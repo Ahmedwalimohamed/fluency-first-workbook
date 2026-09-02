@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#16324f" />
+  <title>Fluency First Workbook</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-shell">
+      <section class="login-brand">
+        <div class="brand-mark">FF</div>
+        <p class="eyebrow">EnglishGate</p>
+        <h1>Fluency First</h1>
+        <p class="lead">Live classes for speaking. Smart independent practice for vocabulary, grammar, listening and writing.</p>
+        <div class="promise-card"><strong>Practice → Detect → Review → Improve</strong><span>Your workbook identifies what needs attention before the next live lesson.</span></div>
+      </section>
+      <section class="login-card">
+        <div><p class="eyebrow">Welcome back</p><h2>Sign in</h2><p class="muted">Use the username and password given by your teacher.</p></div>
+        <form id="loginForm"><label>Username<input id="username" autocomplete="username" required /></label><label>Password<input id="password" type="password" autocomplete="current-password" required /></label><p id="loginError" class="error" aria-live="polite"></p><button class="primary-btn" type="submit">Sign in</button></form>
+        <small>Your account and learning progress are stored securely on the course backend.</small>
+      </section>
+    </div>
+  </div>
+  <div id="app" class="app hidden">
+    <aside class="sidebar"><div class="sidebar-brand"><div class="brand-mark small">FF</div><div><strong>Fluency First</strong><span>Digital Workbook</span></div></div><nav id="sideNav"></nav><div class="sidebar-footer"><div class="avatar" id="sidebarAvatar">S</div><div><strong id="sidebarName">Student</strong><span id="sidebarRole">Learner</span></div><button id="logoutBtn" class="icon-btn" title="Sign out">↗</button></div></aside>
+    <main class="main"><header class="topbar"><button id="menuBtn" class="mobile-menu">☰</button><div><p class="eyebrow" id="pageEyebrow">Dashboard</p><h2 id="pageTitle">Home</h2></div><div class="top-actions"><span class="status-dot"></span><span class="muted desktop-only">Railway sync</span></div></header><div id="content" class="content"></div></main>
+    <nav id="bottomNav" class="bottom-nav"></nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
