@@ -309,15 +309,51 @@ function openAssignmentFromUrl(){
  const a=(getDB().assignments||[]).find(x=>x.id===id);if(!a)return false;
  if(!setActiveBook(a.bookId))return false;activeLessonId=a.lessonId;currentStep=firstOpenStep(session.id,a.lessonId);currentPage='workbook';return true;
 }
-function liveLineHtml(line){
- const t=line.trim();if(!t)return '';
+
+function vocabularyRow(line){
+ const t=String(line||'').trim();
+ const m=t.match(/^(.+?)\s+((?:I|I'm|I've|I'd|My|We|We're|We've|They|They're|He|He's|She|She's|It|It's|Our|The|A|An|This|That|These|Those|You|Your|His|Her)\b.*)$/);
+ if(!m)return null;
+ const word=m[1].trim(),example=m[2].trim();
+ if(!word||!example||word.length>45)return null;
+ return {word,example};
+}
+function liveLineHtml(line,mode='normal'){
+ const t=String(line||'').trim();if(!t)return '';
  if(/^LESSON\s+\d+/i.test(t)||/^WEEK\s+\d+.*LESSON\s+\d+/i.test(t))return '<div class="live-book-marker">'+escapeHtml(t)+'</div>';
  if(/^(PAGE\s+\d+\s*[—-]|\d+\s*[|•]\s*|CAN-DO GOAL:|TODAY.?S OUTCOME)/i.test(t))return '<h3 class="live-book-section">'+escapeHtml(t)+'</h3>';
- if(/^(FLUENCY MISSION|PERFORMANCE MISSION|YOUR MISSION|SPEAKING CHALLENGE|LANGUAGE BANK|USEFUL EXPRESSIONS|GRAMMAR FOR THE MISSION|HOMEWORK|INDEPENDENT MISSION|REFLECTION|CHECK YOUR UNDERSTANDING|SUCCESS CHECK)/i.test(t))return '<h4 class="live-book-subhead">'+escapeHtml(t)+'</h4>';
- if(/^[☐•]/.test(t))return '<div class="live-book-bullet">'+escapeHtml(t)+'</div>';
+ if(/^(Think & Talk|READ|Useful Expressions|Pronunciation|Examples|Complete the Sentences|Make It Personal|Challenge|Try to cover:|Write their names below:|Check Your Understanding|LANGUAGE BANK|USEFUL EXPRESSIONS|GRAMMAR FOR THE MISSION|HOMEWORK|INDEPENDENT MISSION|REFLECTION|SUCCESS CHECK|SPEAKING CHALLENGE|FLUENCY MISSION|PERFORMANCE MISSION|YOUR MISSION)$/i.test(t))return '<h4 class="live-book-subhead">'+escapeHtml(t)+'</h4>';
+ const numbered=t.match(/^(\d+)\.\s*(.+)$/);
+ if(numbered)return '<div class="live-prompt-row"><span>'+escapeHtml(numbered[1])+'</span><p>'+escapeHtml(numbered[2])+'</p></div>';
+ if(/^[☐•]/.test(t))return '<div class="live-book-bullet">'+escapeHtml(t.replace(/^[☐•]\s*/,''))+'</div>';
+ if(mode==='vocabulary'){
+  const row=vocabularyRow(t);
+  if(row)return '<div class="live-vocab-row"><div class="live-vocab-word"><small>Word</small><strong>'+escapeHtml(row.word)+'</strong></div><div class="live-vocab-example"><small>Example</small><span>'+escapeHtml(row.example)+'</span></div></div>';
+ }
+ if(/^_{3,}/.test(t))return '';
  return '<p>'+escapeHtml(t)+'</p>';
 }
-function renderLiveContent(text){return String(text||'').split('\n').map(liveLineHtml).join('')}
+function renderLiveContent(text){
+ const lines=String(text||'').split('\n'),out=[];
+ let mode='normal',vocabOpen=false;
+ const closeVocab=()=>{if(vocabOpen){out.push('</div>');vocabOpen=false}};
+ for(const raw of lines){
+  const t=raw.trim();if(!t)continue;
+  if(/^WORD\s+EXAMPLE$/i.test(t)){
+   closeVocab();mode='vocabulary';vocabOpen=true;
+   out.push('<div class="live-vocab-table"><div class="live-vocab-head"><span>Target word</span><span>Example in context</span></div>');
+   continue;
+  }
+  if(/^(Useful Expressions|Pronunciation|READ|Examples|Complete the Sentences|Make It Personal|Challenge|Check Your Understanding|SPEAKING CHALLENGE|FLUENCY MISSION|HOMEWORK|REFLECTION)$/i.test(t)){
+   closeVocab();mode='normal';
+  }
+  const html=liveLineHtml(t,mode);
+  if(html)out.push(html);
+ }
+ closeVocab();
+ return out.join('');
+}
+
 function liveSectionHeading(line){
  const t=String(line||'').trim();
  const numbered=t.match(/^\d+\s*(?:\|\s*)?([A-Z][A-Z ,&'-]+?)(?:\s*\|\s*\d+(?:-\d+)?\s*min|\s*•\s*\d+(?:-\d+)?\s*MIN|$)/i);
