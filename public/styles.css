@@ -337,3 +337,358 @@ code{background:var(--teal-soft);color:var(--navy)}
 @keyframes engagementTickerMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.engagement-ticker-track{animation:none;padding-left:14px}.engagement-ticker-track span+span{display:none}}
 @media(max-width:760px){.engagement-ticker{height:34px;border-radius:10px}.engagement-ticker-track{animation-duration:14s}.engagement-ticker-track span{font-size:.78rem}}
+
+
+/* =========================================================
+   EnglishGate mobile-first product shell
+   Phone is the base product. Larger screens progressively expand.
+   ========================================================= */
+html{min-width:320px;background:var(--bg);-webkit-text-size-adjust:100%}
+body{min-width:320px;overflow-x:hidden}
+button,a,input,select,textarea{touch-action:manipulation}
+button,.primary-btn,.secondary-btn,.ghost-btn,.nav-btn{min-height:46px}
+input,select,textarea{font-size:16px}
+
+/* Mobile-first authentication */
+.login-screen{min-height:100svh;display:block;padding:0;background:var(--bg)}
+.login-shell{width:100%;min-height:100svh;display:flex;flex-direction:column;border:0;border-radius:0;box-shadow:none;background:#fff}
+.login-brand{padding:24px 20px 22px;min-height:auto;display:grid;gap:8px;align-content:start}
+.login-brand .brand-mark{width:48px;height:48px;margin-bottom:4px}
+.login-brand .eyebrow{margin:4px 0 0;font-size:.65rem}
+.login-brand h1{font-size:2rem;line-height:1.02;margin:0}
+.login-brand .lead{font-size:.92rem;line-height:1.5;margin:6px 0 0}
+.promise-card{display:none}
+.login-card{padding:24px 20px 30px;gap:20px;flex:1}
+.login-card h2{font-size:1.7rem}
+.login-card form{gap:14px}
+.login-card input{min-height:50px}
+.login-card .primary-btn{min-height:52px;width:100%}
+
+/* Mobile-first application shell */
+.app{min-height:100svh}
+.sidebar{display:none}
+.main,.student-mode .main{margin-left:0;min-height:100svh}
+.topbar,.student-mode .topbar{
+  height:62px;
+  min-height:62px;
+  padding:0 14px;
+  gap:10px;
+  background:rgba(222,242,251,.96);
+  position:sticky;
+  top:0;
+  z-index:40
+}
+.mobile-menu,.student-mode .mobile-menu{display:none}
+.page-identity{min-width:0!important;flex:1}
+.page-identity .eyebrow{font-size:.58rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar h2{font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-actions{flex:0 0 auto}
+.desktop-only,.sync-indicator{display:none!important}
+.student-profile-btn{width:36px;height:36px;min-height:36px}
+.student-top-nav,.student-mode .student-top-nav{display:none!important}
+.content,.student-mode .content{
+  width:100%;
+  max-width:none;
+  padding:14px 12px calc(88px + env(safe-area-inset-bottom));
+  margin:0
+}
+
+/* Bottom navigation is the primary phone navigation for every role */
+.bottom-nav,.student-mode .bottom-nav{
+  display:flex;
+  position:fixed;
+  left:0;right:0;bottom:0;
+  z-index:100;
+  gap:2px;
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  padding:6px max(6px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-right));
+  background:rgba(255,255,255,.98);
+  border-top:1px solid var(--border);
+  box-shadow:0 -7px 24px rgba(4,18,66,.08);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px)
+}
+.bottom-nav::-webkit-scrollbar{display:none}
+.bottom-nav .nav-btn{
+  flex:1 0 68px;
+  width:auto;
+  min-width:68px;
+  min-height:54px;
+  padding:5px 5px 4px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:1px;
+  color:#667481;
+  font-size:.63rem;
+  line-height:1.1;
+  text-align:center
+}
+.bottom-nav .nav-btn.active{background:var(--teal-soft);color:var(--navy);box-shadow:none}
+.bottom-nav .nav-icon{width:auto;font-size:.95rem;line-height:1}
+
+/* Mobile cards and layout primitives */
+.grid,.grid-2,.grid-3,.grid-4,
+.admin-metrics,.class-card-grid,.setup-flow,.book-card-grid,
+.student-glance,.student-progress-grid,.lesson-admin-grid{
+  grid-template-columns:1fr!important
+}
+.card,.management-card,.book-card,.next-action-card,.course-intro,
+.learning-heading,.activity-card,.lesson-picker,.live-book-page{
+  border-radius:16px
+}
+.card,.management-card,.book-card{padding:16px}
+.section{margin-top:18px}
+.section-head,.role-page-head,.skill-page-head{align-items:flex-start;flex-direction:column;gap:8px}
+.role-page-head h1,.course-intro h1{font-size:1.5rem;line-height:1.15}
+.hero,.role-hero{grid-template-columns:1fr!important;padding:20px;border-radius:18px}
+.hero h1,.role-hero h1{font-size:1.55rem}
+.hero-action{padding:14px}
+
+/* Student home as a mobile task launcher */
+.student-home{gap:12px}
+.next-action-card{
+  padding:20px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px
+}
+.next-action-card h1{font-size:1.75rem;line-height:1.1}
+.next-action-card h2{font-size:1.1rem}
+.next-action-card p{font-size:.9rem;line-height:1.5}
+.next-action-number{
+  order:-1;
+  width:58px;height:58px;
+  border-radius:15px;
+  align-self:flex-end;
+  margin-bottom:-58px
+}
+.next-action-number span{font-size:1.35rem}
+.next-action-number small{font-size:.55rem}
+.next-progress{margin:16px 0 12px}
+.student-cta-row{display:grid;grid-template-columns:1fr;gap:8px}
+.student-cta-row>*{width:100%;min-width:0}
+.glance-card,.glance-card.quiet{
+  grid-template-columns:auto 1fr;
+  padding:14px;
+  border-radius:14px
+}
+.glance-card .text-link{grid-column:2;text-align:left}
+
+/* Book/course navigation */
+.course-shell,.learning-shell,.progress-shell,.profile-shell{width:100%;max-width:none}
+.course-intro{padding:18px;margin:8px 0 14px;grid-template-columns:1fr;gap:16px}
+.course-overall{border-top:1px solid var(--border);padding-top:14px}
+.course-topic{
+  grid-template-columns:36px minmax(0,1fr);
+  gap:10px;
+  padding:13px 12px;
+  border-radius:14px
+}
+.topic-progress{grid-column:2;font-size:.76rem}
+.topic-copy strong{font-size:.93rem}
+
+/* Workbook is designed for a phone first */
+.learning-top{align-items:flex-start;gap:8px}
+.learning-heading{padding:16px;grid-template-columns:1fr;gap:8px}
+.learning-heading h1{font-size:1.35rem}
+.step-summary{text-align:left;display:flex;gap:6px}
+.step-track{gap:4px;margin:10px 0 12px}
+.track-step{height:6px}
+.skill-tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px}
+.skill-tab{padding:8px 3px;font-size:.63rem;min-height:44px;border-radius:9px}
+.focused-activity{width:100%;max-width:none;padding:0}
+.activity-one-page{padding:16px 14px!important;border-radius:16px}
+.activity-one-page .guided-question{padding:16px 0}
+.guided-question{min-height:0}
+.guided-question p{font-size:1rem;line-height:1.45}
+.mcq-answer-slot{padding:12px;border-radius:13px}
+.mcq-option-cards{display:grid;grid-template-columns:1fr;gap:8px}
+.activity-one-page .mcq-option-card,.mcq-option-card{
+  width:100%;
+  min-width:0;
+  min-height:52px;
+  flex:none;
+  padding:11px 12px;
+  border-radius:12px
+}
+.mcq-option-text{font-size:.92rem;line-height:1.25}
+.source-panel{padding:14px;border-radius:13px}
+.source-panel p{font-size:.93rem;line-height:1.55}
+.writing-task{padding:14px 0}
+.writing-response{min-height:118px}
+
+/* Thumb-zone actions */
+.skill-action-row{
+  position:sticky!important;
+  bottom:calc(72px + env(safe-area-inset-bottom));
+  z-index:80;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:7px;
+  margin:16px -14px -16px;
+  padding:10px 14px 12px;
+  background:rgba(255,255,255,.97);
+  border-top:1px solid var(--border);
+  box-shadow:0 -8px 22px rgba(4,18,66,.07);
+  -webkit-backdrop-filter:blur(9px);
+  backdrop-filter:blur(9px)
+}
+.skill-action-row .skill-submit,.done-activity-btn{
+  width:100%!important;
+  min-height:50px;
+  margin:0;
+  border-radius:11px
+}
+.performance-result{padding:14px;border-radius:14px}
+.performance-score strong{font-size:1.7rem}
+.performance-breakdown{grid-template-columns:repeat(3,1fr);gap:5px}
+.performance-breakdown span{padding:8px 4px;font-size:.68rem}
+
+/* Engagement ticker sits naturally in the mobile flow */
+.engagement-ticker{height:32px;margin:0 0 10px;border-radius:9px}
+.engagement-ticker-track span{font-size:.74rem}
+
+/* Teacher: phone is a teaching remote, not a shrunk dashboard */
+.teacher-today-hero{align-items:flex-start}
+.teacher-live-row,.admin-browser-lesson{
+  grid-template-columns:36px minmax(0,1fr);
+  gap:10px;
+  padding:12px
+}
+.teacher-live-row b,.admin-browser-lesson b{grid-column:2;white-space:normal}
+.teacher-live-num,.admin-browser-num{width:34px;height:34px}
+.live-teaching-top{align-items:flex-start;flex-direction:column;gap:8px}
+.live-teaching-context{width:100%;justify-content:space-between}
+.live-book-title{padding:18px 16px}
+.live-book-title h1{font-size:1.4rem}
+.live-section-tabs{
+  padding:10px 12px;
+  gap:6px;
+  scroll-snap-type:x proximity
+}
+.live-section-tabs button{
+  scroll-snap-align:start;
+  padding:7px 9px;
+  font-size:.68rem
+}
+.live-book-content,.live-section-content{padding:18px 16px;min-height:0}
+.live-book-content p{font-size:.94rem;line-height:1.55}
+.live-book-section{font-size:.96rem}
+.teacher-section-actions{
+  position:sticky;
+  bottom:calc(72px + env(safe-area-inset-bottom));
+  z-index:70;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  padding:10px 12px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 -8px 20px rgba(4,18,66,.07)
+}
+.teacher-section-actions>*{min-width:0;width:100%}
+.assign-workbook-end{margin:14px 12px 16px;padding:14px;align-items:flex-start;flex-direction:column}
+.assignment-skill-row{grid-template-columns:1fr 1fr}
+
+/* Admin/teacher dense content remains usable on small screens */
+.table-wrap{margin:0 -12px;padding:0 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.data-table{min-width:680px}
+.management-row{align-items:flex-start}
+.management-row-meta{flex-wrap:wrap}
+.admin-topic-card,.admin-browser-lesson{border-radius:13px}
+.form-grid{grid-template-columns:1fr!important}
+
+/* Mobile modals are bottom sheets */
+.modal-backdrop{
+  align-items:end;
+  padding:0;
+  background:rgba(15,23,42,.52)
+}
+.modal-card{
+  width:100%;
+  max-width:none;
+  max-height:88svh;
+  border-radius:22px 22px 0 0;
+  padding:18px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow:0 -14px 45px rgba(15,23,42,.24)
+}
+
+/* Break long content rather than force horizontal page scrolling */
+p,h1,h2,h3,h4,strong,small,span{overflow-wrap:anywhere}
+img,video,audio{max-width:100%}
+
+/* Tablet expansion */
+@media(min-width:700px){
+  .login-screen{padding:24px;display:grid;place-items:center}
+  .login-shell{min-height:0;max-width:940px;border:1px solid var(--border);border-radius:24px;overflow:hidden}
+  .login-brand{padding:34px}
+  .login-card{padding:34px}
+  .content,.student-mode .content{padding:22px 24px calc(92px + env(safe-area-inset-bottom))}
+  .grid-2,.student-glance,.class-card-grid,.book-card-grid,.admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .next-action-card{display:grid;grid-template-columns:1fr auto;padding:28px}
+  .next-action-number{order:initial;width:92px;height:92px;margin:0;align-self:start}
+  .next-action-number span{font-size:2.2rem}
+  .student-cta-row{display:flex}
+  .student-cta-row>*{width:auto}
+  .course-intro{grid-template-columns:1fr 150px}
+  .activity-one-page{padding:22px 20px!important}
+  .skill-action-row{margin:18px -20px -22px;padding-left:20px;padding-right:20px}
+  .modal-backdrop{align-items:center;padding:24px}
+  .modal-card{width:min(720px,94vw);border-radius:22px;padding:22px}
+}
+
+/* Desktop is an enhancement, not the base product */
+@media(min-width:1024px){
+  .login-shell{display:grid;grid-template-columns:1.05fr .95fr}
+  .login-brand{padding:52px}
+  .login-brand h1{font-size:2.7rem}
+  .login-brand .lead{font-size:1.02rem}
+  .promise-card{display:grid}
+  .login-card{padding:46px}
+
+  .teacher-mode .sidebar,.admin-mode .sidebar{
+    display:flex;
+    width:250px
+  }
+  .teacher-mode .main,.admin-mode .main{margin-left:250px}
+  .teacher-mode .bottom-nav,.admin-mode .bottom-nav{display:none}
+  .teacher-mode .topbar,.admin-mode .topbar{padding:0 28px;height:76px}
+  .teacher-mode .content,.admin-mode .content{padding:28px 30px 70px;max-width:1280px;margin:auto}
+
+  .student-mode .topbar{height:72px;padding:0 max(24px,calc((100vw - 1040px)/2));gap:24px}
+  .student-mode .student-top-nav{display:flex!important}
+  .student-mode .bottom-nav{display:none}
+  .student-mode .content{max-width:1040px;margin:auto;padding:34px 24px 70px}
+  .student-mode .page-identity{min-width:170px!important}
+
+  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .class-card-grid,.book-card-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .admin-metrics{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .student-glance{grid-template-columns:1fr 1fr!important}
+
+  .next-action-card{padding:36px}
+  .course-shell,.learning-shell,.progress-shell,.profile-shell{max-width:920px;margin:auto}
+  .learning-heading{grid-template-columns:1fr auto;padding:22px}
+  .step-summary{text-align:right;display:grid}
+  .activity-one-page{padding:24px!important}
+  .activity-one-page .mcq-option-cards{display:flex;flex-wrap:wrap}
+  .activity-one-page .mcq-option-card{width:auto;min-width:150px;flex:1 1 180px}
+  .skill-action-row{
+    position:sticky!important;
+    bottom:18px;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    margin:18px 0 0;
+    padding:8px 0 0;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+    backdrop-filter:none
+  }
+  .skill-action-row .skill-submit{width:auto!important}
+  .done-activity-btn{width:auto!important;min-width:150px}
+  .teacher-section-actions{position:static;padding:18px 30px 24px;background:#fff;box-shadow:none}
+}
