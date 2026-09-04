@@ -299,3 +299,28 @@ code{background:var(--teal-soft);color:var(--navy)}
 .done-activity-btn{min-width:150px;font-weight:900}
 .done-activity-btn:disabled{opacity:.38;cursor:not-allowed;box-shadow:none}
 @media(max-width:760px){.skill-action-row{position:static;display:grid;grid-template-columns:1fr}.skill-action-row .skill-submit,.done-activity-btn{width:100%}}
+
+
+/* Teacher section runner + student performance */
+.section-runner-shell{max-width:1180px}
+.live-section-page{display:grid}
+.teacher-section-progress{height:6px;background:#e9eef5;border-radius:999px;overflow:hidden;margin-top:14px}
+.teacher-section-progress span{display:block;height:100%;background:var(--teal);border-radius:999px}
+.live-section-tabs{display:flex;gap:8px;overflow-x:auto;padding:14px 18px;border-bottom:1px solid var(--border);background:#fbfdff}
+.live-section-tabs button{border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 11px;white-space:nowrap;font-size:.76rem;font-weight:800;color:var(--muted);cursor:pointer;display:flex;gap:7px;align-items:center}
+.live-section-tabs button span{width:20px;height:20px;border-radius:50%;background:#eef2f6;display:grid;place-items:center;font-size:.68rem}
+.live-section-tabs button.active{border-color:#91cbdc;background:#eef9fc;color:var(--navy)}
+.live-section-tabs button.done span{background:#ecfdf3;color:#067647}
+.live-section-content{min-height:360px}
+.teacher-section-actions{display:flex;justify-content:space-between;gap:12px;padding:18px 30px 24px;border-top:1px solid var(--border)}
+.compact-assign-end{margin-top:0}
+.performance-result{border:1px solid var(--border);border-radius:16px;padding:18px;display:grid;gap:14px;background:#fff}
+.performance-result.good{border-color:#b7e4ca;background:#f6fcf8}
+.performance-result.bad{border-color:#f0d4a8;background:#fffaf2}
+.performance-score{display:flex;align-items:baseline;gap:10px}
+.performance-score strong{font-size:2rem;line-height:1}.performance-score span{font-weight:900;color:var(--muted)}
+.performance-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.performance-breakdown span{background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.06);border-radius:10px;padding:10px;text-align:center;color:var(--muted);font-size:.78rem}
+.performance-breakdown b{display:block;color:var(--text);font-size:1rem}
+.performance-result p{margin:0;line-height:1.5}
+@media(max-width:760px){.teacher-section-actions{padding:16px 18px}.teacher-section-actions>*{flex:1}.performance-breakdown{grid-template-columns:1fr}.live-section-content{min-height:0}}
