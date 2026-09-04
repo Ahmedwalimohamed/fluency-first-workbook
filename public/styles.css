@@ -230,3 +230,27 @@ code{background:var(--teal-soft);color:var(--navy)}
 .admin-preview-workbook .guided-submit{display:none!important}
 @media(max-width:900px){.admin-workbook-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.admin-workbook-grid{grid-template-columns:1fr}}
+
+
+/* V6 · Book-based workbook */
+.book-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.book-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:18px;display:grid;gap:14px;box-shadow:0 4px 14px rgba(15,23,42,.035)}
+.book-card-top,.book-card-actions,.book-card-meta,.source-panel-head,.skill-page-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.book-status{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;padding:5px 9px;border-radius:999px;background:#f1f5f9;color:#64748b}
+.book-status.ready{background:#ecfdf3;color:#067647}.book-status.pilot{background:#eef5ff;color:#17369f}.book-status.queued{background:#f8fafc;color:#94a3b8}
+.book-cover-mini{min-height:170px;border-radius:18px;padding:22px;background:linear-gradient(145deg,var(--navy),#274e76);color:#fff;display:flex;flex-direction:column;justify-content:flex-end}
+.book-cover-mini span{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;opacity:.72}.book-cover-mini strong{font-size:1.35rem;line-height:1.15;margin:7px 0}.book-cover-mini small{opacity:.8}
+.book-card-meta{align-items:flex-start;flex-direction:column;color:var(--muted);font-size:.82rem}.book-card-actions{justify-content:flex-start}.book-line{color:var(--muted)}.book-line strong{color:var(--text)}
+.skill-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:16px 0}
+.skill-tab{border:1px solid var(--border);background:#fff;border-radius:13px;padding:11px 12px;font-weight:800;color:#64748b;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center}
+.skill-tab span{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#f1f5f9;font-size:.72rem}.skill-tab.active{background:var(--teal-soft);border-color:#9ccfe2;color:var(--navy)}.skill-tab.complete span{background:#ecfdf3;color:#067647}.skill-tab:disabled{opacity:.45;cursor:not-allowed}
+.activity-one-page{display:grid;gap:18px}.skill-page-head{border-bottom:1px solid var(--border);padding-bottom:16px;align-items:flex-end}.skill-page-head h2{margin:7px 0 0}.skill-page-head>strong{font-size:.82rem;color:var(--muted);white-space:nowrap}
+.activity-question-list{display:grid}.activity-one-page .guided-question{display:grid;gap:12px;padding:22px 0;border-bottom:1px solid var(--border)}.activity-one-page .guided-question:last-child{border-bottom:0}.activity-one-page .guided-question>p{font-size:1rem;font-weight:800;line-height:1.45;margin:0}
+.activity-one-page .question-stage{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}.activity-one-page .question-stage b{font-size:.72rem}
+.activity-one-page .mcq-picker{display:grid;gap:9px}.activity-one-page .mcq-answer-slot{min-height:58px;padding:10px 13px}.activity-one-page .mcq-answer-slot small{display:none}.activity-one-page .mcq-option-cards{display:flex;flex-wrap:wrap;gap:8px}.activity-one-page .mcq-option-card{width:auto;min-width:150px;flex:1 1 180px;padding:10px 12px}
+.source-panel{border:1px solid var(--border);border-radius:16px;background:#f8fafc;padding:18px;display:grid;gap:12px}.source-panel p{margin:0;line-height:1.75;font-size:1rem}.source-panel-head small{display:block;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800;font-size:.68rem}.source-panel-head strong{display:block;margin-top:3px}.compact-source{grid-template-columns:1fr}
+.skill-submit{position:sticky;bottom:18px;justify-self:end;min-width:210px;box-shadow:0 8px 22px rgba(23,54,159,.18)}
+.book-home-card .next-action-number span{font-size:1.45rem}
+.course-topic.pending{opacity:.55}.course-topic.pending .topic-state{background:#f1f5f9;color:#94a3b8}
+@media(max-width:980px){.book-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.skill-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.book-card-grid{grid-template-columns:1fr}.skill-tabs{grid-template-columns:1fr 1fr}.skill-tab{font-size:.78rem;padding:9px}.skill-page-head{align-items:flex-start;flex-direction:column}.activity-one-page .guided-question{padding:18px 0}.activity-one-page .mcq-option-card{min-width:100%;flex-basis:100%}.skill-submit{position:static;width:100%;justify-self:stretch}.source-panel{padding:15px}}
