@@ -291,3 +291,11 @@ code{background:var(--teal-soft);color:var(--navy)}
 .assignment-skill-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}.assignment-skill-row span{padding:9px;border-radius:10px;background:#eef5ff;text-align:center;font-size:.75rem;font-weight:800;color:var(--navy)}
 .assignment-success{display:grid;gap:12px;margin-top:14px}.assignment-success textarea{min-height:115px;width:100%;resize:vertical}
 @media(max-width:760px){.teacher-live-row{grid-template-columns:38px 1fr}.teacher-live-row b{grid-column:2}.live-teaching-top,.assign-workbook-end{align-items:flex-start;flex-direction:column}.live-book-title,.live-book-content{padding-left:18px;padding-right:18px}.assign-workbook-end{margin:20px 18px}.assignment-skill-row{grid-template-columns:1fr 1fr}}
+
+
+/* Done-gated workbook progression */
+.skill-action-row{position:sticky;bottom:18px;display:flex;justify-content:flex-end;gap:10px;align-items:center;padding-top:8px;z-index:5}
+.skill-action-row .skill-submit{position:static;box-shadow:0 8px 22px rgba(23,54,159,.14)}
+.done-activity-btn{min-width:150px;font-weight:900}
+.done-activity-btn:disabled{opacity:.38;cursor:not-allowed;box-shadow:none}
+@media(max-width:760px){.skill-action-row{position:static;display:grid;grid-template-columns:1fr}.skill-action-row .skill-submit,.done-activity-btn{width:100%}}
