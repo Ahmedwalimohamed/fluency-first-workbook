@@ -254,3 +254,16 @@ code{background:var(--teal-soft);color:var(--navy)}
 .course-topic.pending{opacity:.55}.course-topic.pending .topic-state{background:#f1f5f9;color:#94a3b8}
 @media(max-width:980px){.book-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.skill-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.book-card-grid{grid-template-columns:1fr}.skill-tabs{grid-template-columns:1fr 1fr}.skill-tab{font-size:.78rem;padding:9px}.skill-page-head{align-items:flex-start;flex-direction:column}.activity-one-page .guided-question{padding:18px 0}.activity-one-page .mcq-option-card{min-width:100%;flex-basis:100%}.skill-submit{position:static;width:100%;justify-self:stretch}.source-panel{padding:15px}}
+
+
+/* Safe admin workbook browser */
+.admin-book-browser{display:grid;gap:18px}
+.admin-browser-list{display:grid;gap:10px}
+.admin-browser-lesson{width:100%;display:grid;grid-template-columns:42px 1fr auto;gap:14px;align-items:center;text-align:left;border:1px solid var(--border);background:#fff;border-radius:15px;padding:14px 16px;cursor:pointer;color:var(--text)}
+.admin-browser-lesson:hover{border-color:#92c9df;background:#fbfdff}
+.admin-browser-lesson.is-pending{opacity:.55;cursor:not-allowed;background:#f8fafc}
+.admin-browser-num{width:36px;height:36px;border-radius:10px;background:#eef5ff;color:var(--navy);display:grid;place-items:center;font-weight:900}
+.admin-browser-lesson>span:nth-child(2){display:grid;gap:3px}
+.admin-browser-lesson small{color:var(--muted);line-height:1.35}
+.admin-browser-lesson b{font-size:.78rem;color:var(--navy);white-space:nowrap}
+@media(max-width:760px){.admin-browser-lesson{grid-template-columns:38px 1fr}.admin-browser-lesson b{grid-column:2;white-space:normal}}
