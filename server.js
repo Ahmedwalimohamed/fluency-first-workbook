@@ -44,7 +44,7 @@ async function initDb(){
  await pool.query("alter table users drop constraint if exists users_role_check");
  await pool.query("alter table users add constraint users_role_check check(role in ('admin','teacher','student'))");
  const aUser=(process.env.SYSTEM_ADMIN_USERNAME||'admin').trim().toLowerCase(),aPass=process.env.SYSTEM_ADMIN_PASSWORD;
- if(aPass){let a=await pool.query('select id,role from users where lower(username)=lower($1)',[aUser]);if(!a.rowCount){await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',['a_'+crypto.randomUUID(),aUser,await bcrypt.hash(aPass,12),'admin',process.env.SYSTEM_ADMIN_NAME||'System Admin']);}else if(a.rows[0].role!=='admin'){throw new Error('SYSTEM_ADMIN_USERNAME is already used by a non-admin account');}}
+ if(aPass){let a=await pool.query('select id,role from users where lower(username)=lower($1)',[aUser]);if(!a.rowCount){await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',['a_'+crypto.randomUUID(),aUser,await bcrypt.hash(aPass,12),'admin',process.env.SYSTEM_ADMIN_NAME||'System Admin']);}else if(a.rows[0].role!=='admin'){throw new Error('SYSTEM_ADMIN_USERNAME is already used by a non-admin account');}else{await pool.query('update users set password_hash=$1,name=$2 where id=$3',[await bcrypt.hash(aPass,12),process.env.SYSTEM_ADMIN_NAME||'System Admin',a.rows[0].id]);}}
  const tUser=process.env.TEACHER_USERNAME||'teacher',tPass=process.env.TEACHER_PASSWORD;
  if(!tPass)throw new Error('TEACHER_PASSWORD is required');
  let t=await pool.query('select id from users where username=$1',[tUser]);
