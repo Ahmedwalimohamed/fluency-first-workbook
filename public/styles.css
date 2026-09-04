@@ -324,3 +324,16 @@ code{background:var(--teal-soft);color:var(--navy)}
 .performance-breakdown b{display:block;color:var(--text);font-size:1rem}
 .performance-result p{margin:0;line-height:1.5}
 @media(max-width:760px){.teacher-section-actions{padding:16px 18px}.teacher-section-actions>*{flex:1}.performance-breakdown{grid-template-columns:1fr}.live-section-content{min-height:0}}
+
+
+/* Dynamic student engagement ticker */
+.engagement-ticker{position:relative;overflow:hidden;height:36px;border:1px solid #b9ddeb;background:#f4fbfe;border-radius:12px;margin-bottom:14px;display:flex;align-items:center}
+.engagement-ticker::before,.engagement-ticker::after{content:"";position:absolute;top:0;bottom:0;width:32px;z-index:2;pointer-events:none}
+.engagement-ticker::before{left:0;background:linear-gradient(90deg,#f4fbfe,rgba(244,251,254,0))}
+.engagement-ticker::after{right:0;background:linear-gradient(270deg,#f4fbfe,rgba(244,251,254,0))}
+.engagement-ticker-track{display:flex;align-items:center;gap:72px;min-width:max-content;white-space:nowrap;animation:engagementTickerMove 18s linear infinite;padding-left:100%}
+.engagement-ticker-track span{font-size:.82rem;font-weight:800;color:var(--navy);letter-spacing:.01em}
+.engagement-ticker:hover .engagement-ticker-track{animation-play-state:paused}
+@keyframes engagementTickerMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.engagement-ticker-track{animation:none;padding-left:14px}.engagement-ticker-track span+span{display:none}}
+@media(max-width:760px){.engagement-ticker{height:34px;border-radius:10px}.engagement-ticker-track{animation-duration:14s}.engagement-ticker-track span{font-size:.78rem}}
