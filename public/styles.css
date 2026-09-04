@@ -169,3 +169,26 @@ code{background:var(--teal-soft);color:var(--navy)}
 .jtbd-result{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:18px;padding:16px;border-radius:14px;background:#f8fafc;border:1px solid var(--border)}.jtbd-result>div{display:grid;gap:3px}.jtbd-result strong{font-size:1.25rem}.jtbd-result span{color:var(--muted);font-size:.84rem}
 .jtbd-shell .mcq-answer-slot{min-height:64px}.jtbd-shell .mcq-option-card{padding:9px 11px}.jtbd-shell .mcq-option-text{font-size:.82rem}
 @media(max-width:760px){.jtbd-shell{max-width:none}.jtbd-activity-panel{padding:18px}.jtbd-workbook-head{grid-template-columns:auto 1fr auto}.jtbd-current-job small{display:none}.runner-question-stack{min-height:220px}.jtbd-result{align-items:stretch;flex-direction:column}.jtbd-result .primary-btn{width:100%}}
+
+
+/* Role-based management UI */
+.role-hero{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 30px;border:1px solid var(--border);border-radius:22px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.045)}
+.role-hero h1,.role-page-head h1{margin:4px 0 8px;font-size:1.85rem;color:var(--navy);letter-spacing:-.02em}.role-hero p,.role-page-head p{margin:0;color:var(--muted);line-height:1.55;max-width:660px}
+.role-kicker{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--teal)}
+.role-page-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:18px}
+.admin-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}.admin-metrics .card{box-shadow:none}.admin-metrics .metric-card{padding:17px}.admin-metrics .metric-card strong{font-size:1.65rem}
+.setup-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.setup-step{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:18px;border:1px solid var(--border);border-radius:16px;background:#fff}.setup-step>b{width:34px;height:34px;border-radius:10px;background:var(--teal-soft);color:var(--teal);display:grid;place-items:center}.setup-step>div{display:grid;gap:3px}.setup-step span{font-size:.8rem;color:var(--muted)}
+.class-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.management-card{padding:20px;border:1px solid var(--border);border-radius:18px;background:#fff;box-shadow:0 5px 16px rgba(15,23,42,.035)}.management-card h3{margin:14px 0 7px}.management-card p{margin:0 0 14px;color:var(--muted)}.management-card-head{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--muted)}
+.clean-list{padding:4px 18px}.management-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:15px 4px;border-bottom:1px solid var(--border)}.management-row:last-child{border-bottom:0}.management-row-meta{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:.84rem}.student-cell small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+.compact-person-row{width:100%;border:0;background:transparent;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:11px;padding:11px 3px;text-align:left;border-bottom:1px solid var(--border);cursor:pointer}.compact-person-row:last-child{border-bottom:0}.compact-person-row>span:nth-child(2){display:grid}.compact-person-row small{color:var(--muted);margin-top:2px}.compact-person-row>b{color:var(--muted)}
+.action-card{display:flex;flex-direction:column;align-items:flex-start}.action-card .secondary-btn{margin-top:auto}
+.credential-card{margin-top:18px;padding:18px;border-radius:14px;background:var(--teal-soft);border:1px solid #b9ddd7;display:grid;gap:6px}.credential-card span{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);font-weight:900}.credential-card code{font-size:1.05rem;padding:10px;background:#fff;border:1px dashed #91bdb6}.credential-card small{color:var(--muted)}
+.empty-state{grid-column:1/-1;padding:38px;text-align:center;border:1px dashed #cbd5e1;border-radius:18px;background:#fff}.empty-state h3{margin:0 0 6px}.empty-state p{margin:0;color:var(--muted)}
+.clean-table .data-table th{background:#f8fafc}.clean-table .data-table td{vertical-align:middle}
+.admin-mode .sidebar{background:#0f2740;color:#fff;border-right:0}.admin-mode .sidebar-brand span,.admin-mode .sidebar-footer span{color:#9fb2c4}.admin-mode .nav-btn{color:#cbd5e1}.admin-mode .nav-btn:hover,.admin-mode .nav-btn.active{background:rgba(255,255,255,.09);color:#fff}.admin-mode .sidebar-footer{border-color:rgba(255,255,255,.12)}.admin-mode .sidebar .brand-mark{background:#fff}
+.teacher-mode .hero{display:none}
+@media(max-width:980px){.admin-metrics{grid-template-columns:repeat(2,1fr)}.class-card-grid,.setup-flow{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.role-hero,.role-page-head,.management-row,.management-row-meta{align-items:stretch;flex-direction:column}.role-hero .primary-btn,.role-page-head .primary-btn{width:100%}.admin-metrics,.class-card-grid,.setup-flow{grid-template-columns:1fr}.management-row-meta{gap:8px}.content{padding-top:16px}}
+
+// Ensure teacher/admin mobile sidebar can open
+@media(max-width:760px){.teacher-mode .sidebar.open,.admin-mode .sidebar.open{display:flex}.teacher-mode .mobile-menu,.admin-mode .mobile-menu{display:block}}
