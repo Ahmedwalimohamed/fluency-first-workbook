@@ -192,3 +192,26 @@ code{background:var(--teal-soft);color:var(--navy)}
 
 // Ensure teacher/admin mobile sidebar can open
 @media(max-width:760px){.teacher-mode .sidebar.open,.admin-mode .sidebar.open{display:flex}.teacher-mode .mobile-menu,.admin-mode .mobile-menu{display:block}}
+
+
+/* JTBD Class Prep */
+.class-prep{display:grid;gap:18px;max-width:680px;margin:0 auto}
+.class-prep-focus{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.82rem}
+.class-prep-focus span{font-weight:700}
+.class-prep-focus strong{padding:5px 9px;border-radius:999px;background:var(--teal-soft);color:var(--teal);font-size:.78rem}
+.class-prep-mission{padding:6px 0 18px;border-bottom:1px solid var(--border)}
+.class-prep-mission h2{margin:7px 0 16px;font-size:1.55rem;line-height:1.28;letter-spacing:-.02em;color:var(--navy)}
+.keyword-line{display:grid;gap:3px;padding:12px 14px;border-radius:12px;background:#f8fafc}
+.keyword-line small{text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-size:.65rem;font-weight:900}
+.keyword-line strong{font-size:.9rem;line-height:1.45}
+.class-prep-recall{padding:16px;border:1px solid var(--border);border-radius:14px;background:#fff}
+.class-prep-recall p{margin:6px 0 0;font-size:.96rem;line-height:1.5}
+.class-prep-ready{width:100%;margin-top:2px}
+.class-prep-challenge{display:grid;gap:10px;padding:16px;border:1px solid var(--border);border-radius:14px;background:#f8fafc}
+.class-prep-challenge>strong{margin-bottom:2px}
+.class-prep-challenge label{display:flex;align-items:flex-start;gap:9px;font-size:.9rem;line-height:1.4}
+.class-prep-challenge input{margin-top:3px}
+@media(max-width:760px){
+  .class-prep{gap:15px}
+  .class-prep-mission h2{font-size:1.28rem}
+}
