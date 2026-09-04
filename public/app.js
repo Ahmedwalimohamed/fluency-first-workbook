@@ -306,7 +306,7 @@ function liveLineHtml(line){
 function renderLiveContent(text){return String(text||'').split('\n').map(liveLineHtml).join('')}
 function liveSectionHeading(line){
  const t=String(line||'').trim();
- const numbered=t.match(/^\d+\s*(?:\|\s*)?([A-Z][A-Z ,&'-]+?)(?:\s*\|\s*\d+\s*min|\s*•\s*\d+\s*MIN|$)/i);
+ const numbered=t.match(/^\d+\s*(?:\|\s*)?([A-Z][A-Z ,&'-]+?)(?:\s*\|\s*\d+(?:-\d+)?\s*min|\s*•\s*\d+(?:-\d+)?\s*MIN|$)/i);
  if(numbered){
   const name=numbered[1].replace(/\s+/g,' ').trim();
   if(/^(CONNECT|MODEL IN ACTION|DECODE THE MODEL|EXPRESSION TOOLKIT|RETRIEVAL CHALLENGE|ACCURACY FOCUS|CLEAR SPEECH COACH|GUIDED REHEARSAL|CAREER PERFORMANCE MISSION|FEEDBACK,? REPAIR AND RETRY|INDEPENDENT TRANSFER|ACTIVATE|LANGUAGE BANK|LISTEN,? NOTICE AND RESPOND|GRAMMAR AND PRONUNCIATION COACH|COMPLETE AND PERSONALISE|LIVE PARTNER PRACTICE|PERFORMANCE MISSION|INDEPENDENT MISSION)$/i.test(name))return name;
