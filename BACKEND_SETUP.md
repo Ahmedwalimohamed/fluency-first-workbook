@@ -15,3 +15,21 @@ The GitHub Pages build is a UX/data-flow prototype. It is not a secure credentia
 ## Why a new project
 
 The connected Supabase account already contains other applications. Reusing one would mix unrelated data and security policies. The Fluency First system should have its own isolated backend.
+
+
+## System Admin
+
+Set these Railway environment variables to create the System Admin account:
+
+- `SYSTEM_ADMIN_USERNAME` — optional, defaults to `admin`
+- `SYSTEM_ADMIN_PASSWORD` — required to create/verify the admin account
+- `SYSTEM_ADMIN_NAME` — optional, defaults to `System Admin`
+
+Role flow:
+
+1. System Admin creates teacher accounts.
+2. System Admin creates classes and assigns a teacher.
+3. System Admin can add the initial students to a class.
+4. After setup, each teacher can create and manage students only inside classes assigned to that teacher.
+
+Temporary passwords are generated for newly created teachers/students and are shown only at creation/reset time.
