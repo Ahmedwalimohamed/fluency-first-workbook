@@ -274,22 +274,36 @@ function assignmentForLesson(classId,lessonId){return assignmentsForClass(classI
 function teacherClass(){return getDB().classes.find(c=>c.id===activeTeacherClassId)||getDB().classes[0]||null}
 let LIVE_BOOK_CACHE=window.LIVE_BOOKS||null;
 async function ensureLiveBooks(){
- if(LIVE_BOOK_CACHE)return LIVE_BOOK_CACHE;
+ if(LIVE_BOOK_CACHE&&Object.keys(LIVE_BOOK_CACHE).length)return LIVE_BOOK_CACHE;
  try{
   const r=await fetch('/live-books.json?v=teacher-books-v2',{cache:'no-store'});
   if(r.ok){LIVE_BOOK_CACHE=await r.json();window.LIVE_BOOKS=LIVE_BOOK_CACHE}
  }catch(e){console.warn('Live book fallback failed',e)}
  return LIVE_BOOK_CACHE||{};
 }
+function normalizeBookKey(value){return String(value||'').toLowerCase().replace(/→/g,'-').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
+function resolveBookKey(c){
+ if(!c)return '';
+ const direct=String(c.bookId||c.course_id||'').trim();
+ if(BOOK_PACKS[direct]||LIVE_BOOK_CACHE?.[direct]||window.LIVE_BOOKS?.[direct])return direct;
+ const meta=bookMeta(direct),label=normalizeBookKey(meta?.title||direct);
+ if(label.includes('speakup-english-a2-b1')||label.includes('speakup-a2-b1'))return 'speakup-a2-b1';
+ if(label.includes('speakup-english-b2')||label==='speakup-b2')return 'speakup-b2';
+ if(label.includes('muna'))return 'career-fluency-muna';
+ if(label.includes('abdishakur'))return 'career-fluency-abdishakur';
+ if(label.includes('abdisalan'))return 'career-fluency-abdisalan';
+ if(label.includes('career-fluency'))return 'career-fluency-abdisalan';
+ return direct;
+}
 function liveBookForClass(c){
  if(!c)return null;
- const id=String(c.bookId||c.course_id||'').trim();
- const books=LIVE_BOOK_CACHE||window.LIVE_BOOKS||{};
- if(books[id])return books[id];
- if(id==='career-fluency')return books['career-fluency-abdisalan']||books['career-fluency-muna']||null;
- return null;
+ const id=resolveBookKey(c),books=LIVE_BOOK_CACHE||window.LIVE_BOOKS||{};
+ return books[id]||null;
 }
-function workbookForClass(c){return c?BOOK_PACKS[String(c.bookId||c.course_id||'').trim()]||null:null}
+function workbookForClass(c){
+ if(!c)return null;
+ return BOOK_PACKS[resolveBookKey(c)]||null;
+}
 function openAssignmentFromUrl(){
  const id=new URLSearchParams(window.location.search).get('assignment');if(!id)return false;
  const a=(getDB().assignments||[]).find(x=>x.id===id);if(!a)return false;
@@ -454,8 +468,8 @@ function studentProgress(){const sid=session.id,w=weakest(sid),ats=attempts(sid)
 function profile(){const u=getDB().users.find(x=>x.id===session.id)||session,c=studentClass(session.id),b=bookMeta(bookIdForStudent(session.id)),teacher=getDB().users.find(x=>x.id===c?.teacher_id);title('EnglishGate Workbook','Profile');$('content').innerHTML=`<section class="profile-shell"><div class="card profile-card"><div class="profile-avatar-large">${escapeHtml(u.name[0])}</div><h2>${escapeHtml(u.name)}</h2><p class="muted">${escapeHtml(b?.title||'Workbook')}</p><div class="profile-row"><span>Class</span><strong>${escapeHtml(c?.name||'—')}</strong></div><div class="profile-row"><span>Teacher</span><strong>${escapeHtml(teacher?.name||'—')}</strong></div><div class="profile-row"><span>Username</span><strong>${escapeHtml(u.username)}</strong></div><button class="ghost-btn" id="resetHelp">Password help</button><button class="ghost-btn danger-action" id="studentLogout">Sign out</button></div></section>`;$('resetHelp').onclick=()=>alert('Ask your teacher to reset your password.');$('studentLogout').onclick=logout}
 function teacherClassIds(){return getDB().classes.map(c=>c.id)} function classStudents(){const ids=teacherClassIds();return getDB().users.filter(u=>u.role==='student'&&u.classIds?.some(id=>ids.includes(id)))}
 function teacherHome(){const cls=getDB().classes,sts=classStudents(),pending=(getDB().assignments||[]).filter(a=>{const students=sts.filter(st=>st.classIds?.includes(a.classId));return students.some(st=>skillCompletionFor(st.id,a.lessonId).length<4)}),last=(getDB().assignments||[])[0];title('Teacher','Today');$('content').innerHTML=`<section class="role-hero teacher-today-hero"><div><span class="role-kicker">Teach → Assign → Follow up</span><h1>What are you teaching today?</h1><p>Open the live book inside EnglishGate. At the end of the lesson, assign the matching workbook with one click.</p></div><button class="primary-btn" id="openTeachNow">Open live book</button></section><section class="admin-metrics">${metric('Classes',cls.length,'Assigned to you')}${metric('Students',sts.length,'Your roster')}${metric('Workbook assignments',(getDB().assignments||[]).length,'Sent from live lessons')}${metric('Need follow-up',pending.length,'Assignments still open')}</section>${last?`<section class="section card"><span class="role-kicker">Latest assignment</span><h3>Lesson ${last.lessonNumber} · ${escapeHtml(last.lessonTitle)}</h3><p class="muted">${escapeHtml(getDB().classes.find(c=>c.id===last.classId)?.name||'Class')} · ${new Date(last.createdAt).toLocaleString()}</p><button class="secondary-btn" id="openLatestClass">Open class book</button></section>`:''}`;$('openTeachNow').onclick=()=>{currentPage='teach';renderNav();teacherTeach()};if($('openLatestClass'))$('openLatestClass').onclick=()=>{activeTeacherClassId=last.classId;currentPage='teacher-book';renderNav();teacherBook()}}
-async function teacherTeach(){await ensureLiveBooks();const cls=getDB().classes;title('Teacher','Teach');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Live class</span><h1>Choose your class</h1><p>Your class book opens directly inside EnglishGate.</p></div></div><div class="class-card-grid">${cls.map(c=>{const b=bookMeta(c.bookId||c.course_id),live=liveBookForClass(c),last=assignmentsForClass(c.id)[0];return `<article class="management-card teacher-book-card"><div class="management-card-head"><span class="pill teal">${escapeHtml(c.level)}</span><span>${classStudents().filter(st=>st.classIds?.includes(c.id)).length} students</span></div><h3>${escapeHtml(c.name)}</h3><p class="book-line">Book: <strong>${escapeHtml(b?.title||c.course_id)}</strong></p>${last?`<p class="muted">Last assigned: Lesson ${last.lessonNumber} · ${escapeHtml(last.lessonTitle)}</p>`:''}<button class="primary-btn" data-teach-class="${c.id}" ${live?'':'disabled'}>${live?'Open live book':'Live book unavailable'}</button></article>`}).join('')||'<div class="empty-state"><h3>No classes assigned</h3><p>Ask the System Admin to assign a class and book.</p></div>'}</div>`;document.querySelectorAll('[data-teach-class]').forEach(b=>b.onclick=()=>{activeTeacherClassId=b.dataset.teachClass;activeTeacherLessonNumber=1;currentPage='teacher-book';renderNav();teacherBook()})}
-function teacherBook(){const c=teacherClass(),live=liveBookForClass(c),wb=workbookForClass(c);if(!c||!live||!wb){currentPage='teach';teacherTeach();return}title('Teacher','Live Book');$('content').innerHTML=`<section class="teacher-book-shell"><button class="back-link" id="backTeachClasses">← Classes</button><div class="course-intro"><div><span class="pill teal">${escapeHtml(c.level)}</span><h1>${escapeHtml(live.title)}</h1><p>${escapeHtml(c.name)} · Teach the live lesson here, then assign the matching workbook.</p></div></div><div class="teacher-lesson-list">${live.lessons.map(l=>{const w=wb.lessons.find(x=>x.number===l.number),assigned=w?assignmentForLesson(c.id,w.id):null;return `<button class="teacher-live-row" data-live-lesson="${l.number}"><span class="teacher-live-num">${l.number}</span><span><strong>${escapeHtml(l.title)}</strong><small>${w?'Workbook matched':'Workbook match missing'}</small></span><b>${assigned?'Assigned ✓':'Teach →'}</b></button>`}).join('')}</div></section>`;$('backTeachClasses').onclick=()=>{currentPage='teach';renderNav();teacherTeach()};document.querySelectorAll('[data-live-lesson]').forEach(b=>b.onclick=()=>{activeTeacherLessonNumber=Number(b.dataset.liveLesson);activeTeacherSectionIndex=0;currentPage='teacher-live-lesson';renderNav();teacherLiveLesson()})}
+async function teacherTeach(){await ensureLiveBooks();const cls=getDB().classes;title('Teacher','Teach');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Live class</span><h1>Choose your class</h1><p>Your class book opens directly inside EnglishGate.</p></div></div><div class="class-card-grid">${cls.map(c=>{const b=bookMeta(c.bookId||c.course_id),live=liveBookForClass(c),wb=workbookForClass(c),last=assignmentsForClass(c.id)[0],canOpen=Boolean(live||wb);return `<article class="management-card teacher-book-card"><div class="management-card-head"><span class="pill teal">${escapeHtml(c.level)}</span><span>${classStudents().filter(st=>st.classIds?.includes(c.id)).length} students</span></div><h3>${escapeHtml(c.name)}</h3><p class="book-line">Book: <strong>${escapeHtml(b?.title||c.course_id)}</strong></p>${last?`<p class="muted">Last assigned: Lesson ${last.lessonNumber} · ${escapeHtml(last.lessonTitle)}</p>`:''}<button class="primary-btn" data-teach-class="${c.id}" ${canOpen?'':'disabled'}>${canOpen?'Open live book':'Live book unavailable'}</button></article>`}).join('')||'<div class="empty-state"><h3>No classes assigned</h3><p>Ask the System Admin to assign a class and book.</p></div>'}</div>`;document.querySelectorAll('[data-teach-class]').forEach(b=>b.onclick=()=>{activeTeacherClassId=b.dataset.teachClass;activeTeacherLessonNumber=1;currentPage='teacher-book';renderNav();teacherBook()})}
+async function teacherBook(){await ensureLiveBooks();const c=teacherClass(),live=liveBookForClass(c),wb=workbookForClass(c);if(!c||!live||!wb){currentPage='teach';teacherTeach();return}title('Teacher','Live Book');$('content').innerHTML=`<section class="teacher-book-shell"><button class="back-link" id="backTeachClasses">← Classes</button><div class="course-intro"><div><span class="pill teal">${escapeHtml(c.level)}</span><h1>${escapeHtml(live.title)}</h1><p>${escapeHtml(c.name)} · Teach the live lesson here, then assign the matching workbook.</p></div></div><div class="teacher-lesson-list">${live.lessons.map(l=>{const w=wb.lessons.find(x=>x.number===l.number),assigned=w?assignmentForLesson(c.id,w.id):null;return `<button class="teacher-live-row" data-live-lesson="${l.number}"><span class="teacher-live-num">${l.number}</span><span><strong>${escapeHtml(l.title)}</strong><small>${w?'Workbook matched':'Workbook match missing'}</small></span><b>${assigned?'Assigned ✓':'Teach →'}</b></button>`}).join('')}</div></section>`;$('backTeachClasses').onclick=()=>{currentPage='teach';renderNav();teacherTeach()};document.querySelectorAll('[data-live-lesson]').forEach(b=>b.onclick=()=>{activeTeacherLessonNumber=Number(b.dataset.liveLesson);activeTeacherSectionIndex=0;currentPage='teacher-live-lesson';renderNav();teacherLiveLesson()})}
 function teacherLiveLesson(){
  const c=teacherClass(),live=liveBookForClass(c),wb=workbookForClass(c);
  if(!c||!live||!wb){currentPage='teach';teacherTeach();return}
