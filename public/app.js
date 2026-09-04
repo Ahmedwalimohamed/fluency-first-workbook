@@ -28,7 +28,7 @@ function init(){$('loginForm').addEventListener('submit',e=>{e.preventDefault();
 async function login(username,password){$('loginError').textContent='';try{const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username,password})});session=r.user;await refreshState();$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('app').classList.remove('student-mode','teacher-mode','admin-mode');$('app').classList.add(session.role+'-mode');$('sidebarName').textContent=session.name;$('sidebarRole').textContent=session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'Student';$('sidebarAvatar').textContent=session.name[0];currentPage=session.role==='admin'?'admin-home':session.role==='teacher'?'teacher-home':'home';renderNav();renderPage()}catch(e){$('loginError').textContent=e.message||'Username or password is incorrect.'}}
 async function logout(){try{await api('/api/auth/logout',{method:'POST'})}catch{}session=null;apiDB=null;$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value=''}
 function renderNav(){const items=NAV[session.role],html=items.map(([id,icon,label])=>`<button class="nav-btn ${currentPage===id?'active':''}" data-page="${id}"><span class="nav-icon">${icon}</span>${label}</button>`).join('');if(session.role==='student'){$('sideNav').innerHTML='';$('studentTopNav').innerHTML=html;$('bottomNav').innerHTML=html+`<button class="nav-btn ${currentPage==='profile'?'active':''}" data-page="profile"><span class="nav-icon">○</span>Profile</button>`;$('studentProfileBtn').classList.remove('hidden');$('studentProfileBtn').textContent=session.name[0]}else{$('sideNav').innerHTML=html;$('studentTopNav').innerHTML='';$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.add('hidden')}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{currentPage=b.dataset.page;document.querySelector('.sidebar').classList.remove('open');renderNav();renderPage()});$('studentProfileBtn').onclick=()=>{currentPage='profile';renderNav();renderPage()}}
-function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} function renderPage(){session.role==='student'?renderStudent():session.role==='teacher'?renderTeacher():renderAdmin()} function renderStudent(){({home:studentHome,workbook,course:studentCourse,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()} function renderTeacher(){({'teacher-home':teacherHome,students,classes,weaknesses,reports}[currentPage]||teacherHome)()} function renderAdmin(){({'admin-home':adminHome,'admin-books':adminBooks,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
+function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} function renderPage(){session.role==='student'?renderStudent():session.role==='teacher'?renderTeacher():renderAdmin()} function renderStudent(){({home:studentHome,workbook,course:studentCourse,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()} function renderTeacher(){({'teacher-home':teacherHome,students,classes,weaknesses,reports}[currentPage]||teacherHome)()} function renderAdmin(){({'admin-home':adminHome,'admin-books':adminBooks,'admin-book-detail':adminBookDetail,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
 function attempts(sid,skill=null,lid=null){return getDB().attempts.filter(a=>a.studentId===sid&&(!skill||a.skill===skill)&&(!lid||a.lessonId===lid))} function mastery(sid,skill){const db=getDB(),base=db.profiles?.[sid]?.base?.[skill]??60,a=attempts(sid,skill);if(!a.length)return base;const best={};a.forEach(x=>best[x.lessonId]=Math.max(best[x.lessonId]||0,x.score));const vals=Object.values(best),avg=Math.round(vals.reduce((p,c)=>p+c,0)/vals.length);return Math.round(base*.35+avg*.65)} function overall(sid){return Math.round(['vocabulary','grammar','listening','writing'].reduce((a,k)=>a+mastery(sid,k),0)/4)} function points(sid){return getDB().profiles?.[sid]?.points||0}
 function completionFor(sid,lid){return getDB().completion?.[sid]?.[lid]||[]} function skillCompletionFor(sid,lid){return completionFor(sid,lid).filter(x=>WORKBOOK_STEPS.includes(x))} function lessonProgress(sid,lid){return Math.round(skillCompletionFor(sid,lid).length/WORKBOOK_STEPS.length*100)} function completionPct(sid){const c=courseForStudent(sid),total=c.totalLessons||c.lessons.length||1,done=c.lessons.reduce((n,l)=>n+skillCompletionFor(sid,l.id).length,0);return Math.round(done/(total*WORKBOOK_STEPS.length)*100)} function writingFor(sid,lid){return getDB().writing?.[sid]?.[lid]||''}
 function weakest(sid){const r=['vocabulary','listening','grammar','writing'].map(k=>[k,mastery(sid,k)]).sort((a,b)=>a[1]-b[1]),k=r[0][0],tips={vocabulary:'Review the words and expressions that are not yet automatic.',listening:'Practise finding the main idea and key details in short texts and audio.',grammar:'Review the grammar pattern needed for this lesson topic.',writing:'Build clearer sentences, then organise them into a complete written response.'};return{key:k,label:skillLabel(k),score:r[0][1],tip:tips[k]}}
@@ -40,8 +40,50 @@ async function loadListeningPrep(l){const box=$('listeningTranscript');if(!box)r
 async function lockListeningScript(l){const btn=$('readyForQuestions'),msg=$('listeningGateMessage');if(!btn)return;btn.disabled=true;btn.textContent='Locking script…';try{await api(`/api/listening/${l.id}/lock`,{method:'POST'});await refreshState();renderActivity()}catch(e){btn.disabled=false;btn.textContent='Done reading & listening — start questions';if(msg)msg.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
 function isAdminWorkbookPreview(){return session?.role==='admin'&&currentPage==='admin-workbook-view'}
 function firstOpenStep(sid,lid){return WORKBOOK_STEPS.find(step=>!skillCompletionFor(sid,lid).includes(step))||WORKBOOK_STEPS[WORKBOOK_STEPS.length-1]}
-function workbook(){const sid=session.id,l=lesson(),steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),preview=isAdminWorkbookPreview(),completed=preview?steps:skillCompletionFor(sid,l.id),firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id));title(`Lesson ${l.number}`,WORKBOOK_LABELS[currentStep]);$('content').innerHTML=`<section class="learning-shell jtbd-shell ${preview?'admin-preview-workbook':''}"><div class="jtbd-workbook-head"><button class="back-link" id="exitWorkbook">← ${preview?'Books':'My book'}</button><div class="jtbd-current-job"><small>${escapeHtml(COURSE.title||COURSE.moduleTitle||'Workbook')} · Lesson ${l.number}${preview?' · Preview':''}</small><strong>${escapeHtml(l.title)}</strong></div><span class="jtbd-step-count">${idx+1}/4</span></div><div class="skill-tabs">${steps.map((step,i)=>{const allowed=preview||completed.includes(step)||i<=firstOpen;return `<button class="skill-tab ${step===currentStep?'active':''} ${completed.includes(step)?'complete':''}" data-skill-tab="${allowed?step:''}" ${allowed?'':'disabled'}><span>${completed.includes(step)?'✓':i+1}</span>${WORKBOOK_LABELS[step]}</button>`}).join('')}</div><div id="activityPanel" class="activity-card focused-activity jtbd-activity-panel"></div></section>`;$('exitWorkbook').onclick=()=>{if(preview){currentPage='admin-books';renderNav();adminBooks()}else{currentPage='course';renderNav();studentCourse()}};document.querySelectorAll('[data-skill-tab]').forEach(btn=>{if(!btn.dataset.skillTab)return;btn.onclick=()=>{currentStep=btn.dataset.skillTab;workbook()}});renderActivity()}
-function renderActivity(){const p=$('activityPanel'),l=lesson();if(currentStep==='vocabulary')p.innerHTML=vocabActivity(l);if(currentStep==='listening')p.innerHTML=listeningActivity(l);if(currentStep==='grammar')p.innerHTML=grammarActivity(l);if(currentStep==='writing')p.innerHTML=writingActivity(l);wireActivity(l)}
+function workbook(){
+  const sid=session.id,l=lesson(),steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),preview=isAdminWorkbookPreview(),completed=preview?steps:skillCompletionFor(sid,l.id),firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id));
+  title(`Lesson ${l.number}`,WORKBOOK_LABELS[currentStep]);
+  $('content').innerHTML=`<section class="learning-shell jtbd-shell ${preview?'admin-preview-workbook':''}">
+    <div class="jtbd-workbook-head">
+      <button class="back-link" id="exitWorkbook">← ${preview?'All lessons':'My book'}</button>
+      <div class="jtbd-current-job">
+        <small>${escapeHtml(COURSE.title||COURSE.moduleTitle||'Workbook')} · Lesson ${l.number}${preview?' · Admin full access':''}</small>
+        <strong>${escapeHtml(l.title)}</strong>
+      </div>
+      <span class="jtbd-step-count">${idx+1}/4</span>
+    </div>
+    ${preview?'<div class="admin-unlocked-banner"><strong>System Admin</strong><span>All four skill pages are unlocked. Nothing you do here changes student progress.</span></div>':''}
+    <div class="skill-tabs">
+      ${steps.map((step,i)=>{
+        const allowed=preview||completed.includes(step)||i<=firstOpen;
+        return `<button class="skill-tab ${step===currentStep?'active':''} ${completed.includes(step)?'complete':''}" data-skill-tab="${allowed?step:''}" ${allowed?'':'disabled'}><span>${preview?i+1:(completed.includes(step)?'✓':i+1)}</span>${WORKBOOK_LABELS[step]}</button>`;
+      }).join('')}
+    </div>
+    <div id="activityPanel" class="activity-card focused-activity jtbd-activity-panel"></div>
+  </section>`;
+  $('exitWorkbook').onclick=()=>{
+    if(preview){currentPage='admin-book-detail';renderNav();adminBookDetail()}
+    else{currentPage='course';renderNav();studentCourse()}
+  };
+  document.querySelectorAll('[data-skill-tab]').forEach(btn=>{
+    if(!btn.dataset.skillTab)return;
+    btn.onclick=()=>{currentStep=btn.dataset.skillTab;workbook()}
+  });
+  renderActivity();
+}
+function renderActivity(){
+  const p=$('activityPanel'),l=lesson();
+  if(isAdminWorkbookPreview()&&l.ready===false){
+    p.innerHTML=`<div class="admin-not-built"><span class="pill">Lesson ${l.number}</span><h2>${escapeHtml(l.title)}</h2><p>This lesson is visible because System Admin has full workbook access, but the digital ${escapeHtml(WORKBOOK_LABELS[currentStep])} activity has not been built yet.</p><button class="ghost-btn" id="backAdminLessons">Back to all lessons</button></div>`;
+    $('backAdminLessons').onclick=()=>{currentPage='admin-book-detail';renderNav();adminBookDetail()};
+    return;
+  }
+  if(currentStep==='vocabulary')p.innerHTML=vocabActivity(l);
+  if(currentStep==='listening')p.innerHTML=listeningActivity(l);
+  if(currentStep==='grammar')p.innerHTML=grammarActivity(l);
+  if(currentStep==='writing')p.innerHTML=writingActivity(l);
+  wireActivity(l);
+}
 function buildVocabQuestions(l){const e=l.expressions,all=e.map(x=>x.text);return [
 {type:'choice',stage:'Recognise',q:`Which expression would you use to ${e[0].job}?`,options:all,answer:e[0].text,tag:'vocabulary:meaning'},
 {type:'choice',stage:'Recognise',q:`Which expression would you use to ${e[1].job}?`,options:all,answer:e[1].text,tag:'vocabulary:meaning'},
@@ -112,7 +154,96 @@ function aggregateWeaknesses(){const map={};classStudents().forEach(s=>{const w=
 function weaknesses(){const areas=aggregateWeaknesses();title('Teacher intelligence','Weakness map');$('content').innerHTML=`<div class="grid grid-2"><div class="card"><h3>Class-wide weaknesses</h3><p class="muted">Prioritised by how many students have each skill as their lowest area.</p>${areas.map(a=>`<div class="question"><div style="display:flex;justify-content:space-between"><strong>${a.label}</strong><span class="pill ${a.avg<65?'gold':'teal'}">${a.count} student${a.count!==1?'s':''}</span></div><div style="margin-top:10px">${progress(a.avg)}</div><small class="muted">Average mastery ${a.avg}%</small></div>`).join('')}</div><div><div class="recommendation"><p class="eyebrow">Best use of live time</p><h3>${areas[0]?.label||'Collect more evidence'}</h3><p>${areas[0]?`Start with a 10-minute revision targeting ${areas[0].label.toLowerCase()}. Then return immediately to the live speaking mission.`:'Have students complete workbook activities first.'}</p></div><div class="card section"><h3>Student-level priorities</h3>${classStudents().map(s=>`<p><strong>${s.name}:</strong> ${weakest(s.id).label} ${weakest(s.id).score}%</p>`).join('')}</div></div></div>`}
 function reports(){const sts=classStudents(),ats=getDB().attempts,avgComp=sts.length?Math.round(sts.reduce((a,st)=>a+completionPct(st.id),0)/sts.length):0,avgMastery=sts.length?Math.round(sts.reduce((a,st)=>a+overall(st.id),0)/sts.length):0;title('Workbook evidence','Reports');$('content').innerHTML=`<div class="grid grid-3">${metric('Workbook completion',avgComp+'%','Across assigned books')}${metric('Average mastery',avgMastery+'%','4 tracked skills')}${metric('Attempts saved',ats.length,'Practice evidence')}</div><section class="section card"><div class="section-head"><div><h3>Evidence by student</h3><p>Workbook completion and mastery only. Speaking and fluency are observed in the live class.</p></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Student</th><th>Book</th><th>Completion</th><th>Overall</th><th>Attempts</th><th>Primary focus</th></tr></thead><tbody>${sts.map(st=>`<tr><td>${escapeHtml(st.name)}</td><td>${escapeHtml(bookMeta(bookIdForStudent(st.id))?.title||'—')}</td><td>${completionPct(st.id)}%</td><td>${overall(st.id)}%</td><td>${attempts(st.id).length}</td><td>${weakest(st.id).label}</td></tr>`).join('')}</tbody></table></div></section>`}
 function leaderboard(teacher){title('Motivation','Class leaderboard');const data=classStudents().map(s=>({...s,points:points(s.id),completion:completionPct(s.id)})).sort((a,b)=>b.points-a.points);$('content').innerHTML=`<div class="card"><div class="section-head"><div><h3>Fluency Foundations · Module 1</h3><p>Points reward completion, attempts and successful practice — not English level alone.</p></div><span class="pill gold">Weekly</span></div>${data.map((s,i)=>`<div class="leader-row ${s.id===session.id&&!teacher?'me':''}"><div class="rank">${i+1}</div><div class="student-cell"><div class="avatar">${s.name[0]}</div><div><strong>${s.name}${s.id===session.id&&!teacher?' · You':''}</strong><div class="muted">${s.completion}% workbook complete</div></div></div><strong>${s.points} pts</strong></div>`).join('')}</div>`}
-function adminBooks(){const books=getDB().books||[];title('System Admin','Books');$('content').innerHTML=`<section class="book-library"><div class="role-page-head"><div><span class="role-kicker">Curriculum</span><h1>Books</h1><p>A class chooses one book. That book decides the lesson topics and the four workbook skill activities.</p></div></div><div class="book-card-grid">${books.map(b=>{const pack=BOOK_PACKS[b.id],readyCount=pack?readyLessons(pack).length:0,canUse=['ready','pilot'].includes(b.status)&&Boolean(pack);return `<article class="book-card"><div class="book-card-top"><span class="pill teal">${escapeHtml(b.level)}</span><span class="book-status ${b.status}">${b.status==='pilot'?'Pilot':b.status==='ready'?'Ready':'Queued'}</span></div><div class="book-cover-mini"><span>EnglishGate</span><strong>${escapeHtml(b.title)}</strong><small>${b.totalLessons} lessons</small></div><p>${escapeHtml(b.audience||'')}</p><div class="book-card-meta"><span>${readyCount}/${b.totalLessons} digital lessons ready</span><span>4 workbook skills</span></div><div class="book-card-actions">${pack&&readyCount?`<button class="ghost-btn" data-preview-book="${b.id}">Preview</button>`:''}${canUse?`<button class="primary-btn" data-class-book="${b.id}">Create class</button>`:`<button class="ghost-btn" disabled>Curriculum queued</button>`}</div></article>`}).join('')}</div></section>`;document.querySelectorAll('[data-preview-book]').forEach(btn=>btn.onclick=()=>{setActiveBook(btn.dataset.previewBook);activeLessonId=readyLessons(COURSE)[0].id;currentStep='vocabulary';currentPage='admin-workbook-view';renderNav();adminWorkbookView()});document.querySelectorAll('[data-class-book]').forEach(btn=>btn.onclick=()=>openAdminClass(btn.dataset.classBook))}
+function adminBooks(){
+  const books=getDB().books||[];
+  title('System Admin','Books');
+  $('content').innerHTML=`<section class="book-library">
+    <div class="role-page-head">
+      <div>
+        <span class="role-kicker">Full curriculum access</span>
+        <h1>Workbooks</h1>
+        <p>Open any book without class, student, progress or completion restrictions.</p>
+      </div>
+    </div>
+    <div class="book-card-grid">
+      ${books.map(b=>{
+        const pack=BOOK_PACKS[b.id], built=pack?pack.lessons.filter(l=>l.ready!==false).length:0, visible=pack?pack.lessons.length:b.totalLessons;
+        return `<article class="book-card">
+          <div class="book-card-top">
+            <span class="pill teal">${escapeHtml(b.level)}</span>
+            <span class="book-status ${b.status}">${b.status==='pilot'?'Pilot':b.status==='ready'?'Ready':'Queued'}</span>
+          </div>
+          <div class="book-cover-mini">
+            <span>EnglishGate</span>
+            <strong>${escapeHtml(b.title)}</strong>
+            <small>${b.totalLessons} lessons</small>
+          </div>
+          <p>${escapeHtml(b.audience||'')}</p>
+          <div class="book-card-meta">
+            <span>${built}/${visible} digital lessons built</span>
+            <span>Admin can inspect the complete workbook structure</span>
+          </div>
+          <div class="book-card-actions">
+            <button class="primary-btn" data-open-book="${b.id}">Open workbook</button>
+            ${['ready','pilot'].includes(b.status)&&pack?`<button class="ghost-btn" data-class-book="${b.id}">Create class</button>`:''}
+          </div>
+        </article>`;
+      }).join('')}
+    </div>
+  </section>`;
+  document.querySelectorAll('[data-open-book]').forEach(btn=>btn.onclick=()=>{
+    activeBookId=btn.dataset.openBook;
+    if(BOOK_PACKS[activeBookId]) setActiveBook(activeBookId);
+    currentPage='admin-book-detail'; renderNav(); adminBookDetail();
+  });
+  document.querySelectorAll('[data-class-book]').forEach(btn=>btn.onclick=()=>openAdminClass(btn.dataset.classBook));
+}
+
+function adminBookDetail(){
+  const meta=bookMeta(activeBookId)||{id:activeBookId,title:'Workbook',level:'',totalLessons:0,status:'queued'};
+  const pack=BOOK_PACKS[activeBookId]||null;
+  title('System Admin','Workbook');
+  if(!pack){
+    $('content').innerHTML=`<section class="admin-full-workbook">
+      <button class="back-link" id="backToBooks">← Books</button>
+      <div class="admin-workbook-title">
+        <div><span class="pill teal">${escapeHtml(meta.level||'')}</span><h1>${escapeHtml(meta.title)}</h1><p>Full admin access is enabled. This book is registered in the catalogue, but its digital lesson activities have not been built yet.</p></div>
+        <span class="book-status ${escapeHtml(meta.status||'queued')}">${escapeHtml(meta.status||'queued')}</span>
+      </div>
+      <div class="empty-state"><h3>No digital activities yet</h3><p>The book remains visible to System Admin instead of being hidden. Once activities are added, every lesson and all four skill pages will appear here automatically.</p></div>
+    </section>`;
+    $('backToBooks').onclick=()=>{currentPage='admin-books';renderNav();adminBooks()};
+    return;
+  }
+  const lessons=pack.lessons||[];
+  $('content').innerHTML=`<section class="admin-full-workbook">
+    <button class="back-link" id="backToBooks">← Books</button>
+    <div class="admin-workbook-title">
+      <div><span class="pill teal">${escapeHtml(meta.level||pack.level||'')}</span><h1>${escapeHtml(meta.title||pack.title)}</h1><p>System Admin can open every lesson and every workbook skill directly. Student locks and progress rules do not apply here.</p></div>
+      <div class="admin-access-badge">FULL ACCESS</div>
+    </div>
+    <div class="admin-workbook-summary">
+      <div><strong>${lessons.length}</strong><span>Lessons visible</span></div>
+      <div><strong>4</strong><span>Skills per lesson</span></div>
+      <div><strong>${lessons.filter(l=>l.ready!==false).length}</strong><span>Lessons built</span></div>
+    </div>
+    <div class="admin-lesson-grid">
+      ${lessons.map(l=>`<button class="admin-lesson-row ${l.ready===false?'not-built':''}" data-admin-lesson="${l.id}">
+        <span class="admin-lesson-number">${l.number}</span>
+        <span class="admin-lesson-copy"><strong>${escapeHtml(l.title)}</strong><small>${escapeHtml(l.outcome||'')}</small></span>
+        <span class="admin-lesson-status">${l.ready===false?'Structure only':'Open all 4 skills'} →</span>
+      </button>`).join('')}
+    </div>
+  </section>`;
+  $('backToBooks').onclick=()=>{currentPage='admin-books';renderNav();adminBooks()};
+  document.querySelectorAll('[data-admin-lesson]').forEach(btn=>btn.onclick=()=>{
+    activeLessonId=btn.dataset.adminLesson;
+    currentStep='vocabulary';
+    currentPage='admin-workbook-view';
+    renderNav();
+    adminWorkbookView();
+  });
+}
 function adminWorkbookView(){workbook()}
 
 function adminUsers(role){return getDB().users.filter(u=>u.role===role)}
