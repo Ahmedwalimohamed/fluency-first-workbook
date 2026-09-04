@@ -692,3 +692,26 @@ img,video,audio{max-width:100%}
   .done-activity-btn{width:auto!important;min-width:150px}
   .teacher-section-actions{position:static;padding:18px 30px 24px;background:#fff;box-shadow:none}
 }
+
+
+/* Structured teacher live-book content */
+.live-vocab-table{display:grid;gap:8px;margin:14px 0 18px}
+.live-vocab-head{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,1.6fr);gap:10px;padding:0 12px;color:var(--muted);font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.live-vocab-row{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,1.6fr);gap:10px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.live-vocab-word,.live-vocab-example{display:grid;gap:3px}
+.live-vocab-word small,.live-vocab-example small{display:none;color:var(--muted);font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;font-weight:900}
+.live-vocab-word strong{color:var(--navy);font-size:1rem}
+.live-vocab-example span{line-height:1.45;color:var(--text)}
+.live-prompt-row{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding:8px 0}
+.live-prompt-row>span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--teal-soft);color:var(--navy);font-weight:900;font-size:.75rem}
+.live-prompt-row p{margin:2px 0 0!important;line-height:1.45}
+.live-book-bullet{position:relative;padding:9px 12px 9px 32px;margin:5px 0;border-radius:10px;background:#f8fbfd;line-height:1.45}
+.live-book-bullet:before{content:"•";position:absolute;left:14px;color:var(--pink);font-weight:900}
+.live-book-subhead{margin-top:22px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+@media(max-width:699px){
+  .live-vocab-head{display:none}
+  .live-vocab-row{grid-template-columns:1fr;gap:8px;padding:12px 13px}
+  .live-vocab-word small,.live-vocab-example small{display:block}
+  .live-vocab-word{padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .live-vocab-word strong{font-size:1.05rem}
+}
