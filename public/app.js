@@ -16,10 +16,21 @@ function pickOptions(correct,pool,index){
   return out;
 }
 function makeVocabulary(topic,data){
-  const pool=data.v.map(x=>x[0]),items=[];
-  for(let i=0;i<6;i++){const x=data.v[i];items.push({q:"Which word or expression means: "+x[1]+"?",options:pickOptions(x[0],pool,i),answer:x[0],tag:"vocabulary:meaning"})}
-  for(let i=0;i<4;i++){const x=data.v[i];items.push({q:"Choose the best word for this meaning: "+x[1]+".",options:pickOptions(x[0],pool,i+2),answer:x[0],tag:"vocabulary:context"})}
-  return {items};
+  const words=data.v.map(x=>x[0]),defs=data.v.map(x=>x[1]);
+  const wordOptions=(i,shift=0)=>pickOptions(data.v[i][0],words,i+shift);
+  const defOptions=(i,shift=0)=>pickOptions(data.v[i][1],defs,i+shift);
+  return {items:[
+    {type:'choice',q:'Match the meaning: '+data.v[0][1]+'.',options:wordOptions(0),answer:data.v[0][0],tag:'vocabulary:meaning'},
+    {type:'choice',q:'You are discussing '+topic.toLowerCase()+'. Which word best expresses this idea: '+data.v[1][1]+'?',options:wordOptions(1,1),answer:data.v[1][0],tag:'vocabulary:context'},
+    {type:'choice',q:'Complete the glossary entry: ___ = '+data.v[2][1]+'.',options:wordOptions(2,2),answer:data.v[2][0],tag:'vocabulary:retrieval'},
+    {type:'choice',q:'A classmate asks for a word meaning “'+data.v[3][1]+'.” What should you suggest?',options:wordOptions(3,3),answer:data.v[3][0],tag:'vocabulary:context'},
+    {type:'choice',q:'What does “'+data.v[4][0]+'” mean?',options:defOptions(4),answer:data.v[4][1],tag:'vocabulary:reverse-meaning'},
+    {type:'choice',q:'Choose the correct definition of “'+data.v[5][0]+'”.',options:defOptions(5,1),answer:data.v[5][1],tag:'vocabulary:reverse-meaning'},
+    {type:'choice',q:'Which target word would you use when talking about '+data.v[4][1]+'?',options:wordOptions(4,2),answer:data.v[4][0],tag:'vocabulary:application'},
+    {type:'choice',q:'Pick the best vocabulary label for this idea: '+data.v[5][1]+'.',options:wordOptions(5,3),answer:data.v[5][0],tag:'vocabulary:application'},
+    {type:'exact',q:'Type the target word that means: '+data.v[0][1]+'.',answer:data.v[0][0],min:1,tag:'vocabulary:recall'},
+    {type:'open',q:'Use “'+data.v[1][0]+'” in one complete sentence about '+topic.toLowerCase()+'.',min:6,tag:'vocabulary:production'}
+  ]};
 }
 function makeReading(topic,level,data){
   const [person,place,goal,challenge,action,result]=data.s;
