@@ -254,22 +254,3 @@ code{background:var(--teal-soft);color:var(--navy)}
 .course-topic.pending{opacity:.55}.course-topic.pending .topic-state{background:#f1f5f9;color:#94a3b8}
 @media(max-width:980px){.book-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.skill-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.book-card-grid{grid-template-columns:1fr}.skill-tabs{grid-template-columns:1fr 1fr}.skill-tab{font-size:.78rem;padding:9px}.skill-page-head{align-items:flex-start;flex-direction:column}.activity-one-page .guided-question{padding:18px 0}.activity-one-page .mcq-option-card{min-width:100%;flex-basis:100%}.skill-submit{position:static;width:100%;justify-self:stretch}.source-panel{padding:15px}}
-
-
-/* Admin full workbook access */
-.admin-full-workbook{display:grid;gap:20px}
-.admin-workbook-title{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;background:#fff;border:1px solid var(--border);border-radius:20px;padding:22px}
-.admin-workbook-title h1{margin:8px 0 7px}.admin-workbook-title p{margin:0;color:var(--muted);max-width:720px;line-height:1.55}
-.admin-access-badge{padding:8px 11px;border-radius:999px;background:#ecfdf3;color:#067647;font-size:.72rem;font-weight:900;letter-spacing:.08em;white-space:nowrap}
-.admin-workbook-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.admin-workbook-summary>div{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;display:grid;gap:3px}
-.admin-workbook-summary strong{font-size:1.45rem}.admin-workbook-summary span{font-size:.8rem;color:var(--muted)}
-.admin-lesson-grid{display:grid;gap:9px}
-.admin-lesson-row{width:100%;display:grid;grid-template-columns:42px 1fr auto;gap:14px;align-items:center;text-align:left;border:1px solid var(--border);background:#fff;border-radius:15px;padding:14px 16px;cursor:pointer;color:var(--text)}
-.admin-lesson-row:hover{border-color:#92c9df;background:#fbfdff}.admin-lesson-row.not-built{background:#fafafa;color:#64748b}
-.admin-lesson-number{width:36px;height:36px;border-radius:10px;background:#eef5ff;color:var(--navy);display:grid;place-items:center;font-weight:900}
-.admin-lesson-copy{display:grid;gap:3px}.admin-lesson-copy small{color:var(--muted);line-height:1.35}.admin-lesson-status{font-size:.78rem;font-weight:800;color:var(--navy);white-space:nowrap}
-.admin-unlocked-banner{display:flex;gap:10px;align-items:center;border:1px solid #b7e4ca;background:#f0fdf4;color:#166534;border-radius:13px;padding:10px 13px;margin-top:14px;font-size:.82rem}
-.admin-unlocked-banner span{color:#3f6f52}
-.admin-not-built{text-align:center;padding:65px 20px;max-width:620px;margin:auto}.admin-not-built h2{margin:12px 0 8px}.admin-not-built p{color:var(--muted);line-height:1.6;margin:0 0 20px}
-@media(max-width:760px){.admin-workbook-title{flex-direction:column}.admin-workbook-summary{grid-template-columns:1fr}.admin-lesson-row{grid-template-columns:38px 1fr}.admin-lesson-status{grid-column:2;white-space:normal}.admin-unlocked-banner{align-items:flex-start;flex-direction:column}}
