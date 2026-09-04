@@ -27,6 +27,7 @@ const loginLimiter=rateLimit({windowMs:10*60*1000,max:20,standardHeaders:true,le
 function tokenFor(u){return jwt.sign({id:u.id,role:u.role,username:u.username,name:u.name},JWT_SECRET,{expiresIn:'12h'})}
 function setSession(res,u){res.cookie('ff_session',tokenFor(u),{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',maxAge:12*60*60*1000,path:'/'})}
 function auth(req,res,next){try{req.user=jwt.verify(req.cookies.ff_session||'',JWT_SECRET);next()}catch{return res.status(401).json({error:'Please sign in again.'})}}
+function adminOnly(req,res,next){if(req.user.role!=='admin')return res.status(403).json({error:'System Admin access required.'});next()}
 function teacherOnly(req,res,next){if(req.user.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});next()}
 function studentOnly(req,res,next){if(req.user.role!=='student')return res.status(403).json({error:'Student access required.'});next()}
 function tempPassword(){return 'FF-'+crypto.randomBytes(5).toString('base64url')}
@@ -40,6 +41,10 @@ async function initDb(){
  create table if not exists completion(student_id text references users(id) on delete cascade,lesson_id text not null,step text not null,completed_at timestamptz default now(),primary key(student_id,lesson_id,step));
  create table if not exists writing_samples(student_id text references users(id) on delete cascade,lesson_id text not null,content text not null,score int not null check(score between 0 and 100),updated_at timestamptz default now(),primary key(student_id,lesson_id));
  create table if not exists listening_locks(student_id text references users(id) on delete cascade,lesson_id text not null,locked_at timestamptz default now(),primary key(student_id,lesson_id));`);
+ await pool.query("alter table users drop constraint if exists users_role_check");
+ await pool.query("alter table users add constraint users_role_check check(role in ('admin','teacher','student'))");
+ const aUser=(process.env.SYSTEM_ADMIN_USERNAME||'admin').trim().toLowerCase(),aPass=process.env.SYSTEM_ADMIN_PASSWORD;
+ if(aPass){let a=await pool.query('select id,role from users where lower(username)=lower($1)',[aUser]);if(!a.rowCount){await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',['a_'+crypto.randomUUID(),aUser,await bcrypt.hash(aPass,12),'admin',process.env.SYSTEM_ADMIN_NAME||'System Admin']);}else if(a.rows[0].role!=='admin'){throw new Error('SYSTEM_ADMIN_USERNAME is already used by a non-admin account');}}
  const tUser=process.env.TEACHER_USERNAME||'teacher',tPass=process.env.TEACHER_PASSWORD;
  if(!tPass)throw new Error('TEACHER_PASSWORD is required');
  let t=await pool.query('select id from users where username=$1',[tUser]);
@@ -57,7 +62,7 @@ app.post('/api/auth/login',loginLimiter,async(req,res)=>{const username=String(r
 app.post('/api/auth/logout',(req,res)=>{res.clearCookie('ff_session',{path:'/'});res.json({ok:true})});
 app.get('/api/me',auth,(req,res)=>res.json({user:req.user}));
 
-async function classIdsFor(user){const q=await pool.query('select class_id from enrollments where user_id=$1',[user.id]);return q.rows.map(r=>r.class_id)}
+async function classIdsFor(user){if(user.role==='admin'){const q=await pool.query('select id from classes order by created_at,name');return q.rows.map(r=>r.id)}if(user.role==='teacher'){const q=await pool.query('select id from classes where teacher_id=$1 order by created_at,name',[user.id]);return q.rows.map(r=>r.id)}const q=await pool.query('select class_id from enrollments where user_id=$1',[user.id]);return q.rows.map(r=>r.class_id)}
 
 async function isListeningLocked(studentId,lessonId){const q=await pool.query(`select 1 from listening_locks where student_id=$1 and lesson_id=$2 union select 1 from completion where student_id=$1 and lesson_id=$2 and step='listening' limit 1`,[studentId,lessonId]);return q.rowCount>0}
 app.get('/api/listening/:lessonId/prep',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');const script=LISTENING_SCRIPTS[lessonId];if(!script)return res.status(404).json({error:'Listening topic not found.'});if(await isListeningLocked(req.user.id,lessonId))return res.json({locked:true});res.set('Cache-Control','no-store');res.json({locked:false,script})});
@@ -76,13 +81,69 @@ app.get('/api/audio/:lessonId',auth,async(req,res)=>{
  }catch(e){console.error('TTS request error',e);res.status(502).json({error:'Natural listening audio could not be generated.'})}
 });
 
-app.get('/api/state',auth,async(req,res)=>{const classIds=await classIdsFor(req.user);const classes=(await pool.query('select * from classes where id=any($1::text[])',[classIds])).rows;let users=[];if(classIds.length)users=(await pool.query(`select distinct u.id,u.username,u.role,u.name from users u join enrollments e on e.user_id=u.id where e.class_id=any($1::text[]) order by u.role desc,u.name`,[classIds])).rows;const studentIds=users.filter(u=>u.role==='student').map(u=>u.id);const ownStudent=req.user.role==='student'?[req.user.id]:studentIds;const profileIds=req.user.role==='teacher'?studentIds:[...new Set([req.user.id,...studentIds])];const profRows=profileIds.length?(await pool.query('select user_id,points,base from profiles where user_id=any($1::text[])',[profileIds])).rows:[];const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base});const attemptIds=req.user.role==='teacher'?studentIds:ownStudent;const atRows=attemptIds.length?(await pool.query('select id,student_id,lesson_id,skill,score,tags,at from attempts where student_id=any($1::text[]) order by at',[attemptIds])).rows:[];const compIds=req.user.role==='teacher'?studentIds:studentIds;const cRows=compIds.length?(await pool.query('select student_id,lesson_id,step from completion where student_id=any($1::text[])',[compIds])).rows:[];const wIds=req.user.role==='teacher'?studentIds:ownStudent;const wRows=wIds.length?(await pool.query('select student_id,lesson_id,content from writing_samples where student_id=any($1::text[])',[wIds])).rows:[];const lockIds=req.user.role==='teacher'?studentIds:ownStudent;const lockRows=lockIds.length?(await pool.query('select student_id,lesson_id from listening_locks where student_id=any($1::text[])',[lockIds])).rows:[];const completion={},writing={},listeningLocks={};cRows.forEach(x=>{completion[x.student_id]??={};completion[x.student_id][x.lesson_id]??=[];completion[x.student_id][x.lesson_id].push(x.step)});wRows.forEach(x=>{writing[x.student_id]??={};writing[x.student_id][x.lesson_id]=x.content});lockRows.forEach(x=>{listeningLocks[x.student_id]??=[];listeningLocks[x.student_id].push(x.lesson_id)});res.json({version:4,users,classes,profiles,attempts:atRows.map(a=>({id:String(a.id),studentId:a.student_id,lessonId:a.lesson_id,skill:a.skill,score:a.score,tags:a.tags,at:a.at})),completion,writing,listeningLocks})});
+app.get('/api/state',auth,async(req,res)=>{
+ const classIds=await classIdsFor(req.user);
+ const classes=req.user.role==='admin'
+  ?(await pool.query('select * from classes order by created_at,name')).rows
+  :(classIds.length?(await pool.query('select * from classes where id=any($1::text[]) order by created_at,name',[classIds])).rows:[]);
+ let users=[];
+ if(req.user.role==='admin'){
+  users=(await pool.query(`select u.id,u.username,u.role,u.name,coalesce(array_remove(array_agg(distinct e.class_id),null),'{}'::text[]) as class_ids from users u left join enrollments e on e.user_id=u.id group by u.id,u.username,u.role,u.name order by case u.role when 'admin' then 1 when 'teacher' then 2 else 3 end,u.name`)).rows;
+ }else if(classIds.length){
+  users=(await pool.query(`select u.id,u.username,u.role,u.name,coalesce(array_remove(array_agg(distinct e.class_id),null),'{}'::text[]) as class_ids from users u left join enrollments e on e.user_id=u.id where u.id=$2 or e.class_id=any($1::text[]) group by u.id,u.username,u.role,u.name order by u.role desc,u.name`,[classIds,req.user.id])).rows;
+ }else{
+  users=(await pool.query("select id,username,role,name,'{}'::text[] as class_ids from users where id=$1",[req.user.id])).rows;
+ }
+ users=users.map(u=>({id:u.id,username:u.username,role:u.role,name:u.name,classIds:u.class_ids||[]}));
+ const studentIds=users.filter(u=>u.role==='student').map(u=>u.id);
+ const ownStudent=req.user.role==='student'?[req.user.id]:studentIds;
+ const profileIds=req.user.role==='student'?[req.user.id]:studentIds;
+ const profRows=profileIds.length?(await pool.query('select user_id,points,base from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
+ const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base});
+ const evidenceIds=req.user.role==='admin'?[]:ownStudent;
+ const atRows=evidenceIds.length?(await pool.query('select id,student_id,lesson_id,skill,score,tags,at from attempts where student_id=any($1::text[]) order by at',[evidenceIds])).rows:[];
+ const cRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,step from completion where student_id=any($1::text[])',[evidenceIds])).rows:[];
+ const wRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,content from writing_samples where student_id=any($1::text[])',[evidenceIds])).rows:[];
+ const lockRows=evidenceIds.length?(await pool.query('select student_id,lesson_id from listening_locks where student_id=any($1::text[])',[evidenceIds])).rows:[];
+ const completion={},writing={},listeningLocks={};
+ cRows.forEach(x=>{completion[x.student_id]??={};completion[x.student_id][x.lesson_id]??=[];completion[x.student_id][x.lesson_id].push(x.step)});
+ wRows.forEach(x=>{writing[x.student_id]??={};writing[x.student_id][x.lesson_id]=x.content});
+ lockRows.forEach(x=>{listeningLocks[x.student_id]??=[];listeningLocks[x.student_id].push(x.lesson_id)});
+ res.json({version:5,users,classes,profiles,attempts:atRows.map(a=>({id:String(a.id),studentId:a.student_id,lessonId:a.lesson_id,skill:a.skill,score:a.score,tags:a.tags,at:a.at})),completion,writing,listeningLocks});
+});
 
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{const {lessonId,skill,score,tags=[]}=req.body;if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,lessonId,skill,score,Array.isArray(tags)?tags.slice(0,10):[]]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);res.json({ok:true})});
 app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);res.json({ok:true})});
 app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),score=Number(req.body.score);if(content.length<20||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid writing sample.'});await pool.query(`insert into writing_samples(student_id,lesson_id,content,score) values($1,$2,$3,$4) on conflict(student_id,lesson_id) do update set content=excluded.content,score=excluded.score,updated_at=now()`,[req.user.id,req.params.lessonId,content,score]);await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,req.params.lessonId,'writing',score,['writing:organisation','writing:task-completion']]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,req.params.lessonId,'writing']);if(done.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);res.json({ok:true})});
 
-app.post('/api/teacher/students',auth,teacherOnly,async(req,res)=>{const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'c1');if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});const owns=await pool.query('select 1 from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);if(!owns.rowCount)return res.status(403).json({error:'You cannot add students to this class.'});const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[id,username,await bcrypt.hash(pw,12),'student',name]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}});
+app.post('/api/admin/teachers',auth,adminOnly,async(req,res)=>{
+ const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase();
+ if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});
+ const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
+ const id='t_'+crypto.randomUUID(),pw=tempPassword();await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[id,username,await bcrypt.hash(pw,12),'teacher',name]);
+ res.status(201).json({id,username,temporaryPassword:pw});
+});
+app.post('/api/admin/classes',auth,adminOnly,async(req,res)=>{
+ const name=String(req.body.name||'').trim(),level=String(req.body.level||'A2+ → B1').trim(),teacherId=String(req.body.teacherId||'').trim();
+ if(name.length<2)return res.status(400).json({error:'Class name is required.'});
+ const t=await pool.query("select id from users where id=$1 and role='teacher'",[teacherId]);if(!t.rowCount)return res.status(400).json({error:'Choose a valid teacher.'});
+ const id='c_'+crypto.randomUUID();await pool.query('insert into classes(id,name,level,course_id,teacher_id) values($1,$2,$3,$4,$5)',[id,name,level,'career-fluency',teacherId]);
+ await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',[id,teacherId]);
+ res.status(201).json({id,name,level,teacherId});
+});
+app.post('/api/admin/students',auth,adminOnly,async(req,res)=>{
+ const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();
+ if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});
+ const c=await pool.query('select id from classes where id=$1',[classId]);if(!c.rowCount)return res.status(400).json({error:'Choose a valid class.'});
+ const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
+ const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[id,username,await bcrypt.hash(pw,12),'student',name]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}
+});
+app.post('/api/admin/users/:id/reset-password',auth,adminOnly,async(req,res)=>{
+ const q=await pool.query("select id,role from users where id=$1 and role in ('teacher','student')",[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'User not found.'});
+ const pw=tempPassword();await pool.query('update users set password_hash=$1 where id=$2',[await bcrypt.hash(pw,12),req.params.id]);res.json({temporaryPassword:pw});
+});
+
+app.post('/api/teacher/students',auth,teacherOnly,async(req,res)=>{const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});const owns=await pool.query('select 1 from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);if(!owns.rowCount)return res.status(403).json({error:'You cannot add students to this class.'});const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[id,username,await bcrypt.hash(pw,12),'student',name]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}});
 app.post('/api/teacher/students/:id/reset-password',auth,teacherOnly,async(req,res)=>{const owns=await pool.query(`select 1 from enrollments es join classes c on c.id=es.class_id where es.user_id=$1 and c.teacher_id=$2`,[req.params.id,req.user.id]);if(!owns.rowCount)return res.status(404).json({error:'Student not found in your classes.'});const pw=tempPassword();await pool.query('update users set password_hash=$1 where id=$2 and role=$3',[await bcrypt.hash(pw,12),req.params.id,'student']);res.json({temporaryPassword:pw})});
 
 app.get('/styles.css',(req,res)=>res.sendFile(path.join(__dirname,'public','styles.css')));
@@ -91,5 +152,5 @@ app.get('/',(req,res)=>res.sendFile(path.join(__dirname,'public','index.html')))
 app.use((req,res)=>{if(req.path.startsWith('/api/'))return res.status(404).json({error:'Not found'});res.sendFile(path.join(__dirname,'public','index.html'))});
 app.use((err,req,res,next)=>{console.error('request error',err);if(res.headersSent)return next(err);res.status(500).json({error:'Server error'})});
 
-async function authSelfCheck(){for(const [username,password,label] of [[process.env.TEACHER_USERNAME||'teacher',process.env.TEACHER_PASSWORD,'teacher'],[process.env.DEMO_STUDENT_USERNAME,process.env.DEMO_STUDENT_PASSWORD,'demo student']]){if(!username||!password)continue;const q=await pool.query('select password_hash from users where lower(username)=lower($1)',[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))throw new Error(`Auth self-check failed for ${label}`);console.log(`Auth self-check passed for ${label}`)}}
+async function authSelfCheck(){for(const [username,password,label] of [[process.env.SYSTEM_ADMIN_USERNAME||'admin',process.env.SYSTEM_ADMIN_PASSWORD,'system admin'],[process.env.TEACHER_USERNAME||'teacher',process.env.TEACHER_PASSWORD,'teacher'],[process.env.DEMO_STUDENT_USERNAME,process.env.DEMO_STUDENT_PASSWORD,'demo student']]){if(!username||!password)continue;const q=await pool.query('select password_hash from users where lower(username)=lower($1)',[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))throw new Error(`Auth self-check failed for ${label}`);console.log(`Auth self-check passed for ${label}`)}}
 initDb().then(authSelfCheck).then(()=>app.listen(port,()=>console.log(`Fluency First listening on ${port}`))).catch(e=>{console.error(e);process.exit(1)});
