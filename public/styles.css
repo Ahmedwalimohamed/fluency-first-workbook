@@ -1082,3 +1082,4 @@ img,video,audio{max-width:100%}
  .student-mode .bottom-nav .nav-btn{font-size:.875rem;padding:8px 4px}
 }
 @media(prefers-reduced-motion:reduce){.engagement-ticker-track{animation:none!important;transform:none!important;white-space:normal}.engagement-ticker-track>span[aria-hidden="true"]{display:none}.eg-workbook *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+.delete-user-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.primary-btn.danger-button{background:var(--danger)}.primary-btn.danger-button:hover{background:#9f3f29}.primary-btn:disabled{cursor:not-allowed;opacity:.65}@media(max-width:560px){.delete-user-actions{display:grid;grid-template-columns:1fr}.delete-user-actions button{width:100%}}
