@@ -32,10 +32,10 @@ function auth(req,res,next){try{req.user=jwt.verify(req.cookies.ff_session||'',J
 function adminOnly(req,res,next){if(req.user.role!=='admin')return res.status(403).json({error:'System Admin access required.'});next()}
 function teacherOnly(req,res,next){if(req.user.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});next()}
 function studentOnly(req,res,next){if(req.user.role!=='student')return res.status(403).json({error:'Student access required.'});next()}
-function tempPassword(){return 'FF-'+crypto.randomBytes(5).toString('base64url')}
+function tempPassword(){return String(crypto.randomInt(0,100000000)).padStart(8,'0')}
 function chosenPassword(value){
  if(value===undefined||value===null||value==='')return tempPassword();
- if(typeof value!=='string'||value.length<8||value.length>72||!/[A-Za-z]/.test(value)||!/\d/.test(value))return null;
+ if(typeof value!=='string'||!/^\d{8,20}$/.test(value))return null;
  return value;
 }
 
@@ -147,7 +147,7 @@ app.post('/api/admin/teachers',auth,adminOnly,async(req,res)=>{
  const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase();
  if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});
  const passwordWasGenerated=req.body.password===undefined||req.body.password===null||req.body.password==='';
- const pw=chosenPassword(req.body.password);if(!pw)return res.status(400).json({error:'Password must be 8–72 characters and include a letter and a number.'});
+ const pw=chosenPassword(req.body.password);if(!pw)return res.status(400).json({error:'Password must contain numbers only and be 8–20 digits long.'});
  const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
  const id='t_'+crypto.randomUUID();await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[id,username,await bcrypt.hash(pw,12),'teacher',name]);
  res.status(201).json({id,username,temporaryPassword:pw,passwordWasGenerated});
@@ -171,7 +171,7 @@ app.post('/api/admin/students',auth,adminOnly,async(req,res)=>{
  const whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();
  if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});
  const passwordWasGenerated=req.body.password===undefined||req.body.password===null||req.body.password==='';
- const pw=chosenPassword(req.body.password);if(!pw)return res.status(400).json({error:'Password must be 8–72 characters and include a letter and a number.'});
+ const pw=chosenPassword(req.body.password);if(!pw)return res.status(400).json({error:'Password must contain numbers only and be 8–20 digits long.'});
  const c=await pool.query('select id from classes where id=$1',[classId]);if(!c.rowCount)return res.status(400).json({error:'Choose a valid class.'});
  const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
  const id='s_'+crypto.randomUUID(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw,passwordWasGenerated})}catch(e){await client.query('rollback');throw e}finally{client.release()}
