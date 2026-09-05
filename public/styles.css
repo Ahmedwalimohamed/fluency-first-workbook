@@ -995,3 +995,90 @@ img,video,audio{max-width:100%}
  .eg-workbook-note{padding:16px 20px}
  .eg-lesson-footer{padding:14px;flex-wrap:wrap}
 }
+
+/* Student home and workbook share the readable teaching palette. */
+.eg-student-home{display:grid;gap:24px;color:#183247;max-width:1040px;margin:auto}
+.eg-student-welcome{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.eg-student-welcome h1{margin:0;font-size:2rem;line-height:1.2}
+.eg-student-welcome .eg-label{margin-bottom:8px}
+.eg-home-layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(240px,1fr);gap:24px;align-items:stretch}
+.eg-next-practice,.eg-home-progress,.eg-recent-practice{background:#fff;border:1px solid #d8e2e6;border-radius:16px;padding:28px}
+.eg-next-practice{border-top:4px solid #17644f}
+.eg-next-practice h2{margin:0;font-size:clamp(1.5rem,3vw,2rem);line-height:1.3;overflow-wrap:anywhere}
+.eg-next-context{font-size:.875rem;line-height:1.6;color:#526779;margin:12px 0 24px}
+.eg-next-skill{display:flex;align-items:center;gap:14px;padding:20px 0;border-top:1px solid #e2e9e6;margin-bottom:12px}
+.eg-next-skill>span{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#e5f2ee;color:#17644f;font-weight:700}
+.eg-next-skill small,.eg-next-skill strong{display:block}
+.eg-next-skill small{font-size:.875rem;color:#526779;margin-bottom:4px}
+.eg-next-skill strong{font-size:1.125rem}
+.eg-student-home .primary-btn,.eg-workbook .primary-btn{background:#17644f;color:white;border-color:#17644f;min-height:46px;font-size:1rem}
+.eg-student-home .ghost-btn{font-size:1rem;min-height:44px}
+.eg-home-progress>strong{display:block;font-size:3rem;line-height:1.1;margin:20px 0;color:#183247}
+.eg-home-progress>strong span{font-size:1.5rem;font-weight:500}
+.eg-home-progress p:not(.eg-label){color:#526779;font-size:.875rem;line-height:1.6}
+.eg-home-progress .progress span{background:#17644f}
+.eg-recent-practice h2{font-size:1.125rem;margin:0 0 12px}
+.eg-recent-practice>p{font-size:1rem;color:#526779}
+.eg-recent-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid #e2e9e6}
+.eg-recent-row strong,.eg-recent-row span{display:block;font-size:1rem}
+.eg-recent-row span{font-size:.875rem;margin-top:6px;color:#526779}
+.eg-recent-row>b{font-size:1.125rem;color:#17644f}
+.eg-workbook{max-width:900px;color:#183247}
+.eg-workbook .jtbd-workbook-head{padding:18px 0;gap:18px;align-items:center}
+.eg-workbook .jtbd-current-job strong{font-size:1.25rem;line-height:1.4}
+.eg-workbook .jtbd-current-job small{font-size:.875rem;line-height:1.5;color:#526779}
+.eg-workbook .jtbd-step-count{font-size:.875rem}
+.eg-workbook .skill-tabs{display:flex;gap:8px;padding:0 0 20px;overflow-x:auto;background:none;border:none}
+.eg-workbook .skill-tab{flex:1 0 auto;padding:12px 16px;border:1px solid #cbd8dd;border-radius:10px;background:#fff;font-size:.875rem;min-height:46px;color:#445c6d}
+.eg-workbook .skill-tab.active{background:#e5f2ee;border-color:#17644f;color:#165745;box-shadow:none}
+.eg-workbook .skill-tab:disabled{color:#647782;opacity:.6;background:#f3f6f6}
+.eg-workbook .jtbd-activity-panel{background:transparent;border:0;padding:0;box-shadow:none}
+.eg-workbook .skill-page-head{padding:20px 0;margin:0;border:0;align-items:center;gap:12px}
+.eg-workbook .skill-page-head h2{font-size:1.25rem;line-height:1.4;margin:8px 0}
+.eg-workbook .skill-page-head>strong{font-size:.875rem;color:#526779;white-space:nowrap}
+.eg-workbook .pill{background:#e5f2ee;color:#17644f;font-size:.875rem}
+.eg-workbook .activity-question-list{display:grid;gap:18px}
+.eg-workbook .guided-question{background:#fff;border:1px solid #d8e2e6;border-radius:14px;padding:24px;box-shadow:none}
+.eg-workbook .question-stage{margin-bottom:14px}
+.eg-workbook .question-stage span,.eg-workbook .stage-badge{font-size:.875rem;color:#526779;background:none;padding:0}
+.eg-workbook .guided-question>p{font-size:1.125rem;line-height:1.6;margin:0 0 18px;color:#183247;font-weight:600}
+.eg-workbook .mcq-answer-slot{background:#f7faf9;border:1px dashed #98b8aa;border-radius:10px;padding:16px;min-height:90px}
+.eg-workbook .mcq-answer-slot strong{font-size:1rem;line-height:1.5}
+.eg-workbook .mcq-answer-slot small,.eg-workbook .mcq-slot-label{font-size:.875rem;color:#526779}
+.eg-workbook .mcq-answer-slot.filled{background:#e5f2ee;border-style:solid;border-color:#17644f}
+.eg-workbook .mcq-option-cards{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.eg-workbook .mcq-option-card{padding:12px 16px;background:#fff;border:1px solid #bfced5;border-radius:10px;min-height:48px;max-width:100%;color:#183247;box-shadow:none}
+.eg-workbook .mcq-option-card.selected{background:#e5f2ee;border-color:#17644f;color:#165745}
+.eg-workbook .mcq-option-text{font-size:1rem;line-height:1.5;overflow-wrap:anywhere}
+.eg-workbook .mcq-option-index{font-size:.875rem}
+.eg-workbook .source-panel{padding:24px;border-radius:14px;background:#fff;border:1px solid #d8e2e6;margin-bottom:20px}
+.eg-workbook .source-panel p{font-size:1.125rem;line-height:1.8}
+.eg-workbook .source-panel small,.eg-workbook .audio-player .muted{font-size:.875rem}
+.eg-workbook .writing-task-head strong{font-size:1.125rem;line-height:1.6}
+.eg-workbook .writing-task-head>span,.eg-workbook .word-count,.eg-workbook .open-evidence small{font-size:.875rem}
+.eg-workbook textarea{font-size:1rem;line-height:1.7;min-height:120px;padding:16px;border:1px solid #adbec7;border-radius:10px;width:100%;box-sizing:border-box}
+.eg-workbook .skill-action-row{display:flex;flex-wrap:wrap;gap:12px;padding:20px 0;margin:0}
+.eg-workbook .guided-submit.skill-submit{display:inline-flex!important;align-items:center;justify-content:center;min-height:46px}
+.eg-workbook .secondary-btn{min-height:46px;font-size:1rem}
+.eg-workbook .performance-result{padding:24px;border-radius:14px;font-size:1rem}
+.eg-workbook button:focus-visible,.eg-student-home button:focus-visible{outline:3px solid #2876ad;outline-offset:3px}
+.student-mode .course-shell .course-topic{border-radius:12px;background:#fff;border:1px solid #d8e2e6;box-shadow:none}
+.student-mode .course-shell .topic-copy strong{font-size:1.125rem;line-height:1.5}
+.student-mode .course-shell .topic-copy small,.student-mode .course-shell .topic-copy>span{font-size:.875rem}
+@media(max-width:760px){
+ .eg-home-layout{grid-template-columns:1fr;gap:18px}
+ .eg-student-home{gap:18px}
+ .eg-next-practice,.eg-home-progress,.eg-recent-practice{padding:22px}
+ .eg-student-welcome h1{font-size:1.6rem}
+ .eg-next-practice .primary-btn{width:100%}
+ .eg-workbook .jtbd-workbook-head{grid-template-columns:auto minmax(0,1fr);gap:12px}
+ .eg-workbook .jtbd-current-job small{display:block}
+ .eg-workbook .jtbd-step-count{display:none}
+ .eg-workbook .guided-question,.eg-workbook .source-panel{padding:18px}
+ .eg-workbook .skill-tabs{padding-bottom:12px}
+ .eg-workbook .skill-page-head{flex-wrap:wrap}
+ .eg-workbook .mcq-option-card{width:100%;justify-content:flex-start;text-align:left}
+ .student-mode .bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .student-mode .bottom-nav .nav-btn{font-size:.875rem;padding:8px 4px}
+}
+@media(prefers-reduced-motion:reduce){.engagement-ticker-track{animation:none!important;transform:none!important;white-space:normal}.engagement-ticker-track>span[aria-hidden="true"]{display:none}.eg-workbook *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
