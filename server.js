@@ -75,6 +75,20 @@ async function isListeningLocked(studentId,lessonId){const q=await pool.query(`s
 app.get('/api/listening/:lessonId/prep',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');const script=LISTENING_SCRIPTS[lessonId];if(!script)return res.status(404).json({error:'Listening topic not found.'});if(await isListeningLocked(req.user.id,lessonId))return res.json({locked:true});res.set('Cache-Control','no-store');res.json({locked:false,script})});
 app.post('/api/listening/:lessonId/lock',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');if(!LISTENING_SCRIPTS[lessonId])return res.status(404).json({error:'Listening topic not found.'});await pool.query('insert into listening_locks(student_id,lesson_id) values($1,$2) on conflict do nothing',[req.user.id,lessonId]);res.json({ok:true,locked:true})});
 
+app.post('/api/audio',auth,async(req,res)=>{
+ const lessonId=String(req.body.lessonId||'').trim();
+ const input=String(req.body.text||'').trim();
+ if(!lessonId||input.length<5||input.length>5000)return res.status(400).json({error:'Invalid listening audio request.'});
+ if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'Natural listening audio is unavailable.'});
+ const key=crypto.createHash('sha256').update(lessonId+'|'+input).digest('hex');
+ try{
+  if(audioCache.has(key)){res.set('Content-Type','audio/mpeg');res.set('Cache-Control','private, max-age=3600');return res.send(audioCache.get(key))}
+  const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({model:OPENAI_TTS_MODEL,voice:OPENAI_TTS_VOICE,input,instructions:'Speak in clear, warm, natural conversational English for an English learner. Use realistic pacing, meaningful pauses, and natural emphasis. Do not sound like an announcement or a robot.',response_format:'mp3'})});
+  if(!r.ok){const detail=await r.text();console.error('OpenAI TTS error',r.status,detail.slice(0,500));return res.status(502).json({error:'Natural listening audio could not be generated.'})}
+  const buf=Buffer.from(await r.arrayBuffer());audioCache.set(key,buf);res.set('Content-Type','audio/mpeg');res.set('Cache-Control','private, max-age=3600');return res.send(buf)
+ }catch(e){console.error('TTS request error',e);return res.status(502).json({error:'Natural listening audio could not be generated.'})}
+});
+
 app.get('/api/audio/:lessonId',auth,async(req,res)=>{
  const lessonId=String(req.params.lessonId||'');
  const input=LISTENING_SCRIPTS[lessonId];
