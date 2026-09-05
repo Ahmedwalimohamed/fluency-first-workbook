@@ -623,43 +623,29 @@ function teacherLiveLesson(){
  if(!c||!live||!wb){currentPage='teach';teacherTeach();return}
  const l=live.lessons.find(x=>x.number===activeTeacherLessonNumber),w=wb.lessons.find(x=>x.number===activeTeacherLessonNumber);
  if(!l){currentPage='teacher-book';teacherBook();return}
- const assigned=w?assignmentForLesson(c.id,w.id):null,sections=liveSections(l.content),total=sections.length;
- activeTeacherSectionIndex=Math.max(0,Math.min(activeTeacherSectionIndex,total-1));
- const section=sections[activeTeacherSectionIndex],isLast=activeTeacherSectionIndex===total-1,pct=Math.round(((activeTeacherSectionIndex+1)/Math.max(1,total))*100);
- const students=classStudents().filter(st=>st.classIds?.includes(c.id)).length,goal=lessonCanDoGoal(l),stageName=sectionLabel(section.title,activeTeacherSectionIndex,total);
- const initials=String(live.title||'SU').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+ const sections=liveSections(l.content),total=sections.length,assigned=w?assignmentForLesson(c.id,w.id):null;
+ activeTeacherSectionIndex=Math.max(0,Math.min(activeTeacherSectionIndex,Math.max(0,total-1)));
+ const section=sections[activeTeacherSectionIndex],isLast=activeTeacherSectionIndex===total-1,goal=lessonCanDoGoal(l);
+ const stageName=section?sectionLabel(section.title,activeTeacherSectionIndex,total):'Lesson unavailable';
  title('Teacher','Lesson '+l.number);
- const tabs=sections.map((x,i)=>'<button class="classroom-step '+(i===activeTeacherSectionIndex?'active ':'')+(i<activeTeacherSectionIndex?'done':'')+'" data-live-section="'+i+'"><span>'+(i<activeTeacherSectionIndex?'✓':i+1)+'</span><b>'+escapeHtml(sectionLabel(x.title,i,total))+'</b></button>').join('');
- const mainAction=isLast?'<button class="classroom-next-btn" id="finishAndAssign" '+((!w||assigned)?'disabled':'')+'><span>'+(assigned?'Workbook assigned ✓':'Finish lesson & assign workbook')+'</span><b>→</b></button>':'<button class="classroom-next-btn" id="nextLiveSection"><span>Next: '+escapeHtml(sectionLabel(sections[activeTeacherSectionIndex+1]?.title||'Continue',activeTeacherSectionIndex+1,total))+'</span><b>→</b></button>';
- const goalHtml=goal?'<div class="classroom-goal"><div class="classroom-goal-icon">⚡</div><div><small>Lesson Can-Do Goal</small><strong>'+escapeHtml(goal)+'</strong></div></div>':'';
- const matched=isLast?'<div class="classroom-workbook-match"><div><small>Matched workbook</small><strong>Lesson '+(w?.number||'—')+' · '+escapeHtml(w?.title||'No match')+'</strong><p>Vocabulary · Listening & Reading · Grammar · Writing</p></div></div>':'';
- $('content').innerHTML='<section class="classroom-player">'+
-   '<header class="classroom-global-header">'+
-     '<button class="classroom-back" id="backTeacherBook" aria-label="Back to book">←</button>'+
-     '<div class="classroom-brandmark">'+escapeHtml(initials)+'</div>'+
-     '<div class="classroom-course"><strong>'+escapeHtml(live.title)+'</strong><span>'+escapeHtml(c.name)+'</span></div>'+
-     '<div class="classroom-meta"><span class="classroom-present">'+students+' students</span><span>Lesson <b>'+l.number+'</b> of '+live.lessons.length+'</span></div>'+
-   '</header>'+
-   '<section class="classroom-nav-card">'+
-     '<div class="classroom-title-row"><div><div class="classroom-kicker"><span>Live Class · '+(activeTeacherSectionIndex+1)+'/'+total+'</span><b>•</b><em>Lesson '+l.number+' '+escapeHtml(l.title)+'</em></div><div class="classroom-heading"><h1>'+escapeHtml(l.title)+'</h1><span>'+escapeHtml(stageName)+'</span></div></div>'+
-       '<div class="classroom-progress-box"><div><span>Stage Progress</span><b>'+pct+'%</b></div><div class="classroom-progress"><span style="width:'+pct+'%"></span></div></div>'+
-     '</div>'+
-     '<nav class="classroom-stepper" aria-label="Lesson stages">'+tabs+'</nav>'+
-   '</section>'+
-   goalHtml+
-   '<section class="classroom-stage-card">'+
-     '<div class="classroom-stage-head"><div><small>Stage '+(activeTeacherSectionIndex+1)+' of '+total+'</small><h2>'+escapeHtml(stageName)+'</h2></div><span>'+pct+'% complete</span></div>'+
-     '<div class="live-book-content classroom-stage-content">'+renderLiveContent(liveSectionContent(section))+'</div>'+
-   '</section>'+
-   matched+
-   '<footer class="classroom-footer"><button class="classroom-prev-btn" id="prevLiveSection" '+(activeTeacherSectionIndex===0?'disabled':'')+'>← <span>Previous</span></button><div class="classroom-footer-note">Use the stage tabs to jump within this lesson.</div>'+mainAction+'</footer>'+
- '</section>';
+ const stages=sections.map((x,i)=>`<button class="eg-stage ${i===activeTeacherSectionIndex?'is-current':''}" data-live-section="${i}" ${i===activeTeacherSectionIndex?'aria-current="step"':''}><span>${i+1}</span><strong>${escapeHtml(sectionLabel(x.title,i,total).toLowerCase())}</strong></button>`).join('');
+ const nextAction=!total?'':!isLast?'<button class="primary-btn" id="nextLiveSection">Next stage →</button>':assigned?'<span class="eg-assigned" role="status">Workbook assigned ✓</span>':w&&w.ready!==false?'<button class="primary-btn" id="finishAndAssign">Assign workbook →</button>':'<span class="eg-unavailable">Matching workbook is not available yet.</span>';
+ $('content').innerHTML=`<section class="eg-lesson">
+  <header class="eg-lesson-header"><button class="ghost-btn" id="backTeacherBook">← Lessons</button><div><p>${escapeHtml(c.name)} · ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div></header>
+  <div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside>
+  <div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeTeacherSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header>
+  <article class="live-book-content eg-stage-content" aria-labelledby="liveStageTitle">${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no teaching content yet. Return to the book and choose another lesson.</p>'}</article>
+  ${isLast?`<div class="eg-workbook-note">${w?`<strong>After class</strong><span>Workbook ${w.number} · ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}
+  <footer class="eg-lesson-footer"><button class="ghost-btn" id="prevLiveSection" ${activeTeacherSectionIndex===0?'disabled':''}>← Previous</button>${nextAction}</footer></div></div>
+ </section>`;
  $('backTeacherBook').onclick=()=>{currentPage='teacher-book';renderNav();teacherBook()};
- document.querySelectorAll('[data-live-section]').forEach(b=>b.onclick=()=>{activeTeacherSectionIndex=Number(b.dataset.liveSection);teacherLiveLesson()});
- if($('prevLiveSection'))$('prevLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0){activeTeacherSectionIndex--;teacherLiveLesson()}};
- if($('nextLiveSection'))$('nextLiveSection').onclick=()=>{if(activeTeacherSectionIndex<total-1){activeTeacherSectionIndex++;teacherLiveLesson()}};
- if($('finishAndAssign')&&!assigned&&w)$('finishAndAssign').onclick=()=>openAssignWorkbook(c,l,w);
+ const goToStage=index=>{activeTeacherSectionIndex=index;teacherLiveLesson();$('liveStageTitle').focus()};
+ document.querySelectorAll('[data-live-section]').forEach(b=>b.onclick=()=>goToStage(Number(b.dataset.liveSection)));
+ $('prevLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0)goToStage(activeTeacherSectionIndex-1)};
+ if($('nextLiveSection'))$('nextLiveSection').onclick=()=>goToStage(activeTeacherSectionIndex+1);
+ if($('finishAndAssign'))$('finishAndAssign').onclick=()=>openAssignWorkbook(c,l,w);
 }
+
 function openAssignWorkbook(c,liveLesson,workbookLesson){showModal(`<div class="section-head"><div><span class="role-kicker">Post-class action</span><h3>Assign matching workbook</h3><p class="muted">${escapeHtml(c.name)}</p></div><button class="icon-btn" data-close>×</button></div><div class="assignment-match-card"><span>Live lesson</span><strong>Lesson ${liveLesson.number} · ${escapeHtml(liveLesson.title)}</strong><span>↓ automatically matched</span><strong>Workbook Lesson ${workbookLesson.number} · ${escapeHtml(workbookLesson.title)}</strong></div><div class="assignment-skill-row"><span>Vocabulary</span><span>Listening & Reading</span><span>Grammar</span><span>Writing</span></div><button class="primary-btn" id="confirmAssignment">Assign to class</button><div id="assignResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('confirmAssignment').onclick=async()=>{const btn=$('confirmAssignment');btn.disabled=true;btn.textContent='Assigning…';try{const a=await api('/api/teacher/assignments',{method:'POST',body:JSON.stringify({classId:c.id,bookId:c.bookId||c.course_id,lessonId:workbookLesson.id,lessonNumber:workbookLesson.number,lessonTitle:workbookLesson.title,skills:WORKBOOK_STEPS})});await refreshState();const link=window.location.origin+'/?assignment='+encodeURIComponent(a.id),message=`${c.name}: Lesson ${workbookLesson.number} · ${workbookLesson.title} workbook is ready. Complete Vocabulary, Listening & Reading, Grammar and Writing: ${link}`;$('assignResult').innerHTML=`<div class="assignment-success"><strong>Assigned to ${escapeHtml(c.name)}</strong><p>Share this WhatsApp message with the class. The link opens the exact workbook lesson.</p><textarea id="whatsappMessage" readonly>${escapeHtml(message)}</textarea><div class="student-cta-row"><button class="secondary-btn" id="copyWhatsApp">Copy WhatsApp message</button><button class="primary-btn" id="openWhatsApp">Open WhatsApp</button></div></div>`;btn.classList.add('hidden');$('copyWhatsApp').onclick=async()=>{await navigator.clipboard.writeText(message);$('copyWhatsApp').textContent='Copied ✓'};$('openWhatsApp').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank')}catch(e){btn.disabled=false;btn.textContent='Assign to class';$('assignResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
 function students(){const sts=classStudents();title('Teacher','Students');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Roster</span><h1>Your students</h1><p>Students in classes assigned to you.</p></div><button class="primary-btn" id="addStudent">+ Add student</button></div><div class="card table-wrap clean-table"><table class="data-table"><thead><tr><th>Student</th><th>Class</th><th>Progress</th><th>Focus</th><th></th></tr></thead><tbody>${sts.map(s=>studentRow(s)).join('')}</tbody></table></div>`;$('addStudent').onclick=openAddStudent;document.querySelectorAll('[data-review-student]').forEach(b=>b.onclick=()=>openStudentDetail(b.dataset.reviewStudent))}
 function studentRow(s){const w=weakest(s.id),className=getDB().classes.find(c=>s.classIds?.includes(c.id))?.name||'—';return `<tr><td><div class="student-cell"><div class="avatar">${escapeHtml(s.name[0])}</div><div><strong>${escapeHtml(s.name)}</strong><div class="muted">@${escapeHtml(s.username)}</div></div></div></td><td>${escapeHtml(className)}</td><td>${completionPct(s.id)}%</td><td>${w.label}</td><td><button class="ghost-btn" data-review-student="${s.id}">Review</button></td></tr>`}
