@@ -43,6 +43,7 @@ async function initDb(){
  create table if not exists completion(student_id text references users(id) on delete cascade,lesson_id text not null,step text not null,completed_at timestamptz default now(),primary key(student_id,lesson_id,step));
  create table if not exists writing_samples(student_id text references users(id) on delete cascade,lesson_id text not null,content text not null,score int check(score between 0 and 100),updated_at timestamptz default now(),primary key(student_id,lesson_id));
  create table if not exists listening_locks(student_id text references users(id) on delete cascade,lesson_id text not null,locked_at timestamptz default now(),primary key(student_id,lesson_id));\n create table if not exists assignments(id text primary key,class_id text references classes(id) on delete cascade,book_id text not null,lesson_id text not null,lesson_number int not null,lesson_title text not null,skills text[] not null default '{vocabulary,listening,grammar,writing}',created_by text references users(id),created_at timestamptz default now());`);
+ await pool.query("alter table users add column if not exists whatsapp_number text");
  await pool.query("alter table writing_samples alter column score drop not null");
  await pool.query("update writing_samples set score=null where score is not null");
  await pool.query("delete from attempts where skill='writing' and tags @> array['writing:organisation','writing:task-completion']::text[]");
@@ -109,13 +110,13 @@ app.get('/api/state',auth,async(req,res)=>{
   :(classIds.length?(await pool.query('select * from classes where id=any($1::text[]) order by created_at,name',[classIds])).rows:[]);
  let users=[];
  if(req.user.role==='admin'){
-  users=(await pool.query(`select u.id,u.username,u.role,u.name,coalesce(array_remove(array_agg(distinct e.class_id),null),'{}'::text[]) as class_ids from users u left join enrollments e on e.user_id=u.id group by u.id,u.username,u.role,u.name order by case u.role when 'admin' then 1 when 'teacher' then 2 else 3 end,u.name`)).rows;
+  users=(await pool.query(`select u.id,u.username,u.role,u.name,u.whatsapp_number,coalesce(array_remove(array_agg(distinct e.class_id),null),'{}'::text[]) as class_ids from users u left join enrollments e on e.user_id=u.id group by u.id,u.username,u.role,u.name order by case u.role when 'admin' then 1 when 'teacher' then 2 else 3 end,u.name`)).rows;
  }else if(classIds.length){
-  users=(await pool.query(`select u.id,u.username,u.role,u.name,coalesce(array_remove(array_agg(distinct e.class_id),null),'{}'::text[]) as class_ids from users u left join enrollments e on e.user_id=u.id where u.id=$2 or e.class_id=any($1::text[]) group by u.id,u.username,u.role,u.name order by u.role desc,u.name`,[classIds,req.user.id])).rows;
+  users=(await pool.query(`select u.id,u.username,u.role,u.name,u.whatsapp_number,coalesce(array_remove(array_agg(distinct e.class_id),null),'{}'::text[]) as class_ids from users u left join enrollments e on e.user_id=u.id where u.id=$2 or e.class_id=any($1::text[]) group by u.id,u.username,u.role,u.name order by u.role desc,u.name`,[classIds,req.user.id])).rows;
  }else{
-  users=(await pool.query("select id,username,role,name,'{}'::text[] as class_ids from users where id=$1",[req.user.id])).rows;
+  users=(await pool.query("select id,username,role,name,whatsapp_number,'{}'::text[] as class_ids from users where id=$1",[req.user.id])).rows;
  }
- users=users.map(u=>({id:u.id,username:u.username,role:u.role,name:u.name,classIds:u.class_ids||[]}));
+ users=users.map(u=>({id:u.id,username:u.username,role:u.role,name:u.name,whatsappNumber:u.whatsapp_number||null,classIds:u.class_ids||[]}));
  const studentIds=users.filter(u=>u.role==='student').map(u=>u.id);
  const ownStudent=req.user.role==='student'?[req.user.id]:studentIds;
  const profileIds=req.user.role==='student'?[req.user.id]:studentIds;
@@ -154,19 +155,24 @@ app.post('/api/admin/classes',auth,adminOnly,async(req,res)=>{
  await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',[id,teacherId]);
  res.status(201).json({id,name,level:b.rows[0].level,bookId,teacherId});
 });
+function normalizeWhatsapp(value){
+ if(typeof value!=='string'||value.length>40)return null;
+ const number=value.trim().replace(/[\s().-]/g,'').replace(/^00/,'+');
+ return /^\+[1-9]\d{7,14}$/.test(number)?number:null;
+}
 app.post('/api/admin/students',auth,adminOnly,async(req,res)=>{
- const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();
+ const whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();
  if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});
  const c=await pool.query('select id from classes where id=$1',[classId]);if(!c.rowCount)return res.status(400).json({error:'Choose a valid class.'});
  const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
- const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[id,username,await bcrypt.hash(pw,12),'student',name]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}
+ const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}
 });
 app.post('/api/admin/users/:id/reset-password',auth,adminOnly,async(req,res)=>{
  const q=await pool.query("select id,role from users where id=$1 and role in ('teacher','student')",[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'User not found.'});
  const pw=tempPassword();await pool.query('update users set password_hash=$1 where id=$2',[await bcrypt.hash(pw,12),req.params.id]);res.json({temporaryPassword:pw});
 });
 
-app.post('/api/teacher/students',auth,teacherOnly,async(req,res)=>{const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});const owns=await pool.query('select 1 from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);if(!owns.rowCount)return res.status(403).json({error:'You cannot add students to this class.'});const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[id,username,await bcrypt.hash(pw,12),'student',name]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}});
+app.post('/api/teacher/students',auth,teacherOnly,async(req,res)=>{const whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});const owns=await pool.query('select 1 from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);if(!owns.rowCount)return res.status(403).json({error:'You cannot add students to this class.'});const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}});
 app.post('/api/teacher/assignments',auth,teacherOnly,async(req,res)=>{
  const classId=String(req.body.classId||'').trim(),bookId=String(req.body.bookId||'').trim(),lessonId=String(req.body.lessonId||'').trim(),lessonTitle=String(req.body.lessonTitle||'').trim(),lessonNumber=Number(req.body.lessonNumber),allowed=['vocabulary','listening','grammar','writing'],skills=Array.isArray(req.body.skills)?req.body.skills.filter(x=>allowed.includes(x)):[];
  if(!classId||!bookId||!lessonId||!lessonTitle||!Number.isInteger(lessonNumber)||lessonNumber<1||skills.length<1)return res.status(400).json({error:'Invalid workbook assignment.'});
