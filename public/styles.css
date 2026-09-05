@@ -938,3 +938,60 @@ img,video,audio{max-width:100%}
   .classroom-footer{min-height:44px;padding:5px 8px}
   .classroom-prev-btn,.classroom-next-btn{height:34px;min-height:34px}
 }
+
+/* Teacher lesson player: readable content and free stage navigation. */
+.eg-lesson{max-width:1440px;margin:0 auto;color:#183247;font-size:1rem}
+.eg-lesson-header{display:flex;align-items:center;gap:24px;margin-bottom:24px}
+.eg-lesson-header>div{min-width:0}
+.eg-lesson-header p{margin:0 0 6px;color:#526779;font-size:.875rem;overflow-wrap:anywhere}
+.eg-lesson-header h1{margin:0;font-size:clamp(1.25rem,2vw,1.75rem);line-height:1.3}
+.eg-lesson .ghost-btn,.eg-lesson .primary-btn{min-height:44px;font-size:1rem;white-space:normal}
+.eg-lesson-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:28px;align-items:start}
+.eg-label{margin:0 0 14px;color:#526779;font-size:.875rem;font-weight:600}
+.eg-stage-list{position:sticky;top:24px}
+.eg-stage-list nav{display:grid;gap:4px}
+.eg-stage{display:flex;align-items:center;gap:12px;width:100%;padding:12px;text-align:left;background:transparent;border:1px solid transparent;border-radius:10px;color:#445c6d;cursor:pointer;font:inherit}
+.eg-stage>span{display:grid;place-items:center;flex:0 0 28px;height:28px;border:1px solid #bccbd1;border-radius:50%;font-size:.875rem}
+.eg-stage strong{font-size:.875rem;font-weight:500;line-height:1.4}
+.eg-stage strong::first-letter,.eg-stage-heading h2::first-letter{text-transform:uppercase}
+.eg-stage:hover{background:#edf3f3}
+.eg-stage.is-current{background:#e5f2ee;border-color:#b7d8cd;color:#165745}
+.eg-stage.is-current>span{background:#17644f;border-color:#17644f;color:white}
+.eg-stage.is-current strong{font-weight:700}
+.eg-goal{margin-top:24px;padding-top:18px;border-top:1px solid #d3dfe3;font-size:.875rem}
+.eg-goal summary{cursor:pointer;font-weight:600;padding:8px 0}
+.eg-goal p{line-height:1.6;color:#445c6d}
+.eg-teaching-surface{min-width:0;background:#fff;border:1px solid #d8e2e6;border-radius:16px;box-shadow:0 8px 28px #18324706;overflow:hidden}
+.eg-stage-heading{padding:28px 36px 20px;border-bottom:1px solid #e6ecef}
+.eg-stage-heading .eg-label{margin-bottom:8px}
+.eg-stage-heading h2{margin:0;font-size:clamp(1.5rem,2.3vw,2rem);line-height:1.25}
+.eg-stage-content{padding:24px 36px 36px;min-height:300px;font-size:1.125rem;line-height:1.75;overflow-wrap:anywhere}
+.eg-stage-content>p{font-size:1.125rem;line-height:1.75;max-width:75ch;margin:0 0 18px}
+.eg-stage-content .live-book-section,.eg-stage-content .live-book-subhead{font-size:1.125rem;line-height:1.5;margin:24px 0 12px}
+.eg-stage-content .live-prompt-row{grid-template-columns:30px minmax(0,1fr);gap:14px;padding:12px 0}
+.eg-stage-content .live-prompt-row p,.eg-stage-content .live-book-bullet{font-size:1.125rem;line-height:1.65}
+.eg-stage-content .live-prompt-row>span{width:28px;height:28px;font-size:.875rem}
+.eg-stage-content .live-vocab-row{padding:16px;gap:16px}
+.eg-stage-content .live-vocab-word strong,.eg-stage-content .live-vocab-example span{font-size:1.125rem;line-height:1.6}
+.eg-stage-content .live-vocab-head,.eg-stage-content small{font-size:.875rem}
+.eg-workbook-note{display:flex;flex-wrap:wrap;gap:8px 16px;padding:18px 36px;background:#f4f8f6;border-top:1px solid #e1ebe6;font-size:.875rem}
+.eg-lesson-footer{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;background:#fff;border-top:1px solid #e6ecef}
+.eg-assigned{color:#17644f;font-weight:600}
+.eg-unavailable{font-size:.875rem;color:#526779}
+.eg-lesson button:focus-visible,.eg-goal summary:focus-visible{outline:3px solid #2876ad;outline-offset:3px}
+.eg-lesson button:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:1050px){.eg-lesson-layout{grid-template-columns:190px minmax(0,1fr);gap:16px}.eg-stage-content{padding:24px}.eg-stage-heading{padding:24px}}
+@media(max-width:760px){
+ .eg-lesson-header{align-items:flex-start;gap:12px;margin-bottom:18px}
+ .eg-lesson-header .ghost-btn{flex-shrink:0;padding:8px}
+ .eg-lesson-layout{display:block}
+ .eg-stage-list{position:static;margin-bottom:18px}
+ .eg-stage-list>.eg-label{display:none}
+ .eg-stage-list nav{display:flex;overflow-x:auto;padding:4px 3px 10px;gap:6px}
+ .eg-stage{width:auto;flex-shrink:0;max-width:240px;padding:8px 12px}
+ .eg-goal{margin-top:4px;padding-top:4px}
+ .eg-stage-content{padding:20px;min-height:220px}
+ .eg-stage-heading{padding:20px}
+ .eg-workbook-note{padding:16px 20px}
+ .eg-lesson-footer{padding:14px;flex-wrap:wrap}
+}
