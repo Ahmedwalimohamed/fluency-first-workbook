@@ -199,6 +199,7 @@ app.post('/api/teacher/students/:id/reset-password',auth,teacherOnly,async(req,r
 app.get('/styles.css',(req,res)=>res.sendFile(path.join(__dirname,'public','styles.css')));
 app.get('/app.js',(req,res)=>res.sendFile(path.join(__dirname,'public','app.js')));
 app.get('/live-books.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','live-books.js')));
+app.get('/speakup-b2-blueprint.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','speakup-b2-blueprint.js')));
 app.get('/live-books.json',(req,res)=>res.type('application/json').sendFile(path.join(__dirname,'public','live-books.json')));
 app.get('/',(req,res)=>res.sendFile(path.join(__dirname,'public','index.html')));
 app.use((req,res)=>{if(req.path.startsWith('/api/'))return res.status(404).json({error:'Not found'});res.sendFile(path.join(__dirname,'public','index.html'))});
