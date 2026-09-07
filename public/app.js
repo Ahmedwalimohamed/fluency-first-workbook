@@ -532,6 +532,7 @@ function workbook(){
    <button class="ghost-btn" id="backWorkbookLessons">${backLabel}</button>
    ${englishGateLogo('englishgate-logo-lesson')}
    <div><p>${escapeHtml(COURSE.title||COURSE.moduleTitle||'EnglishGate')} · Workbook</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div>
+   ${lessonVisualThumbHtml(l)}
    ${canRevise?'<button class="ghost-btn" id="reviseLessonFromWorkbook">Lesson book</button>':preview?'<span class="eg-unavailable">Preview mode</span>':''}
   </header>
   <div class="eg-lesson-layout">
@@ -620,6 +621,21 @@ function vocabActivity(l){
 }
 function questionSetHtml(qs,prefix,label){
  return qs.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>${label} · ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${radio(prefix+i,q.options,q.answer,q.tag)}</article>`).join('');
+}
+const LESSON_VISUALS={
+ w1l1:{src:'/assets/lesson-visuals/w1l1.svg',alt:'Two adult learners discussing English goals together at a table with a laptop and notebooks.',prompt:'Where might these learners use English in real life?'},
+ w1l2:{src:'/assets/lesson-visuals/w1l2.svg',alt:'Two professionals greeting each other with a handshake in a modern office.',prompt:'What information do people usually share when they meet professionally?'},
+ w1l3:{src:'/assets/lesson-visuals/w1l3.svg',alt:'Two adults having a focused conversation while one person takes a moment to think.',prompt:'What can a speaker do when they need more time to think?'}
+};
+function lessonVisualHtml(l){
+ const v=LESSON_VISUALS[l?.id];
+ if(!v)return '';
+ return `<figure class="eg-lesson-visual"><div class="eg-lesson-visual-media"><img src="${escapeAttr(v.src)}" alt="${escapeAttr(v.alt)}" loading="eager"></div><figcaption><span>Before you begin</span><strong>${escapeHtml(v.prompt)}</strong></figcaption></figure>`;
+}
+function lessonVisualThumbHtml(l){
+ const v=LESSON_VISUALS[l?.id];
+ if(!v)return '';
+ return `<div class="eg-lesson-visual-thumb" title="Lesson visual"><img src="${escapeAttr(v.src)}" alt="" aria-hidden="true"></div>`;
 }
 function listeningActivity(l){
  const all=(l.listening?.questions||[]).slice(0,10),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');

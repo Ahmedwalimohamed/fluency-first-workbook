@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Professional introduction</title>
+<desc id="desc">Two professionals greet one another with a handshake in a modern office.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity=".12"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#bg)"/>
+<rect x="80" y="70" width="1120" height="500" rx="34" fill="#ffffff" filter="url(#shadow)"/>
+<rect x="110" y="105" width="420" height="300" rx="20" fill="#dbeafe"/>
+<rect x="750" y="105" width="420" height="300" rx="20" fill="#e0e7ff"/>
+<path d="M320 105v300M960 105v300" stroke="#ffffff" stroke-width="12" opacity=".85"/>
+<rect x="540" y="130" width="200" height="275" rx="24" fill="#f1f5f9"/>
+<circle cx="640" cy="230" r="55" fill="#cbd5e1"/>
+<rect x="590" y="300" width="100" height="70" rx="16" fill="#94a3b8"/>
+<g>
+  <circle cx="390" cy="275" r="62" fill="#8d5d45"/>
+  <path d="M335 275c5-70 109-92 118-6-23-19-50-29-79-25-15 2-28 8-39 17z" fill="#111827"/>
+  <rect x="320" y="340" width="145" height="190" rx="34" fill="#0f172a"/>
+  <path d="M460 395c70 28 112 56 160 95" stroke="#8d5d45" stroke-width="28" stroke-linecap="round"/>
+  <path d="M355 530l-42 95M430 530l45 95" stroke="#111827" stroke-width="30" stroke-linecap="round"/>
+</g>
+<g>
+  <circle cx="890" cy="275" r="62" fill="#d7a77a"/>
+  <path d="M832 276c8-81 118-87 120 2-20-17-44-27-71-27-18 0-34 5-49 13z" fill="#4b5563"/>
+  <rect x="815" y="340" width="150" height="190" rx="34" fill="#2563eb"/>
+  <path d="M820 395c-67 28-110 56-158 95" stroke="#d7a77a" stroke-width="28" stroke-linecap="round"/>
+  <path d="M852 530l-48 95M930 530l44 95" stroke="#0f172a" stroke-width="30" stroke-linecap="round"/>
+</g>
+<ellipse cx="640" cy="500" rx="70" ry="34" fill="#f8fafc"/>
+<path d="M590 486c18-18 37-27 55-27 20 0 39 9 55 27-11 23-28 35-54 35-25 0-44-12-56-35z" fill="#f1c7a4" stroke="#b77953" stroke-width="4"/>
+<rect x="300" y="590" width="680" height="20" rx="10" fill="#cbd5e1"/>
+<circle cx="1110" cy="605" r="38" fill="#f59e0b" opacity=".18"/>
+</svg>
