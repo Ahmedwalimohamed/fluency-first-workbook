@@ -225,8 +225,10 @@ app.post('/api/teacher/assignments',auth,teacherOnly,async(req,res)=>{
 });
 app.post('/api/teacher/students/:id/reset-password',auth,teacherOnly,async(req,res)=>{const owns=await pool.query(`select 1 from enrollments es join classes c on c.id=es.class_id where es.user_id=$1 and c.teacher_id=$2`,[req.params.id,req.user.id]);if(!owns.rowCount)return res.status(404).json({error:'Student not found in your classes.'});const pw=tempPassword();await pool.query('update users set password_hash=$1 where id=$2 and role=$3',[await bcrypt.hash(pw,12),req.params.id,'student']);res.json({temporaryPassword:pw})});
 
+app.use('/assets',express.static(path.join(__dirname,'public','assets')));
+app.get('/lesson-visuals.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','lesson-visuals.js')));
 app.get('/styles.css',(req,res)=>res.sendFile(path.join(__dirname,'public','styles.css')));
-app.get('/app.js',(req,res)=>res.sendFile(path.join(__dirname,'public','app.js')));
+app.get('/app.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','app.js')));
 app.get('/live-books.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','live-books.js')));
 app.get('/speakup-b2-blueprint.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','speakup-b2-blueprint.js')));
 app.get('/live-books.json',(req,res)=>res.type('application/json').sendFile(path.join(__dirname,'public','live-books.json')));
