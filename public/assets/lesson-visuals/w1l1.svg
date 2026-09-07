@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Adult learners discussing English goals</title>
+<desc id="desc">Two adult learners sit at a table with a laptop and notebooks while discussing an English lesson.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eff6ff"/><stop offset="1" stop-color="#f8fafc"/></linearGradient>
+  <linearGradient id="desk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cbd5e1"/><stop offset="1" stop-color="#e2e8f0"/></linearGradient>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#0f172a" flood-opacity=".12"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#bg)"/>
+<circle cx="1100" cy="120" r="150" fill="#dbeafe"/>
+<circle cx="120" cy="620" r="190" fill="#ede9fe"/>
+<rect x="150" y="440" width="980" height="130" rx="28" fill="url(#desk)" filter="url(#shadow)"/>
+<rect x="525" y="235" width="250" height="165" rx="16" fill="#0f172a" filter="url(#shadow)"/>
+<rect x="540" y="250" width="220" height="130" rx="9" fill="#ffffff"/>
+<rect x="570" y="278" width="95" height="74" rx="10" fill="#dbeafe"/>
+<circle cx="618" cy="303" r="20" fill="#2563eb"/>
+<path d="M592 342c18-27 38-37 55-37s37 10 56 37" fill="#93c5fd"/>
+<rect x="690" y="278" width="45" height="11" rx="5.5" fill="#94a3b8"/>
+<rect x="690" y="302" width="55" height="11" rx="5.5" fill="#cbd5e1"/>
+<rect x="690" y="326" width="36" height="11" rx="5.5" fill="#cbd5e1"/>
+<path d="M495 400h310l38 40H456z" fill="#475569"/>
+<g>
+  <circle cx="330" cy="300" r="58" fill="#d7a77a"/>
+  <path d="M276 296c8-78 112-86 122-4-20-20-40-30-60-29-22 1-42 12-62 33z" fill="#1f2937"/>
+  <rect x="270" y="355" width="135" height="150" rx="32" fill="#2563eb"/>
+  <path d="M398 390c55 18 92 42 126 75" stroke="#d7a77a" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="534" cy="470" r="15" fill="#d7a77a"/>
+  <path d="M300 505l-48 80M375 505l54 80" stroke="#0f172a" stroke-width="28" stroke-linecap="round"/>
+</g>
+<g>
+  <circle cx="950" cy="298" r="58" fill="#8d5d45"/>
+  <path d="M895 300c7-72 106-89 116-9-24-21-51-31-80-26-12 2-24 7-36 14z" fill="#111827"/>
+  <rect x="885" y="355" width="135" height="150" rx="32" fill="#ffffff" stroke="#cbd5e1" stroke-width="5"/>
+  <path d="M885 393c-52 22-93 48-126 75" stroke="#8d5d45" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="750" cy="474" r="15" fill="#8d5d45"/>
+  <path d="M920 505l-54 80M990 505l50 80" stroke="#0f172a" stroke-width="28" stroke-linecap="round"/>
+</g>
+<rect x="260" y="448" width="170" height="16" rx="8" fill="#ffffff"/>
+<rect x="855" y="448" width="170" height="16" rx="8" fill="#ffffff"/>
+<path d="M448 185c0-42 35-77 77-77h90c42 0 77 35 77 77v5c0 42-35 77-77 77h-40l-35 33 8-33h-23c-42 0-77-35-77-77z" fill="#ffffff" filter="url(#shadow)"/>
+<circle cx="530" cy="188" r="10" fill="#2563eb"/><circle cx="570" cy="188" r="10" fill="#2563eb"/><circle cx="610" cy="188" r="10" fill="#2563eb"/>
+</svg>
