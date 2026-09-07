@@ -179,6 +179,20 @@ app.post('/api/admin/students',auth,adminOnly,async(req,res)=>{
  const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
  const id='s_'+crypto.randomUUID(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw,passwordWasGenerated})}catch(e){await client.query('rollback');throw e}finally{client.release()}
 });
+async function transferStudent(req,res,isAdmin){
+ const studentId=String(req.params.id||'').trim(),classId=String(req.body.classId||'').trim();
+ if(!studentId||!classId)return res.status(400).json({error:'Choose a student and destination class.'});
+ const student=await pool.query("select id,name from users where id=$1 and role='student'",[studentId]);if(!student.rowCount)return res.status(404).json({error:'Student not found.'});
+ let target;
+ if(isAdmin){
+  target=await pool.query('select id,name from classes where id=$1',[classId]);if(!target.rowCount)return res.status(400).json({error:'Choose a valid class.'});
+ }else{
+  const ownsStudent=await pool.query(`select 1 from enrollments e join classes c on c.id=e.class_id where e.user_id=$1 and c.teacher_id=$2`,[studentId,req.user.id]);if(!ownsStudent.rowCount)return res.status(404).json({error:'Student not found in your classes.'});
+  target=await pool.query('select id,name from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);if(!target.rowCount)return res.status(403).json({error:'You can only transfer students to your own classes.'});
+ }
+ const client=await pool.connect();try{await client.query('begin');if(isAdmin){await client.query('delete from enrollments where user_id=$1',[studentId]);}else{await client.query('delete from enrollments where user_id=$1 and class_id in (select id from classes where teacher_id=$2)',[studentId,req.user.id]);}await client.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',[classId,studentId]);await client.query('commit');res.json({ok:true,studentId,classId,className:target.rows[0].name});}catch(e){await client.query('rollback');throw e}finally{client.release()}
+}
+app.patch('/api/admin/students/:id/class',auth,adminOnly,(req,res)=>transferStudent(req,res,true));
 app.post('/api/admin/users/:id/reset-password',auth,adminOnly,async(req,res)=>{
  const q=await pool.query("select id,role from users where id=$1 and role in ('teacher','student')",[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'User not found.'});
  const pw=tempPassword();await pool.query('update users set password_hash=$1 where id=$2',[await bcrypt.hash(pw,12),req.params.id]);res.json({temporaryPassword:pw});
@@ -192,6 +206,7 @@ app.delete('/api/admin/classes/:id',auth,adminOnly,async(req,res)=>{
 });
 
 app.post('/api/teacher/students',auth,teacherOnly,async(req,res)=>{const whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});const owns=await pool.query('select 1 from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);if(!owns.rowCount)return res.status(403).json({error:'You cannot add students to this class.'});const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}});
+app.patch('/api/teacher/students/:id/class',auth,teacherOnly,(req,res)=>transferStudent(req,res,false));
 app.post('/api/teacher/assignments',auth,teacherOnly,async(req,res)=>{
  const classId=String(req.body.classId||'').trim(),bookId=String(req.body.bookId||'').trim(),lessonId=String(req.body.lessonId||'').trim(),lessonTitle=String(req.body.lessonTitle||'').trim(),lessonNumber=Number(req.body.lessonNumber),allowed=['vocabulary','listening','grammar','writing'],skills=Array.isArray(req.body.skills)?req.body.skills.filter(x=>allowed.includes(x)):[];
  if(!classId||!bookId||!lessonId||!lessonTitle||!Number.isInteger(lessonNumber)||lessonNumber<1||skills.length<1)return res.status(400).json({error:'Invalid workbook assignment.'});
