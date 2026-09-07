@@ -518,33 +518,40 @@ function isWorkbookPreview(){return (session?.role==='admin'&&currentPage==='adm
 function firstOpenStep(sid,lid){return WORKBOOK_STEPS.find(step=>!skillCompletionFor(sid,lid).includes(step))||WORKBOOK_STEPS[WORKBOOK_STEPS.length-1]}
 function workbook(){
  setWorkbookDesignMode(true);
- const sid=session.id,l=lesson(),steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),preview=isWorkbookPreview();
- title(`Lesson ${l.number}`,WORKBOOK_LABELS[currentStep]);
- const avatar=escapeHtml((session?.name||'E').trim().charAt(0).toUpperCase()||'E');
- $('content').innerHTML=`<section class="eg-workbook ${preview?'admin-preview-workbook':''}">
-  <header class="eg-designed-topbar">
-   <button class="eg-brand-button" id="egWorkbookHome">EnglishGate</button>
-   <nav class="eg-designed-nav" aria-label="Workbook navigation">
-    <button id="egWorkbookLearn">Learn</button>
-    <span class="active">Practice</span>
-    <button id="egWorkbookProgress">Progress</button>
-   </nav>
-   <div class="eg-designed-meta">
-    <span>Lesson ${l.number} · ${WORKBOOK_LABELS[currentStep]}</span>
-    <div class="eg-mini-progress"><i style="width:${((idx+1)/steps.length)*100}%"></i></div>
-    <b>${idx+1} / ${steps.length}</b>
-    <button class="eg-avatar-button" id="egWorkbookProfile">${avatar}</button>
-   </div>
+ const sid=session.id,l=lesson(),steps=WORKBOOK_STEPS,idx=Math.max(0,steps.indexOf(currentStep)),preview=isWorkbookPreview();
+ const completed=preview?[]:skillCompletionFor(sid,l.id),firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id));
+ const stageButtons=steps.map((step,i)=>{
+  const allowed=preview||completed.includes(step)||i<=firstOpen,done=!preview&&completed.includes(step);
+  return `<button class="eg-stage ${step===currentStep?'is-current':''} ${done?'is-done':''}" data-workbook-stage="${allowed?step:''}" ${allowed?'':'disabled'} ${step===currentStep?'aria-current="step"':''}><span>${done?'✓':i+1}</span><strong>${escapeHtml(WORKBOOK_LABELS[step].toLowerCase())}</strong></button>`;
+ }).join('');
+ const c=session?.role==='student'?studentClass(sid):null,live=session?.role==='student'?liveBookForClass(c):null,canRevise=Boolean(live?.lessons?.some(x=>x.number===l.number));
+ const backLabel=preview?'← Workbooks':'← Lessons',goal=l.outcome||`Practise the language from Lesson ${l.number} and check your understanding.`;
+ title('Workbook','Lesson '+l.number);
+ $('content').innerHTML=`<section class="eg-lesson eg-workbook lesson-book-workbook ${preview?'admin-preview-workbook':''}">
+  <header class="eg-lesson-header">
+   <button class="ghost-btn" id="backWorkbookLessons">${backLabel}</button>
+   <div><p>${escapeHtml(COURSE.title||COURSE.moduleTitle||'EnglishGate')} · Workbook</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div>
+   ${canRevise?'<button class="ghost-btn" id="reviseLessonFromWorkbook">Lesson book</button>':preview?'<span class="eg-unavailable">Preview mode</span>':''}
   </header>
-  <main class="eg-workbook-main">
-   <div id="activityPanel" class="activity-card focused-activity eg-workbook-surface"></div>
-  </main>
+  <div class="eg-lesson-layout">
+   <aside class="eg-stage-list">
+    <p class="eg-label">Workbook stages</p>
+    <nav aria-label="Workbook stages">${stageButtons}</nav>
+    <details class="eg-goal"><summary>Practice goal</summary><p>${escapeHtml(goal)}</p></details>
+   </aside>
+   <div class="eg-teaching-surface eg-workbook-teaching-surface">
+    <header class="eg-stage-heading">
+     <p class="eg-label">Workbook stage ${idx+1} of ${steps.length}</p>
+     <h2 id="workbookStageTitle" tabindex="-1">${escapeHtml(WORKBOOK_LABELS[currentStep].toLowerCase())}</h2>
+    </header>
+    <article id="activityPanel" class="eg-stage-content eg-workbook-stage-content" aria-labelledby="workbookStageTitle"></article>
+    <footer class="eg-lesson-footer eg-workbook-footer" id="workbookStageFooter"></footer>
+   </div>
+  </div>
  </section>`;
- const leaveTo=page=>{setWorkbookDesignMode(false);currentPage=page;renderNav();renderPage()};
- $('egWorkbookHome').onclick=()=>leaveTo(session.role==='student'?'home':session.role==='teacher'?'teacher-home':'admin-home');
- $('egWorkbookLearn').onclick=()=>{if(preview){setWorkbookDesignMode(false);returnToWorkbookLessons()}else leaveTo('course')};
- $('egWorkbookProgress').onclick=()=>{if(preview){setWorkbookDesignMode(false);returnToWorkbookLessons()}else leaveTo('progress')};
- $('egWorkbookProfile').onclick=()=>{if(session.role==='student')leaveTo('profile')};
+ $('backWorkbookLessons').onclick=()=>{setWorkbookDesignMode(false);if(preview){returnToWorkbookLessons();return}currentPage='course';renderNav();studentCourse()};
+ if($('reviseLessonFromWorkbook'))$('reviseLessonFromWorkbook').onclick=()=>{activeStudentLiveLessonNumber=l.number;activeStudentSectionIndex=0;currentPage='student-live-lesson';renderNav();studentLiveLesson()};
+ document.querySelectorAll('[data-workbook-stage]').forEach(btn=>{if(!btn.dataset.workbookStage)return;btn.onclick=()=>{currentStep=btn.dataset.workbookStage;workbook();setTimeout(()=>$('workbookStageTitle')?.focus(),0)}});
  renderActivity();
 }
 function renderActivity(){
@@ -553,9 +560,13 @@ function renderActivity(){
  if(currentStep==='listening')p.innerHTML=listeningActivity(l);
  if(currentStep==='grammar')p.innerHTML=grammarActivity(l);
  if(currentStep==='writing')p.innerHTML=writingActivity(l);
- const row=p.querySelector('.skill-action-row');
- if(row){
-  row.insertAdjacentHTML('afterbegin','<button class="secondary-btn eg-previous-btn" id="previousActivity">← Previous</button><button class="eg-hint-btn" id="activityHint">♧ Hint</button>');
+ const row=p.querySelector('.skill-action-row'),footer=$('workbookStageFooter');
+ if(row&&footer){
+  row.insertAdjacentHTML('afterbegin','<button class="ghost-btn eg-previous-btn" id="previousActivity">← Previous</button><button class="ghost-btn eg-hint-btn" id="activityHint">Hint</button>');
+  while(row.firstChild)footer.appendChild(row.firstChild);
+  row.remove();
+ }else if(footer){
+  footer.innerHTML='<button class="ghost-btn eg-previous-btn" id="previousActivity">← Previous</button><button class="ghost-btn eg-hint-btn" id="activityHint">Hint</button>';
  }
  wireActivity(l);
 }
