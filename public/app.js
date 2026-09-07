@@ -366,21 +366,23 @@ function liveLineHtml(line,mode='normal'){
 }
 function renderLiveContent(text){
  const lines=String(text||'').split('\n'),out=[];
- let mode='normal',vocabOpen=false;
+ let mode='normal',vocabOpen=false,promptOpen=false;
  const closeVocab=()=>{if(vocabOpen){out.push('</div>');vocabOpen=false}};
+ const closePrompts=()=>{if(promptOpen){out.push('</div>');promptOpen=false}};
  for(const raw of lines){
   const t=raw.trim();if(!t)continue;
   if(/^WORD\s+EXAMPLE$/i.test(t)){
-   closeVocab();mode='vocabulary';vocabOpen=true;
+   closePrompts();closeVocab();mode='vocabulary';vocabOpen=true;
    out.push('<div class="live-vocab-table"><div class="live-vocab-head"><span>Target word</span><span>Example in context</span></div>');
    continue;
   }
   if(/^(Useful Expressions|Pronunciation|READ|Examples|Complete the Sentences|Make It Personal|Challenge|Check Your Understanding|SPEAKING CHALLENGE|FLUENCY MISSION|HOMEWORK|REFLECTION)$/i.test(t)){
-   closeVocab();mode='normal';
+   closePrompts();closeVocab();mode='normal';
   }
   const html=liveLineHtml(t,mode);
-  if(html)out.push(html);
+  if(html){if(html.startsWith('<div class="live-prompt-row"')){if(!promptOpen){out.push('<div class="live-prompt-grid">');promptOpen=true}out.push(html)}else{closePrompts();out.push(html)}}
  }
+ closePrompts();
  closeVocab();
  return out.join('');
 }
