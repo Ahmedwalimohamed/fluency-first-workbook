@@ -970,9 +970,19 @@ img,video,audio{max-width:100%}
 .eg-stage-content{padding:24px 36px 36px;min-height:300px;font-size:1.125rem;line-height:1.75;overflow-wrap:anywhere}
 .eg-stage-content>p{font-size:1.125rem;line-height:1.75;max-width:75ch;margin:0 0 18px}
 .eg-stage-content .live-book-section,.eg-stage-content .live-book-subhead{font-size:1.125rem;line-height:1.5;margin:24px 0 12px}
+.eg-stage-content .live-prompt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0 24px}
 .eg-stage-content .live-prompt-row{grid-template-columns:30px minmax(0,1fr);gap:14px;padding:12px 0}
 .eg-stage-content .live-prompt-row p,.eg-stage-content .live-book-bullet{font-size:1.125rem;line-height:1.65}
 .eg-stage-content .live-prompt-row>span{width:28px;height:28px;font-size:.875rem}
+.eg-stage-content .live-prompt-grid .live-prompt-row{position:relative;grid-template-columns:38px minmax(0,1fr);gap:12px;align-items:start;min-height:118px;padding:18px;border:1px solid #d8e2e6;border-radius:16px;background:#fff;box-shadow:0 10px 28px rgba(24,50,71,.05)}
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+1){background:#fff8f5;border-color:#f4c9bc}
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+2){background:#f4fbf8;border-color:#bcdad0}
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+3){background:#f7f8ff;border-color:#cfd6f3}
+.eg-stage-content .live-prompt-grid .live-prompt-row>span{width:34px;height:34px;border:0;background:#17644f;color:#fff}
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+1)>span{background:#f05a3f}
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+2)>span{background:#17644f}
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+3)>span{background:#4c5fd5}
+.eg-stage-content .live-prompt-grid .live-prompt-row p{margin:1px 0 0!important;font-size:1rem;line-height:1.55;font-weight:650;color:#183247}
 .eg-stage-content .live-vocab-row{padding:16px;gap:16px}
 .eg-stage-content .live-vocab-word strong,.eg-stage-content .live-vocab-example span{font-size:1.125rem;line-height:1.6}
 .eg-stage-content .live-vocab-head,.eg-stage-content small{font-size:.875rem}
@@ -993,6 +1003,8 @@ img,video,audio{max-width:100%}
  .eg-stage{width:auto;flex-shrink:0;max-width:240px;padding:8px 12px}
  .eg-goal{margin-top:4px;padding-top:4px}
  .eg-stage-content{padding:20px;min-height:220px}
+ .eg-stage-content .live-prompt-grid{grid-template-columns:1fr;gap:10px}
+ .eg-stage-content .live-prompt-grid .live-prompt-row{min-height:0;padding:15px}
  .eg-stage-heading{padding:20px}
  .eg-workbook-note{padding:16px 20px}
  .eg-lesson-footer{padding:14px;flex-wrap:wrap}
