@@ -1407,3 +1407,321 @@ img,video,audio{max-width:100%}
  .eg-audio-console .audio-icon-btn,.eg-audio-console .audio-speed{grid-column:auto}
  .eg-audio-console #audioStatus{grid-column:1/-1}
 }
+
+
+
+/* Workbook mirrors lesson-book player v1 */
+.lesson-book-workbook{
+ max-width:1440px!important;
+ margin:0 auto!important;
+ padding:0!important;
+ color:#183247!important;
+ background:transparent!important
+}
+.lesson-book-workbook .eg-lesson-layout{align-items:start}
+.lesson-book-workbook .eg-workbook-teaching-surface{min-width:0}
+.lesson-book-workbook .eg-stage.is-done:not(.is-current)>span{
+ background:#e5f2ee;
+ border-color:#bcdad0;
+ color:#17644f;
+ font-weight:800
+}
+.lesson-book-workbook .eg-stage:disabled{opacity:.48;cursor:not-allowed}
+.lesson-book-workbook .eg-stage:disabled:hover{background:transparent}
+.lesson-book-workbook .eg-workbook-stage-content{
+ padding:24px 36px 36px!important;
+ min-height:420px!important;
+ overflow:visible!important
+}
+.lesson-book-workbook .eg-skill-page{
+ padding:0!important;
+ background:transparent!important
+}
+.lesson-book-workbook .eg-skill-hero{display:none!important}
+.lesson-book-workbook .eg-skill-layout,
+.lesson-book-workbook .eg-source-task-section,
+.lesson-book-workbook .eg-writing-layout,
+.lesson-book-workbook .eg-writing-layout-designed,
+.lesson-book-workbook .eg-listening-layout,
+.lesson-book-workbook .eg-grammar-layout{
+ display:block!important;
+ padding:0!important
+}
+.lesson-book-workbook .eg-source-task-section{
+ border:0!important;
+ margin:0 0 30px!important
+}
+.lesson-book-workbook .eg-source-task-section+.eg-source-task-section{
+ padding-top:28px!important;
+ border-top:1px solid #e6ecef!important
+}
+.lesson-book-workbook .eg-editorial-panel,
+.lesson-book-workbook .eg-source-column,
+.lesson-book-workbook .eg-writing-brief{
+ position:static!important;
+ top:auto!important
+}
+.lesson-book-workbook .eg-editorial-panel,
+.lesson-book-workbook .eg-writing-brief,
+.lesson-book-workbook .eg-reading-article,
+.lesson-book-workbook .eg-listening-scene{
+ margin:0 0 24px!important;
+ padding:20px!important;
+ border:1px solid #d8e2e6!important;
+ border-radius:14px!important;
+ background:#f7faf9!important;
+ box-shadow:none!important
+}
+.lesson-book-workbook .eg-reading-article:before,
+.lesson-book-workbook .eg-reading-article:after{display:none!important}
+.lesson-book-workbook .eg-reading-article>p{
+ margin:10px 0 0!important;
+ color:#334e62!important;
+ font-family:inherit!important;
+ font-size:1.05rem!important;
+ line-height:1.75!important
+}
+.lesson-book-workbook .eg-listening-scene{
+ min-height:0!important;
+ display:block!important;
+ background:#f7faf9!important
+}
+.lesson-book-workbook .eg-listening-quote{
+ margin:16px 0!important;
+ padding:14px 16px!important;
+ border-left:3px solid #17644f!important;
+ background:#fff!important;
+ color:#334e62!important;
+ font-family:inherit!important;
+ font-size:.95rem!important
+}
+.lesson-book-workbook .eg-audio-card{
+ margin-top:16px!important;
+ padding:16px!important;
+ border:1px solid #d8e2e6!important;
+ border-radius:12px!important;
+ background:#fff!important
+}
+.lesson-book-workbook .eg-audio-console{
+ background:#f7faf9!important;
+ border-color:#d8e2e6!important;
+ box-shadow:none!important
+}
+.lesson-book-workbook .eg-task-panel{min-width:0}
+.lesson-book-workbook .eg-task-panel-head{
+ align-items:start!important;
+ margin:0 0 14px!important
+}
+.lesson-book-workbook .eg-task-panel-head h2,
+.lesson-book-workbook .eg-panel-heading h2,
+.lesson-book-workbook .eg-reading-article h2,
+.lesson-book-workbook .eg-listening-scene h2,
+.lesson-book-workbook .eg-writing-brief h2{
+ margin:5px 0 7px!important;
+ font-family:inherit!important;
+ font-size:1.15rem!important;
+ line-height:1.4!important;
+ color:#183247!important
+}
+.lesson-book-workbook .eg-panel-heading p,
+.lesson-book-workbook .eg-writing-brief>p,
+.lesson-book-workbook .eg-listening-scene>p{
+ font-size:.95rem!important;
+ line-height:1.6!important;
+ color:#526779!important
+}
+.lesson-book-workbook .activity-question-list{
+ display:grid!important;
+ gap:12px!important
+}
+.lesson-book-workbook .guided-question{
+ padding:18px!important;
+ border:1px solid #d8e2e6!important;
+ border-radius:14px!important;
+ background:#fff!important;
+ box-shadow:none!important
+}
+.lesson-book-workbook .guided-question>p{
+ margin:0 0 14px!important;
+ color:#183247!important;
+ font-size:1rem!important;
+ line-height:1.6!important;
+ font-weight:650!important
+}
+.lesson-book-workbook .question-stage{margin-bottom:9px!important}
+.lesson-book-workbook .question-stage span,
+.lesson-book-workbook .stage-badge{
+ background:none!important;
+ border:0!important;
+ padding:0!important;
+ color:#647782!important;
+ font-size:.78rem!important;
+ letter-spacing:.02em!important;
+ text-transform:none!important
+}
+.lesson-book-workbook .mcq-answer-slot{
+ min-height:68px!important;
+ padding:13px!important;
+ border:1px dashed #98b8aa!important;
+ border-radius:10px!important;
+ background:#f7faf9!important
+}
+.lesson-book-workbook .mcq-answer-slot.filled{
+ background:#e5f2ee!important;
+ border-color:#17644f!important
+}
+.lesson-book-workbook .mcq-option-cards{
+ display:flex!important;
+ flex-wrap:wrap!important;
+ gap:8px!important;
+ margin-top:10px!important
+}
+.lesson-book-workbook .mcq-option-card{
+ width:auto!important;
+ max-width:100%!important;
+ min-height:42px!important;
+ padding:9px 13px!important;
+ justify-content:flex-start!important;
+ text-align:left!important;
+ border:1px solid #cbd8dd!important;
+ border-radius:10px!important;
+ background:#fff!important;
+ color:#183247!important;
+ box-shadow:none!important
+}
+.lesson-book-workbook .mcq-option-card.selected{
+ background:#e5f2ee!important;
+ border-color:#17644f!important;
+ color:#165745!important
+}
+.lesson-book-workbook .eg-vocab-reference-grid{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:10px!important;
+ margin:16px 0!important
+}
+.lesson-book-workbook .eg-vocab-reference-card,
+.lesson-book-workbook .eg-vocab-reference-card:nth-child(2n){
+ min-height:0!important;
+ padding:15px!important;
+ border:1px solid #d8e2e6!important;
+ border-radius:12px!important;
+ background:#fff!important
+}
+.lesson-book-workbook .eg-vocab-reference-card>span{
+ background:#e5f2ee!important;
+ color:#17644f!important
+}
+.lesson-book-workbook .eg-vocab-reference-card strong{
+ color:#183247!important;
+ font-family:inherit!important;
+ font-size:1rem!important
+}
+.lesson-book-workbook .eg-tip-card{
+ margin-top:12px!important;
+ padding:13px 14px!important;
+ border:1px solid #d8e2e6!important;
+ border-radius:12px!important;
+ background:#f7faf9!important;
+ color:#526779!important
+}
+.lesson-book-workbook .eg-grammar-coach{
+ background:#f7faf9!important
+}
+.lesson-book-workbook .grammar-rule-card,
+.lesson-book-workbook .assessment-notice{
+ background:#fff!important;
+ border-color:#d8e2e6!important
+}
+.lesson-book-workbook .eg-sentence-lab{
+ margin-top:14px!important;
+ padding:16px!important;
+ border:1px solid #d8e2e6!important;
+ border-radius:12px!important;
+ background:#fff!important;
+ color:#183247!important
+}
+.lesson-book-workbook .eg-sentence-lab>small{color:#647782!important;opacity:1!important}
+.lesson-book-workbook .eg-sentence-lab>p{
+ color:#183247!important;
+ font-family:inherit!important
+}
+.lesson-book-workbook .eg-sentence-lab>div span{
+ background:#f7faf9!important;
+ border:1px solid #d8e2e6!important;
+ color:#334e62!important
+}
+.lesson-book-workbook .eg-writing-brief{
+ background:#f7faf9!important
+}
+.lesson-book-workbook .eg-writing-workspace{
+ display:grid!important;
+ gap:18px!important
+}
+.lesson-book-workbook .eg-phrase-bank>span{
+ background:#fff!important;
+ border-color:#d8e2e6!important;
+ color:#334e62!important
+}
+.lesson-book-workbook .eg-writing-reminder{
+ margin-top:15px!important;
+ padding-top:14px!important;
+ border-color:#d8e2e6!important
+}
+.lesson-book-workbook .eg-message-composer{
+ overflow:hidden!important;
+ border:1px solid #d8e2e6!important;
+ border-radius:14px!important;
+ background:#fff!important
+}
+.lesson-book-workbook .eg-message-bar{
+ background:#f7faf9!important;
+ border-color:#d8e2e6!important
+}
+.lesson-book-workbook .eg-message-avatar{
+ background:#17644f!important;
+ color:#fff!important
+}
+.lesson-book-workbook textarea{
+ background:#fff!important;
+ border-color:#adbec7!important
+}
+.lesson-book-workbook .transcript-card{
+ margin-top:20px!important;
+ background:#f7faf9!important;
+ border-color:#d8e2e6!important
+}
+.lesson-book-workbook .transcript-card summary{color:#17644f!important}
+.lesson-book-workbook .skill-action-row{display:none!important}
+.lesson-book-workbook .eg-workbook-footer{
+ min-height:76px;
+ justify-content:flex-end!important;
+ flex-wrap:wrap
+}
+.lesson-book-workbook .eg-workbook-footer .eg-previous-btn{margin-right:auto}
+.lesson-book-workbook .eg-workbook-footer .eg-hint-btn{
+ background:#fff!important;
+ border:1px solid #d8e2e6!important;
+ color:#526779!important
+}
+.lesson-book-workbook .eg-workbook-footer .primary-btn{
+ background:#17644f!important;
+ color:#fff!important;
+ border-color:#17644f!important
+}
+.lesson-book-workbook .performance-result{
+ margin-top:20px!important;
+ border-radius:14px!important
+}
+@media(max-width:1050px){
+ .lesson-book-workbook .eg-vocab-reference-grid{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:760px){
+ .lesson-book-workbook .eg-workbook-stage-content{padding:20px!important;min-height:300px!important}
+ .lesson-book-workbook .eg-vocab-reference-grid{grid-template-columns:1fr!important}
+ .lesson-book-workbook .mcq-option-cards{display:grid!important;grid-template-columns:1fr!important}
+ .lesson-book-workbook .mcq-option-card{width:100%!important}
+ .lesson-book-workbook .eg-workbook-footer{padding:14px!important;gap:8px!important}
+ .lesson-book-workbook .eg-workbook-footer .eg-previous-btn{margin-right:0}
+ .lesson-book-workbook .eg-workbook-footer>*{flex:1 1 150px}
+}
