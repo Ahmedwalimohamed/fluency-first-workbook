@@ -557,7 +557,7 @@ function workbookVocabReferences(l){
  const seen=new Set(),items=[];
  const push=(word,meaning,example='')=>{word=String(word||'').trim();if(!word||seen.has(word.toLowerCase()))return;seen.add(word.toLowerCase());items.push({word,meaning:String(meaning||vocabMeaning(word)),example:String(example||'')})};
  (l.expressions||[]).forEach(x=>push(x.text,x.job,x.example||''));
- (l.targetVocabulary||[]).forEach(x=>push(x,vocabMeaning(x),''));
+ (Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).forEach(x=>push(x,vocabMeaning(x),''));
  const questions=l.vocabulary?.items||[];
  questions.forEach(q=>{if(items.length>=4)return;const a=String(q.answer||'').trim();if(a&&a.split(/\s+/).length<=5)push(a,vocabMeaning(a),'')});
  return items.slice(0,4);
