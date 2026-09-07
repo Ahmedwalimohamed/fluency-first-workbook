@@ -1,0 +1,40 @@
+/* EnglishGate Lesson Visuals */
+.lesson-visual{margin:18px 0 20px;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:var(--card)}
+.lesson-visual-media{aspect-ratio:16/9;overflow:hidden;background:#eef2f7;position:relative}
+.lesson-visual-media img{width:100%;height:100%;display:block;object-fit:cover}
+.lesson-visual-media.is-empty{display:grid;place-items:center;background:linear-gradient(135deg,#eef5f8,#f8fafc)}
+.lesson-visual-fallback{height:100%;min-height:220px;display:grid;place-items:center;align-content:center;gap:7px;text-align:center;color:var(--muted);padding:24px}
+.lesson-visual-fallback strong{color:var(--text)}
+.lesson-visual-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#fff;border:1px solid var(--border);color:var(--navy);font-size:1.4rem}
+.lesson-visual figcaption{padding:13px 16px 15px;line-height:1.5;color:var(--text);background:#fff}
+.lesson-visual figcaption span{display:block;color:var(--teal);font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.09em;margin-bottom:3px}
+.lesson-visual.compact{margin:0}
+.lesson-visual.compact figcaption{display:none}
+
+.lesson-admin-card{padding:0!important;overflow:hidden}
+.lesson-admin-copy{padding:16px}
+.lesson-admin-copy h3{margin:10px 0 6px}
+.lesson-admin-copy p{color:var(--muted);font-size:.88rem;line-height:1.5;min-height:42px}
+.lesson-admin-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:14px 0 8px;font-size:.78rem;color:var(--muted)}
+.lesson-admin-meta strong{color:var(--text)}
+.lesson-visual-manage{width:100%;margin-top:14px}
+.lesson-visual-thumb{aspect-ratio:16/9;background:#eef2f7;overflow:hidden;border-bottom:1px solid var(--border)}
+.lesson-visual-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.lesson-visual-thumb.is-empty{display:grid;place-items:center;background:linear-gradient(135deg,#eef5f8,#f8fafc)}
+.lesson-visual-thumb.is-empty>div{display:grid;place-items:center;gap:6px;color:var(--muted)}
+.lesson-visual-thumb.is-empty span{font-size:1.6rem;color:var(--navy)}
+
+.visual-editor-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:24px;align-items:start}
+.visual-editor-preview{position:sticky;top:0}
+.visual-editor-preview .lesson-visual{margin:0}
+.visual-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}
+.visual-or:before,.visual-or:after{content:"";height:1px;background:var(--border);flex:1}
+.visual-editor-actions{display:flex;gap:10px;flex-wrap:wrap}
+.danger-text{color:var(--danger)!important}
+
+@media(max-width:760px){
+  .visual-editor-grid{grid-template-columns:1fr}
+  .visual-editor-preview{position:static}
+  .lesson-visual-fallback{min-height:160px}
+  .lesson-admin-meta{align-items:flex-start;flex-direction:column}
+}
