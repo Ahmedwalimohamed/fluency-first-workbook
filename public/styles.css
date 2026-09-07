@@ -1857,3 +1857,23 @@ img,video,audio{max-width:100%}
  .eg-lesson-visual{border-radius:16px;margin-bottom:18px}
  .eg-lesson-visual figcaption{align-items:flex-start;flex-direction:column;gap:4px;padding:12px 14px}
 }
+
+.eg-lesson-visual-thumb{
+ margin-left:auto;
+ width:112px;
+ aspect-ratio:16/9;
+ border-radius:12px;
+ overflow:hidden;
+ border:1px solid #e2e8f0;
+ background:#f8fafc;
+ flex:0 0 auto;
+}
+.eg-lesson-visual-thumb img{
+ display:block;
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+@media(max-width:760px){
+ .eg-lesson-visual-thumb{width:88px}
+}
