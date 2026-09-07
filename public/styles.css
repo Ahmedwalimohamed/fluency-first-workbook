@@ -1897,3 +1897,14 @@ img,video,audio{max-width:100%}
  .eg-lesson-visual figcaption{align-items:flex-start;flex-direction:column;gap:4px;padding:12px 14px}
  .eg-lesson-visual-thumb{width:88px}
 }
+
+/* Navigation scroll stability */
+html{scroll-behavior:auto!important}
+.content,
+.course-shell,
+.eg-lesson,
+.eg-workbook,
+.eg-teaching-surface,
+.eg-workbook-teaching-surface{
+ overflow-anchor:none;
+}
