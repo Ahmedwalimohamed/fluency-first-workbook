@@ -1833,3 +1833,67 @@ img,video,audio{max-width:100%}
  .lesson-visual figcaption small{white-space:normal}
  .lesson-visual-fallback{min-height:160px}
 }
+
+
+/* Live lesson visuals: Reading & Listening */
+.eg-lesson-visual{
+ margin:0 0 24px;
+ background:#fff;
+ border:1px solid #e2e8f0;
+ border-radius:22px;
+ overflow:hidden;
+ box-shadow:0 10px 28px rgba(15,23,42,.06);
+}
+.eg-lesson-visual-media{
+ aspect-ratio:16/9;
+ background:#f8fafc;
+ overflow:hidden;
+}
+.eg-lesson-visual-media img{
+ display:block;
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+.eg-lesson-visual figcaption{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ padding:14px 18px;
+ background:#fff;
+ border-top:1px solid #e2e8f0;
+ color:#0f172a;
+}
+.eg-lesson-visual figcaption span{
+ flex:0 0 auto;
+ font-size:.68rem;
+ font-weight:900;
+ letter-spacing:.09em;
+ text-transform:uppercase;
+ color:#2563eb;
+}
+.eg-lesson-visual figcaption strong{
+ font-size:.92rem;
+ line-height:1.45;
+}
+.eg-lesson-visual-thumb{
+ margin-left:auto;
+ width:112px;
+ aspect-ratio:16/9;
+ border-radius:12px;
+ overflow:hidden;
+ border:1px solid #e2e8f0;
+ background:#f8fafc;
+ flex:0 0 auto;
+}
+.eg-lesson-visual-thumb img{
+ display:block;
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+@media(max-width:760px){
+ .eg-lesson-visual{border-radius:16px;margin-bottom:18px}
+ .eg-lesson-visual figcaption{align-items:flex-start;flex-direction:column;gap:4px;padding:12px 14px}
+ .eg-lesson-visual-thumb{width:88px}
+}
