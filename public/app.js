@@ -290,7 +290,9 @@ function init(){if('scrollRestoration' in history)history.scrollRestoration='man
 async function login(username,password){$('loginError').textContent='';try{const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username,password})});session=r.user;await refreshState();if(session.role==='teacher')await ensureLiveBooks();$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('app').classList.remove('student-mode','teacher-mode','admin-mode');$('app').classList.add(session.role+'-mode');$('sidebarName').textContent=session.name;$('sidebarRole').textContent=session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'Student';$('sidebarAvatar').textContent=session.name[0];currentPage=session.role==='admin'?'admin-home':session.role==='teacher'?'teacher-home':'home';if(session.role==='student'&&openAssignmentFromUrl()){renderNav();renderPage();return}renderNav();renderPage()}catch(e){$('loginError').textContent=e.message||'Username or password is incorrect.'}}
 async function logout(){try{await api('/api/auth/logout',{method:'POST'})}catch{}session=null;apiDB=null;$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value=''}
 function renderNav(){const items=NAV[session.role],html=items.map(([id,icon,label])=>`<button class="nav-btn ${currentPage===id?'active':''}" data-page="${id}"><span class="nav-icon">${icon}</span>${label}</button>`).join('');if(session.role==='student'){$('sideNav').innerHTML='';$('studentTopNav').innerHTML=html;$('bottomNav').innerHTML=html+`<button class="nav-btn ${currentPage==='profile'?'active':''}" data-page="profile"><span class="nav-icon">○</span>Profile</button>`;$('studentProfileBtn').classList.remove('hidden');$('studentProfileBtn').textContent=session.name[0]}else{$('sideNav').innerHTML=html;$('studentTopNav').innerHTML='';$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.add('hidden')}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{currentPage=b.dataset.page;document.querySelector('.sidebar').classList.remove('open');renderNav();renderPage()});$('studentProfileBtn').onclick=()=>{currentPage='profile';renderNav();renderPage()};resetAppScroll()}
-function englishGateLogo(className=''){return `<img class="englishgate-logo ${escapeAttr(className)}" src="/assets/englishgate-official-logo.jpg" alt="EnglishGate">`} function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} function resetAppScroll(){
+function englishGateLogo(className=''){return `<img class="englishgate-logo ${escapeAttr(className)}" src="/assets/englishgate-official-logo.jpg" alt="EnglishGate">`} function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} 
+try{if('scrollRestoration' in history)history.scrollRestoration='manual'}catch{}
+function resetAppScroll(){
  const reset=()=>{
   try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch{window.scrollTo(0,0)}
   if(document.scrollingElement)document.scrollingElement.scrollTop=0;
@@ -303,7 +305,29 @@ function englishGateLogo(className=''){return `<img class="englishgate-logo ${es
  reset();
  requestAnimationFrame(()=>{reset();requestAnimationFrame(reset)});
  setTimeout(reset,60);
-} function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})}catch{el.focus()}resetAppScroll()} function setWorkbookDesignMode(on){document.body.classList.toggle('workbook-design-mode',Boolean(on))} async function renderPage(){
+} 
+let appScrollResetTimer=0;
+function scheduleAppScrollReset(){
+ resetAppScroll();
+ clearTimeout(appScrollResetTimer);
+ requestAnimationFrame(()=>requestAnimationFrame(resetAppScroll));
+ setTimeout(resetAppScroll,80);
+ setTimeout(resetAppScroll,220);
+ appScrollResetTimer=setTimeout(resetAppScroll,500);
+}
+function installNavigationScrollReset(){
+ const content=$('content');
+ if(!content||content.dataset.scrollResetInstalled)return;
+ content.dataset.scrollResetInstalled='true';
+ const observer=new MutationObserver(mutations=>{
+  if(mutations.some(m=>m.type==='childList'&&(m.addedNodes.length||m.removedNodes.length)))scheduleAppScrollReset();
+ });
+ observer.observe(content,{childList:true});
+ window.addEventListener('popstate',scheduleAppScrollReset);
+ window.addEventListener('pageshow',scheduleAppScrollReset);
+}
+installNavigationScrollReset();
+function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})}catch{el.focus()}scheduleAppScrollReset()} function setWorkbookDesignMode(on){document.body.classList.toggle('workbook-design-mode',Boolean(on))} async function renderPage(){
  setWorkbookDesignMode(['workbook','teacher-workbook-view','admin-workbook-view'].includes(currentPage));
  const result=session.role==='student'?renderStudent():session.role==='teacher'?renderTeacher():renderAdmin();
  await Promise.resolve(result);
