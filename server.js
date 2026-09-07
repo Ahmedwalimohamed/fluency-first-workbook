@@ -126,7 +126,7 @@ app.get('/api/state',auth,async(req,res)=>{
  const profileIds=req.user.role==='student'?[req.user.id]:studentIds;
  const profRows=profileIds.length?(await pool.query('select user_id,points,base from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
  const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base});
- const evidenceIds=req.user.role==='admin'?[]:ownStudent;
+ const evidenceIds=req.user.role==='admin'?studentIds:ownStudent;
  const atRows=evidenceIds.length?(await pool.query('select id,student_id,lesson_id,skill,score,tags,at from attempts where student_id=any($1::text[]) order by at',[evidenceIds])).rows:[];
  const cRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,step from completion where student_id=any($1::text[])',[evidenceIds])).rows:[];
  const wRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,content,score from writing_samples where student_id=any($1::text[])',[evidenceIds])).rows:[];
