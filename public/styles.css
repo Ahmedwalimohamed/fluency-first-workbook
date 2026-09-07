@@ -698,6 +698,7 @@ img,video,audio{max-width:100%}
 .live-vocab-table{display:grid;gap:8px;margin:14px 0 18px}
 .live-vocab-head{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,1.6fr);gap:10px;padding:0 12px;color:var(--muted);font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
 .live-vocab-row{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,1.6fr);gap:10px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.live-vocab-click{width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit}.live-vocab-click:hover{border-color:var(--teal);background:#f5fbf8}.topic-actions{display:flex;gap:8px;justify-content:flex-end;align-items:center}.topic-actions .primary-btn,.topic-actions .ghost-btn{min-height:38px;padding:8px 12px;white-space:nowrap}.vocab-meaning-card{display:grid;gap:6px}.vocab-meaning-card small{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}.vocab-meaning-card p{margin:0 0 12px;line-height:1.65}
 .live-vocab-word,.live-vocab-example{display:grid;gap:3px}
 .live-vocab-word small,.live-vocab-example small{display:none;color:var(--muted);font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;font-weight:900}
 .live-vocab-word strong{color:var(--navy);font-size:1rem}
@@ -711,6 +712,7 @@ img,video,audio{max-width:100%}
 @media(max-width:699px){
   .live-vocab-head{display:none}
   .live-vocab-row{grid-template-columns:1fr;gap:8px;padding:12px 13px}
+  .topic-actions{grid-column:1/-1;justify-content:stretch}.topic-actions button{width:100%}
   .live-vocab-word small,.live-vocab-example small{display:block}
   .live-vocab-word{padding-bottom:8px;border-bottom:1px solid var(--border)}
   .live-vocab-word strong{font-size:1.05rem}
