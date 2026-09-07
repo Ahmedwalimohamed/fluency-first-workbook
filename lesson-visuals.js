@@ -4,19 +4,28 @@
 
 const LESSON_VISUAL_DEFAULTS = {
   w1l1: {
-    alt: 'Adult English learner discussing personal goals with a tutor.',
-    caption: 'Look at the picture. Where might this learner use English?',
-    sourceType: 'none'
+    src: 'https://images.pexels.com/photos/5649522/pexels-photo-5649522.jpeg?auto=compress&cs=tinysrgb&w=1280&h=720&fit=crop',
+    alt: 'Two adult learners studying English together at a table while an English lesson plays on a laptop.',
+    caption: 'Look at the picture. Where might these learners use English in real life?',
+    sourceType: 'stock',
+    sourcePage: 'https://www.pexels.com/photo/high-angle-shot-of-man-and-woman-studying-together-5649522/',
+    credit: 'Thirdman / Pexels'
   },
   w1l2: {
-    alt: 'Two professionals introducing themselves in a workplace setting.',
+    src: 'https://images.pexels.com/photos/12903292/pexels-photo-12903292.jpeg?auto=compress&cs=tinysrgb&w=1280&h=720&fit=crop',
+    alt: 'Two business professionals greeting each other with a handshake in a modern office.',
     caption: 'Look at the picture. What information do people usually share when they meet professionally?',
-    sourceType: 'none'
+    sourceType: 'stock',
+    sourcePage: 'https://www.pexels.com/photo/business-people-meeting-in-the-office-12903292/',
+    credit: 'Mizuno K / Pexels'
   },
   w1l3: {
-    alt: 'Professional explaining an idea during a conversation.',
+    src: 'https://images.pexels.com/photos/9064335/pexels-photo-9064335.jpeg?auto=compress&cs=tinysrgb&w=1280&h=720&fit=crop',
+    alt: 'Two adults having a focused one-to-one conversation in a professional mentoring setting.',
     caption: 'Look at the picture. What can a speaker do when they need more time to think?',
-    sourceType: 'none'
+    sourceType: 'stock',
+    sourcePage: 'https://www.pexels.com/photo/a-man-in-black-polo-shirt-sitting-on-the-couch-9064335/',
+    credit: 'RDNE Stock project / Pexels'
   }
 };
 
