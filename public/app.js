@@ -532,6 +532,7 @@ function workbook(){
    <button class="ghost-btn" id="backWorkbookLessons">${backLabel}</button>
    ${englishGateLogo('englishgate-logo-lesson')}
    <div><p>${escapeHtml(COURSE.title||COURSE.moduleTitle||'EnglishGate')} · Workbook</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div>
+   ${lessonVisualThumbHtml(l)}
    ${canRevise?'<button class="ghost-btn" id="reviseLessonFromWorkbook">Lesson book</button>':preview?'<span class="eg-unavailable">Preview mode</span>':''}
   </header>
   <div class="eg-lesson-layout">
@@ -630,6 +631,11 @@ function lessonVisualHtml(l){
  const v=LESSON_VISUALS[l?.id];
  if(!v)return '';
  return `<figure class="eg-lesson-visual"><div class="eg-lesson-visual-media"><img src="${escapeAttr(v.src)}" alt="${escapeAttr(v.alt)}" loading="eager"></div><figcaption><span>Before you begin</span><strong>${escapeHtml(v.prompt)}</strong></figcaption></figure>`;
+}
+function lessonVisualThumbHtml(l){
+ const v=LESSON_VISUALS[l?.id];
+ if(!v)return '';
+ return `<div class="eg-lesson-visual-thumb" title="Lesson visual"><img src="${escapeAttr(v.src)}" alt="" aria-hidden="true"></div>`;
 }
 function listeningActivity(l){
  const all=(l.listening?.questions||[]).slice(0,10),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');
