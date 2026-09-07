@@ -290,7 +290,7 @@ function init(){$('loginForm').addEventListener('submit',e=>{e.preventDefault();
 async function login(username,password){$('loginError').textContent='';try{const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username,password})});session=r.user;await refreshState();if(session.role==='teacher')await ensureLiveBooks();$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('app').classList.remove('student-mode','teacher-mode','admin-mode');$('app').classList.add(session.role+'-mode');$('sidebarName').textContent=session.name;$('sidebarRole').textContent=session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'Student';$('sidebarAvatar').textContent=session.name[0];currentPage=session.role==='admin'?'admin-home':session.role==='teacher'?'teacher-home':'home';if(session.role==='student'&&openAssignmentFromUrl()){renderNav();renderPage();return}renderNav();renderPage()}catch(e){$('loginError').textContent=e.message||'Username or password is incorrect.'}}
 async function logout(){try{await api('/api/auth/logout',{method:'POST'})}catch{}session=null;apiDB=null;$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value=''}
 function renderNav(){const items=NAV[session.role],html=items.map(([id,icon,label])=>`<button class="nav-btn ${currentPage===id?'active':''}" data-page="${id}"><span class="nav-icon">${icon}</span>${label}</button>`).join('');if(session.role==='student'){$('sideNav').innerHTML='';$('studentTopNav').innerHTML=html;$('bottomNav').innerHTML=html+`<button class="nav-btn ${currentPage==='profile'?'active':''}" data-page="profile"><span class="nav-icon">○</span>Profile</button>`;$('studentProfileBtn').classList.remove('hidden');$('studentProfileBtn').textContent=session.name[0]}else{$('sideNav').innerHTML=html;$('studentTopNav').innerHTML='';$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.add('hidden')}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{currentPage=b.dataset.page;document.querySelector('.sidebar').classList.remove('open');renderNav();renderPage()});$('studentProfileBtn').onclick=()=>{currentPage='profile';renderNav();renderPage()}}
-function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} function renderPage(){session.role==='student'?renderStudent():session.role==='teacher'?renderTeacher():renderAdmin()} function renderStudent(){({home:studentHome,workbook,course:studentCourse,'class-book':studentClassBook,'student-live-lesson':studentLiveLesson,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()} function renderTeacher(){({'teacher-home':teacherHome,teach:teacherTeach,'teacher-book':teacherBook,'teacher-live-lesson':teacherLiveLesson,'teacher-workbooks':teacherWorkbooks,'teacher-book-browse':teacherBookBrowse,'teacher-workbook-view':teacherWorkbookView,students,classes,weaknesses,reports}[currentPage]||teacherHome)()} function renderAdmin(){({'admin-home':adminHome,'admin-books':adminBooks,'admin-book-browse':adminBookBrowse,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-reports':reports,'admin-admins':adminAdmins,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
+function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} function setWorkbookDesignMode(on){document.body.classList.toggle('workbook-design-mode',Boolean(on))} function renderPage(){setWorkbookDesignMode(['workbook','teacher-workbook-view','admin-workbook-view'].includes(currentPage));session.role==='student'?renderStudent():session.role==='teacher'?renderTeacher():renderAdmin()} function renderStudent(){({home:studentHome,workbook,course:studentCourse,'class-book':studentClassBook,'student-live-lesson':studentLiveLesson,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()} function renderTeacher(){({'teacher-home':teacherHome,teach:teacherTeach,'teacher-book':teacherBook,'teacher-live-lesson':teacherLiveLesson,'teacher-workbooks':teacherWorkbooks,'teacher-book-browse':teacherBookBrowse,'teacher-workbook-view':teacherWorkbookView,students,classes,weaknesses,reports}[currentPage]||teacherHome)()} function renderAdmin(){({'admin-home':adminHome,'admin-books':adminBooks,'admin-book-browse':adminBookBrowse,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-reports':reports,'admin-admins':adminAdmins,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
 
 function assignmentsForClass(classId){return (getDB().assignments||[]).filter(a=>a.classId===classId)}
 function assignmentForLesson(classId,lessonId){return assignmentsForClass(classId).find(a=>a.lessonId===lessonId)||null}
@@ -517,30 +517,48 @@ async function lockListeningScript(l){const btn=$('readyForQuestions'),msg=$('li
 function isWorkbookPreview(){return (session?.role==='admin'&&currentPage==='admin-workbook-view')||(session?.role==='teacher'&&currentPage==='teacher-workbook-view')}
 function firstOpenStep(sid,lid){return WORKBOOK_STEPS.find(step=>!skillCompletionFor(sid,lid).includes(step))||WORKBOOK_STEPS[WORKBOOK_STEPS.length-1]}
 function workbook(){
- const sid=session.id,l=lesson(),steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),preview=isWorkbookPreview(),completed=preview?[]:skillCompletionFor(sid,l.id),firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id)),pct=preview?Math.round((idx+1)/steps.length*100):lessonProgress(sid,l.id);
+ setWorkbookDesignMode(true);
+ const sid=session.id,l=lesson(),steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),preview=isWorkbookPreview();
  title(`Lesson ${l.number}`,WORKBOOK_LABELS[currentStep]);
- $('content').innerHTML=`${preview?'':studentTickerHtml(sid)}<section class="learning-shell eg-workbook ${preview?'admin-preview-workbook':''}">
-  <div class="eg-workbook-frame">
-   <aside class="eg-workbook-side">
-    <button class="back-link eg-side-back" id="exitWorkbook">← ${preview?'Books':'Back to book'}</button>
-    <div class="eg-side-book"><small>${escapeHtml(COURSE.level||'English course')}</small><h2>${escapeHtml(COURSE.title||COURSE.moduleTitle||'EnglishGate')}</h2><p>Lesson ${l.number}</p><strong>${escapeHtml(l.title)}</strong></div>
-    <nav class="skill-tabs eg-workbook-tabs" aria-label="Workbook activities">${steps.map((step,i)=>{const allowed=preview||completed.includes(step)||i<=firstOpen;return `<button class="skill-tab ${step===currentStep?'active':''} ${completed.includes(step)?'complete':''}" data-skill-tab="${allowed?step:''}" ${allowed?'':'disabled'}><span>${completed.includes(step)?'✓':i+1}</span><strong>${WORKBOOK_LABELS[step]}</strong><i></i></button>`}).join('')}</nav>
-    <div class="eg-side-progress"><small>Lesson progress</small><strong>${pct}%</strong><div class="eg-workbook-progress-track"><i style="width:${pct}%"></i></div></div>
-   </aside>
-   <main class="eg-workbook-main">
-    <header class="eg-workbook-top">
-     <div class="eg-workbook-identity"><small>Lesson ${l.number} · ${WORKBOOK_LABELS[currentStep]}${preview?' · Preview':''}</small><strong>${escapeHtml(l.title)}</strong></div>
-     <div class="eg-workbook-progress"><span>${idx+1} / ${steps.length}</span><div class="eg-workbook-progress-track"><i style="width:${((idx+1)/steps.length)*100}%"></i></div></div>
-    </header>
-    <div id="activityPanel" class="activity-card focused-activity eg-workbook-surface"></div>
-   </main>
-  </div>
+ const avatar=escapeHtml((session?.name||'E').trim().charAt(0).toUpperCase()||'E');
+ $('content').innerHTML=`<section class="eg-workbook ${preview?'admin-preview-workbook':''}">
+  <header class="eg-designed-topbar">
+   <button class="eg-brand-button" id="egWorkbookHome">EnglishGate</button>
+   <nav class="eg-designed-nav" aria-label="Workbook navigation">
+    <button id="egWorkbookLearn">Learn</button>
+    <span class="active">Practice</span>
+    <button id="egWorkbookProgress">Progress</button>
+   </nav>
+   <div class="eg-designed-meta">
+    <span>Lesson ${l.number} · ${WORKBOOK_LABELS[currentStep]}</span>
+    <div class="eg-mini-progress"><i style="width:${((idx+1)/steps.length)*100}%"></i></div>
+    <b>${idx+1} / ${steps.length}</b>
+    <button class="eg-avatar-button" id="egWorkbookProfile">${avatar}</button>
+   </div>
+  </header>
+  <main class="eg-workbook-main">
+   <div id="activityPanel" class="activity-card focused-activity eg-workbook-surface"></div>
+  </main>
  </section>`;
- $('exitWorkbook').onclick=()=>{if(preview){returnToWorkbookLessons()}else{currentPage='course';renderNav();studentCourse()}};
- document.querySelectorAll('[data-skill-tab]').forEach(btn=>{if(!btn.dataset.skillTab)return;btn.onclick=()=>{currentStep=btn.dataset.skillTab;workbook()}});
+ const leaveTo=page=>{setWorkbookDesignMode(false);currentPage=page;renderNav();renderPage()};
+ $('egWorkbookHome').onclick=()=>leaveTo(session.role==='student'?'home':session.role==='teacher'?'teacher-home':'admin-home');
+ $('egWorkbookLearn').onclick=()=>{if(preview){setWorkbookDesignMode(false);returnToWorkbookLessons()}else leaveTo('course')};
+ $('egWorkbookProgress').onclick=()=>{if(preview){setWorkbookDesignMode(false);returnToWorkbookLessons()}else leaveTo('progress')};
+ $('egWorkbookProfile').onclick=()=>{if(session.role==='student')leaveTo('profile')};
  renderActivity();
 }
-function renderActivity(){const p=$('activityPanel'),l=lesson();if(currentStep==='vocabulary')p.innerHTML=vocabActivity(l);if(currentStep==='listening')p.innerHTML=listeningActivity(l);if(currentStep==='grammar')p.innerHTML=grammarActivity(l);if(currentStep==='writing')p.innerHTML=writingActivity(l);wireActivity(l)}
+function renderActivity(){
+ const p=$('activityPanel'),l=lesson();
+ if(currentStep==='vocabulary')p.innerHTML=vocabActivity(l);
+ if(currentStep==='listening')p.innerHTML=listeningActivity(l);
+ if(currentStep==='grammar')p.innerHTML=grammarActivity(l);
+ if(currentStep==='writing')p.innerHTML=writingActivity(l);
+ const row=p.querySelector('.skill-action-row');
+ if(row){
+  row.insertAdjacentHTML('afterbegin','<button class="secondary-btn eg-previous-btn" id="previousActivity">← Previous</button><button class="eg-hint-btn" id="activityHint">♧ Hint</button>');
+ }
+ wireActivity(l);
+}
 function buildVocabQuestions(l){const e=l.expressions,all=e.map(x=>x.text);return [
 {type:'choice',stage:'Recognise',q:`Which expression would you use to ${e[0].job}?`,options:all,answer:e[0].text,tag:'vocabulary:meaning'},
 {type:'choice',stage:'Recognise',q:`Which expression would you use to ${e[1].job}?`,options:all,answer:e[1].text,tag:'vocabulary:meaning'},
@@ -754,7 +772,10 @@ function wireAudioControls(l){
  if(seek)seek.oninput=async()=>{try{const audio=await ensureLessonAudio(l);if(Number.isFinite(audio.duration)&&audio.duration>0){audio.currentTime=(Number(seek.value)/100)*audio.duration;syncAudioUi()}}catch{}};
 }
 
-function wireActivity(l){wireMcqCards();if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
+function wireActivity(l){wireMcqCards();
+ if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
+ if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:'Check purpose, reader and key information before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
+ if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
 function formativeWritingChecks(l,text){const words=text.trim()?text.trim().split(/\s+/):[],sentences=text.split(/[.!?]+/).filter(x=>x.trim()),targets=(Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).filter(w=>new RegExp(`\\b${String(w).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`,'i').test(text));return{words:words.length,length:words.length>=l.writing.minWords&&words.length<=l.writing.maxWords,organisation:sentences.length>=3||text.includes('\n'),vocabulary:targets}}
 async function saveWriting(l){const f=$('activityFeedback');if(l.writing?.builder){const groups=l.writing.builder.map((_,i)=>'wb'+i),selected=groups.map(g=>document.querySelector(`input[name="${g}"]:checked`)),box=document.querySelector('.writing-final-response'),response=box?.value.trim()||'',checks=formativeWritingChecks(l,response);if(selected.some(x=>!x)){f.innerHTML=`<div class="feedback bad">Finish all ${groups.length} builder checks before submitting.</div>`;return}if(!checks.length){f.innerHTML=`<div class="feedback bad">Your final response has ${checks.words} words. Write ${l.writing.minWords}–${l.writing.maxWords} words.</div>`;return}const correct=selected.filter(x=>x.value===x.dataset.answer).length,score=Math.round(correct/groups.length*100),payload={builder:selected.map(x=>x.value),final:response,submittedAt:new Date().toISOString()};try{await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(payload)})});if(!l.writing.humanGraded)await recordAttempt(session.id,l.id,'writing',score,['writing:builder',...selected.map(x=>x.dataset.tag).filter(Boolean)].slice(0,10));await refreshState();const done=$('doneActivity');if(done)done.disabled=false;if(l.writing.humanGraded){f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> Your response is saved and no automatic correction has been shown.</div>';return}const checksPassed=[checks.length?'✓ Word range':'Review word range',checks.vocabulary.length?`✓ Target vocabulary (${checks.vocabulary.join(', ')})`:'Review target vocabulary',checks.organisation?'✓ Clear organisation':'Review paragraph organisation'];f.innerHTML=`<div class="performance-result ${score>=80?'good':'bad'}"><div class="performance-score"><strong>${score}%</strong><span>Writing builder</span></div><div class="writing-checklist">${checksPassed.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div><p>${score>=80?'Strong preparation.':'Review the builder choices before your next draft.'} Check grammar and spelling once more before you press Done.</p></div>`}catch(e){f.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}return}
  const boxes=[...document.querySelectorAll('.writing-response')],responses=boxes.map(t=>t.value.trim());let met=0;boxes.forEach(t=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0;if(n>=Number(t.dataset.min))met++});if(met<boxes.length){f.innerHTML=`<div class="feedback bad">Finish all ${boxes.length} writing tasks first. You have completed ${met}/${boxes.length}.</div>`;return}try{await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(responses)})});await refreshState();f.innerHTML='<div class="feedback good"><strong>Writing complete.</strong> Press Done to continue.</div>';const done=$('doneActivity');if(done)done.disabled=false}catch(e){f.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
@@ -899,7 +920,7 @@ function teacherWorkbookView(){
  setActiveBook(resolveBookKey(teacherClass()));workbook();
 }
 function returnToWorkbookLessons(){
- currentPage=session?.role==='teacher'?'teacher-book-browse':'admin-book-browse';renderNav();session?.role==='teacher'?teacherBookBrowse():adminBookBrowse();
+ setWorkbookDesignMode(false);currentPage=session?.role==='teacher'?'teacher-book-browse':'admin-book-browse';renderNav();session?.role==='teacher'?teacherBookBrowse():adminBookBrowse();
 }
 
 function adminWorkbookView(){workbook()}
