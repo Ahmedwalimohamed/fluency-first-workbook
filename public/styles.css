@@ -983,6 +983,11 @@ img,video,audio{max-width:100%}
 .eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+2)>span{background:#17644f}
 .eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+3)>span{background:#4c5fd5}
 .eg-stage-content .live-prompt-grid .live-prompt-row p{margin:1px 0 0!important;font-size:1rem;line-height:1.55;font-weight:650;color:#183247}
+.eg-stage-content .live-check-row{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;margin:8px 0;border:1px solid #d8e2e6;border-radius:14px;background:#f7faf9;cursor:pointer;font-size:1rem;line-height:1.45;color:#183247}
+.eg-stage-content .live-check-row input{width:20px;height:20px;accent-color:#17644f;flex:0 0 auto}
+.eg-stage-content .live-check-row span{overflow-wrap:anywhere}
+.eg-stage-content .live-check-row:has(input:checked){background:#e5f2ee;border-color:#bcdad0;color:#165745}
+.eg-stage-content .live-check-row:has(input:checked) span{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#7fb5a3}
 .eg-stage-content .live-vocab-row{padding:16px;gap:16px}
 .eg-stage-content .live-vocab-word strong,.eg-stage-content .live-vocab-example span{font-size:1.125rem;line-height:1.6}
 .eg-stage-content .live-vocab-head,.eg-stage-content small{font-size:.875rem}
