@@ -162,6 +162,12 @@ app.post('/api/admin/classes',auth,adminOnly,async(req,res)=>{
  await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',[id,teacherId]);
  res.status(201).json({id,name,level:b.rows[0].level,bookId,teacherId});
 });
+app.patch('/api/admin/classes/:id/book',auth,adminOnly,async(req,res)=>{
+ const classId=String(req.params.id||'').trim(),bookId=String(req.body.bookId||'').trim();
+ const b=await pool.query("select id,title,level,status from books where id=$1",[bookId]);if(!b.rowCount)return res.status(400).json({error:'Choose a valid book.'});
+ if(!['ready','pilot'].includes(b.rows[0].status))return res.status(400).json({error:'That book is not ready for classes yet.'});
+ const client=await pool.connect();try{await client.query('begin');const c=await client.query('update classes set course_id=$1,level=$2 where id=$3 returning id,name',[bookId,b.rows[0].level,classId]);if(!c.rowCount){await client.query('rollback');return res.status(404).json({error:'Class not found.'});}await client.query('delete from assignments where class_id=$1',[classId]);await client.query('commit');res.json({ok:true,classId,bookId,bookTitle:b.rows[0].title,level:b.rows[0].level});}catch(e){await client.query('rollback');throw e}finally{client.release()}
+});
 app.delete('/api/admin/books/:id',auth,adminOnly,async(req,res)=>{
  const client=await pool.connect();try{await client.query('begin');const b=await client.query('select id,title from books where id=$1 for update',[req.params.id]);if(!b.rowCount){await client.query('rollback');return res.status(404).json({error:'Book not found.'});}const cls=await client.query('select count(*)::int as count from classes where course_id=$1',[req.params.id]);if(Number(cls.rows[0]?.count||0)>0){await client.query('rollback');return res.status(400).json({error:'Delete or move classes using this book before deleting the book.'});}await client.query('delete from assignments where book_id=$1',[req.params.id]);await client.query('delete from books where id=$1',[req.params.id]);await client.query('insert into deleted_seed_books(id) values($1) on conflict(id) do nothing',[req.params.id]);await client.query('commit');res.json({ok:true,id:b.rows[0].id,title:b.rows[0].title});}catch(e){await client.query('rollback');throw e}finally{client.release()}
 });
