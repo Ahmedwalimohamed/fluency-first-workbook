@@ -1407,3 +1407,484 @@ img,video,audio{max-width:100%}
  .eg-audio-console .audio-icon-btn,.eg-audio-console .audio-speed{grid-column:auto}
  .eg-audio-console #audioStatus{grid-column:1/-1}
 }
+
+
+
+/* EnglishGate student professional color system v1 */
+body.student-app-mode{
+ --navy:#2563EB;
+ --navy-2:#1D4ED8;
+ --teal:#2563EB;
+ --teal-soft:#EFF6FF;
+ --gold:#F59E0B;
+ --purple:#2563EB;
+ --pink:#2563EB;
+ --green:#16A34A;
+ --bg:#F8FAFC;
+ --card:#FFFFFF;
+ --text:#0F172A;
+ --muted:#64748B;
+ --border:#E2E8F0;
+ --danger:#DC2626;
+ --shadow:0 8px 24px rgba(15,23,42,.08);
+ background:#F8FAFC;
+ color:#0F172A
+}
+body.student-app-mode .student-mode{background:#F8FAFC;color:#0F172A}
+body.student-app-mode .student-mode .main,
+body.student-app-mode .student-mode .content{background:#F8FAFC}
+body.student-app-mode .student-mode .topbar{background:rgba(255,255,255,.96)!important;border-color:#E2E8F0!important}
+body.student-app-mode .student-mode .topbar h2,
+body.student-app-mode .student-mode h1,
+body.student-app-mode .student-mode h2,
+body.student-app-mode .student-mode h3,
+body.student-app-mode .student-mode h4,
+body.student-app-mode .student-mode strong{color:#0F172A}
+body.student-app-mode .student-mode .muted,
+body.student-app-mode .student-mode small,
+body.student-app-mode .student-mode .section-head p,
+body.student-app-mode .student-mode .topic-copy small,
+body.student-app-mode .student-mode .topic-copy span,
+body.student-app-mode .student-mode .word-count{color:#64748B}
+body.student-app-mode .student-mode .card,
+body.student-app-mode .student-mode .next-action-card,
+body.student-app-mode .student-mode .glance-card,
+body.student-app-mode .student-mode .course-intro,
+body.student-app-mode .student-mode .course-topic,
+body.student-app-mode .student-mode .activity-card,
+body.student-app-mode .student-mode .source-panel,
+body.student-app-mode .student-mode .guided-question,
+body.student-app-mode .student-mode .profile-card,
+body.student-app-mode .student-mode .eg-teaching-surface,
+body.student-app-mode .student-mode .eg-reading-article,
+body.student-app-mode .student-mode .eg-audio-card,
+body.student-app-mode .student-mode .eg-editorial-panel,
+body.student-app-mode .student-mode .eg-writing-brief{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .primary-btn,
+body.student-app-mode .student-mode .student-primary-cta,
+body.student-app-mode .student-mode .play-btn,
+body.student-app-mode .student-mode .eg-workbook .primary-btn{
+ background:#2563EB!important;
+ border-color:#2563EB!important;
+ color:#FFFFFF!important;
+ box-shadow:none!important
+}
+body.student-app-mode .student-mode .primary-btn:hover,
+body.student-app-mode .student-mode .student-primary-cta:hover,
+body.student-app-mode .student-mode .play-btn:hover{background:#1D4ED8!important}
+body.student-app-mode .student-mode .secondary-btn{
+ background:#EFF6FF!important;
+ border-color:#BFDBFE!important;
+ color:#2563EB!important
+}
+body.student-app-mode .student-mode .ghost-btn{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important;
+ color:#2563EB!important
+}
+body.student-app-mode .student-mode .text-link,
+body.student-app-mode .student-mode .back-link,
+body.student-app-mode .student-mode a{color:#2563EB!important}
+body.student-app-mode .student-mode input,
+body.student-app-mode .student-mode textarea,
+body.student-app-mode .student-mode select{
+ background:#FFFFFF!important;
+ border-color:#CBD5E1!important;
+ color:#0F172A!important
+}
+body.student-app-mode .student-mode input:focus,
+body.student-app-mode .student-mode textarea:focus,
+body.student-app-mode .student-mode select:focus{
+ border-color:#2563EB!important;
+ box-shadow:0 0 0 3px rgba(37,99,235,.14)!important
+}
+
+/* Navigation */
+body.student-app-mode .student-mode .nav-btn{color:#64748B!important}
+body.student-app-mode .student-mode .nav-btn:hover{
+ background:#F1F5F9!important;
+ color:#2563EB!important
+}
+body.student-app-mode .student-mode .nav-btn.active{
+ background:#EFF6FF!important;
+ color:#2563EB!important;
+ box-shadow:none!important
+}
+body.student-app-mode .student-mode .student-profile-btn,
+body.student-app-mode .student-mode .profile-avatar-large{
+ background:#2563EB!important;
+ color:#FFFFFF!important
+}
+body.student-app-mode .student-mode .bottom-nav{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+
+/* Dashboard and book overview */
+body.student-app-mode .student-mode .eg-student-home{color:#0F172A!important}
+body.student-app-mode .student-mode .eg-next-practice{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important;
+ border-top-color:#2563EB!important
+}
+body.student-app-mode .student-mode .eg-home-progress,
+body.student-app-mode .student-mode .eg-recent-practice{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .eg-next-skill>span,
+body.student-app-mode .student-mode .next-action-number,
+body.student-app-mode .student-mode .glance-icon,
+body.student-app-mode .student-mode .lesson-icon,
+body.student-app-mode .student-mode .topic-state{
+ background:#EFF6FF!important;
+ color:#2563EB!important
+}
+body.student-app-mode .student-mode .course-topic.current{
+ background:#EFF6FF!important;
+ border-color:#2563EB!important
+}
+body.student-app-mode .student-mode .course-topic.current .topic-state{
+ background:#2563EB!important;
+ color:#FFFFFF!important
+}
+body.student-app-mode .student-mode .course-topic.complete{
+ background:#F0FDF4!important;
+ border-color:#BBF7D0!important
+}
+body.student-app-mode .student-mode .course-topic.complete .topic-state{
+ background:#16A34A!important;
+ color:#FFFFFF!important
+}
+body.student-app-mode .student-mode .topic-copy strong,
+body.student-app-mode .student-mode .course-intro h1,
+body.student-app-mode .student-mode .course-overall strong{
+ color:#0F172A!important
+}
+body.student-app-mode .student-mode .topic-progress{color:#2563EB!important}
+body.student-app-mode .student-mode .progress,
+body.student-app-mode .student-mode .eg-workbook-progress-track{
+ background:#E2E8F0!important
+}
+body.student-app-mode .student-mode .progress>span,
+body.student-app-mode .student-mode .eg-home-progress .progress span,
+body.student-app-mode .student-mode .eg-workbook-progress-track i,
+body.student-app-mode .student-mode .runner-progress>span{
+ background:#2563EB!important
+}
+body.student-app-mode .student-mode .progress-hero-card,
+body.student-app-mode .student-mode .hero,
+body.student-app-mode .student-mode .recommendation{
+ background:#2563EB!important;
+ color:#FFFFFF!important;
+ box-shadow:none!important
+}
+body.student-app-mode .student-mode .progress-hero-card h1,
+body.student-app-mode .student-mode .progress-hero-card strong,
+body.student-app-mode .student-mode .hero h1,
+body.student-app-mode .student-mode .hero strong,
+body.student-app-mode .student-mode .recommendation h3{color:#FFFFFF!important}
+
+/* Pills and neutral labels */
+body.student-app-mode .student-mode .pill,
+body.student-app-mode .student-mode .pill.teal{
+ background:#EFF6FF!important;
+ border-color:#BFDBFE!important;
+ color:#2563EB!important
+}
+body.student-app-mode .student-mode .pill.gold{
+ background:#FFFBEB!important;
+ border-color:#FDE68A!important;
+ color:#B45309!important
+}
+body.student-app-mode .student-mode .eyebrow,
+body.student-app-mode .student-mode .student-kicker,
+body.student-app-mode .student-mode .role-kicker{
+ color:#2563EB!important
+}
+
+/* Success, error and review states */
+body.student-app-mode .student-mode .feedback.good,
+body.student-app-mode #modalRoot .feedback.good{
+ background:#F0FDF4!important;
+ border:1px solid #BBF7D0!important;
+ color:#15803D!important
+}
+body.student-app-mode .student-mode .feedback.bad,
+body.student-app-mode #modalRoot .feedback.bad{
+ background:#FEF2F2!important;
+ border:1px solid #FECACA!important;
+ color:#DC2626!important
+}
+body.student-app-mode .student-mode .performance-result.good{
+ background:#F0FDF4!important;
+ border-color:#BBF7D0!important
+}
+body.student-app-mode .student-mode .performance-result.bad{
+ background:#FFFBEB!important;
+ border-color:#FDE68A!important
+}
+body.student-app-mode .student-mode .performance-result.good .performance-score strong{color:#16A34A!important}
+body.student-app-mode .student-mode .performance-result.bad .performance-score strong{color:#B45309!important}
+body.student-app-mode .student-mode .score-chip.good{
+ background:#F0FDF4!important;
+ color:#15803D!important;
+ border-color:#BBF7D0!important
+}
+body.student-app-mode .student-mode .score-chip.warn{
+ background:#FFFBEB!important;
+ color:#B45309!important;
+ border-color:#FDE68A!important
+}
+body.student-app-mode .student-mode .score-chip.bad{
+ background:#FEF2F2!important;
+ color:#DC2626!important;
+ border-color:#FECACA!important
+}
+body.student-app-mode .student-mode .score-chip.done{
+ background:#F0FDF4!important;
+ color:#15803D!important;
+ border-color:#BBF7D0!important
+}
+body.student-app-mode .student-mode .weakness{
+ background:#FFFBEB!important;
+ border-left-color:#F59E0B!important
+}
+body.student-app-mode .student-mode .danger-action,
+body.student-app-mode .student-mode .error{color:#DC2626!important}
+
+/* Class-book lesson player */
+body.student-app-mode .student-mode .eg-lesson{color:#0F172A!important}
+body.student-app-mode .student-mode .eg-stage{color:#64748B!important}
+body.student-app-mode .student-mode .eg-stage:hover{background:#F8FAFC!important}
+body.student-app-mode .student-mode .eg-stage.is-current{
+ background:#EFF6FF!important;
+ border-color:#BFDBFE!important;
+ color:#2563EB!important
+}
+body.student-app-mode .student-mode .eg-stage.is-current>span{
+ background:#2563EB!important;
+ border-color:#2563EB!important;
+ color:#FFFFFF!important
+}
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row,
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+1),
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+2),
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+3){
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row>span,
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+1)>span,
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+2)>span,
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+3)>span{
+ background:#2563EB!important;
+ color:#FFFFFF!important
+}
+body.student-app-mode .student-mode .eg-stage-content .live-prompt-grid .live-prompt-row p,
+body.student-app-mode .student-mode .eg-stage-content .live-check-row{color:#0F172A!important}
+body.student-app-mode .student-mode .eg-stage-content .live-check-row{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .eg-stage-content .live-check-row input{accent-color:#16A34A!important}
+body.student-app-mode .student-mode .eg-stage-content .live-check-row:has(input:checked){
+ background:#F0FDF4!important;
+ border-color:#BBF7D0!important;
+ color:#15803D!important
+}
+body.student-app-mode .student-mode .eg-workbook-note{
+ background:#F8FAFC!important;
+ border-color:#E2E8F0!important
+}
+
+/* Workbook common */
+body.student-app-mode .student-mode .eg-workbook,
+body.student-app-mode .student-mode .eg-skill-page,
+body.student-app-mode .student-mode .eg-workbook-main{
+ background:#F8FAFC!important;
+ color:#0F172A!important
+}
+body.student-app-mode .student-mode .eg-workbook-top,
+body.student-app-mode .student-mode .eg-designed-topbar{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .eg-workbook-identity small,
+body.student-app-mode .student-mode .eg-skill-hero p,
+body.student-app-mode .student-mode .eg-task-panel-head small,
+body.student-app-mode .student-mode .question-stage span,
+body.student-app-mode .student-mode .stage-badge{color:#64748B!important}
+body.student-app-mode .student-mode .eg-skill-hero h1,
+body.student-app-mode .student-mode .eg-panel-heading h2,
+body.student-app-mode .student-mode .eg-task-panel-head h2,
+body.student-app-mode .student-mode .eg-reading-article h2,
+body.student-app-mode .student-mode .eg-listening-scene h2,
+body.student-app-mode .student-mode .eg-writing-brief h2,
+body.student-app-mode .student-mode .guided-question>p{color:#0F172A!important}
+body.student-app-mode .student-mode .eg-workbook .skill-tab.active,
+body.student-app-mode .student-mode .mcq-answer-slot.filled,
+body.student-app-mode .student-mode .mcq-option-card.selected{
+ background:#EFF6FF!important;
+ border-color:#2563EB!important;
+ color:#2563EB!important
+}
+body.student-app-mode .student-mode .mcq-option-card,
+body.student-app-mode .student-mode .mcq-answer-slot{
+ background:#FFFFFF!important;
+ border-color:#CBD5E1!important;
+ color:#0F172A!important
+}
+body.student-app-mode .student-mode .audio-player,
+body.student-app-mode .student-mode .eg-audio-console{
+ background:#F8FAFC!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .eg-waveform i{background:#93C5FD!important}
+body.student-app-mode .student-mode .transcript-card{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .transcript-card summary{color:#2563EB!important}
+
+/* Vocabulary: violet is a subtle accent only */
+body.student-app-mode .student-mode .eg-vocabulary-page .eg-skill-kicker,
+body.student-app-mode .student-mode .eg-vocabulary-page .question-stage span,
+body.student-app-mode .student-mode .eg-vocabulary-page .stage-badge{
+ color:#7C3AED!important
+}
+body.student-app-mode .student-mode .eg-vocab-reference-card{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .eg-vocab-reference-card:nth-child(2n){background:#FAF5FF!important}
+body.student-app-mode .student-mode .eg-vocab-reference-card>span{
+ background:#F5F3FF!important;
+ color:#7C3AED!important
+}
+body.student-app-mode .student-mode .eg-vocab-reference-card strong{color:#0F172A!important}
+body.student-app-mode .student-mode .eg-vocab-reference-card p,
+body.student-app-mode .student-mode .eg-vocab-reference-card small{color:#64748B!important}
+
+/* Grammar stays blue/neutral, not a separate skill color */
+body.student-app-mode .student-mode .eg-grammar-coach,
+body.student-app-mode .student-mode .grammar-rule-card,
+body.student-app-mode .student-mode .assessment-notice{
+ background:#EFF6FF!important;
+ border-color:#BFDBFE!important
+}
+body.student-app-mode .student-mode .grammar-rule-card small{color:#2563EB!important}
+body.student-app-mode .student-mode .eg-sentence-lab{
+ background:#EFF6FF!important;
+ border:1px solid #BFDBFE!important;
+ color:#0F172A!important
+}
+body.student-app-mode .student-mode .eg-sentence-lab>div span{
+ background:#FFFFFF!important;
+ border:1px solid #E2E8F0!important;
+ color:#0F172A!important
+}
+
+/* Writing stays neutral */
+body.student-app-mode .student-mode .eg-writing-brief,
+body.student-app-mode .student-mode .eg-message-bar,
+body.student-app-mode .student-mode .eg-message-composer{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+body.student-app-mode .student-mode .eg-message-avatar{
+ background:#2563EB!important;
+ color:#FFFFFF!important
+}
+body.student-app-mode .student-mode .eg-phrase-bank>span{
+ background:#F8FAFC!important;
+ border-color:#E2E8F0!important;
+ color:#0F172A!important
+}
+body.student-app-mode .student-mode .eg-writing-reminder{
+ background:#F8FAFC!important;
+ border-color:#E2E8F0!important;
+ color:#64748B!important
+}
+
+/* Hints and Boost use amber */
+body.student-app-mode .student-mode .eg-hint-btn,
+body.student-app-mode #modalRoot .boost-launch-btn,
+body.student-app-mode #modalRoot .boost-submit{
+ background:#F59E0B!important;
+ border-color:#F59E0B!important;
+ color:#0F172A!important;
+ box-shadow:none!important
+}
+body.student-app-mode .student-mode .eg-hint-btn{
+ border:1px solid #FDE68A!important;
+ background:#FFFBEB!important;
+ color:#B45309!important
+}
+body.student-app-mode #modalRoot .modal-backdrop{background:rgba(15,23,42,.55)!important}
+body.student-app-mode #modalRoot .modal-card{
+ background:#FFFFFF!important;
+ border:1px solid #E2E8F0!important;
+ color:#0F172A!important
+}
+body.student-app-mode #modalRoot .muted,
+body.student-app-mode #modalRoot .boost-modal-head p,
+body.student-app-mode #modalRoot .boost-note{color:#64748B!important}
+body.student-app-mode #modalRoot .boost-kicker{color:#B45309!important}
+body.student-app-mode #modalRoot .boost-entry,
+body.student-app-mode #modalRoot .boost-mini,
+body.student-app-mode #modalRoot .boost-hint,
+body.student-app-mode #modalRoot .boost-rule{
+ background:#FFFBEB!important;
+ border-color:#FDE68A!important;
+ color:#92400E!important
+}
+body.student-app-mode #modalRoot .boost-mini{border-left-color:#F59E0B!important}
+body.student-app-mode #modalRoot .boost-flow span{background:#F8FAFC!important;color:#64748B!important}
+body.student-app-mode #modalRoot .boost-flow span.active{
+ background:#F59E0B!important;
+ color:#0F172A!important
+}
+body.student-app-mode #modalRoot .boost-flow span.done{
+ background:#F0FDF4!important;
+ color:#15803D!important
+}
+body.student-app-mode #modalRoot .boost-result-icon{
+ background:#FFFBEB!important;
+ color:#B45309!important
+}
+body.student-app-mode #modalRoot .boost-question-card,
+body.student-app-mode #modalRoot .boost-result-grid>div,
+body.student-app-mode #modalRoot .boost-original{
+ background:#FFFFFF!important;
+ border-color:#E2E8F0!important
+}
+
+/* Engagement and supporting attention states */
+body.student-app-mode .student-mode .engagement-ticker{
+ background:#EFF6FF!important;
+ border-color:#BFDBFE!important
+}
+body.student-app-mode .student-mode .engagement-ticker::before{background:linear-gradient(90deg,#EFF6FF,rgba(239,246,255,0))!important}
+body.student-app-mode .student-mode .engagement-ticker::after{background:linear-gradient(270deg,#EFF6FF,rgba(239,246,255,0))!important}
+body.student-app-mode .student-mode .engagement-ticker-track span{color:#2563EB!important}
+body.student-app-mode .student-mode .prelisten-box,
+body.student-app-mode .student-mode .module-challenge{
+ background:#FFFBEB!important;
+ border-color:#FDE68A!important;
+ color:#92400E!important
+}
+
+/* Accessible focus states */
+body.student-app-mode .student-mode button:focus-visible,
+body.student-app-mode .student-mode a:focus-visible,
+body.student-app-mode .student-mode input:focus-visible,
+body.student-app-mode .student-mode textarea:focus-visible,
+body.student-app-mode .student-mode select:focus-visible,
+body.student-app-mode #modalRoot button:focus-visible{
+ outline:3px solid rgba(37,99,235,.35)!important;
+ outline-offset:2px
+}
