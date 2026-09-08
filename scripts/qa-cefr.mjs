@@ -21,6 +21,18 @@ else{
 if(!index.includes('cefr-levels.js')||!index.includes('cefr-live-books.js'))errors.push('CEFR modules are not loaded by index.html');
 if(!cefr.includes('BOOK_PACKS[book.id]=book'))errors.push('Standalone workbooks are not registered in BOOK_PACKS');
 if(!live.includes("const LEVELS=['A1','A2','B1','C1']"))errors.push('Live CEFR level registry is incomplete');
+const topicMatch=app.match(/const TOPIC_LIBRARY=(\{[\s\S]*?\});\nconst CAREER_LESSON_SPECS/);
+const vocabMatch=live.match(/const VOCAB_USAGE=(\{[\s\S]*?\});\n\nfunction warm/);
+if(!topicMatch||!vocabMatch)errors.push('Could not inspect CEFR vocabulary coverage');
+else{
+ try{
+  const topicLibrary=JSON.parse(topicMatch[1]);
+  const usage=new Function('return ('+vocabMatch[1]+')')();
+  const words=[...new Set(Object.values(topicLibrary).flatMap(x=>x.v.map(v=>v[0])))];
+  const missing=words.filter(word=>!usage[word]);
+  if(missing.length)errors.push('Missing real vocabulary usage examples: '+missing.join(', '));
+ }catch(e){errors.push('Could not validate vocabulary usage examples: '+e.message)}
+}
 
 for(const level of levels){
  const id='speakup-'+level.toLowerCase();
