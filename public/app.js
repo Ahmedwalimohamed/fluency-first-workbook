@@ -990,41 +990,96 @@ function updateStudentTicker(){
 function weakest(sid){const tips={vocabulary:'Review the words and expressions that are not yet automatic.',listening:'Practise finding the main idea and key details in short texts and audio.',grammar:'Review the grammar pattern needed for this lesson topic.',writing:'Build clearer sentences, then organise them into a complete written response.'},r=['vocabulary','listening','grammar','writing'].map(k=>[k,mastery(sid,k)]).filter(x=>Number.isFinite(x[1])).sort((a,b)=>a[1]-b[1]);if(!r.length)return null;const [k,score]=r[0];return{key:k,label:skillLabel(k),score,tip:tips[k]}}
 
 function skillCard(n,v,d){const has=Number.isFinite(v);return `<div class="card metric-card"><div class="metric-top"><span class="pill">${has?d:'Recorded evidence'}</span><strong>${has?v+'%':'—'}</strong></div><h4 style="margin:0">${n}</h4>${has?progress(v):'<small class="muted">No scored activity yet.</small>'}</div>`} function metric(l,v,s){return `<div class="card metric-card"><span class="pill">${s}</span><strong>${v}</strong><h4 style="margin:0">${l}</h4></div>`}
-let writingFeed=[],writingFeedFilter='all';
+let writingFeed=[],writingFeedFilter='all',writingPage=1;
+const WRITINGS_PAGE_SIZE=10;
 function writingLessonLabel(w){const l=lessonById(w.lessonId);return l?`Lesson ${l.number} · ${l.title}`:'English writing'}
 function writingDate(value){try{return new Date(value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}catch{return''}}
+function writingExcerpt(text,max=360){const clean=String(text||'').replace(/\s+/g,' ').trim();return clean.length>max?clean.slice(0,max).trimEnd()+'…':clean}
+function writingContributorStats(studentId){const rows=writingFeed.filter(w=>w.studentId===studentId);return {count:rows.length,likes:rows.reduce((n,w)=>n+Number(w.likeCount||0),0),latest:rows.slice().sort((x,y)=>new Date(y.updatedAt)-new Date(x.updatedAt))[0]||null}}
+async function toggleWritingLike(w,btn,after){
+ if(!w?.canLike)return;if(btn)btn.disabled=true;
+ try{
+  const r=await api('/api/writings/'+encodeURIComponent(w.studentId)+'/'+encodeURIComponent(w.lessonId)+'/like',{method:w.likedByMe?'DELETE':'POST'});
+  w.likedByMe=Boolean(r.liked);w.likeCount=Number(r.likeCount||0);after?.()
+ }catch(e){
+  if(btn)btn.disabled=false;
+  showModal(`<div class="section-head"><div><span class="role-kicker">My Writings</span><h3>Could not update thumbs up</h3><p class="muted">${escapeHtml(e.message)}</p></div><button class="icon-btn" data-close>×</button></div>`);
+  document.querySelector('[data-close]').onclick=closeModal
+ }
+}
 function writingCardHtml(w,index){
- const own=w.studentId===session.id,lessonLabel=writingLessonLabel(w);
- return `<article class="writing-community-card" data-writing-card="${index}">
-  <header class="writing-community-author">${studentAvatarMarkup(w.photoUrl,w.studentName,'writing-community-avatar')}<div><strong>${escapeHtml(w.studentName)}</strong><span>${escapeHtml(w.className||'EnglishGate learner')} · ${escapeHtml(writingDate(w.updatedAt))}</span></div><span class="writing-community-lesson">${escapeHtml(lessonLabel)}</span></header>
-  <div class="writing-community-text">${escapeHtml(w.content).replace(/\n/g,'<br>')}</div>
-  <footer class="writing-community-actions">
+ const own=w.studentId===session.id,lessonLabel=writingLessonLabel(w),excerpt=writingExcerpt(w.content);
+ return `<article class="writing-review-card" data-writing-card="${index}">
+  <header class="writing-review-author">
+   <button class="writing-profile-link" type="button" data-writing-profile="${escapeAttr(w.studentId)}" aria-label="View all writing by ${escapeAttr(w.studentName)}">
+    ${studentAvatarMarkup(w.photoUrl,w.studentName,'writing-review-avatar')}
+    <span class="writing-review-author-copy"><strong>${escapeHtml(w.studentName)}</strong><small>${escapeHtml(w.className||'EnglishGate learner')}</small></span>
+   </button>
+   <span class="writing-review-date">${escapeHtml(writingDate(w.updatedAt))}</span>
+  </header>
+  <div class="writing-review-meta"><span>${escapeHtml(lessonLabel)}</span></div>
+  <button class="writing-review-body" type="button" data-writing-read="${index}" aria-label="Read full writing by ${escapeAttr(w.studentName)}">
+   <span class="writing-review-quote" aria-hidden="true">“</span>
+   <p>${escapeHtml(excerpt)}</p>
+  </button>
+  <footer class="writing-review-actions">
    <button class="writing-like-btn ${w.likedByMe?'is-liked':''}" type="button" data-writing-like="${index}" ${w.canLike?'':'disabled'} aria-pressed="${w.likedByMe?'true':'false'}"><span aria-hidden="true">👍</span><strong>${w.likeCount}</strong><span>${w.likeCount===1?'thumbs up':'thumbs up'}</span></button>
-   ${own&&w.canShare?`<button class="ghost-btn writing-share-btn" type="button" data-writing-share="${index}">Share my poster</button>`:''}
+   <button class="writing-read-btn" type="button" data-writing-read="${index}">Read writing</button>
+   ${own&&w.canShare?`<button class="ghost-btn writing-share-btn" type="button" data-writing-share="${index}">Share poster</button>`:''}
   </footer>
  </article>`
 }
-function renderWritingFeed(){
- const host=$('writingCommunityFeed');if(!host)return;
+function filteredWritingRows(){
  let rows=[...writingFeed];
  if(writingFeedFilter==='mine')rows=rows.filter(w=>w.studentId===session.id);
  if(writingFeedFilter==='popular')rows.sort((x,y)=>y.likeCount-x.likeCount||new Date(y.updatedAt)-new Date(x.updatedAt));
  else rows.sort((x,y)=>new Date(y.updatedAt)-new Date(x.updatedAt));
- if(!rows.length){host.innerHTML='<div class="empty-state writing-community-empty"><h3>No writing here yet</h3><p>Authentic writing submissions will appear automatically after students save them.</p></div>';return}
- host.innerHTML=rows.map(w=>writingCardHtml(w,writingFeed.indexOf(w))).join('');
- document.querySelectorAll('[data-writing-like]').forEach(btn=>btn.onclick=async()=>{
-  const w=writingFeed[Number(btn.dataset.writingLike)];if(!w?.canLike)return;btn.disabled=true;
-  try{const r=await api('/api/writings/'+encodeURIComponent(w.studentId)+'/'+encodeURIComponent(w.lessonId)+'/like',{method:w.likedByMe?'DELETE':'POST'});w.likedByMe=Boolean(r.liked);w.likeCount=Number(r.likeCount||0);renderWritingFeed()}catch(e){btn.disabled=false;showModal(`<div class="section-head"><div><span class="role-kicker">My Writings</span><h3>Could not update thumbs up</h3><p class="muted">${escapeHtml(e.message)}</p></div><button class="icon-btn" data-close>×</button></div>`);document.querySelector('[data-close]').onclick=closeModal}
+ return rows
+}
+function writingPaginationHtml(total){
+ const pages=Math.max(1,Math.ceil(total/WRITINGS_PAGE_SIZE));if(pages<=1)return'';
+ return `<nav class="writing-pagination" aria-label="Writing pages"><button class="ghost-btn" id="writingPrevPage" type="button" ${writingPage<=1?'disabled':''}>← Previous</button><span>Page <strong>${writingPage}</strong> of ${pages}</span><button class="ghost-btn" id="writingNextPage" type="button" ${writingPage>=pages?'disabled':''}>Next →</button></nav>`
+}
+function bindWritingCardActions(container=document){
+ container.querySelectorAll('[data-writing-like]').forEach(btn=>btn.onclick=()=>{
+  const w=writingFeed[Number(btn.dataset.writingLike)];toggleWritingLike(w,btn,renderWritingFeed)
  });
- document.querySelectorAll('[data-writing-share]').forEach(btn=>btn.onclick=()=>shareWritingPoster(Number(btn.dataset.writingShare),btn));
+ container.querySelectorAll('[data-writing-share]').forEach(btn=>btn.onclick=()=>shareWritingPoster(Number(btn.dataset.writingShare),btn));
+ container.querySelectorAll('[data-writing-profile]').forEach(btn=>btn.onclick=()=>openWritingContributor(btn.dataset.writingProfile));
+ container.querySelectorAll('[data-writing-read]').forEach(btn=>btn.onclick=()=>openWritingDetail(Number(btn.dataset.writingRead)))
+}
+function renderWritingFeed(){
+ const host=$('writingCommunityFeed');if(!host)return;
+ const rows=filteredWritingRows(),pages=Math.max(1,Math.ceil(rows.length/WRITINGS_PAGE_SIZE));writingPage=Math.min(Math.max(1,writingPage),pages);
+ if(!rows.length){host.innerHTML='<div class="empty-state writing-community-empty"><h3>No writing here yet</h3><p>Authentic writing submissions will appear automatically after students save them.</p></div>';return}
+ const pageRows=rows.slice((writingPage-1)*WRITINGS_PAGE_SIZE,writingPage*WRITINGS_PAGE_SIZE);
+ host.innerHTML=`<div class="writing-review-grid">${pageRows.map(w=>writingCardHtml(w,writingFeed.indexOf(w))).join('')}</div>${writingPaginationHtml(rows.length)}`;
+ bindWritingCardActions(host);
+ $('writingPrevPage')?.addEventListener('click',()=>{if(writingPage>1){writingPage--;renderWritingFeed();$('writingCommunityFeed')?.scrollIntoView({behavior:'smooth',block:'start'})}});
+ $('writingNextPage')?.addEventListener('click',()=>{if(writingPage<pages){writingPage++;renderWritingFeed();$('writingCommunityFeed')?.scrollIntoView({behavior:'smooth',block:'start'})}})
+}
+function openWritingDetail(index){
+ const w=writingFeed[index];if(!w)return;const own=w.studentId===session.id;
+ showModal(`<section class="writing-detail-modal"><div class="section-head"><button class="writing-profile-link writing-detail-profile" type="button" id="writingDetailProfile">${studentAvatarMarkup(w.photoUrl,w.studentName,'writing-detail-avatar')}<span><small>Writing by</small><strong>${escapeHtml(w.studentName)}</strong><em>${escapeHtml(w.className||'EnglishGate learner')}</em></span></button><button class="icon-btn" data-close>×</button></div><div class="writing-detail-context"><span>${escapeHtml(writingLessonLabel(w))}</span><span>${escapeHtml(writingDate(w.updatedAt))}</span></div><article class="writing-detail-text">${escapeHtml(w.content).replace(/\n/g,'<br>')}</article><div class="writing-detail-actions"><button class="writing-like-btn ${w.likedByMe?'is-liked':''}" id="writingDetailLike" type="button" ${w.canLike?'':'disabled'}><span aria-hidden="true">👍</span><strong>${w.likeCount}</strong><span>thumbs up</span></button>${own&&w.canShare?'<button class="primary-btn" id="writingDetailShare" type="button">Share my poster</button>':''}</div></section>`);
+ document.querySelector('[data-close]').onclick=closeModal;
+ $('writingDetailProfile').onclick=()=>{closeModal();openWritingContributor(w.studentId)};
+ $('writingDetailLike').onclick=()=>toggleWritingLike(w,$('writingDetailLike'),()=>{closeModal();renderWritingFeed();openWritingDetail(index)});
+ if($('writingDetailShare'))$('writingDetailShare').onclick=()=>shareWritingPoster(index,$('writingDetailShare'))
+}
+function openWritingContributor(studentId){
+ const rows=writingFeed.filter(w=>w.studentId===studentId).sort((x,y)=>new Date(y.updatedAt)-new Date(x.updatedAt));if(!rows.length)return;
+ const first=rows[0],stats=writingContributorStats(studentId);
+ showModal(`<section class="writing-contributor-modal"><header class="writing-contributor-hero">${studentAvatarMarkup(first.photoUrl,first.studentName,'writing-contributor-avatar')}<div><span class="role-kicker">Writing contributor</span><h2>${escapeHtml(first.studentName)}</h2><p>${escapeHtml(first.className||'EnglishGate learner')}</p><div class="writing-contributor-stats"><span><strong>${stats.count}</strong> contribution${stats.count===1?'':'s'}</span><span><strong>${stats.likes}</strong> thumbs up</span></div></div><button class="icon-btn" data-close>×</button></header><div class="writing-contributor-list">${rows.map(w=>{const idx=writingFeed.indexOf(w);return `<article class="writing-contributor-item"><div><span>${escapeHtml(writingLessonLabel(w))}</span><small>${escapeHtml(writingDate(w.updatedAt))}</small></div><p>${escapeHtml(writingExcerpt(w.content,240))}</p><div><span>👍 ${w.likeCount}</span><button class="writing-read-btn" type="button" data-contributor-read="${idx}">Read full writing</button></div></article>`}).join('')}</div></section>`);
+ document.querySelector('[data-close]').onclick=closeModal;
+ document.querySelectorAll('[data-contributor-read]').forEach(btn=>btn.onclick=()=>{const idx=Number(btn.dataset.contributorRead);closeModal();openWritingDetail(idx)})
 }
 async function myWritings(){
- writingFeedFilter='all';
+ writingFeedFilter='all';writingPage=1;
  const label=session.role==='student'?'Community':'Student writing';title(session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'EnglishGate',session.role==='student'?'My Writings':'Writings');
- $('content').innerHTML=`<section class="writing-community-page"><header class="writing-community-hero"><div><span class="role-kicker">${label}</span><h1>${session.role==='student'?'My Writings':'Student Writings'}</h1><p>${session.role==='student'?'Read what other learners are writing, encourage good work with a thumbs up, and share your own writing as a branded poster.':'See authentic writing students have submitted across EnglishGate.'}</p></div><div class="writing-community-brand"><strong>${IOU_PUBLIC_NAME}</strong><span>${IOU_PUBLIC_CONTACT}</span></div></header>
- <div class="writing-community-toolbar"><button class="ghost-btn is-active" data-writing-filter="all">Newest</button><button class="ghost-btn" data-writing-filter="popular">Most liked</button>${session.role==='student'?'<button class="ghost-btn" data-writing-filter="mine">My writing</button>':''}<span>Likes encourage learners; they do not change academic grades or leaderboard scores.</span></div>
- <div id="writingCommunityFeed" class="writing-community-feed"><div class="empty-state"><h3>Loading writings…</h3></div></div></section>`;
- document.querySelectorAll('[data-writing-filter]').forEach(btn=>btn.onclick=()=>{writingFeedFilter=btn.dataset.writingFilter;document.querySelectorAll('[data-writing-filter]').forEach(x=>x.classList.toggle('is-active',x===btn));renderWritingFeed()});
+ $('content').innerHTML=`<section class="writing-community-page"><header class="writing-community-hero writing-community-hero-cozy"><div><span class="role-kicker">${label}</span><h1>${session.role==='student'?'My Writings':'Student Writings'}</h1><p>${session.role==='student'?'A cozy space to read learner writing, encourage good work, and discover more from writers you enjoy.':'Review authentic student writing in a clean community feed.'}</p></div><div class="writing-community-brand"><strong>${IOU_PUBLIC_NAME}</strong><span>${IOU_PUBLIC_CONTACT}</span></div></header>
+ <div class="writing-community-toolbar writing-review-toolbar"><div><button class="ghost-btn is-active" data-writing-filter="all">Newest</button><button class="ghost-btn" data-writing-filter="popular">Most liked</button>${session.role==='student'?'<button class="ghost-btn" data-writing-filter="mine">My writing</button>':''}</div><span>10 writings per page · Thumbs up never affects academic scores.</span></div>
+ <div id="writingCommunityFeed"><div class="empty-state"><h3>Loading writings…</h3></div></div></section>`;
+ document.querySelectorAll('[data-writing-filter]').forEach(btn=>btn.onclick=()=>{writingFeedFilter=btn.dataset.writingFilter;writingPage=1;document.querySelectorAll('[data-writing-filter]').forEach(x=>x.classList.toggle('is-active',x===btn));renderWritingFeed()});
  try{const r=await api('/api/writings');writingFeed=Array.isArray(r.writings)?r.writings:[];renderWritingFeed()}catch(e){$('writingCommunityFeed').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}
 }
 function wrapPosterText(ctx,text,maxWidth){
