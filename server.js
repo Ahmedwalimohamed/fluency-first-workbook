@@ -61,6 +61,7 @@ async function initDb(){
  await pool.query("alter table profiles add column if not exists b2_upgrade_notice_seen_at timestamptz");
  await pool.query("create unique index if not exists users_login_token_unique on users(login_token) where login_token is not null");
  await pool.query("alter table writing_samples alter column score drop not null");
+ await pool.query("alter table writing_samples add column if not exists published_to_community boolean not null default true");
  await pool.query("delete from attempts where skill='writing' and tags @> array['writing:organisation','writing:task-completion']::text[]");
  await pool.query("alter table users drop constraint if exists users_role_check");
  await pool.query("alter table users add constraint users_role_check check(role in ('admin','teacher','student'))");
@@ -296,7 +297,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
 
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{const {lessonId,skill,score,tags=[]}=req.body;if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});const safeTags=Array.isArray(tags)?tags.slice(0,9):[];if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,lessonId,skill,score,safeTags]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);res.json({ok:true})});
 app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);res.json({ok:true})});
-app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||'');if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before publishing.'});const previous=await pool.query('select content from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score) values($1,$2,$3,null) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,updated_at=now()`,[req.user.id,lessonId,content]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);res.json({ok:true,completed:Boolean(done.rowCount)})});
+app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||''),publishToCommunity=req.body.publishToCommunity===true;if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before saving.'});const previous=await pool.query('select content,published_to_community from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score,published_to_community) values($1,$2,$3,null,$4) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,published_to_community=excluded.published_to_community,updated_at=now()`,[req.user.id,lessonId,content,publishToCommunity]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);res.json({ok:true,completed:Boolean(done.rowCount),publishedToCommunity:publishToCommunity})});
 function authenticWritingText(raw){
  const text=String(raw||'').trim();if(!text)return'';
  const looksJson=/^[\[{]/.test(text);
@@ -340,7 +341,7 @@ app.get('/api/writings',auth,async(req,res)=>{
     from writing_likes wl
     where wl.author_student_id=w.student_id and wl.lesson_id=w.lesson_id
   ) lc on true
-  where length(trim(w.content))>=20
+  where w.published_to_community=true and length(trim(w.content))>=20
   order by w.updated_at desc
   limit 1000
  `,[req.user.id])).rows;
@@ -361,7 +362,7 @@ app.get('/api/writings',auth,async(req,res)=>{
 app.post('/api/writings/:studentId/:lessonId/like',auth,studentOnly,async(req,res)=>{
  const authorId=String(req.params.studentId||''),lessonId=String(req.params.lessonId||'');
  if(authorId===req.user.id)return res.status(400).json({error:'You cannot like your own writing.'});
- const exists=await pool.query(`select 1 from writing_samples w join users u on u.id=w.student_id where w.student_id=$1 and w.lesson_id=$2 and u.role='student'`,[authorId,lessonId]);
+ const exists=await pool.query(`select 1 from writing_samples w join users u on u.id=w.student_id where w.student_id=$1 and w.lesson_id=$2 and u.role='student' and w.published_to_community=true`,[authorId,lessonId]);
  if(!exists.rowCount)return res.status(404).json({error:'Writing not found.'});
  await pool.query('insert into writing_likes(liker_student_id,author_student_id,lesson_id) values($1,$2,$3) on conflict do nothing',[req.user.id,authorId,lessonId]);
  const count=await pool.query('select count(*)::int as count from writing_likes where author_student_id=$1 and lesson_id=$2',[authorId,lessonId]);
