@@ -1843,9 +1843,9 @@ async function saveWriting(l){
  if(firstIncomplete>=0){if(f)f.innerHTML='<div class="feedback bad">Complete all 12 writing practice questions before saving your final response.</div>';cards[firstIncomplete]?.scrollIntoView({behavior:'smooth',block:'center'});return}
  const box=document.querySelector('.writing-final-response'),response=box?.value.trim()||'',spec=writingFinalSpec(l),checks=formativeWritingChecks(l,response,spec);
  if(!checks.length){if(f)f.innerHTML=`<div class="feedback bad">Your final response has ${checks.words} words. Write ${spec.min}–${spec.max} words.</div>`;box?.focus();return}
- const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100),core=results.map((x,i)=>({question:i+1,type:x.type,response:x.response,correct:x.correct})),payload={core,final:response,score,submittedAt:new Date().toISOString()};
+ const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100);
  try{
-  await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(payload)})});
+  await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:response})});
   if(!l.writing?.humanGraded)await recordAttempt(session.id,l.id,'writing',score,['writing:sentence-building','writing:sentence-combining','writing:error-correction','writing:paragraph-ordering']);
   await refreshState();clearActivityDraft();const done=$('doneActivity');if(done)done.disabled=false;
   if(l.writing?.humanGraded){if(f)f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> The 12 practice questions were auto-graded and your real-life writing is saved for your teacher.</div>';return}
