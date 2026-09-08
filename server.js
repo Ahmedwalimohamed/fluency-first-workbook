@@ -275,6 +275,7 @@ app.post('/api/teacher/students/:id/reset-password',auth,teacherOnly,async(req,r
 
 app.use('/assets',express.static(path.join(__dirname,'public','assets')));
 app.get('/lesson-visuals.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','lesson-visuals.js')));
+app.get('/core-activities.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','core-activities.js')));
 app.get('/styles.css',(req,res)=>res.sendFile(path.join(__dirname,'public','styles.css')));
 app.get('/app.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','app.js')));
 app.get('/live-books.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','live-books.js')));
