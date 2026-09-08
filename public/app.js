@@ -282,6 +282,7 @@ function skillLabel(k){return k==='listening'?'Listening & Reading':cap(k)}
 const NAV={student:[['home','⌂','Home'],['course','▣','My book'],['progress','◔','Progress'],['leaderboard','▥','Leaderboard']],teacher:[['teacher-home','⌂','Overview'],['teach','▣','Teach'],['teacher-workbooks','▤','Workbooks'],['students','◎','Students'],['classes','▤','Classes'],['leaderboard','▥','Leaderboard'],['weaknesses','△','Needs review'],['reports','▦','Reports']],admin:[['admin-home','⌂','Overview'],['admin-books','▣','Books'],['admin-classes','▤','Classes'],['admin-reports','▦','Reports'],['admin-admins','◇','Admins'],['admin-teachers','◎','Teachers'],['admin-students','○','Students']]};
 let session=null,currentPage='home',activeLessonId='w1l1',currentStep='vocabulary',apiDB=null,activeTeacherClassId=null,activeTeacherLessonNumber=1,activeTeacherSectionIndex=0,activeStudentLiveLessonNumber=1,activeStudentSectionIndex=0;
 let personalAccessToken=new URLSearchParams(window.location.search).get('access')||null,personalAccessStudent=null;
+let teacherPresentationMode=false;
 function getDB(){return apiDB||{version:7,assignments:[],books:[],users:[],classes:[],profiles:{},attempts:[],completion:{},writing:{},listeningLocks:{}}}
 function saveDB(db){apiDB=db}
 function $(id){return document.getElementById(id)} function lesson(id=activeLessonId){return lessonById(id)||COURSE.lessons[0]} function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
@@ -331,6 +332,9 @@ function installNavigationScrollReset(){
 }
 installNavigationScrollReset();
 function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})}catch{el.focus()}scheduleAppScrollReset()} function setWorkbookDesignMode(on){document.body.classList.toggle('workbook-design-mode',Boolean(on))} async function renderPage(){
+ const teacherLive=session?.role==='teacher'&&currentPage==='teacher-live-lesson';
+ document.body.classList.toggle('teacher-live-active',teacherLive);
+ if(!teacherLive){teacherPresentationMode=false;document.body.classList.remove('teacher-presentation-mode');document.getElementById('teacherSpotlightOverlay')?.remove()}else document.body.classList.toggle('teacher-presentation-mode',teacherPresentationMode);
  setWorkbookDesignMode(['workbook','teacher-workbook-view','admin-workbook-view'].includes(currentPage));
  const result=session.role==='student'?renderStudent():session.role==='teacher'?renderTeacher():renderAdmin();
  await Promise.resolve(result);
@@ -1371,6 +1375,55 @@ function teacherLiveToolsHtml(){
   </div>
  </div>`;
 }
+function setTeacherPresentationMode(on){
+ teacherPresentationMode=Boolean(on);
+ document.body.classList.toggle('teacher-presentation-mode',teacherPresentationMode);
+ document.querySelectorAll('[data-presentation-toggle]').forEach(b=>{b.setAttribute('aria-pressed',teacherPresentationMode?'true':'false');if(b.dataset.presentationLabel==='dynamic')b.textContent=teacherPresentationMode?'Exit presentation':'Present ⛶'});
+ if(!teacherPresentationMode)document.getElementById('teacherSpotlightOverlay')?.remove();
+ setTimeout(()=>{window.dispatchEvent(new Event('resize'));resetAppScroll()},20);
+}
+async function toggleTeacherPresentation(){
+ const next=!teacherPresentationMode;
+ setTeacherPresentationMode(next);
+ if(next&&document.documentElement.requestFullscreen){try{await document.documentElement.requestFullscreen()}catch{}}
+ else if(!next&&document.fullscreenElement&&document.exitFullscreen){try{await document.exitFullscreen()}catch{}}
+}
+function closeTeacherSpotlight(){document.getElementById('teacherSpotlightOverlay')?.remove()}
+function openTeacherSpotlight(rows,index){
+ closeTeacherSpotlight();
+ if(!rows.length)return;
+ const safeIndex=Math.max(0,Math.min(index,rows.length-1)),row=rows[safeIndex],number=row.querySelector(':scope > span')?.textContent?.trim()||String(safeIndex+1),question=row.querySelector('p')?.textContent?.trim()||row.textContent.trim();
+ const overlay=document.createElement('div');overlay.id='teacherSpotlightOverlay';overlay.className='teacher-spotlight-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Question spotlight');
+ overlay.innerHTML=`<div class="teacher-spotlight-card" data-tone="${safeIndex%3}">
+  <header><span>Question ${escapeHtml(number)}</span><button type="button" class="teacher-spotlight-close" id="closeTeacherSpotlight">Show all questions ×</button></header>
+  <div class="teacher-spotlight-body"><div class="teacher-spotlight-number">${escapeHtml(number)}</div><p>${escapeHtml(question)}</p></div>
+  <footer><button type="button" class="ghost-btn" id="spotlightPrev" ${safeIndex===0?'disabled':''}>← Previous</button><span>${safeIndex+1} of ${rows.length}</span><button type="button" class="primary-btn" id="spotlightNext" ${safeIndex===rows.length-1?'disabled':''}>Next →</button></footer>
+ </div>`;
+ document.body.appendChild(overlay);
+ $('closeTeacherSpotlight').onclick=closeTeacherSpotlight;
+ $('spotlightPrev').onclick=()=>openTeacherSpotlight(rows,safeIndex-1);
+ $('spotlightNext').onclick=()=>openTeacherSpotlight(rows,safeIndex+1);
+ overlay.onclick=e=>{if(e.target===overlay)closeTeacherSpotlight()};
+ $('closeTeacherSpotlight').focus();
+}
+function wireTeacherSpotlight(){
+ const rows=[...document.querySelectorAll('#teacherAnnotationStage .live-prompt-grid .live-prompt-row')];
+ rows.forEach((row,index)=>{
+  row.classList.add('teacher-spotlight-ready');row.tabIndex=0;row.setAttribute('role','button');row.setAttribute('aria-label','Spotlight question '+(index+1));
+  const open=()=>{if(teacherLiveTool==='interact')openTeacherSpotlight(rows,index)};
+  row.onclick=open;
+  row.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&teacherLiveTool==='interact'){e.preventDefault();open()}};
+ });
+}
+function wireTeacherPresentation(){
+ document.querySelectorAll('[data-presentation-toggle]').forEach(b=>b.onclick=toggleTeacherPresentation);
+ setTeacherPresentationMode(teacherPresentationMode);
+ if(!window.__egTeacherPresentationEvents){
+  window.__egTeacherPresentationEvents=true;
+  document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&teacherPresentationMode)setTeacherPresentationMode(false)});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('teacherSpotlightOverlay'))closeTeacherSpotlight();else if(teacherPresentationMode&&!document.fullscreenElement)setTeacherPresentationMode(false)}});
+ }
+}
 function wireTeacherLiveTools(){
  const stage=$('teacherAnnotationStage'),canvas=$('teacherAnnotationCanvas'),textLayer=$('teacherAnnotationTextLayer'),laser=$('teacherLaserPointer');
  if(!stage||!canvas||!textLayer||!laser)return;
@@ -1460,9 +1513,9 @@ function wireTeacherLiveTools(){
 
 function teacherLiveLesson(){
  const c=teacherClass(),live=liveBookForClass(c),wb=workbookForClass(c);
- if(!c||!live||!wb){currentPage='teach';teacherTeach();return}
+ if(!c||!live||!wb){teacherPresentationMode=false;document.body.classList.remove('teacher-presentation-mode');currentPage='teach';teacherTeach();return}
  const l=live.lessons.find(x=>x.number===activeTeacherLessonNumber),w=wb.lessons.find(x=>x.number===activeTeacherLessonNumber);
- if(!l){currentPage='teacher-book';teacherBook();return}
+ if(!l){teacherPresentationMode=false;document.body.classList.remove('teacher-presentation-mode');currentPage='teacher-book';teacherBook();return}
  const sections=liveSections(l.content),total=sections.length,assigned=w?assignmentForLesson(c.id,w.id):null;
  activeTeacherSectionIndex=Math.max(0,Math.min(activeTeacherSectionIndex,Math.max(0,total-1)));
  const section=sections[activeTeacherSectionIndex],isLast=activeTeacherSectionIndex===total-1,goal=lessonCanDoGoal(l);
@@ -1470,9 +1523,11 @@ function teacherLiveLesson(){
  const stageName=section?sectionLabel(section.title,activeTeacherSectionIndex,total):'Lesson unavailable';
  title('Teacher','Lesson '+l.number);
  const stages=sections.map((x,i)=>`<button class="eg-stage ${i===activeTeacherSectionIndex?'is-current':''}" data-live-section="${i}" ${i===activeTeacherSectionIndex?'aria-current="step"':''}><span>${i+1}</span><strong>${escapeHtml(sectionLabel(x.title,i,total).toLowerCase())}</strong></button>`).join('');
+ const presentationStages=sections.map((x,i)=>`<button class="teacher-presentation-stage ${i===activeTeacherSectionIndex?'is-current':''}" data-live-section="${i}" ${i===activeTeacherSectionIndex?'aria-current="step"':''}><span>${i+1}</span><strong>${escapeHtml(sectionLabel(x.title,i,total))}</strong></button>`).join('');
  const nextAction=!total?'':!isLast?'<button class="primary-btn" id="nextLiveSection">Next stage →</button>':assigned?'<span class="eg-assigned" role="status">Workbook assigned ✓</span>':w&&w.ready!==false?'<button class="primary-btn" id="finishAndAssign">Assign workbook →</button>':'<span class="eg-unavailable">Matching workbook is not available yet.</span>';
  $('content').innerHTML=`<section class="eg-lesson">
-  <header class="eg-lesson-header"><button class="ghost-btn" id="backTeacherBook">← Lessons</button>${englishGateLogo('englishgate-logo-lesson')}<div><p>${escapeHtml(c.name)} · ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div>${w&&w.ready!==false?'<button class="ghost-btn" id="openTeacherWorkbook">Workbook</button>':''}</header>
+  <header class="eg-lesson-header"><button class="ghost-btn" id="backTeacherBook">← Lessons</button>${englishGateLogo('englishgate-logo-lesson')}<div><p>${escapeHtml(c.name)} · ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div><div class="eg-lesson-header-actions">${w&&w.ready!==false?'<button class="ghost-btn" id="openTeacherWorkbook">Workbook</button>':''}<button class="primary-btn teacher-present-btn" type="button" data-presentation-toggle data-presentation-label="dynamic" aria-pressed="${teacherPresentationMode?'true':'false'}">${teacherPresentationMode?'Exit presentation':'Present ⛶'}</button></div></header>
+  <div class="teacher-presentation-chrome"><div class="teacher-presentation-title"><div><span>${escapeHtml(c.name)}</span><strong>Lesson ${l.number} · ${escapeHtml(l.title)}</strong></div><button class="teacher-exit-presentation" type="button" data-presentation-toggle aria-label="Exit presentation">Exit ⛶</button></div><nav class="teacher-presentation-stages" aria-label="Lesson stages">${presentationStages}</nav></div>
   <div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside>
   <div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeTeacherSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header>
   ${teacherLiveToolsHtml()}
@@ -1483,18 +1538,18 @@ function teacherLiveLesson(){
    <div class="teacher-laser-pointer" id="teacherLaserPointer" aria-hidden="true"></div>
   </div>
   ${isLast?`<div class="eg-workbook-note">${w?`<strong>After class</strong><span>Workbook ${w.number} · ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}
-  <footer class="eg-lesson-footer"><button class="ghost-btn" id="prevLiveSection" ${activeTeacherSectionIndex===0?'disabled':''}>← Previous</button>${nextAction}</footer></div></div>
+  <footer class="eg-lesson-footer"><button class="ghost-btn" id="prevLiveSection" ${activeTeacherSectionIndex===0?'disabled':''}>← Previous stage</button><span class="teacher-footer-stage">Stage ${activeTeacherSectionIndex+1} of ${Math.max(1,total)}</span>${nextAction}</footer></div></div>
  </section>`;
- $('backTeacherBook').onclick=()=>{currentPage='teacher-book';renderNav();teacherBook()};
- if($('openTeacherWorkbook'))$('openTeacherWorkbook').onclick=()=>openTeacherWorkbook(c.id,w.id);
- const goToStage=index=>{activeTeacherSectionIndex=index;teacherLiveLesson();focusWithoutScroll($('liveStageTitle'));resetAppScroll()};
+ document.body.classList.add('teacher-live-active');document.body.classList.toggle('teacher-presentation-mode',teacherPresentationMode);
+ $('backTeacherBook').onclick=()=>{teacherPresentationMode=false;document.body.classList.remove('teacher-presentation-mode','teacher-live-active');closeTeacherSpotlight();currentPage='teacher-book';renderNav();teacherBook()};
+ if($('openTeacherWorkbook'))$('openTeacherWorkbook').onclick=()=>{teacherPresentationMode=false;document.body.classList.remove('teacher-presentation-mode');closeTeacherSpotlight();openTeacherWorkbook(c.id,w.id)};
+ const goToStage=index=>{closeTeacherSpotlight();activeTeacherSectionIndex=index;teacherLiveLesson();focusWithoutScroll($('liveStageTitle'));resetAppScroll()};
  document.querySelectorAll('[data-live-section]').forEach(b=>b.onclick=()=>goToStage(Number(b.dataset.liveSection)));
  $('prevLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0)goToStage(activeTeacherSectionIndex-1)};
  if($('nextLiveSection'))$('nextLiveSection').onclick=()=>goToStage(activeTeacherSectionIndex+1);
  if($('finishAndAssign'))$('finishAndAssign').onclick=()=>openAssignWorkbook(c,l,w);
- wireLiveVocabulary();wireLiveChecks();wireTeacherLiveTools();
+ wireLiveVocabulary();wireLiveChecks();wireTeacherLiveTools();wireTeacherSpotlight();wireTeacherPresentation();
 }
-
 function openAssignWorkbook(c,liveLesson,workbookLesson){showModal(`<div class="section-head"><div><span class="role-kicker">Post-class action</span><h3>Assign matching workbook</h3><p class="muted">${escapeHtml(c.name)}</p></div><button class="icon-btn" data-close>×</button></div><div class="assignment-match-card"><span>Live lesson</span><strong>Lesson ${liveLesson.number} · ${escapeHtml(liveLesson.title)}</strong><span>↓ automatically matched</span><strong>Workbook Lesson ${workbookLesson.number} · ${escapeHtml(workbookLesson.title)}</strong></div><div class="assignment-skill-row"><span>Vocabulary</span><span>Listening & Reading</span><span>Grammar</span><span>Writing</span></div><button class="primary-btn" id="confirmAssignment">Assign to class</button><div id="assignResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('confirmAssignment').onclick=async()=>{const btn=$('confirmAssignment');btn.disabled=true;btn.textContent='Assigning…';try{const a=await api('/api/teacher/assignments',{method:'POST',body:JSON.stringify({classId:c.id,bookId:c.bookId||c.course_id,lessonId:workbookLesson.id,lessonNumber:workbookLesson.number,lessonTitle:workbookLesson.title,skills:WORKBOOK_STEPS})});await refreshState();const link=window.location.origin+'/?assignment='+encodeURIComponent(a.id),message=`${c.name}: Lesson ${workbookLesson.number} · ${workbookLesson.title} workbook is ready. Complete Vocabulary, Listening & Reading, Grammar and Writing: ${link}`;$('assignResult').innerHTML=`<div class="assignment-success"><strong>Assigned to ${escapeHtml(c.name)}</strong><p>Share this WhatsApp message with the class. The link opens the exact workbook lesson.</p><textarea id="whatsappMessage" readonly>${escapeHtml(message)}</textarea><div class="student-cta-row"><button class="secondary-btn" id="copyWhatsApp">Copy WhatsApp message</button><button class="primary-btn" id="openWhatsApp">Open WhatsApp</button></div></div>`;btn.classList.add('hidden');$('copyWhatsApp').onclick=async()=>{await navigator.clipboard.writeText(message);$('copyWhatsApp').textContent='Copied ✓'};$('openWhatsApp').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank')}catch(e){btn.disabled=false;btn.textContent='Assign to class';$('assignResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
 function students(){const sts=classStudents();title('Teacher','Students');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Roster</span><h1>Your students</h1><p>Students in classes assigned to you.</p></div><button class="primary-btn" id="addStudent">+ Add student</button></div><div class="card table-wrap clean-table"><table class="data-table"><thead><tr><th>Student</th><th>Class</th><th>Progress</th><th>Focus</th><th></th></tr></thead><tbody>${sts.map(s=>studentRow(s)).join('')}</tbody></table></div>`;$('addStudent').onclick=openAddStudent;bindStudentActions()}
 function studentRow(s){const w=weakest(s.id),className=getDB().classes.find(c=>s.classIds?.includes(c.id))?.name||'—';return `<tr><td><div class="student-cell"><div class="avatar">${escapeHtml(s.name[0])}</div><div><button class="student-name-link" data-student-report="${escapeAttr(s.id)}" type="button">${escapeHtml(s.name)}</button><div class="muted">@${escapeHtml(s.username)}</div><small>WhatsApp: ${escapeHtml(s.whatsappNumber||'Not recorded')}</small></div></div></td><td>${escapeHtml(className)}</td><td>${completionPct(s.id)}%</td><td>${w?.label||'No scored activity yet'}</td><td><div class="management-row-meta"><button class="ghost-btn" data-transfer-student="${escapeAttr(s.id)}">Transfer</button><button class="ghost-btn" data-password-student="${escapeAttr(s.id)}">Password</button><button class="ghost-btn" data-review-student="${escapeAttr(s.id)}">View report</button></div></td></tr>`}
