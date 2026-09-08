@@ -1302,6 +1302,7 @@ function saveActivityDraft(){
  }catch{}
 }
 function restoreActivityDraft(){
+ if(skillCompletionFor(session?.id,activeLessonId).includes(currentStep)){clearActivityDraft();return false}
  const draft=readActivityDraft(),panel=$('activityPanel');if(!draft||!panel)return false;
  const textFields=[...panel.querySelectorAll('textarea,input[type="text"]')];
  (draft.textFields||[]).forEach(saved=>{
@@ -1343,7 +1344,10 @@ function wireActivityDrafting(){
  if(session?.role!=='student'||isWorkbookPreview())return;
  const panel=$('activityPanel');if(!panel)return;
  let timer=null;const queue=()=>{clearTimeout(timer);timer=setTimeout(saveActivityDraft,120)};
- panel.addEventListener('input',queue);panel.addEventListener('change',queue);panel.addEventListener('click',()=>setTimeout(queue,0));
+ panel.addEventListener('input',queue);
+ panel.addEventListener('change',saveActivityDraft);
+ panel.addEventListener('focusout',saveActivityDraft);
+ panel.addEventListener('click',()=>setTimeout(saveActivityDraft,0));
  if(!window.__egDraftLifecycle){
   window.__egDraftLifecycle=true;
   window.addEventListener('beforeunload',saveActivityDraft);
