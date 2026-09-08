@@ -1342,6 +1342,122 @@ async function teacherTeach(){await ensureLiveBooks();const cls=getDB().classes;
 async function teacherBook(){await ensureLiveBooks();const c=teacherClass(),live=liveBookForClass(c),wb=workbookForClass(c);if(!c||!live||!wb){currentPage='teach';teacherTeach();return}title('Teacher','Live Book');$('content').innerHTML=`<section class="teacher-book-shell"><button class="back-link" id="backTeachClasses">← Classes</button><div class="course-intro"><div><span class="pill teal">${escapeHtml(c.level)}</span><h1>${escapeHtml(live.title)}</h1><p>${escapeHtml(c.name)} · Teach the live lesson here, then assign the matching workbook.</p></div></div><div class="teacher-lesson-list">${live.lessons.map(l=>{const w=wb.lessons.find(x=>x.number===l.number),assigned=w?assignmentForLesson(c.id,w.id):null;return `<button class="teacher-live-row" data-live-lesson="${l.number}"><span class="teacher-live-num">${l.number}</span><span><strong>${escapeHtml(l.title)}</strong><small>${w?'Workbook matched':'Workbook match missing'}</small></span><b>${assigned?'Assigned ✓':'Teach →'}</b></button>`}).join('')}</div></section>`;$('backTeachClasses').onclick=()=>{currentPage='teach';renderNav();teacherTeach()};document.querySelectorAll('[data-live-lesson]').forEach(b=>b.onclick=()=>{activeTeacherLessonNumber=Number(b.dataset.liveLesson);activeTeacherSectionIndex=0;currentPage='teacher-live-lesson';renderNav();teacherLiveLesson()})}
 function lessonCanDoGoal(l){const line=String(l?.content||'').split('\n').map(x=>x.trim()).find(x=>/^CAN-DO GOAL:/i.test(x));return line?line.replace(/^CAN-DO GOAL:\s*/i,'').trim():''}
 function liveSectionContent(section){return (section?.lines||[]).filter(x=>!/^CAN-DO GOAL:/i.test(String(x).trim())).join('\n')}
+
+let teacherLiveTool='interact';
+const teacherLiveAnnotations=new Map();
+function teacherAnnotationKey(){
+ const c=teacherClass();
+ return [c?.id||'class',activeTeacherLessonNumber,activeTeacherSectionIndex].join(':');
+}
+function teacherAnnotationState(){
+ const key=teacherAnnotationKey();
+ if(!teacherLiveAnnotations.has(key))teacherLiveAnnotations.set(key,{strokes:[],texts:[],actions:[]});
+ return teacherLiveAnnotations.get(key);
+}
+function teacherToolButton(mode,label,icon){
+ return `<button class="live-tool-btn ${teacherLiveTool===mode?'active':''}" type="button" data-live-tool="${mode}" aria-pressed="${teacherLiveTool===mode?'true':'false'}"><span aria-hidden="true">${icon}</span>${label}</button>`;
+}
+function teacherLiveToolsHtml(){
+ return `<div class="live-class-tools" role="toolbar" aria-label="Live class teaching tools">
+  <div class="live-tool-modes">
+   ${teacherToolButton('interact','Interact','↖')}
+   ${teacherToolButton('pointer','Pointer','●')}
+   ${teacherToolButton('highlight','Highlighter','▰')}
+   ${teacherToolButton('text','Text','T')}
+  </div>
+  <div class="live-tool-actions">
+   <button class="live-tool-btn" type="button" id="undoLiveAnnotation" title="Undo last annotation">↶ <span>Undo</span></button>
+   <button class="live-tool-btn" type="button" id="clearLiveAnnotations" title="Clear annotations">× <span>Clear</span></button>
+  </div>
+ </div>`;
+}
+function wireTeacherLiveTools(){
+ const stage=$('teacherAnnotationStage'),canvas=$('teacherAnnotationCanvas'),textLayer=$('teacherAnnotationTextLayer'),laser=$('teacherLaserPointer');
+ if(!stage||!canvas||!textLayer||!laser)return;
+ const state=teacherAnnotationState(),ctx=canvas.getContext('2d');
+ let dpr=Math.max(1,window.devicePixelRatio||1),activeStroke=null;
+ const setMode=mode=>{
+  teacherLiveTool=mode;
+  document.querySelectorAll('[data-live-tool]').forEach(b=>{const on=b.dataset.liveTool===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on?'true':'false')});
+  canvas.style.pointerEvents=mode==='interact'?'none':'auto';
+  canvas.style.touchAction=mode==='highlight'?'none':'auto';
+  stage.dataset.annotationMode=mode;
+  laser.classList.toggle('is-enabled',mode==='pointer');
+  if(mode!=='pointer')laser.classList.remove('is-visible');
+ };
+ const renderTexts=()=>{
+  textLayer.innerHTML=state.texts.map(t=>`<div class="live-text-note" style="left:${t.x*100}%;top:${t.y*100}%">${escapeHtml(t.text)}</div>`).join('');
+ };
+ const draw=()=>{
+  const rect=stage.getBoundingClientRect();
+  if(rect.width<1||rect.height<1)return;
+  dpr=Math.max(1,window.devicePixelRatio||1);
+  const w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#FACC15';ctx.globalAlpha=.38;ctx.lineWidth=20*dpr;
+  state.strokes.forEach(stroke=>{
+   if(!stroke.points.length)return;
+   ctx.beginPath();
+   stroke.points.forEach((p,i)=>{const x=p.x*canvas.width,y=p.y*canvas.height;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});
+   if(stroke.points.length===1){const p=stroke.points[0],x=p.x*canvas.width,y=p.y*canvas.height;ctx.moveTo(x,y);ctx.lineTo(x+.1,y+.1)}
+   ctx.stroke();
+  });
+  ctx.globalAlpha=1;
+ };
+ const point=e=>{
+  const r=canvas.getBoundingClientRect();
+  return {x:Math.max(0,Math.min(1,(e.clientX-r.left)/Math.max(1,r.width))),y:Math.max(0,Math.min(1,(e.clientY-r.top)/Math.max(1,r.height)))};
+ };
+ const addTextEditor=p=>{
+  const editor=document.createElement('input');
+  editor.type='text';editor.className='live-text-editor';editor.placeholder='Type text…';editor.maxLength=140;
+  editor.style.left=(p.x*100)+'%';editor.style.top=(p.y*100)+'%';
+  stage.appendChild(editor);editor.focus();
+  const finish=save=>{
+   if(!editor.isConnected)return;
+   const value=editor.value.trim();
+   editor.remove();
+   if(save&&value){const id='text-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);state.texts.push({id,x:p.x,y:p.y,text:value});state.actions.push({type:'text',id});renderTexts()}
+  };
+  editor.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();finish(true)}else if(e.key==='Escape'){e.preventDefault();finish(false)}});
+  editor.addEventListener('blur',()=>finish(true),{once:true});
+ };
+ canvas.addEventListener('pointerdown',e=>{
+  if(teacherLiveTool==='highlight'){
+   e.preventDefault();canvas.setPointerCapture?.(e.pointerId);
+   const p=point(e),id='stroke-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+   activeStroke={id,points:[p]};state.strokes.push(activeStroke);state.actions.push({type:'stroke',id});draw();
+  }else if(teacherLiveTool==='text'){e.preventDefault();addTextEditor(point(e))}
+  else if(teacherLiveTool==='pointer'){e.preventDefault()}
+ });
+ canvas.addEventListener('pointermove',e=>{
+  if(teacherLiveTool==='pointer'){
+   const r=stage.getBoundingClientRect();laser.style.left=(e.clientX-r.left)+'px';laser.style.top=(e.clientY-r.top)+'px';laser.classList.add('is-visible');
+  }else if(teacherLiveTool==='highlight'&&activeStroke){
+   e.preventDefault();activeStroke.points.push(point(e));draw();
+  }
+ });
+ const finishStroke=e=>{if(activeStroke){try{canvas.releasePointerCapture?.(e.pointerId)}catch{}activeStroke=null}};
+ canvas.addEventListener('pointerup',finishStroke);canvas.addEventListener('pointercancel',finishStroke);
+ canvas.addEventListener('pointerleave',()=>{if(teacherLiveTool==='pointer')laser.classList.remove('is-visible')});
+ document.querySelectorAll('[data-live-tool]').forEach(b=>b.onclick=()=>setMode(b.dataset.liveTool));
+ if($('undoLiveAnnotation'))$('undoLiveAnnotation').onclick=()=>{
+  const action=state.actions.pop();if(!action)return;
+  if(action.type==='stroke')state.strokes=state.strokes.filter(x=>x.id!==action.id);
+  if(action.type==='text')state.texts=state.texts.filter(x=>x.id!==action.id);
+  draw();renderTexts();
+ };
+ if($('clearLiveAnnotations'))$('clearLiveAnnotations').onclick=()=>{
+  if(!state.actions.length)return;
+  state.strokes=[];state.texts=[];state.actions=[];draw();renderTexts();laser.classList.remove('is-visible');
+ };
+ const resize=()=>{draw();renderTexts()};
+ const observer=typeof ResizeObserver!=='undefined'?new ResizeObserver(resize):null;observer?.observe(stage);
+ window.addEventListener('resize',resize,{passive:true});
+ renderTexts();draw();setMode(teacherLiveTool);
+}
+
 function teacherLiveLesson(){
  const c=teacherClass(),live=liveBookForClass(c),wb=workbookForClass(c);
  if(!c||!live||!wb){currentPage='teach';teacherTeach();return}
@@ -1359,7 +1475,13 @@ function teacherLiveLesson(){
   <header class="eg-lesson-header"><button class="ghost-btn" id="backTeacherBook">← Lessons</button>${englishGateLogo('englishgate-logo-lesson')}<div><p>${escapeHtml(c.name)} · ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div>${w&&w.ready!==false?'<button class="ghost-btn" id="openTeacherWorkbook">Workbook</button>':''}</header>
   <div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside>
   <div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeTeacherSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header>
-  <article class="live-book-content eg-stage-content" aria-labelledby="liveStageTitle">${activeTeacherSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no teaching content yet. Return to the book and choose another lesson.</p>'}</article>
+  ${teacherLiveToolsHtml()}
+  <div class="teacher-annotation-stage" id="teacherAnnotationStage" data-annotation-mode="${teacherLiveTool}">
+   <article class="live-book-content eg-stage-content" aria-labelledby="liveStageTitle">${activeTeacherSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no teaching content yet. Return to the book and choose another lesson.</p>'}</article>
+   <div class="teacher-annotation-text-layer" id="teacherAnnotationTextLayer" aria-hidden="true"></div>
+   <canvas class="teacher-annotation-canvas" id="teacherAnnotationCanvas" aria-label="Teacher annotation layer"></canvas>
+   <div class="teacher-laser-pointer" id="teacherLaserPointer" aria-hidden="true"></div>
+  </div>
   ${isLast?`<div class="eg-workbook-note">${w?`<strong>After class</strong><span>Workbook ${w.number} · ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}
   <footer class="eg-lesson-footer"><button class="ghost-btn" id="prevLiveSection" ${activeTeacherSectionIndex===0?'disabled':''}>← Previous</button>${nextAction}</footer></div></div>
  </section>`;
@@ -1370,7 +1492,7 @@ function teacherLiveLesson(){
  $('prevLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0)goToStage(activeTeacherSectionIndex-1)};
  if($('nextLiveSection'))$('nextLiveSection').onclick=()=>goToStage(activeTeacherSectionIndex+1);
  if($('finishAndAssign'))$('finishAndAssign').onclick=()=>openAssignWorkbook(c,l,w);
- wireLiveVocabulary();wireLiveChecks();
+ wireLiveVocabulary();wireLiveChecks();wireTeacherLiveTools();
 }
 
 function openAssignWorkbook(c,liveLesson,workbookLesson){showModal(`<div class="section-head"><div><span class="role-kicker">Post-class action</span><h3>Assign matching workbook</h3><p class="muted">${escapeHtml(c.name)}</p></div><button class="icon-btn" data-close>×</button></div><div class="assignment-match-card"><span>Live lesson</span><strong>Lesson ${liveLesson.number} · ${escapeHtml(liveLesson.title)}</strong><span>↓ automatically matched</span><strong>Workbook Lesson ${workbookLesson.number} · ${escapeHtml(workbookLesson.title)}</strong></div><div class="assignment-skill-row"><span>Vocabulary</span><span>Listening & Reading</span><span>Grammar</span><span>Writing</span></div><button class="primary-btn" id="confirmAssignment">Assign to class</button><div id="assignResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('confirmAssignment').onclick=async()=>{const btn=$('confirmAssignment');btn.disabled=true;btn.textContent='Assigning…';try{const a=await api('/api/teacher/assignments',{method:'POST',body:JSON.stringify({classId:c.id,bookId:c.bookId||c.course_id,lessonId:workbookLesson.id,lessonNumber:workbookLesson.number,lessonTitle:workbookLesson.title,skills:WORKBOOK_STEPS})});await refreshState();const link=window.location.origin+'/?assignment='+encodeURIComponent(a.id),message=`${c.name}: Lesson ${workbookLesson.number} · ${workbookLesson.title} workbook is ready. Complete Vocabulary, Listening & Reading, Grammar and Writing: ${link}`;$('assignResult').innerHTML=`<div class="assignment-success"><strong>Assigned to ${escapeHtml(c.name)}</strong><p>Share this WhatsApp message with the class. The link opens the exact workbook lesson.</p><textarea id="whatsappMessage" readonly>${escapeHtml(message)}</textarea><div class="student-cta-row"><button class="secondary-btn" id="copyWhatsApp">Copy WhatsApp message</button><button class="primary-btn" id="openWhatsApp">Open WhatsApp</button></div></div>`;btn.classList.add('hidden');$('copyWhatsApp').onclick=async()=>{await navigator.clipboard.writeText(message);$('copyWhatsApp').textContent='Copied ✓'};$('openWhatsApp').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank')}catch(e){btn.disabled=false;btn.textContent='Assign to class';$('assignResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
