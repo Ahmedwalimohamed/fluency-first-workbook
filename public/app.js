@@ -1650,7 +1650,7 @@ async function saveWriting(l){
   if(l.writing?.humanGraded){if(f)f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> The 12 practice questions were auto-graded and your real-life writing is saved for your teacher.</div>';return}
   const tone=score>=75?'good':'bad',label=score===100?'All 12 correct':score>=75?'Strong preparation':'Review the practice';
   if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> practice questions correct</span><span><b>${12-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. Review any practice item you missed, then press <strong>Done</strong>.</p></div>`
- }catch(e){if(f)f.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}
+ }catch(e){saveActivityDraft();if(f)f.innerHTML=`<div class="feedback bad">${navigator.onLine?escapeHtml(e.message):'<strong>You are offline.</strong> Your answers are saved on this device. Reconnect and press save again.'}</div>`}
 }
 async function checkCurrent(){
  const open=[...document.querySelectorAll('[data-open="1"]')];
@@ -1674,7 +1674,7 @@ async function checkCurrent(){
   const transcript=currentStep==='listening'&&lesson().listening?.audioScript?listeningTranscript(lesson()):'';
   if(feedback)feedback.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${band}</span></div><div class="performance-breakdown"><span><b>${correct}</b> correct</span><span><b>${missed}</b> to review</span><span><b>${totalItems}</b> total</span></div><p>Your activity is complete. Press <strong>Done</strong> to continue, or review your mistakes first.</p>${boost}</div>${transcript}`;
   if($('boostFromResult'))$('boostFromResult').onclick=()=>startBoost(lesson());
- }catch(e){if(feedback)feedback.innerHTML=`<div class="feedback bad">Could not save progress: ${escapeHtml(e.message)}</div>`}
+ }catch(e){saveActivityDraft();if(feedback)feedback.innerHTML=`<div class="feedback bad">${navigator.onLine?'Could not save progress: '+escapeHtml(e.message):'<strong>You are offline.</strong> Your answers are saved on this device. Reconnect and press Check again.'}</div>`}
 }
 async function recordAttempt(studentId,lessonId,skill,score,tags=[]){await api('/api/attempts',{method:'POST',body:JSON.stringify({lessonId,skill,score,tags:[...new Set(tags)]})})}
 async function markDone(studentId,lid,step){await api('/api/completion',{method:'POST',body:JSON.stringify({lessonId:lid,step})})}
