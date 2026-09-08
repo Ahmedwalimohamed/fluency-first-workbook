@@ -5017,3 +5017,21 @@ html{scroll-behavior:auto!important}
   max-width:100%;
  }
 }
+
+/* B2 Living Standard — existing-student upgrade notice */
+.b2-upgrade-modal{max-width:650px;margin:auto;display:grid;gap:18px;padding:4px}
+.b2-upgrade-modal h2{margin:0;font-size:clamp(1.65rem,4vw,2.2rem);line-height:1.1;color:var(--navy)}
+.b2-upgrade-modal>p{margin:0;color:var(--muted);font-size:1.02rem;line-height:1.65}
+.b2-upgrade-kicker{width:max-content;padding:7px 11px;border-radius:999px;background:var(--teal-soft);color:var(--navy);font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.b2-upgrade-saved{display:grid;gap:6px;padding:16px 18px;border:1px solid var(--border);border-radius:16px;background:var(--bg)}
+.b2-upgrade-saved strong{color:var(--navy)}
+.b2-upgrade-saved span{color:var(--muted);line-height:1.55}
+.b2-upgrade-actions{display:flex;gap:10px;flex-wrap:wrap}
+.b2-upgrade-actions button{min-height:44px}
+.b2-upgrade-badge{display:inline-flex;width:max-content;align-items:center;padding:4px 8px;border-radius:999px;background:#fff3cd;color:#744d00;font-size:.72rem;font-weight:900;letter-spacing:.03em;text-transform:uppercase}
+.b2-score-compare{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:5px;font-size:.8rem}
+.b2-score-compare b{color:var(--navy)}
+.b2-score-compare span{color:var(--muted)}
+.b2-score-compare strong{color:var(--navy)}
+.course-topic.has-upgrade{border-color:#e5c14e;background:linear-gradient(90deg,#fffdf5 0%,#fff 34%)}
+@media(max-width:600px){.b2-upgrade-actions{display:grid}.b2-upgrade-actions button{width:100%}}

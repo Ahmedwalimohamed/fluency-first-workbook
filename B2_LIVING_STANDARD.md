@@ -123,3 +123,16 @@ Future B2 changes must:
 3. pass `npm run qa:b2`,
 4. avoid changing non-B2 books unless a separate task explicitly requires it,
 5. update this living standard when the curriculum contract itself changes.
+
+
+## Existing-student migration
+When B2 content is upgraded, existing students are never reset.
+
+- Course ID `speakup-b2` and lesson IDs `su-b2-l1`–`su-b2-l22` remain stable.
+- Previous completion, scores, attempts, and writing stay preserved.
+- Existing students who had B2 evidence before Living Standard v1 see a one-time upgrade notice.
+- They may continue where they stopped or voluntarily redo earlier upgraded lessons.
+- Completed legacy lessons can show **Upgrade available** and compare previous scores with scores earned on Living Standard v1.
+- New B2 attempts are tagged `curriculum:b2-living-standard-v1`.
+- B2 local activity drafts use a versioned key so stale pre-upgrade unfinished answers cannot populate changed activities.
+- Course completion is not reduced merely because a lesson has an optional upgrade available.
