@@ -220,12 +220,14 @@ app.post('/api/teacher/writing/:studentId/:lessonId/grade',auth,teacherOnly,asyn
 
 app.post('/api/admin/teachers',auth,adminOnly,async(req,res)=>{
  const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase();
+ const whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});
  if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});
  const passwordWasGenerated=req.body.password===undefined||req.body.password===null||req.body.password==='';
  const pw=chosenPassword(req.body.password);if(!pw)return res.status(400).json({error:'Password must contain numbers only and be 8–20 digits long.'});
  const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
- const id='t_'+crypto.randomUUID();await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[id,username,await bcrypt.hash(pw,12),'teacher',name]);
- res.status(201).json({id,username,temporaryPassword:pw,passwordWasGenerated});
+ const id='t_'+crypto.randomUUID();await pool.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'teacher',name,whatsappNumber]);
+ const message=accountAccessMessage({name,username,password:pw,className:'Teacher account',courseName:'EnglishGate Workbook',role:'teacher',appUrl:appBaseUrl(req)});
+ res.status(201).json({id,username,temporaryPassword:pw,passwordWasGenerated,whatsappNumber,className:'Teacher account',courseName:'EnglishGate Workbook',whatsappMessage:message,whatsappLink:whatsappHref(whatsappNumber,message)});
 });
 app.post('/api/admin/classes',auth,adminOnly,async(req,res)=>{
  const name=String(req.body.name||'').trim(),teacherId=String(req.body.teacherId||'').trim(),bookId=String(req.body.bookId||'').trim();
@@ -298,10 +300,11 @@ async function transferStudent(req,res,isAdmin){
 }
 app.patch('/api/admin/students/:id/class',auth,adminOnly,(req,res)=>transferStudent(req,res,true));
 app.post('/api/admin/users/:id/reset-password',auth,adminOnly,async(req,res)=>{
- const q=await pool.query("select id,role from users where id=$1 and role in ('teacher','student')",[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'User not found.'});
+ const q=await pool.query("select id,username,role,name,whatsapp_number from users where id=$1 and role in ('teacher','student')",[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'User not found.'});
  const pw=chosenPassword(req.body?.password);if(!pw)return res.status(400).json({error:'Password must contain 8–20 digits.'});
  await pool.query('update users set password_hash=$1 where id=$2',[await bcrypt.hash(pw,12),req.params.id]);
- res.json({password:pw,temporaryPassword:pw,generated:!req.body?.password});
+ const user=q.rows[0],access=await accountAccessContext(user),message=user.whatsapp_number?accountAccessMessage({name:user.name,username:user.username,password:pw,className:access.className,courseName:access.courseName,role:user.role,appUrl:appBaseUrl(req),kind:'reset'}):null;
+ res.json({password:pw,temporaryPassword:pw,generated:!req.body?.password,username:user.username,whatsappNumber:user.whatsapp_number||null,className:access.className,courseName:access.courseName,whatsappMessage:message,whatsappLink:message?whatsappHref(user.whatsapp_number,message):null});
 });
 app.delete('/api/admin/users/:id',auth,adminOnly,async(req,res)=>{
  const client=await pool.connect();try{await client.query('begin');const q=await client.query("select id,username,role,name from users where id=$1 and role in ('admin','teacher','student') for update",[req.params.id]);if(!q.rowCount){await client.query('rollback');return res.status(404).json({error:'User not found.'});}const user=q.rows[0];if(user.id===req.user.id){await client.query('rollback');return res.status(400).json({error:'You cannot delete the account you are currently using.'});}if(user.role==='admin'){const admins=await client.query("select count(*)::int as count from users where role='admin'");if(Number(admins.rows[0]?.count||0)<=1){await client.query('rollback');return res.status(400).json({error:'At least one admin account must remain.'});}}await client.query('insert into deleted_seed_accounts(username) values($1) on conflict(username) do nothing',[user.username.toLowerCase()]);let unassignedClasses=0;if(user.role==='teacher'){const classes=await client.query('update classes set teacher_id=null where teacher_id=$1',[user.id]);unassignedClasses=classes.rowCount;}await client.query('update assignments set created_by=null where created_by=$1',[user.id]);await client.query('delete from users where id=$1',[user.id]);await client.query('commit');res.json({ok:true,id:user.id,name:user.name,role:user.role,unassignedClasses});}catch(e){await client.query('rollback');throw e}finally{client.release()}
