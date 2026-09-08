@@ -234,3 +234,178 @@
     wireGrammarChoices();
   };
 })();
+
+/* Vocabulary focus runner — one question at a time */
+(function(){
+  'use strict';
+  function vEsc(v){return typeof escapeHtml==='function'?escapeHtml(String(v??'')):String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function vAttr(v){return typeof escapeAttr==='function'?escapeAttr(String(v??'')):vEsc(v).replace(/"/g,'&quot;')}
+  function vNorm(v){return String(v??'').toLowerCase().replace(/[“”"'’]/g,"'").replace(/[^a-z0-9'&]+/g,' ').replace(/\s+/g,' ').trim()}
+  function vLower(v){const t=String(v??'').trim();return /^[A-Z][a-z]/.test(t)?t[0].toLowerCase()+t.slice(1):t}
+  function vSentence(v){const t=String(v??'').trim();return /[.!?]$/.test(t)?t:t+'.'}
+  function vUnique(items,keyFn){const seen=new Set();return items.filter(x=>{const k=keyFn(x);if(!k||seen.has(k))return false;seen.add(k);return true})}
+
+  function vPool(l){
+    const items=[],qs=l.vocabulary?.items||buildVocabQuestions(l);
+    qs.forEach((q,i)=>{const m=vocabFeedbackMeta(l,q,i);if(m)items.push({word:m.word,meaning:vLower(m.meaning),example:m.example})});
+    (l.expressions||[]).forEach(x=>items.push({word:x.text,meaning:vLower(x.job||vocabMeaning(x.text)),example:x.example||lessonVocabExample(x.text,l)}));
+    (Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).forEach(x=>items.push({word:x,meaning:vLower(vocabMeaning(x)),example:lessonVocabExample(x,l)}));
+    return vUnique(items,x=>normalizeVocabWord(x.word));
+  }
+  function vDistractors(pool,target,field){
+    const vals=vUnique(pool.filter(x=>normalizeVocabWord(x.word)!==normalizeVocabWord(target.word)).map(x=>String(x[field]||'').trim()).filter(Boolean),vNorm);
+    const fallbacks=field==='meaning'
+      ?['something you want to learn more about','past education and experience','knowledge gained by doing or seeing something']
+      :['another lesson word','a different expression','another possible word'];
+    for(const item of fallbacks)if(!vals.some(x=>vNorm(x)===vNorm(item)))vals.push(item);
+    return vals.slice(0,3);
+  }
+  const VCOL={
+    goal:'set a goal',experience:'gain experience',deadline:'meet a deadline',decision:'make a decision',attention:'pay attention',
+    job:'apply for a job',promotion:'get a promotion',confidence:'build confidence',problem:'solve a problem',message:'send a message',
+    report:'write a report',responsibility:'take responsibility',interest:'show interest',friend:'make friends',friends:'make friends',
+    course:'take a course',university:'apply to university',technology:'use technology',ticket:'book a ticket',request:'make a request',
+    complaint:'make a complaint',progress:'make progress',meeting:'hold a meeting',plan:'make a plan',question:'ask a question'
+  };
+  function vCollocation(item){
+    const key=normalizeVocabWord(item.word),clean=String(item.word||'').replace(/[.…!?]+$/,'').trim();
+    if(VCOL[key])return VCOL[key];
+    if(clean.split(/\s+/).length>=2&&clean.split(/\s+/).length<=5)return clean;
+    return 'use '+clean;
+  }
+  function vCollocationOptions(pool,target){
+    const answer=vCollocation(target),verb=answer.split(/\s+/)[0],opts=[answer];
+    for(const item of pool){
+      if(normalizeVocabWord(item.word)===normalizeVocabWord(target.word))continue;
+      const tail=vCollocation(item).split(/\s+/).slice(1).join(' ');
+      const candidate=(verb+' '+tail).trim();
+      if(tail&&!opts.some(x=>vNorm(x)===vNorm(candidate)))opts.push(candidate);
+      if(opts.length===4)break;
+    }
+    while(opts.length<4)opts.push(verb+' another phrase');
+    return{answer,options:opts.slice(0,4)};
+  }
+  function vPrevious(l){
+    const out=[],lessons=(COURSE?.lessons||[]).filter(x=>Number(x.number)<Number(l.number)).sort((a,b)=>Number(b.number)-Number(a.number));
+    for(const prior of lessons){
+      for(const item of vPool(prior)){
+        if(!out.some(x=>normalizeVocabWord(x.word)===normalizeVocabWord(item.word)))out.push({...item,sourceLesson:prior.number});
+        if(out.length>=4)return out;
+      }
+    }
+    return out;
+  }
+  function vCore(l){
+    let pool=vPool(l);
+    if(!pool.length)pool=[{word:'English',meaning:'the language being learned',example:'We use English in class.'}];
+    while(pool.length<6)pool.push({...pool[pool.length%pool.length]});
+    const matching=pool.slice(0,3).map(target=>({type:'matching',target,answer:target.meaning,options:[target.meaning,...vDistractors(pool,target,'meaning')]}));
+    const context=pool.slice(3,6).map(target=>{
+      const ex=String(target.example||lessonVocabExample(target.word,l)),escaped=String(target.word).replace(/[.*+?^$()|[\]\\]/g,'\\$&');
+      const prompt=new RegExp(escaped,'i').test(ex)?ex.replace(new RegExp(escaped,'i'),'_____'):'Choose the word that best fits this situation.';
+      return{type:'context',target,prompt,answer:target.word,options:[target.word,...vDistractors(pool,target,'word')]};
+    });
+    const coll=pool.slice(0,2).map(target=>{const c=vCollocationOptions(pool,target);return{type:'collocation',target,answer:c.answer,options:c.options}});
+    let retrieval=vPrevious(l).slice(0,2);
+    if(retrieval.length<2)retrieval=[...retrieval,...pool.filter(x=>!retrieval.some(r=>normalizeVocabWord(r.word)===normalizeVocabWord(x.word))).slice(0,2-retrieval.length).map(x=>({...x,sourceLesson:null}))];
+    return[...matching,...context,...coll,...retrieval.map(target=>({type:'retrieval',target}))];
+  }
+  function vTypeLabel(type){return({matching:'Choose the meaning',context:'Use in context',collocation:'Build a collocation',retrieval:'Recall from memory'})[type]||'Vocabulary'}
+  function vQuestionTitle(item){
+    if(item.type==='matching')return 'What does “'+item.target.word+'” mean?';
+    if(item.type==='context')return 'Which word completes this sentence?';
+    if(item.type==='collocation')return 'Which combination sounds natural with “'+item.target.word+'”?';
+    return 'Which word means “'+item.target.meaning+'”?';
+  }
+  function vQuestionHint(item){
+    if(item.type==='matching')return 'Choose the best meaning from the options below.';
+    if(item.type==='context')return item.prompt;
+    if(item.type==='collocation')return 'Choose the natural word combination used by fluent speakers.';
+    return item.target.sourceLesson?'You learned this in Lesson '+item.target.sourceLesson+'. Type the word or phrase from memory.':'Type the word or phrase from memory.';
+  }
+  function vChoice(item,index){
+    return '<section class="vocab-question-slide" data-vocab-slide data-vocab-index="'+index+'" hidden>'+
+      '<div class="vocab-question-meta"><span>Vocabulary</span><i>•</i><span>'+vEsc(vTypeLabel(item.type))+'</span><i>•</i><strong>'+(index+1)+' of 10</strong></div>'+
+      '<div class="vocab-question-heading"><div><h1>'+vEsc(vQuestionTitle(item))+'</h1><p>'+vEsc(vQuestionHint(item))+'</p></div><aside class="vocab-focus-tip"><span class="vocab-focus-icon">○</span><div><strong>Build your vocabulary</strong><small>Meaning + context + retrieval builds lasting recall.</small></div></aside></div>'+
+      '<div class="vocab-answer-area">'+radio('v'+index,item.options,item.answer,'vocabulary:'+item.type,item.target)+'</div>'+
+      '</section>';
+  }
+  function vRecall(item,index){
+    const t=item.target;
+    return '<section class="vocab-question-slide" data-vocab-slide data-vocab-index="'+index+'" hidden>'+
+      '<div class="vocab-question-meta"><span>Vocabulary</span><i>•</i><span>Recall from memory</span><i>•</i><strong>'+(index+1)+' of 10</strong></div>'+
+      '<div class="vocab-question-heading"><div><h1>'+vEsc(vQuestionTitle(item))+'</h1><p>'+vEsc(vQuestionHint(item))+'</p></div><aside class="vocab-focus-tip"><span class="vocab-focus-icon">↻</span><div><strong>Retrieve, don’t reread</strong><small>Trying to remember strengthens the word in memory.</small></div></aside></div>'+
+      '<div class="vocab-recall-box"><input type="text" autocomplete="off" data-open="1" data-exact="'+vAttr(t.word)+'" data-tag="vocabulary:spaced-retrieval" data-vocab-exact data-word="'+vAttr(t.word)+'" data-meaning="'+vAttr(t.meaning)+'" data-example="'+vAttr(t.example)+'" placeholder="Type the word or phrase"><button class="primary-btn" type="button" data-vocab-exact-check>Check answer</button></div>'+
+      '<div class="vocab-recall-feedback" data-vocab-exact-feedback aria-live="polite"></div>'+
+      '</section>';
+  }
+
+  window.vocabActivity=function(l){
+    const questions=vCore(l);
+    return '<div class="eg-skill-page eg-vocabulary-page vocab-focus-runner" data-vocab-runner>'+
+      '<div class="vocab-runner-card">'+
+        '<div class="vocab-progress-row"><div class="vocab-progress-track"><span data-vocab-progress></span></div><strong data-vocab-progress-text>1 of 10</strong></div>'+
+        '<div class="vocab-slide-stack">'+questions.map((q,i)=>q.type==='retrieval'?vRecall(q,i):vChoice(q,i)).join('')+'</div>'+
+        '<div id="activityFeedback" class="vocab-overall-feedback"></div>'+
+        '<div class="vocab-runner-nav"><button class="vocab-prev-btn" type="button" data-vocab-prev>← <span>Previous</span></button><button class="primary-btn vocab-next-btn" type="button" data-vocab-next disabled>Continue <span>→</span></button></div>'+
+      '</div>'+
+      '<div class="vocab-hidden-actions" aria-hidden="true"><button id="checkActivity" type="button">Check vocabulary</button>'+activityDoneButton(l)+'</div>'+
+      '</div>';
+  };
+
+  function vSlideAnswered(slide){
+    const checked=slide.querySelector('input[type=radio]:checked');
+    if(checked)return true;
+    const exact=slide.querySelector('[data-vocab-exact]');
+    return Boolean(exact&&exact.dataset.checked==='1');
+  }
+  function wireVocabFocusRunner(){
+    const runner=document.querySelector('[data-vocab-runner]');if(!runner||runner.dataset.wired==='1')return;
+    runner.dataset.wired='1';
+    const slides=[...runner.querySelectorAll('[data-vocab-slide]')],prev=runner.querySelector('[data-vocab-prev]'),next=runner.querySelector('[data-vocab-next]'),bar=runner.querySelector('[data-vocab-progress]'),label=runner.querySelector('[data-vocab-progress-text]');
+    let current=0,submitted=false;
+    const show=index=>{
+      current=Math.max(0,Math.min(slides.length-1,index));
+      slides.forEach((s,i)=>s.hidden=i!==current);
+      if(bar)bar.style.width=((current+1)/slides.length*100)+'%';
+      if(label)label.textContent=(current+1)+' of '+slides.length;
+      if(prev)prev.disabled=current===0;
+      if(next){
+        next.disabled=!vSlideAnswered(slides[current]);
+        next.innerHTML=current===slides.length-1?(submitted?'Done <span>→</span>':'Check activity <span>→</span>'):'Continue <span>→</span>';
+      }
+      slides[current]?.scrollIntoView({block:'start',behavior:'smooth'});
+    };
+    slides.forEach(slide=>{
+      slide.querySelectorAll('input[type=radio]').forEach(input=>input.addEventListener('change',()=>{slide.dataset.answered='1';if(slide===slides[current])next.disabled=false}));
+      const exact=slide.querySelector('[data-vocab-exact]'),check=slide.querySelector('[data-vocab-exact-check]');
+      if(exact)exact.addEventListener('input',()=>{if(exact.dataset.checked==='1'){exact.dataset.checked='0';const box=slide.querySelector('[data-vocab-exact-feedback]');if(box)box.innerHTML=''}if(slide===slides[current])next.disabled=true});
+      if(check)check.addEventListener('click',()=>{if(exact&&exact.value.trim()){exact.dataset.checked='1';slide.dataset.answered='1';if(slide===slides[current])next.disabled=false}});
+    });
+    prev.onclick=()=>show(current-1);
+    next.onclick=()=>{
+      if(next.disabled)return;
+      if(current<slides.length-1){show(current+1);return}
+      if(submitted){const done=document.getElementById('doneActivity');if(done&&!done.disabled)done.click();return}
+      const checker=document.getElementById('checkActivity');if(checker){next.disabled=true;next.textContent='Saving…';checker.click()}
+      if(isWorkbookPreview())return;
+      const done=document.getElementById('doneActivity');
+      if(done){
+        const sync=()=>{
+          if(!done.disabled){submitted=true;next.disabled=false;next.innerHTML='Done <span>→</span>'}
+        };
+        sync();
+        const observer=new MutationObserver(()=>{sync();if(submitted)observer.disconnect()});
+        observer.observe(done,{attributes:true,attributeFilter:['disabled']});
+        setTimeout(()=>{sync();if(submitted)observer.disconnect()},1200);
+      }
+    };
+    show(0);
+  }
+
+  const priorWireActivity=window.wireActivity;
+  window.wireActivity=function(l){
+    priorWireActivity(l);
+    wireVocabFocusRunner();
+  };
+})();
