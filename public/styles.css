@@ -4814,3 +4814,66 @@ html{scroll-behavior:auto!important}
  .profile-photo-status{text-align:center}
  .student-profile-card{padding:20px!important}
 }
+
+
+/* Teacher-only writing structure notes */
+.teacher-only-writing-guide{
+ display:grid;
+ gap:5px;
+ margin:0 0 16px;
+ padding:14px 16px;
+ border:1px solid #d7e4ea;
+ border-radius:12px;
+ background:#f7fafc
+}
+.teacher-only-writing-guide strong{color:#183247}
+.teacher-only-writing-guide p{margin:0;color:#607383;font-size:.82rem;line-height:1.5}
+
+/* Student job title */
+.profile-job-card{
+ display:grid;
+ grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+ gap:22px;
+ margin:20px 0;
+ padding:18px;
+ border:1px solid #dde7eb;
+ border-radius:14px;
+ background:#fbfdfe
+}
+.profile-job-card h3{margin:4px 0 5px;color:#102a43}
+.profile-job-card>div>p{margin:0;color:#607383;font-size:.84rem;line-height:1.5}
+.profile-job-form{display:grid;gap:7px}
+.profile-job-form label{
+ color:#334e62;
+ font-size:.76rem;
+ font-weight:850
+}
+.profile-job-input-row{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) auto;
+ gap:8px
+}
+.profile-job-input-row input{
+ width:100%;
+ min-height:44px;
+ padding:10px 12px;
+ border:1px solid #cbd8dd;
+ border-radius:10px;
+ background:#fff;
+ color:#183247;
+ font:inherit
+}
+.profile-job-input-row input:focus{
+ outline:3px solid rgba(37,99,235,.13);
+ border-color:#6e9ed3
+}
+.profile-job-form small{
+ color:#6a7d8d;
+ font-size:.73rem;
+ line-height:1.45
+}
+@media(max-width:760px){
+ .profile-job-card{grid-template-columns:1fr;gap:12px}
+ .profile-job-input-row{grid-template-columns:1fr}
+ .profile-job-input-row .secondary-btn{width:100%}
+}
