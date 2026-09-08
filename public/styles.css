@@ -3990,3 +3990,16 @@ html{scroll-behavior:auto!important}
   padding:32px 22px
  }
 }
+
+
+/* Find Someone Who spotlight now keeps only the official prompt + one hint. */
+.teacher-find-language-single{
+ grid-template-columns:1fr;
+ max-width:760px
+}
+.teacher-find-language-single>div{
+ padding:20px 22px
+}
+.teacher-find-language-single p{
+ font-size:clamp(1.15rem,2vw,1.55rem)
+}
