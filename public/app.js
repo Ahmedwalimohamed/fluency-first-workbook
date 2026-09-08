@@ -1214,17 +1214,17 @@ function wireActivity(l){wireMcqCards();wireVocabRecycle();if(currentStep==='wri
 function formativeWritingChecks(l,text,spec=writingFinalSpec(l)){const words=text.trim()?text.trim().split(/\s+/):[],sentences=text.split(/[.!?]+/).filter(x=>x.trim()),targets=(Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).filter(w=>text.toLowerCase().includes(String(w).toLowerCase()));return{words:words.length,length:words.length>=spec.min&&words.length<=spec.max,organisation:sentences.length>=2||text.includes('\n'),vocabulary:targets}}
 async function saveWriting(l){
  const f=$('activityFeedback'),cards=[...document.querySelectorAll('[data-writing-core]')],results=cards.map(card=>checkWritingCoreCard(card,true)),firstIncomplete=results.findIndex(x=>!x.complete);
- if(firstIncomplete>=0){if(f)f.innerHTML='<div class="feedback bad">Complete all four writing practice activities before saving your final response.</div>';cards[firstIncomplete]?.scrollIntoView({behavior:'smooth',block:'center'});return}
+ if(firstIncomplete>=0){if(f)f.innerHTML='<div class="feedback bad">Complete all 12 writing practice questions before saving your final response.</div>';cards[firstIncomplete]?.scrollIntoView({behavior:'smooth',block:'center'});return}
  const box=document.querySelector('.writing-final-response'),response=box?.value.trim()||'',spec=writingFinalSpec(l),checks=formativeWritingChecks(l,response,spec);
  if(!checks.length){if(f)f.innerHTML=`<div class="feedback bad">Your final response has ${checks.words} words. Write ${spec.min}–${spec.max} words.</div>`;box?.focus();return}
- const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100),core=Object.fromEntries(results.map(x=>[x.type,x.response])),payload={core,final:response,score,submittedAt:new Date().toISOString()};
+ const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100),core=results.map((x,i)=>({question:i+1,type:x.type,response:x.response,correct:x.correct})),payload={core,final:response,score,submittedAt:new Date().toISOString()};
  try{
   await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(payload)})});
   if(!l.writing?.humanGraded)await recordAttempt(session.id,l.id,'writing',score,['writing:sentence-building','writing:sentence-combining','writing:error-correction','writing:paragraph-ordering']);
   await refreshState();const done=$('doneActivity');if(done)done.disabled=false;
-  if(l.writing?.humanGraded){if(f)f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> The four practice activities were auto-graded and your real-life writing is saved for your teacher.</div>';return}
-  const tone=score>=75?'good':'bad',label=score===100?'All four correct':score>=75?'Strong preparation':'Review the practice';
-  if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> core skills correct</span><span><b>${4-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. Review any practice item you missed, then press <strong>Done</strong>.</p></div>`
+  if(l.writing?.humanGraded){if(f)f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> The 12 practice questions were auto-graded and your real-life writing is saved for your teacher.</div>';return}
+  const tone=score>=75?'good':'bad',label=score===100?'All 12 correct':score>=75?'Strong preparation':'Review the practice';
+  if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> practice questions correct</span><span><b>${12-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. Review any practice item you missed, then press <strong>Done</strong>.</p></div>`
  }catch(e){if(f)f.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}
 }
 async function checkCurrent(){
