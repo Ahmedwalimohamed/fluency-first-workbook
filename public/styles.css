@@ -2961,3 +2961,423 @@ html{scroll-behavior:auto!important}
  .live-tool-modes .live-tool-btn{flex:1 1 42%}
  .live-tool-actions .live-tool-btn{flex:1}
 }
+
+
+/* Teacher live lesson — classroom-first 10/10 presentation experience */
+.teacher-live-active .topbar{display:none}
+.teacher-live-active .content{
+ max-width:1440px!important;
+ padding-top:18px!important
+}
+.teacher-live-active .eg-lesson-header{
+ margin-bottom:16px
+}
+.teacher-live-active .eg-lesson-layout{
+ grid-template-columns:190px minmax(0,1fr);
+ gap:20px
+}
+.eg-lesson-header-actions{
+ margin-left:auto;
+ display:flex;
+ align-items:center;
+ gap:8px;
+ flex:0 0 auto
+}
+.teacher-present-btn{
+ min-width:118px
+}
+.teacher-footer-stage{
+ color:#647782;
+ font-size:.82rem;
+ font-weight:800
+}
+.teacher-presentation-chrome{
+ display:none
+}
+.teacher-spotlight-ready{
+ cursor:zoom-in;
+ transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease
+}
+.teacher-spotlight-ready:hover{
+ transform:translateY(-2px);
+ box-shadow:0 14px 34px rgba(24,50,71,.1)!important;
+ border-color:#9ab8ad!important
+}
+.teacher-spotlight-ready:focus-visible{
+ outline:3px solid rgba(23,100,79,.25);
+ outline-offset:3px
+}
+.teacher-spotlight-ready::after{
+ content:'Spotlight';
+ position:absolute;
+ right:12px;
+ bottom:9px;
+ padding:3px 7px;
+ border-radius:999px;
+ background:rgba(255,255,255,.86);
+ color:#64748b;
+ font-size:.62rem;
+ font-weight:850;
+ letter-spacing:.03em;
+ opacity:0;
+ transform:translateY(3px);
+ transition:opacity .15s ease,transform .15s ease
+}
+.teacher-spotlight-ready:hover::after,
+.teacher-spotlight-ready:focus-visible::after{
+ opacity:1;
+ transform:none
+}
+
+/* True presentation mode */
+.teacher-presentation-mode{
+ background:#f4f7f7
+}
+.teacher-presentation-mode .sidebar,
+.teacher-presentation-mode .topbar,
+.teacher-presentation-mode .bottom-nav,
+.teacher-presentation-mode .mobile-menu{
+ display:none!important
+}
+.teacher-presentation-mode .main{
+ margin-left:0!important;
+ min-height:100svh
+}
+.teacher-presentation-mode .content{
+ max-width:none!important;
+ width:100%!important;
+ padding:10px 16px 16px!important;
+ margin:0!important
+}
+.teacher-presentation-mode .eg-lesson{
+ max-width:none;
+ width:100%
+}
+.teacher-presentation-mode .eg-lesson-header,
+.teacher-presentation-mode .eg-stage-list{
+ display:none!important
+}
+.teacher-presentation-mode .teacher-presentation-chrome{
+ display:grid;
+ gap:8px;
+ margin:0 0 10px
+}
+.teacher-presentation-title{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:18px;
+ min-height:58px;
+ padding:8px 12px 8px 18px;
+ border:1px solid #d8e2e6;
+ border-radius:14px;
+ background:#fff;
+ box-shadow:0 6px 18px rgba(15,23,42,.05)
+}
+.teacher-presentation-title>div{
+ min-width:0;
+ display:grid;
+ gap:2px
+}
+.teacher-presentation-title span{
+ color:#647782;
+ font-size:.72rem;
+ font-weight:800;
+ text-transform:uppercase;
+ letter-spacing:.05em
+}
+.teacher-presentation-title strong{
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+ color:#183247;
+ font-size:1.18rem
+}
+.teacher-exit-presentation{
+ flex:0 0 auto;
+ min-height:40px;
+ padding:8px 13px;
+ border:1px solid #cbd8dd;
+ border-radius:10px;
+ background:#fff;
+ color:#334155;
+ font:inherit;
+ font-weight:850;
+ cursor:pointer
+}
+.teacher-exit-presentation:hover{background:#f8fafc}
+.teacher-presentation-stages{
+ display:flex;
+ gap:7px;
+ overflow-x:auto;
+ scrollbar-width:thin;
+ padding:2px 1px 6px
+}
+.teacher-presentation-stage{
+ flex:0 0 auto;
+ display:flex;
+ align-items:center;
+ gap:8px;
+ min-height:40px;
+ padding:7px 11px;
+ border:1px solid #d5e0e3;
+ border-radius:999px;
+ background:#fff;
+ color:#526779;
+ font:inherit;
+ cursor:pointer
+}
+.teacher-presentation-stage span{
+ display:grid;
+ place-items:center;
+ width:24px;
+ height:24px;
+ border-radius:50%;
+ border:1px solid #bdcdd2;
+ font-size:.72rem;
+ font-weight:850
+}
+.teacher-presentation-stage strong{
+ font-size:.75rem;
+ font-weight:750;
+ white-space:nowrap
+}
+.teacher-presentation-stage.is-current{
+ border-color:#9cc8ba;
+ background:#eaf6f1;
+ color:#145c49
+}
+.teacher-presentation-stage.is-current span{
+ border-color:#17644f;
+ background:#17644f;
+ color:#fff
+}
+.teacher-presentation-mode .eg-lesson-layout{
+ display:block
+}
+.teacher-presentation-mode .eg-teaching-surface{
+ border-radius:18px;
+ box-shadow:0 10px 30px rgba(15,23,42,.06)
+}
+.teacher-presentation-mode .eg-stage-heading{
+ display:flex;
+ align-items:end;
+ justify-content:space-between;
+ gap:18px;
+ padding:16px 30px 14px
+}
+.teacher-presentation-mode .eg-stage-heading .eg-label{
+ margin:0;
+ order:2;
+ font-size:.8rem;
+ font-weight:800
+}
+.teacher-presentation-mode .eg-stage-heading h2{
+ font-size:clamp(1.75rem,2.5vw,2.45rem)
+}
+.teacher-presentation-mode .live-class-tools{
+ position:sticky;
+ top:0;
+ z-index:45;
+ margin:0;
+ border-width:0 0 1px;
+ border-radius:0;
+ padding:8px 14px;
+ box-shadow:0 5px 16px rgba(15,23,42,.07)
+}
+.teacher-presentation-mode .live-tool-btn{
+ min-height:40px;
+ font-size:.82rem
+}
+.teacher-presentation-mode .eg-stage-content{
+ min-height:calc(100svh - 285px);
+ padding:28px 40px 42px;
+ font-size:1.3rem;
+ line-height:1.75
+}
+.teacher-presentation-mode .eg-stage-content>p{
+ max-width:85ch;
+ font-size:1.3rem;
+ line-height:1.75
+}
+.teacher-presentation-mode .eg-stage-content .live-book-section,
+.teacher-presentation-mode .eg-stage-content .live-book-subhead{
+ font-size:1.28rem;
+ margin:24px 0 14px
+}
+.teacher-presentation-mode .eg-stage-content .live-prompt-grid{
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:18px;
+ margin:18px 0 28px
+}
+.teacher-presentation-mode .eg-stage-content .live-prompt-grid .live-prompt-row{
+ min-height:150px;
+ grid-template-columns:46px minmax(0,1fr);
+ gap:15px;
+ padding:22px;
+ border-radius:18px
+}
+.teacher-presentation-mode .eg-stage-content .live-prompt-grid .live-prompt-row>span{
+ width:40px;
+ height:40px;
+ font-size:1rem
+}
+.teacher-presentation-mode .eg-stage-content .live-prompt-grid .live-prompt-row p{
+ margin:1px 0 0!important;
+ font-size:1.22rem;
+ line-height:1.55;
+ font-weight:700
+}
+.teacher-presentation-mode .eg-stage-content .live-check-row{
+ min-height:58px;
+ padding:16px 18px;
+ font-size:1.15rem
+}
+.teacher-presentation-mode .eg-stage-content .live-vocab-row{
+ padding:18px 20px
+}
+.teacher-presentation-mode .eg-stage-content .live-vocab-word strong,
+.teacher-presentation-mode .eg-stage-content .live-vocab-example span{
+ font-size:1.2rem
+}
+.teacher-presentation-mode .eg-lesson-footer{
+ z-index:40;
+ padding:12px 18px;
+ min-height:64px;
+ box-shadow:0 -5px 18px rgba(15,23,42,.06)
+}
+.teacher-presentation-mode .eg-lesson-footer .ghost-btn,
+.teacher-presentation-mode .eg-lesson-footer .primary-btn{
+ min-width:150px;
+ font-size:1rem
+}
+.teacher-presentation-mode .teacher-footer-stage{
+ font-size:.88rem
+}
+
+/* Spotlight mode — one question becomes the classroom focus */
+.teacher-spotlight-overlay{
+ position:fixed;
+ inset:0;
+ z-index:1200;
+ display:grid;
+ place-items:center;
+ padding:28px;
+ background:rgba(15,23,42,.78);
+ backdrop-filter:blur(8px)
+}
+.teacher-spotlight-card{
+ width:min(1120px,94vw);
+ min-height:min(620px,82vh);
+ display:grid;
+ grid-template-rows:auto 1fr auto;
+ overflow:hidden;
+ border-radius:28px;
+ background:#fff;
+ box-shadow:0 28px 80px rgba(0,0,0,.32)
+}
+.teacher-spotlight-card[data-tone="0"]{background:#fff8f5}
+.teacher-spotlight-card[data-tone="1"]{background:#f3fbf8}
+.teacher-spotlight-card[data-tone="2"]{background:#f7f8ff}
+.teacher-spotlight-card>header{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:16px;
+ padding:18px 22px;
+ border-bottom:1px solid rgba(15,23,42,.09)
+}
+.teacher-spotlight-card>header>span{
+ color:#526779;
+ font-size:.78rem;
+ font-weight:900;
+ text-transform:uppercase;
+ letter-spacing:.08em
+}
+.teacher-spotlight-close{
+ min-height:40px;
+ border:1px solid rgba(15,23,42,.12);
+ border-radius:10px;
+ padding:8px 12px;
+ background:rgba(255,255,255,.78);
+ color:#334155;
+ font:inherit;
+ font-weight:800;
+ cursor:pointer
+}
+.teacher-spotlight-body{
+ display:grid;
+ place-items:center;
+ align-content:center;
+ grid-template-columns:auto minmax(0,1fr);
+ gap:28px;
+ padding:54px clamp(34px,6vw,84px)
+}
+.teacher-spotlight-number{
+ display:grid;
+ place-items:center;
+ width:74px;
+ height:74px;
+ border-radius:50%;
+ background:#17644f;
+ color:#fff;
+ font-size:1.8rem;
+ font-weight:900
+}
+.teacher-spotlight-card[data-tone="0"] .teacher-spotlight-number{background:#f05a3f}
+.teacher-spotlight-card[data-tone="2"] .teacher-spotlight-number{background:#4c5fd5}
+.teacher-spotlight-body p{
+ margin:0;
+ color:#183247;
+ font-size:clamp(2rem,4vw,3.5rem);
+ line-height:1.22;
+ font-weight:800;
+ letter-spacing:-.025em
+}
+.teacher-spotlight-card>footer{
+ display:grid;
+ grid-template-columns:1fr auto 1fr;
+ align-items:center;
+ gap:18px;
+ padding:18px 22px;
+ border-top:1px solid rgba(15,23,42,.09);
+ background:rgba(255,255,255,.72)
+}
+.teacher-spotlight-card>footer>span{
+ color:#647782;
+ font-size:.82rem;
+ font-weight:850;
+ text-align:center
+}
+.teacher-spotlight-card>footer .primary-btn{justify-self:end}
+.teacher-spotlight-card>footer .ghost-btn{justify-self:start}
+
+@media(max-width:1100px){
+ .teacher-presentation-mode .eg-stage-content .live-prompt-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))
+ }
+}
+@media(max-width:760px){
+ .teacher-live-active .content{padding-top:12px!important}
+ .teacher-live-active .eg-lesson-layout{display:block}
+ .eg-lesson-header-actions{width:100%;margin-left:0}
+ .eg-lesson-header-actions>*{flex:1}
+ .teacher-presentation-mode .content{padding:6px!important}
+ .teacher-presentation-title{border-radius:10px;padding-left:12px}
+ .teacher-presentation-title strong{font-size:.98rem}
+ .teacher-presentation-stage strong{display:none}
+ .teacher-presentation-mode .eg-stage-heading{padding:14px 18px}
+ .teacher-presentation-mode .live-class-tools{padding:7px}
+ .teacher-presentation-mode .eg-stage-content{padding:22px 18px 30px;min-height:calc(100svh - 300px)}
+ .teacher-presentation-mode .eg-stage-content .live-prompt-grid{grid-template-columns:1fr}
+ .teacher-presentation-mode .eg-stage-content .live-prompt-grid .live-prompt-row{min-height:0}
+ .teacher-presentation-mode .eg-stage-content .live-prompt-grid .live-prompt-row p{font-size:1.12rem}
+ .teacher-presentation-mode .teacher-footer-stage{display:none}
+ .teacher-spotlight-overlay{padding:10px}
+ .teacher-spotlight-card{min-height:78vh;border-radius:20px}
+ .teacher-spotlight-body{grid-template-columns:1fr;justify-items:start;padding:34px 26px;gap:20px}
+ .teacher-spotlight-number{width:54px;height:54px;font-size:1.25rem}
+ .teacher-spotlight-body p{font-size:clamp(1.7rem,8vw,2.7rem)}
+ .teacher-spotlight-card>footer{grid-template-columns:1fr 1fr}
+ .teacher-spotlight-card>footer>span{display:none}
+}
