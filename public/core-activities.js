@@ -326,7 +326,7 @@
   function vChoice(item,index){
     return '<section class="vocab-question-slide" data-vocab-slide data-vocab-index="'+index+'" hidden>'+
       '<div class="vocab-question-meta"><span>Vocabulary</span><i>•</i><span>'+vEsc(vTypeLabel(item.type))+'</span><i>•</i><strong>'+(index+1)+' of 10</strong></div>'+
-      '<div class="vocab-question-heading"><div><h1>'+vEsc(vQuestionTitle(item))+'</h1><p>'+vEsc(vQuestionHint(item))+'</p></div><aside class="vocab-focus-tip"><span class="vocab-focus-icon">○</span><div><strong>Build your vocabulary</strong><small>Meaning + context + retrieval builds lasting recall.</small></div></aside></div>'+
+      '<div class="vocab-question-heading"><h1>'+vEsc(vQuestionTitle(item))+'</h1><p>'+vEsc(vQuestionHint(item))+'</p></div>'+
       '<div class="vocab-answer-area">'+radio('v'+index,item.options,item.answer,'vocabulary:'+item.type,item.target)+'</div>'+
       '</section>';
   }
@@ -334,7 +334,7 @@
     const t=item.target;
     return '<section class="vocab-question-slide" data-vocab-slide data-vocab-index="'+index+'" hidden>'+
       '<div class="vocab-question-meta"><span>Vocabulary</span><i>•</i><span>Recall from memory</span><i>•</i><strong>'+(index+1)+' of 10</strong></div>'+
-      '<div class="vocab-question-heading"><div><h1>'+vEsc(vQuestionTitle(item))+'</h1><p>'+vEsc(vQuestionHint(item))+'</p></div><aside class="vocab-focus-tip"><span class="vocab-focus-icon">↻</span><div><strong>Retrieve, don’t reread</strong><small>Trying to remember strengthens the word in memory.</small></div></aside></div>'+
+      '<div class="vocab-question-heading"><h1>'+vEsc(vQuestionTitle(item))+'</h1><p>'+vEsc(vQuestionHint(item))+'</p></div>'+
       '<div class="vocab-recall-box"><input type="text" autocomplete="off" data-open="1" data-exact="'+vAttr(t.word)+'" data-tag="vocabulary:spaced-retrieval" data-vocab-exact data-word="'+vAttr(t.word)+'" data-meaning="'+vAttr(t.meaning)+'" data-example="'+vAttr(t.example)+'" placeholder="Type the word or phrase"><button class="primary-btn" type="button" data-vocab-exact-check>Check answer</button></div>'+
       '<div class="vocab-recall-feedback" data-vocab-exact-feedback aria-live="polite"></div>'+
       '</section>';
