@@ -1688,7 +1688,7 @@ function writingActivity(l){
      <textarea class="writing-final-response" data-count-key="final" data-min="${spec.min}" data-max="${spec.max}" autocomplete="off" autocapitalize="sentences" spellcheck="true" placeholder="Type your response here…">${escapeHtml(saved.final)}</textarea><div class="word-count" data-count="final">0 words</div><div class="writing-integrity-status" id="writingIntegrityStatus" role="status" aria-live="polite"></div>
      <fieldset class="writing-share-choice">
       <legend>Would you like to share your writing to My Writings?</legend>
-      <p>Your writing is saved for learning either way. Choose Yes only if you want other EnglishGate students to read it.</p>
+      <p>Your writing is saved for learning either way. Choose Yes only if you want other EnglishGate students to read it. Only you can share your writing outside EnglishGate.</p>
       <div class="writing-share-options">
        <label><input type="radio" name="writing-community-share" value="yes"><span><strong>Yes — share it</strong><small>Publish this writing to My Writings.</small></span></label>
        <label><input type="radio" name="writing-community-share" value="no"><span><strong>No — keep it private</strong><small>Save it for learning, but do not show it in My Writings.</small></span></label>
