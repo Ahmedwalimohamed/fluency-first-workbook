@@ -554,14 +554,67 @@ function openVocabularyMeaning(word,example){showModal(`<div class="section-head
 function wireLiveVocabulary(){document.querySelectorAll('[data-vocab-word]').forEach(b=>b.onclick=()=>openVocabularyMeaning(b.dataset.vocabWord,b.dataset.vocabExample))}
 function liveCheckKey(text){const role=session?.role||'guest',lesson=role==='teacher'?activeTeacherLessonNumber:activeStudentLiveLessonNumber;return 'eg-live-check:'+role+':'+lesson+':'+normalizeVocabWord(text)}
 function wireLiveChecks(){document.querySelectorAll('[data-live-check]').forEach(input=>{const key=liveCheckKey(input.dataset.liveCheck);input.checked=localStorage.getItem(key)==='1';input.onchange=()=>{if(input.checked)localStorage.setItem(key,'1');else localStorage.removeItem(key)}})}
+function thinkTalkHint(question){
+ const q=String(question||'').trim(),lower=q.toLowerCase();
+ if(/\b(favourite|favorite|prefer|best|most important)\b/.test(lower))return 'Choose one answer, then explain why.';
+ if(/^how many\b/.test(lower))return 'Give a number, then add one detail.';
+ if(/^how\b/.test(lower))return 'Explain how, then give a real example.';
+ if(/^who\b/.test(lower))return 'Think of one person. Say who they are and why.';
+ if(/^where\b/.test(lower))return 'Name the place, then add one detail about it.';
+ if(/^when\b/.test(lower))return 'Give the time or situation, then explain what happened.';
+ if(/^why\b/.test(lower))return 'Give one reason, then add an example.';
+ if(/^what\b/.test(lower))return 'Give one clear answer, then add a reason or example.';
+ if(/^(do|did|are|is|can|could|would|have|has|will)\b/.test(lower))return 'Answer first, then add a reason or example.';
+ return 'Give your answer, then add one detail or example.';
+}
+function baseVerbFromThirdPerson(verb){
+ const v=String(verb||'').toLowerCase();
+ if(v.endsWith('ies'))return v.slice(0,-3)+'y';
+ if(v.endsWith('es')&&/(ches|shes|sses|xes|zes|oes)$/.test(v))return v.slice(0,-2);
+ if(v.endsWith('s')&&!v.endsWith('ss'))return v.slice(0,-1);
+ return v;
+}
+function findSomeoneQuestion(statement){
+ const s=String(statement||'').trim().replace(/[.?!]+$/,'');
+ let m;
+ if((m=s.match(/^is\s+(.+)$/i)))return 'Are you '+m[1]+'?';
+ if((m=s.match(/^are\s+(.+)$/i)))return 'Are you '+m[1]+'?';
+ if((m=s.match(/^has\s+been\s+(.+)$/i)))return 'Have you been '+m[1]+'?';
+ if((m=s.match(/^has\s+(travelled|traveled|visited|camped|deleted|planted|picked|competed|learned)\s+(.+)$/i)))return 'Have you '+m[1].toLowerCase()+' '+m[2]+'?';
+ if((m=s.match(/^has\s+(.+)$/i)))return 'Do you have '+m[1]+'?';
+ if((m=s.match(/^had\s+(.+)$/i)))return 'Did you have '+m[1]+'?';
+ if((m=s.match(/^once\s+got\s+(.+)$/i)))return 'Did you ever get '+m[1]+'?';
+ if((m=s.match(/^got\s+(.+)$/i)))return 'Did you get '+m[1]+'?';
+ if((m=s.match(/^studied\s+(.+)$/i)))return 'Did you study '+m[1]+'?';
+ if((m=s.match(/^enjoyed\s+(.+)$/i)))return 'Did you enjoy '+m[1]+'?';
+ if((m=s.match(/^learned\s+(.+)$/i)))return 'Did you learn '+m[1]+'?';
+ if((m=s.match(/^can['’']?t\s+(.+)$/i)))return 'Can you '+m[1]+'?';
+ if((m=s.match(/^can\s+(.+)$/i)))return 'Can you '+m[1]+'?';
+ if((m=s.match(/^could\s+(.+)$/i)))return 'Could you '+m[1]+'?';
+ if((m=s.match(/^doesn['’']?t\s+like\s+(.+)$/i)))return 'Do you like '+m[1]+'?';
+ if((m=s.match(/^never\s+skips\s+breakfast$/i)))return 'Do you always eat breakfast?';
+ if((m=s.match(/^(.+?)\s+(.+)$/))){
+  const verb=m[1],rest=m[2],base=baseVerbFromThirdPerson(verb);
+  if(/^[a-z]+$/i.test(verb)&&base!==verb.toLowerCase())return 'Do you '+base+' '+rest+'?';
+ }
+ return 'Is this true for you: '+s+'?';
+}
+function discussionHintHtml(text,type){
+ if(type==='find'){
+  const ask=findSomeoneQuestion(text);
+  return '<small class="discussion-hint find-someone-hint"><b>Ask:</b> “'+escapeHtml(ask)+'” <span>Then ask one follow-up.</span></small>';
+ }
+ return '<small class="discussion-hint"><b>Hint:</b> '+escapeHtml(thinkTalkHint(text))+'</small>';
+}
+
 function liveLineHtml(line,mode='normal'){
  const t=String(line||'').trim();if(!t)return '';
  if(/^LESSON\s+\d+/i.test(t)||/^WEEK\s+\d+.*LESSON\s+\d+/i.test(t))return '<div class="live-book-marker">'+escapeHtml(t)+'</div>';
  if(/^(PAGE\s+\d+\s*[—-]|\d+\s*[|•]\s*|CAN-DO GOAL:|TODAY.?S OUTCOME)/i.test(t))return '<h3 class="live-book-section">'+escapeHtml(t)+'</h3>';
  if(/^(Think & Talk|READ|Useful Expressions|Pronunciation|Examples|Complete the Sentences|Make It Personal|Challenge|Try to cover:|Write their names below:|Check Your Understanding|LANGUAGE BANK|USEFUL EXPRESSIONS|GRAMMAR FOR THE MISSION|HOMEWORK|INDEPENDENT MISSION|REFLECTION|SUCCESS CHECK|SPEAKING CHALLENGE|FLUENCY MISSION|PERFORMANCE MISSION|YOUR MISSION)$/i.test(t))return '<h4 class="live-book-subhead">'+escapeHtml(t)+'</h4>';
  const numbered=t.match(/^(\d+)\.\s*(.+)$/);
- if(numbered)return '<div class="live-prompt-row"><span>'+escapeHtml(numbered[1])+'</span><p>'+escapeHtml(numbered[2])+'</p></div>';
- if(/^☐/.test(t)){const text=t.replace(/^☐\s*/,'');return '<label class="live-check-row"><input type="checkbox" data-live-check="'+escapeAttr(text)+'"><span>'+escapeHtml(text)+'</span></label>'}
+ if(numbered){const hint=mode==='talk'?discussionHintHtml(numbered[2],'talk'):'';return '<div class="live-prompt-row"><span>'+escapeHtml(numbered[1])+'</span><div class="live-prompt-copy"><p>'+escapeHtml(numbered[2])+'</p>'+hint+'</div></div>'}
+ if(/^☐/.test(t)){const text=t.replace(/^☐\s*/,'');const hint=mode==='find'?discussionHintHtml(text,'find'):'';return '<label class="live-check-row"><input type="checkbox" data-live-check="'+escapeAttr(text)+'"><span class="live-check-copy"><b>'+escapeHtml(text)+'</b>'+hint+'</span></label>'}
  if(/^•/.test(t))return '<div class="live-book-bullet">'+escapeHtml(t.replace(/^•\s*/,''))+'</div>';
  if(mode==='vocabulary'){
   const row=vocabularyRow(t);
@@ -582,7 +635,10 @@ function renderLiveContent(text){
    out.push('<div class="live-vocab-table"><div class="live-vocab-head"><span>Target word</span><span>Example in context</span></div>');
    continue;
   }
-  if(/^(Useful Expressions|Pronunciation|READ|Examples|Complete the Sentences|Make It Personal|Challenge|Check Your Understanding|SPEAKING CHALLENGE|FLUENCY MISSION|HOMEWORK|REFLECTION)$/i.test(t)){
+  if(/^Think & Talk$/i.test(t)){closePrompts();closeVocab();mode='talk'}
+  else if(/^Find someone who\.{0,3}$/i.test(t)){closePrompts();closeVocab();mode='find'}
+  else if(/^Write their names below:$/i.test(t)){closePrompts();closeVocab();mode='normal'}
+  else if(/^(Useful Expressions|Pronunciation|READ|Examples|Complete the Sentences|Make It Personal|Challenge|Check Your Understanding|SPEAKING CHALLENGE|FLUENCY MISSION|HOMEWORK|REFLECTION)$/i.test(t)){
    closePrompts();closeVocab();mode='normal';
   }
   const html=liveLineHtml(t,mode);
@@ -1393,11 +1449,11 @@ function closeTeacherSpotlight(){document.getElementById('teacherSpotlightOverla
 function openTeacherSpotlight(rows,index){
  closeTeacherSpotlight();
  if(!rows.length)return;
- const safeIndex=Math.max(0,Math.min(index,rows.length-1)),row=rows[safeIndex],number=row.querySelector(':scope > span')?.textContent?.trim()||String(safeIndex+1),question=row.querySelector('p')?.textContent?.trim()||row.textContent.trim();
+ const safeIndex=Math.max(0,Math.min(index,rows.length-1)),row=rows[safeIndex],number=row.querySelector(':scope > span')?.textContent?.trim()||String(safeIndex+1),question=row.querySelector('p')?.textContent?.trim()||row.textContent.trim(),hint=row.querySelector('.discussion-hint')?.textContent?.replace(/^Hint:\s*/i,'').trim()||'';
  const overlay=document.createElement('div');overlay.id='teacherSpotlightOverlay';overlay.className='teacher-spotlight-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Question spotlight');
  overlay.innerHTML=`<div class="teacher-spotlight-card" data-tone="${safeIndex%3}">
   <header><span>Question ${escapeHtml(number)}</span><button type="button" class="teacher-spotlight-close" id="closeTeacherSpotlight">Show all questions ×</button></header>
-  <div class="teacher-spotlight-body"><div class="teacher-spotlight-number">${escapeHtml(number)}</div><p>${escapeHtml(question)}</p></div>
+  <div class="teacher-spotlight-body"><div class="teacher-spotlight-number">${escapeHtml(number)}</div><div class="teacher-spotlight-copy"><p>${escapeHtml(question)}</p>${hint?'<div class="teacher-spotlight-hint"><b>Hint</b><span>'+escapeHtml(hint)+'</span></div>':''}</div></div>
   <footer><button type="button" class="ghost-btn" id="spotlightPrev" ${safeIndex===0?'disabled':''}>← Previous</button><span>${safeIndex+1} of ${rows.length}</span><button type="button" class="primary-btn" id="spotlightNext" ${safeIndex===rows.length-1?'disabled':''}>Next →</button></footer>
  </div>`;
  document.body.appendChild(overlay);
