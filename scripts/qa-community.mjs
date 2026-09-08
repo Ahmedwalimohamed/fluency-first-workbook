@@ -46,6 +46,7 @@ const likeStart=serverCode.indexOf("app.post('/api/writings/:studentId/:lessonId
 const likeEnd=serverCode.indexOf("app.delete('/api/writings/:studentId/:lessonId/like'",likeStart);
 const likeSegment=likeStart>=0&&likeEnd>likeStart?serverCode.slice(likeStart,likeEnd):'';
 if(/update profiles|insert into attempts|completion/i.test(likeSegment))fail('Thumbs-up logic must not change grades, points, attempts, or completion.');
+if(!serverCode.includes("delete from writing_likes where author_student_id=$1 and lesson_id=$2"))fail('Likes must reset when the published writing text changes.');
 
 const manageStart=serverCode.indexOf('async function manageStudent');
 const manageEnd=serverCode.indexOf("app.post('/api/admin/users/:id/reset-password'",manageStart);
