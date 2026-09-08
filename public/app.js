@@ -1235,7 +1235,7 @@ async function checkCurrent(){
  const totalItems=open.length+groups.length,answered=openDone+mcqDone,feedback=$('activityFeedback');
  if(answered<totalItems){if(feedback)feedback.innerHTML=`<div class="feedback bad">Finish all ${totalItems} questions before checking. You have answered ${answered}/${totalItems}.</div>`;return}
  let correct=0,tags=[],grammarMissed=[];
- open.forEach(el=>{const value=el.value.trim(),exact=el.dataset.exact||'',min=Number(el.dataset.min||1);let ok=false;if(exact)ok=value.toLowerCase().replace(/[.?!]/g,'').trim()===exact.toLowerCase().replace(/[.?!]/g,'').trim();else ok=(value?value.split(/\s+/).length:0)>=min;if(ok)correct++;if(el.dataset.tag)tags.push(el.dataset.tag)});
+ open.forEach(el=>{const value=el.value.trim(),exact=el.dataset.exact||'',min=Number(el.dataset.min||1);let ok=false;if(exact)ok=writingNormalize(value)===writingNormalize(exact);else ok=(value?value.split(/\s+/).length:0)>=min;if(ok)correct++;if(el.dataset.tag)tags.push(el.dataset.tag)});
  groups.forEach(g=>{const c=document.querySelector(`input[name="${g}"]:checked`),isGrammarAuto=currentStep==='grammar'&&/^g[0-9]$/.test(g);if(c&&c.value===c.dataset.answer)correct++;else if(isGrammarAuto)grammarMissed.push(Number(g.slice(1)));if(c&&c.dataset.tag)tags.push(c.dataset.tag)});
  if(currentStep==='grammar')tags=grammarMissed.length?grammarMissed.map(i=>`missq:${i}`):['diagnostic:no-misses'];
  const score=Math.round(correct/Math.max(1,totalItems)*100),missed=totalItems-correct;

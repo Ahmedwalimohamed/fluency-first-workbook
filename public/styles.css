@@ -2080,3 +2080,62 @@ html{scroll-behavior:auto!important}
 .student-mode .student-top-nav .nav-btn.active span{
  color:#ffffff!important
 }
+
+
+/* Grammar + Vocabulary core activity system */
+.core-group-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ margin:18px 0 10px;
+ padding:11px 13px;
+ border:1px solid #e2e8f0;
+ border-radius:12px;
+ background:#f8fafc
+}
+.core-group-head span{font-size:.88rem;font-weight:900;color:#0f172a}
+.core-group-head strong{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#64748b}
+.core-activity-card{border-left:4px solid #2563eb!important}
+.grammar-intended-meaning,.grammar-source-sentence{
+ margin:12px 0;
+ padding:13px 14px;
+ border:1px solid #e2e8f0;
+ border-radius:11px;
+ background:#f8fafc
+}
+.grammar-intended-meaning small,.grammar-source-sentence small{
+ display:block;
+ margin-bottom:4px;
+ color:#2563eb;
+ font-size:.68rem;
+ font-weight:900;
+ text-transform:uppercase;
+ letter-spacing:.07em
+}
+.grammar-intended-meaning p,.grammar-source-sentence p{margin:0;color:#0f172a;line-height:1.5}
+.core-exact-entry{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:center;margin-top:10px}
+.core-exact-entry input{
+ min-width:0;
+ width:100%;
+ box-sizing:border-box;
+ border:1px solid #cbd5e1;
+ border-radius:10px;
+ padding:11px 13px;
+ font:inherit;
+ color:#0f172a;
+ background:#fff
+}
+.core-exact-entry input:focus{outline:3px solid rgba(37,99,235,.14);border-color:#2563eb}
+.core-exact-entry input.is-correct{border-color:#16a34a}
+.core-exact-entry input.is-incorrect{border-color:#dc2626}
+.core-inline-feedback:empty{display:none}
+.core-feedback{display:grid;gap:4px;margin-top:10px;padding:10px 12px;border:1px solid;border-radius:10px;font-size:.84rem;line-height:1.45}
+.core-feedback.is-correct{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.core-feedback.is-incorrect{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.core-feedback span{color:#334155}
+.vocab-retrieval-card p b{color:#2563eb}
+@media(max-width:760px){
+ .core-exact-entry{grid-template-columns:1fr}
+ .core-exact-entry button{width:100%}
+}
