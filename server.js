@@ -296,7 +296,28 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
 
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{const {lessonId,skill,score,tags=[]}=req.body;if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});const safeTags=Array.isArray(tags)?tags.slice(0,9):[];if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,lessonId,skill,score,safeTags]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);res.json({ok:true})});
 app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);res.json({ok:true})});
-app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||'');if(content.length<20)return res.status(400).json({error:'Invalid writing sample.'});const previous=await pool.query('select content from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score) values($1,$2,$3,null) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,updated_at=now()`,[req.user.id,lessonId,content]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);res.json({ok:true,completed:Boolean(done.rowCount)})});
+app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||'');if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before publishing.'});const previous=await pool.query('select content from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score) values($1,$2,$3,null) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,updated_at=now()`,[req.user.id,lessonId,content]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);res.json({ok:true,completed:Boolean(done.rowCount)})});
+function authenticWritingText(raw){
+ const text=String(raw||'').trim();if(!text)return'';
+ const looksJson=/^[\[{]/.test(text);
+ if(looksJson){
+  try{
+   const parsed=JSON.parse(text);
+   if(Array.isArray(parsed)){const last=[...parsed].reverse().find(v=>typeof v==='string'&&v.trim());return String(last||'').trim()}
+   if(parsed&&typeof parsed==='object'){return typeof parsed.final==='string'?parsed.final.trim():''}
+   return typeof parsed==='string'?parsed.trim():''
+  }catch{return''}
+ }
+ return text
+}
+function isAuthenticWritingText(text){
+ const clean=String(text||'').trim();
+ if(clean.length<20)return false;
+ if(/^[\[{]\s*["']?(?:core|builder|question|response|correct)["']?\s*:/i.test(clean))return false;
+ if(/"question"\s*:\s*\d+\s*,\s*"type"\s*:/i.test(clean))return false;
+ return true
+}
+
 app.get('/api/writings',auth,async(req,res)=>{
  const rows=(await pool.query(`
   select w.student_id,w.lesson_id,w.content,w.updated_at,u.name,
@@ -320,17 +341,22 @@ app.get('/api/writings',auth,async(req,res)=>{
     where wl.author_student_id=w.student_id and wl.lesson_id=w.lesson_id
   ) lc on true
   where length(trim(w.content))>=20
-  order by coalesce(lc.like_count,0) desc,w.updated_at desc
-  limit 250
+  order by w.updated_at desc
+  limit 1000
  `,[req.user.id])).rows;
+ const writings=rows.map(r=>({...r,published_content:authenticWritingText(r.content)}))
+  .filter(r=>isAuthenticWritingText(r.published_content))
+  .sort((a,b)=>Number(b.like_count||0)-Number(a.like_count||0)||new Date(b.updated_at)-new Date(a.updated_at))
+  .slice(0,250)
+  .map(r=>({
+   studentId:r.student_id,lessonId:r.lesson_id,content:r.published_content,updatedAt:r.updated_at,
+   studentName:r.name,className:r.class_name||'',photoUrl:r.has_photo?'/api/profile-photo/'+encodeURIComponent(r.student_id):null,
+   likeCount:Number(r.like_count||0),likedByMe:Boolean(r.liked_by_me),
+   canLike:req.user.role==='student'&&r.student_id!==req.user.id,
+   canShare:req.user.role==='student'&&r.student_id===req.user.id
+  }));
  res.set('Cache-Control','no-store');
- res.json({writings:rows.map(r=>({
-  studentId:r.student_id,lessonId:r.lesson_id,content:r.content,updatedAt:r.updated_at,
-  studentName:r.name,className:r.class_name||'',photoUrl:r.has_photo?'/api/profile-photo/'+encodeURIComponent(r.student_id):null,
-  likeCount:Number(r.like_count||0),likedByMe:Boolean(r.liked_by_me),
-  canLike:req.user.role==='student'&&r.student_id!==req.user.id,
-  canShare:req.user.role==='student'&&r.student_id===req.user.id
- }))});
+ res.json({writings});
 });
 app.post('/api/writings/:studentId/:lessonId/like',auth,studentOnly,async(req,res)=>{
  const authorId=String(req.params.studentId||''),lessonId=String(req.params.lessonId||'');
