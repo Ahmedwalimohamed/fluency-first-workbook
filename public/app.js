@@ -335,7 +335,7 @@ function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})
 }
 function renderStudent(){return ({home:studentHome,workbook,course:studentCourse,'class-book':studentClassBook,'student-live-lesson':studentLiveLesson,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()}
 function renderTeacher(){return ({'teacher-home':teacherHome,teach:teacherTeach,'teacher-book':teacherBook,'teacher-live-lesson':teacherLiveLesson,'teacher-workbooks':teacherWorkbooks,'teacher-book-browse':teacherBookBrowse,'teacher-workbook-view':teacherWorkbookView,students,classes,leaderboard:()=>leaderboard(true),weaknesses,reports}[currentPage]||teacherHome)()}
-function renderAdmin(){return ({'admin-home':adminHome,'admin-books':adminBooks,'admin-book-browse':adminBookBrowse,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-reports':reports,'admin-admins':adminAdmins,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
+function renderAdmin(){return ({'admin-home':adminHome,'admin-books':adminBooks,'admin-live-book-browse':adminLiveBookBrowse,'admin-live-lesson':adminLiveLesson,'admin-book-browse':adminBookBrowse,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-reports':reports,'admin-admins':adminAdmins,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
 
 function assignmentsForClass(classId){return (getDB().assignments||[]).filter(a=>a.classId===classId)}
 function assignmentForLesson(classId,lessonId){return assignmentsForClass(classId).find(a=>a.lessonId===lessonId)||null}
@@ -1406,7 +1406,7 @@ function adminBooks(){
   const books=getDB().books||[];
   title('System Admin','Books');
   $('content').innerHTML=`<section class="book-library">
-    <div class="role-page-head"><div><span class="role-kicker">Curriculum browser</span><h1>Books</h1><p>System Admin can browse every digitized workbook without joining a class.</p></div></div>
+    <div class="role-page-head"><div><span class="role-kicker">Curriculum browser</span><h1>Books</h1><p>System Admin can browse both the lesson book and the matching workbook without joining a class.</p></div></div>
     <div class="book-card-grid">
       ${books.map(b=>{
         const pack=BOOK_PACKS[b.id],readyCount=pack?readyLessons(pack).length:0,canUse=['ready','pilot'].includes(b.status)&&Boolean(pack);
@@ -1416,7 +1416,8 @@ function adminBooks(){
           <p>${escapeHtml(b.audience||'')}</p>
           <div class="book-card-meta"><span>${readyCount}/${b.totalLessons} digital lessons ready</span><span>Vocabulary · Listening & Reading · Grammar · Writing</span></div>
           <div class="book-card-actions">
-            ${pack?`<button class="primary-btn" data-browse-book="${b.id}">Browse workbook</button>`:`<button class="ghost-btn" disabled>Not digitized yet</button>`}
+            ${canUse?`<button class="primary-btn" data-open-lesson-book="${b.id}">Open lesson book</button>`:''}
+            ${pack?`<button class="ghost-btn" data-browse-book="${b.id}">Browse workbook</button>`:`<button class="ghost-btn" disabled>Workbook not digitized yet</button>`}
             ${canUse?`<button class="ghost-btn" data-class-book="${b.id}">Create class</button>`:''}
             <button class="ghost-btn danger-action" data-admin-delete-book="${escapeAttr(b.id)}" data-name="${escapeAttr(b.title)}">Delete book</button>
           </div>
@@ -1424,6 +1425,16 @@ function adminBooks(){
       }).join('')}
     </div>
   </section>`;
+  document.querySelectorAll('[data-open-lesson-book]').forEach(btn=>btn.onclick=async()=>{
+    const id=btn.dataset.openLessonBook;
+    await ensureLiveBooks();
+    if(!setActiveBook(id))return;
+    activeTeacherLessonNumber=1;
+    activeTeacherSectionIndex=0;
+    currentPage='admin-live-book-browse';
+    renderNav();
+    adminLiveBookBrowse();
+  });
   document.querySelectorAll('[data-browse-book]').forEach(btn=>btn.onclick=()=>{
     setActiveBook(btn.dataset.browseBook);
     currentPage='admin-book-browse';
@@ -1434,6 +1445,55 @@ function adminBooks(){
   bindAdminBookActions();
 }
 function bindAdminBookActions(){document.querySelectorAll('[data-admin-delete-book]').forEach(b=>b.onclick=()=>openAdminBookDelete(b.dataset.adminDeleteBook,b.dataset.name))}
+function adminActiveLiveBook(){
+ const books=LIVE_BOOK_CACHE||window.LIVE_BOOKS||{};
+ return books[activeBookId]||null;
+}
+async function adminLiveBookBrowse(){
+ await ensureLiveBooks();
+ const live=adminActiveLiveBook(),wb=BOOK_PACKS[activeBookId],meta=bookMeta(activeBookId)||{title:live?.title||wb?.title||'Book',level:wb?.level||''};
+ if(!live){currentPage='admin-books';renderNav();adminBooks();return}
+ title('System Admin','Lesson Book');
+ $('content').innerHTML=`<section class="teacher-book-shell admin-live-book-shell">
+  <button class="back-link" id="adminBackBookLibrary">← Books</button>
+  <div class="course-intro"><div><span class="pill teal">${escapeHtml(meta.level||'')}</span><h1>${escapeHtml(live.title||meta.title)}</h1><p>Admin preview · browse the same lesson book used by teachers and students.</p></div><button class="ghost-btn" id="adminOpenWorkbookFromLive">Browse workbook</button></div>
+  <div class="teacher-lesson-list">${live.lessons.map(l=>{const w=wb?.lessons?.find(x=>x.number===l.number);return `<button class="teacher-live-row" data-admin-live-lesson="${l.number}"><span class="teacher-live-num">${l.number}</span><span><strong>${escapeHtml(l.title)}</strong><small>${w?'Matching workbook available':'Workbook match unavailable'}</small></span><b>Open →</b></button>`}).join('')}</div>
+ </section>`;
+ $('adminBackBookLibrary').onclick=()=>{currentPage='admin-books';renderNav();adminBooks()};
+ $('adminOpenWorkbookFromLive').onclick=()=>{currentPage='admin-book-browse';renderNav();adminBookBrowse()};
+ document.querySelectorAll('[data-admin-live-lesson]').forEach(btn=>btn.onclick=()=>{activeTeacherLessonNumber=Number(btn.dataset.adminLiveLesson);activeTeacherSectionIndex=0;currentPage='admin-live-lesson';renderNav();adminLiveLesson()});
+}
+async function adminLiveLesson(){
+ await ensureLiveBooks();
+ const live=adminActiveLiveBook(),wb=BOOK_PACKS[activeBookId];
+ if(!live){currentPage='admin-live-book-browse';adminLiveBookBrowse();return}
+ const l=live.lessons.find(x=>x.number===activeTeacherLessonNumber)||live.lessons[0],w=wb?.lessons?.find(x=>x.number===l.number);
+ activeTeacherLessonNumber=l.number;
+ const sections=liveSections(l.content),total=sections.length;
+ activeTeacherSectionIndex=Math.max(0,Math.min(activeTeacherSectionIndex,Math.max(0,total-1)));
+ const section=sections[activeTeacherSectionIndex],isLast=activeTeacherSectionIndex===total-1,goal=lessonCanDoGoal(l),stageName=section?sectionLabel(section.title,activeTeacherSectionIndex,total):'Lesson unavailable';
+ title('System Admin','Lesson '+l.number);
+ const stages=sections.map((x,i)=>`<button class="eg-stage ${i===activeTeacherSectionIndex?'is-current':''}" data-admin-live-section="${i}" ${i===activeTeacherSectionIndex?'aria-current="step"':''}><span>${i+1}</span><strong>${escapeHtml(sectionLabel(x.title,i,total).toLowerCase())}</strong></button>`).join('');
+ const nextAction=!total?'':!isLast?'<button class="primary-btn" id="nextAdminLiveSection">Next stage →</button>':w&&w.ready!==false?'<button class="primary-btn" id="openAdminWorkbookFromLesson">Open matching workbook →</button>':'<span class="eg-unavailable">Matching workbook is not available yet.</span>';
+ $('content').innerHTML=`<section class="eg-lesson admin-live-book">
+  <header class="eg-lesson-header"><button class="ghost-btn" id="backAdminLiveBook">← Lessons</button><div><p>Admin preview · ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div>${w&&w.ready!==false?'<button class="ghost-btn" id="openAdminWorkbookTop">Workbook</button>':''}</header>
+  <div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside>
+  <div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeTeacherSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header>
+  <article class="live-book-content eg-stage-content" aria-labelledby="liveStageTitle">${activeTeacherSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no teaching content yet.</p>'}</article>
+  ${isLast?`<div class="eg-workbook-note">${w?`<strong>Matching workbook</strong><span>Workbook ${w.number} · ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}
+  <footer class="eg-lesson-footer"><button class="ghost-btn" id="prevAdminLiveSection" ${activeTeacherSectionIndex===0?'disabled':''}>← Previous</button>${nextAction}</footer></div></div>
+ </section>`;
+ $('backAdminLiveBook').onclick=()=>{currentPage='admin-live-book-browse';renderNav();adminLiveBookBrowse()};
+ const openWorkbook=()=>{if(!w)return;activeLessonId=w.id;currentStep='vocabulary';currentPage='admin-workbook-view';renderNav();adminWorkbookView()};
+ if($('openAdminWorkbookTop'))$('openAdminWorkbookTop').onclick=openWorkbook;
+ if($('openAdminWorkbookFromLesson'))$('openAdminWorkbookFromLesson').onclick=openWorkbook;
+ const goToStage=index=>{activeTeacherSectionIndex=index;adminLiveLesson();focusWithoutScroll($('liveStageTitle'));resetAppScroll()};
+ document.querySelectorAll('[data-admin-live-section]').forEach(btn=>btn.onclick=()=>goToStage(Number(btn.dataset.adminLiveSection)));
+ $('prevAdminLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0)goToStage(activeTeacherSectionIndex-1)};
+ if($('nextAdminLiveSection'))$('nextAdminLiveSection').onclick=()=>goToStage(activeTeacherSectionIndex+1);
+ wireLiveVocabulary();wireLiveChecks();
+}
+
 function adminBookBrowse(){const teacher=session?.role==='teacher';const meta=bookMeta(activeBookId)||{title:COURSE.title||COURSE.moduleTitle,level:COURSE.level,totalLessons:COURSE.totalLessons||COURSE.lessons.length},lessons=COURSE.lessons||[];title(teacher?'Teacher':'System Admin','Workbook');$('content').innerHTML=`<section class="admin-book-browser"><button class="back-link" id="adminBackBooks">← Books</button><div class="role-page-head"><div><span class="pill teal">${escapeHtml(meta.level||'')}</span><h1>${escapeHtml(meta.title||COURSE.title||COURSE.moduleTitle)}</h1><p>Browse any available lesson and all four skills. Preview answers are not saved as student work.</p></div></div><div class="admin-browser-list">${lessons.map(l=>`<button class="admin-browser-lesson ${l.ready===false?'is-pending':''}" data-admin-browse-lesson="${l.ready===false?'':l.id}" ${l.ready===false?'disabled':''}><span class="admin-browser-num">${l.number}</span><span><strong>${escapeHtml(l.title)}</strong><small>${l.ready===false?'Workbook activities not built yet':escapeHtml(l.outcome||'All 4 skill pages available')}</small></span><b>${l.ready===false?'Not built':'Open →'}</b></button>`).join('')}</div></section>`;$('adminBackBooks').onclick=()=>{currentPage=teacher?'teacher-workbooks':'admin-books';renderNav();teacher?teacherWorkbooks():adminBooks()};document.querySelectorAll('[data-admin-browse-lesson]').forEach(btn=>{if(!btn.dataset.adminBrowseLesson)return;btn.onclick=()=>{activeLessonId=btn.dataset.adminBrowseLesson;currentStep='vocabulary';currentPage=teacher?'teacher-workbook-view':'admin-workbook-view';renderNav();teacher?teacherWorkbookView():adminWorkbookView()}})}
 function teacherWorkbooks(){
  title('Teacher','Workbooks');
