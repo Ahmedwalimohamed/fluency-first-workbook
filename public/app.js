@@ -1406,6 +1406,42 @@ function openTeacherSpotlight(rows,index){
  overlay.onclick=e=>{if(e.target===overlay)closeTeacherSpotlight()};
  $('closeTeacherSpotlight').focus();
 }
+function readingSpotlightNodes(){
+ const content=document.querySelector('#teacherAnnotationStage .eg-stage-content');
+ if(!content)return null;
+ const children=[...content.children],stageTitle=String($('liveStageTitle')?.textContent||'').trim();
+ const readHead=children.find(el=>el.classList?.contains('live-book-subhead')&&/^(read|reading)$/i.test(el.textContent.trim()));
+ if(readHead){
+  const nodes=[];
+  for(let i=children.indexOf(readHead)+1;i<children.length;i++){
+   const el=children[i];
+   if(el.classList?.contains('live-book-subhead')||el.classList?.contains('live-book-section')||el.classList?.contains('live-prompt-grid')||el.classList?.contains('live-vocab-table'))break;
+   if(el.matches?.('p,.live-book-bullet,blockquote,figure,img,.reading-text,.live-reading'))nodes.push(el);
+  }
+  if(nodes.length)return {title:readHead.textContent.trim()||'Reading',nodes,anchor:readHead};
+ }
+ if(/reading/i.test(stageTitle)){
+  const nodes=children.filter(el=>el.matches?.('p,.live-book-bullet,blockquote,figure,img,.reading-text,.live-reading')&&!el.closest?.('.live-prompt-grid'));
+  if(nodes.length)return {title:stageTitle||'Reading',nodes,anchor:null};
+ }
+ return null;
+}
+function openTeacherReadingSpotlight(reading){
+ closeTeacherSpotlight();
+ if(!reading?.nodes?.length)return;
+ const overlay=document.createElement('div');overlay.id='teacherSpotlightOverlay';overlay.className='teacher-spotlight-overlay teacher-reading-spotlight-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Reading spotlight');
+ const card=document.createElement('div');card.className='teacher-spotlight-card teacher-reading-spotlight-card';
+ card.innerHTML=`<header><span>Reading spotlight</span><div class="teacher-reading-controls"><button type="button" class="teacher-reading-size" id="readingSmaller" title="Smaller text">A−</button><button type="button" class="teacher-reading-size" id="readingLarger" title="Larger text">A+</button><button type="button" class="teacher-spotlight-close" id="closeTeacherSpotlight">Show lesson ×</button></div></header><div class="teacher-reading-spotlight-body"><h2>${escapeHtml(reading.title||'Reading')}</h2><div class="teacher-reading-copy" id="teacherReadingCopy"></div></div><footer><span>Reading · Classroom view</span><button type="button" class="primary-btn" id="closeReadingSpotlight">Back to lesson</button></footer>`;
+ overlay.appendChild(card);document.body.appendChild(overlay);
+ const copy=$('teacherReadingCopy');reading.nodes.forEach(node=>copy.appendChild(node.cloneNode(true)));
+ let scale=1;
+ const applyScale=()=>{copy.style.setProperty('--reading-scale',String(scale))};
+ $('readingSmaller').onclick=()=>{scale=Math.max(.82,Math.round((scale-.1)*100)/100);applyScale()};
+ $('readingLarger').onclick=()=>{scale=Math.min(1.5,Math.round((scale+.1)*100)/100);applyScale()};
+ $('closeTeacherSpotlight').onclick=closeTeacherSpotlight;$('closeReadingSpotlight').onclick=closeTeacherSpotlight;
+ overlay.onclick=e=>{if(e.target===overlay)closeTeacherSpotlight()};
+ $('closeTeacherSpotlight').focus();
+}
 function wireTeacherSpotlight(){
  const rows=[...document.querySelectorAll('#teacherAnnotationStage .live-prompt-grid .live-prompt-row')];
  rows.forEach((row,index)=>{
@@ -1414,6 +1450,13 @@ function wireTeacherSpotlight(){
   row.onclick=open;
   row.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&teacherLiveTool==='interact'){e.preventDefault();open()}};
  });
+ const reading=readingSpotlightNodes();
+ if(reading){
+  const target=reading.anchor||document.querySelector('#teacherAnnotationStage .eg-stage-content');
+  const btn=document.createElement('button');btn.type='button';btn.className='reading-spotlight-trigger';btn.innerHTML='<span aria-hidden="true">⛶</span> Spotlight reading';btn.setAttribute('aria-label','Open reading in spotlight view');
+  btn.onclick=e=>{e.stopPropagation();if(teacherLiveTool==='interact')openTeacherReadingSpotlight(reading)};
+  if(reading.anchor)reading.anchor.insertAdjacentElement('afterend',btn);else target.prepend(btn);
+ }
 }
 function wireTeacherPresentation(){
  document.querySelectorAll('[data-presentation-toggle]').forEach(b=>b.onclick=toggleTeacherPresentation);
