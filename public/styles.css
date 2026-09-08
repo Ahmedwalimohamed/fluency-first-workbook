@@ -3663,3 +3663,106 @@ html{scroll-behavior:auto!important}
     grid-template-columns:1fr;
   }
 }
+
+
+/* Speaking support: useful hints without giving students the answer */
+.live-prompt-copy{
+ display:grid;
+ gap:8px;
+ min-width:0
+}
+.live-prompt-copy>p{
+ margin:0!important
+}
+.discussion-hint{
+ display:block;
+ margin-top:2px;
+ color:#607383;
+ font-size:.78rem!important;
+ line-height:1.45!important;
+ font-weight:600!important
+}
+.discussion-hint b{
+ color:#17644f;
+ font-weight:850
+}
+.find-someone-hint{
+ margin-top:5px;
+ padding:7px 9px;
+ border-radius:8px;
+ background:#eef7f4;
+ color:#526779
+}
+.find-someone-hint span{
+ display:block;
+ margin-top:2px;
+ color:#71818e
+}
+.live-check-copy{
+ display:grid;
+ gap:2px;
+ min-width:0;
+ flex:1
+}
+.live-check-copy>b{
+ color:#183247;
+ font-size:1rem;
+ line-height:1.45
+}
+.live-check-row:has(input:checked) .discussion-hint{
+ opacity:.7;
+ text-decoration:none
+}
+.teacher-presentation-mode .discussion-hint{
+ margin-top:8px;
+ font-size:.94rem!important;
+ line-height:1.45!important
+}
+.teacher-presentation-mode .find-someone-hint{
+ padding:9px 11px;
+ font-size:.95rem!important
+}
+.teacher-presentation-mode .live-check-copy>b{
+ font-size:1.24rem
+}
+.teacher-spotlight-copy{
+ min-width:0
+}
+.teacher-spotlight-hint{
+ display:flex;
+ align-items:flex-start;
+ gap:12px;
+ margin-top:28px;
+ padding:16px 18px;
+ border:1px solid rgba(23,100,79,.18);
+ border-radius:14px;
+ background:rgba(255,255,255,.66);
+ color:#526779
+}
+.teacher-spotlight-hint b{
+ flex:0 0 auto;
+ padding:4px 8px;
+ border-radius:999px;
+ background:#17644f;
+ color:#fff;
+ font-size:.72rem;
+ text-transform:uppercase;
+ letter-spacing:.06em
+}
+.teacher-spotlight-hint span{
+ font-size:clamp(1rem,1.6vw,1.35rem);
+ line-height:1.5;
+ font-weight:650
+}
+@media(max-width:760px){
+ .discussion-hint{
+  font-size:.76rem!important
+ }
+ .teacher-presentation-mode .discussion-hint{
+  font-size:.86rem!important
+ }
+ .teacher-spotlight-hint{
+  margin-top:20px;
+  padding:13px 14px
+ }
+}
