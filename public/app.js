@@ -1380,16 +1380,18 @@ function writingCoreHtml(l){
  }).join('')
 }
 function writingActivity(l){
- const saved=writingSubmission(session.id,l.id),spec=writingFinalSpec(l),assessment=Boolean(l.writing?.humanGraded),teacherGrade=getDB().writingScores?.[session.id]?.[l.id],phrases=(l.expressions||[]).slice(0,5).map(x=>x.text);
+ const saved=writingSubmission(session.id,l.id),spec=writingFinalSpec(l),assessment=Boolean(l.writing?.humanGraded),teacherGrade=getDB().writingScores?.[session.id]?.[l.id],phrases=(l.expressions||[]).slice(0,5).map(x=>x.text),teacherView=isWorkbookPreview();
+ const teacherGuide=teacherView?`<div class="teacher-only-writing-guide"><span class="role-kicker">Teacher view</span><strong>Activity design</strong><p>12 auto-graded preparation questions: Build → Combine → Correct → Organize, followed by one real-life writing task.</p></div>`:'';
  return `<div class="eg-skill-page eg-writing-page">
-  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${assessment?'Final assessment':'Writing'}</span><h1>Build, combine, correct, organize</h1><p>Practise the building blocks first. Then write one real-life response.</p></div><span class="eg-question-count">12 auto-graded + 1 real writing</span></header>
-  ${assessment?`<div class="assessment-notice"><strong>Independent final writing</strong><p>${teacherGrade===null||teacherGrade===undefined?'The 12 preparation questions are auto-graded. Your final response will be graded by your teacher.':`Your teacher awarded ${teacherGrade}% for the final response. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}
+  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${assessment?'Final assessment':'Writing'}</span><h1>${teacherView?'Writing activity structure':'Writing practice'}</h1><p>${teacherView?'Preview the student practice sequence and final writing task.':'Complete the practice, then write your real-life response.'}</p></div><span class="eg-question-count">${teacherView?'12 auto-graded + 1 real writing':'13 activities'}</span></header>
+  ${teacherGuide}
+  ${assessment?`<div class="assessment-notice"><strong>Independent final writing</strong><p>${teacherGrade===null||teacherGrade===undefined?(teacherView?'The 12 preparation questions are auto-graded. The final response is teacher-graded.':'Your final response will be reviewed by your teacher.'):`Your teacher awarded ${teacherGrade}% for the final response. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}
   <div class="eg-writing-layout eg-writing-layout-designed">
    <main class="eg-writing-workspace">
-    <section class="writing-builder writing-core-sequence"><div class="eg-task-panel-head"><div><small>Part 1 · Auto-graded practice</small><h2>Build → Combine → Correct → Organize</h2><p>Complete 3 questions for each type before the final real-life writing task.</p></div></div>${writingCoreHtml(l)}</section>
+    <section class="writing-builder writing-core-sequence">${teacherView?'<div class="eg-task-panel-head"><div><small>Part 1 · Auto-graded practice</small><h2>Build → Combine → Correct → Organize</h2><p>Three questions for each exercise type before the final task.</p></div></div>':''}${writingCoreHtml(l)}</section>
     <article class="guided-question writing-guided-question final-writing-card eg-message-composer">
      <div class="eg-message-bar"><div class="eg-message-avatar">Y</div><div><strong>You</strong><small>Real-life writing</small></div></div>
-     <div class="writing-task-head"><div><span class="stage-badge">Part 2 · Write it yourself</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}–${spec.max} words</span></div>
+     <div class="writing-task-head"><div><span class="stage-badge">${teacherView?'Part 2 · Write it yourself':'Your writing task'}</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}–${spec.max} words</span></div>
      <textarea class="writing-final-response" data-count-key="final" data-min="${spec.min}" data-max="${spec.max}" placeholder="Type your response here…">${escapeHtml(saved.final)}</textarea><div class="word-count" data-count="final">0 words</div>
     </article>
    </main>
@@ -1612,7 +1614,7 @@ function prepareProfilePhoto(file){
  });
 }
 function profile(){
- const u=getDB().users.find(x=>x.id===session.id)||session,c=studentClass(session.id),b=bookMeta(bookIdForStudent(session.id)),teacher=getDB().users.find(x=>x.id===c?.teacher_id),photo=studentPhoto(session.id),required=!photo;
+ const u=getDB().users.find(x=>x.id===session.id)||session,c=studentClass(session.id),b=bookMeta(bookIdForStudent(session.id)),teacher=getDB().users.find(x=>x.id===c?.teacher_id),photo=studentPhoto(session.id),required=!photo,studentProfile=getDB().profiles?.[session.id]||{},jobTitle=studentProfile.jobTitle||'';
  title('EnglishGate Workbook','Profile');
  $('content').innerHTML=`<section class="profile-shell student-photo-profile">
   <div class="card profile-card student-profile-card">
@@ -1626,6 +1628,10 @@ function profile(){
     <span class="profile-photo-status" id="profilePhotoStatus">${required?'Required to continue':''}</span>
    </div>
    <div class="profile-photo-privacy"><span aria-hidden="true">◉</span><p>Your profile picture is visible to signed-in EnglishGate students and teachers on the leaderboard.</p></div>
+   <section class="profile-job-card">
+    <div><span class="role-kicker">About you</span><h3>Job title</h3><p>Add one job title that best describes what you do.</p></div>
+    <div class="profile-job-form"><label for="studentJobTitle">Your job title</label><div class="profile-job-input-row"><input id="studentJobTitle" type="text" maxlength="50" value="${escapeAttr(jobTitle)}" placeholder="e.g. Doctor, Teacher, Accountant"><button class="secondary-btn" id="saveJobTitle" type="button">Save</button></div><small>Hint: enter one simple title, for example <strong>Doctor</strong>.</small><span id="jobTitleStatus" class="profile-photo-status"></span></div>
+   </section>
    <div class="profile-details">
     <div class="profile-row"><span>Name</span><strong>${escapeHtml(u.name)}</strong></div>
     <div class="profile-row"><span>Class</span><strong>${escapeHtml(c?.name||'—')}</strong></div>
@@ -1635,8 +1641,17 @@ function profile(){
    <button class="ghost-btn" id="resetHelp">Password help</button><button class="ghost-btn danger-action" id="studentLogout">Sign out</button>
   </div>
  </section>`;
- const input=$('profilePhotoInput'),choose=$('chooseProfilePhoto'),status=$('profilePhotoStatus'),preview=$('profilePhotoPreview');
+ const input=$('profilePhotoInput'),choose=$('chooseProfilePhoto'),status=$('profilePhotoStatus'),preview=$('profilePhotoPreview'),jobInput=$('studentJobTitle'),jobSave=$('saveJobTitle'),jobStatus=$('jobTitleStatus');
  choose.onclick=()=>input.click();
+ jobSave.onclick=async()=>{
+  const value=jobInput.value.trim();jobStatus.classList.remove('error');jobSave.disabled=true;jobSave.textContent='Saving…';
+  try{
+   const r=await api('/api/student/job-title',{method:'PUT',body:JSON.stringify({jobTitle:value})});
+   getDB().profiles[session.id]??={points:0,base:{}};getDB().profiles[session.id].jobTitle=r.jobTitle;
+   jobInput.value=r.jobTitle;jobStatus.textContent='Job title saved.';jobSave.textContent='Saved';
+   setTimeout(()=>{jobSave.disabled=false;jobSave.textContent='Save'},900);
+  }catch(e){jobStatus.textContent=e.message||'Could not save job title.';jobStatus.classList.add('error');jobSave.disabled=false;jobSave.textContent='Save'}
+ };
  input.onchange=async()=>{
   const file=input.files?.[0];if(!file)return;
   choose.disabled=true;choose.textContent='Preparing photo…';status.textContent='';
@@ -2063,11 +2078,11 @@ async function leaderboard(teacher=false){
     <div><span class="role-kicker">All active learners</span><h1>Learning leaderboard</h1><p>Professional progress view based on a balanced score: recorded performance, workbook completion, and consistent practice.</p></div>
     <div class="leaderboard-my-standing"><small>${teacher?'Learners ranked': 'Your standing'}</small><strong>${teacher?rows.length:escapeHtml(rankText)}</strong><span>${teacher?'Across EnglishGate':me?`${me.score}% performance score`:'Complete an activity to enter the ranking'}</span></div>
    </div>
-   ${top.length?`<div class="leaderboard-top-three">${top.map(st=>`<article class="leaderboard-top-card ${st.id===session.id?'is-me':''}"><span class="leaderboard-rank-label">#${st.rank}</span><div class="leaderboard-avatar">${avatarInner(st.photoUrl,st.name)}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.className||st.level||'EnglishGate learner')}</small></div><div class="leaderboard-top-metrics"><span><b>${st.score}%</b> score</span><span><b>${st.completion}%</b> complete</span><span><b>${Number.isFinite(st.average)?st.average+'%':'—'}</b> average</span></div></article>`).join('')}</div>`:''}
+   ${top.length?`<div class="leaderboard-top-three">${top.map(st=>`<article class="leaderboard-top-card ${st.id===session.id?'is-me':''}"><span class="leaderboard-rank-label">#${st.rank}</span><div class="leaderboard-avatar">${avatarInner(st.photoUrl,st.name)}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.jobTitle||st.className||st.level||'EnglishGate learner')}</small></div><div class="leaderboard-top-metrics"><span><b>${st.score}%</b> score</span><span><b>${st.completion}%</b> complete</span><span><b>${Number.isFinite(st.average)?st.average+'%':'—'}</b> average</span></div></article>`).join('')}</div>`:''}
    <div class="leaderboard-table-card">
     <div class="leaderboard-table-head"><div><h2>All students</h2><p>Ranking updates when students complete workbook activities and submit scored work.</p></div><span>${rows.length} learners</span></div>
     <div class="leaderboard-table-wrap"><table class="professional-leaderboard-table"><thead><tr><th>Rank</th><th>Learner</th><th>Class</th><th>Score</th><th>Average</th><th>Completion</th><th>Practice</th></tr></thead><tbody>
-     ${rows.map(st=>`<tr class="${st.id===session.id?'is-me':''}"><td><span class="leaderboard-rank-number">#${st.rank}</span></td><td><div class="leaderboard-person"><span class="leaderboard-avatar small">${avatarInner(st.photoUrl,st.name)}</span><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.bookTitle||st.level||'English learner')}</small></div></div></td><td>${escapeHtml(st.className||'—')}</td><td><strong>${st.score}%</strong></td><td><strong>${Number.isFinite(st.average)?st.average+'%':'—'}</strong></td><td>${st.completion}%</td><td>${st.completed} done · ${st.scored} scored</td></tr>`).join('')||'<tr><td colspan="7">No learner activity yet.</td></tr>'}
+     ${rows.map(st=>`<tr class="${st.id===session.id?'is-me':''}"><td><span class="leaderboard-rank-number">#${st.rank}</span></td><td><div class="leaderboard-person"><span class="leaderboard-avatar small">${avatarInner(st.photoUrl,st.name)}</span><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.jobTitle||st.bookTitle||st.level||'English learner')}</small></div></div></td><td>${escapeHtml(st.className||'—')}</td><td><strong>${st.score}%</strong></td><td><strong>${Number.isFinite(st.average)?st.average+'%':'—'}</strong></td><td>${st.completion}%</td><td>${st.completed} done · ${st.scored} scored</td></tr>`).join('')||'<tr><td colspan="7">No learner activity yet.</td></tr>'}
     </tbody></table></div>
    </div>
    <p class="leaderboard-method">Ranking method: 45% recorded activity average, 35% workbook completion, 20% practice consistency. No contact information is shown.</p>

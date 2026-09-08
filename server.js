@@ -55,6 +55,7 @@ async function initDb(){
  await pool.query("alter table users add column if not exists login_token text");
  await pool.query("alter table profiles add column if not exists profile_photo text");
  await pool.query("alter table profiles add column if not exists profile_photo_updated_at timestamptz");
+ await pool.query("alter table profiles add column if not exists job_title text");
  await pool.query("create unique index if not exists users_login_token_unique on users(login_token) where login_token is not null");
  await pool.query("alter table writing_samples alter column score drop not null");
  await pool.query("delete from attempts where skill='writing' and tags @> array['writing:organisation','writing:task-completion']::text[]");
@@ -142,6 +143,15 @@ app.get('/api/profile-photo/:studentId',auth,async(req,res)=>{
  res.send(Buffer.from(base64,'base64'));
 });
 
+app.put('/api/student/job-title',auth,studentOnly,async(req,res)=>{
+ const jobTitle=String(req.body.jobTitle||'').trim().replace(/\s+/g,' ');
+ if(jobTitle.length<2||jobTitle.length>50)return res.status(400).json({error:'Enter one job title, for example Doctor, Teacher, or Accountant.'});
+ if(!/^[\p{L}\p{N} .&'’/-]+$/u.test(jobTitle))return res.status(400).json({error:'Use a simple job title, for example Doctor, Teacher, or Accountant.'});
+ await pool.query(`insert into profiles(user_id,job_title) values($1,$2) on conflict(user_id) do update set job_title=excluded.job_title`,[req.user.id,jobTitle]);
+ res.set('Cache-Control','no-store');
+ res.json({ok:true,jobTitle});
+});
+
 
 async function classIdsFor(user){if(user.role==='admin'){const q=await pool.query('select id from classes order by created_at,name');return q.rows.map(r=>r.id)}if(user.role==='teacher'){const q=await pool.query('select id from classes where teacher_id=$1 order by created_at,name',[user.id]);return q.rows.map(r=>r.id)}const q=await pool.query('select class_id from enrollments where user_id=$1',[user.id]);return q.rows.map(r=>r.class_id)}
 
@@ -193,8 +203,8 @@ app.get('/api/state',auth,async(req,res)=>{
  const studentIds=users.filter(u=>u.role==='student').map(u=>u.id);
  const ownStudent=req.user.role==='student'?[req.user.id]:studentIds;
  const profileIds=req.user.role==='student'?[req.user.id]:studentIds;
- const profRows=profileIds.length?(await pool.query('select user_id,points,base,(profile_photo is not null) as has_photo from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
- const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base,hasPhoto:Boolean(p.has_photo),photoUrl:p.has_photo?'/api/profile-photo/'+encodeURIComponent(p.user_id):null});
+ const profRows=profileIds.length?(await pool.query('select user_id,points,base,(profile_photo is not null) as has_photo,job_title from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
+ const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base,hasPhoto:Boolean(p.has_photo),photoUrl:p.has_photo?'/api/profile-photo/'+encodeURIComponent(p.user_id):null,jobTitle:p.job_title||''});
  const evidenceIds=req.user.role==='admin'?studentIds:ownStudent;
  const atRows=evidenceIds.length?(await pool.query('select id,student_id,lesson_id,skill,score,tags,at from attempts where student_id=any($1::text[]) order by at',[evidenceIds])).rows:[];
  const cRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,step from completion where student_id=any($1::text[])',[evidenceIds])).rows:[];
@@ -213,7 +223,7 @@ app.get('/api/state',auth,async(req,res)=>{
 
 app.get('/api/leaderboard',auth,async(req,res)=>{
  const rows=(await pool.query(`
-  select u.id,u.name,(p.profile_photo is not null) as has_photo,
+  select u.id,u.name,(p.profile_photo is not null) as has_photo,p.job_title,
          coalesce(cls.name,'') as class_name,
          coalesce(cls.level,'') as level,
          coalesce(cls.book_title,'Workbook') as book_title,
@@ -255,6 +265,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   id:r.id,
   name:r.name,
   photoUrl:r.has_photo?'/api/profile-photo/'+encodeURIComponent(r.id):null,
+  jobTitle:r.job_title||'',
   className:r.class_name||'',
   level:r.level||'',
   bookTitle:r.book_title||'Workbook',
