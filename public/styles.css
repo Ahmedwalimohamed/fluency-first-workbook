@@ -2026,3 +2026,57 @@ html{scroll-behavior:auto!important}
  .student-mode .bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))}
  .student-mode .bottom-nav .nav-btn{font-size:.72rem;padding:7px 2px}
 }
+
+
+/* Writing groups: 3 questions per core type */
+.writing-core-group-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ margin:10px 0 -4px;
+ padding:12px 14px;
+ border-radius:12px;
+ background:#f8fafc;
+ border:1px solid #e2e8f0
+}
+.writing-core-group-head span{
+ color:#0f172a;
+ font-size:.9rem;
+ font-weight:900
+}
+.writing-core-group-head strong{
+ color:#64748b;
+ font-size:.72rem;
+ text-transform:uppercase;
+ letter-spacing:.06em
+}
+
+/* Student header navigation contrast fix */
+.student-mode .topbar{
+ background:#ffffff!important;
+ border-bottom:1px solid #e2e8f0!important
+}
+.student-mode .student-top-nav .nav-btn{
+ color:#334155!important;
+ background:transparent!important;
+ border:1px solid transparent!important;
+ opacity:1!important
+}
+.student-mode .student-top-nav .nav-btn:hover{
+ color:#1d4ed8!important;
+ background:#eff6ff!important
+}
+.student-mode .student-top-nav .nav-btn.active{
+ color:#ffffff!important;
+ background:#2563eb!important;
+ border-color:#2563eb!important
+}
+.student-mode .student-top-nav .nav-btn:focus-visible{
+ outline:3px solid rgba(37,99,235,.22)!important;
+ outline-offset:2px
+}
+.student-mode .student-top-nav .nav-btn.active .nav-icon,
+.student-mode .student-top-nav .nav-btn.active span{
+ color:#ffffff!important
+}
