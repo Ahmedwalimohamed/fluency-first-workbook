@@ -1,1577 +1,2174 @@
-const CAREER_FLUENCY_BOOK={"id":"career-fluency","title":"English Communication & Career Fluency","level":"A2+ â†’ B1","module":1,"moduleTitle":"Fluency Foundations","moduleGoal":"Build automatic speaking habits, natural conversation control and clear professional self-expression.","lessons":[{"id":"w1l1","number":1,"week":1,"title":"Your starting point","outcome":"Complete a friendly speaking diagnostic and identify one clear fluency goal.","expressions":[{"text":"Let me think for a moment.","job":"gain thinking time without becoming silent","cloze":"___ me think for a moment.","answer":"Let","choices":["Let","Make","Give"]},{"text":"What I mean isâ€¦","job":"restate an idea more clearly","cloze":"What I ___ isâ€¦","answer":"mean","choices":["mean","say","tell"]},{"text":"Could you repeat the question?","job":"ask to hear a question again","cloze":"Could you ___ the question?","answer":"repeat","choices":["repeat","return","reply"]},{"text":"In my experienceâ€¦","job":"connect an answer to real life","cloze":"In my ___â€¦","answer":"experience","choices":["experience","example","opinion"]},{"text":"One goal I have isâ€¦","job":"state a learning or career goal","cloze":"One ___ I have isâ€¦","answer":"goal","choices":["goal","job","reason"]}],"grammar":{"focus":"Complete simple sentences, question forms, and infinitives for goals.","items":[{"q":"Choose the complete sentence.","options":["I use English at work.","I English at work.","Use English work."],"answer":"I use English at work.","tag":"grammar:complete-sentence"},{"q":"Choose the accurate question.","options":["Where do you use English?","Where you use English?","Where does you use English?"],"answer":"Where do you use English?","tag":"grammar:question-form"},{"q":"Choose the accurate goal sentence.","options":["I want to speak more confidently.","I want speak more confidently.","I want speaking more confidently."],"answer":"I want to speak more confidently.","tag":"grammar:infinitive"},{"q":"Choose the correct sentence.","options":["I feel confident when I read.","I feels confident when I read.","I feeling confident when I read."],"answer":"I feel confident when I read.","tag":"grammar:present-simple"},{"q":"Complete: One thing I ___ well is reading.","options":["do","does","doing"],"answer":"do","tag":"grammar:do"},{"q":"Choose the correct negative.","options":["I do not use English every day.","I not use English every day.","I does not use English every day."],"answer":"I do not use English every day.","tag":"grammar:negative"},{"q":"Choose the best question for a goal.","options":["What would you like to improve?","What you would like improve?","What would like you improve?"],"answer":"What would you like to improve?","tag":"grammar:question-order"},{"q":"Complete: My main difficulty ___ speaking quickly.","options":["is","are","be"],"answer":"is","tag":"grammar:be"},{"q":"Choose the accurate time phrase.","options":["In twelve weeks, I want to improve.","At twelve weeks, I want improve.","On twelve weeks, I improving."],"answer":"In twelve weeks, I want to improve.","tag":"grammar:time-phrase"},{"q":"Choose the best combined sentence.","options":["I can read well, but spontaneous speaking is harder.","I can read well, because spontaneous speaking is harder.","I can read well, so spontaneous speaking is harder."],"answer":"I can read well, but spontaneous speaking is harder.","tag":"grammar:connector"}]},"listening":{"title":"My English starting point","questions":[{"q":"What is the speaker mainly describing?","options":["Their current English ability and one goal","A holiday plan","A new job offer"],"answer":"Their current English ability and one goal","tag":"listening:main-idea"},{"q":"Where does the speaker use English at work?","options":["Reading messages and speaking with colleagues","Only writing essays","Only answering phone calls"],"answer":"Reading messages and speaking with colleagues","tag":"listening:detail"},{"q":"What does the speaker do online?","options":["Watches videos and searches for information","Teaches a class","Buys airline tickets"],"answer":"Watches videos and searches for information","tag":"listening:detail"},{"q":"Which skill feels comfortable?","options":["Reading","Spontaneous speaking","Giving presentations"],"answer":"Reading","tag":"listening:detail"},{"q":"What happens when the speaker must answer quickly?","options":["They sometimes pause too long","They always change the topic","They speak much faster"],"answer":"They sometimes pause too long","tag":"listening:detail"},{"q":"Why does the speaker pause?","options":["They are searching for the right word","They are bored","They cannot hear the question"],"answer":"They are searching for the right word","tag":"listening:inference"},{"q":"When does the speaker communicate better?","options":["When they have a few seconds to think","When they read a full script","When they avoid questions"],"answer":"When they have a few seconds to think","tag":"listening:detail"},{"q":"What is the twelve-week speaking goal?","options":["Speak for two minutes with fewer stops","Write a ten-page report","Learn one hundred grammar rules"],"answer":"Speak for two minutes with fewer stops","tag":"listening:goal"},{"q":"What strategy does the speaker want to use confidently?","options":["Ask for repetition","Avoid difficult questions","Translate every sentence"],"answer":"Ask for repetition","tag":"listening:strategy"},{"q":"Which phrase best summarizes the message?","options":["Know your starting point, then set a measurable goal.","Perfect grammar must come first.","Only reading matters for fluency."],"answer":"Know your starting point, then set a measurable goal.","tag":"listening:inference"}]},"writing":{"tasks":[{"prompt":"Write one sentence about where you use English.","minWords":5},{"prompt":"Write one sentence about a skill you already do well.","minWords":5},{"prompt":"Write one sentence about a speaking situation that feels difficult.","minWords":5},{"prompt":"Write a complete question you could ask a teacher about your English.","minWords":5},{"prompt":"Use â€œIn my experienceâ€¦â€ in a true sentence.","minWords":5},{"prompt":"Use â€œOne goal I have isâ€¦â€ to state a measurable goal.","minWords":8},{"prompt":"Explain why that goal matters to you in 2â€“3 sentences.","minWords":15},{"prompt":"Describe one situation where you need English and what usually happens.","minWords":20},{"prompt":"Draft stage: Write a short 40â€“60 word self-diagnostic: strength, difficulty, and strategy.","minWords":40},{"prompt":"Final rewrite and transfer: write a 70â€“90 word starting-point profile that you can use to prepare your two-minute baseline.","minWords":70}]},"review":{"keywords":"use Â· strength Â· difficulty Â· goal","mission":"Speak for two minutes about who you are, how you use English, and what you want to achieve in twelve weeks."}},{"id":"w1l2","number":2,"week":1,"title":"A strong professional introduction","outcome":"Introduce yourself with a clear beginning, useful details and a forward-looking ending.","expressions":[{"text":"I currently work asâ€¦","job":"state your present role","cloze":"I ___ work asâ€¦","answer":"currently","choices":["currently","current","currency"]},{"text":"My background is inâ€¦","job":"describe education or professional field","cloze":"My ___ is inâ€¦","answer":"background","choices":["background","back","history"]},{"text":"Iâ€™m responsible forâ€¦","job":"explain a main duty","cloze":"Iâ€™m ___ forâ€¦","answer":"responsible","choices":["responsible","response","responsibility"]},{"text":"Iâ€™m particularly interested inâ€¦","job":"name a professional interest","cloze":"Iâ€™m ___ interested inâ€¦","answer":"particularly","choices":["particularly","particular","partly"]},{"text":"My current goal is toâ€¦","job":"finish with a future direction","cloze":"My ___ goal is toâ€¦","answer":"current","choices":["current","currently","career"]}],"grammar":{"focus":"Present simple with be, have and work; gerunds after â€œresponsible forâ€; because for reasons.","items":[{"q":"Choose the accurate role sentence.","options":["I currently work as a project assistant.","I currently works as a project assistant.","I am currently work as a project assistant."],"answer":"I currently work as a project assistant.","tag":"grammar:present-simple"},{"q":"Choose the correct background sentence.","options":["My background is in education.","My background are in education.","My background in is education."],"answer":"My background is in education.","tag":"grammar:be"},{"q":"Choose the correct responsibility sentence.","options":["Iâ€™m responsible for preparing reports.","Iâ€™m responsible to prepare reports.","I responsible for preparing reports."],"answer":"Iâ€™m responsible for preparing reports.","tag":"grammar:gerund"},{"q":"Choose the best reason.","options":["I enjoy my role because I solve problems.","I enjoy my role because of I solve problems.","I enjoy my role because solve problems."],"answer":"I enjoy my role because I solve problems.","tag":"grammar:because"},{"q":"Complete: I ___ two main responsibilities.","options":["have","has","having"],"answer":"have","tag":"grammar:have"},{"q":"Choose the correct subject-verb agreement.","options":["She works with international clients.","She work with international clients.","She working with international clients."],"answer":"She works with international clients.","tag":"grammar:third-person"},{"q":"Complete: My current goal is ___ lead a larger team.","options":["to","for","at"],"answer":"to","tag":"grammar:infinitive"},{"q":"Choose the natural sentence.","options":["Iâ€™m particularly interested in digital education.","I particularly interested digital education.","Iâ€™m particular interest in digital education."],"answer":"Iâ€™m particularly interested in digital education.","tag":"grammar:collocation"},{"q":"Choose the correct question.","options":["What are you responsible for?","What you are responsible for?","What do responsible you for?"],"answer":"What are you responsible for?","tag":"grammar:question-form"},{"q":"Choose the best ending.","options":["My current goal is to improve my leadership skills.","My current goal improve leadership skills.","My current goal is improving to leadership skills."],"answer":"My current goal is to improve my leadership skills.","tag":"grammar:infinitive"}]},"listening":{"title":"A professional introduction","questions":[{"q":"What is Hassanâ€™s current role?","options":["Project assistant","Site supervisor","English teacher"],"answer":"Project assistant","tag":"listening:detail"},{"q":"What is his professional background?","options":["Construction planning","Medicine","Accounting"],"answer":"Construction planning","tag":"listening:detail"},{"q":"How long has he worked with the team?","options":["Almost two years","Ten years","Two months"],"answer":"Almost two years","tag":"listening:detail"},{"q":"Which task is one of his responsibilities?","options":["Preparing weekly updates","Teaching mathematics","Selling construction materials"],"answer":"Preparing weekly updates","tag":"listening:detail"},{"q":"Why is he interested in planning?","options":["He likes turning complicated projects into clear steps","He wants to avoid teamwork","He dislikes project information"],"answer":"He likes turning complicated projects into clear steps","tag":"listening:reason"},{"q":"Who does he work closely with?","options":["Engineers and site supervisors","Only customers","School teachers"],"answer":"Engineers and site supervisors","tag":"listening:detail"},{"q":"Why is communication important in his role?","options":["He works with different project colleagues","He never shares information","He works alone"],"answer":"He works with different project colleagues","tag":"listening:inference"},{"q":"What is his future career goal?","options":["Lead larger projects","Leave construction immediately","Study medicine"],"answer":"Lead larger projects","tag":"listening:goal"},{"q":"What English ability does he want to improve?","options":["Communicate confidently and explain project information clearly","Read only fiction","Memorize grammar terminology"],"answer":"Communicate confidently and explain project information clearly","tag":"listening:detail"},{"q":"Which order best matches the introduction?","options":["Role â†’ background â†’ responsibilities â†’ interest â†’ goal","Goal â†’ hobby â†’ family â†’ role","Problem â†’ apology â†’ goodbye"],"answer":"Role â†’ background â†’ responsibilities â†’ interest â†’ goal","tag":"listening:sequence"}]},"writing":{"tasks":[{"prompt":"Write your current role or study status in one complete sentence.","minWords":5},{"prompt":"Write one sentence beginning â€œMy background is inâ€¦â€","minWords":5},{"prompt":"Write one responsibility using â€œIâ€™m responsible forâ€¦â€","minWords":5},{"prompt":"Write one sentence about a professional interest.","minWords":5},{"prompt":"Write one sentence about your current career goal.","minWords":5},{"prompt":"Add a reason using â€œbecauseâ€.","minWords":8},{"prompt":"Write 2â€“3 sentences explaining your role to a new colleague.","minWords":18},{"prompt":"Write a short introduction that includes role, background and responsibility.","minWords":30},{"prompt":"Draft stage: Add your professional interest and future goal to make a 50â€“70 word introduction.","minWords":50},{"prompt":"Final rewrite and transfer: write an 80â€“100 word professional introduction with a clear beginning, development and forward-looking ending.","minWords":80}]},"review":{"keywords":"role Â· background Â· responsibility Â· interest Â· goal","mission":"Deliver a 90-second professional introduction without reading full sentences."}},{"id":"w1l3","number":3,"week":1,"title":"Keep speaking without long pauses","outcome":"Use thinking phrases, connectors and repair strategies to maintain your turn.","expressions":[{"text":"There are two main reasons.","job":"organise an answer before giving details","cloze":"There are two main ___.","answer":"reasons","choices":["reasons","results","examples"]},{"text":"The first point isâ€¦","job":"start your first idea","cloze":"The first ___ isâ€¦","answer":"point","choices":["point","place","part"]},{"text":"Another thing isâ€¦","job":"add a second idea","cloze":"Another ___ isâ€¦","answer":"thing","choices":["thing","reasoning","exampled"]},{"text":"For exampleâ€¦","job":"support an idea with evidence","cloze":"For ___â€¦","answer":"example","choices":["example","reason","case"]},{"text":"Let me say that another way.","job":"repair an unclear sentence","cloze":"Let me say that another ___.","answer":"way","choices":["way","word","time"]}],"grammar":{"focus":"Join ideas with and, but, because and so; organise two-point answers.","items":[{"q":"Choose the best connector: I use English at work ___ I speak with international clients.","options":["because","but","so"],"answer":"because","tag":"grammar:connector-because"},{"q":"Choose the best connector: I understand the topic, ___ I sometimes need more time to answer.","options":["but","because","so"],"answer":"but","tag":"grammar:connector-but"},{"q":"Choose the best connector: I want to work internationally, ___ I practise English every day.","options":["so","but","because"],"answer":"so","tag":"grammar:connector-so"},{"q":"Choose the sentence that adds information.","options":["I read articles and I watch videos.","I read articles but I watch videos because.","I read articles so but videos."],"answer":"I read articles and I watch videos.","tag":"grammar:connector-and"},{"q":"Choose the best organised opening.","options":["There are two main reasons.","Because two reasons are.","Two main there reasons."],"answer":"There are two main reasons.","tag":"grammar:organisation"},{"q":"Complete: The first point ___ communication at work.","options":["is","are","be"],"answer":"is","tag":"grammar:be"},{"q":"Choose the best example sentence.","options":["For example, I speak with international visitors.","For example because I speak international visitors.","Example for I speak visitors."],"answer":"For example, I speak with international visitors.","tag":"grammar:example"},{"q":"Choose the best repair.","options":["Let me say that another way.","Let me saying another way.","Let me to say another way."],"answer":"Let me say that another way.","tag":"grammar:repair-phrase"},{"q":"Choose the strongest two-point structure.","options":["The first point is confidence. Another thing is career growth.","First confidence another career.","The point first because career another."],"answer":"The first point is confidence. Another thing is career growth.","tag":"grammar:organisation"},{"q":"Choose the correctly linked sentence.","options":["English is difficult sometimes, but I keep practising because it matters to my career.","English difficult but because career so.","English is difficult because but I practise."],"answer":"English is difficult sometimes, but I keep practising because it matters to my career.","tag":"grammar:connectors"}]},"listening":{"title":"Why English matters to me","questions":[{"q":"How many main reasons does the speaker give?","options":["Two","Three","One"],"answer":"Two","tag":"listening:main-idea"},{"q":"What is the first reason?","options":["Communication at work","Travel for holidays","Reading novels"],"answer":"Communication at work","tag":"listening:sequence"},{"q":"Who does the speaker sometimes meet?","options":["People from different countries","Only family members","Only classmates"],"answer":"People from different countries","tag":"listening:detail"},{"q":"What example does the speaker give?","options":["Speaking with a visitor about a project schedule","Writing a school exam","Buying a new phone"],"answer":"Speaking with a visitor about a project schedule","tag":"listening:detail"},{"q":"What problem happened during that conversation?","options":["The speaker paused too often","The visitor left immediately","The speaker forgot the project"],"answer":"The speaker paused too often","tag":"listening:detail"},{"q":"What is the second reason?","options":["Career growth","Better handwriting","More free time"],"answer":"Career growth","tag":"listening:sequence"},{"q":"Which opportunities are mentioned?","options":["Training, interviews and more responsibility","Driving lessons and sports","Cooking and shopping"],"answer":"Training, interviews and more responsibility","tag":"listening:detail"},{"q":"What does â€œLet me say that another wayâ€ signal?","options":["The speaker is repairing or clarifying an idea","The speaker is ending the conversation","The speaker is asking a question"],"answer":"The speaker is repairing or clarifying an idea","tag":"listening:strategy"},{"q":"What does the speaker say they do NOT need before speaking?","options":["Perfect English","Useful language","Practice"],"answer":"Perfect English","tag":"listening:inference"},{"q":"What practice strategy does the speaker prefer?","options":["Short answers, examples and repair phrases","Long memorized scripts only","Avoiding difficult topics"],"answer":"Short answers, examples and repair phrases","tag":"listening:strategy"}]},"writing":{"tasks":[{"prompt":"Write one reason English matters to you.","minWords":5},{"prompt":"Add a second reason using â€œAnother thing isâ€¦â€","minWords":5},{"prompt":"Write one example beginning â€œFor exampleâ€¦â€","minWords":5},{"prompt":"Join two ideas with â€œandâ€.","minWords":5},{"prompt":"Join two contrasting ideas with â€œbutâ€.","minWords":5},{"prompt":"Explain one reason using â€œbecauseâ€.","minWords":8},{"prompt":"Write a 3-sentence answer with two reasons and one example.","minWords":20},{"prompt":"Write a repair sentence using â€œLet me say that another way.â€","minWords":10},{"prompt":"Draft stage: Write a 50â€“70 word answer to â€œWhy are you learning English now?â€","minWords":50},{"prompt":"Final rewrite and transfer: write an 80â€“100 word two-point response that you could later deliver as a two-minute talk.","minWords":80}]},"review":{"keywords":"reason 1 Â· example Â· reason 2 Â· repair","mission":"Speak for two minutes: â€œWhy I am learning English now.â€ Repeat with fewer pauses."}},{"id":"w2l4","number":4,"week":2,"title":"Start conversations naturally","outcome":"Open a conversation in social and professional situations.","expressions":[{"text":"How has your day been so far?","job":"open a relaxed conversation","cloze":"How has your ___ been so far?","answer":"day","choices":["day","work","time"]},{"text":"What brings you here?","job":"ask about purpose at an event","cloze":"What ___ you here?","answer":"brings","choices":["brings","takes","makes"]},{"text":"Have we met before?","job":"check whether you know someone","cloze":"Have we ___ before?","answer":"met","choices":["met","meet","meeting"]},{"text":"How do you know the team?","job":"find a shared connection","cloze":"How do you ___ the team?","answer":"know","choices":["know","knows","knowing"]},{"text":"That sounds interesting.","job":"respond positively before another question","cloze":"That ___ interesting.","answer":"sounds","choices":["sounds","hears","listens"]}],"grammar":{"focus":"Wh- questions, present simple question order, and present perfect for â€œHave we metâ€¦?â€","items":[{"q":"Choose the correct opener.","options":["What brings you here?","What you brings here?","What does brings you here?"],"answer":"What brings you here?","tag":"grammar:wh-question"},{"q":"Choose the correct question.","options":["How do you know the team?","How you know the team?","How does you know team?"],"answer":"How do you know the team?","tag":"grammar:question-order"},{"q":"Choose the correct present perfect question.","options":["Have we met before?","Did we met before?","Have we meet before?"],"answer":"Have we met before?","tag":"grammar:present-perfect"},{"q":"Complete: How ___ your day been so far?","options":["has","have","do"],"answer":"has","tag":"grammar:auxiliary"},{"q":"Choose the natural response.","options":["That sounds interesting.","That sound interesting.","That is sound interesting."],"answer":"That sounds interesting.","tag":"grammar:third-person"},{"q":"Choose the safe professional question.","options":["What brings you to this workshop?","How much money do you earn?","Why are you still single?"],"answer":"What brings you to this workshop?","tag":"grammar:appropriacy"},{"q":"Choose the correct present simple question.","options":["Where do you work?","Where you work?","Where does you work?"],"answer":"Where do you work?","tag":"grammar:present-simple-question"},{"q":"Complete: How ___ you know the organiser?","options":["do","are","have"],"answer":"do","tag":"grammar:auxiliary"},{"q":"Choose the best follow-up.","options":["What kind of work do you do?","What kind work you do?","What work does you do?"],"answer":"What kind of work do you do?","tag":"grammar:question-order"},{"q":"Choose the correct sentence.","options":["Iâ€™m attending the workshop today.","I attending workshop today.","I am attend the workshop today."],"answer":"Iâ€™m attending the workshop today.","tag":"grammar:present-continuous"}]},"listening":{"title":"Meeting someone at a workshop","questions":[{"q":"Where does the conversation happen?","options":["At a digital skills workshop","At a hospital","At a football match"],"answer":"At a digital skills workshop","tag":"listening:setting"},{"q":"What is the first question the woman asks?","options":["Have we met before?","Where do you live?","How old are you?"],"answer":"Have we met before?","tag":"listening:sequence"},{"q":"Why is the speaker at the workshop?","options":["To learn more about technology at work","To buy a phone","To meet a doctor"],"answer":"To learn more about technology at work","tag":"listening:detail"},{"q":"How does the woman react?","options":["That sounds interesting.","That is impossible.","I do not care."],"answer":"That sounds interesting.","tag":"listening:detail"},{"q":"What does she ask next?","options":["How the speaker knows the organising team","How much the speaker earns","Where the speaker was born"],"answer":"How the speaker knows the organising team","tag":"listening:detail"},{"q":"Why do the questions feel natural?","options":["They connect to the event and are not too personal","They are very private","They change topics quickly"],"answer":"They connect to the event and are not too personal","tag":"listening:inference"},{"q":"What does the speaker later ask about?","options":["The womanâ€™s work","Her salary","Her family problems"],"answer":"The womanâ€™s work","tag":"listening:detail"},{"q":"What shared connection do they discover?","options":["Someone from the same community project","The same school teacher","The same house"],"answer":"Someone from the same community project","tag":"listening:detail"},{"q":"What helps the conversation continue?","options":["Each question creates a shared topic","They both read from a script","They avoid asking questions"],"answer":"Each question creates a shared topic","tag":"listening:inference"},{"q":"What is the main lesson?","options":["Use safe, connected opening questions.","Ask personal questions first.","Speak without listening."],"answer":"Use safe, connected opening questions.","tag":"listening:main-idea"}]},"writing":{"tasks":[{"prompt":"Write one safe opening question for a workshop.","minWords":5},{"prompt":"Write one safe opening question for an online meeting.","minWords":5},{"prompt":"Write a friendly response to someoneâ€™s answer.","minWords":5},{"prompt":"Write a question beginning â€œWhat brings youâ€¦â€","minWords":5},{"prompt":"Write a question beginning â€œHow do you knowâ€¦â€","minWords":5},{"prompt":"Write a two-line opening exchange.","minWords":10},{"prompt":"Write three connected questions for meeting a new colleague.","minWords":18},{"prompt":"Explain why one personal question might be inappropriate in a professional setting.","minWords":20},{"prompt":"Draft stage: Write a 50â€“70 word mini-conversation that starts naturally and reaches a shared topic.","minWords":50},{"prompt":"Final rewrite and transfer: write three different conversation openings for three situations: workshop, office reception and online meeting.","minWords":70}]},"review":{"keywords":"opening Â· safe question Â· shared topic Â· follow-up","mission":"Start three different two-minute conversations without using the same opening twice."}},{"id":"w2l5","number":5,"week":2,"title":"Show interest and ask follow-ups","outcome":"Keep a conversation going by responding, echoing and asking connected questions.","expressions":[{"text":"Really? What happened next?","job":"invite someone to continue a story","cloze":"Really? What happened ___?","answer":"next","choices":["next","later","after"]},{"text":"How did you get interested in that?","job":"ask about the origin of an interest","cloze":"How did you get ___ in that?","answer":"interested","choices":["interested","interesting","interest"]},{"text":"What was that like?","job":"ask about an experience","cloze":"What was that ___?","answer":"like","choices":["like","look","feel"]},{"text":"So, you mean thatâ€¦?","job":"check your understanding","cloze":"So, you ___ thatâ€¦?","answer":"mean","choices":["mean","means","meaning"]},{"text":"I can relate to that.","job":"connect the speakerâ€™s experience to yours","cloze":"I can ___ to that.","answer":"relate","choices":["relate","relationship","relative"]}],"grammar":{"focus":"Follow-up questions with how, why, when and what happened next.","items":[{"q":"Choose the correct follow-up.","options":["How did you get interested in that?","How you got interested in that?","How did you got interested?"],"answer":"How did you get interested in that?","tag":"grammar:past-question"},{"q":"Choose the correct question.","options":["What was that like?","What that was like?","What did that like?"],"answer":"What was that like?","tag":"grammar:be-question"},{"q":"Choose the natural story follow-up.","options":["What happened next?","What next happened did?","What did happened next?"],"answer":"What happened next?","tag":"grammar:past-question"},{"q":"Complete: Why ___ you choose that course?","options":["did","do","were"],"answer":"did","tag":"grammar:auxiliary"},{"q":"Choose the correct time question.","options":["When did you start?","When you did start?","When did you started?"],"answer":"When did you start?","tag":"grammar:past-question"},{"q":"Choose the checking phrase.","options":["So, you mean that the first week was difficult?","So, you means the first week difficult?","So, mean you first week?"],"answer":"So, you mean that the first week was difficult?","tag":"grammar:checking"},{"q":"Choose the best connected question after â€œI started a new job.â€","options":["How did your first week go?","What is your favorite fruit?","Where is the airport?"],"answer":"How did your first week go?","tag":"grammar:cohesion"},{"q":"Complete: I can ___ to that.","options":["relate","related","relating"],"answer":"relate","tag":"grammar:modal"},{"q":"Choose the correct follow-up after a past event.","options":["How did you feel about it?","How do you felt about it?","How did you felt about it?"],"answer":"How did you feel about it?","tag":"grammar:past-question"},{"q":"Choose the best question form.","options":["What made you decide to continue?","What did made you decide continue?","What make you decided?"],"answer":"What made you decide to continue?","tag":"grammar:question-form"}]},"listening":{"title":"Keeping a story going","questions":[{"q":"What new skill is the colleague learning?","options":["Mapping software","Cooking","Driving"],"answer":"Mapping software","tag":"listening:detail"},{"q":"What does the speaker do first to show interest?","options":["Says â€œReally?â€ and asks a connected question","Changes the topic","Talks only about themselves"],"answer":"Says â€œReally?â€ and asks a connected question","tag":"listening:strategy"},{"q":"Who introduced the colleague to mapping?","options":["A colleague","A family member","A teacher at school"],"answer":"A colleague","tag":"listening:detail"},{"q":"What can mapping help with?","options":["Community projects","Cooking dinner","Learning music"],"answer":"Community projects","tag":"listening:detail"},{"q":"How were the first lessons?","options":["Challenging","Very easy","Boring and useless"],"answer":"Challenging","tag":"listening:detail"},{"q":"Why did she continue?","options":["She enjoyed seeing progress","She was forced to","She wanted to stop immediately"],"answer":"She enjoyed seeing progress","tag":"listening:inference"},{"q":"What does the speaker check?","options":["Whether practice made the difficult beginning easier","Whether she bought a new computer","Whether she changed jobs"],"answer":"Whether practice made the difficult beginning easier","tag":"listening:checking"},{"q":"How does the speaker relate personally?","options":["By mentioning learning a reporting system","By changing to travel","By talking about salary"],"answer":"By mentioning learning a reporting system","tag":"listening:detail"},{"q":"What do all the questions have in common?","options":["They connect to the previous answer","They are unrelated","They are yes/no only"],"answer":"They connect to the previous answer","tag":"listening:inference"},{"q":"What is the main communication skill?","options":["Show interest and ask connected follow-ups","Give a formal presentation","End a conversation quickly"],"answer":"Show interest and ask connected follow-ups","tag":"listening:main-idea"}]},"writing":{"tasks":[{"prompt":"Write a natural reaction to â€œI started a new course.â€","minWords":5},{"prompt":"Write one follow-up beginning â€œHow didâ€¦â€","minWords":5},{"prompt":"Write one follow-up beginning â€œWhat wasâ€¦â€","minWords":5},{"prompt":"Write one checking question beginning â€œSo, you meanâ€¦â€","minWords":5},{"prompt":"Write one sentence using â€œI can relate to that.â€","minWords":5},{"prompt":"Write two connected follow-up questions about learning a skill.","minWords":12},{"prompt":"Write a 4-line conversation where every question connects to the previous answer.","minWords":25},{"prompt":"Explain the difference between a connected follow-up and a sudden topic change.","minWords":25},{"prompt":"Draft stage: Write a 60â€“80 word conversation about learning something difficult.","minWords":60},{"prompt":"Final rewrite and transfer: create a six-exchange conversation using at least three target follow-up expressions.","minWords":80}]},"review":{"keywords":"story Â· reaction Â· follow-up Â· checking","mission":"Keep one conversation going for six exchanges using at least three follow-up expressions."}},{"id":"w2l6","number":6,"week":2,"title":"End conversations professionally","outcome":"Close conversations warmly, confirm next steps and leave a positive final impression.","expressions":[{"text":"It was great speaking with you.","job":"signal a warm ending","cloze":"It was great ___ with you.","answer":"speaking","choices":["speaking","speak","spoke"]},{"text":"I should let you get back toâ€¦","job":"respect the other personâ€™s time","cloze":"I should let you get ___ toâ€¦","answer":"back","choices":["back","return","again"]},{"text":"Letâ€™s stay in touch.","job":"suggest future contact","cloze":"Letâ€™s stay in ___.","answer":"touch","choices":["touch","contacting","talk"]},{"text":"Iâ€™ll send you the details.","job":"promise a next action","cloze":"Iâ€™ll ___ you the details.","answer":"send","choices":["send","sent","sending"]},{"text":"I look forward to speaking again.","job":"close a professional interaction","cloze":"I look ___ to speaking again.","answer":"forward","choices":["forward","ahead","future"]}],"grammar":{"focus":"Future arrangements with will and present continuous; â€œlook forward toâ€ + -ing.","items":[{"q":"Choose the correct promise.","options":["Iâ€™ll send you the details this afternoon.","I send you details tomorrow yesterday.","Iâ€™ll sending the details."],"answer":"Iâ€™ll send you the details this afternoon.","tag":"grammar:will"},{"q":"Choose the correct arrangement.","options":["Iâ€™m meeting the team tomorrow.","I meeting the team tomorrow.","Iâ€™m meet the team tomorrow."],"answer":"Iâ€™m meeting the team tomorrow.","tag":"grammar:present-continuous"},{"q":"Choose the correct phrase.","options":["I look forward to speaking again.","I look forward to speak again.","I look forward speaking again."],"answer":"I look forward to speaking again.","tag":"grammar:gerund"},{"q":"Complete: It ___ great speaking with you.","options":["was","were","be"],"answer":"was","tag":"grammar:be"},{"q":"Complete: Letâ€™s ___ in touch.","options":["stay","staying","stayed"],"answer":"stay","tag":"grammar:let-us"},{"q":"Choose the polite time signal.","options":["I should let you get back to the workshop.","You need go now.","Stop talking now."],"answer":"I should let you get back to the workshop.","tag":"grammar:appropriacy"},{"q":"Choose the correct next step.","options":["Iâ€™ll review it tomorrow.","Iâ€™ll reviewed it tomorrow.","I review it tomorrow yesterday."],"answer":"Iâ€™ll review it tomorrow.","tag":"grammar:will"},{"q":"Choose the correct future question.","options":["When will you send the link?","When you will send the link?","When will you sent the link?"],"answer":"When will you send the link?","tag":"grammar:future-question"},{"q":"Complete: Weâ€™re ___ again on Thursday.","options":["meeting","meet","met"],"answer":"meeting","tag":"grammar:present-continuous"},{"q":"Choose the strongest professional close.","options":["It was great speaking with you. Iâ€™ll send the details today.","Bye. Maybe something later.","Okay finished."],"answer":"It was great speaking with you. Iâ€™ll send the details today.","tag":"grammar:cohesion"}]},"listening":{"title":"Closing a professional conversation","questions":[{"q":"What signal tells the speaker it may be time to end?","options":["The other person looks toward the next session","The lights turn off","Someone starts eating"],"answer":"The other person looks toward the next session","tag":"listening:inference"},{"q":"What polite time signal does the speaker use?","options":["I should let you get back to the workshop.","You must leave now.","I am bored."],"answer":"I should let you get back to the workshop.","tag":"listening:strategy"},{"q":"How does the other person describe the conversation?","options":["Great speaking with you","Too long and difficult","Not useful"],"answer":"Great speaking with you","tag":"listening:detail"},{"q":"What does the speaker suggest?","options":["Stay in touch","Never speak again","Change the workshop"],"answer":"Stay in touch","tag":"listening:detail"},{"q":"What does the speaker promise to send?","options":["A project link","A new laptop","A job contract"],"answer":"A project link","tag":"listening:detail"},{"q":"When will it be sent?","options":["That afternoon","Next month","The previous day"],"answer":"That afternoon","tag":"listening:detail"},{"q":"When will the other person review it?","options":["The next day","Immediately before receiving it","Next year"],"answer":"The next day","tag":"listening:sequence"},{"q":"Why is the next step useful?","options":["It makes the follow-up clear","It makes the ending longer","It avoids all future contact"],"answer":"It makes the follow-up clear","tag":"listening:inference"},{"q":"What final phrase does the speaker use?","options":["I look forward to speaking again.","Do not contact me.","That is all."],"answer":"I look forward to speaking again.","tag":"listening:detail"},{"q":"What makes the ending professional?","options":["Respecting time, confirming a next step, and closing warmly","Leaving without saying anything","Making several vague promises"],"answer":"Respecting time, confirming a next step, and closing warmly","tag":"listening:main-idea"}]},"writing":{"tasks":[{"prompt":"Write one warm closing sentence.","minWords":5},{"prompt":"Write one sentence that respects the other personâ€™s time.","minWords":5},{"prompt":"Write one next-action promise using â€œIâ€™llâ€¦â€","minWords":5},{"prompt":"Write one future arrangement using present continuous.","minWords":5},{"prompt":"Write one sentence using â€œI look forward toâ€¦â€ correctly.","minWords":5},{"prompt":"Write a two-line professional closing.","minWords":12},{"prompt":"Write a closing that includes a specific deadline for your next action.","minWords":15},{"prompt":"Rewrite a vague ending (â€œWe should talk sometimeâ€) as a clear professional next step.","minWords":20},{"prompt":"Draft stage: Write a 50â€“70 word closing to a conversation after a workshop.","minWords":50},{"prompt":"Final rewrite and transfer: write a complete professional ending that includes time signal, warm close, next action, deadline and final sentence.","minWords":75}]},"review":{"keywords":"time signal Â· warm close Â· next action Â· deadline","mission":"Open, maintain and close a complete four-minute conversation."}},{"id":"w3l7","number":7,"week":3,"title":"Describe your work clearly","outcome":"Explain your role, team and responsibilities to someone outside your field.","expressions":[{"text":"My main responsibility isâ€¦","job":"name your most important duty","cloze":"My main ___ isâ€¦","answer":"responsibility","choices":["responsibility","response","responsible"]},{"text":"I work closely withâ€¦","job":"describe collaboration","cloze":"I work ___ withâ€¦","answer":"closely","choices":["closely","close","closed"]},{"text":"A typical task involvesâ€¦","job":"explain a regular activity","cloze":"A typical task ___â€¦","answer":"involves","choices":["involves","involve","involving"]},{"text":"The purpose of my role is toâ€¦","job":"explain why your job exists","cloze":"The ___ of my role is toâ€¦","answer":"purpose","choices":["purpose","result","position"]},{"text":"In simple termsâ€¦","job":"make technical information accessible","cloze":"In ___ termsâ€¦","answer":"simple","choices":["simple","simply","small"]}],"grammar":{"focus":"Present simple for regular duties; gerunds after â€œinvolvesâ€; clear noun phrases for roles and departments.","items":[{"q":"Choose the correct duty sentence.","options":["My main responsibility is checking quality.","My main responsibility are checking quality.","My main responsible is check quality."],"answer":"My main responsibility is checking quality.","tag":"grammar:be"},{"q":"Choose the correct collaboration sentence.","options":["I work closely with the finance team.","I works closely with finance team.","I close work with the finance team."],"answer":"I work closely with the finance team.","tag":"grammar:present-simple"},{"q":"Choose the correct â€œinvolvesâ€ pattern.","options":["A typical task involves preparing reports.","A typical task involves prepare reports.","A typical task involve preparing reports."],"answer":"A typical task involves preparing reports.","tag":"grammar:gerund"},{"q":"Complete: The purpose of my role is ___ support customers.","options":["to","for","at"],"answer":"to","tag":"grammar:infinitive"},{"q":"Choose the clearest noun phrase.","options":["the customer support team","support customer the team","the team customer supporting"],"answer":"the customer support team","tag":"grammar:noun-phrase"},{"q":"Choose the correct third-person form.","options":["She manages client requests.","She manage client requests.","She managing client requests."],"answer":"She manages client requests.","tag":"grammar:third-person"},{"q":"Choose the simple explanation.","options":["In simple terms, I help projects stay on schedule.","In terms simple I project schedule.","Simply terms I helping schedule."],"answer":"In simple terms, I help projects stay on schedule.","tag":"grammar:clarity"},{"q":"Complete: I usually ___ progress data every Friday.","options":["collect","collects","collecting"],"answer":"collect","tag":"grammar:present-simple"},{"q":"Choose the correct question about work.","options":["Who do you work closely with?","Who you work closely with?","Who does you work close with?"],"answer":"Who do you work closely with?","tag":"grammar:question-form"},{"q":"Choose the best result sentence.","options":["The result of my work is a clear weekly update.","The result my work are clear update.","My work result clear weekly."],"answer":"The result of my work is a clear weekly update.","tag":"grammar:noun-phrase"}]},"listening":{"title":"My work in simple terms","questions":[{"q":"What does the speaker avoid at the beginning?","options":["Technical language","Simple explanations","Examples"],"answer":"Technical language","tag":"listening:strategy"},{"q":"In simple terms, what does the speaker do?","options":["Helps projects stay organised and on schedule","Repairs computers","Teaches children"],"answer":"Helps projects stay organised and on schedule","tag":"listening:main-idea"},{"q":"What is the main responsibility?","options":["Collect progress information and make clear updates","Design buildings","Hire all staff"],"answer":"Collect progress information and make clear updates","tag":"listening:detail"},{"q":"What does a typical task include first?","options":["Checking what has been completed","Buying equipment","Calling customers"],"answer":"Checking what has been completed","tag":"listening:sequence"},{"q":"What problem does the speaker identify?","options":["Anything that is late","Only spelling mistakes","Personal disagreements"],"answer":"Anything that is late","tag":"listening:detail"},{"q":"Who does the speaker work with?","options":["Field staff, supervisors and finance","Only the manager","Only outside customers"],"answer":"Field staff, supervisors and finance","tag":"listening:detail"},{"q":"Why are several teams involved?","options":["Each group has part of the needed information","The speaker wants more meetings","No one has any information"],"answer":"Each group has part of the needed information","tag":"listening:reason"},{"q":"What is the purpose of the role?","options":["Help managers understand progress and decide next steps","Make reports longer","Avoid project decisions"],"answer":"Help managers understand progress and decide next steps","tag":"listening:purpose"},{"q":"What is the useful result of an update?","options":["Notice problems early and keep work moving","Create more technical vocabulary","Delay decisions"],"answer":"Notice problems early and keep work moving","tag":"listening:inference"},{"q":"What communication principle is demonstrated?","options":["Explain work so an outsider can understand it","Use as much jargon as possible","List job titles without explaining them"],"answer":"Explain work so an outsider can understand it","tag":"listening:main-idea"}]},"writing":{"tasks":[{"prompt":"Write your job or study role in simple terms.","minWords":5},{"prompt":"Write one sentence beginning â€œMy main responsibility isâ€¦â€","minWords":5},{"prompt":"Write one sentence beginning â€œI work closely withâ€¦â€","minWords":5},{"prompt":"Write one sentence beginning â€œA typical task involvesâ€¦â€","minWords":5},{"prompt":"Write the purpose of your role using â€œThe purpose of my role is toâ€¦â€","minWords":5},{"prompt":"Explain one technical word from your field in simple English.","minWords":10},{"prompt":"Write 3 sentences about role, task and collaborators.","minWords":20},{"prompt":"Write 40â€“60 words explaining your work to a 12-year-old.","minWords":40},{"prompt":"Draft stage: Add the result or value of your work to create a 60â€“80 word explanation.","minWords":60},{"prompt":"Final rewrite and transfer: write an 80â€“100 word â€œMy work in simple termsâ€ explanation with no unexplained technical words.","minWords":80}]},"review":{"keywords":"role Â· main task Â· collaborators Â· purpose Â· result","mission":"Give a two-minute â€œMy work in simple termsâ€ explanation."}},{"id":"w3l8","number":8,"week":3,"title":"Routines and current priorities","outcome":"Compare regular responsibilities with what you are working on now.","expressions":[{"text":"I usually spend my morningsâ€¦","job":"describe a normal routine","cloze":"I ___ spend my morningsâ€¦","answer":"usually","choices":["usually","current","today"]},{"text":"At the moment, Iâ€™m working onâ€¦","job":"name a current assignment","cloze":"At the ___, Iâ€™m working onâ€¦","answer":"moment","choices":["moment","minute","time"]},{"text":"Most weeks, Iâ€¦","job":"describe a frequent pattern","cloze":"___ weeks, Iâ€¦","answer":"Most","choices":["Most","Much","Many"]},{"text":"This week is different becauseâ€¦","job":"contrast routine and present","cloze":"This ___ is different becauseâ€¦","answer":"week","choices":["week","weeks","weekly"]},{"text":"My top priority today isâ€¦","job":"identify the most urgent task","cloze":"My top ___ today isâ€¦","answer":"priority","choices":["priority","prior","important"]}],"grammar":{"focus":"Present simple versus present continuous; adverbs of frequency.","items":[{"q":"Choose the routine sentence.","options":["I usually review plans in the morning.","I am usually reviewing plans every morning now.","I usually reviewing plans."],"answer":"I usually review plans in the morning.","tag":"grammar:present-simple"},{"q":"Choose the current-action sentence.","options":["At the moment, Iâ€™m preparing a report.","At the moment, I prepare a report every day.","At the moment, I preparing report."],"answer":"At the moment, Iâ€™m preparing a report.","tag":"grammar:present-continuous"},{"q":"Complete: Most weeks, I ___ with colleagues.","options":["coordinate","am coordinating","coordinates"],"answer":"coordinate","tag":"grammar:present-simple"},{"q":"Complete: This week, I ___ on a special project.","options":["am working","work every","works"],"answer":"am working","tag":"grammar:present-continuous"},{"q":"Choose the correct adverb position.","options":["I usually check email at 8 a.m.","I check usually email at 8 a.m.","Usually I am check email."],"answer":"I usually check email at 8 a.m.","tag":"grammar:adverb-frequency"},{"q":"Choose the correct negative current action.","options":["Iâ€™m not working on that task today.","I donâ€™t working on that task today.","I not am work on that task."],"answer":"Iâ€™m not working on that task today.","tag":"grammar:present-continuous"},{"q":"Choose the correct routine question.","options":["What do you usually do in the morning?","What are you usually do morning?","What you usually doing every morning?"],"answer":"What do you usually do in the morning?","tag":"grammar:question-form"},{"q":"Choose the current question.","options":["What are you working on at the moment?","What do you working at moment?","What are you work on?"],"answer":"What are you working on at the moment?","tag":"grammar:question-form"},{"q":"Complete: My top priority today ___ finishing the client update.","options":["is","are","be"],"answer":"is","tag":"grammar:be"},{"q":"Choose the best contrast.","options":["I usually work on reports, but this week Iâ€™m preparing a presentation.","I am usually report but week prepare presentation.","Usually I working reports because presentation."],"answer":"I usually work on reports, but this week Iâ€™m preparing a presentation.","tag":"grammar:contrast"}]},"listening":{"title":"My normal week and todayâ€™s priority","questions":[{"q":"How does the speaker describe most weeks?","options":["Predictable","Completely different every day","Very quiet"],"answer":"Predictable","tag":"listening:main-idea"},{"q":"What does the speaker usually do first?","options":["Check messages and review the dayâ€™s plan","Prepare a presentation","Call customers immediately"],"answer":"Check messages and review the dayâ€™s plan","tag":"listening:sequence"},{"q":"What happens after that?","options":["Coordinate with colleagues and update the task list","Go home","Start a new job"],"answer":"Coordinate with colleagues and update the task list","tag":"listening:sequence"},{"q":"What is a normal afternoon activity?","options":["Preparing notes or reports","Attending school","Cooking"],"answer":"Preparing notes or reports","tag":"listening:detail"},{"q":"Why is this week different?","options":["There is an important Thursday deadline","The office is closed","The speaker is on holiday"],"answer":"There is an important Thursday deadline","tag":"listening:reason"},{"q":"What is the speaker working on now?","options":["Final details for a client update","A new building","A job interview"],"answer":"Final details for a client update","tag":"listening:detail"},{"q":"What is the speaker waiting for?","options":["Two pieces of information","A new computer","A salary payment"],"answer":"Two pieces of information","tag":"listening:detail"},{"q":"What is todayâ€™s top priority?","options":["Finish the update before 4 p.m.","Read every email again","Change the task list"],"answer":"Finish the update before 4 p.m.","tag":"listening:priority"},{"q":"What happens to normal duties?","options":["They receive less time until the deadline is complete","They disappear permanently","They become more important than the deadline"],"answer":"They receive less time until the deadline is complete","tag":"listening:inference"},{"q":"Which grammar contrast is central to the message?","options":["Routine present simple vs current present continuous","Past perfect vs future perfect","Passive voice only"],"answer":"Routine present simple vs current present continuous","tag":"listening:language"}]},"writing":{"tasks":[{"prompt":"Write one normal weekly duty using present simple.","minWords":5},{"prompt":"Write another routine sentence with â€œusuallyâ€.","minWords":5},{"prompt":"Write one current task using present continuous.","minWords":5},{"prompt":"Write one sentence beginning â€œAt the momentâ€¦â€","minWords":5},{"prompt":"Write todayâ€™s top priority.","minWords":5},{"prompt":"Write one contrast sentence beginning â€œThis week is different becauseâ€¦â€","minWords":10},{"prompt":"Write 3 sentences: routine, current task and priority.","minWords":20},{"prompt":"Write a short work log with five routine statements and three current-action statements.","minWords":40},{"prompt":"Draft stage: Write 60â€“80 words comparing a normal week with this week.","minWords":60},{"prompt":"Final rewrite and transfer: write an 80â€“100 word update titled â€œMy normal work and my current priority.â€","minWords":80}]},"review":{"keywords":"routine 1 Â· routine 2 Â· current task Â· priority","mission":"Speak for two minutes about â€œMy normal work and my current priority.â€"}},{"id":"w3l9","number":9,"week":3,"title":"Give a useful work update","outcome":"Report progress, completed actions, current work and next steps.","expressions":[{"text":"So far, Iâ€™ve completedâ€¦","job":"report completed progress","cloze":"So ___, Iâ€™ve completedâ€¦","answer":"far","choices":["far","long","now"]},{"text":"Iâ€™m currently checkingâ€¦","job":"describe work in progress","cloze":"Iâ€™m ___ checkingâ€¦","answer":"currently","choices":["currently","current","nowly"]},{"text":"The main issue isâ€¦","job":"identify a blocker","cloze":"The main ___ isâ€¦","answer":"issue","choices":["issue","problematic","thingy"]},{"text":"I expect to finish byâ€¦","job":"give a realistic deadline","cloze":"I ___ to finish byâ€¦","answer":"expect","choices":["expect","expects","waiting"]},{"text":"My next step is toâ€¦","job":"state the immediate action","cloze":"My ___ step is toâ€¦","answer":"next","choices":["next","new","later"]}],"grammar":{"focus":"Present perfect for progress; present continuous for current work; future language for next action and deadline.","items":[{"q":"Choose the correct progress sentence.","options":["So far, Iâ€™ve completed the first review.","So far, I completed the first review every day.","So far, I am complete first review."],"answer":"So far, Iâ€™ve completed the first review.","tag":"grammar:present-perfect"},{"q":"Choose the current-work sentence.","options":["Iâ€™m currently checking the final details.","I currently checked final details now.","Iâ€™m currently check final details."],"answer":"Iâ€™m currently checking the final details.","tag":"grammar:present-continuous"},{"q":"Choose the blocker sentence.","options":["The main issue is one missing document.","The main issue are missing document one.","Main issue one document missing is."],"answer":"The main issue is one missing document.","tag":"grammar:be"},{"q":"Complete: I expect to finish ___ 3 p.m.","options":["by","at until","on"],"answer":"by","tag":"grammar:deadline"},{"q":"Choose the next-step sentence.","options":["My next step is to update the plan.","My next step is updating to the plan.","My next step update plan is."],"answer":"My next step is to update the plan.","tag":"grammar:infinitive"},{"q":"Choose the correct progress question.","options":["What have you completed so far?","What did you completed so far?","What have you complete so far?"],"answer":"What have you completed so far?","tag":"grammar:present-perfect-question"},{"q":"Choose the correct current question.","options":["What are you working on now?","What do you working on now?","What are you work now?"],"answer":"What are you working on now?","tag":"grammar:present-continuous-question"},{"q":"Choose the realistic future sentence.","options":["I expect to receive it today.","I expecting receive it yesterday tomorrow.","I expect receiving it today to."],"answer":"I expect to receive it today.","tag":"grammar:infinitive"},{"q":"Choose the best contrast.","options":["Iâ€™ve completed the review, and Iâ€™m now checking the final details.","I completed now and checking yesterday.","Iâ€™ve complete review but currently checked."],"answer":"Iâ€™ve completed the review, and Iâ€™m now checking the final details.","tag":"grammar:tense-contrast"},{"q":"Choose the clearest update order.","options":["completed progress â†’ current work â†’ issue â†’ deadline â†’ next step","issue â†’ unrelated story â†’ greeting â†’ hobby","next year â†’ past childhood â†’ current task"],"answer":"completed progress â†’ current work â†’ issue â†’ deadline â†’ next step","tag":"grammar:organisation"}]},"listening":{"title":"A clear work update","questions":[{"q":"What is the purpose of the message?","options":["Give a quick work update","Introduce a new employee","End a workshop conversation"],"answer":"Give a quick work update","tag":"listening:main-idea"},{"q":"What has already been completed?","options":["The first review","The final presentation","The supplier contract"],"answer":"The first review","tag":"listening:progress"},{"q":"How many sections were corrected?","options":["Two","Five","One"],"answer":"Two","tag":"listening:detail"},{"q":"What is happening now?","options":["Checking final details and confirming numbers","Writing a job application","Starting the first review"],"answer":"Checking final details and confirming numbers","tag":"listening:current-work"},{"q":"Who is helping confirm the numbers?","options":["The finance team","A school teacher","The customerâ€™s family"],"answer":"The finance team","tag":"listening:detail"},{"q":"What is the main issue?","options":["One missing supplier document","A broken computer","A missing employee"],"answer":"One missing supplier document","tag":"listening:blocker"},{"q":"What has the speaker done about the issue?","options":["Requested the document","Cancelled the project","Ignored it"],"answer":"Requested the document","tag":"listening:action"},{"q":"When is the full update expected to finish?","options":["By 3 p.m.","Next week","At midnight yesterday"],"answer":"By 3 p.m.","tag":"listening:deadline"},{"q":"What is the next step after receiving the document?","options":["Add it, check the final version, and send the plan","Begin the first review again","Change the client"],"answer":"Add it, check the final version, and send the plan","tag":"listening:sequence"},{"q":"Does the speaker expect the deadline to change?","options":["No","Yes, definitely","The speaker gives no opinion"],"answer":"No","tag":"listening:inference"}]},"writing":{"tasks":[{"prompt":"Write one sentence about something you have completed so far.","minWords":5},{"prompt":"Write one sentence about what you are currently working on.","minWords":5},{"prompt":"Write one sentence identifying a main issue.","minWords":5},{"prompt":"Write one realistic deadline using â€œI expect to finish byâ€¦â€","minWords":5},{"prompt":"Write one next step using â€œMy next step is toâ€¦â€","minWords":5},{"prompt":"Write a two-sentence update: completed progress + current work.","minWords":15},{"prompt":"Add one blocker and what you are doing about it.","minWords":20},{"prompt":"Write a 50â€“70 word update using all five target expressions.","minWords":50},{"prompt":"Draft stage: Rewrite a vague update (â€œThings are going okayâ€) as a specific useful update.","minWords":50},{"prompt":"Final rewrite and transfer: write an 80â€“110 word professional work update in this order: progress, current work, issue, deadline, next step.","minWords":80}]},"review":{"keywords":"progress Â· current work Â· issue Â· deadline Â· next step","mission":"Give a 60â€“90 second work update with completed progress, current work, blocker, deadline and next step."}}],"levelNote":"Adult/professional communicative pathway: supported A2+ practice moving toward functional B1 independence."};
-CAREER_FLUENCY_BOOK.totalLessons=CAREER_FLUENCY_BOOK.lessons.length;
-CAREER_FLUENCY_BOOK.lessons.forEach(l=>{if(l.ready===undefined)l.ready=true});
-const SPEAKUP_A2_B1_BOOK={"id":"speakup-a2-b1","title":"SpeakUp English A2 â†’ B1","level":"A2 â†’ B1","moduleTitle":"SpeakUp English A2 â†’ B1","moduleGoal":"Digital workbook practice that supports the live fluency course with vocabulary, listening & reading, grammar and writing.","totalLessons":22,"lessons":[{"id":"su-a2b1-l1","number":1,"title":"Getting Acquainted","outcome":"Build the language you need to introduce yourself and understand simple personal information.","ready":true,"vocabulary":{"items":[{"q":"Which word means an activity you enjoy in your free time?","options":["hobby","occupation","hometown"],"answer":"hobby","tag":"vocabulary:meaning"},{"q":"Which word means the town or city you come from?","options":["hometown","occupation","family"],"answer":"hometown","tag":"vocabulary:meaning"},{"q":"Which word means your job or type of work?","options":["occupation","hobby","outgoing"],"answer":"occupation","tag":"vocabulary:meaning"},{"q":"Which word describes someone who enjoys meeting and talking to people?","options":["outgoing","single","married"],"answer":"outgoing","tag":"vocabulary:meaning"},{"q":"A person who has a husband or wife isâ€¦","options":["married","single","outgoing"],"answer":"married","tag":"vocabulary:context"},{"q":"Choose the best expression when you meet someone for the first time.","options":["Nice to meet you.","See you yesterday.","What time job?"],"answer":"Nice to meet you.","tag":"vocabulary:expression"},{"q":"Choose the natural question to ask about someone's job.","options":["What do you do?","What you doing job?","Where occupation you?"],"answer":"What do you do?","tag":"vocabulary:expression"},{"q":"Your classmate tells you an unusual hobby. Which response shows interest?","options":["That's interesting.","No speaking.","I am hometown."],"answer":"That's interesting.","tag":"vocabulary:expression"},{"q":"Choose the expression that returns the same question to the other person.","options":["How about you?","Nice hometown.","Really job?"],"answer":"How about you?","tag":"vocabulary:expression"},{"q":"Choose the polite request for more personal information.","options":["Could you tell me about yourself?","Tell yourself now.","What yourself is?"],"answer":"Could you tell me about yourself?","tag":"vocabulary:expression"}]},"listening":{"title":"First day at a training course","text":"On the first day of a new training course, Amina sits next to Yusuf. Amina lives in Borama and works in a small office. Her hometown is Hargeisa. She enjoys reading and walking in the evening. Yusuf is a university student. He likes football and photography. They ask each other simple questions about work, hometowns, and hobbies. Before the lesson starts, Amina introduces Yusuf to another student and says that he is friendly and outgoing.","questions":[{"q":"Where does Amina live?","options":["Borama","Hargeisa","London"],"answer":"Borama","tag":"listening-reading:detail"},{"q":"Where is Amina's hometown?","options":["Hargeisa","Borama","Zeila"],"answer":"Hargeisa","tag":"listening-reading:detail"},{"q":"What does Amina do?","options":["She works in a small office.","She is a nurse.","She owns a restaurant."],"answer":"She works in a small office.","tag":"listening-reading:detail"},{"q":"Which two activities does Amina enjoy?","options":["Reading and walking","Football and photography","Cooking and swimming"],"answer":"Reading and walking","tag":"listening-reading:detail"},{"q":"What is Yusuf?","options":["A university student","An office manager","A teacher"],"answer":"A university student","tag":"listening-reading:detail"},{"q":"Which hobby belongs to Yusuf?","options":["Photography","Walking only","Reading mystery books"],"answer":"Photography","tag":"listening-reading:detail"},{"q":"What do Amina and Yusuf ask each other about?","options":["Work, hometowns, and hobbies","Only the weather","Prices and shopping"],"answer":"Work, hometowns, and hobbies","tag":"listening-reading:main-idea"},{"q":"Who introduces Yusuf to another student?","options":["Amina","The teacher","His brother"],"answer":"Amina","tag":"listening-reading:sequence"},{"q":"How does Amina describe Yusuf?","options":["Friendly and outgoing","Quiet and angry","Tired and late"],"answer":"Friendly and outgoing","tag":"listening-reading:detail"},{"q":"What is the main purpose of the text?","options":["Two new classmates get acquainted.","A student applies for a job.","Two friends plan a holiday."],"answer":"Two new classmates get acquainted.","tag":"listening-reading:main-idea"}]},"grammar":{"focus":"Present Simple with be, have and like for personal facts, routines and preferences.","items":[{"q":"Choose the correct sentence.","options":["I am a student.","I is a student.","I be a student."],"answer":"I am a student.","tag":"grammar:be"},{"q":"Complete: She ___ from Borama.","options":["is","are","am"],"answer":"is","tag":"grammar:be"},{"q":"Choose the correct sentence.","options":["I have two brothers.","I has two brothers.","I having two brothers."],"answer":"I have two brothers.","tag":"grammar:have"},{"q":"Complete: He ___ football.","options":["likes","like","liking"],"answer":"likes","tag":"grammar:present-simple"},{"q":"Choose the correct negative.","options":["I don't like coffee.","I doesn't like coffee.","I not like coffee."],"answer":"I don't like coffee.","tag":"grammar:negative"},{"q":"Choose the correct question.","options":["Where do you live?","Where you live?","Where does you live?"],"answer":"Where do you live?","tag":"grammar:question-form"},{"q":"Complete: What ___ she do?","options":["does","do","is"],"answer":"does","tag":"grammar:question-form"},{"q":"Choose the accurate sentence.","options":["My hometown is Hargeisa.","My hometown are Hargeisa.","My hometown Hargeisa is from."],"answer":"My hometown is Hargeisa.","tag":"grammar:be"},{"q":"Choose the correct preference sentence.","options":["We like travelling.","We likes travelling.","We are like travelling."],"answer":"We like travelling.","tag":"grammar:present-simple"},{"q":"Choose the best combined sentence.","options":["I work in an office and I like photography.","I work in an office but because photography.","I working office and likes photography."],"answer":"I work in an office and I like photography.","tag":"grammar:connector"}]},"writing":{"tasks":[{"prompt":"Write one complete sentence with your name.","minWords":4},{"prompt":"Write one sentence saying where you are from.","minWords":5},{"prompt":"Write one sentence about where you live now.","minWords":5},{"prompt":"Write one sentence about your work or studies.","minWords":6},{"prompt":"Write one sentence about one hobby you enjoy.","minWords":6},{"prompt":"Write one sentence about something you do not like.","minWords":6},{"prompt":"Write two connected sentences about your hometown.","minWords":14},{"prompt":"Write three sentences about your normal week using the present simple.","minWords":20},{"prompt":"Write a short 40â€“60 word profile for a class registration page.","minWords":40},{"prompt":"Rewrite your profile as a clear 70â€“90 word personal introduction for a written course profile.","minWords":70}]}},{"id":"su-a2b1-l2","number":2,"title":"Work & Careers","outcome":"Grammar focus: Present Simple vs Present Continuous. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l3","number":3,"title":"Travel & Adventure","outcome":"Grammar focus: Past Simple. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l4","number":4,"title":"Technology & Social Media","outcome":"Grammar focus: Adverbs of Frequency + Present Simple. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l5","number":5,"title":"Health & Wellbeing","outcome":"Grammar focus: Should / Shouldn't. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l6","number":6,"title":"Food & Culture","outcome":"Grammar focus: Comparatives and Superlatives. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l7","number":7,"title":"Education & Learning","outcome":"Grammar focus: Past Simple vs Past Continuous. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l8","number":8,"title":"Money & Business","outcome":"Grammar focus: Future Plans with Going to. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l9","number":9,"title":"Environment & Climate","outcome":"Grammar focus: Have to / Don't have to. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l10","number":10,"title":"Relationships & Family","outcome":"Grammar focus: Relative Clauses. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l11","number":11,"title":"Media & News","outcome":"Grammar focus: Can / Could. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l12","number":12,"title":"Sports & Fitness","outcome":"Grammar focus: As...as + Adverbs of Manner. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l13","number":13,"title":"City vs Countryside","outcome":"Grammar focus: Quantifiers. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l14","number":14,"title":"Dreams & Ambitions","outcome":"Grammar focus: Would like to / Want to. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l15","number":15,"title":"Crime & Justice","outcome":"Grammar focus: Present Perfect. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l16","number":16,"title":"Science & Innovation","outcome":"Grammar focus: Present Perfect vs Past Simple. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l17","number":17,"title":"Arts & Entertainment","outcome":"Grammar focus: First Conditional. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l18","number":18,"title":"Global Issues","outcome":"Grammar focus: Present Simple Passive. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l19","number":19,"title":"Free Time & Hobbies","outcome":"Grammar focus: Gerunds vs Infinitives. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l20","number":20,"title":"Cultural Identity","outcome":"Grammar focus: Reported Speech. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l21","number":21,"title":"Making Decisions","outcome":"Grammar focus: Second Conditional. Workbook activities are being prepared.","ready":false},{"id":"su-a2b1-l22","number":22,"title":"Looking Back, Looking Forward","outcome":"Grammar focus: Mixed Review. Workbook activities are being prepared.","ready":false}]};
-const SPEAKUP_A2_B1_SYLLABUS=[["Getting Acquainted","Present Simple (be, have, like)"],["Work & Careers","Present Simple vs Present Continuous"],["Travel & Adventure","Past Simple"],["Technology & Social Media","Adverbs of Frequency + Present Simple"],["Health & Wellbeing","Should / Shouldn't"],["Food & Culture","Comparatives and Superlatives"],["Education & Learning","Past Simple vs Past Continuous"],["Money & Business","Going to for future plans"],["Environment & Climate","Have to / Don't have to"],["Relationships & Family","Relative Clauses"],["Media & News","Can / Could"],["Sports & Fitness","As...as + Adverbs of Manner"],["City vs Countryside","Quantifiers"],["Dreams & Ambitions","Would like to / Want to + infinitive"],["Crime & Justice","Present Perfect"],["Science & Innovation","Present Perfect vs Past Simple"],["Arts & Entertainment","First Conditional"],["Global Issues","Present Simple Passive"],["Free Time & Hobbies","Gerunds vs Infinitives"],["Cultural Identity","Reported Speech"],["Making Decisions","Second Conditional"],["Looking Back, Looking Forward","Mixed Review"]];
-const SPEAKUP_B2_SYLLABUS=[["Getting Acquainted","Present Simple"],["Work & Careers","Present Perfect vs Past Simple"],["Travel & Adventure","Narrative Tenses"],["Technology & Social Media","Present Perfect Continuous"],["Health & Wellbeing","Modals of Advice and Obligation"],["Food & Culture","Comparatives, Superlatives, and Quantifiers"],["Education & Learning","Used to / Would"],["Money & Business","First and Second Conditionals"],["Environment & Climate","Passive Voice"],["Relationships & Family","Relative Clauses"],["Media & News","Reported Speech"],["Sports & Fitness","Modals of Ability and Possibility"],["City vs Countryside","Gerunds and Infinitives"],["Dreams & Ambitions","Future Forms"],["Crime & Justice","Third Conditional"],["Science & Innovation","Modals of Speculation and Deduction"],["Arts & Entertainment","Mixed Conditionals"],["Global Issues","Passive Reporting Structures"],["Free Time & Hobbies","Phrasal Verbs"],["Cultural Identity","Wish / If Only"],["Making Decisions","Question Tags and Indirect Questions"],["Looking Back, Looking Forward","Mixed Review"]];
-const TOPIC_LIBRARY={"Getting Acquainted":{"v":[["hobby","free-time activity"],["hometown","place you come from"],["occupation","job or type of work"],["outgoing","comfortable meeting people"],["background","past education and experience"],["introduce","tell people who someone is"]],"s":["Amina","a new training course","meet new classmates","she did not know how to start","ask simple questions about work, hometown and hobbies","she found two shared interests"]},"Work & Careers":{"v":[["colleague","person you work with"],["deadline","latest time work must finish"],["shift","period of working time"],["promotion","move to a higher job"],["responsibility","duty you manage"],["priority","most important task"]],"s":["Hodan","a busy office","finish a client report","two deadlines arrived together","set priorities and ask a colleague for support","the team finished on time"]},"Travel & Adventure":{"v":[["journey","travel from one place to another"],["destination","place you are travelling to"],["reservation","booking for a seat or room"],["delay","something happening later than planned"],["explore","travel around to learn about a place"],["memorable","special enough to remember"]],"s":["Yusuf","a weekend trip","reach Berbera before sunset","the bus left late","confirm the hotel and change the plan","he still had time to explore the town"]},"Technology & Social Media":{"v":[["device","piece of electronic equipment"],["privacy","control over personal information"],["notification","message about something new"],["upload","send a file to the internet"],["screen time","time spent using screens"],["reliable","able to be trusted"]],"s":["Rahma","a university library","study without distraction","phone notifications kept interrupting her","turn off alerts and check only reliable sources","she completed her assignment more quickly"]},"Health & Wellbeing":{"v":[["symptom","sign of an illness or problem"],["stress","pressure or worry"],["balanced","healthy because needs are considered"],["rest","time to relax and recover"],["habit","something you do regularly"],["recover","become healthy or strong again"]],"s":["Abdi","a health centre","improve his energy","he was tired after several stressful weeks","change two habits and get more rest","his concentration improved"]},"Food & Culture":{"v":[["ingredient","food used to make a dish"],["recipe","instructions for making food"],["traditional","connected with older customs"],["flavour","taste of food or drink"],["portion","amount served to one person"],["hospitality","friendly treatment of guests"]],"s":["Sahra","a family kitchen","prepare a traditional meal","one ingredient was unavailable","adapt the recipe without changing the main flavour","the guests enjoyed the meal"]},"Education & Learning":{"v":[["assignment","work given to a student"],["feedback","comments that help improvement"],["revise","study something again"],["progress","improvement over time"],["strategy","planned way to achieve something"],["concentrate","give full attention"]],"s":["Maryan","a college study room","prepare better for exams","she studied for hours but forgot details","use shorter revision sessions and feedback","her practice scores improved"]},"Money & Business":{"v":[["budget","plan for using money"],["profit","money left after costs"],["expense","money spent"],["customer","person who buys a product or service"],["invest","put resources into future benefit"],["afford","have enough money to pay"]],"s":["Khalid","a small business","plan next month's spending","expenses rose with sales","separate essential costs from optional ones","the business kept enough cash for operations"]},"Environment & Climate":{"v":[["waste","unwanted material"],["recycle","process used material for reuse"],["pollution","harmful substances in the environment"],["conserve","protect from being wasted"],["climate","usual weather of a place"],["resource","something useful people can use"]],"s":["Nimo","a community meeting","reduce plastic waste","many homes used single-use plastic daily","create recycling points and share simple guidance","more families separated their waste"]},"Relationships & Family":{"v":[["relative","person in your family"],["supportive","helpful and encouraging"],["generation","people born in a similar period"],["relationship","connection between people"],["respect","polite consideration"],["dependable","able to be trusted"]],"s":["Fadumo","a family gathering","understand different views","people kept interrupting each other","let each person explain one reason before replies","the discussion became calmer"]},"Media & News":{"v":[["headline","title of a news story"],["source","place information comes from"],["report","information about an event"],["claim","statement that may need evidence"],["bias","preference that influences judgement"],["verify","check that something is true"]],"s":["Omar","a media workshop","check an online story","several headlines gave conflicting information","compare original sources and separate facts from claims","he found one viral post had removed context"]},"Sports & Fitness":{"v":[["stamina","ability to continue physical effort"],["routine","regular way of doing something"],["stretch","lengthen muscles before or after exercise"],["pace","speed of movement"],["recover","return to normal strength"],["consistent","done regularly over time"]],"s":["Anisa","a sports club","prepare for a five-kilometre run","she trained too quickly and became exhausted","reduce her pace and follow a consistent routine","she completed longer sessions comfortably"]},"City vs Countryside":{"v":[["crowded","full of many people"],["convenient","easy and useful"],["peaceful","quiet and calm"],["commute","regular journey between home and work"],["facility","place or service for a purpose"],["traffic","vehicles moving on roads"]],"s":["Hassan","a housing office","choose where to live","the city had more services but heavier traffic","compare cost, commute, facilities and quiet","he identified the option that matched his priorities"]},"Dreams & Ambitions":{"v":[["ambition","strong hope to achieve something"],["goal","something you are trying to achieve"],["achieve","successfully reach a goal"],["opportunity","good chance to do something"],["plan","steps for the future"],["motivation","reason or energy for action"]],"s":["Leyla","a career workshop","move into management","her goal was clear but her plan was too general","break the goal into skills and deadlines","she identified two courses and a mentor"]},"Crime & Justice":{"v":[["evidence","information showing what happened"],["witness","person who saw an event"],["law","rule made by an authority"],["investigate","examine facts carefully"],["court","place where legal cases are decided"],["fair","reasonable and equal"]],"s":["Ismail","a civic education class","understand a legal decision","students confused rumours with evidence","separate witness statements from opinions","the class reached a more careful conclusion"]},"Science & Innovation":{"v":[["research","careful study to discover information"],["experiment","test used to learn something"],["innovation","new idea, method or product"],["device","tool or piece of equipment"],["develop","create or improve over time"],["evidence","facts supporting an idea"]],"s":["Nasra","a university lab","test a low-cost water filter","the first design worked too slowly","change the material and repeat the experiment","the second version worked faster"]},"Arts & Entertainment":{"v":[["performance","event with acting, music or dance"],["audience","people watching or listening"],["creative","able to produce new ideas"],["review","opinion about a film, book or show"],["character","person in a story"],["plot","main events of a story"]],"s":["Hamza","an arts festival","write a useful review","several shows used very different styles","watch one drama and take notes on plot and characters","his review explained strengths and weaknesses"]},"Global Issues":{"v":[["poverty","not having enough money or resources"],["access","ability or right to use something"],["conflict","serious disagreement or fight"],["aid","help such as money, food or services"],["inequality","unfair difference between groups"],["sustainable","able to continue without serious harm"]],"s":["Asha","a development seminar","compare responses to a water shortage","short-term aid did not solve the long-term problem","combine emergency help with local infrastructure","the community reduced dependence on deliveries"]},"Free Time & Hobbies":{"v":[["leisure","free time outside work"],["collect","gather items as a hobby"],["creative","involving imagination"],["relaxing","helping you feel calm"],["skill","ability developed through practice"],["join","become part of a group"]],"s":["Bilal","a community centre","find a suitable hobby","he wanted something relaxing and social","try a weekly photography club","he learned a skill and met new people"]},"Cultural Identity":{"v":[["identity","qualities that make a person or group who they are"],["tradition","custom passed between generations"],["heritage","culture inherited from the past"],["belong","feel accepted as part of a group"],["custom","usual cultural way of behaving"],["preserve","protect so something continues"]],"s":["Zahra","a cultural centre","record family stories","younger relatives knew little about older traditions","interview grandparents and compare memories","the project created conversations across generations"]},"Making Decisions":{"v":[["option","one possible choice"],["priority","something more important than other things"],["consequence","result of an action"],["consider","think carefully about"],["compare","examine similarities and differences"],["decide","choose after thinking"]],"s":["Farah","a project meeting","choose a training provider","one option was cheaper and another had better support","compare cost, quality and schedule","the team chose the option matching its priorities"]},"Looking Back, Looking Forward":{"v":[["progress","improvement over time"],["reflect","think carefully about past experience"],["strength","something you do well"],["challenge","something difficult"],["improve","become better"],["next step","action that should happen next"]],"s":["Samira","an end-of-course review","plan the next stage","she focused only on mistakes","compare first work with recent work","she saw progress and chose one realistic next step"]}};
-const CAREER_LESSON_SPECS=[["Starting point","Present Simple"],["Professional introduction","Present Simple"],["Managing pauses","Present Simple"],["Starting conversations","Present Simple"],["Maintaining conversations","Question forms"],["Ending conversations","Polite forms"],["Role","Present Simple"],["Routines","Present Simple vs Present Continuous"],["Work updates","Present Perfect"],["Past experiences","Past Simple"],["Story sequence","Narrative Tenses"],["Challenge and success","Past Simple"],["International contacts","Present Simple"],["Clarification","Question forms"],["Remote calls","Present Simple vs Present Continuous"],["Problems","Should / Shouldn't"],["Solutions","First Conditional"],["Process explanations","Passive Voice"],["Opinions","Present Simple"],["Agreement","Modals of Advice and Obligation"],["Follow-up messages","Present Perfect"],["Interview introduction","Present Simple"],["Experience","Present Perfect vs Past Simple"],["Strengths","Present Simple"],["STAR: Situation and task","Past Simple"],["STAR: Action and result","Past Simple"],["Lessons learned","Present Perfect"],["Motivation","Would like to / Want to + infinitive"],["Value","First and Second Conditionals"],["Interviewer questions","Question Tags and Indirect Questions"],["Presentation opening","Present Simple"],["Presentation organisation","Present Simple"],["Visual explanation","Comparatives and Superlatives"],["Audience questions","Modals of Ability and Possibility"],["Final interview","Mixed Review"],["Showcase","Mixed Review"]];
-const CAREER_REVISED_LESSON_SPECS=[["Your starting point","Present Simple"],["A strong professional introduction","Present Simple"],["Keep speaking without long pauses","Present Simple"],["Start conversations naturally","Present Simple"],["Show interest and ask follow-ups","Question forms"],["End conversations professionally","Polite forms"],["Describe your work clearly","Present Simple"],["Routines and current priorities","Present Simple vs Present Continuous"],["Give a useful work update","Present Perfect"],["Tell a past experience","Past Simple"],["Sequence a professional story","Narrative Tenses"],["Describe success and challenge","Past Simple"],["Meet international contacts","Present Simple"],["Clarify and confirm meaning","Question forms"],["Phone and video calls","Present Simple vs Present Continuous"],["Describe a workplace problem","Should / Shouldn't"],["Suggest and compare solutions","First Conditional"],["Explain a process step by step","Passive Voice"],["Share opinions in meetings","Present Simple"],["Agree and disagree politely","Modals of Advice and Obligation"],["Messages and follow-up emails","Present Perfect"],["Answer: Tell me about yourself","Present Simple"],["Qualifications and experience","Present Perfect vs Past Simple"],["Strengths and development areas","Present Simple"],["Build a STAR answer","Past Simple"],["Present achievements with evidence","Past Simple"],["Discuss challenges and lessons","Present Perfect"],["Career goals and motivation","Would like to / Want to + infinitive"],["Why should we hire you?","First and Second Conditionals"],["Ask intelligent interview questions","Question Tags and Indirect Questions"],["Open a presentation confidently","Present Simple"],["Organise and connect ideas","Present Simple"],["Explain information and visuals","Comparatives and Superlatives"],["Handle audience questions","Modals of Ability and Possibility"],["Final interview rehearsal","Mixed Review"],["Final showcase and next plan","Mixed Review"]];
-const CAREER_WEEK_VOCAB=[[["goal","something you want to achieve"],["fluency","ability to communicate smoothly"],["pause","short stop while speaking"],["clarify","make meaning clearer"],["confident","feeling sure of yourself"],["progress","improvement over time"]],[["greeting","words used when meeting"],["follow-up","question or action that continues a conversation"],["respond","answer or react"],["transition","phrase that moves to another topic"],["close","end a conversation"],["contact","person you communicate with"]],[["responsibility","duty you manage"],["routine","something done regularly"],["deadline","latest time work must finish"],["update","new information about progress"],["priority","most important task"],["progress","movement toward completion"]],[["experience","something that happened to you"],["challenge","difficult situation"],["solution","answer to a problem"],["result","what happened after an action"],["achievement","important success"],["lesson","useful knowledge gained"]],[["contact","person or organisation you communicate with"],["clarify","make meaning clearer"],["connection","link between people or systems"],["agenda","list of meeting topics"],["repeat","say something again"],["signal","strength of phone or internet connection"]],[["issue","problem needing attention"],["cause","reason something happened"],["option","possible choice"],["solution","way to solve a problem"],["step","one action in a process"],["outcome","final result"]],[["opinion","what you think"],["agree","have the same opinion"],["disagree","have a different opinion"],["suggestion","idea about what should be done"],["action","something that must be done"],["follow-up","communication after a meeting"]],[["background","education and experience"],["role","position or function"],["experience","knowledge gained through work"],["strength","something you do well"],["skill","ability developed through practice"],["responsibility","duty you manage"]],[["situation","context at the start of an example"],["task","what you needed to do"],["action","what you did"],["result","what happened at the end"],["achievement","successful result"],["lesson","something useful learned"]],[["motivation","reason you want to do something"],["contribution","something useful you add"],["value","benefit you bring"],["opportunity","good chance to do something"],["employer","organisation giving jobs"],["question","something asked for information"]],[["opening","beginning of a presentation"],["structure","way parts are organised"],["visual","image, chart or slide"],["point","important idea"],["evidence","information supporting an idea"],["summary","short statement of main ideas"]],[["question","something asked for information"],["clarify","make meaning clearer"],["respond","answer"],["portfolio","collection of work showing progress"],["progress","improvement over time"],["next step","action that comes next"]]];
-const careerSpecs=CAREER_LESSON_SPECS;
-const careerWeekVocab=CAREER_WEEK_VOCAB;
-function pickOptions(correct,pool,index){
-  const out=[correct];
-  for(let i=1;i<pool.length&&out.length<3;i++){const x=pool[(index+i)%pool.length];if(x!==correct&&!out.includes(x))out.push(x)}
-  return out;
-}
-function makeVocabulary(topic,data){
-  const words=data.v.map(x=>x[0]),defs=data.v.map(x=>x[1]);
-  const wordOptions=(i,shift=0)=>pickOptions(data.v[i][0],words,i+shift);
-  const defOptions=(i,shift=0)=>pickOptions(data.v[i][1],defs,i+shift);
-  return {items:[
-    {type:'choice',q:'Match the meaning: '+data.v[0][1]+'.',options:wordOptions(0),answer:data.v[0][0],tag:'vocabulary:meaning'},
-    {type:'choice',q:'You are discussing '+topic.toLowerCase()+'. Which word best expresses this idea: '+data.v[1][1]+'?',options:wordOptions(1,1),answer:data.v[1][0],tag:'vocabulary:context'},
-    {type:'choice',q:'Complete the glossary entry: ___ = '+data.v[2][1]+'.',options:wordOptions(2,2),answer:data.v[2][0],tag:'vocabulary:retrieval'},
-    {type:'choice',q:'A classmate asks for a word meaning â€œ'+data.v[3][1]+'.â€ What should you suggest?',options:wordOptions(3,3),answer:data.v[3][0],tag:'vocabulary:context'},
-    {type:'choice',q:'What does â€œ'+data.v[4][0]+'â€ mean?',options:defOptions(4),answer:data.v[4][1],tag:'vocabulary:reverse-meaning'},
-    {type:'choice',q:'Choose the correct definition of â€œ'+data.v[5][0]+'â€.',options:defOptions(5,1),answer:data.v[5][1],tag:'vocabulary:reverse-meaning'},
-    {type:'choice',q:'Which target word would you use when talking about '+data.v[4][1]+'?',options:wordOptions(4,2),answer:data.v[4][0],tag:'vocabulary:application'},
-    {type:'choice',q:'Pick the best vocabulary label for this idea: '+data.v[5][1]+'.',options:wordOptions(5,3),answer:data.v[5][0],tag:'vocabulary:application'},
-    {type:'exact',q:'Type the target word that means: '+data.v[0][1]+'.',answer:data.v[0][0],min:1,tag:'vocabulary:recall'},
-    {type:'open',q:'Use â€œ'+data.v[1][0]+'â€ in one complete sentence about '+topic.toLowerCase()+'.',min:6,tag:'vocabulary:production'}
-  ]};
-}
-function makeReading(topic,level,data){
-  const [person,place,goal,challenge,action,result]=data.s;
-  const text=level==="B2"
-    ? person+" took part in a focused discussion about "+topic.toLowerCase()+" at "+place+". The aim was to "+goal+". The situation was more complicated than expected because "+challenge+". Instead of reacting immediately, "+person+" decided to "+action+". This produced a useful result: "+result+". Looking back, "+person+" concluded that practical decisions improve when people identify the real problem, act deliberately, and then evaluate what changed."
-    : person+" is learning about "+topic.toLowerCase()+" at "+place+". The main goal is to "+goal+". At first, "+challenge+". To improve the situation, "+person+" decided to "+action+". After that, "+result+". The experience shows that a clear action can make a difficult situation easier.";
-  return {title:topic+" Â· Reading & Listening",text,questions:[
-    {q:"Who is the text mainly about?",options:[person,"A teacher","A visitor"],answer:person,tag:"listening-reading:detail"},
-    {q:"Where does the situation happen?",options:[place,"a sports stadium","a hotel"],answer:place,tag:"listening-reading:detail"},
-    {q:"What is the main goal?",options:[goal,"avoid making any plan","leave immediately"],answer:goal,tag:"listening-reading:main-idea"},
-    {q:"What challenge appears first?",options:[challenge,"everything was already perfect","there was no problem"],answer:challenge,tag:"listening-reading:detail"},
-    {q:"What action does the person take?",options:[action,"ignore the situation","cancel every activity"],answer:action,tag:"listening-reading:sequence"},
-    {q:"What happens after that action?",options:[result,"nothing useful happens","the task is abandoned"],answer:result,tag:"listening-reading:detail"},
-    {q:"Which happened first?",options:[challenge,action,result],answer:challenge,tag:"listening-reading:sequence"},
-    {q:"Which happened after the action?",options:[result,challenge,goal],answer:result,tag:"listening-reading:sequence"},
-    {q:"What does the experience suggest?",options:["A clear action can improve a difficult situation.","Planning never helps.","The best choice is to do nothing."],answer:"A clear action can improve a difficult situation.",tag:"listening-reading:inference"},
-    {q:"What is the main idea?",options:["A person faces a topic-related challenge and responds to it.","The person avoids the topic completely.","The text is only a list of vocabulary."],answer:"A person faces a topic-related challenge and responds to it.",tag:"listening-reading:main-idea"}
-  ]};
-}
-function qg(q,options,answer){return {q,options,answer,tag:"grammar:accuracy"}}
-function grammarQuestions(focus){
-  const f=focus.toLowerCase();
-  if(f.includes("present perfect continuous")) return [
-    qg("Complete: I ___ English for three years.",["have been studying","am studying since","have studied yesterday"],"have been studying"),qg("She ___ all morning.",["has been working","is worked","has working"],"has been working"),qg("Choose the focus on duration.",["They have been waiting since nine.","They waited since nine now.","They are wait since nine."],"They have been waiting since nine."),qg("How long ___ you ___ for this company?",["have / been working","did / been work","are / worked"],"have / been working"),qg("It ___ all day.",["has been raining","has raining","is rained"],"has been raining"),qg("Choose the correct negative.",["I havenâ€™t been sleeping well.","I havenâ€™t been sleep well.","I didnâ€™t been sleeping well."],"I havenâ€™t been sleeping well.")
-  ];
-  if(f.includes("third conditional")) return [
-    qg("Complete: If I had known, I ___ earlier.",["would have called","would call","will have called"],"would have called"),qg("If they ___ earlier, they would have caught the bus.",["had left","left would","have left"],"had left"),qg("Choose the correct past unreal result.",["If we had prepared, we would have succeeded.","If we prepared, we would have succeeded yesterday.","If we had prepare, we will succeed."],"If we had prepared, we would have succeeded."),qg("She would not have missed it if she ___ the reminder.",["had seen","would see","has saw"],"had seen"),qg("If the weather had improved, we ___ outside.",["could have met","could meet yesterday","can have met"],"could have met"),qg("Choose the correct question.",["What would you have done if you had known?","What had you done if you would know?","What will you have done if you knew yesterday?"],"What would you have done if you had known?")
-  ];
-  if(f.includes("mixed conditional")) return [
-    qg("If I had taken that job, I ___ abroad now.",["would be living","would have lived yesterday","will live"],"would be living"),qg("If she were more organised, she ___ the deadline yesterday.",["would not have missed","would not miss yesterday","will not have missed"],"would not have missed"),qg("Choose the past cause with a present result.",["If I had studied medicine, I would be a doctor now.","If I studied medicine yesterday, I am a doctor now.","If I had study medicine, I will be a doctor."],"If I had studied medicine, I would be a doctor now."),qg("If they had saved more, they ___ a house now.",["could own","could have owned yesterday only","will own"],"could own"),qg("If he were more careful, he ___ that mistake.",["would not have made","did not made","will not have made"],"would not have made"),qg("Choose the present condition with a past result.",["If I spoke French, I would have applied for the role.","If I had spoken French, I apply now.","If I speak French, I applied yesterday."],"If I spoke French, I would have applied for the role.")
-  ];
-  if(f.includes("modals of deduction")) return [
-    qg("The lights are on. They ___ be home.",["must","can't","should to"],"must"),qg("He is in Nairobi, so he ___ be at this meeting.",["can't","must","might to"],"can't"),qg("I am not sure; she ___ know the answer.",["might","must definitely","can to"],"might"),qg("Choose the strong past deduction.",["They must have forgotten.","They must forgot.","They have must forgotten."],"They must have forgotten."),qg("The door was locked. He ___ have entered that way.",["can't","must","should"],"can't"),qg("Choose the uncertain past deduction.",["She might have missed the bus.","She might missed the bus.","She might has missed the bus."],"She might have missed the bus.")
-  ];
-  if(f.includes("passive reporting")) return [
-    qg("People believe the plan is effective. The plan ___ effective.",["is believed to be","believes to be","is believing"],"is believed to be"),qg("They say she lives abroad. She ___ abroad.",["is said to live","is said that lives","says to live"],"is said to live"),qg("Choose the correct reporting passive.",["It is thought that prices will rise.","It thinks that prices will rise.","It is thought prices will rising."],"It is thought that prices will rise."),qg("People reported that he had left. He ___ left.",["was reported to have","reported to had","was reporting have"],"was reported to have"),qg("The company ___ to be considering changes.",["is understood","understands","is understand"],"is understood"),qg("Choose the impersonal form.",["It is expected that the policy will change.","It expects the policy changing.","It is expect that policy change."],"It is expected that the policy will change.")
-  ];
-  if(f.includes("phrasal verb")) return [
-    qg("Complete: We need to ___ a solution.",["come up with","come up","come with up"],"come up with"),qg("Please ___ the form before Friday.",["fill in","fill on","fill over"],"fill in"),qg("Choose the sentence meaning postpone.",["They put off the meeting.","They put the meeting up.","They put out the meeting."],"They put off the meeting."),qg("I need to ___ this word in a dictionary.",["look up","look after","look out"],"look up"),qg("Choose the inseparable phrasal verb.",["She looks after her younger brother.","She looks her younger brother after.","She after looks her brother."],"She looks after her younger brother."),qg("The project ___ because funding ended.",["fell through","fell up","fell over with"],"fell through")
-  ];
-  if(f.includes("wish")||f.includes("if only")) return [
-    qg("I wish I ___ more free time now.",["had","have had yesterday","would had"],"had"),qg("If only we ___ the earlier bus.",["had taken","took tomorrow","would take yesterday"],"had taken"),qg("Choose a wish about a present situation.",["I wish I lived closer.","I wish I will live closer.","I wish I have lived closer yesterday."],"I wish I lived closer."),qg("I wish you ___ making that noise.",["would stop","will stopped","had stop now"],"would stop"),qg("Choose a regret about the past.",["If only I had listened.","If only I listen yesterday.","If only I would listened."],"If only I had listened."),qg("She wishes she ___ speak more confidently.",["could","can yesterday","will could"],"could")
-  ];
-  if(f.includes("condition")) return [
-    qg("Complete: If we finish early, we ___ the client.",["will call","called","calling"],"will call"),
-    qg("Complete: If I had more time, I ___ more.",["would practise","will practised","practise yesterday"],"would practise"),
-    qg("Choose the correct first conditional.",["If it rains, we will stay inside.","If it will rain, we stay inside.","If it rained, we will stayed inside."],"If it rains, we will stay inside."),
-    qg("Choose the correct second conditional.",["If I were you, I would ask for help.","If I am you, I would asked.","If I were you, I will ask."],"If I were you, I would ask for help."),
-    qg("Complete: If the price drops, they ___ it.",["will buy","would bought","buying"],"will buy"),
-    qg("Complete: If she knew the answer, she ___ us.",["would tell","will told","tells yesterday"],"would tell"),
-    qg("Choose the real future possibility.",["If demand grows, we will hire more staff.","If demand grew, we would hire more staff.","If demand will grow, we hire."],"If demand grows, we will hire more staff."),
-    qg("Choose the hypothetical situation.",["If I owned the company, I would invest more.","If I own the company, I would invested more.","If I owned it, I will invest."],"If I owned the company, I would invest more."),
-    qg("Complete: If he practises, he ___ improve.",["will","would have","did"],"will"),
-    qg("Complete: What ___ you do if you had the choice?",["would","will","did"],"would")
-  ];
-  if(f.includes("passive")) return [
-    qg("Complete: The report ___ every Friday.",["is published","publishes","is publish"],"is published"),
-    qg("Choose the passive sentence.",["The waste is collected every morning.","Workers collect the waste every morning.","The waste collects workers."],"The waste is collected every morning."),
-    qg("Complete: The bridge ___ in 2010.",["was built","built","was build"],"was built"),
-    qg("Complete: The results ___ tomorrow.",["will be announced","will announce","will be announce"],"will be announced"),
-    qg("Choose the correct form.",["English is spoken in many countries.","English speaks in many countries.","English is speak in many countries."],"English is spoken in many countries."),
-    qg("Complete: These products ___ locally.",["are made","make","are make"],"are made"),
-    qg("Choose the question.",["Where is the coffee grown?","Where does the coffee grown?","Where the coffee is grow?"],"Where is the coffee grown?"),
-    qg("Complete: The meeting ___ because of the weather.",["was cancelled","cancelled itself","was cancel"],"was cancelled"),
-    qg("Choose the agent phrase.",["The book was written by a local author.","The book was written from a local author.","The book wrote by a local author."],"The book was written by a local author."),
-    qg("Complete: New rules ___ next month.",["will be introduced","will introduced","are introduce"],"will be introduced")
-  ];
-  if(f.includes("reported")) return [
-    qg('Direct: "I am tired." Reported: She said she ___.',["was tired","is tired yesterday","were tired"],"was tired"),
-    qg('Direct: "I work here." Reported: He said he ___ there.',["worked","works here now","working"],"worked"),
-    qg('Direct: "I have finished." Reported: She said she ___.',["had finished","has finish","finished tomorrow"],"had finished"),
-    qg("Choose the correct sentence.",["He told me that he was busy.","He said me that he was busy.","He told that me he busy."],"He told me that he was busy."),
-    qg("Choose the correct future backshift.",["She said she would call later.","She said she will called later.","She told she would calls."],"She said she would call later."),
-    qg('Direct: "We can help." Reported: They said they ___ help.',["could","can yesterday","were can"],"could"),
-    qg("Complete: He said he ___ seen the article before.",["had","has yesterday","did"],"had"),
-    qg("Choose the time change.",["today â†’ that day","today â†’ next year","yesterday â†’ tomorrow always"],"today â†’ that day"),
-    qg("Choose the accurate statement.",["Muna said she was studying.","Muna said she is study yesterday.","Muna told she studying."],"Muna said she was studying."),
-    qg('Direct: "I will send it." Reported: He said he ___ send it.',["would","will yesterday","was"],"would")
-  ];
-  if(f.includes("relative")) return [
-    qg("A colleague is someone ___ works with you.",["who","which","where"],"who"),
-    qg("A device is something ___ connects to the internet.",["that","who","where"],"that"),
-    qg("This is the office ___ I work.",["where","who","which person"],"where"),
-    qg("Choose the correct sentence.",["I know a teacher who speaks three languages.","I know a teacher which speaks three languages.","I know a teacher where speaks three languages."],"I know a teacher who speaks three languages."),
-    qg("The book ___ I bought is useful.",["that","who","where"],"that"),
-    qg("Choose the correct place clause.",["Borama is a town where many students study.","Borama is a town who many students study.","Borama is a town which people studies there."],"Borama is a town where many students study."),
-    qg("The person ___ called you is my manager.",["who","where","which place"],"who"),
-    qg("The project ___ we discussed has started.",["that","who","where"],"that"),
-    qg("Best relative word for people:",["who","which","where"],"who"),
-    qg("Best relative word for places:",["where","who","whose person"],"where")
-  ];
-  if(f.includes("present perfect")) return [
-    qg("I ___ never ___ that film.",["have / seen","did / saw","have / saw"],"have / seen"),
-    qg("She ___ just arrived.",["has","did","is"],"has"),
-    qg("Choose the experience question.",["Have you ever worked abroad?","Did you ever worked abroad?","Are you ever work abroad?"],"Have you ever worked abroad?"),
-    qg("We havenâ€™t finished ___.",["yet","yesterday","last week"],"yet"),
-    qg("Choose the correct sentence.",["He has already sent the email.","He already has send the email.","He did already sent the email."],"He has already sent the email."),
-    qg("They ___ worked here for three years.",["have","did","are"],"have"),
-    qg("Choose the past participle of write.",["written","wrote","writed"],"written"),
-    qg("She has ___ a new job.",["found","find","finding"],"found"),
-    qg("Choose the correct negative.",["I havenâ€™t tried that app.","I didnâ€™t tried that app ever.","I havenâ€™t try that app."],"I havenâ€™t tried that app."),
-    qg("How long ___ you lived here?",["have","did","are"],"have")
-  ];
-  if(f.includes("past")) return [
-    qg("Yesterday I ___ the report.",["finished","finish","finishing"],"finished"),
-    qg("Choose the correct negative.",["We didnâ€™t travel last week.","We didnâ€™t travelled last week.","We not travelled last week."],"We didnâ€™t travel last week."),
-    qg("Choose the correct question.",["Did she call you?","Did she called you?","She did call you?"],"Did she call you?"),
-    qg("While she ___, the phone rang.",["was driving","drove always","has driven"],"was driving"),
-    qg("By the time we arrived, the bus ___.",["had left","was leave","has left yesterday"],"had left"),
-    qg("Choose the correct story sentence.",["I was walking home when it started to rain.","I walked home when it was start to rain.","I had walking home when rain started."],"I was walking home when it started to rain."),
-    qg("He ___ a new job in May.",["started","starts","has start"],"started"),
-    qg("Choose the irregular past form of go.",["went","goed","gone yesterday"],"went"),
-    qg("What ___ you doing when it happened?",["were","did","are"],"were"),
-    qg("Choose the correct sequence.",["He had finished before the meeting started.","He has finished before the meeting started yesterday.","He finished before the meeting had starting."],"He had finished before the meeting started.")
-  ];
-  if(f.includes("future")||f.includes("going to")||f.includes("would like")||f.includes("want to")) return [
-    qg("I ___ apply for the course next month.",["am going to","going","will going to"],"am going to"),
-    qg("They ___ launch a new service.",["are going to","is going to","are go to"],"are going to"),
-    qg("Choose the correct question.",["What are you going to do next?","What you are going to do next?","What do you going to do next?"],"What are you going to do next?"),
-    qg("I would like ___ a new skill.",["to learn","learning to","learned"],"to learn"),
-    qg("She wants ___ abroad.",["to study","study to","studying to"],"to study"),
-    qg("Choose a spontaneous decision.",["Iâ€™ll answer the phone.","I am answered the phone tomorrow.","I will to answer."],"Iâ€™ll answer the phone."),
-    qg("Choose a fixed arrangement.",["Iâ€™m meeting the director at 10 tomorrow.","I meet the director yesterday.","I will meeting the director at 10."],"Iâ€™m meeting the director at 10 tomorrow."),
-    qg("Look at those clouds. It ___.",["is going to rain","will raining","rains yesterday"],"is going to rain"),
-    qg("Choose the polite preference.",["Iâ€™d like to apply.","I like apply.","I would like applying."],"Iâ€™d like to apply."),
-    qg("I promise I ___ call you.",["will","am go","will to"],"will")
-  ];
-  if(f.includes("modal")||f.includes("should")||f.includes("can / could")||f.includes("ability")||f.includes("obligation")) return [
-    qg("You ___ get more rest.",["should","should to","shoulds"],"should"),
-    qg("Visitors ___ wear an ID badge.",["must","should maybe","could"],"must"),
-    qg("Employees ___ sign in at reception.",["have to","might","would"],"have to"),
-    qg("Choose no obligation.",["You donâ€™t have to attend.","You mustnâ€™t attend.","You shouldnâ€™t to attend."],"You donâ€™t have to attend."),
-    qg("Choose prohibition.",["You mustnâ€™t smoke here.","You donâ€™t have to smoke here.","You could not smoke here maybe."],"You mustnâ€™t smoke here."),
-    qg("Present ability: I ___ swim.",["can","could yesterday","am can"],"can"),
-    qg("Past ability: When I was ten, I ___ ride a bike.",["could","can","am able"],"could"),
-    qg("Choose the polite request.",["Could you send the file?","Could you to send the file?","Do could you send the file?"],"Could you send the file?"),
-    qg("Future ability:",["I will be able to join next week.","I will can join next week.","I will able join next week."],"I will be able to join next week."),
-    qg("The plan ___ work, but Iâ€™m not sure.",["could","must definitely","can to"],"could")
-  ];
-  if(f.includes("compar")||f.includes("superl")||f.includes("quantifier")||f.includes("as...as")) return [
-    qg("This route is ___ than the other one.",["faster","more fast","fastest"],"faster"),
-    qg("This is the ___ option.",["cheapest","cheaper","more cheap"],"cheapest"),
-    qg("The city is ___ crowded than the village.",["more","most","muchest"],"more"),
-    qg("This option is ___ practical as the first one.",["as","more","most"],"as"),
-    qg("There are ___ students here.",["many","much","a little"],"many"),
-    qg("We donâ€™t have ___ time.",["much","many","a few"],"much"),
-    qg("Choose a small number of countable things.",["a few","a little","much"],"a few"),
-    qg("Choose a small amount of an uncountable thing.",["a little","a few","many"],"a little"),
-    qg("There are ___ cars at night.",["fewer","less","fewest than"],"fewer"),
-    qg("There is ___ noise in the countryside.",["less","fewer","many"],"less")
-  ];
-  if(f.includes("gerund")||f.includes("infinitive")) return [
-    qg("I enjoy ___ in the evening.",["reading","to read after enjoy","read"],"reading"),
-    qg("She decided ___ a new course.",["to take","taking after decide","take to"],"to take"),
-    qg("Choose the form after avoid.",["avoid wasting time","avoid to waste time","avoid waste time"],"avoid wasting time"),
-    qg("Choose the form after want.",["want to learn","want learning","want learn to"],"want to learn"),
-    qg("He suggested ___ earlier.",["leaving","to leave after suggested","leave to"],"leaving"),
-    qg("We hope ___ soon.",["to finish","finishing after hope","finish to"],"to finish"),
-    qg("Choose the accurate sentence.",["Iâ€™m interested in learning photography.","Iâ€™m interested to learning photography.","Iâ€™m interested learn photography."],"Iâ€™m interested in learning photography."),
-    qg("She agreed ___ us.",["to help","helping after agreed","help to us"],"to help"),
-    qg("Choose the form after keep.",["keep practising","keep to practise","keep practise to"],"keep practising"),
-    qg("Choose the correct sentence.",["They plan to join the club.","They plan joining after plan.","They plan join to the club."],"They plan to join the club.")
-  ];
-  if(f.includes("question")) return [
-    qg("Choose the correct direct question.",["Where do you work?","Where you work?","Where does you work?"],"Where do you work?"),
-    qg("Choose the polite indirect question.",["Could you tell me where the station is?","Could you tell me where is the station?","Tell me where is station?"],"Could you tell me where the station is?"),
-    qg("You work here, ___?",["donâ€™t you","do you","arenâ€™t you"],"donâ€™t you"),
-    qg("She isnâ€™t coming, ___?",["is she","isnâ€™t she","does she"],"is she"),
-    qg("They arrived early, ___?",["didnâ€™t they","did they","werenâ€™t they"],"didnâ€™t they"),
-    qg("Do you know ___?",["what time it starts","what time does it start","what time starts it"],"what time it starts"),
-    qg("He can drive, ___?",["canâ€™t he","can he","doesnâ€™t he"],"canâ€™t he"),
-    qg("Could you explain ___?",["why the meeting was cancelled","why was the meeting cancelled","why did cancel the meeting"],"why the meeting was cancelled"),
-    qg("You havenâ€™t seen it, ___?",["have you","havenâ€™t you","did you"],"have you"),
-    qg("Choose the accurate form.",["I wonder whether you could help me.","I wonder could you help me?","I wonder whether could you help."],"I wonder whether you could help me.")
-  ];
-  if(f.includes("present simple")||f.includes("frequency")) return [
-    qg("She ___ in an office.",["works","work","working"],"works"),
-    qg("I ___ coffee every morning.",["drink","drinks","am drink"],"drink"),
-    qg("Choose the correct negative.",["He doesnâ€™t drive to work.","He doesnâ€™t drives to work.","He not drive to work."],"He doesnâ€™t drive to work."),
-    qg("Choose the correct question.",["Where do you live?","Where you live?","Where does you live?"],"Where do you live?"),
-    qg("My brother ___ football.",["likes","like","liking"],"likes"),
-    qg("We ___ two classes on Monday.",["have","has","having"],"have"),
-    qg("Choose the correct be sentence.",["They are students.","They is students.","They be students."],"They are students."),
-    qg("What ___ she do?",["does","do","is"],"does"),
-    qg("Choose the routine sentence.",["I usually start at eight.","I usually starts at eight.","I am usually start at eight."],"I usually start at eight."),
-    qg("Choose the accurate sentence.",["He is from Borama and works in Hargeisa.","He are from Borama and work in Hargeisa.","He from Borama and working Hargeisa."],"He is from Borama and works in Hargeisa.")
-  ];
-  return [
-    qg("Choose the most accurate sentence.",["The team completed the task on time.","The team complete the task yesterday.","The team completing task on time."],"The team completed the task on time."),
-    qg("Choose the correct question.",["What did you learn from the experience?","What you learned from the experience?","What did you learned from experience?"],"What did you learn from the experience?"),
-    qg("Choose the correct connector.",["I was tired, but I finished the work.","I was tired because but finished.","I was tired so but finished."],"I was tired, but I finished the work."),
-    qg("Choose the clear reason.",["I practised because I wanted to improve.","I practised but I wanted because improve.","I practised so because improve."],"I practised because I wanted to improve."),
-    qg("Choose the result connector.",["The deadline changed, so we updated the plan.","The deadline changed because so updated plan.","The deadline changed but therefore because."],"The deadline changed, so we updated the plan."),
-    qg("Choose the correct perfect sentence.",["She has worked here for three years.","She has work here for three years.","She is worked here since three years."],"She has worked here for three years."),
-    qg("Choose the correct advice.",["You should explain the problem clearly.","You should to explain the problem.","You should explaining the problem."],"You should explain the problem clearly."),
-    qg("Choose the future plan.",["We are going to review the results tomorrow.","We going review results tomorrow.","We are go to review tomorrow."],"We are going to review the results tomorrow."),
-    qg("Choose the relative clause.",["A mentor is someone who gives guidance.","A mentor is someone which gives guidance.","A mentor is someone where gives guidance."],"A mentor is someone who gives guidance."),
-    qg("Choose the passive sentence.",["The report was sent after the meeting.","The report sent itself after meeting.","The report was send after meeting."],"The report was sent after the meeting.")
-  ];
-}
-function makeWriting(topic,focus,level){
-  const hi=level==="B2";
-  return {tasks:[
-    {prompt:"Write one complete sentence about "+topic.toLowerCase()+" using one target vocabulary item.",minWords:6},
-    {prompt:"Write one accurate sentence using this grammar focus: "+focus+".",minWords:7},
-    {prompt:"Write one question to gather information about "+topic.toLowerCase()+".",minWords:7},
-    {prompt:"Write two connected sentences about your own experience of "+topic.toLowerCase()+".",minWords:14},
-    {prompt:"Explain one advantage or positive point connected to "+topic.toLowerCase()+".",minWords:18},
-    {prompt:"Explain one challenge connected to "+topic.toLowerCase()+" and give a reason.",minWords:20},
-    {prompt:"Write a short message to a classmate or colleague about "+topic.toLowerCase()+".",minWords:28},
-    {prompt:"Write a short paragraph that uses the target grammar accurately at least twice.",minWords:hi?55:40},
-    {prompt:"Write a structured response with a clear point, reason and example about "+topic.toLowerCase()+".",minWords:hi?75:55},
-    {prompt:"Write a final response on "+topic.toLowerCase()+". Check vocabulary, grammar, sentence clarity and organisation.",minWords:hi?100:70}
-  ]};
-}
-function makeLesson(prefix,number,title,focus,level,data){
-  return {id:prefix+"-l"+number,number,title,outcome:"Build vocabulary, comprehension, grammar and writing for "+title.toLowerCase()+".",ready:true,vocabulary:makeVocabulary(title,data),listening:makeReading(title,level,data),grammar:{focus,items:grammarQuestions(focus)},writing:makeWriting(title,focus,level)};
-}
-function careerData(title,week){
-  const v=careerWeekVocab[week-1];
-  return {v,s:["Amina","a workplace training session","handle "+title.toLowerCase()+" more clearly","the first attempt was unclear and too general","use a simple structure and choose useful expressions","the second attempt was clearer and easier to follow"]};
-}
-function buildCareerBook(id,title,level,specs=CAREER_LESSON_SPECS){
-  return {id,title,level,moduleTitle:title,moduleGoal:"Workbook practice in vocabulary, listening & reading, grammar and writing that supports the live Career Fluency course.",totalLessons:36,lessons:specs.map((x,i)=>makeLesson(id,i+1,x[0],x[1],level,careerData(x[0],Math.floor(i/3)+1)))};
-}
-SPEAKUP_A2_B1_BOOK.lessons=[SPEAKUP_A2_B1_BOOK.lessons[0],...SPEAKUP_A2_B1_SYLLABUS.slice(1).map((x,i)=>makeLesson('su-a2b1',i+2,x[0],x[1],'A2 â†’ B1',TOPIC_LIBRARY[x[0]]))];
-SPEAKUP_A2_B1_BOOK.totalLessons=22;
-function makeBlueprintB2Lesson(x){return{id:x.id,number:x.number,title:x.title,outcome:x.outcome,ready:true,targetVocabulary:x.vocabulary,vocabulary:{items:x.vocabularyItems},listening:{title:x.title+' Â· Reading & Listening',readingText:x.readingText,audioScript:x.audioScript,text:x.audioScript,questions:x.questions},grammar:{focus:x.grammarFocus,rule:x.grammarRule,items:grammarQuestions(x.grammarFocus)},writing:x.writing}}
-const B2_BLUEPRINT=Array.isArray(window.SPEAKUP_B2_BLUEPRINT)?window.SPEAKUP_B2_BLUEPRINT:[];
-const SPEAKUP_B2_BOOK={id:'speakup-b2',title:'SpeakUp English B2',level:'B2',moduleTitle:'SpeakUp English B2',moduleGoal:'Independent workbook practice for vocabulary, listening & reading, grammar and writing that supports the live B2 fluency course.',totalLessons:22,lessons:B2_BLUEPRINT.length===22?B2_BLUEPRINT.map(makeBlueprintB2Lesson):SPEAKUP_B2_SYLLABUS.map((x,i)=>makeLesson('su-b2',i+1,x[0],x[1],'B2',TOPIC_LIBRARY[x[0]]))};
-const CAREER_MUNA_BOOK=buildCareerBook('career-fluency-muna','Career Fluency â€” Muna Edition','A1+/A2 â†’ functional B1',CAREER_REVISED_LESSON_SPECS);
-const CAREER_ABDISALAN_BOOK=buildCareerBook('career-fluency-abdisalan','Career Fluency â€” Abdisalan Edition','A2+ â†’ functional B1');
-const CAREER_ABDISHAKUR_BOOK=buildCareerBook('career-fluency-abdishakur','Career Fluency â€” Abdishakur Edition','A2+ â†’ functional B1',CAREER_REVISED_LESSON_SPECS);
-const BOOK_PACKS={'career-fluency':CAREER_FLUENCY_BOOK,'speakup-a2-b1':SPEAKUP_A2_B1_BOOK,'speakup-b2':SPEAKUP_B2_BOOK,'career-fluency-muna':CAREER_MUNA_BOOK,'career-fluency-abdisalan':CAREER_ABDISALAN_BOOK,'career-fluency-abdishakur':CAREER_ABDISHAKUR_BOOK};
-let COURSE=CAREER_FLUENCY_BOOK,activeBookId='career-fluency';
-const WORKBOOK_STEPS=['vocabulary','listening','grammar','writing'];
-const WORKBOOK_LABELS={vocabulary:'Vocabulary',listening:'Listening & Reading',grammar:'Grammar',writing:'Writing'};
-function bookMeta(id){return getDB().books?.find(b=>b.id===id)||null}
-function studentClass(sid){const u=getDB().users.find(x=>x.id===sid);return getDB().classes.find(c=>u?.classIds?.includes(c.id))||null}
-function bookIdForStudent(sid){const c=studentClass(sid);return c?.bookId||c?.course_id||'career-fluency'}
-function courseForStudent(sid){return BOOK_PACKS[bookIdForStudent(sid)]||CAREER_FLUENCY_BOOK}
-function readyLessons(course=COURSE){return course.lessons.filter(l=>l.ready!==false)}
-function setActiveBook(id){if(!BOOK_PACKS[id])return false;activeBookId=id;COURSE=BOOK_PACKS[id];if(!COURSE.lessons.some(l=>l.id===activeLessonId&&l.ready!==false))activeLessonId=readyLessons(COURSE)[0]?.id||COURSE.lessons[0]?.id;return true}
-function syncActiveBook(){if(!session||session.role!=='student')return;setActiveBook(bookIdForStudent(session.id))}
-function lessonById(id){for(const c of Object.values(BOOK_PACKS)){const hit=c.lessons.find(l=>l.id===id);if(hit)return hit}return null}
-function skillLabel(k){return k==='listening'?'Listening & Reading':cap(k)}
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×NxÓ´èµ©hºÚn¶X§zÍXÛÛœİĞT‘QT—Ñ“QSÖWĞ“ÓÒÏ^ÈšYˆ˜Ø\™Y\‹Y›Y[˜ŞH‹]Hˆ‘[™Û\ÚÛÛ[][šXØ][Ûˆ	ˆØ\™Y\ˆ›Y[˜ŞH‹›]™[ˆLŠÈ8¡¤ˆŒH‹›[Ù[HŒK›[Ù[U]Hˆ‘›Y[˜ŞH›İ[™][ÛœÈ‹›[Ù[QÛØ[ˆZ[]]ÛX]XÈÜXZÚ[™ÈXš]Ë˜]\˜[ÛÛ™\œØ][ÛˆÛÛ›Û[™ÛX\ˆ›Ù™\ÜÚ[Û˜[Ù[‹Y^™\ÜÚ[Û‹ˆ‹›\ÜÛÛœÈ–ŞÈšYˆÌ[H‹›[X™\ˆŒKÙYZÈŒK]Hˆ–[İ\ˆİ\[™ÈÚ[‹›İ]ÛÛYHˆÛÛ\]HHœšY[™HÜXZÚ[™ÈXYÛ›ÜİXÈ[™Y[YHÛ™HÛX\ˆ›Y[˜ŞHÛØ[ˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ“]YH[šÈ›ÜˆH[ÛY[ˆ‹š›Øˆˆ™ØZ[ˆ[šÚ[™È[YHÚ]İ]™XÛÛZ[™ÈÚ[[‹˜ÛŞ™Hˆ—××ÈYH[šÈ›ÜˆH[ÛY[ˆ‹˜[œİÙ\ˆˆ“]‹˜ÚÚXÙ\È–È“]‹“XZÙH‹‘Ú]™H—_KÈ^ˆ•Ú]HYX[ˆ\ø )ˆ‹š›Øˆˆœ™\İ]H[ˆYXH[Ü™HÛX\›H‹˜ÛŞ™Hˆ•Ú]H××È\ø )ˆ‹˜[œİÙ\ˆˆ›YX[ˆ‹˜ÚÚXÙ\È–È›YX[ˆ‹œØ^H‹[—_KÈ^ˆÛİ[[İH™\X]H]Y\İ[ÛÈ‹š›Øˆˆ˜\ÚÈÈX\ˆH]Y\İ[ÛˆYØZ[ˆ‹˜ÛŞ™HˆÛİ[[İH××ÈH]Y\İ[ÛÈ‹˜[œİÙ\ˆˆœ™\X]‹˜ÚÚXÙ\È–Èœ™\X]‹œ™]\›ˆ‹œ™\H—_KÈ^ˆ’[ˆ^H^\šY[˜Ùx )ˆ‹š›Øˆˆ˜ÛÛ›™Xİ[ˆ[œİÙ\ˆÈ™X[Y™H‹˜ÛŞ™Hˆ’[ˆ^H××ø )ˆ‹˜[œİÙ\ˆˆ™^\šY[˜ÙH‹˜ÚÚXÙ\È–È™^\šY[˜ÙH‹™^[\H‹›Ü[š[Ûˆ—_KÈ^ˆ“Û™HÛØ[H]™H\ø )ˆ‹š›Øˆˆœİ]HHX\›š[™ÈÜˆØ\™Y\ˆÛØ[‹˜ÛŞ™Hˆ“Û™H××ÈH]™H\ø )ˆ‹˜[œİÙ\ˆˆ™ÛØ[‹˜ÚÚXÙ\È–È™ÛØ[‹š›Øˆ‹œ™X\ÛÛˆ—_WK™Ü˜[[X\ˆÈ™›Øİ\ÈˆÛÛ\]HÚ[\HÙ[[˜Ù\Ë]Y\İ[Ûˆ›Ü›\Ë[™[™š[š]]™\È›ÜˆÛØ[Ëˆ‹š][\È–ŞÈœHˆÚÛÜÙHHÛÛ\]HÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’H\ÙH[™Û\Ú]ÛÜšËˆ‹’H[™Û\Ú]ÛÜšËˆ‹•\ÙH[™Û\ÚÛÜšËˆ—K˜[œİÙ\ˆˆ’H\ÙH[™Û\Ú]ÛÜšËˆ‹YÈˆ™Ü˜[[X\˜ÛÛ\]K\Ù[[˜ÙHŸKÈœHˆÚÛÜÙHHXØİ\˜]H]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú\™HÈ[İH\ÙH[™Û\ÚÈ‹•Ú\™H[İH\ÙH[™Û\ÚÈ‹•Ú\™HÙ\È[İH\ÙH[™Û\ÚÈ—K˜[œİÙ\ˆˆ•Ú\™HÈ[İH\ÙH[™Û\ÚÈ‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹Y›Ü›HŸKÈœHˆÚÛÜÙHHXØİ\˜]HÛØ[Ù[[˜ÙKˆ‹›Ü[ÛœÈ–È’HØ[ÈÜXZÈ[Ü™HÛÛ™šY[Kˆ‹’HØ[ÜXZÈ[Ü™HÛÛ™šY[Kˆ‹’HØ[ÜXZÚ[™È[Ü™HÛÛ™šY[Kˆ—K˜[œİÙ\ˆˆ’HØ[ÈÜXZÈ[Ü™HÛÛ™šY[Kˆ‹YÈˆ™Ü˜[[X\š[™š[š]]™HŸKÈœHˆÚÛÜÙHHÛÜœ™XİÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’H™Y[ÛÛ™šY[Ú[ˆH™XYˆ‹’H™Y[ÈÛÛ™šY[Ú[ˆH™XYˆ‹’H™Y[[™ÈÛÛ™šY[Ú[ˆH™XYˆ—K˜[œİÙ\ˆˆ’H™Y[ÛÛ™šY[Ú[ˆH™XYˆ‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\HŸKÈœHˆÛÛ\]NˆÛ™H[™ÈH××ÈÙ[\È™XY[™Ëˆ‹›Ü[ÛœÈ–È™È‹™Ù\È‹™Ú[™È—K˜[œİÙ\ˆˆ™È‹YÈˆ™Ü˜[[X\™ÈŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ™YØ]]™Kˆ‹›Ü[ÛœÈ–È’HÈ›İ\ÙH[™Û\Ú]™\H^Kˆ‹’H›İ\ÙH[™Û\Ú]™\H^Kˆ‹’HÙ\È›İ\ÙH[™Û\Ú]™\H^Kˆ—K˜[œİÙ\ˆˆ’HÈ›İ\ÙH[™Û\Ú]™\H^Kˆ‹YÈˆ™Ü˜[[X\›™YØ]]™HŸKÈœHˆÚÛÜÙHH™\İ]Y\İ[Ûˆ›ÜˆHÛØ[ˆ‹›Ü[ÛœÈ–È•Ú]Ûİ[[İHZÙHÈ[\›İ™OÈ‹•Ú][İHÛİ[ZÙH[\›İ™OÈ‹•Ú]Ûİ[ZÙH[İH[\›İ™OÈ—K˜[œİÙ\ˆˆ•Ú]Ûİ[[İHZÙHÈ[\›İ™OÈ‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹[Ü™\ˆŸKÈœHˆÛÛ\]Nˆ^HXZ[ˆY™šXİ[H××ÈÜXZÚ[™È]ZXÚÛKˆ‹›Ü[ÛœÈ–Èš\È‹˜\™H‹˜™H—K˜[œİÙ\ˆˆš\È‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÚÛÜÙHHXØİ\˜]H[YH˜\ÙKˆ‹›Ü[ÛœÈ–È’[ˆÙ[™HÙYZÜËHØ[È[\›İ™Kˆ‹]Ù[™HÙYZÜËHØ[[\›İ™Kˆ‹“ÛˆÙ[™HÙYZÜËH[\›İš[™Ëˆ—K˜[œİÙ\ˆˆ’[ˆÙ[™HÙYZÜËHØ[È[\›İ™Kˆ‹YÈˆ™Ü˜[[X\[YK\˜\ÙHŸKÈœHˆÚÛÜÙHH™\İÛÛXš[™YÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’HØ[ˆ™XYÙ[]ÜÛ[™[İ\ÈÜXZÚ[™È\È\™\‹ˆ‹’HØ[ˆ™XYÙ[™XØ]\ÙHÜÛ[™[İ\ÈÜXZÚ[™È\È\™\‹ˆ‹’HØ[ˆ™XYÙ[ÛÈÜÛ[™[İ\ÈÜXZÚ[™È\È\™\‹ˆ—K˜[œİÙ\ˆˆ’HØ[ˆ™XYÙ[]ÜÛ[™[İ\ÈÜXZÚ[™È\È\™\‹ˆ‹YÈˆ™Ü˜[[X\˜ÛÛ›™XİÜˆŸW_K›\İ[š[™ÈÈ]Hˆ“^H[™Û\Úİ\[™ÈÚ[‹œ]Y\İ[ÛœÈ–ŞÈœHˆ•Ú]\ÈHÜXZÙ\ˆXZ[›H\ØÜšXš[™ÏÈ‹›Ü[ÛœÈ–È•Z\ˆİ\œ™[[™Û\ÚXš[]H[™Û™HÛØ[‹HÛY^H[ˆ‹H™]È›ØˆÙ™™\ˆ—K˜[œİÙ\ˆˆ•Z\ˆİ\œ™[[™Û\ÚXš[]H[™Û™HÛØ[‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸKÈœHˆ•Ú\™HÙ\ÈHÜXZÙ\ˆ\ÙH[™Û\Ú]ÛÜšÏÈ‹›Ü[ÛœÈ–È”™XY[™ÈY\ÜØYÙ\È[™ÜXZÚ[™ÈÚ]ÛÛXYİY\È‹“Û›HÜš][™È\ÜØ^\È‹“Û›H[œİÙ\š[™ÈÛ™HØ[È—K˜[œİÙ\ˆˆ”™XY[™ÈY\ÜØYÙ\È[™ÜXZÚ[™ÈÚ]ÛÛXYİY\È‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆÈÛ›[™OÈ‹›Ü[ÛœÈ–È•Ø]Ú\ÈšY[ÜÈ[™ÙX\˜Ú\È›Üˆ[™›Ü›X][Ûˆ‹•XXÚ\ÈHÛ\ÜÈ‹^\ÈZ\›[™HXÚÙ]È—K˜[œİÙ\ˆˆ•Ø]Ú\ÈšY[ÜÈ[™ÙX\˜Ú\È›Üˆ[™›Ü›X][Ûˆ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚXÚÚÚ[™Y[ÈÛÛY›ÜX›OÈ‹›Ü[ÛœÈ–È”™XY[™È‹”ÜÛ[™[İ\ÈÜXZÚ[™È‹‘Ú]š[™È™\Ù[][ÛœÈ—K˜[œİÙ\ˆˆ”™XY[™È‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]\[œÈÚ[ˆHÜXZÙ\ˆ]\İ[œİÙ\ˆ]ZXÚÛOÈ‹›Ü[ÛœÈ–È•^HÛÛY][Y\È]\ÙHÛÈÛ™È‹•^H[Ø^\ÈÚ[™ÙHHÜXÈ‹•^HÜXZÈ]XÚ˜\İ\ˆ—K˜[œİÙ\ˆˆ•^HÛÛY][Y\È]\ÙHÛÈÛ™È‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚHÙ\ÈHÜXZÙ\ˆ]\ÙOÈ‹›Ü[ÛœÈ–È•^H\™HÙX\˜Ú[™È›ÜˆHšYÚÛÜ™‹•^H\™H›Ü™Y‹•^HØ[››İX\ˆH]Y\İ[Ûˆ—K˜[œİÙ\ˆˆ•^H\™HÙX\˜Ú[™È›ÜˆHšYÚÛÜ™‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú[ˆÙ\ÈHÜXZÙ\ˆÛÛ[][šXØ]H™]\È‹›Ü[ÛœÈ–È•Ú[ˆ^H]™HH™]ÈÙXÛÛ™ÈÈ[šÈ‹•Ú[ˆ^H™XYH[ØÜš\‹•Ú[ˆ^H]›ÚY]Y\İ[ÛœÈ—K˜[œİÙ\ˆˆ•Ú[ˆ^H]™HH™]ÈÙXÛÛ™ÈÈ[šÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]\ÈHÙ[™K]ÙYZÈÜXZÚ[™ÈÛØ[È‹›Ü[ÛœÈ–È”ÜXZÈ›ÜˆÛÈZ[]\ÈÚ]™]Ù\ˆİÜÈ‹•Üš]HH[‹\YÙH™\Ü‹“X\›ˆÛ™H[™™YÜ˜[[X\ˆ[\È—K˜[œİÙ\ˆˆ”ÜXZÈ›ÜˆÛÈZ[]\ÈÚ]™]Ù\ˆİÜÈ‹YÈˆ›\İ[š[™Î™ÛØ[ŸKÈœHˆ•Ú]İ˜]YŞHÙ\ÈHÜXZÙ\ˆØ[È\ÙHÛÛ™šY[OÈ‹›Ü[ÛœÈ–È\ÚÈ›Üˆ™\]][Ûˆ‹]›ÚYY™šXİ[]Y\İ[ÛœÈ‹•˜[œÛ]H]™\HÙ[[˜ÙH—K˜[œİÙ\ˆˆ\ÚÈ›Üˆ™\]][Ûˆ‹YÈˆ›\İ[š[™Îœİ˜]YŞHŸKÈœHˆ•ÚXÚ˜\ÙH™\İİ[[X\š^™\ÈHY\ÜØYÙOÈ‹›Ü[ÛœÈ–È’Û›İÈ[İ\ˆİ\[™ÈÚ[[ˆÙ]HYX\İ\˜X›HÛØ[ˆ‹”\™™XİÜ˜[[X\ˆ]\İÛÛYHš\œİˆ‹“Û›H™XY[™ÈX]\œÈ›Üˆ›Y[˜ŞKˆ—K˜[œİÙ\ˆˆ’Û›İÈ[İ\ˆİ\[™ÈÚ[[ˆÙ]HYX\İ\˜X›HÛØ[ˆ‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]Ú\™H[İH\ÙH[™Û\Úˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]HÚÚ[[İH[™XYHÈÙ[ˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]HÜXZÚ[™ÈÚ]X][Ûˆ]™Y[ÈY™šXİ[ˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HHÛÛ\]H]Y\İ[Ûˆ[İHÛİ[\ÚÈHXXÚ\ˆX›İ][İ\ˆ[™Û\Úˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•\ÙH8 '[ˆ^H^\šY[˜Ùx )¸ 'H[ˆHYHÙ[[˜ÙKˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•\ÙH8 'Û™HÛØ[H]™H\ø )¸ 'HÈİ]HHYX\İ\˜X›HÛØ[ˆ‹›Z[•ÛÜ™ÈKÈœ›Û\ˆ‘^Z[ˆÚH]ÛØ[X]\œÈÈ[İH[ˆ¸ $ÌÈÙ[[˜Ù\Ëˆ‹›Z[•ÛÜ™ÈŒM_KÈœ›Û\ˆ‘\ØÜšX™HÛ™HÚ]X][ÛˆÚ\™H[İH™YY[™Û\Ú[™Ú]\İX[H\[œËˆ‹›Z[•ÛÜ™ÈŒŒKÈœ›Û\ˆ‘˜YİYÙNˆÜš]HHÚÜ8 $ÍŒÛÜ™Ù[‹YXYÛ›ÜİXÎˆİ™[™İY™šXİ[K[™İ˜]YŞKˆ‹›Z[•ÛÜ™ÈKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜš]HHÌ8 $ÎLÛÜ™İ\[™Ë\Ú[›Ùš[H][İHØ[ˆ\ÙHÈ™\\™H[İ\ˆÛË[Z[]H˜\Ù[[™Kˆ‹›Z[•ÛÜ™ÈÌW_Kœ™]šY]ÈÈšÙ^]ÛÜ™Èˆ\ÙH0­Èİ™[™İ0­ÈY™šXİ[H0­ÈÛØ[‹›Z\ÜÚ[Ûˆˆ”ÜXZÈ›ÜˆÛÈZ[]\ÈX›İ]ÚÈ[İH\™KİÈ[İH\ÙH[™Û\Ú[™Ú][İHØ[ÈXÚY]™H[ˆÙ[™HÙYZÜËˆŸ_KÈšYˆÌ[ˆ‹›[X™\ˆŒ‹ÙYZÈŒK]HˆHİ›Û™È›Ù™\ÜÚ[Û˜[[›ÙXİ[Ûˆ‹›İ]ÛÛYHˆ’[›ÙXÙH[İ\œÙ[ˆÚ]HÛX\ˆ™YÚ[›š[™Ë\ÙY[]Z[È[™H›ÜØ\™[ÛÚÚ[™È[™[™Ëˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ’Hİ\œ™[HÛÜšÈ\ø )ˆ‹š›Øˆˆœİ]H[İ\ˆ™\Ù[›ÛH‹˜ÛŞ™Hˆ’H××ÈÛÜšÈ\ø )ˆ‹˜[œİÙ\ˆˆ˜İ\œ™[H‹˜ÚÚXÙ\È–È˜İ\œ™[H‹˜İ\œ™[‹˜İ\œ™[˜ŞH—_KÈ^ˆ“^H˜XÚÙÜ›İ[™\È[¸ )ˆ‹š›Øˆˆ™\ØÜšX™HYXØ][ÛˆÜˆ›Ù™\ÜÚ[Û˜[šY[‹˜ÛŞ™Hˆ“^H××È\È[¸ )ˆ‹˜[œİÙ\ˆˆ˜˜XÚÙÜ›İ[™‹˜ÚÚXÙ\È–È˜˜XÚÙÜ›İ[™‹˜˜XÚÈ‹š\İÜH—_KÈ^ˆ’x &[H™\ÜÛœÚX›H›Ü¸ )ˆ‹š›Øˆˆ™^Z[ˆHXZ[ˆ]H‹˜ÛŞ™Hˆ’x &[H××È›Ü¸ )ˆ‹˜[œİÙ\ˆˆœ™\ÜÛœÚX›H‹˜ÚÚXÙ\È–Èœ™\ÜÛœÚX›H‹œ™\ÜÛœÙH‹œ™\ÜÛœÚXš[]H—_KÈ^ˆ’x &[H\Xİ[\›H[\™\İY[¸ )ˆ‹š›Øˆˆ›˜[YHH›Ù™\ÜÚ[Û˜[[\™\İ‹˜ÛŞ™Hˆ’x &[H××È[\™\İY[¸ )ˆ‹˜[œİÙ\ˆˆœ\Xİ[\›H‹˜ÚÚXÙ\È–Èœ\Xİ[\›H‹œ\Xİ[\ˆ‹œ\H—_KÈ^ˆ“^Hİ\œ™[ÛØ[\Èø )ˆ‹š›Øˆˆ™š[š\ÚÚ]H]\™H\™Xİ[Ûˆ‹˜ÛŞ™Hˆ“^H××ÈÛØ[\Èø )ˆ‹˜[œİÙ\ˆˆ˜İ\œ™[‹˜ÚÚXÙ\È–È˜İ\œ™[‹˜İ\œ™[H‹˜Ø\™Y\ˆ—_WK™Ü˜[[X\ˆÈ™›Øİ\Èˆ”™\Ù[Ú[\HÚ]™K]™H[™ÛÜšÎÈÙ\[™ÈY\ˆ8 '™\ÜÛœÚX›H›Ü¸ 'NÈ™XØ]\ÙH›Üˆ™X\ÛÛœËˆ‹š][\È–ŞÈœHˆÚÛÜÙHHXØİ\˜]H›ÛHÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’Hİ\œ™[HÛÜšÈ\ÈH›Ú™Xİ\ÜÚ\İ[ˆ‹’Hİ\œ™[HÛÜšÜÈ\ÈH›Ú™Xİ\ÜÚ\İ[ˆ‹’H[Hİ\œ™[HÛÜšÈ\ÈH›Ú™Xİ\ÜÚ\İ[ˆ—K˜[œİÙ\ˆˆ’Hİ\œ™[HÛÜšÈ\ÈH›Ú™Xİ\ÜÚ\İ[ˆ‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ˜XÚÙÜ›İ[™Ù[[˜ÙKˆ‹›Ü[ÛœÈ–È“^H˜XÚÙÜ›İ[™\È[ˆYXØ][Û‹ˆ‹“^H˜XÚÙÜ›İ[™\™H[ˆYXØ][Û‹ˆ‹“^H˜XÚÙÜ›İ[™[ˆ\ÈYXØ][Û‹ˆ—K˜[œİÙ\ˆˆ“^H˜XÚÙÜ›İ[™\È[ˆYXØ][Û‹ˆ‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ™\ÜÛœÚXš[]HÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’x &[H™\ÜÛœÚX›H›Üˆ™\\š[™È™\ÜËˆ‹’x &[H™\ÜÛœÚX›HÈ™\\™H™\ÜËˆ‹’H™\ÜÛœÚX›H›Üˆ™\\š[™È™\ÜËˆ—K˜[œİÙ\ˆˆ’x &[H™\ÜÛœÚX›H›Üˆ™\\š[™È™\ÜËˆ‹YÈˆ™Ü˜[[X\™Ù\[™ŸKÈœHˆÚÛÜÙHH™\İ™X\ÛÛ‹ˆ‹›Ü[ÛœÈ–È’H[š›ŞH^H›ÛH™XØ]\ÙHHÛÛ™H›Ø›[\Ëˆ‹’H[š›ŞH^H›ÛH™XØ]\ÙHÙˆHÛÛ™H›Ø›[\Ëˆ‹’H[š›ŞH^H›ÛH™XØ]\ÙHÛÛ™H›Ø›[\Ëˆ—K˜[œİÙ\ˆˆ’H[š›ŞH^H›ÛH™XØ]\ÙHHÛÛ™H›Ø›[\Ëˆ‹YÈˆ™Ü˜[[X\˜™XØ]\ÙHŸKÈœHˆÛÛ\]NˆH××ÈÛÈXZ[ˆ™\ÜÛœÚXš[]Y\Ëˆ‹›Ü[ÛœÈ–Èš]™H‹š\È‹š]š[™È—K˜[œİÙ\ˆˆš]™H‹YÈˆ™Ü˜[[X\š]™HŸKÈœHˆÚÛÜÙHHÛÜœ™XİİXš™Xİ]™\˜ˆYÜ™Y[Y[ˆ‹›Ü[ÛœÈ–È”ÚHÛÜšÜÈÚ][\›˜][Û˜[ÛY[Ëˆ‹”ÚHÛÜšÈÚ][\›˜][Û˜[ÛY[Ëˆ‹”ÚHÛÜšÚ[™ÈÚ][\›˜][Û˜[ÛY[Ëˆ—K˜[œİÙ\ˆˆ”ÚHÛÜšÜÈÚ][\›˜][Û˜[ÛY[Ëˆ‹YÈˆ™Ü˜[[X\\™\\œÛÛˆŸKÈœHˆÛÛ\]Nˆ^Hİ\œ™[ÛØ[\È××ÈXYH\™Ù\ˆX[Kˆ‹›Ü[ÛœÈ–ÈÈ‹™›Üˆ‹˜]—K˜[œİÙ\ˆˆÈ‹YÈˆ™Ü˜[[X\š[™š[š]]™HŸKÈœHˆÚÛÜÙHH˜]\˜[Ù[[˜ÙKˆ‹›Ü[ÛœÈ–È’x &[H\Xİ[\›H[\™\İY[ˆYÚ][YXØ][Û‹ˆ‹’H\Xİ[\›H[\™\İYYÚ][YXØ][Û‹ˆ‹’x &[H\Xİ[\ˆ[\™\İ[ˆYÚ][YXØ][Û‹ˆ—K˜[œİÙ\ˆˆ’x &[H\Xİ[\›H[\™\İY[ˆYÚ][YXØ][Û‹ˆ‹YÈˆ™Ü˜[[X\˜ÛÛØØ][ÛˆŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú]\™H[İH™\ÜÛœÚX›H›ÜÈ‹•Ú][İH\™H™\ÜÛœÚX›H›ÜÈ‹•Ú]È™\ÜÛœÚX›H[İH›ÜÈ—K˜[œİÙ\ˆˆ•Ú]\™H[İH™\ÜÛœÚX›H›ÜÈ‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹Y›Ü›HŸKÈœHˆÚÛÜÙHH™\İ[™[™Ëˆ‹›Ü[ÛœÈ–È“^Hİ\œ™[ÛØ[\ÈÈ[\›İ™H^HXY\œÚ\ÚÚ[Ëˆ‹“^Hİ\œ™[ÛØ[[\›İ™HXY\œÚ\ÚÚ[Ëˆ‹“^Hİ\œ™[ÛØ[\È[\›İš[™ÈÈXY\œÚ\ÚÚ[Ëˆ—K˜[œİÙ\ˆˆ“^Hİ\œ™[ÛØ[\ÈÈ[\›İ™H^HXY\œÚ\ÚÚ[Ëˆ‹YÈˆ™Ü˜[[X\š[™š[š]]™HŸW_K›\İ[š[™ÈÈ]HˆH›Ù™\ÜÚ[Û˜[[›ÙXİ[Ûˆ‹œ]Y\İ[ÛœÈ–ŞÈœHˆ•Ú]\È\ÜØ[¸ &\Èİ\œ™[›ÛOÈ‹›Ü[ÛœÈ–È”›Ú™Xİ\ÜÚ\İ[‹”Ú]Hİ\\š\ÛÜˆ‹‘[™Û\ÚXXÚ\ˆ—K˜[œİÙ\ˆˆ”›Ú™Xİ\ÜÚ\İ[‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]\È\È›Ù™\ÜÚ[Û˜[˜XÚÙÜ›İ[™È‹›Ü[ÛœÈ–ÈÛÛœİXİ[Ûˆ[›š[™È‹“YYXÚ[™H‹XØÛİ[[™È—K˜[œİÙ\ˆˆÛÛœİXİ[Ûˆ[›š[™È‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ’İÈÛ™È\ÈHÛÜšÙYÚ]HX[OÈ‹›Ü[ÛœÈ–È[[ÜİÛÈYX\œÈ‹•[ˆYX\œÈ‹•ÛÈ[ÛÈ—K˜[œİÙ\ˆˆ[[ÜİÛÈYX\œÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚXÚ\ÚÈ\ÈÛ™HÙˆ\È™\ÜÛœÚXš[]Y\ÏÈ‹›Ü[ÛœÈ–È”™\\š[™ÈÙYZÛH\]\È‹•XXÚ[™ÈX][X]XÜÈ‹”Ù[[™ÈÛÛœİXİ[ÛˆX]\šX[È—K˜[œİÙ\ˆˆ”™\\š[™ÈÙYZÛH\]\È‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚH\ÈH[\™\İY[ˆ[›š[™ÏÈ‹›Ü[ÛœÈ–È’HZÙ\È\›š[™ÈÛÛ\XØ]Y›Ú™XİÈ[ÈÛX\ˆİ\È‹’HØ[ÈÈ]›ÚYX[]ÛÜšÈ‹’H\ÛZÙ\È›Ú™Xİ[™›Ü›X][Ûˆ—K˜[œİÙ\ˆˆ’HZÙ\È\›š[™ÈÛÛ\XØ]Y›Ú™XİÈ[ÈÛX\ˆİ\È‹YÈˆ›\İ[š[™Îœ™X\ÛÛˆŸKÈœHˆ•ÚÈÙ\ÈHÛÜšÈÛÜÙ[HÚ]È‹›Ü[ÛœÈ–È‘[™Ú[™Y\œÈ[™Ú]Hİ\\š\ÛÜœÈ‹“Û›Hİ\İÛY\œÈ‹”ØÚÛÛXXÚ\œÈ—K˜[œİÙ\ˆˆ‘[™Ú[™Y\œÈ[™Ú]Hİ\\š\ÛÜœÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚH\ÈÛÛ[][šXØ][Ûˆ[\Ü[[ˆ\È›ÛOÈ‹›Ü[ÛœÈ–È’HÛÜšÜÈÚ]Y™™\™[›Ú™XİÛÛXYİY\È‹’H™]™\ˆÚ\™\È[™›Ü›X][Ûˆ‹’HÛÜšÜÈ[Û™H—K˜[œİÙ\ˆˆ’HÛÜšÜÈÚ]Y™™\™[›Ú™XİÛÛXYİY\È‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]\È\È]\™HØ\™Y\ˆÛØ[È‹›Ü[ÛœÈ–È“XY\™Ù\ˆ›Ú™XİÈ‹“X]™HÛÛœİXİ[Ûˆ[[YYX][H‹”İYHYYXÚ[™H—K˜[œİÙ\ˆˆ“XY\™Ù\ˆ›Ú™XİÈ‹YÈˆ›\İ[š[™Î™ÛØ[ŸKÈœHˆ•Ú][™Û\ÚXš[]HÙ\ÈHØ[È[\›İ™OÈ‹›Ü[ÛœÈ–ÈÛÛ[][šXØ]HÛÛ™šY[H[™^Z[ˆ›Ú™Xİ[™›Ü›X][ÛˆÛX\›H‹”™XYÛ›HšXİ[Ûˆ‹“Y[[Üš^™HÜ˜[[X\ˆ\›Z[›ÛÙŞH—K˜[œİÙ\ˆˆÛÛ[][šXØ]HÛÛ™šY[H[™^Z[ˆ›Ú™Xİ[™›Ü›X][ÛˆÛX\›H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚXÚÜ™\ˆ™\İX]Ú\ÈH[›ÙXİ[ÛÈ‹›Ü[ÛœÈ–È”›ÛH8¡¤ˆ˜XÚÙÜ›İ[™8¡¤ˆ™\ÜÛœÚXš[]Y\È8¡¤ˆ[\™\İ8¡¤ˆÛØ[‹‘ÛØ[8¡¤ˆØ˜H8¡¤ˆ˜[Z[H8¡¤ˆ›ÛH‹”›Ø›[H8¡¤ˆ\ÛÙŞH8¡¤ˆÛÛÙYH—K˜[œİÙ\ˆˆ”›ÛH8¡¤ˆ˜XÚÙÜ›İ[™8¡¤ˆ™\ÜÛœÚXš[]Y\È8¡¤ˆ[\™\İ8¡¤ˆÛØ[‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]H[İ\ˆİ\œ™[›ÛHÜˆİYHİ]\È[ˆÛ™HÛÛ\]HÙ[[˜ÙKˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙH™YÚ[›š[™È8 '^H˜XÚÙÜ›İ[™\È[¸ )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™H™\ÜÛœÚXš[]H\Ú[™È8 'x &[H™\ÜÛœÚX›H›Ü¸ )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]H›Ù™\ÜÚ[Û˜[[\™\İˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ][İ\ˆİ\œ™[Ø\™Y\ˆÛØ[ˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆYH™X\ÛÛˆ\Ú[™È8 '™XØ]\Ùx 'Kˆ‹›Z[•ÛÜ™ÈKÈœ›Û\ˆ•Üš]H¸ $ÌÈÙ[[˜Ù\È^Z[š[™È[İ\ˆ›ÛHÈH™]ÈÛÛXYİYKˆ‹›Z[•ÛÜ™ÈŒNKÈœ›Û\ˆ•Üš]HHÚÜ[›ÙXİ[Ûˆ][˜ÛY\È›ÛK˜XÚÙÜ›İ[™[™™\ÜÛœÚXš[]Kˆ‹›Z[•ÛÜ™ÈŒÌKÈœ›Û\ˆ‘˜YİYÙNˆY[İ\ˆ›Ù™\ÜÚ[Û˜[[\™\İ[™]\™HÛØ[ÈXZÙHHL8 $ÍÌÛÜ™[›ÙXİ[Û‹ˆ‹›Z[•ÛÜ™ÈLKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜš]H[ˆ8 $ÌLÛÜ™›Ù™\ÜÚ[Û˜[[›ÙXİ[ÛˆÚ]HÛX\ˆ™YÚ[›š[™Ë]™[ÜY[[™›ÜØ\™[ÛÚÚ[™È[™[™Ëˆ‹›Z[•ÛÜ™ÈW_Kœ™]šY]ÈÈšÙ^]ÛÜ™Èˆœ›ÛH0­È˜XÚÙÜ›İ[™0­È™\ÜÛœÚXš[]H0­È[\™\İ0­ÈÛØ[‹›Z\ÜÚ[Ûˆˆ‘[]™\ˆHL\ÙXÛÛ™›Ù™\ÜÚ[Û˜[[›ÙXİ[ÛˆÚ]İ]™XY[™È[Ù[[˜Ù\ËˆŸ_KÈšYˆÌ[È‹›[X™\ˆŒËÙYZÈŒK]Hˆ’ÙY\ÜXZÚ[™ÈÚ]İ]Û™È]\Ù\È‹›İ]ÛÛYHˆ•\ÙH[šÚ[™È˜\Ù\ËÛÛ›™XİÜœÈ[™™\Z\ˆİ˜]YÚY\ÈÈXZ[Z[ˆ[İ\ˆ\›‹ˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ•\™H\™HÛÈXZ[ˆ™X\ÛÛœËˆ‹š›Øˆˆ›Ü™Ø[š\ÙH[ˆ[œİÙ\ˆ™Y›Ü™HÚ]š[™È]Z[È‹˜ÛŞ™Hˆ•\™H\™HÛÈXZ[ˆ××Ëˆ‹˜[œİÙ\ˆˆœ™X\ÛÛœÈ‹˜ÚÚXÙ\È–Èœ™X\ÛÛœÈ‹œ™\İ[È‹™^[\\È—_KÈ^ˆ•Hš\œİÚ[\ø )ˆ‹š›Øˆˆœİ\[İ\ˆš\œİYXH‹˜ÛŞ™Hˆ•Hš\œİ××È\ø )ˆ‹˜[œİÙ\ˆˆœÚ[‹˜ÚÚXÙ\È–ÈœÚ[‹œXÙH‹œ\—_KÈ^ˆ[›İ\ˆ[™È\ø )ˆ‹š›Øˆˆ˜YHÙXÛÛ™YXH‹˜ÛŞ™Hˆ[›İ\ˆ××È\ø )ˆ‹˜[œİÙ\ˆˆ[™È‹˜ÚÚXÙ\È–È[™È‹œ™X\ÛÛš[™È‹™^[\Y—_KÈ^ˆ‘›Üˆ^[\x )ˆ‹š›Øˆˆœİ\Ü[ˆYXHÚ]]šY[˜ÙH‹˜ÛŞ™Hˆ‘›Üˆ××ø )ˆ‹˜[œİÙ\ˆˆ™^[\H‹˜ÚÚXÙ\È–È™^[\H‹œ™X\ÛÛˆ‹˜Ø\ÙH—_KÈ^ˆ“]YHØ^H][›İ\ˆØ^Kˆ‹š›Øˆˆœ™\Z\ˆ[ˆ[˜ÛX\ˆÙ[[˜ÙH‹˜ÛŞ™Hˆ“]YHØ^H][›İ\ˆ××Ëˆ‹˜[œİÙ\ˆˆØ^H‹˜ÚÚXÙ\È–ÈØ^H‹ÛÜ™‹[YH—_WK™Ü˜[[X\ˆÈ™›Øİ\Èˆ’›Ú[ˆYX\ÈÚ][™]™XØ]\ÙH[™ÛÎÈÜ™Ø[š\ÙHÛË\Ú[[œİÙ\œËˆ‹š][\È–ŞÈœHˆÚÛÜÙHH™\İÛÛ›™XİÜˆH\ÙH[™Û\Ú]ÛÜšÈ××ÈHÜXZÈÚ][\›˜][Û˜[ÛY[Ëˆ‹›Ü[ÛœÈ–È˜™XØ]\ÙH‹˜]‹œÛÈ—K˜[œİÙ\ˆˆ˜™XØ]\ÙH‹YÈˆ™Ü˜[[X\˜ÛÛ›™XİÜ‹X™XØ]\ÙHŸKÈœHˆÚÛÜÙHH™\İÛÛ›™XİÜˆH[™\œİ[™HÜXË××ÈHÛÛY][Y\È™YY[Ü™H[YHÈ[œİÙ\‹ˆ‹›Ü[ÛœÈ–È˜]‹˜™XØ]\ÙH‹œÛÈ—K˜[œİÙ\ˆˆ˜]‹YÈˆ™Ü˜[[X\˜ÛÛ›™XİÜ‹X]ŸKÈœHˆÚÛÜÙHH™\İÛÛ›™XİÜˆHØ[ÈÛÜšÈ[\›˜][Û˜[K××ÈH˜Xİ\ÙH[™Û\Ú]™\H^Kˆ‹›Ü[ÛœÈ–ÈœÛÈ‹˜]‹˜™XØ]\ÙH—K˜[œİÙ\ˆˆœÛÈ‹YÈˆ™Ü˜[[X\˜ÛÛ›™XİÜ‹\ÛÈŸKÈœHˆÚÛÜÙHHÙ[[˜ÙH]YÈ[™›Ü›X][Û‹ˆ‹›Ü[ÛœÈ–È’H™XY\XÛ\È[™HØ]ÚšY[ÜËˆ‹’H™XY\XÛ\È]HØ]ÚšY[ÜÈ™XØ]\ÙKˆ‹’H™XY\XÛ\ÈÛÈ]šY[ÜËˆ—K˜[œİÙ\ˆˆ’H™XY\XÛ\È[™HØ]ÚšY[ÜËˆ‹YÈˆ™Ü˜[[X\˜ÛÛ›™XİÜ‹X[™ŸKÈœHˆÚÛÜÙHH™\İÜ™Ø[š\ÙYÜ[š[™Ëˆ‹›Ü[ÛœÈ–È•\™H\™HÛÈXZ[ˆ™X\ÛÛœËˆ‹™XØ]\ÙHÛÈ™X\ÛÛœÈ\™Kˆ‹•ÛÈXZ[ˆ\™H™X\ÛÛœËˆ—K˜[œİÙ\ˆˆ•\™H\™HÛÈXZ[ˆ™X\ÛÛœËˆ‹YÈˆ™Ü˜[[X\›Ü™Ø[š\Ø][ÛˆŸKÈœHˆÛÛ\]NˆHš\œİÚ[××ÈÛÛ[][šXØ][Ûˆ]ÛÜšËˆ‹›Ü[ÛœÈ–Èš\È‹˜\™H‹˜™H—K˜[œİÙ\ˆˆš\È‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÚÛÜÙHH™\İ^[\HÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È‘›Üˆ^[\KHÜXZÈÚ][\›˜][Û˜[š\Ú]ÜœËˆ‹‘›Üˆ^[\H™XØ]\ÙHHÜXZÈ[\›˜][Û˜[š\Ú]ÜœËˆ‹‘^[\H›ÜˆHÜXZÈš\Ú]ÜœËˆ—K˜[œİÙ\ˆˆ‘›Üˆ^[\KHÜXZÈÚ][\›˜][Û˜[š\Ú]ÜœËˆ‹YÈˆ™Ü˜[[X\™^[\HŸKÈœHˆÚÛÜÙHH™\İ™\Z\‹ˆ‹›Ü[ÛœÈ–È“]YHØ^H][›İ\ˆØ^Kˆ‹“]YHØ^Z[™È[›İ\ˆØ^Kˆ‹“]YHÈØ^H[›İ\ˆØ^Kˆ—K˜[œİÙ\ˆˆ“]YHØ^H][›İ\ˆØ^Kˆ‹YÈˆ™Ü˜[[X\œ™\Z\‹\˜\ÙHŸKÈœHˆÚÛÜÙHHİ›Û™Ù\İÛË\Ú[İXİ\™Kˆ‹›Ü[ÛœÈ–È•Hš\œİÚ[\ÈÛÛ™šY[˜ÙKˆ[›İ\ˆ[™È\ÈØ\™Y\ˆÜ›İİˆ‹‘š\œİÛÛ™šY[˜ÙH[›İ\ˆØ\™Y\‹ˆ‹•HÚ[š\œİ™XØ]\ÙHØ\™Y\ˆ[›İ\‹ˆ—K˜[œİÙ\ˆˆ•Hš\œİÚ[\ÈÛÛ™šY[˜ÙKˆ[›İ\ˆ[™È\ÈØ\™Y\ˆÜ›İİˆ‹YÈˆ™Ü˜[[X\›Ü™Ø[š\Ø][ÛˆŸKÈœHˆÚÛÜÙHHÛÜœ™XİH[šÙYÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È‘[™Û\Ú\ÈY™šXİ[ÛÛY][Y\Ë]HÙY\˜Xİ\Ú[™È™XØ]\ÙH]X]\œÈÈ^HØ\™Y\‹ˆ‹‘[™Û\ÚY™šXİ[]™XØ]\ÙHØ\™Y\ˆÛËˆ‹‘[™Û\Ú\ÈY™šXİ[™XØ]\ÙH]H˜Xİ\ÙKˆ—K˜[œİÙ\ˆˆ‘[™Û\Ú\ÈY™šXİ[ÛÛY][Y\Ë]HÙY\˜Xİ\Ú[™È™XØ]\ÙH]X]\œÈÈ^HØ\™Y\‹ˆ‹YÈˆ™Ü˜[[X\˜ÛÛ›™XİÜœÈŸW_K›\İ[š[™ÈÈ]Hˆ•ÚH[™Û\ÚX]\œÈÈYH‹œ]Y\İ[ÛœÈ–ŞÈœHˆ’İÈX[HXZ[ˆ™X\ÛÛœÈÙ\ÈHÜXZÙ\ˆÚ]™OÈ‹›Ü[ÛœÈ–È•ÛÈ‹•™YH‹“Û™H—K˜[œİÙ\ˆˆ•ÛÈ‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸKÈœHˆ•Ú]\ÈHš\œİ™X\ÛÛÈ‹›Ü[ÛœÈ–ÈÛÛ[][šXØ][Ûˆ]ÛÜšÈ‹•˜]™[›ÜˆÛY^\È‹”™XY[™È›İ™[È—K˜[œİÙ\ˆˆÛÛ[][šXØ][Ûˆ]ÛÜšÈ‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ•ÚÈÙ\ÈHÜXZÙ\ˆÛÛY][Y\ÈYY]È‹›Ü[ÛœÈ–È”[ÜHœ›ÛHY™™\™[Ûİ[šY\È‹“Û›H˜[Z[HY[X™\œÈ‹“Û›HÛ\ÜÛX]\È—K˜[œİÙ\ˆˆ”[ÜHœ›ÛHY™™\™[Ûİ[šY\È‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]^[\HÙ\ÈHÜXZÙ\ˆÚ]™OÈ‹›Ü[ÛœÈ–È”ÜXZÚ[™ÈÚ]Hš\Ú]ÜˆX›İ]H›Ú™XİØÚY[H‹•Üš][™ÈHØÚÛÛ^[H‹^Z[™ÈH™]ÈÛ™H—K˜[œİÙ\ˆˆ”ÜXZÚ[™ÈÚ]Hš\Ú]ÜˆX›İ]H›Ú™XİØÚY[H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]›Ø›[H\[™Y\š[™È]ÛÛ™\œØ][ÛÈ‹›Ü[ÛœÈ–È•HÜXZÙ\ˆ]\ÙYÛÈÙ[ˆ‹•Hš\Ú]ÜˆY[[YYX][H‹•HÜXZÙ\ˆ›Ü™ÛİH›Ú™Xİ—K˜[œİÙ\ˆˆ•HÜXZÙ\ˆ]\ÙYÛÈÙ[ˆ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]\ÈHÙXÛÛ™™X\ÛÛÈ‹›Ü[ÛœÈ–ÈØ\™Y\ˆÜ›İİ‹™]\ˆ[™Üš][™È‹“[Ü™Hœ™YH[YH—K˜[œİÙ\ˆˆØ\™Y\ˆÜ›İİ‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ•ÚXÚÜÜ[š]Y\È\™HY[[Û™YÈ‹›Ü[ÛœÈ–È•˜Z[š[™Ë[\šY]ÜÈ[™[Ü™H™\ÜÛœÚXš[]H‹‘š]š[™È\ÜÛÛœÈ[™ÜÜÈ‹ÛÛÚÚ[™È[™ÚÜ[™È—K˜[œİÙ\ˆˆ•˜Z[š[™Ë[\šY]ÜÈ[™[Ü™H™\ÜÛœÚXš[]H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ù\È8 ']YHØ^H][›İ\ˆØ^x 'HÚYÛ˜[È‹›Ü[ÛœÈ–È•HÜXZÙ\ˆ\È™\Z\š[™ÈÜˆÛ\šYZ[™È[ˆYXH‹•HÜXZÙ\ˆ\È[™[™ÈHÛÛ™\œØ][Ûˆ‹•HÜXZÙ\ˆ\È\ÚÚ[™ÈH]Y\İ[Ûˆ—K˜[œİÙ\ˆˆ•HÜXZÙ\ˆ\È™\Z\š[™ÈÜˆÛ\šYZ[™È[ˆYXH‹YÈˆ›\İ[š[™Îœİ˜]YŞHŸKÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆØ^H^HÈ“Õ™YY™Y›Ü™HÜXZÚ[™ÏÈ‹›Ü[ÛœÈ–È”\™™Xİ[™Û\Ú‹•\ÙY[[™İXYÙH‹”˜XİXÙH—K˜[œİÙ\ˆˆ”\™™Xİ[™Û\Ú‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]˜XİXÙHİ˜]YŞHÙ\ÈHÜXZÙ\ˆ™Y™\È‹›Ü[ÛœÈ–È”ÚÜ[œİÙ\œË^[\\È[™™\Z\ˆ˜\Ù\È‹“Û™ÈY[[Üš^™YØÜš\ÈÛ›H‹]›ÚY[™ÈY™šXİ[ÜXÜÈ—K˜[œİÙ\ˆˆ”ÚÜ[œİÙ\œË^[\\È[™™\Z\ˆ˜\Ù\È‹YÈˆ›\İ[š[™Îœİ˜]YŞHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]HÛ™H™X\ÛÛˆ[™Û\ÚX]\œÈÈ[İKˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆYHÙXÛÛ™™X\ÛÛˆ\Ú[™È8 '[›İ\ˆ[™È\ø )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™H^[\H™YÚ[›š[™È8 '›Üˆ^[\x )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ’›Ú[ˆÛÈYX\ÈÚ]8 '[™8 'Kˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ’›Ú[ˆÛÈÛÛ˜\İ[™ÈYX\ÈÚ]8 ']8 'Kˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ‘^Z[ˆÛ™H™X\ÛÛˆ\Ú[™È8 '™XØ]\Ùx 'Kˆ‹›Z[•ÛÜ™ÈKÈœ›Û\ˆ•Üš]HHË\Ù[[˜ÙH[œİÙ\ˆÚ]ÛÈ™X\ÛÛœÈ[™Û™H^[\Kˆ‹›Z[•ÛÜ™ÈŒŒKÈœ›Û\ˆ•Üš]HH™\Z\ˆÙ[[˜ÙH\Ú[™È8 ']YHØ^H][›İ\ˆØ^K¸ 'H‹›Z[•ÛÜ™ÈŒLKÈœ›Û\ˆ‘˜YİYÙNˆÜš]HHL8 $ÍÌÛÜ™[œİÙ\ˆÈ8 'ÚH\™H[İHX\›š[™È[™Û\Ú›İÏø 'H‹›Z[•ÛÜ™ÈLKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜš]H[ˆ8 $ÌLÛÜ™ÛË\Ú[™\ÜÛœÙH][İHÛİ[]\ˆ[]™\ˆ\ÈHÛË[Z[]H[Ëˆ‹›Z[•ÛÜ™ÈW_Kœ™]šY]ÈÈšÙ^]ÛÜ™Èˆœ™X\ÛÛˆH0­È^[\H0­È™X\ÛÛˆˆ0­È™\Z\ˆ‹›Z\ÜÚ[Ûˆˆ”ÜXZÈ›ÜˆÛÈZ[]\Îˆ8 'ÚHH[HX\›š[™È[™Û\Ú›İË¸ 'H™\X]Ú]™]Ù\ˆ]\Ù\ËˆŸ_KÈšYˆÌ›‹›[X™\ˆÙYZÈŒ‹]Hˆ”İ\ÛÛ™\œØ][ÛœÈ˜]\˜[H‹›İ]ÛÛYHˆ“Ü[ˆHÛÛ™\œØ][Ûˆ[ˆÛØÚX[[™›Ù™\ÜÚ[Û˜[Ú]X][ÛœËˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ’İÈ\È[İ\ˆ^H™Y[ˆÛÈ˜\È‹š›Øˆˆ›Ü[ˆH™[^YÛÛ™\œØ][Ûˆ‹˜ÛŞ™Hˆ’İÈ\È[İ\ˆ××È™Y[ˆÛÈ˜\È‹˜[œİÙ\ˆˆ™^H‹˜ÚÚXÙ\È–È™^H‹ÛÜšÈ‹[YH—_KÈ^ˆ•Ú]œš[™ÜÈ[İH\™OÈ‹š›Øˆˆ˜\ÚÈX›İ]\œÜÙH][ˆ]™[‹˜ÛŞ™Hˆ•Ú]××È[İH\™OÈ‹˜[œİÙ\ˆˆ˜œš[™ÜÈ‹˜ÚÚXÙ\È–È˜œš[™ÜÈ‹ZÙ\È‹›XZÙ\È—_KÈ^ˆ’]™HÙHY]™Y›Ü™OÈ‹š›Øˆˆ˜ÚXÚÈÚ]\ˆ[İHÛ›İÈÛÛY[Û™H‹˜ÛŞ™Hˆ’]™HÙH××È™Y›Ü™OÈ‹˜[œİÙ\ˆˆ›Y]‹˜ÚÚXÙ\È–È›Y]‹›YY]‹›YY][™È—_KÈ^ˆ’İÈÈ[İHÛ›İÈHX[OÈ‹š›Øˆˆ™š[™HÚ\™YÛÛ›™Xİ[Ûˆ‹˜ÛŞ™Hˆ’İÈÈ[İH××ÈHX[OÈ‹˜[œİÙ\ˆˆšÛ›İÈ‹˜ÚÚXÙ\È–ÈšÛ›İÈ‹šÛ›İÜÈ‹šÛ›İÚ[™È—_KÈ^ˆ•]Ûİ[™È[\™\İ[™Ëˆ‹š›Øˆˆœ™\ÜÛ™ÜÚ]]™[H™Y›Ü™H[›İ\ˆ]Y\İ[Ûˆ‹˜ÛŞ™Hˆ•]××È[\™\İ[™Ëˆ‹˜[œİÙ\ˆˆœÛİ[™È‹˜ÚÚXÙ\È–ÈœÛİ[™È‹šX\œÈ‹›\İ[œÈ—_WK™Ü˜[[X\ˆÈ™›Øİ\Èˆ•ÚH]Y\İ[ÛœË™\Ù[Ú[\H]Y\İ[ÛˆÜ™\‹[™™\Ù[\™™Xİ›Üˆ8 ']™HÙHY]8 )ø 'H‹š][\È–ŞÈœHˆÚÛÜÙHHÛÜœ™XİÜ[™\‹ˆ‹›Ü[ÛœÈ–È•Ú]œš[™ÜÈ[İH\™OÈ‹•Ú][İHœš[™ÜÈ\™OÈ‹•Ú]Ù\Èœš[™ÜÈ[İH\™OÈ—K˜[œİÙ\ˆˆ•Ú]œš[™ÜÈ[İH\™OÈ‹YÈˆ™Ü˜[[X\Ú\]Y\İ[ÛˆŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È’İÈÈ[İHÛ›İÈHX[OÈ‹’İÈ[İHÛ›İÈHX[OÈ‹’İÈÙ\È[İHÛ›İÈX[OÈ—K˜[œİÙ\ˆˆ’İÈÈ[İHÛ›İÈHX[OÈ‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹[Ü™\ˆŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ™\Ù[\™™Xİ]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È’]™HÙHY]™Y›Ü™OÈ‹‘YÙHY]™Y›Ü™OÈ‹’]™HÙHYY]™Y›Ü™OÈ—K˜[œİÙ\ˆˆ’]™HÙHY]™Y›Ü™OÈ‹YÈˆ™Ü˜[[X\œ™\Ù[\\™™XİŸKÈœHˆÛÛ\]NˆİÈ××È[İ\ˆ^H™Y[ˆÛÈ˜\È‹›Ü[ÛœÈ–Èš\È‹š]™H‹™È—K˜[œİÙ\ˆˆš\È‹YÈˆ™Ü˜[[X\˜]^[X\HŸKÈœHˆÚÛÜÙHH˜]\˜[™\ÜÛœÙKˆ‹›Ü[ÛœÈ–È•]Ûİ[™È[\™\İ[™Ëˆ‹•]Ûİ[™[\™\İ[™Ëˆ‹•]\ÈÛİ[™[\™\İ[™Ëˆ—K˜[œİÙ\ˆˆ•]Ûİ[™È[\™\İ[™Ëˆ‹YÈˆ™Ü˜[[X\\™\\œÛÛˆŸKÈœHˆÚÛÜÙHHØY™H›Ù™\ÜÚ[Û˜[]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú]œš[™ÜÈ[İHÈ\ÈÛÜšÜÚÜÈ‹’İÈ]XÚ[Û™^HÈ[İHX\›È‹•ÚH\™H[İHİ[Ú[™ÛOÈ—K˜[œİÙ\ˆˆ•Ú]œš[™ÜÈ[İHÈ\ÈÛÜšÜÚÜÈ‹YÈˆ™Ü˜[[X\˜\›ÜšXXŞHŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ™\Ù[Ú[\H]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú\™HÈ[İHÛÜšÏÈ‹•Ú\™H[İHÛÜšÏÈ‹•Ú\™HÙ\È[İHÛÜšÏÈ—K˜[œİÙ\ˆˆ•Ú\™HÈ[İHÛÜšÏÈ‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\K\]Y\İ[ÛˆŸKÈœHˆÛÛ\]NˆİÈ××È[İHÛ›İÈHÜ™Ø[š\Ù\È‹›Ü[ÛœÈ–È™È‹˜\™H‹š]™H—K˜[œİÙ\ˆˆ™È‹YÈˆ™Ü˜[[X\˜]^[X\HŸKÈœHˆÚÛÜÙHH™\İ›ÛİË]\ˆ‹›Ü[ÛœÈ–È•Ú]Ú[™ÙˆÛÜšÈÈ[İHÏÈ‹•Ú]Ú[™ÛÜšÈ[İHÏÈ‹•Ú]ÛÜšÈÙ\È[İHÏÈ—K˜[œİÙ\ˆˆ•Ú]Ú[™ÙˆÛÜšÈÈ[İHÏÈ‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹[Ü™\ˆŸKÈœHˆÚÛÜÙHHÛÜœ™XİÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’x &[H][™[™ÈHÛÜšÜÚÜÙ^Kˆ‹’H][™[™ÈÛÜšÜÚÜÙ^Kˆ‹’H[H][™HÛÜšÜÚÜÙ^Kˆ—K˜[œİÙ\ˆˆ’x &[H][™[™ÈHÛÜšÜÚÜÙ^Kˆ‹YÈˆ™Ü˜[[X\œ™\Ù[XÛÛ[[İ\ÈŸW_K›\İ[š[™ÈÈ]Hˆ“YY][™ÈÛÛY[Û™H]HÛÜšÜÚÜ‹œ]Y\İ[ÛœÈ–ŞÈœHˆ•Ú\™HÙ\ÈHÛÛ™\œØ][Ûˆ\[È‹›Ü[ÛœÈ–È]HYÚ][ÚÚ[ÈÛÜšÜÚÜ‹]HÜÜ][‹]H›Ûİ˜[X]Ú—K˜[œİÙ\ˆˆ]HYÚ][ÚÚ[ÈÛÜšÜÚÜ‹YÈˆ›\İ[š[™ÎœÙ][™ÈŸKÈœHˆ•Ú]\ÈHš\œİ]Y\İ[ÛˆHÛÛX[ˆ\ÚÜÏÈ‹›Ü[ÛœÈ–È’]™HÙHY]™Y›Ü™OÈ‹•Ú\™HÈ[İH]™OÈ‹’İÈÛ\™H[İOÈ—K˜[œİÙ\ˆˆ’]™HÙHY]™Y›Ü™OÈ‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ•ÚH\ÈHÜXZÙ\ˆ]HÛÜšÜÚÜÈ‹›Ü[ÛœÈ–È•ÈX\›ˆ[Ü™HX›İ]XÚ›ÛÙŞH]ÛÜšÈ‹•È^HHÛ™H‹•ÈYY]HØİÜˆ—K˜[œİÙ\ˆˆ•ÈX\›ˆ[Ü™HX›İ]XÚ›ÛÙŞH]ÛÜšÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ’İÈÙ\ÈHÛÛX[ˆ™XXİÈ‹›Ü[ÛœÈ–È•]Ûİ[™È[\™\İ[™Ëˆ‹•]\È[\ÜÜÚX›Kˆ‹’HÈ›İØ\™Kˆ—K˜[œİÙ\ˆˆ•]Ûİ[™È[\™\İ[™Ëˆ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ù\ÈÚH\ÚÈ™^È‹›Ü[ÛœÈ–È’İÈHÜXZÙ\ˆÛ›İÜÈHÜ™Ø[š\Ú[™ÈX[H‹’İÈ]XÚHÜXZÙ\ˆX\›œÈ‹•Ú\™HHÜXZÙ\ˆØ\È›Ü›ˆ—K˜[œİÙ\ˆˆ’İÈHÜXZÙ\ˆÛ›İÜÈHÜ™Ø[š\Ú[™ÈX[H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚHÈH]Y\İ[ÛœÈ™Y[˜]\˜[È‹›Ü[ÛœÈ–È•^HÛÛ›™XİÈH]™[[™\™H›İÛÈ\œÛÛ˜[‹•^H\™H™\Hš]˜]H‹•^HÚ[™ÙHÜXÜÈ]ZXÚÛH—K˜[œİÙ\ˆˆ•^HÛÛ›™XİÈH]™[[™\™H›İÛÈ\œÛÛ˜[‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆ]\ˆ\ÚÈX›İ]È‹›Ü[ÛœÈ–È•HÛÛX[¸ &\ÈÛÜšÈ‹’\ˆØ[\H‹’\ˆ˜[Z[H›Ø›[\È—K˜[œİÙ\ˆˆ•HÛÛX[¸ &\ÈÛÜšÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ú\™YÛÛ›™Xİ[ÛˆÈ^H\ØÛİ™\È‹›Ü[ÛœÈ–È”ÛÛY[Û™Hœ›ÛHHØ[YHÛÛ[][š]H›Ú™Xİ‹•HØ[YHØÚÛÛXXÚ\ˆ‹•HØ[YHİ\ÙH—K˜[œİÙ\ˆˆ”ÛÛY[Û™Hœ›ÛHHØ[YHÛÛ[][š]H›Ú™Xİ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú][ÈHÛÛ™\œØ][ÛˆÛÛ[YOÈ‹›Ü[ÛœÈ–È‘XXÚ]Y\İ[ÛˆÜ™X]\ÈHÚ\™YÜXÈ‹•^H›İ™XYœ›ÛHHØÜš\‹•^H]›ÚY\ÚÚ[™È]Y\İ[ÛœÈ—K˜[œİÙ\ˆˆ‘XXÚ]Y\İ[ÛˆÜ™X]\ÈHÚ\™YÜXÈ‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]\ÈHXZ[ˆ\ÜÛÛÈ‹›Ü[ÛœÈ–È•\ÙHØY™KÛÛ›™XİYÜ[š[™È]Y\İ[ÛœËˆ‹\ÚÈ\œÛÛ˜[]Y\İ[ÛœÈš\œİˆ‹”ÜXZÈÚ]İ]\İ[š[™Ëˆ—K˜[œİÙ\ˆˆ•\ÙHØY™KÛÛ›™XİYÜ[š[™È]Y\İ[ÛœËˆ‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]HÛ™HØY™HÜ[š[™È]Y\İ[Ûˆ›ÜˆHÛÜšÜÚÜˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HØY™HÜ[š[™È]Y\İ[Ûˆ›Üˆ[ˆÛ›[™HYY][™Ëˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HHœšY[™H™\ÜÛœÙHÈÛÛY[Û™x &\È[œİÙ\‹ˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HH]Y\İ[Ûˆ™YÚ[›š[™È8 'Ú]œš[™ÜÈ[İx )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HH]Y\İ[Ûˆ™YÚ[›š[™È8 'İÈÈ[İHÛ›İø )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HHÛË[[™HÜ[š[™È^Ú[™ÙKˆ‹›Z[•ÛÜ™ÈŒLKÈœ›Û\ˆ•Üš]H™YHÛÛ›™XİY]Y\İ[ÛœÈ›ÜˆYY][™ÈH™]ÈÛÛXYİYKˆ‹›Z[•ÛÜ™ÈŒNKÈœ›Û\ˆ‘^Z[ˆÚHÛ™H\œÛÛ˜[]Y\İ[ÛˆZYÚ™H[˜\›ÜšX]H[ˆH›Ù™\ÜÚ[Û˜[Ù][™Ëˆ‹›Z[•ÛÜ™ÈŒŒKÈœ›Û\ˆ‘˜YİYÙNˆÜš]HHL8 $ÍÌÛÜ™Z[šKXÛÛ™\œØ][Ûˆ]İ\È˜]\˜[H[™™XXÚ\ÈHÚ\™YÜXËˆ‹›Z[•ÛÜ™ÈLKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜš]H™YHY™™\™[ÛÛ™\œØ][ÛˆÜ[š[™ÜÈ›Üˆ™YHÚ]X][ÛœÎˆÛÜšÜÚÜÙ™šXÙH™XÙ\[Ûˆ[™Û›[™HYY][™Ëˆ‹›Z[•ÛÜ™ÈÌW_Kœ™]šY]ÈÈšÙ^]ÛÜ™Èˆ›Ü[š[™È0­ÈØY™H]Y\İ[Ûˆ0­ÈÚ\™YÜXÈ0­È›ÛİË]\‹›Z\ÜÚ[Ûˆˆ”İ\™YHY™™\™[ÛË[Z[]HÛÛ™\œØ][ÛœÈÚ]İ]\Ú[™ÈHØ[YHÜ[š[™ÈÚXÙKˆŸ_KÈšYˆÌ›H‹›[X™\ˆKÙYZÈŒ‹]Hˆ”ÚİÈ[\™\İ[™\ÚÈ›ÛİË]\È‹›İ]ÛÛYHˆ’ÙY\HÛÛ™\œØ][ÛˆÛÚ[™ÈH™\ÜÛ™[™ËXÚÚ[™È[™\ÚÚ[™ÈÛÛ›™XİY]Y\İ[ÛœËˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ”™X[OÈÚ]\[™Y™^È‹š›Øˆˆš[š]HÛÛY[Û™HÈÛÛ[YHHİÜH‹˜ÛŞ™Hˆ”™X[OÈÚ]\[™Y××ÏÈ‹˜[œİÙ\ˆˆ›™^‹˜ÚÚXÙ\È–È›™^‹›]\ˆ‹˜Y\ˆ—_KÈ^ˆ’İÈY[İHÙ][\™\İY[ˆ]È‹š›Øˆˆ˜\ÚÈX›İ]HÜšYÚ[ˆÙˆ[ˆ[\™\İ‹˜ÛŞ™Hˆ’İÈY[İHÙ]××È[ˆ]È‹˜[œİÙ\ˆˆš[\™\İY‹˜ÚÚXÙ\È–Èš[\™\İY‹š[\™\İ[™È‹š[\™\İ—_KÈ^ˆ•Ú]Ø\È]ZÙOÈ‹š›Øˆˆ˜\ÚÈX›İ][ˆ^\šY[˜ÙH‹˜ÛŞ™Hˆ•Ú]Ø\È]××ÏÈ‹˜[œİÙ\ˆˆ›ZÙH‹˜ÚÚXÙ\È–È›ZÙH‹›ÛÚÈ‹™™Y[—_KÈ^ˆ”ÛË[İHYX[ˆ]8 )È‹š›Øˆˆ˜ÚXÚÈ[İ\ˆ[™\œİ[™[™È‹˜ÛŞ™Hˆ”ÛË[İH××È]8 )È‹˜[œİÙ\ˆˆ›YX[ˆ‹˜ÚÚXÙ\È–È›YX[ˆ‹›YX[œÈ‹›YX[š[™È—_KÈ^ˆ’HØ[ˆ™[]HÈ]ˆ‹š›Øˆˆ˜ÛÛ›™XİHÜXZÙ\¸ &\È^\šY[˜ÙHÈ[İ\œÈ‹˜ÛŞ™Hˆ’HØ[ˆ××ÈÈ]ˆ‹˜[œİÙ\ˆˆœ™[]H‹˜ÚÚXÙ\È–Èœ™[]H‹œ™[][ÛœÚ\‹œ™[]]™H—_WK™Ü˜[[X\ˆÈ™›Øİ\Èˆ‘›ÛİË]\]Y\İ[ÛœÈÚ]İËÚKÚ[ˆ[™Ú]\[™Y™^ˆ‹š][\È–ŞÈœHˆÚÛÜÙHHÛÜœ™Xİ›ÛİË]\ˆ‹›Ü[ÛœÈ–È’İÈY[İHÙ][\™\İY[ˆ]È‹’İÈ[İHÛİ[\™\İY[ˆ]È‹’İÈY[İHÛİ[\™\İYÈ—K˜[œİÙ\ˆˆ’İÈY[İHÙ][\™\İY[ˆ]È‹YÈˆ™Ü˜[[X\œ\İ\]Y\İ[ÛˆŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú]Ø\È]ZÙOÈ‹•Ú]]Ø\ÈZÙOÈ‹•Ú]Y]ZÙOÈ—K˜[œİÙ\ˆˆ•Ú]Ø\È]ZÙOÈ‹YÈˆ™Ü˜[[X\˜™K\]Y\İ[ÛˆŸKÈœHˆÚÛÜÙHH˜]\˜[İÜH›ÛİË]\ˆ‹›Ü[ÛœÈ–È•Ú]\[™Y™^È‹•Ú]™^\[™YYÈ‹•Ú]Y\[™Y™^È—K˜[œİÙ\ˆˆ•Ú]\[™Y™^È‹YÈˆ™Ü˜[[X\œ\İ\]Y\İ[ÛˆŸKÈœHˆÛÛ\]NˆÚH××È[İHÚÛÜÙH]Ûİ\œÙOÈ‹›Ü[ÛœÈ–È™Y‹™È‹Ù\™H—K˜[œİÙ\ˆˆ™Y‹YÈˆ™Ü˜[[X\˜]^[X\HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ[YH]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú[ˆY[İHİ\È‹•Ú[ˆ[İHYİ\È‹•Ú[ˆY[İHİ\YÈ—K˜[œİÙ\ˆˆ•Ú[ˆY[İHİ\È‹YÈˆ™Ü˜[[X\œ\İ\]Y\İ[ÛˆŸKÈœHˆÚÛÜÙHHÚXÚÚ[™È˜\ÙKˆ‹›Ü[ÛœÈ–È”ÛË[İHYX[ˆ]Hš\œİÙYZÈØ\ÈY™šXİ[È‹”ÛË[İHYX[œÈHš\œİÙYZÈY™šXİ[È‹”ÛËYX[ˆ[İHš\œİÙYZÏÈ—K˜[œİÙ\ˆˆ”ÛË[İHYX[ˆ]Hš\œİÙYZÈØ\ÈY™šXİ[È‹YÈˆ™Ü˜[[X\˜ÚXÚÚ[™ÈŸKÈœHˆÚÛÜÙHH™\İÛÛ›™XİY]Y\İ[ÛˆY\ˆ8 'Hİ\YH™]È›Ø‹¸ 'H‹›Ü[ÛœÈ–È’İÈY[İ\ˆš\œİÙYZÈÛÏÈ‹•Ú]\È[İ\ˆ˜]›Üš]HœZ]È‹•Ú\™H\ÈHZ\œÜÈ—K˜[œİÙ\ˆˆ’İÈY[İ\ˆš\œİÙYZÈÛÏÈ‹YÈˆ™Ü˜[[X\˜ÛÚ\Ú[ÛˆŸKÈœHˆÛÛ\]NˆHØ[ˆ××ÈÈ]ˆ‹›Ü[ÛœÈ–Èœ™[]H‹œ™[]Y‹œ™[][™È—K˜[œİÙ\ˆˆœ™[]H‹YÈˆ™Ü˜[[X\›[Ù[ŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ›ÛİË]\Y\ˆH\İ]™[ˆ‹›Ü[ÛœÈ–È’İÈY[İH™Y[X›İ]]È‹’İÈÈ[İH™[X›İ]]È‹’İÈY[İH™[X›İ]]È—K˜[œİÙ\ˆˆ’İÈY[İH™Y[X›İ]]È‹YÈˆ™Ü˜[[X\œ\İ\]Y\İ[ÛˆŸKÈœHˆÚÛÜÙHH™\İ]Y\İ[Ûˆ›Ü›Kˆ‹›Ü[ÛœÈ–È•Ú]XYH[İHXÚYHÈÛÛ[YOÈ‹•Ú]YXYH[İHXÚYHÛÛ[YOÈ‹•Ú]XZÙH[İHXÚYYÈ—K˜[œİÙ\ˆˆ•Ú]XYH[İHXÚYHÈÛÛ[YOÈ‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹Y›Ü›HŸW_K›\İ[š[™ÈÈ]Hˆ’ÙY\[™ÈHİÜHÛÚ[™È‹œ]Y\İ[ÛœÈ–ŞÈœHˆ•Ú]™]ÈÚÚ[\ÈHÛÛXYİYHX\›š[™ÏÈ‹›Ü[ÛœÈ–È“X\[™ÈÛÙØ\™H‹ÛÛÚÚ[™È‹‘š]š[™È—K˜[œİÙ\ˆˆ“X\[™ÈÛÙØ\™H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆÈš\œİÈÚİÈ[\™\İÈ‹›Ü[ÛœÈ–È”Ø^\È8 '™X[Oø 'H[™\ÚÜÈHÛÛ›™XİY]Y\İ[Ûˆ‹Ú[™Ù\ÈHÜXÈ‹•[ÜÈÛ›HX›İ][\Ù[™\È—K˜[œİÙ\ˆˆ”Ø^\È8 '™X[Oø 'H[™\ÚÜÈHÛÛ›™XİY]Y\İ[Ûˆ‹YÈˆ›\İ[š[™Îœİ˜]YŞHŸKÈœHˆ•ÚÈ[›ÙXÙYHÛÛXYİYHÈX\[™ÏÈ‹›Ü[ÛœÈ–ÈHÛÛXYİYH‹H˜[Z[HY[X™\ˆ‹HXXÚ\ˆ]ØÚÛÛ—K˜[œİÙ\ˆˆHÛÛXYİYH‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ø[ˆX\[™È[Ú]È‹›Ü[ÛœÈ–ÈÛÛ[][š]H›Ú™XİÈ‹ÛÛÚÚ[™È[›™\ˆ‹“X\›š[™È]\ÚXÈ—K˜[œİÙ\ˆˆÛÛ[][š]H›Ú™XİÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ’İÈÙ\™HHš\œİ\ÜÛÛœÏÈ‹›Ü[ÛœÈ–ÈÚ[[™Ú[™È‹•™\HX\ŞH‹›Üš[™È[™\Ù[\ÜÈ—K˜[œİÙ\ˆˆÚ[[™Ú[™È‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚHYÚHÛÛ[YOÈ‹›Ü[ÛœÈ–È”ÚH[š›ŞYYÙYZ[™È›ÙÜ™\ÜÈ‹”ÚHØ\È›Ü˜ÙYÈ‹”ÚHØ[YÈİÜ[[YYX][H—K˜[œİÙ\ˆˆ”ÚH[š›ŞYYÙYZ[™È›ÙÜ™\ÜÈ‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆÚXÚÏÈ‹›Ü[ÛœÈ–È•Ú]\ˆ˜XİXÙHXYHHY™šXİ[™YÚ[›š[™ÈX\ÚY\ˆ‹•Ú]\ˆÚH›İYÚH™]ÈÛÛ\]\ˆ‹•Ú]\ˆÚHÚ[™ÙY›ØœÈ—K˜[œİÙ\ˆˆ•Ú]\ˆ˜XİXÙHXYHHY™šXİ[™YÚ[›š[™ÈX\ÚY\ˆ‹YÈˆ›\İ[š[™Î˜ÚXÚÚ[™ÈŸKÈœHˆ’İÈÙ\ÈHÜXZÙ\ˆ™[]H\œÛÛ˜[OÈ‹›Ü[ÛœÈ–ÈHY[[Ûš[™ÈX\›š[™ÈH™\Ü[™ÈŞ\İ[H‹HÚ[™Ú[™ÈÈ˜]™[‹H[Ú[™ÈX›İ]Ø[\H—K˜[œİÙ\ˆˆHY[[Ûš[™ÈX\›š[™ÈH™\Ü[™ÈŞ\İ[H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]È[H]Y\İ[ÛœÈ]™H[ˆÛÛ[[ÛÈ‹›Ü[ÛœÈ–È•^HÛÛ›™XİÈH™]š[İ\È[œİÙ\ˆ‹•^H\™H[œ™[]Y‹•^H\™HY\ËÛ›ÈÛ›H—K˜[œİÙ\ˆˆ•^HÛÛ›™XİÈH™]š[İ\È[œİÙ\ˆ‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]\ÈHXZ[ˆÛÛ[][šXØ][ÛˆÚÚ[È‹›Ü[ÛœÈ–È”ÚİÈ[\™\İ[™\ÚÈÛÛ›™XİY›ÛİË]\È‹‘Ú]™HH›Ü›X[™\Ù[][Ûˆ‹‘[™HÛÛ™\œØ][Ûˆ]ZXÚÛH—K˜[œİÙ\ˆˆ”ÚİÈ[\™\İ[™\ÚÈÛÛ›™XİY›ÛİË]\È‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]HH˜]\˜[™XXİ[ÛˆÈ8 'Hİ\YH™]ÈÛİ\œÙK¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™H›ÛİË]\™YÚ[›š[™È8 'İÈY8 )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™H›ÛİË]\™YÚ[›š[™È8 'Ú]Ø\ø )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÚXÚÚ[™È]Y\İ[Ûˆ™YÚ[›š[™È8 'ÛË[İHYX[¸ )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙH\Ú[™È8 'HØ[ˆ™[]HÈ]¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛÈÛÛ›™XİY›ÛİË]\]Y\İ[ÛœÈX›İ]X\›š[™ÈHÚÚ[ˆ‹›Z[•ÛÜ™ÈŒLŸKÈœ›Û\ˆ•Üš]HH[[™HÛÛ™\œØ][ÛˆÚ\™H]™\H]Y\İ[ÛˆÛÛ›™XİÈÈH™]š[İ\È[œİÙ\‹ˆ‹›Z[•ÛÜ™ÈŒ_KÈœ›Û\ˆ‘^Z[ˆHY™™\™[˜ÙH™]ÙY[ˆHÛÛ›™XİY›ÛİË]\[™HİY[ˆÜXÈÚ[™ÙKˆ‹›Z[•ÛÜ™ÈŒ_KÈœ›Û\ˆ‘˜YİYÙNˆÜš]HHŒ8 $ÎÛÜ™ÛÛ™\œØ][ÛˆX›İ]X\›š[™ÈÛÛY][™ÈY™šXİ[ˆ‹›Z[•ÛÜ™ÈŒKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜ™X]HHÚ^Y^Ú[™ÙHÛÛ™\œØ][Ûˆ\Ú[™È]X\İ™YH\™Ù]›ÛİË]\^™\ÜÚ[ÛœËˆ‹›Z[•ÛÜ™ÈW_Kœ™]šY]ÈÈšÙ^]ÛÜ™ÈˆœİÜH0­È™XXİ[Ûˆ0­È›ÛİË]\0­ÈÚXÚÚ[™È‹›Z\ÜÚ[Ûˆˆ’ÙY\Û™HÛÛ™\œØ][ÛˆÛÚ[™È›ÜˆÚ^^Ú[™Ù\È\Ú[™È]X\İ™YH›ÛİË]\^™\ÜÚ[ÛœËˆŸ_KÈšYˆÌ›ˆ‹›[X™\ˆ‹ÙYZÈŒ‹]Hˆ‘[™ÛÛ™\œØ][ÛœÈ›Ù™\ÜÚ[Û˜[H‹›İ]ÛÛYHˆÛÜÙHÛÛ™\œØ][ÛœÈØ\›[KÛÛ™š\›H™^İ\È[™X]™HHÜÚ]]™Hš[˜[[\™\ÜÚ[Û‹ˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ’]Ø\ÈÜ™X]ÜXZÚ[™ÈÚ][İKˆ‹š›ØˆˆœÚYÛ˜[HØ\›H[™[™È‹˜ÛŞ™Hˆ’]Ø\ÈÜ™X]××ÈÚ][İKˆ‹˜[œİÙ\ˆˆœÜXZÚ[™È‹˜ÚÚXÙ\È–ÈœÜXZÚ[™È‹œÜXZÈ‹œÜÚÙH—_KÈ^ˆ’HÚİ[][İHÙ]˜XÚÈø )ˆ‹š›Øˆˆœ™\ÜXİHİ\ˆ\œÛÛ¸ &\È[YH‹˜ÛŞ™Hˆ’HÚİ[][İHÙ]××Èø )ˆ‹˜[œİÙ\ˆˆ˜˜XÚÈ‹˜ÚÚXÙ\È–È˜˜XÚÈ‹œ™]\›ˆ‹˜YØZ[ˆ—_KÈ^ˆ“]8 &\Èİ^H[ˆİXÚˆ‹š›ØˆˆœİYÙÙ\İ]\™HÛÛXİ‹˜ÛŞ™Hˆ“]8 &\Èİ^H[ˆ××Ëˆ‹˜[œİÙ\ˆˆİXÚ‹˜ÚÚXÙ\È–ÈİXÚ‹˜ÛÛXİ[™È‹[È—_KÈ^ˆ’x &[Ù[™[İHH]Z[Ëˆ‹š›Øˆˆœ›ÛZ\ÙHH™^Xİ[Ûˆ‹˜ÛŞ™Hˆ’x &[××È[İHH]Z[Ëˆ‹˜[œİÙ\ˆˆœÙ[™‹˜ÚÚXÙ\È–ÈœÙ[™‹œÙ[‹œÙ[™[™È—_KÈ^ˆ’HÛÚÈ›ÜØ\™ÈÜXZÚ[™ÈYØZ[‹ˆ‹š›Øˆˆ˜ÛÜÙHH›Ù™\ÜÚ[Û˜[[\˜Xİ[Ûˆ‹˜ÛŞ™Hˆ’HÛÚÈ××ÈÈÜXZÚ[™ÈYØZ[‹ˆ‹˜[œİÙ\ˆˆ™›ÜØ\™‹˜ÚÚXÙ\È–È™›ÜØ\™‹˜ZXY‹™]\™H—_WK™Ü˜[[X\ˆÈ™›Øİ\Èˆ‘]\™H\œ˜[™Ù[Y[ÈÚ]Ú[[™™\Ù[ÛÛ[[İ\ÎÈ8 'ÛÚÈ›ÜØ\™ø 'H
+ÈZ[™Ëˆ‹š][\È–ŞÈœHˆÚÛÜÙHHÛÜœ™Xİ›ÛZ\ÙKˆ‹›Ü[ÛœÈ–È’x &[Ù[™[İHH]Z[È\ÈY\››ÛÛ‹ˆ‹’HÙ[™[İH]Z[ÈÛ[Üœ›İÈY\İ\™^Kˆ‹’x &[Ù[™[™ÈH]Z[Ëˆ—K˜[œİÙ\ˆˆ’x &[Ù[™[İHH]Z[È\ÈY\››ÛÛ‹ˆ‹YÈˆ™Ü˜[[X\Ú[ŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ\œ˜[™Ù[Y[ˆ‹›Ü[ÛœÈ–È’x &[HYY][™ÈHX[HÛ[Üœ›İËˆ‹’HYY][™ÈHX[HÛ[Üœ›İËˆ‹’x &[HYY]HX[HÛ[Üœ›İËˆ—K˜[œİÙ\ˆˆ’x &[HYY][™ÈHX[HÛ[Üœ›İËˆ‹YÈˆ™Ü˜[[X\œ™\Ù[XÛÛ[[İ\ÈŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ˜\ÙKˆ‹›Ü[ÛœÈ–È’HÛÚÈ›ÜØ\™ÈÜXZÚ[™ÈYØZ[‹ˆ‹’HÛÚÈ›ÜØ\™ÈÜXZÈYØZ[‹ˆ‹’HÛÚÈ›ÜØ\™ÜXZÚ[™ÈYØZ[‹ˆ—K˜[œİÙ\ˆˆ’HÛÚÈ›ÜØ\™ÈÜXZÚ[™ÈYØZ[‹ˆ‹YÈˆ™Ü˜[[X\™Ù\[™ŸKÈœHˆÛÛ\]Nˆ]××ÈÜ™X]ÜXZÚ[™ÈÚ][İKˆ‹›Ü[ÛœÈ–ÈØ\È‹Ù\™H‹˜™H—K˜[œİÙ\ˆˆØ\È‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÛÛ\]Nˆ]8 &\È××È[ˆİXÚˆ‹›Ü[ÛœÈ–Èœİ^H‹œİ^Z[™È‹œİ^YY—K˜[œİÙ\ˆˆœİ^H‹YÈˆ™Ü˜[[X\›]]\ÈŸKÈœHˆÚÛÜÙHHÛ]H[YHÚYÛ˜[ˆ‹›Ü[ÛœÈ–È’HÚİ[][İHÙ]˜XÚÈÈHÛÜšÜÚÜˆ‹–[İH™YYÛÈ›İËˆ‹”İÜ[Ú[™È›İËˆ—K˜[œİÙ\ˆˆ’HÚİ[][İHÙ]˜XÚÈÈHÛÜšÜÚÜˆ‹YÈˆ™Ü˜[[X\˜\›ÜšXXŞHŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ™^İ\ˆ‹›Ü[ÛœÈ–È’x &[™]šY]È]Û[Üœ›İËˆ‹’x &[™]šY]ÙY]Û[Üœ›İËˆ‹’H™]šY]È]Û[Üœ›İÈY\İ\™^Kˆ—K˜[œİÙ\ˆˆ’x &[™]šY]È]Û[Üœ›İËˆ‹YÈˆ™Ü˜[[X\Ú[ŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ]\™H]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú[ˆÚ[[İHÙ[™H[šÏÈ‹•Ú[ˆ[İHÚ[Ù[™H[šÏÈ‹•Ú[ˆÚ[[İHÙ[H[šÏÈ—K˜[œİÙ\ˆˆ•Ú[ˆÚ[[İHÙ[™H[šÏÈ‹YÈˆ™Ü˜[[X\™]\™K\]Y\İ[ÛˆŸKÈœHˆÛÛ\]NˆÙx &\™H××ÈYØZ[ˆÛˆ\œÙ^Kˆ‹›Ü[ÛœÈ–È›YY][™È‹›YY]‹›Y]—K˜[œİÙ\ˆˆ›YY][™È‹YÈˆ™Ü˜[[X\œ™\Ù[XÛÛ[[İ\ÈŸKÈœHˆÚÛÜÙHHİ›Û™Ù\İ›Ù™\ÜÚ[Û˜[ÛÜÙKˆ‹›Ü[ÛœÈ–È’]Ø\ÈÜ™X]ÜXZÚ[™ÈÚ][İKˆx &[Ù[™H]Z[ÈÙ^Kˆ‹YKˆX^X™HÛÛY][™È]\‹ˆ‹“ÚØ^Hš[š\ÚYˆ—K˜[œİÙ\ˆˆ’]Ø\ÈÜ™X]ÜXZÚ[™ÈÚ][İKˆx &[Ù[™H]Z[ÈÙ^Kˆ‹YÈˆ™Ü˜[[X\˜ÛÚ\Ú[ÛˆŸW_K›\İ[š[™ÈÈ]HˆÛÜÚ[™ÈH›Ù™\ÜÚ[Û˜[ÛÛ™\œØ][Ûˆ‹œ]Y\İ[ÛœÈ–ŞÈœHˆ•Ú]ÚYÛ˜[[ÈHÜXZÙ\ˆ]X^H™H[YHÈ[™È‹›Ü[ÛœÈ–È•Hİ\ˆ\œÛÛˆÛÚÜÈİØ\™H™^Ù\ÜÚ[Ûˆ‹•HYÚÈ\›ˆÙ™ˆ‹”ÛÛY[Û™Hİ\ÈX][™È—K˜[œİÙ\ˆˆ•Hİ\ˆ\œÛÛˆÛÚÜÈİØ\™H™^Ù\ÜÚ[Ûˆ‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]Û]H[YHÚYÛ˜[Ù\ÈHÜXZÙ\ˆ\ÙOÈ‹›Ü[ÛœÈ–È’HÚİ[][İHÙ]˜XÚÈÈHÛÜšÜÚÜˆ‹–[İH]\İX]™H›İËˆ‹’H[H›Ü™Yˆ—K˜[œİÙ\ˆˆ’HÚİ[][İHÙ]˜XÚÈÈHÛÜšÜÚÜˆ‹YÈˆ›\İ[š[™Îœİ˜]YŞHŸKÈœHˆ’İÈÙ\ÈHİ\ˆ\œÛÛˆ\ØÜšX™HHÛÛ™\œØ][ÛÈ‹›Ü[ÛœÈ–È‘Ü™X]ÜXZÚ[™ÈÚ][İH‹•ÛÈÛ™È[™Y™šXİ[‹“›İ\ÙY[—K˜[œİÙ\ˆˆ‘Ü™X]ÜXZÚ[™ÈÚ][İH‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆİYÙÙ\İÈ‹›Ü[ÛœÈ–È”İ^H[ˆİXÚ‹“™]™\ˆÜXZÈYØZ[ˆ‹Ú[™ÙHHÛÜšÜÚÜ—K˜[œİÙ\ˆˆ”İ^H[ˆİXÚ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆ›ÛZ\ÙHÈÙ[™È‹›Ü[ÛœÈ–ÈH›Ú™Xİ[šÈ‹H™]È\Ü‹H›ØˆÛÛ˜Xİ—K˜[œİÙ\ˆˆH›Ú™Xİ[šÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú[ˆÚ[]™HÙ[È‹›Ü[ÛœÈ–È•]Y\››ÛÛˆ‹“™^[Û‹•H™]š[İ\È^H—K˜[œİÙ\ˆˆ•]Y\››ÛÛˆ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú[ˆÚ[Hİ\ˆ\œÛÛˆ™]šY]È]È‹›Ü[ÛœÈ–È•H™^^H‹’[[YYX][H™Y›Ü™H™XÙZ]š[™È]‹“™^YX\ˆ—K˜[œİÙ\ˆˆ•H™^^H‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ•ÚH\ÈH™^İ\\ÙY[È‹›Ü[ÛœÈ–È’]XZÙ\ÈH›ÛİË]\ÛX\ˆ‹’]XZÙ\ÈH[™[™ÈÛ™Ù\ˆ‹’]]›ÚYÈ[]\™HÛÛXİ—K˜[œİÙ\ˆˆ’]XZÙ\ÈH›ÛİË]\ÛX\ˆ‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]š[˜[˜\ÙHÙ\ÈHÜXZÙ\ˆ\ÙOÈ‹›Ü[ÛœÈ–È’HÛÚÈ›ÜØ\™ÈÜXZÚ[™ÈYØZ[‹ˆ‹‘È›İÛÛXİYKˆ‹•]\È[ˆ—K˜[œİÙ\ˆˆ’HÛÚÈ›ÜØ\™ÈÜXZÚ[™ÈYØZ[‹ˆ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]XZÙ\ÈH[™[™È›Ù™\ÜÚ[Û˜[È‹›Ü[ÛœÈ–È”™\ÜXİ[™È[YKÛÛ™š\›Z[™ÈH™^İ\[™ÛÜÚ[™ÈØ\›[H‹“X]š[™ÈÚ]İ]Ø^Z[™È[][™È‹“XZÚ[™ÈÙ]™\˜[˜YİYH›ÛZ\Ù\È—K˜[œİÙ\ˆˆ”™\ÜXİ[™È[YKÛÛ™š\›Z[™ÈH™^İ\[™ÛÜÚ[™ÈØ\›[H‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]HÛ™HØ\›HÛÜÚ[™ÈÙ[[˜ÙKˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙH]™\ÜXİÈHİ\ˆ\œÛÛ¸ &\È[YKˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™H™^XXİ[Ûˆ›ÛZ\ÙH\Ú[™È8 'x &[8 )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™H]\™H\œ˜[™Ù[Y[\Ú[™È™\Ù[ÛÛ[[İ\Ëˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙH\Ú[™È8 'HÛÚÈ›ÜØ\™ø )¸ 'HÛÜœ™XİKˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HHÛË[[™H›Ù™\ÜÚ[Û˜[ÛÜÚ[™Ëˆ‹›Z[•ÛÜ™ÈŒLŸKÈœ›Û\ˆ•Üš]HHÛÜÚ[™È][˜ÛY\ÈHÜXÚYšXÈXY[™H›Üˆ[İ\ˆ™^Xİ[Û‹ˆ‹›Z[•ÛÜ™ÈŒM_KÈœ›Û\ˆ”™]Üš]HH˜YİYH[™[™È
+8 'ÙHÚİ[[ÈÛÛY][Yx 'JH\ÈHÛX\ˆ›Ù™\ÜÚ[Û˜[™^İ\ˆ‹›Z[•ÛÜ™ÈŒŒKÈœ›Û\ˆ‘˜YİYÙNˆÜš]HHL8 $ÍÌÛÜ™ÛÜÚ[™ÈÈHÛÛ™\œØ][ÛˆY\ˆHÛÜšÜÚÜˆ‹›Z[•ÛÜ™ÈLKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜš]HHÛÛ\]H›Ù™\ÜÚ[Û˜[[™[™È][˜ÛY\È[YHÚYÛ˜[Ø\›HÛÜÙK™^Xİ[Û‹XY[™H[™š[˜[Ù[[˜ÙKˆ‹›Z[•ÛÜ™ÈÍ_W_Kœ™]šY]ÈÈšÙ^]ÛÜ™Èˆ[YHÚYÛ˜[0­ÈØ\›HÛÜÙH0­È™^Xİ[Ûˆ0­ÈXY[™H‹›Z\ÜÚ[Ûˆˆ“Ü[‹XZ[Z[ˆ[™ÛÜÙHHÛÛ\]H›İ\‹[Z[]HÛÛ™\œØ][Û‹ˆŸ_KÈšYˆÌÛÈ‹›[X™\ˆËÙYZÈŒË]Hˆ‘\ØÜšX™H[İ\ˆÛÜšÈÛX\›H‹›İ]ÛÛYHˆ‘^Z[ˆ[İ\ˆ›ÛKX[H[™™\ÜÛœÚXš[]Y\ÈÈÛÛY[Û™Hİ]ÚYH[İ\ˆšY[ˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ“^HXZ[ˆ™\ÜÛœÚXš[]H\ø )ˆ‹š›Øˆˆ›˜[YH[İ\ˆ[Üİ[\Ü[]H‹˜ÛŞ™Hˆ“^HXZ[ˆ××È\ø )ˆ‹˜[œİÙ\ˆˆœ™\ÜÛœÚXš[]H‹˜ÚÚXÙ\È–Èœ™\ÜÛœÚXš[]H‹œ™\ÜÛœÙH‹œ™\ÜÛœÚX›H—_KÈ^ˆ’HÛÜšÈÛÜÙ[HÚ]8 )ˆ‹š›Øˆˆ™\ØÜšX™HÛÛX›Ü˜][Ûˆ‹˜ÛŞ™Hˆ’HÛÜšÈ××ÈÚ]8 )ˆ‹˜[œİÙ\ˆˆ˜ÛÜÙ[H‹˜ÚÚXÙ\È–È˜ÛÜÙ[H‹˜ÛÜÙH‹˜ÛÜÙY—_KÈ^ˆH\XØ[\ÚÈ[›Û™\ø )ˆ‹š›Øˆˆ™^Z[ˆH™Yİ[\ˆXİ]š]H‹˜ÛŞ™HˆH\XØ[\ÚÈ××ø )ˆ‹˜[œİÙ\ˆˆš[›Û™\È‹˜ÚÚXÙ\È–Èš[›Û™\È‹š[›Û™H‹š[›Ûš[™È—_KÈ^ˆ•H\œÜÙHÙˆ^H›ÛH\Èø )ˆ‹š›Øˆˆ™^Z[ˆÚH[İ\ˆ›Øˆ^\İÈ‹˜ÛŞ™Hˆ•H××ÈÙˆ^H›ÛH\Èø )ˆ‹˜[œİÙ\ˆˆœ\œÜÙH‹˜ÚÚXÙ\È–Èœ\œÜÙH‹œ™\İ[‹œÜÚ][Ûˆ—_KÈ^ˆ’[ˆÚ[\H\›\ø )ˆ‹š›Øˆˆ›XZÙHXÚšXØ[[™›Ü›X][ÛˆXØÙ\ÜÚX›H‹˜ÛŞ™Hˆ’[ˆ××È\›\ø )ˆ‹˜[œİÙ\ˆˆœÚ[\H‹˜ÚÚXÙ\È–ÈœÚ[\H‹œÚ[\H‹œÛX[—_WK™Ü˜[[X\ˆÈ™›Øİ\Èˆ”™\Ù[Ú[\H›Üˆ™Yİ[\ˆ]Y\ÎÈÙ\[™ÈY\ˆ8 '[›Û™\ø 'NÈÛX\ˆ›İ[ˆ˜\Ù\È›Üˆ›Û\È[™\\Y[Ëˆ‹š][\È–ŞÈœHˆÚÛÜÙHHÛÜœ™Xİ]HÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È“^HXZ[ˆ™\ÜÛœÚXš[]H\ÈÚXÚÚ[™È]X[]Kˆ‹“^HXZ[ˆ™\ÜÛœÚXš[]H\™HÚXÚÚ[™È]X[]Kˆ‹“^HXZ[ˆ™\ÜÛœÚX›H\ÈÚXÚÈ]X[]Kˆ—K˜[œİÙ\ˆˆ“^HXZ[ˆ™\ÜÛœÚXš[]H\ÈÚXÚÚ[™È]X[]Kˆ‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÚÛÜÙHHÛÜœ™XİÛÛX›Ü˜][ÛˆÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’HÛÜšÈÛÜÙ[HÚ]Hš[˜[˜ÙHX[Kˆ‹’HÛÜšÜÈÛÜÙ[HÚ]š[˜[˜ÙHX[Kˆ‹’HÛÜÙHÛÜšÈÚ]Hš[˜[˜ÙHX[Kˆ—K˜[œİÙ\ˆˆ’HÛÜšÈÛÜÙ[HÚ]Hš[˜[˜ÙHX[Kˆ‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ8 '[›Û™\ø 'H]\›‹ˆ‹›Ü[ÛœÈ–ÈH\XØ[\ÚÈ[›Û™\È™\\š[™È™\ÜËˆ‹H\XØ[\ÚÈ[›Û™\È™\\™H™\ÜËˆ‹H\XØ[\ÚÈ[›Û™H™\\š[™È™\ÜËˆ—K˜[œİÙ\ˆˆH\XØ[\ÚÈ[›Û™\È™\\š[™È™\ÜËˆ‹YÈˆ™Ü˜[[X\™Ù\[™ŸKÈœHˆÛÛ\]NˆH\œÜÙHÙˆ^H›ÛH\È××Èİ\Üİ\İÛY\œËˆ‹›Ü[ÛœÈ–ÈÈ‹™›Üˆ‹˜]—K˜[œİÙ\ˆˆÈ‹YÈˆ™Ü˜[[X\š[™š[š]]™HŸKÈœHˆÚÛÜÙHHÛX\™\İ›İ[ˆ˜\ÙKˆ‹›Ü[ÛœÈ–ÈHİ\İÛY\ˆİ\ÜX[H‹œİ\Üİ\İÛY\ˆHX[H‹HX[Hİ\İÛY\ˆİ\Ü[™È—K˜[œİÙ\ˆˆHİ\İÛY\ˆİ\ÜX[H‹YÈˆ™Ü˜[[X\››İ[‹\˜\ÙHŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ\™\\œÛÛˆ›Ü›Kˆ‹›Ü[ÛœÈ–È”ÚHX[˜YÙ\ÈÛY[™\]Y\İËˆ‹”ÚHX[˜YÙHÛY[™\]Y\İËˆ‹”ÚHX[˜YÚ[™ÈÛY[™\]Y\İËˆ—K˜[œİÙ\ˆˆ”ÚHX[˜YÙ\ÈÛY[™\]Y\İËˆ‹YÈˆ™Ü˜[[X\\™\\œÛÛˆŸKÈœHˆÚÛÜÙHHÚ[\H^[˜][Û‹ˆ‹›Ü[ÛœÈ–È’[ˆÚ[\H\›\ËH[›Ú™XİÈİ^HÛˆØÚY[Kˆ‹’[ˆ\›\ÈÚ[\HH›Ú™XİØÚY[Kˆ‹”Ú[\H\›\ÈH[[™ÈØÚY[Kˆ—K˜[œİÙ\ˆˆ’[ˆÚ[\H\›\ËH[›Ú™XİÈİ^HÛˆØÚY[Kˆ‹YÈˆ™Ü˜[[X\˜Û\š]HŸKÈœHˆÛÛ\]NˆH\İX[H××È›ÙÜ™\ÜÈ]H]™\HœšY^Kˆ‹›Ü[ÛœÈ–È˜ÛÛXİ‹˜ÛÛXİÈ‹˜ÛÛXİ[™È—K˜[œİÙ\ˆˆ˜ÛÛXİ‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ]Y\İ[ÛˆX›İ]ÛÜšËˆ‹›Ü[ÛœÈ–È•ÚÈÈ[İHÛÜšÈÛÜÙ[HÚ]È‹•ÚÈ[İHÛÜšÈÛÜÙ[HÚ]È‹•ÚÈÙ\È[İHÛÜšÈÛÜÙHÚ]È—K˜[œİÙ\ˆˆ•ÚÈÈ[İHÛÜšÈÛÜÙ[HÚ]È‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹Y›Ü›HŸKÈœHˆÚÛÜÙHH™\İ™\İ[Ù[[˜ÙKˆ‹›Ü[ÛœÈ–È•H™\İ[Ùˆ^HÛÜšÈ\ÈHÛX\ˆÙYZÛH\]Kˆ‹•H™\İ[^HÛÜšÈ\™HÛX\ˆ\]Kˆ‹“^HÛÜšÈ™\İ[ÛX\ˆÙYZÛKˆ—K˜[œİÙ\ˆˆ•H™\İ[Ùˆ^HÛÜšÈ\ÈHÛX\ˆÙYZÛH\]Kˆ‹YÈˆ™Ü˜[[X\››İ[‹\˜\ÙHŸW_K›\İ[š[™ÈÈ]Hˆ“^HÛÜšÈ[ˆÚ[\H\›\È‹œ]Y\İ[ÛœÈ–ŞÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆ]›ÚY]H™YÚ[›š[™ÏÈ‹›Ü[ÛœÈ–È•XÚšXØ[[™İXYÙH‹”Ú[\H^[˜][ÛœÈ‹‘^[\\È—K˜[œİÙ\ˆˆ•XÚšXØ[[™İXYÙH‹YÈˆ›\İ[š[™Îœİ˜]YŞHŸKÈœHˆ’[ˆÚ[\H\›\ËÚ]Ù\ÈHÜXZÙ\ˆÏÈ‹›Ü[ÛœÈ–È’[È›Ú™XİÈİ^HÜ™Ø[š\ÙY[™ÛˆØÚY[H‹”™\Z\œÈÛÛ\]\œÈ‹•XXÚ\ÈÚ[™[ˆ—K˜[œİÙ\ˆˆ’[È›Ú™XİÈİ^HÜ™Ø[š\ÙY[™ÛˆØÚY[H‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸKÈœHˆ•Ú]\ÈHXZ[ˆ™\ÜÛœÚXš[]OÈ‹›Ü[ÛœÈ–ÈÛÛXİ›ÙÜ™\ÜÈ[™›Ü›X][Ûˆ[™XZÙHÛX\ˆ\]\È‹‘\ÚYÛˆZ[[™ÜÈ‹’\™H[İY™ˆ—K˜[œİÙ\ˆˆÛÛXİ›ÙÜ™\ÜÈ[™›Ü›X][Ûˆ[™XZÙHÛX\ˆ\]\È‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]Ù\ÈH\XØ[\ÚÈ[˜ÛYHš\œİÈ‹›Ü[ÛœÈ–ÈÚXÚÚ[™ÈÚ]\È™Y[ˆÛÛ\]Y‹^Z[™È\]Z\Y[‹Ø[[™Èİ\İÛY\œÈ—K˜[œİÙ\ˆˆÚXÚÚ[™ÈÚ]\È™Y[ˆÛÛ\]Y‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ•Ú]›Ø›[HÙ\ÈHÜXZÙ\ˆY[YOÈ‹›Ü[ÛœÈ–È[][™È]\È]H‹“Û›HÜ[[™ÈZ\İZÙ\È‹”\œÛÛ˜[\ØYÜ™Y[Y[È—K˜[œİÙ\ˆˆ[][™È]\È]H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚÈÙ\ÈHÜXZÙ\ˆÛÜšÈÚ]È‹›Ü[ÛœÈ–È‘šY[İY™‹İ\\š\ÛÜœÈ[™š[˜[˜ÙH‹“Û›HHX[˜YÙ\ˆ‹“Û›Hİ]ÚYHİ\İÛY\œÈ—K˜[œİÙ\ˆˆ‘šY[İY™‹İ\\š\ÛÜœÈ[™š[˜[˜ÙH‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚH\™HÙ]™\˜[X[\È[›Û™YÈ‹›Ü[ÛœÈ–È‘XXÚÜ›İ\\È\ÙˆH™YYY[™›Ü›X][Ûˆ‹•HÜXZÙ\ˆØ[È[Ü™HYY][™ÜÈ‹“›ÈÛ™H\È[H[™›Ü›X][Ûˆ—K˜[œİÙ\ˆˆ‘XXÚÜ›İ\\È\ÙˆH™YYY[™›Ü›X][Ûˆ‹YÈˆ›\İ[š[™Îœ™X\ÛÛˆŸKÈœHˆ•Ú]\ÈH\œÜÙHÙˆH›ÛOÈ‹›Ü[ÛœÈ–È’[X[˜YÙ\œÈ[™\œİ[™›ÙÜ™\ÜÈ[™XÚYH™^İ\È‹“XZÙH™\ÜÈÛ™Ù\ˆ‹]›ÚY›Ú™XİXÚ\Ú[ÛœÈ—K˜[œİÙ\ˆˆ’[X[˜YÙ\œÈ[™\œİ[™›ÙÜ™\ÜÈ[™XÚYH™^İ\È‹YÈˆ›\İ[š[™Îœ\œÜÙHŸKÈœHˆ•Ú]\ÈH\ÙY[™\İ[Ùˆ[ˆ\]OÈ‹›Ü[ÛœÈ–È“›İXÙH›Ø›[\ÈX\›H[™ÙY\ÛÜšÈ[İš[™È‹Ü™X]H[Ü™HXÚšXØ[›ØØX[\H‹‘[^HXÚ\Ú[ÛœÈ—K˜[œİÙ\ˆˆ“›İXÙH›Ø›[\ÈX\›H[™ÙY\ÛÜšÈ[İš[™È‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•Ú]ÛÛ[][šXØ][Ûˆš[˜Ú\H\È[[Ûœİ˜]YÈ‹›Ü[ÛœÈ–È‘^Z[ˆÛÜšÈÛÈ[ˆİ]ÚY\ˆØ[ˆ[™\œİ[™]‹•\ÙH\È]XÚ˜\™ÛÛˆ\ÈÜÜÚX›H‹“\İ›Øˆ]\ÈÚ]İ]^Z[š[™È[H—K˜[œİÙ\ˆˆ‘^Z[ˆÛÜšÈÛÈ[ˆİ]ÚY\ˆØ[ˆ[™\œİ[™]‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]H[İ\ˆ›ØˆÜˆİYH›ÛH[ˆÚ[\H\›\Ëˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙH™YÚ[›š[™È8 '^HXZ[ˆ™\ÜÛœÚXš[]H\ø )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙH™YÚ[›š[™È8 'HÛÜšÈÛÜÙ[HÚ]8 )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙH™YÚ[›š[™È8 'H\XØ[\ÚÈ[›Û™\ø )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HH\œÜÙHÙˆ[İ\ˆ›ÛH\Ú[™È8 'H\œÜÙHÙˆ^H›ÛH\Èø )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ‘^Z[ˆÛ™HXÚšXØ[ÛÜ™œ›ÛH[İ\ˆšY[[ˆÚ[\H[™Û\Úˆ‹›Z[•ÛÜ™ÈŒLKÈœ›Û\ˆ•Üš]HÈÙ[[˜Ù\ÈX›İ]›ÛK\ÚÈ[™ÛÛX›Ü˜]ÜœËˆ‹›Z[•ÛÜ™ÈŒŒKÈœ›Û\ˆ•Üš]H8 $ÍŒÛÜ™È^Z[š[™È[İ\ˆÛÜšÈÈHL‹^YX\‹[Ûˆ‹›Z[•ÛÜ™ÈKÈœ›Û\ˆ‘˜YİYÙNˆYH™\İ[Üˆ˜[YHÙˆ[İ\ˆÛÜšÈÈÜ™X]HHŒ8 $ÎÛÜ™^[˜][Û‹ˆ‹›Z[•ÛÜ™ÈŒKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜš]H[ˆ8 $ÌLÛÜ™8 '^HÛÜšÈ[ˆÚ[\H\›\ø 'H^[˜][ÛˆÚ]›È[™^Z[™YXÚšXØ[ÛÜ™Ëˆ‹›Z[•ÛÜ™ÈW_Kœ™]šY]ÈÈšÙ^]ÛÜ™Èˆœ›ÛH0­ÈXZ[ˆ\ÚÈ0­ÈÛÛX›Ü˜]ÜœÈ0­È\œÜÙH0­È™\İ[‹›Z\ÜÚ[Ûˆˆ‘Ú]™HHÛË[Z[]H8 '^HÛÜšÈ[ˆÚ[\H\›\ø 'H^[˜][Û‹ˆŸ_KÈšYˆÌÛ‹›[X™\ˆÙYZÈŒË]Hˆ”›İ][™\È[™İ\œ™[š[Üš]Y\È‹›İ]ÛÛYHˆÛÛ\\™H™Yİ[\ˆ™\ÜÛœÚXš[]Y\ÈÚ]Ú][İH\™HÛÜšÚ[™ÈÛˆ›İËˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ’H\İX[HÜ[™^H[Ü›š[™Üø )ˆ‹š›Øˆˆ™\ØÜšX™HH›Ü›X[›İ][™H‹˜ÛŞ™Hˆ’H××ÈÜ[™^H[Ü›š[™Üø )ˆ‹˜[œİÙ\ˆˆ\İX[H‹˜ÚÚXÙ\È–È\İX[H‹˜İ\œ™[‹Ù^H—_KÈ^ˆ]H[ÛY[x &[HÛÜšÚ[™ÈÛ¸ )ˆ‹š›Øˆˆ›˜[YHHİ\œ™[\ÜÚYÛ›Y[‹˜ÛŞ™Hˆ]H××Ëx &[HÛÜšÚ[™ÈÛ¸ )ˆ‹˜[œİÙ\ˆˆ›[ÛY[‹˜ÚÚXÙ\È–È›[ÛY[‹›Z[]H‹[YH—_KÈ^ˆ“[ÜİÙYZÜËx )ˆ‹š›Øˆˆ™\ØÜšX™HHœ™\]Y[]\›ˆ‹˜ÛŞ™Hˆ—××ÈÙYZÜËx )ˆ‹˜[œİÙ\ˆˆ“[Üİ‹˜ÚÚXÙ\È–È“[Üİ‹“]XÚ‹“X[H—_KÈ^ˆ•\ÈÙYZÈ\ÈY™™\™[™XØ]\Ùx )ˆ‹š›Øˆˆ˜ÛÛ˜\İ›İ][™H[™™\Ù[‹˜ÛŞ™Hˆ•\È××È\ÈY™™\™[™XØ]\Ùx )ˆ‹˜[œİÙ\ˆˆÙYZÈ‹˜ÚÚXÙ\È–ÈÙYZÈ‹ÙYZÜÈ‹ÙYZÛH—_KÈ^ˆ“^HÜš[Üš]HÙ^H\ø )ˆ‹š›ØˆˆšY[YHH[Üİ\™Ù[\ÚÈ‹˜ÛŞ™Hˆ“^HÜ××ÈÙ^H\ø )ˆ‹˜[œİÙ\ˆˆœš[Üš]H‹˜ÚÚXÙ\È–Èœš[Üš]H‹œš[Üˆ‹š[\Ü[—_WK™Ü˜[[X\ˆÈ™›Øİ\Èˆ”™\Ù[Ú[\H™\œİ\È™\Ù[ÛÛ[[İ\ÎÈY™\˜œÈÙˆœ™\]Y[˜ŞKˆ‹š][\È–ŞÈœHˆÚÛÜÙHH›İ][™HÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’H\İX[H™]šY]È[œÈ[ˆH[Ü›š[™Ëˆ‹’H[H\İX[H™]šY]Ú[™È[œÈ]™\H[Ü›š[™È›İËˆ‹’H\İX[H™]šY]Ú[™È[œËˆ—K˜[œİÙ\ˆˆ’H\İX[H™]šY]È[œÈ[ˆH[Ü›š[™Ëˆ‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\HŸKÈœHˆÚÛÜÙHHİ\œ™[XXİ[ÛˆÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È]H[ÛY[x &[H™\\š[™ÈH™\Üˆ‹]H[ÛY[H™\\™HH™\Ü]™\H^Kˆ‹]H[ÛY[H™\\š[™È™\Üˆ—K˜[œİÙ\ˆˆ]H[ÛY[x &[H™\\š[™ÈH™\Üˆ‹YÈˆ™Ü˜[[X\œ™\Ù[XÛÛ[[İ\ÈŸKÈœHˆÛÛ\]Nˆ[ÜİÙYZÜËH××ÈÚ]ÛÛXYİY\Ëˆ‹›Ü[ÛœÈ–È˜ÛÛÜ™[˜]H‹˜[HÛÛÜ™[˜][™È‹˜ÛÛÜ™[˜]\È—K˜[œİÙ\ˆˆ˜ÛÛÜ™[˜]H‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\HŸKÈœHˆÛÛ\]Nˆ\ÈÙYZËH××ÈÛˆHÜXÚX[›Ú™Xİˆ‹›Ü[ÛœÈ–È˜[HÛÜšÚ[™È‹ÛÜšÈ]™\H‹ÛÜšÜÈ—K˜[œİÙ\ˆˆ˜[HÛÜšÚ[™È‹YÈˆ™Ü˜[[X\œ™\Ù[XÛÛ[[İ\ÈŸKÈœHˆÚÛÜÙHHÛÜœ™XİY™\˜ˆÜÚ][Û‹ˆ‹›Ü[ÛœÈ–È’H\İX[HÚXÚÈ[XZ[]K›Kˆ‹’HÚXÚÈ\İX[H[XZ[]K›Kˆ‹•\İX[HH[HÚXÚÈ[XZ[ˆ—K˜[œİÙ\ˆˆ’H\İX[HÚXÚÈ[XZ[]K›Kˆ‹YÈˆ™Ü˜[[X\˜Y™\˜‹Yœ™\]Y[˜ŞHŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ™YØ]]™Hİ\œ™[Xİ[Û‹ˆ‹›Ü[ÛœÈ–È’x &[H›İÛÜšÚ[™ÈÛˆ]\ÚÈÙ^Kˆ‹’HÛ¸ &]ÛÜšÚ[™ÈÛˆ]\ÚÈÙ^Kˆ‹’H›İ[HÛÜšÈÛˆ]\ÚËˆ—K˜[œİÙ\ˆˆ’x &[H›İÛÜšÚ[™ÈÛˆ]\ÚÈÙ^Kˆ‹YÈˆ™Ü˜[[X\œ™\Ù[XÛÛ[[İ\ÈŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ›İ][™H]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú]È[İH\İX[HÈ[ˆH[Ü›š[™ÏÈ‹•Ú]\™H[İH\İX[HÈ[Ü›š[™ÏÈ‹•Ú][İH\İX[HÚ[™È]™\H[Ü›š[™ÏÈ—K˜[œİÙ\ˆˆ•Ú]È[İH\İX[HÈ[ˆH[Ü›š[™ÏÈ‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹Y›Ü›HŸKÈœHˆÚÛÜÙHHİ\œ™[]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú]\™H[İHÛÜšÚ[™ÈÛˆ]H[ÛY[È‹•Ú]È[İHÛÜšÚ[™È][ÛY[È‹•Ú]\™H[İHÛÜšÈÛÈ—K˜[œİÙ\ˆˆ•Ú]\™H[İHÛÜšÚ[™ÈÛˆ]H[ÛY[È‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹Y›Ü›HŸKÈœHˆÛÛ\]Nˆ^HÜš[Üš]HÙ^H××Èš[š\Ú[™ÈHÛY[\]Kˆ‹›Ü[ÛœÈ–Èš\È‹˜\™H‹˜™H—K˜[œİÙ\ˆˆš\È‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÚÛÜÙHH™\İÛÛ˜\İˆ‹›Ü[ÛœÈ–È’H\İX[HÛÜšÈÛˆ™\ÜË]\ÈÙYZÈx &[H™\\š[™ÈH™\Ù[][Û‹ˆ‹’H[H\İX[H™\Ü]ÙYZÈ™\\™H™\Ù[][Û‹ˆ‹•\İX[HHÛÜšÚ[™È™\ÜÈ™XØ]\ÙH™\Ù[][Û‹ˆ—K˜[œİÙ\ˆˆ’H\İX[HÛÜšÈÛˆ™\ÜË]\ÈÙYZÈx &[H™\\š[™ÈH™\Ù[][Û‹ˆ‹YÈˆ™Ü˜[[X\˜ÛÛ˜\İŸW_K›\İ[š[™ÈÈ]Hˆ“^H›Ü›X[ÙYZÈ[™Ù^x &\Èš[Üš]H‹œ]Y\İ[ÛœÈ–ŞÈœHˆ’İÈÙ\ÈHÜXZÙ\ˆ\ØÜšX™H[ÜİÙYZÜÏÈ‹›Ü[ÛœÈ–È”™YXİX›H‹ÛÛ\][HY™™\™[]™\H^H‹•™\H]ZY]—K˜[œİÙ\ˆˆ”™YXİX›H‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸKÈœHˆ•Ú]Ù\ÈHÜXZÙ\ˆ\İX[HÈš\œİÈ‹›Ü[ÛœÈ–ÈÚXÚÈY\ÜØYÙ\È[™™]šY]ÈH^x &\È[ˆ‹”™\\™HH™\Ù[][Ûˆ‹Ø[İ\İÛY\œÈ[[YYX][H—K˜[œİÙ\ˆˆÚXÚÈY\ÜØYÙ\È[™™]šY]ÈH^x &\È[ˆ‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ•Ú]\[œÈY\ˆ]È‹›Ü[ÛœÈ–ÈÛÛÜ™[˜]HÚ]ÛÛXYİY\È[™\]HH\ÚÈ\İ‹‘ÛÈÛYH‹”İ\H™]È›Øˆ—K˜[œİÙ\ˆˆÛÛÜ™[˜]HÚ]ÛÛXYİY\È[™\]HH\ÚÈ\İ‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ•Ú]\ÈH›Ü›X[Y\››ÛÛˆXİ]š]OÈ‹›Ü[ÛœÈ–È”™\\š[™È›İ\ÈÜˆ™\ÜÈ‹][™[™ÈØÚÛÛ‹ÛÛÚÚ[™È—K˜[œİÙ\ˆˆ”™\\š[™È›İ\ÈÜˆ™\ÜÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•ÚH\È\ÈÙYZÈY™™\™[È‹›Ü[ÛœÈ–È•\™H\È[ˆ[\Ü[\œÙ^HXY[™H‹•HÙ™šXÙH\ÈÛÜÙY‹•HÜXZÙ\ˆ\ÈÛˆÛY^H—K˜[œİÙ\ˆˆ•\™H\È[ˆ[\Ü[\œÙ^HXY[™H‹YÈˆ›\İ[š[™Îœ™X\ÛÛˆŸKÈœHˆ•Ú]\ÈHÜXZÙ\ˆÛÜšÚ[™ÈÛˆ›İÏÈ‹›Ü[ÛœÈ–È‘š[˜[]Z[È›ÜˆHÛY[\]H‹H™]ÈZ[[™È‹H›Øˆ[\šY]È—K˜[œİÙ\ˆˆ‘š[˜[]Z[È›ÜˆHÛY[\]H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]\ÈHÜXZÙ\ˆØZ][™È›ÜÈ‹›Ü[ÛœÈ–È•ÛÈYXÙ\ÈÙˆ[™›Ü›X][Ûˆ‹H™]ÈÛÛ\]\ˆ‹HØ[\H^[Y[—K˜[œİÙ\ˆˆ•ÛÈYXÙ\ÈÙˆ[™›Ü›X][Ûˆ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]\ÈÙ^x &\ÈÜš[Üš]OÈ‹›Ü[ÛœÈ–È‘š[š\ÚH\]H™Y›Ü™H›Kˆ‹”™XY]™\H[XZ[YØZ[ˆ‹Ú[™ÙHH\ÚÈ\İ—K˜[œİÙ\ˆˆ‘š[š\ÚH\]H™Y›Ü™H›Kˆ‹YÈˆ›\İ[š[™Îœš[Üš]HŸKÈœHˆ•Ú]\[œÈÈ›Ü›X[]Y\ÏÈ‹›Ü[ÛœÈ–È•^H™XÙZ]™H\ÜÈ[YH[[HXY[™H\ÈÛÛ\]H‹•^H\Ø\X\ˆ\›X[™[H‹•^H™XÛÛYH[Ü™H[\Ü[[ˆHXY[™H—K˜[œİÙ\ˆˆ•^H™XÙZ]™H\ÜÈ[YH[[HXY[™H\ÈÛÛ\]H‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸKÈœHˆ•ÚXÚÜ˜[[X\ˆÛÛ˜\İ\ÈÙ[˜[ÈHY\ÜØYÙOÈ‹›Ü[ÛœÈ–È”›İ][™H™\Ù[Ú[\HœÈİ\œ™[™\Ù[ÛÛ[[İ\È‹”\İ\™™XİœÈ]\™H\™™Xİ‹”\ÜÚ]™H›ÚXÙHÛ›H—K˜[œİÙ\ˆˆ”›İ][™H™\Ù[Ú[\HœÈİ\œ™[™\Ù[ÛÛ[[İ\È‹YÈˆ›\İ[š[™Î›[™İXYÙHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]HÛ™H›Ü›X[ÙYZÛH]H\Ú[™È™\Ù[Ú[\Kˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]H[›İ\ˆ›İ][™HÙ[[˜ÙHÚ]8 '\İX[x 'Kˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™Hİ\œ™[\ÚÈ\Ú[™È™\Ù[ÛÛ[[İ\Ëˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙH™YÚ[›š[™È8 ']H[ÛY[8 )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÙ^x &\ÈÜš[Üš]Kˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÛÛ˜\İÙ[[˜ÙH™YÚ[›š[™È8 '\ÈÙYZÈ\ÈY™™\™[™XØ]\Ùx )¸ 'H‹›Z[•ÛÜ™ÈŒLKÈœ›Û\ˆ•Üš]HÈÙ[[˜Ù\Îˆ›İ][™Kİ\œ™[\ÚÈ[™š[Üš]Kˆ‹›Z[•ÛÜ™ÈŒŒKÈœ›Û\ˆ•Üš]HHÚÜÛÜšÈÙÈÚ]š]™H›İ][™Hİ][Y[È[™™YHİ\œ™[XXİ[Ûˆİ][Y[Ëˆ‹›Z[•ÛÜ™ÈKÈœ›Û\ˆ‘˜YİYÙNˆÜš]HŒ8 $ÎÛÜ™ÈÛÛ\\š[™ÈH›Ü›X[ÙYZÈÚ]\ÈÙYZËˆ‹›Z[•ÛÜ™ÈŒKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜš]H[ˆ8 $ÌLÛÜ™\]H]Y8 '^H›Ü›X[ÛÜšÈ[™^Hİ\œ™[š[Üš]K¸ 'H‹›Z[•ÛÜ™ÈW_Kœ™]šY]ÈÈšÙ^]ÛÜ™Èˆœ›İ][™HH0­È›İ][™Hˆ0­Èİ\œ™[\ÚÈ0­Èš[Üš]H‹›Z\ÜÚ[Ûˆˆ”ÜXZÈ›ÜˆÛÈZ[]\ÈX›İ]8 '^H›Ü›X[ÛÜšÈ[™^Hİ\œ™[š[Üš]K¸ 'HŸ_KÈšYˆÌÛH‹›[X™\ˆKÙYZÈŒË]Hˆ‘Ú]™HH\ÙY[ÛÜšÈ\]H‹›İ]ÛÛYHˆ”™\Ü›ÙÜ™\ÜËÛÛ\]YXİ[ÛœËİ\œ™[ÛÜšÈ[™™^İ\Ëˆ‹™^™\ÜÚ[ÛœÈ–ŞÈ^ˆ”ÛÈ˜\‹x &]™HÛÛ\]Y8 )ˆ‹š›Øˆˆœ™\ÜÛÛ\]Y›ÙÜ™\ÜÈ‹˜ÛŞ™Hˆ”ÛÈ××Ëx &]™HÛÛ\]Y8 )ˆ‹˜[œİÙ\ˆˆ™˜\ˆ‹˜ÚÚXÙ\È–È™˜\ˆ‹›Û™È‹››İÈ—_KÈ^ˆ’x &[Hİ\œ™[HÚXÚÚ[™ø )ˆ‹š›Øˆˆ™\ØÜšX™HÛÜšÈ[ˆ›ÙÜ™\ÜÈ‹˜ÛŞ™Hˆ’x &[H××ÈÚXÚÚ[™ø )ˆ‹˜[œİÙ\ˆˆ˜İ\œ™[H‹˜ÚÚXÙ\È–È˜İ\œ™[H‹˜İ\œ™[‹››İÛH—_KÈ^ˆ•HXZ[ˆ\ÜİYH\ø )ˆ‹š›ØˆˆšY[YHH›ØÚÙ\ˆ‹˜ÛŞ™Hˆ•HXZ[ˆ××È\ø )ˆ‹˜[œİÙ\ˆˆš\ÜİYH‹˜ÚÚXÙ\È–Èš\ÜİYH‹œ›Ø›[X]XÈ‹[™ŞH—_KÈ^ˆ’H^XİÈš[š\Úx )ˆ‹š›Øˆˆ™Ú]™HH™X[\İXÈXY[™H‹˜ÛŞ™Hˆ’H××ÈÈš[š\Úx )ˆ‹˜[œİÙ\ˆˆ™^Xİ‹˜ÚÚXÙ\È–È™^Xİ‹™^XİÈ‹ØZ][™È—_KÈ^ˆ“^H™^İ\\Èø )ˆ‹š›Øˆˆœİ]HH[[YYX]HXİ[Ûˆ‹˜ÛŞ™Hˆ“^H××Èİ\\Èø )ˆ‹˜[œİÙ\ˆˆ›™^‹˜ÚÚXÙ\È–È›™^‹›™]È‹›]\ˆ—_WK™Ü˜[[X\ˆÈ™›Øİ\Èˆ”™\Ù[\™™Xİ›Üˆ›ÙÜ™\ÜÎÈ™\Ù[ÛÛ[[İ\È›Üˆİ\œ™[ÛÜšÎÈ]\™H[™İXYÙH›Üˆ™^Xİ[Ûˆ[™XY[™Kˆ‹š][\È–ŞÈœHˆÚÛÜÙHHÛÜœ™Xİ›ÙÜ™\ÜÈÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È”ÛÈ˜\‹x &]™HÛÛ\]YHš\œİ™]šY]Ëˆ‹”ÛÈ˜\‹HÛÛ\]YHš\œİ™]šY]È]™\H^Kˆ‹”ÛÈ˜\‹H[HÛÛ\]Hš\œİ™]šY]Ëˆ—K˜[œİÙ\ˆˆ”ÛÈ˜\‹x &]™HÛÛ\]YHš\œİ™]šY]Ëˆ‹YÈˆ™Ü˜[[X\œ™\Ù[\\™™XİŸKÈœHˆÚÛÜÙHHİ\œ™[]ÛÜšÈÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’x &[Hİ\œ™[HÚXÚÚ[™ÈHš[˜[]Z[Ëˆ‹’Hİ\œ™[HÚXÚÙYš[˜[]Z[È›İËˆ‹’x &[Hİ\œ™[HÚXÚÈš[˜[]Z[Ëˆ—K˜[œİÙ\ˆˆ’x &[Hİ\œ™[HÚXÚÚ[™ÈHš[˜[]Z[Ëˆ‹YÈˆ™Ü˜[[X\œ™\Ù[XÛÛ[[İ\ÈŸKÈœHˆÚÛÜÙHH›ØÚÙ\ˆÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È•HXZ[ˆ\ÜİYH\ÈÛ™HZ\ÜÚ[™ÈØİ[Y[ˆ‹•HXZ[ˆ\ÜİYH\™HZ\ÜÚ[™ÈØİ[Y[Û™Kˆ‹“XZ[ˆ\ÜİYHÛ™HØİ[Y[Z\ÜÚ[™È\Ëˆ—K˜[œİÙ\ˆˆ•HXZ[ˆ\ÜİYH\ÈÛ™HZ\ÜÚ[™ÈØİ[Y[ˆ‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÛÛ\]NˆH^XİÈš[š\Ú××ÈÈ›Kˆ‹›Ü[ÛœÈ–È˜H‹˜][[‹›Ûˆ—K˜[œİÙ\ˆˆ˜H‹YÈˆ™Ü˜[[X\™XY[™HŸKÈœHˆÚÛÜÙHH™^\İ\Ù[[˜ÙKˆ‹›Ü[ÛœÈ–È“^H™^İ\\ÈÈ\]HH[‹ˆ‹“^H™^İ\\È\][™ÈÈH[‹ˆ‹“^H™^İ\\]H[ˆ\Ëˆ—K˜[œİÙ\ˆˆ“^H™^İ\\ÈÈ\]HH[‹ˆ‹YÈˆ™Ü˜[[X\š[™š[š]]™HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ›ÙÜ™\ÜÈ]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú]]™H[İHÛÛ\]YÛÈ˜\È‹•Ú]Y[İHÛÛ\]YÛÈ˜\È‹•Ú]]™H[İHÛÛ\]HÛÈ˜\È—K˜[œİÙ\ˆˆ•Ú]]™H[İHÛÛ\]YÛÈ˜\È‹YÈˆ™Ü˜[[X\œ™\Ù[\\™™Xİ\]Y\İ[ÛˆŸKÈœHˆÚÛÜÙHHÛÜœ™Xİİ\œ™[]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú]\™H[İHÛÜšÚ[™ÈÛˆ›İÏÈ‹•Ú]È[İHÛÜšÚ[™ÈÛˆ›İÏÈ‹•Ú]\™H[İHÛÜšÈ›İÏÈ—K˜[œİÙ\ˆˆ•Ú]\™H[İHÛÜšÚ[™ÈÛˆ›İÏÈ‹YÈˆ™Ü˜[[X\œ™\Ù[XÛÛ[[İ\Ë\]Y\İ[ÛˆŸKÈœHˆÚÛÜÙHH™X[\İXÈ]\™HÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’H^XİÈ™XÙZ]™H]Ù^Kˆ‹’H^Xİ[™È™XÙZ]™H]Y\İ\™^HÛ[Üœ›İËˆ‹’H^Xİ™XÙZ]š[™È]Ù^HËˆ—K˜[œİÙ\ˆˆ’H^XİÈ™XÙZ]™H]Ù^Kˆ‹YÈˆ™Ü˜[[X\š[™š[š]]™HŸKÈœHˆÚÛÜÙHH™\İÛÛ˜\İˆ‹›Ü[ÛœÈ–È’x &]™HÛÛ\]YH™]šY]Ë[™x &[H›İÈÚXÚÚ[™ÈHš[˜[]Z[Ëˆ‹’HÛÛ\]Y›İÈ[™ÚXÚÚ[™ÈY\İ\™^Kˆ‹’x &]™HÛÛ\]H™]šY]È]İ\œ™[HÚXÚÙYˆ—K˜[œİÙ\ˆˆ’x &]™HÛÛ\]YH™]šY]Ë[™x &[H›İÈÚXÚÚ[™ÈHš[˜[]Z[Ëˆ‹YÈˆ™Ü˜[[X\[œÙKXÛÛ˜\İŸKÈœHˆÚÛÜÙHHÛX\™\İ\]HÜ™\‹ˆ‹›Ü[ÛœÈ–È˜ÛÛ\]Y›ÙÜ™\ÜÈ8¡¤ˆİ\œ™[ÛÜšÈ8¡¤ˆ\ÜİYH8¡¤ˆXY[™H8¡¤ˆ™^İ\‹š\ÜİYH8¡¤ˆ[œ™[]YİÜH8¡¤ˆÜ™Y][™È8¡¤ˆØ˜H‹›™^YX\ˆ8¡¤ˆ\İÚ[ÛÙ8¡¤ˆİ\œ™[\ÚÈ—K˜[œİÙ\ˆˆ˜ÛÛ\]Y›ÙÜ™\ÜÈ8¡¤ˆİ\œ™[ÛÜšÈ8¡¤ˆ\ÜİYH8¡¤ˆXY[™H8¡¤ˆ™^İ\‹YÈˆ™Ü˜[[X\›Ü™Ø[š\Ø][ÛˆŸW_K›\İ[š[™ÈÈ]HˆHÛX\ˆÛÜšÈ\]H‹œ]Y\İ[ÛœÈ–ŞÈœHˆ•Ú]\ÈH\œÜÙHÙˆHY\ÜØYÙOÈ‹›Ü[ÛœÈ–È‘Ú]™HH]ZXÚÈÛÜšÈ\]H‹’[›ÙXÙHH™]È[\ŞYYH‹‘[™HÛÜšÜÚÜÛÛ™\œØ][Ûˆ—K˜[œİÙ\ˆˆ‘Ú]™HH]ZXÚÈÛÜšÈ\]H‹YÈˆ›\İ[š[™Î›XZ[‹ZYXHŸKÈœHˆ•Ú]\È[™XYH™Y[ˆÛÛ\]YÈ‹›Ü[ÛœÈ–È•Hš\œİ™]šY]È‹•Hš[˜[™\Ù[][Ûˆ‹•Hİ\Y\ˆÛÛ˜Xİ—K˜[œİÙ\ˆˆ•Hš\œİ™]šY]È‹YÈˆ›\İ[š[™Îœ›ÙÜ™\ÜÈŸKÈœHˆ’İÈX[HÙXİ[ÛœÈÙ\™HÛÜœ™XİYÈ‹›Ü[ÛœÈ–È•ÛÈ‹‘š]™H‹“Û™H—K˜[œİÙ\ˆˆ•ÛÈ‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]\È\[š[™È›İÏÈ‹›Ü[ÛœÈ–ÈÚXÚÚ[™Èš[˜[]Z[È[™ÛÛ™š\›Z[™È[X™\œÈ‹•Üš][™ÈH›Øˆ\XØ][Ûˆ‹”İ\[™ÈHš\œİ™]šY]È—K˜[œİÙ\ˆˆÚXÚÚ[™Èš[˜[]Z[È[™ÛÛ™š\›Z[™È[X™\œÈ‹YÈˆ›\İ[š[™Î˜İ\œ™[]ÛÜšÈŸKÈœHˆ•ÚÈ\È[[™ÈÛÛ™š\›HH[X™\œÏÈ‹›Ü[ÛœÈ–È•Hš[˜[˜ÙHX[H‹HØÚÛÛXXÚ\ˆ‹•Hİ\İÛY\¸ &\È˜[Z[H—K˜[œİÙ\ˆˆ•Hš[˜[˜ÙHX[H‹YÈˆ›\İ[š[™Î™]Z[ŸKÈœHˆ•Ú]\ÈHXZ[ˆ\ÜİYOÈ‹›Ü[ÛœÈ–È“Û™HZ\ÜÚ[™Èİ\Y\ˆØİ[Y[‹Hœ›ÚÙ[ˆÛÛ\]\ˆ‹HZ\ÜÚ[™È[\ŞYYH—K˜[œİÙ\ˆˆ“Û™HZ\ÜÚ[™Èİ\Y\ˆØİ[Y[‹YÈˆ›\İ[š[™Î˜›ØÚÙ\ˆŸKÈœHˆ•Ú]\ÈHÜXZÙ\ˆÛ™HX›İ]H\ÜİYOÈ‹›Ü[ÛœÈ–È”™\]Y\İYHØİ[Y[‹Ø[˜Ù[YH›Ú™Xİ‹’YÛ›Ü™Y]—K˜[œİÙ\ˆˆ”™\]Y\İYHØİ[Y[‹YÈˆ›\İ[š[™Î˜Xİ[ÛˆŸKÈœHˆ•Ú[ˆ\ÈH[\]H^XİYÈš[š\ÚÈ‹›Ü[ÛœÈ–ÈHÈ›Kˆ‹“™^ÙYZÈ‹]ZYšYÚY\İ\™^H—K˜[œİÙ\ˆˆHÈ›Kˆ‹YÈˆ›\İ[š[™Î™XY[™HŸKÈœHˆ•Ú]\ÈH™^İ\Y\ˆ™XÙZ]š[™ÈHØİ[Y[È‹›Ü[ÛœÈ–ÈY]ÚXÚÈHš[˜[™\œÚ[Û‹[™Ù[™H[ˆ‹™YÚ[ˆHš\œİ™]šY]ÈYØZ[ˆ‹Ú[™ÙHHÛY[—K˜[œİÙ\ˆˆY]ÚXÚÈHš[˜[™\œÚ[Û‹[™Ù[™H[ˆ‹YÈˆ›\İ[š[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ‘Ù\ÈHÜXZÙ\ˆ^XİHXY[™HÈÚ[™ÙOÈ‹›Ü[ÛœÈ–È“›È‹–Y\ËYš[š][H‹•HÜXZÙ\ˆÚ]™\È›ÈÜ[š[Ûˆ—K˜[œİÙ\ˆˆ“›È‹YÈˆ›\İ[š[™Îš[™™\™[˜ÙHŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]ÛÛY][™È[İH]™HÛÛ\]YÛÈ˜\‹ˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]Ú][İH\™Hİ\œ™[HÛÜšÚ[™ÈÛ‹ˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHY[YZ[™ÈHXZ[ˆ\ÜİYKˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™H™X[\İXÈXY[™H\Ú[™È8 'H^XİÈš[š\Úx )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™H™^İ\\Ú[™È8 '^H™^İ\\Èø )¸ 'H‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HHÛË\Ù[[˜ÙH\]NˆÛÛ\]Y›ÙÜ™\ÜÈ
+Èİ\œ™[ÛÜšËˆ‹›Z[•ÛÜ™ÈŒM_KÈœ›Û\ˆYÛ™H›ØÚÙ\ˆ[™Ú][İH\™HÚ[™ÈX›İ]]ˆ‹›Z[•ÛÜ™ÈŒŒKÈœ›Û\ˆ•Üš]HHL8 $ÍÌÛÜ™\]H\Ú[™È[š]™H\™Ù]^™\ÜÚ[ÛœËˆ‹›Z[•ÛÜ™ÈLKÈœ›Û\ˆ‘˜YİYÙNˆ™]Üš]HH˜YİYH\]H
+8 '[™ÜÈ\™HÛÚ[™ÈÚØ^x 'JH\ÈHÜXÚYšXÈ\ÙY[\]Kˆ‹›Z[•ÛÜ™ÈLKÈœ›Û\ˆ‘š[˜[™]Üš]H[™˜[œÙ™\ˆÜš]H[ˆ8 $ÌLLÛÜ™›Ù™\ÜÚ[Û˜[ÛÜšÈ\]H[ˆ\ÈÜ™\ˆ›ÙÜ™\ÜËİ\œ™[ÛÜšË\ÜİYKXY[™K™^İ\ˆ‹›Z[•ÛÜ™ÈW_Kœ™]šY]ÈÈšÙ^]ÛÜ™Èˆœ›ÙÜ™\ÜÈ0­Èİ\œ™[ÛÜšÈ0­È\ÜİYH0­ÈXY[™H0­È™^İ\‹›Z\ÜÚ[Ûˆˆ‘Ú]™HHŒ8 $ÎLÙXÛÛ™ÛÜšÈ\]HÚ]ÛÛ\]Y›ÙÜ™\ÜËİ\œ™[ÛÜšË›ØÚÙ\‹XY[™H[™™^İ\ˆŸ_WK›]™[›İHˆY[Ü›Ù™\ÜÚ[Û˜[ÛÛ[][šXØ]]™H]Ø^Nˆİ\ÜYLŠÈ˜XİXÙH[İš[™ÈİØ\™[˜İ[Û˜[ŒH[™\[™[˜ÙKˆŸNÂĞT‘QT—Ñ“QSÖWĞ“ÓÒËİ[\ÜÛÛœÏPĞT‘QT—Ñ“QSÖWĞ“ÓÒË›\ÜÛÛœË›[™İÂĞT‘QT—Ñ“QSÖWĞ“ÓÒË›\ÜÛÛœË™›Ü‘XXÚ
+OÚYŠœ™XYOOO][™Yš[™Y
+[œ™XYO]Y_JNÂ˜ÛÛœİÔPRÕTĞL—ĞŒWĞ“ÓÒÏ^ÈšYˆœÜXZİ\XL‹XŒH‹]Hˆ”ÜXZÕ\[™Û\ÚLˆ8¡¤ˆŒH‹›]™[ˆLˆ8¡¤ˆŒH‹›[Ù[U]Hˆ”ÜXZÕ\[™Û\ÚLˆ8¡¤ˆŒH‹›[Ù[QÛØ[ˆ‘YÚ][ÛÜšØ›ÛÚÈ˜XİXÙH]İ\ÜÈH]™H›Y[˜ŞHÛİ\œÙHÚ]›ØØX[\K\İ[š[™È	ˆ™XY[™ËÜ˜[[X\ˆ[™Üš][™Ëˆ‹İ[\ÜÛÛœÈŒŒ‹›\ÜÛÛœÈ–ŞÈšYˆœİKXL˜ŒK[H‹›[X™\ˆŒK]Hˆ‘Ù][™ÈXÜ]XZ[Y‹›İ]ÛÛYHˆZ[H[™İXYÙH[İH™YYÈ[›ÙXÙH[İ\œÙ[ˆ[™[™\œİ[™Ú[\H\œÛÛ˜[[™›Ü›X][Û‹ˆ‹œ™XYHYK›ØØX[\HÈš][\È–ŞÈœHˆ•ÚXÚÛÜ™YX[œÈ[ˆXİ]š]H[İH[š›ŞH[ˆ[İ\ˆœ™YH[YOÈ‹›Ü[ÛœÈ–ÈšØ˜H‹›ØØİ\][Ûˆ‹šÛY]İÛˆ—K˜[œİÙ\ˆˆšØ˜H‹YÈˆ›ØØX[\N›YX[š[™ÈŸKÈœHˆ•ÚXÚÛÜ™YX[œÈHİÛˆÜˆÚ]H[İHÛÛYHœ›ÛOÈ‹›Ü[ÛœÈ–ÈšÛY]İÛˆ‹›ØØİ\][Ûˆ‹™˜[Z[H—K˜[œİÙ\ˆˆšÛY]İÛˆ‹YÈˆ›ØØX[\N›YX[š[™ÈŸKÈœHˆ•ÚXÚÛÜ™YX[œÈ[İ\ˆ›ØˆÜˆ\HÙˆÛÜšÏÈ‹›Ü[ÛœÈ–È›ØØİ\][Ûˆ‹šØ˜H‹›İ]ÛÚ[™È—K˜[œİÙ\ˆˆ›ØØİ\][Ûˆ‹YÈˆ›ØØX[\N›YX[š[™ÈŸKÈœHˆ•ÚXÚÛÜ™\ØÜšX™\ÈÛÛY[Û™HÚÈ[š›Ş\ÈYY][™È[™[Ú[™ÈÈ[ÜOÈ‹›Ü[ÛœÈ–È›İ]ÛÚ[™È‹œÚ[™ÛH‹›X\œšYY—K˜[œİÙ\ˆˆ›İ]ÛÚ[™È‹YÈˆ›ØØX[\N›YX[š[™ÈŸKÈœHˆH\œÛÛˆÚÈ\ÈH\Ø˜[™ÜˆÚY™H\ø )ˆ‹›Ü[ÛœÈ–È›X\œšYY‹œÚ[™ÛH‹›İ]ÛÚ[™È—K˜[œİÙ\ˆˆ›X\œšYY‹YÈˆ›ØØX[\N˜ÛÛ^ŸKÈœHˆÚÛÜÙHH™\İ^™\ÜÚ[ÛˆÚ[ˆ[İHYY]ÛÛY[Û™H›ÜˆHš\œİ[YKˆ‹›Ü[ÛœÈ–È“šXÙHÈYY][İKˆ‹”ÙYH[İHY\İ\™^Kˆ‹•Ú][YH›ØÈ—K˜[œİÙ\ˆˆ“šXÙHÈYY][İKˆ‹YÈˆ›ØØX[\N™^™\ÜÚ[ÛˆŸKÈœHˆÚÛÜÙHH˜]\˜[]Y\İ[ÛˆÈ\ÚÈX›İ]ÛÛY[Û™IÜÈ›Ø‹ˆ‹›Ü[ÛœÈ–È•Ú]È[İHÏÈ‹•Ú][İHÚ[™È›ØÈ‹•Ú\™HØØİ\][Ûˆ[İOÈ—K˜[œİÙ\ˆˆ•Ú]È[İHÏÈ‹YÈˆ›ØØX[\N™^™\ÜÚ[ÛˆŸKÈœHˆ–[İ\ˆÛ\ÜÛX]H[È[İH[ˆ[\İX[Ø˜KˆÚXÚ™\ÜÛœÙHÚİÜÈ[\™\İÈ‹›Ü[ÛœÈ–È•]	ÜÈ[\™\İ[™Ëˆ‹“›ÈÜXZÚ[™Ëˆ‹’H[HÛY]İÛ‹ˆ—K˜[œİÙ\ˆˆ•]	ÜÈ[\™\İ[™Ëˆ‹YÈˆ›ØØX[\N™^™\ÜÚ[ÛˆŸKÈœHˆÚÛÜÙHH^™\ÜÚ[Ûˆ]™]\›œÈHØ[YH]Y\İ[ÛˆÈHİ\ˆ\œÛÛ‹ˆ‹›Ü[ÛœÈ–È’İÈX›İ][İOÈ‹“šXÙHÛY]İÛ‹ˆ‹”™X[H›ØÈ—K˜[œİÙ\ˆˆ’İÈX›İ][İOÈ‹YÈˆ›ØØX[\N™^™\ÜÚ[ÛˆŸKÈœHˆÚÛÜÙHHÛ]H™\]Y\İ›Üˆ[Ü™H\œÛÛ˜[[™›Ü›X][Û‹ˆ‹›Ü[ÛœÈ–ÈÛİ[[İH[YHX›İ][İ\œÙ[È‹•[[İ\œÙ[ˆ›İËˆ‹•Ú][İ\œÙ[ˆ\ÏÈ—K˜[œİÙ\ˆˆÛİ[[İH[YHX›İ][İ\œÙ[È‹YÈˆ›ØØX[\N™^™\ÜÚ[ÛˆŸW_K›\İ[š[™ÈÈ]Hˆ‘š\œİ^H]H˜Z[š[™ÈÛİ\œÙH‹^ˆ“ÛˆHš\œİ^HÙˆH™]È˜Z[š[™ÈÛİ\œÙK[Z[˜HÚ]È™^È]\İY‹ˆ[Z[˜H]™\È[ˆ›Ü˜[XH[™ÛÜšÜÈ[ˆHÛX[Ù™šXÙKˆ\ˆÛY]İÛˆ\È\™ÙZ\ØKˆÚH[š›Ş\È™XY[™È[™Ø[Ú[™È[ˆH]™[š[™Ëˆ]\İYˆ\ÈH[š]™\œÚ]HİY[ˆHZÙ\È›Ûİ˜[[™İÙÜ˜\Kˆ^H\ÚÈXXÚİ\ˆÚ[\H]Y\İ[ÛœÈX›İ]ÛÜšËÛY]İÛœË[™Ø˜šY\Ëˆ™Y›Ü™HH\ÜÛÛˆİ\Ë[Z[˜H[›ÙXÙ\È]\İYˆÈ[›İ\ˆİY[[™Ø^\È]H\ÈœšY[™H[™İ]ÛÚ[™Ëˆ‹œ]Y\İ[ÛœÈ–ŞÈœHˆ•Ú\™HÙ\È[Z[˜H]™OÈ‹›Ü[ÛœÈ–È›Ü˜[XH‹’\™ÙZ\ØH‹“Û™Ûˆ—K˜[œİÙ\ˆˆ›Ü˜[XH‹YÈˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKÈœHˆ•Ú\™H\È[Z[˜IÜÈÛY]İÛÈ‹›Ü[ÛœÈ–È’\™ÙZ\ØH‹›Ü˜[XH‹–™Z[H—K˜[œİÙ\ˆˆ’\™ÙZ\ØH‹YÈˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKÈœHˆ•Ú]Ù\È[Z[˜HÏÈ‹›Ü[ÛœÈ–È”ÚHÛÜšÜÈ[ˆHÛX[Ù™šXÙKˆ‹”ÚH\ÈH\œÙKˆ‹”ÚHİÛœÈH™\İ]\˜[ˆ—K˜[œİÙ\ˆˆ”ÚHÛÜšÜÈ[ˆHÛX[Ù™šXÙKˆ‹YÈˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKÈœHˆ•ÚXÚÛÈXİ]š]Y\ÈÙ\È[Z[˜H[š›ŞOÈ‹›Ü[ÛœÈ–È”™XY[™È[™Ø[Ú[™È‹‘›Ûİ˜[[™İÙÜ˜\H‹ÛÛÚÚ[™È[™İÚ[[Z[™È—K˜[œİÙ\ˆˆ”™XY[™È[™Ø[Ú[™È‹YÈˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKÈœHˆ•Ú]\È]\İYÈ‹›Ü[ÛœÈ–ÈH[š]™\œÚ]HİY[‹[ˆÙ™šXÙHX[˜YÙ\ˆ‹HXXÚ\ˆ—K˜[œİÙ\ˆˆH[š]™\œÚ]HİY[‹YÈˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKÈœHˆ•ÚXÚØ˜H™[Û™ÜÈÈ]\İYÈ‹›Ü[ÛœÈ–È”İÙÜ˜\H‹•Ø[Ú[™ÈÛ›H‹”™XY[™È^\İ\H›ÛÚÜÈ—K˜[œİÙ\ˆˆ”İÙÜ˜\H‹YÈˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKÈœHˆ•Ú]È[Z[˜H[™]\İYˆ\ÚÈXXÚİ\ˆX›İ]È‹›Ü[ÛœÈ–È•ÛÜšËÛY]İÛœË[™Ø˜šY\È‹“Û›HHÙX]\ˆ‹”šXÙ\È[™ÚÜ[™È—K˜[œİÙ\ˆˆ•ÛÜšËÛY]İÛœË[™Ø˜šY\È‹YÈˆ›\İ[š[™Ë\™XY[™Î›XZ[‹ZYXHŸKÈœHˆ•ÚÈ[›ÙXÙ\È]\İYˆÈ[›İ\ˆİY[È‹›Ü[ÛœÈ–È[Z[˜H‹•HXXÚ\ˆ‹’\Èœ›İ\ˆ—K˜[œİÙ\ˆˆ[Z[˜H‹YÈˆ›\İ[š[™Ë\™XY[™ÎœÙ\]Y[˜ÙHŸKÈœHˆ’İÈÙ\È[Z[˜H\ØÜšX™H]\İYÈ‹›Ü[ÛœÈ–È‘œšY[™H[™İ]ÛÚ[™È‹”]ZY][™[™ÜH‹•\™Y[™]H—K˜[œİÙ\ˆˆ‘œšY[™H[™İ]ÛÚ[™È‹YÈˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKÈœHˆ•Ú]\ÈHXZ[ˆ\œÜÙHÙˆH^È‹›Ü[ÛœÈ–È•ÛÈ™]ÈÛ\ÜÛX]\ÈÙ]XÜ]XZ[Yˆ‹HİY[\Y\È›ÜˆH›Ø‹ˆ‹•ÛÈœšY[™È[ˆHÛY^Kˆ—K˜[œİÙ\ˆˆ•ÛÈ™]ÈÛ\ÜÛX]\ÈÙ]XÜ]XZ[Yˆ‹YÈˆ›\İ[š[™Ë\™XY[™Î›XZ[‹ZYXHŸW_K™Ü˜[[X\ˆÈ™›Øİ\Èˆ”™\Ù[Ú[\HÚ]™K]™H[™ZÙH›Üˆ\œÛÛ˜[˜XİË›İ][™\È[™™Y™\™[˜Ù\Ëˆ‹š][\È–ŞÈœHˆÚÛÜÙHHÛÜœ™XİÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’H[HHİY[ˆ‹’H\ÈHİY[ˆ‹’H™HHİY[ˆ—K˜[œİÙ\ˆˆ’H[HHİY[ˆ‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÛÛ\]NˆÚH××Èœ›ÛH›Ü˜[XKˆ‹›Ü[ÛœÈ–Èš\È‹˜\™H‹˜[H—K˜[œİÙ\ˆˆš\È‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÚÛÜÙHHÛÜœ™XİÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’H]™HÛÈœ›İ\œËˆ‹’H\ÈÛÈœ›İ\œËˆ‹’H]š[™ÈÛÈœ›İ\œËˆ—K˜[œİÙ\ˆˆ’H]™HÛÈœ›İ\œËˆ‹YÈˆ™Ü˜[[X\š]™HŸKÈœHˆÛÛ\]NˆH××È›Ûİ˜[ˆ‹›Ü[ÛœÈ–È›ZÙ\È‹›ZÙH‹›ZÚ[™È—K˜[œİÙ\ˆˆ›ZÙ\È‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ™YØ]]™Kˆ‹›Ü[ÛœÈ–È’HÛ‰İZÙHÛÙ™™YKˆ‹’HÙ\Û‰İZÙHÛÙ™™YKˆ‹’H›İZÙHÛÙ™™YKˆ—K˜[œİÙ\ˆˆ’HÛ‰İZÙHÛÙ™™YKˆ‹YÈˆ™Ü˜[[X\›™YØ]]™HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹›Ü[ÛœÈ–È•Ú\™HÈ[İH]™OÈ‹•Ú\™H[İH]™OÈ‹•Ú\™HÙ\È[İH]™OÈ—K˜[œİÙ\ˆˆ•Ú\™HÈ[İH]™OÈ‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹Y›Ü›HŸKÈœHˆÛÛ\]NˆÚ]××ÈÚHÏÈ‹›Ü[ÛœÈ–È™Ù\È‹™È‹š\È—K˜[œİÙ\ˆˆ™Ù\È‹YÈˆ™Ü˜[[X\œ]Y\İ[Û‹Y›Ü›HŸKÈœHˆÚÛÜÙHHXØİ\˜]HÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È“^HÛY]İÛˆ\È\™ÙZ\ØKˆ‹“^HÛY]İÛˆ\™H\™ÙZ\ØKˆ‹“^HÛY]İÛˆ\™ÙZ\ØH\Èœ›ÛKˆ—K˜[œİÙ\ˆˆ“^HÛY]İÛˆ\È\™ÙZ\ØKˆ‹YÈˆ™Ü˜[[X\˜™HŸKÈœHˆÚÛÜÙHHÛÜœ™Xİ™Y™\™[˜ÙHÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È•ÙHZÙH˜]™[[™Ëˆ‹•ÙHZÙ\È˜]™[[™Ëˆ‹•ÙH\™HZÙH˜]™[[™Ëˆ—K˜[œİÙ\ˆˆ•ÙHZÙH˜]™[[™Ëˆ‹YÈˆ™Ü˜[[X\œ™\Ù[\Ú[\HŸKÈœHˆÚÛÜÙHH™\İÛÛXš[™YÙ[[˜ÙKˆ‹›Ü[ÛœÈ–È’HÛÜšÈ[ˆ[ˆÙ™šXÙH[™HZÙHİÙÜ˜\Kˆ‹’HÛÜšÈ[ˆ[ˆÙ™šXÙH]™XØ]\ÙHİÙÜ˜\Kˆ‹’HÛÜšÚ[™ÈÙ™šXÙH[™ZÙ\ÈİÙÜ˜\Kˆ—K˜[œİÙ\ˆˆ’HÛÜšÈ[ˆ[ˆÙ™šXÙH[™HZÙHİÙÜ˜\Kˆ‹YÈˆ™Ü˜[[X\˜ÛÛ›™XİÜˆŸW_KÜš][™ÈÈ\ÚÜÈ–ŞÈœ›Û\ˆ•Üš]HÛ™HÛÛ\]HÙ[[˜ÙHÚ][İ\ˆ˜[YKˆ‹›Z[•ÛÜ™ÈKÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHØ^Z[™ÈÚ\™H[İH\™Hœ›ÛKˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]Ú\™H[İH]™H›İËˆ‹›Z[•ÛÜ™È_KÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ][İ\ˆÛÜšÈÜˆİYY\Ëˆ‹›Z[•ÛÜ™ÈŸKÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]Û™HØ˜H[İH[š›ŞKˆ‹›Z[•ÛÜ™ÈŸKÈœ›Û\ˆ•Üš]HÛ™HÙ[[˜ÙHX›İ]ÛÛY][™È[İHÈ›İZÙKˆ‹›Z[•ÛÜ™ÈŸKÈœ›Û\ˆ•Üš]HÛÈÛÛ›™XİYÙ[[˜Ù\ÈX›İ][İ\ˆÛY]İÛ‹ˆ‹›Z[•ÛÜ™ÈŒMKÈœ›Û\ˆ•Üš]H™YHÙ[[˜Ù\ÈX›İ][İ\ˆ›Ü›X[ÙYZÈ\Ú[™ÈH™\Ù[Ú[\Kˆ‹›Z[•ÛÜ™ÈŒŒKÈœ›Û\ˆ•Üš]HHÚÜ8 $ÍŒÛÜ™›Ùš[H›ÜˆHÛ\ÜÈ™YÚ\İ˜][ÛˆYÙKˆ‹›Z[•ÛÜ™ÈKÈœ›Û\ˆ”™]Üš]H[İ\ˆ›Ùš[H\ÈHÛX\ˆÌ8 $ÎLÛÜ™\œÛÛ˜[[›ÙXİ[Ûˆ›ÜˆHÜš][ˆÛİ\œÙH›Ùš[Kˆ‹›Z[•ÛÜ™ÈÌW__KÈšYˆœİKXL˜ŒK[ˆ‹›[X™\ˆŒ‹]Hˆ•ÛÜšÈ	ˆØ\™Y\œÈ‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ™\Ù[Ú[\HœÈ™\Ù[ÛÛ[[İ\ËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[È‹›[X™\ˆŒË]Hˆ•˜]™[	ˆY™[\™H‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ\İÚ[\KˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[‹›[X™\ˆ]Hˆ•XÚ›ÛÙŞH	ˆÛØÚX[YYXH‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\ÎˆY™\˜œÈÙˆœ™\]Y[˜ŞH
+È™\Ù[Ú[\KˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[H‹›[X™\ˆK]Hˆ’X[	ˆÙ[™Z[™È‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\ÎˆÚİ[ÈÚİ[‰İˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[ˆ‹›[X™\ˆ‹]Hˆ‘›ÛÙ	ˆİ[\™H‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\ÎˆÛÛ\\˜]]™\È[™İ\\›]]™\ËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[È‹›[X™\ˆË]Hˆ‘YXØ][Ûˆ	ˆX\›š[™È‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ\İÚ[\HœÈ\İÛÛ[[İ\ËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[‹›[X™\ˆ]Hˆ“[Û™^H	ˆ\Ú[™\ÜÈ‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ]\™H[œÈÚ]ÛÚ[™ÈËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[H‹›[X™\ˆK]Hˆ‘[š\›Û›Y[	ˆÛ[X]H‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ]™HÈÈÛ‰İ]™HËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[L‹›[X™\ˆŒL]Hˆ”™[][ÛœÚ\È	ˆ˜[Z[H‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ™[]]™HÛ]\Ù\ËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[LH‹›[X™\ˆŒLK]Hˆ“YYXH	ˆ™]ÜÈ‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\ÎˆØ[ˆÈÛİ[ˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[Lˆ‹›[X™\ˆŒL‹]Hˆ”ÜÜÈ	ˆš]™\ÜÈ‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ\Ë‹‹˜\È
+ÈY™\˜œÈÙˆX[›™\‹ˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[LÈ‹›[X™\ˆŒLË]HˆÚ]HœÈÛİ[\ÚYH‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ]X[YšY\œËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[M‹›[X™\ˆŒM]Hˆ‘™X[\È	ˆ[Xš][ÛœÈ‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\ÎˆÛİ[ZÙHÈÈØ[ËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[MH‹›[X™\ˆŒMK]HˆÜš[YH	ˆ\İXÙH‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ™\Ù[\™™XİˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[Mˆ‹›[X™\ˆŒM‹]Hˆ”ØÚY[˜ÙH	ˆ[››İ˜][Ûˆ‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ™\Ù[\™™XİœÈ\İÚ[\KˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[MÈ‹›[X™\ˆŒMË]Hˆ\È	ˆ[\Z[›Y[‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆš\œİÛÛ™][Û˜[ˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[N‹›[X™\ˆŒN]Hˆ‘ÛØ˜[\ÜİY\È‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ™\Ù[Ú[\H\ÜÚ]™KˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[NH‹›[X™\ˆŒNK]Hˆ‘œ™YH[YH	ˆØ˜šY\È‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\ÎˆÙ\[™ÈœÈ[™š[š]]™\ËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[Œ‹›[X™\ˆŒŒ]Hˆİ[\˜[Y[]H‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\Îˆ™\ÜYÜYXÚˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[ŒH‹›[X™\ˆŒŒK]Hˆ“XZÚ[™ÈXÚ\Ú[ÛœÈ‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\ÎˆÙXÛÛ™ÛÛ™][Û˜[ˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_KÈšYˆœİKXL˜ŒK[Œˆ‹›[X™\ˆŒŒ‹]Hˆ“ÛÚÚ[™È˜XÚËÛÚÚ[™È›ÜØ\™‹›İ]ÛÛYHˆ‘Ü˜[[X\ˆ›Øİ\ÎˆZ^Y™]šY]ËˆÛÜšØ›ÛÚÈXİ]š]Y\È\™H™Z[™È™\\™Yˆ‹œ™XYH™˜[Ù_W_NÂ˜ÛÛœİÔPRÕTĞL—ĞŒWÔÖSP•TÏVÖÈ‘Ù][™ÈXÜ]XZ[Y‹”™\Ù[Ú[\H
+™K]™KZÙJH—KÈ•ÛÜšÈ	ˆØ\™Y\œÈ‹”™\Ù[Ú[\HœÈ™\Ù[ÛÛ[[İ\È—KÈ•˜]™[	ˆY™[\™H‹”\İÚ[\H—KÈ•XÚ›ÛÙŞH	ˆÛØÚX[YYXH‹Y™\˜œÈÙˆœ™\]Y[˜ŞH
+È™\Ù[Ú[\H—KÈ’X[	ˆÙ[™Z[™È‹”Úİ[ÈÚİ[‰İ—KÈ‘›ÛÙ	ˆİ[\™H‹ÛÛ\\˜]]™\È[™İ\\›]]™\È—KÈ‘YXØ][Ûˆ	ˆX\›š[™È‹”\İÚ[\HœÈ\İÛÛ[[İ\È—KÈ“[Û™^H	ˆ\Ú[™\ÜÈ‹‘ÛÚ[™ÈÈ›Üˆ]\™H[œÈ—KÈ‘[š\›Û›Y[	ˆÛ[X]H‹’]™HÈÈÛ‰İ]™HÈ—KÈ”™[][ÛœÚ\È	ˆ˜[Z[H‹”™[]]™HÛ]\Ù\È—KÈ“YYXH	ˆ™]ÜÈ‹Ø[ˆÈÛİ[—KÈ”ÜÜÈ	ˆš]™\ÜÈ‹\Ë‹‹˜\È
+ÈY™\˜œÈÙˆX[›™\ˆ—KÈÚ]HœÈÛİ[\ÚYH‹”]X[YšY\œÈ—KÈ‘™X[\È	ˆ[Xš][ÛœÈ‹•Ûİ[ZÙHÈÈØ[È
+È[™š[š]]™H—KÈÜš[YH	ˆ\İXÙH‹”™\Ù[\™™Xİ—KÈ”ØÚY[˜ÙH	ˆ[››İ˜][Ûˆ‹”™\Ù[\™™XİœÈ\İÚ[\H—KÈ\È	ˆ[\Z[›Y[‹‘š\œİÛÛ™][Û˜[—KÈ‘ÛØ˜[\ÜİY\È‹”™\Ù[Ú[\H\ÜÚ]™H—KÈ‘œ™YH[YH	ˆØ˜šY\È‹‘Ù\[™ÈœÈ[™š[š]]™\È—KÈİ[\˜[Y[]H‹”™\ÜYÜYXÚ—KÈ“XZÚ[™ÈXÚ\Ú[ÛœÈ‹”ÙXÛÛ™ÛÛ™][Û˜[—KÈ“ÛÚÚ[™È˜XÚËÛÚÚ[™È›ÜØ\™‹“Z^Y™]šY]È—WNÂ˜ÛÛœİÔPRÕTĞŒ—ÔÖSP•TÏVÖÈ‘Ù][™ÈXÜ]XZ[Y‹”™\Ù[Ú[\H—KÈ•ÛÜšÈ	ˆØ\™Y\œÈ‹”™\Ù[\™™XİœÈ\İÚ[\H—KÈ•˜]™[	ˆY™[\™H‹“˜\œ˜]]™H[œÙ\È—KÈ•XÚ›ÛÙŞH	ˆÛØÚX[YYXH‹”™\Ù[\™™XİÛÛ[[İ\È—KÈ’X[	ˆÙ[™Z[™È‹“[Ù[ÈÙˆYšXÙH[™Ø›YØ][Ûˆ—KÈ‘›ÛÙ	ˆİ[\™H‹ÛÛ\\˜]]™\Ëİ\\›]]™\Ë[™]X[YšY\œÈ—KÈ‘YXØ][Ûˆ	ˆX\›š[™È‹•\ÙYÈÈÛİ[—KÈ“[Û™^H	ˆ\Ú[™\ÜÈ‹‘š\œİ[™ÙXÛÛ™ÛÛ™][Û˜[È—KÈ‘[š\›Û›Y[	ˆÛ[X]H‹”\ÜÚ]™H›ÚXÙH—KÈ”™[][ÛœÚ\È	ˆ˜[Z[H‹”™[]]™HÛ]\Ù\È—KÈ“YYXH	ˆ™]ÜÈ‹”™\ÜYÜYXÚ—KÈ”ÜÜÈ	ˆš]™\ÜÈ‹“[Ù[ÈÙˆXš[]H[™ÜÜÚXš[]H—KÈÚ]HœÈÛİ[\ÚYH‹‘Ù\[™È[™[™š[š]]™\È—KÈ‘™X[\È	ˆ[Xš][ÛœÈ‹‘]\™H›Ü›\È—KÈÜš[YH	ˆ\İXÙH‹•\™ÛÛ™][Û˜[—KÈ”ØÚY[˜ÙH	ˆ[››İ˜][Ûˆ‹“[Ù[ÈÙˆÜXİ[][Ûˆ[™YXİ[Ûˆ—KÈ\È	ˆ[\Z[›Y[‹“Z^YÛÛ™][Û˜[È—KÈ‘ÛØ˜[\ÜİY\È‹”\ÜÚ]™H™\Ü[™ÈİXİ\™\È—KÈ‘œ™YH[YH	ˆØ˜šY\È‹”˜\Ø[™\˜œÈ—KÈİ[\˜[Y[]H‹•Ú\ÚÈYˆÛ›H—KÈ“XZÚ[™ÈXÚ\Ú[ÛœÈ‹”]Y\İ[ÛˆYÜÈ[™[™\™Xİ]Y\İ[ÛœÈ—KÈ“ÛÚÚ[™È˜XÚËÛÚÚ[™È›ÜØ\™‹“Z^Y™]šY]È—WNÂ˜ÛÛœİÔP×ÓP”T–O^È‘Ù][™ÈXÜ]XZ[YÈˆ–ÖÈšØ˜H‹™œ™YK][YHXİ]š]H—KÈšÛY]İÛˆ‹œXÙH[İHÛÛYHœ›ÛH—KÈ›ØØİ\][Ûˆ‹š›ØˆÜˆ\HÙˆÛÜšÈ—KÈ›İ]ÛÚ[™È‹˜ÛÛY›ÜX›HYY][™È[ÜH—KÈ˜˜XÚÙÜ›İ[™‹œ\İYXØ][Ûˆ[™^\šY[˜ÙH—KÈš[›ÙXÙH‹[[ÜHÚÈÛÛY[Û™H\È—WKœÈ–È[Z[˜H‹˜H™]È˜Z[š[™ÈÛİ\œÙH‹›YY]™]ÈÛ\ÜÛX]\È‹œÚHY›İÛ›İÈİÈÈİ\‹˜\ÚÈÚ[\H]Y\İ[ÛœÈX›İ]ÛÜšËÛY]İÛˆ[™Ø˜šY\È‹œÚH›İ[™ÛÈÚ\™Y[\™\İÈ—_K•ÛÜšÈ	ˆØ\™Y\œÈÈˆ–ÖÈ˜ÛÛXYİYH‹œ\œÛÛˆ[İHÛÜšÈÚ]—KÈ™XY[™H‹›]\İ[YHÛÜšÈ]\İš[š\Ú—KÈœÚY‹œ\š[ÙÙˆÛÜšÚ[™È[YH—KÈœ›Û[İ[Ûˆ‹›[İ™HÈHYÚ\ˆ›Øˆ—KÈœ™\ÜÛœÚXš[]H‹™]H[İHX[˜YÙH—KÈœš[Üš]H‹›[Üİ[\Ü[\ÚÈ—WKœÈ–È’Ù[ˆ‹˜H\ŞHÙ™šXÙH‹™š[š\ÚHÛY[™\Ü‹ÛÈXY[™\È\œš]™YÙÙ]\ˆ‹œÙ]š[Üš]Y\È[™\ÚÈHÛÛXYİYH›Üˆİ\Ü‹HX[Hš[š\ÚYÛˆ[YH—_K•˜]™[	ˆY™[\™HÈˆ–ÖÈš›İ\›™^H‹˜]™[œ›ÛHÛ™HXÙHÈ[›İ\ˆ—KÈ™\İ[˜][Ûˆ‹œXÙH[İH\™H˜]™[[™ÈÈ—KÈœ™\Ù\˜][Ûˆ‹˜›ÛÚÚ[™È›ÜˆHÙX]Üˆ›ÛÛH—KÈ™[^H‹œÛÛY][™È\[š[™È]\ˆ[ˆ[›™Y—KÈ™^Ü™H‹˜]™[\›İ[™ÈX\›ˆX›İ]HXÙH—KÈ›Y[[Ü˜X›H‹œÜXÚX[[›İYÚÈ™[Y[X™\ˆ—WKœÈ–È–]\İYˆ‹˜HÙYZÙ[™š\‹œ™XXÚ™\˜™\˜H™Y›Ü™Hİ[œÙ]‹H\ÈY]H‹˜ÛÛ™š\›HHİ[[™Ú[™ÙHH[ˆ‹šHİ[Y[YHÈ^Ü™HHİÛˆ—_K•XÚ›ÛÙŞH	ˆÛØÚX[YYXHÈˆ–ÖÈ™]šXÙH‹œYXÙHÙˆ[Xİ›ÛšXÈ\]Z\Y[—KÈœš]˜XŞH‹˜ÛÛ›Ûİ™\ˆ\œÛÛ˜[[™›Ü›X][Ûˆ—KÈ››İYšXØ][Ûˆ‹›Y\ÜØYÙHX›İ]ÛÛY][™È™]È—KÈ\ØY‹œÙ[™Hš[HÈH[\›™]—KÈœØÜ™Y[ˆ[YH‹[YHÜ[\Ú[™ÈØÜ™Y[œÈ—KÈœ™[XX›H‹˜X›HÈ™H\İY—WKœÈ–È”˜ZXH‹˜H[š]™\œÚ]HXœ˜\H‹œİYHÚ]İ]\İ˜Xİ[Ûˆ‹œÛ™H›İYšXØ][ÛœÈÙ\[\œ\[™È\ˆ‹\›ˆÙ™ˆ[\È[™ÚXÚÈÛ›H™[XX›HÛİ\˜Ù\È‹œÚHÛÛ\]Y\ˆ\ÜÚYÛ›Y[[Ü™H]ZXÚÛH—_K’X[	ˆÙ[™Z[™ÈÈˆ–ÖÈœŞ[\ÛH‹œÚYÛˆÙˆ[ˆ[™\ÜÈÜˆ›Ø›[H—KÈœİ™\ÜÈ‹œ™\Üİ\™HÜˆÛÜœH—KÈ˜˜[[˜ÙY‹šX[H™XØ]\ÙH™YYÈ\™HÛÛœÚY\™Y—KÈœ™\İ‹[YHÈ™[^[™™XÛİ™\ˆ—KÈšXš]‹œÛÛY][™È[İHÈ™Yİ[\›H—KÈœ™XÛİ™\ˆ‹˜™XÛÛYHX[HÜˆİ›Û™ÈYØZ[ˆ—WKœÈ–ÈX™H‹˜HX[Ù[™H‹š[\›İ™H\È[™\™ŞH‹šHØ\È\™YY\ˆÙ]™\˜[İ™\ÜÙ[ÙYZÜÈ‹˜Ú[™ÙHÛÈXš]È[™Ù][Ü™H™\İ‹š\ÈÛÛ˜Ù[˜][Ûˆ[\›İ™Y—_K‘›ÛÙ	ˆİ[\™HÈˆ–ÖÈš[™Ü™YY[‹™›ÛÙ\ÙYÈXZÙHH\Ú—KÈœ™XÚ\H‹š[œİXİ[ÛœÈ›ÜˆXZÚ[™È›ÛÙ—KÈ˜Y][Û˜[‹˜ÛÛ›™XİYÚ]Û\ˆİ\İÛ\È—KÈ™›]›İ\ˆ‹\İHÙˆ›ÛÙÜˆš[šÈ—KÈœÜ[Ûˆ‹˜[[İ[Ù\™YÈÛ™H\œÛÛˆ—KÈšÜÜ][]H‹™œšY[™H™X]Y[ÙˆİY\İÈ—WKœÈ–È”ØZ˜H‹˜H˜[Z[HÚ]Ú[ˆ‹œ™\\™HH˜Y][Û˜[YX[‹›Û™H[™Ü™YY[Ø\È[˜]˜Z[X›H‹˜Y\H™XÚ\HÚ]İ]Ú[™Ú[™ÈHXZ[ˆ›]›İ\ˆ‹HİY\İÈ[š›ŞYYHYX[—_K‘YXØ][Ûˆ	ˆX\›š[™ÈÈˆ–ÖÈ˜\ÜÚYÛ›Y[‹ÛÜšÈÚ]™[ˆÈHİY[—KÈ™™YY˜XÚÈ‹˜ÛÛ[Y[È][[\›İ™[Y[—KÈœ™]š\ÙH‹œİYHÛÛY][™ÈYØZ[ˆ—KÈœ›ÙÜ™\ÜÈ‹š[\›İ™[Y[İ™\ˆ[YH—KÈœİ˜]YŞH‹œ[›™YØ^HÈXÚY]™HÛÛY][™È—KÈ˜ÛÛ˜Ù[˜]H‹™Ú]™H[][[Ûˆ—WKœÈ–È“X\X[ˆ‹˜HÛÛYÙHİYH›ÛÛH‹œ™\\™H™]\ˆ›Üˆ^[\È‹œÚHİYYY›Üˆİ\œÈ]›Ü™Ûİ]Z[È‹\ÙHÚÜ\ˆ™]š\Ú[ÛˆÙ\ÜÚ[ÛœÈ[™™YY˜XÚÈ‹š\ˆ˜XİXÙHØÛÜ™\È[\›İ™Y—_K“[Û™^H	ˆ\Ú[™\ÜÈÈˆ–ÖÈ˜YÙ]‹œ[ˆ›Üˆ\Ú[™È[Û™^H—KÈœ›Ùš]‹›[Û™^HYY\ˆÛÜİÈ—KÈ™^[œÙH‹›[Û™^HÜ[—KÈ˜İ\İÛY\ˆ‹œ\œÛÛˆÚÈ^\ÈH›ÙXİÜˆÙ\šXÙH—KÈš[™\İ‹œ]™\Ûİ\˜Ù\È[È]\™H™[™Yš]—KÈ˜Y™›Ü™‹š]™H[›İYÚ[Û™^HÈ^H—WKœÈ–È’Ú[Y‹˜HÛX[\Ú[™\ÜÈ‹œ[ˆ™^[Û	ÜÈÜ[™[™È‹™^[œÙ\È›ÜÙHÚ]Ø[\È‹œÙ\\˜]H\ÜÙ[X[ÛÜİÈœ›ÛHÜ[Û˜[Û™\È‹H\Ú[™\ÜÈÙ\[›İYÚØ\Ú›ÜˆÜ\˜][ÛœÈ—_K‘[š\›Û›Y[	ˆÛ[X]HÈˆ–ÖÈØ\İH‹[Ø[YX]\šX[—KÈœ™XŞXÛH‹œ›ØÙ\ÜÈ\ÙYX]\šX[›Üˆ™]\ÙH—KÈœÛ][Ûˆ‹š\›Y[İXœİ[˜Ù\È[ˆH[š\›Û›Y[—KÈ˜ÛÛœÙ\™H‹œ›İXİœ›ÛH™Z[™ÈØ\İY—KÈ˜Û[X]H‹\İX[ÙX]\ˆÙˆHXÙH—KÈœ™\Ûİ\˜ÙH‹œÛÛY][™È\ÙY[[ÜHØ[ˆ\ÙH—WKœÈ–È“š[[È‹˜HÛÛ[][š]HYY][™È‹œ™YXÙH\İXÈØ\İH‹›X[HÛY\È\ÙYÚ[™ÛK]\ÙH\İXÈZ[H‹˜Ü™X]H™XŞXÛ[™ÈÚ[È[™Ú\™HÚ[\HİZY[˜ÙH‹›[Ü™H˜[Z[Y\ÈÙ\\˜]YZ\ˆØ\İH—_K”™[][ÛœÚ\È	ˆ˜[Z[HÈˆ–ÖÈœ™[]]™H‹œ\œÛÛˆ[ˆ[İ\ˆ˜[Z[H—KÈœİ\Ü]™H‹š[[[™[˜Ûİ\˜YÚ[™È—KÈ™Ù[™\˜][Ûˆ‹œ[ÜH›Ü›ˆ[ˆHÚ[Z[\ˆ\š[Ù—KÈœ™[][ÛœÚ\‹˜ÛÛ›™Xİ[Ûˆ™]ÙY[ˆ[ÜH—KÈœ™\ÜXİ‹œÛ]HÛÛœÚY\˜][Ûˆ—KÈ™\[™X›H‹˜X›HÈ™H\İY—WKœÈ–È‘˜Y[[È‹˜H˜[Z[HØ]\š[™È‹[™\œİ[™Y™™\™[šY]ÜÈ‹œ[ÜHÙ\[\œ\[™ÈXXÚİ\ˆ‹›]XXÚ\œÛÛˆ^Z[ˆÛ™H™X\ÛÛˆ™Y›Ü™H™\Y\È‹H\Øİ\ÜÚ[Ûˆ™XØ[YHØ[Y\ˆ—_K“YYXH	ˆ™]ÜÈÈˆ–ÖÈšXY[™H‹]HÙˆH™]ÜÈİÜH—KÈœÛİ\˜ÙH‹œXÙH[™›Ü›X][ÛˆÛÛY\Èœ›ÛH—KÈœ™\Ü‹š[™›Ü›X][ÛˆX›İ][ˆ]™[—KÈ˜ÛZ[H‹œİ][Y[]X^H™YY]šY[˜ÙH—KÈ˜šX\È‹œ™Y™\™[˜ÙH][™›Y[˜Ù\ÈYÙ[Y[—KÈ™\šYH‹˜ÚXÚÈ]ÛÛY][™È\ÈYH—WKœÈ–È“ÛX\ˆ‹˜HYYXHÛÜšÜÚÜ‹˜ÚXÚÈ[ˆÛ›[™HİÜH‹œÙ]™\˜[XY[™\ÈØ]™HÛÛ™›Xİ[™È[™›Ü›X][Ûˆ‹˜ÛÛ\\™HÜšYÚ[˜[Ûİ\˜Ù\È[™Ù\\˜]H˜XİÈœ›ÛHÛZ[\È‹šH›İ[™Û™Hš\˜[ÜİY™[[İ™YÛÛ^—_K”ÜÜÈ	ˆš]™\ÜÈÈˆ–ÖÈœİ[Z[˜H‹˜Xš[]HÈÛÛ[YH\ÚXØ[Y™›Ü—KÈœ›İ][™H‹œ™Yİ[\ˆØ^HÙˆÚ[™ÈÛÛY][™È—KÈœİ™]Ú‹›[™İ[ˆ]\ØÛ\È™Y›Ü™HÜˆY\ˆ^\˜Ú\ÙH—KÈœXÙH‹œÜYYÙˆ[İ™[Y[—KÈœ™XÛİ™\ˆ‹œ™]\›ˆÈ›Ü›X[İ™[™İ—KÈ˜ÛÛœÚ\İ[‹™Û™H™Yİ[\›Hİ™\ˆ[YH—WKœÈ–È[š\ØH‹˜HÜÜÈÛXˆ‹œ™\\™H›ÜˆHš]™KZÚ[ÛY]™H[ˆ‹œÚH˜Z[™YÛÈ]ZXÚÛH[™™XØ[YH^]\İY‹œ™YXÙH\ˆXÙH[™›ÛİÈHÛÛœÚ\İ[›İ][™H‹œÚHÛÛ\]YÛ™Ù\ˆÙ\ÜÚ[ÛœÈÛÛY›ÜX›H—_KÚ]HœÈÛİ[\ÚYHÈˆ–ÖÈ˜Ü›İÙY‹™[ÙˆX[H[ÜH—KÈ˜ÛÛ™[šY[‹™X\ŞH[™\ÙY[—KÈœXXÙY[‹œ]ZY][™Ø[H—KÈ˜ÛÛ[]]H‹œ™Yİ[\ˆ›İ\›™^H™]ÙY[ˆÛYH[™ÛÜšÈ—KÈ™˜XÚ[]H‹œXÙHÜˆÙ\šXÙH›ÜˆH\œÜÙH—KÈ˜Y™šXÈ‹™ZXÛ\È[İš[™ÈÛˆ›ØYÈ—WKœÈ–È’\ÜØ[ˆ‹˜Hİ\Ú[™ÈÙ™šXÙH‹˜ÚÛÜÙHÚ\™HÈ]™H‹HÚ]HY[Ü™HÙ\šXÙ\È]X]šY\ˆ˜Y™šXÈ‹˜ÛÛ\\™HÛÜİÛÛ[]]K˜XÚ[]Y\È[™]ZY]‹šHY[YšYYHÜ[Ûˆ]X]ÚY\Èš[Üš]Y\È—_K‘™X[\È	ˆ[Xš][ÛœÈÈˆ–ÖÈ˜[Xš][Ûˆ‹œİ›Û™ÈÜHÈXÚY]™HÛÛY][™È—KÈ™ÛØ[‹œÛÛY][™È[İH\™HZ[™ÈÈXÚY]™H—KÈ˜XÚY]™H‹œİXØÙ\ÜÙ[H™XXÚHÛØ[—KÈ›ÜÜ[š]H‹™ÛÛÙÚ[˜ÙHÈÈÛÛY][™È—KÈœ[ˆ‹œİ\È›ÜˆH]\™H—KÈ›[İ]˜][Ûˆ‹œ™X\ÛÛˆÜˆ[™\™ŞH›ÜˆXİ[Ûˆ—WKœÈ–È“^[H‹˜HØ\™Y\ˆÛÜšÜÚÜ‹›[İ™H[ÈX[˜YÙ[Y[‹š\ˆÛØ[Ø\ÈÛX\ˆ]\ˆ[ˆØ\ÈÛÈÙ[™\˜[‹˜œ™XZÈHÛØ[[ÈÚÚ[È[™XY[™\È‹œÚHY[YšYYÛÈÛİ\œÙ\È[™HY[Üˆ—_KÜš[YH	ˆ\İXÙHÈˆ–ÖÈ™]šY[˜ÙH‹š[™›Ü›X][ÛˆÚİÚ[™ÈÚ]\[™Y—KÈÚ]™\ÜÈ‹œ\œÛÛˆÚÈØ]È[ˆ]™[—KÈ›]È‹œ[HXYHH[ˆ]]Üš]H—KÈš[™\İYØ]H‹™^[Z[™H˜XİÈØ\™Y[H—KÈ˜Ûİ\‹œXÙHÚ\™HYØ[Ø\Ù\È\™HXÚYY—KÈ™˜Z\ˆ‹œ™X\ÛÛ˜X›H[™\]X[—WKœÈ–È’\ÛXZ[‹˜HÚ]šXÈYXØ][ÛˆÛ\ÜÈ‹[™\œİ[™HYØ[XÚ\Ú[Ûˆ‹œİY[ÈÛÛ™\ÙY[[İ\œÈÚ]]šY[˜ÙH‹œÙ\\˜]HÚ]™\ÜÈİ][Y[Èœ›ÛHÜ[š[ÛœÈ‹HÛ\ÜÈ™XXÚYH[Ü™HØ\™Y[ÛÛ˜Û\Ú[Ûˆ—_K”ØÚY[˜ÙH	ˆ[››İ˜][ÛˆÈˆ–ÖÈœ™\ÙX\˜Ú‹˜Ø\™Y[İYHÈ\ØÛİ™\ˆ[™›Ü›X][Ûˆ—KÈ™^\š[Y[‹\İ\ÙYÈX\›ˆÛÛY][™È—KÈš[››İ˜][Ûˆ‹›™]ÈYXKY]ÙÜˆ›ÙXİ—KÈ™]šXÙH‹ÛÛÜˆYXÙHÙˆ\]Z\Y[—KÈ™]™[Ü‹˜Ü™X]HÜˆ[\›İ™Hİ™\ˆ[YH—KÈ™]šY[˜ÙH‹™˜XİÈİ\Ü[™È[ˆYXH—WKœÈ–È“˜\Ü˜H‹˜H[š]™\œÚ]HXˆ‹\İHİËXÛÜİØ]\ˆš[\ˆ‹Hš\œİ\ÚYÛˆÛÜšÙYÛÈÛİÛH‹˜Ú[™ÙHHX]\šX[[™™\X]H^\š[Y[‹HÙXÛÛ™™\œÚ[ÛˆÛÜšÙY˜\İ\ˆ—_K\È	ˆ[\Z[›Y[Èˆ–ÖÈœ\™›Ü›X[˜ÙH‹™]™[Ú]Xİ[™Ë]\ÚXÈÜˆ[˜ÙH—KÈ˜]YY[˜ÙH‹œ[ÜHØ]Ú[™ÈÜˆ\İ[š[™È—KÈ˜Ü™X]]™H‹˜X›HÈ›ÙXÙH™]ÈYX\È—KÈœ™]šY]È‹›Ü[š[ÛˆX›İ]Hš[K›ÛÚÈÜˆÚİÈ—KÈ˜Ú\˜Xİ\ˆ‹œ\œÛÛˆ[ˆHİÜH—KÈœİ‹›XZ[ˆ]™[ÈÙˆHİÜH—WKœÈ–È’[^˜H‹˜[ˆ\È™\İ]˜[‹Üš]HH\ÙY[™]šY]È‹œÙ]™\˜[ÚİÜÈ\ÙY™\HY™™\™[İ[\È‹Ø]ÚÛ™H˜[XH[™ZÙH›İ\ÈÛˆİ[™Ú\˜Xİ\œÈ‹š\È™]šY]È^Z[™Yİ™[™İÈ[™ÙXZÛ™\ÜÙ\È—_K‘ÛØ˜[\ÜİY\ÈÈˆ–ÖÈœİ™\H‹››İ]š[™È[›İYÚ[Û™^HÜˆ™\Ûİ\˜Ù\È—KÈ˜XØÙ\ÜÈ‹˜Xš[]HÜˆšYÚÈ\ÙHÛÛY][™È—KÈ˜ÛÛ™›Xİ‹œÙ\š[İ\È\ØYÜ™Y[Y[ÜˆšYÚ—KÈ˜ZY‹š[İXÚ\È[Û™^K›ÛÙÜˆÙ\šXÙ\È—KÈš[™\]X[]H‹[™˜Z\ˆY™™\™[˜ÙH™]ÙY[ˆÜ›İ\È—KÈœİ\İZ[˜X›H‹˜X›HÈÛÛ[YHÚ]İ]Ù\š[İ\È\›H—WKœÈ–È\ÚH‹˜H]™[ÜY[Ù[Z[˜\ˆ‹˜ÛÛ\\™H™\ÜÛœÙ\ÈÈHØ]\ˆÚÜYÙH‹œÚÜ]\›HZYY›İÛÛ™HHÛ™Ë]\›H›Ø›[H‹˜ÛÛXš[™H[Y\™Ù[˜ŞH[Ú]ØØ[[™œ˜\İXİ\™H‹HÛÛ[][š]H™YXÙY\[™[˜ÙHÛˆ[]™\šY\È—_K‘œ™YH[YH	ˆØ˜šY\ÈÈˆ–ÖÈ›Z\İ\™H‹™œ™YH[YHİ]ÚYHÛÜšÈ—KÈ˜ÛÛXİ‹™Ø]\ˆ][\È\ÈHØ˜H—KÈ˜Ü™X]]™H‹š[›Ûš[™È[XYÚ[˜][Ûˆ—KÈœ™[^[™È‹š[[™È[İH™Y[Ø[H—KÈœÚÚ[‹˜Xš[]H]™[ÜY›İYÚ˜XİXÙH—KÈš›Ú[ˆ‹˜™XÛÛYH\ÙˆHÜ›İ\—WKœÈ–Èš[[‹˜HÛÛ[][š]HÙ[™H‹™š[™HİZ]X›HØ˜H‹šHØ[YÛÛY][™È™[^[™È[™ÛØÚX[‹HHÙYZÛHİÙÜ˜\HÛXˆ‹šHX\›™YHÚÚ[[™Y]™]È[ÜH—_Kİ[\˜[Y[]HÈˆ–ÖÈšY[]H‹œ]X[]Y\È]XZÙHH\œÛÛˆÜˆÜ›İ\ÚÈ^H\™H—KÈ˜Y][Ûˆ‹˜İ\İÛH\ÜÙY™]ÙY[ˆÙ[™\˜][ÛœÈ—KÈš\š]YÙH‹˜İ[\™H[š\š]Yœ›ÛHH\İ—KÈ˜™[Û™È‹™™Y[XØÙ\Y\È\ÙˆHÜ›İ\—KÈ˜İ\İÛH‹\İX[İ[\˜[Ø^HÙˆ™Z]š[™È—KÈœ™\Ù\™H‹œ›İXİÛÈÛÛY][™ÈÛÛ[Y\È—WKœÈ–È–˜Z˜H‹˜Hİ[\˜[Ù[™H‹œ™XÛÜ™˜[Z[HİÜšY\È‹[İ[™Ù\ˆ™[]]™\ÈÛ™]È]HX›İ]Û\ˆ˜Y][ÛœÈ‹š[\šY]ÈÜ˜[™\™[È[™ÛÛ\\™HY[[ÜšY\È‹H›Ú™XİÜ™X]YÛÛ™\œØ][ÛœÈXÜ›ÜÜÈÙ[™\˜][ÛœÈ—_K“XZÚ[™ÈXÚ\Ú[ÛœÈÈˆ–ÖÈ›Ü[Ûˆ‹›Û™HÜÜÚX›HÚÚXÙH—KÈœš[Üš]H‹œÛÛY][™È[Ü™H[\Ü[[ˆİ\ˆ[™ÜÈ—KÈ˜ÛÛœÙ\]Y[˜ÙH‹œ™\İ[Ùˆ[ˆXİ[Ûˆ—KÈ˜ÛÛœÚY\ˆ‹[šÈØ\™Y[HX›İ]—KÈ˜ÛÛ\\™H‹™^[Z[™HÚ[Z[\š]Y\È[™Y™™\™[˜Ù\È—KÈ™XÚYH‹˜ÚÛÜÙHY\ˆ[šÚ[™È—WKœÈ–È‘˜\˜Z‹˜H›Ú™XİYY][™È‹˜ÚÛÜÙHH˜Z[š[™È›İšY\ˆ‹›Û™HÜ[ÛˆØ\ÈÚX\\ˆ[™[›İ\ˆY™]\ˆİ\Ü‹˜ÛÛ\\™HÛÜİ]X[]H[™ØÚY[H‹HX[HÚÜÙHHÜ[ÛˆX]Ú[™È]Èš[Üš]Y\È—_K“ÛÚÚ[™È˜XÚËÛÚÚ[™È›ÜØ\™Èˆ–ÖÈœ›ÙÜ™\ÜÈ‹š[\›İ™[Y[İ™\ˆ[YH—KÈœ™Y›Xİ‹[šÈØ\™Y[HX›İ]\İ^\šY[˜ÙH—KÈœİ™[™İ‹œÛÛY][™È[İHÈÙ[—KÈ˜Ú[[™ÙH‹œÛÛY][™ÈY™šXİ[—KÈš[\›İ™H‹˜™XÛÛYH™]\ˆ—KÈ›™^İ\‹˜Xİ[Ûˆ]Úİ[\[ˆ™^—WKœÈ–È”Ø[Z\˜H‹˜[ˆ[™[Ù‹XÛİ\œÙH™]šY]È‹œ[ˆH™^İYÙH‹œÚH›Øİ\ÙYÛ›HÛˆZ\İZÙ\È‹˜ÛÛ\\™Hš\œİÛÜšÈÚ]™XÙ[ÛÜšÈ‹œÚHØ]È›ÙÜ™\ÜÈ[™ÚÜÙHÛ™H™X[\İXÈ™^İ\—__NÂ˜ÛÛœİĞT‘QT—ÓTÔÓÓ—ÔÔPÔÏVÖÈ”İ\[™ÈÚ[‹”™\Ù[Ú[\H—KÈ”›Ù™\ÜÚ[Û˜[[›ÙXİ[Ûˆ‹”™\Ù[Ú[\H—KÈ“X[˜YÚ[™È]\Ù\È‹”™\Ù[Ú[\H—KÈ”İ\[™ÈÛÛ™\œØ][ÛœÈ‹”™\Ù[Ú[\H—KÈ“XZ[Z[š[™ÈÛÛ™\œØ][ÛœÈ‹”]Y\İ[Ûˆ›Ü›\È—KÈ‘[™[™ÈÛÛ™\œØ][ÛœÈ‹”Û]H›Ü›\È—KÈ”›ÛH‹”™\Ù[Ú[\H—KÈ”›İ][™\È‹”™\Ù[Ú[\HœÈ™\Ù[ÛÛ[[İ\È—KÈ•ÛÜšÈ\]\È‹”™\Ù[\™™Xİ—KÈ”\İ^\šY[˜Ù\È‹”\İÚ[\H—KÈ”İÜHÙ\]Y[˜ÙH‹“˜\œ˜]]™H[œÙ\È—KÈÚ[[™ÙH[™İXØÙ\ÜÈ‹”\İÚ[\H—KÈ’[\›˜][Û˜[ÛÛXİÈ‹”™\Ù[Ú[\H—KÈÛ\šYšXØ][Ûˆ‹”]Y\İ[Ûˆ›Ü›\È—KÈ”™[[İHØ[È‹”™\Ù[Ú[\HœÈ™\Ù[ÛÛ[[İ\È—KÈ”›Ø›[\È‹”Úİ[ÈÚİ[‰İ—KÈ”ÛÛ][ÛœÈ‹‘š\œİÛÛ™][Û˜[—KÈ”›ØÙ\ÜÈ^[˜][ÛœÈ‹”\ÜÚ]™H›ÚXÙH—KÈ“Ü[š[ÛœÈ‹”™\Ù[Ú[\H—KÈYÜ™Y[Y[‹“[Ù[ÈÙˆYšXÙH[™Ø›YØ][Ûˆ—KÈ‘›ÛİË]\Y\ÜØYÙ\È‹”™\Ù[\™™Xİ—KÈ’[\šY]È[›ÙXİ[Ûˆ‹”™\Ù[Ú[\H—KÈ‘^\šY[˜ÙH‹”™\Ù[\™™XİœÈ\İÚ[\H—KÈ”İ™[™İÈ‹”™\Ù[Ú[\H—KÈ”ÕTˆÚ]X][Ûˆ[™\ÚÈ‹”\İÚ[\H—KÈ”ÕTˆXİ[Ûˆ[™™\İ[‹”\İÚ[\H—KÈ“\ÜÛÛœÈX\›™Y‹”™\Ù[\™™Xİ—KÈ“[İ]˜][Ûˆ‹•Ûİ[ZÙHÈÈØ[È
+È[™š[š]]™H—KÈ•˜[YH‹‘š\œİ[™ÙXÛÛ™ÛÛ™][Û˜[È—KÈ’[\šY]Ù\ˆ]Y\İ[ÛœÈ‹”]Y\İ[ÛˆYÜÈ[™[™\™Xİ]Y\İ[ÛœÈ—KÈ”™\Ù[][ÛˆÜ[š[™È‹”™\Ù[Ú[\H—KÈ”™\Ù[][ÛˆÜ™Ø[š\Ø][Ûˆ‹”™\Ù[Ú[\H—KÈ•š\İX[^[˜][Ûˆ‹ÛÛ\\˜]]™\È[™İ\\›]]™\È—KÈ]YY[˜ÙH]Y\İ[ÛœÈ‹“[Ù[ÈÙˆXš[]H[™ÜÜÚXš[]H—KÈ‘š[˜[[\šY]È‹“Z^Y™]šY]È—KÈ”ÚİØØ\ÙH‹“Z^Y™]šY]È—WNÂ˜ÛÛœİĞT‘QT—Ô‘U’TÑQÓTÔÓÓ—ÔÔPÔÏVÖÈ–[İ\ˆİ\[™ÈÚ[‹”™\Ù[Ú[\H—KÈHİ›Û™È›Ù™\ÜÚ[Û˜[[›ÙXİ[Ûˆ‹”™\Ù[Ú[\H—KÈ’ÙY\ÜXZÚ[™ÈÚ]İ]Û™È]\Ù\È‹”™\Ù[Ú[\H—KÈ”İ\ÛÛ™\œØ][ÛœÈ˜]\˜[H‹”™\Ù[Ú[\H—KÈ”ÚİÈ[\™\İ[™\ÚÈ›ÛİË]\È‹”]Y\İ[Ûˆ›Ü›\È—KÈ‘[™ÛÛ™\œØ][ÛœÈ›Ù™\ÜÚ[Û˜[H‹”Û]H›Ü›\È—KÈ‘\ØÜšX™H[İ\ˆÛÜšÈÛX\›H‹”™\Ù[Ú[\H—KÈ”›İ][™\È[™İ\œ™[š[Üš]Y\È‹”™\Ù[Ú[\HœÈ™\Ù[ÛÛ[[İ\È—KÈ‘Ú]™HH\ÙY[ÛÜšÈ\]H‹”™\Ù[\™™Xİ—KÈ•[H\İ^\šY[˜ÙH‹”\İÚ[\H—KÈ”Ù\]Y[˜ÙHH›Ù™\ÜÚ[Û˜[İÜH‹“˜\œ˜]]™H[œÙ\È—KÈ‘\ØÜšX™HİXØÙ\ÜÈ[™Ú[[™ÙH‹”\İÚ[\H—KÈ“YY][\›˜][Û˜[ÛÛXİÈ‹”™\Ù[Ú[\H—KÈÛ\šYH[™ÛÛ™š\›HYX[š[™È‹”]Y\İ[Ûˆ›Ü›\È—KÈ”Û™H[™šY[ÈØ[È‹”™\Ù[Ú[\HœÈ™\Ù[ÛÛ[[İ\È—KÈ‘\ØÜšX™HHÛÜšÜXÙH›Ø›[H‹”Úİ[ÈÚİ[‰İ—KÈ”İYÙÙ\İ[™ÛÛ\\™HÛÛ][ÛœÈ‹‘š\œİÛÛ™][Û˜[—KÈ‘^Z[ˆH›ØÙ\ÜÈİ\Hİ\‹”\ÜÚ]™H›ÚXÙH—KÈ”Ú\™HÜ[š[ÛœÈ[ˆYY][™ÜÈ‹”™\Ù[Ú[\H—KÈYÜ™YH[™\ØYÜ™YHÛ][H‹“[Ù[ÈÙˆYšXÙH[™Ø›YØ][Ûˆ—KÈ“Y\ÜØYÙ\È[™›ÛİË]\[XZ[È‹”™\Ù[\™™Xİ—KÈ[œİÙ\ˆ[YHX›İ][İ\œÙ[ˆ‹”™\Ù[Ú[\H—KÈ”]X[YšXØ][ÛœÈ[™^\šY[˜ÙH‹”™\Ù[\™™XİœÈ\İÚ[\H—KÈ”İ™[™İÈ[™]™[ÜY[\™X\È‹”™\Ù[Ú[\H—KÈZ[HÕTˆ[œİÙ\ˆ‹”\İÚ[\H—KÈ”™\Ù[XÚY]™[Y[ÈÚ]]šY[˜ÙH‹”\İÚ[\H—KÈ‘\Øİ\ÜÈÚ[[™Ù\È[™\ÜÛÛœÈ‹”™\Ù[\™™Xİ—KÈØ\™Y\ˆÛØ[È[™[İ]˜][Ûˆ‹•Ûİ[ZÙHÈÈØ[È
+È[™š[š]]™H—KÈ•ÚHÚİ[ÙH\™H[İOÈ‹‘š\œİ[™ÙXÛÛ™ÛÛ™][Û˜[È—KÈ\ÚÈ[[YÙ[[\šY]È]Y\İ[ÛœÈ‹”]Y\İ[ÛˆYÜÈ[™[™\™Xİ]Y\İ[ÛœÈ—KÈ“Ü[ˆH™\Ù[][ÛˆÛÛ™šY[H‹”™\Ù[Ú[\H—KÈ“Ü™Ø[š\ÙH[™ÛÛ›™XİYX\È‹”™\Ù[Ú[\H—KÈ‘^Z[ˆ[™›Ü›X][Ûˆ[™š\İX[È‹ÛÛ\\˜]]™\È[™İ\\›]]™\È—KÈ’[™H]YY[˜ÙH]Y\İ[ÛœÈ‹“[Ù[ÈÙˆXš[]H[™ÜÜÚXš[]H—KÈ‘š[˜[[\šY]È™ZX\œØ[‹“Z^Y™]šY]È—KÈ‘š[˜[ÚİØØ\ÙH[™™^[ˆ‹“Z^Y™]šY]È—WNÂ˜ÛÛœİĞT‘QT—ÕÑQR×Õ“ĞĞPVÖÖÈ™ÛØ[‹œÛÛY][™È[İHØ[ÈXÚY]™H—KÈ™›Y[˜ŞH‹˜Xš[]HÈÛÛ[][šXØ]HÛ[ÛİH—KÈœ]\ÙH‹œÚÜİÜÚ[HÜXZÚ[™È—KÈ˜Û\šYH‹›XZÙHYX[š[™ÈÛX\™\ˆ—KÈ˜ÛÛ™šY[‹™™Y[[™Èİ\™HÙˆ[İ\œÙ[ˆ—KÈœ›ÙÜ™\ÜÈ‹š[\›İ™[Y[İ™\ˆ[YH—WKÖÈ™Ü™Y][™È‹ÛÜ™È\ÙYÚ[ˆYY][™È—KÈ™›ÛİË]\‹œ]Y\İ[ÛˆÜˆXİ[Ûˆ]ÛÛ[Y\ÈHÛÛ™\œØ][Ûˆ—KÈœ™\ÜÛ™‹˜[œİÙ\ˆÜˆ™XXİ—KÈ˜[œÚ][Ûˆ‹œ˜\ÙH][İ™\ÈÈ[›İ\ˆÜXÈ—KÈ˜ÛÜÙH‹™[™HÛÛ™\œØ][Ûˆ—KÈ˜ÛÛXİ‹œ\œÛÛˆ[İHÛÛ[][šXØ]HÚ]—WKÖÈœ™\ÜÛœÚXš[]H‹™]H[İHX[˜YÙH—KÈœ›İ][™H‹œÛÛY][™ÈÛ™H™Yİ[\›H—KÈ™XY[™H‹›]\İ[YHÛÜšÈ]\İš[š\Ú—KÈ\]H‹›™]È[™›Ü›X][ÛˆX›İ]›ÙÜ™\ÜÈ—KÈœš[Üš]H‹›[Üİ[\Ü[\ÚÈ—KÈœ›ÙÜ™\ÜÈ‹›[İ™[Y[İØ\™ÛÛ\][Ûˆ—WKÖÈ™^\šY[˜ÙH‹œÛÛY][™È]\[™YÈ[İH—KÈ˜Ú[[™ÙH‹™Y™šXİ[Ú]X][Ûˆ—KÈœÛÛ][Ûˆ‹˜[œİÙ\ˆÈH›Ø›[H—KÈœ™\İ[‹Ú]\[™YY\ˆ[ˆXİ[Ûˆ—KÈ˜XÚY]™[Y[‹š[\Ü[İXØÙ\ÜÈ—KÈ›\ÜÛÛˆ‹\ÙY[Û›İÛYÙHØZ[™Y—WKÖÈ˜ÛÛXİ‹œ\œÛÛˆÜˆÜ™Ø[š\Ø][Ûˆ[İHÛÛ[][šXØ]HÚ]—KÈ˜Û\šYH‹›XZÙHYX[š[™ÈÛX\™\ˆ—KÈ˜ÛÛ›™Xİ[Ûˆ‹›[šÈ™]ÙY[ˆ[ÜHÜˆŞ\İ[\È—KÈ˜YÙ[™H‹›\İÙˆYY][™ÈÜXÜÈ—KÈœ™\X]‹œØ^HÛÛY][™ÈYØZ[ˆ—KÈœÚYÛ˜[‹œİ™[™İÙˆÛ™HÜˆ[\›™]ÛÛ›™Xİ[Ûˆ—WKÖÈš\ÜİYH‹œ›Ø›[H™YY[™È][[Ûˆ—KÈ˜Ø]\ÙH‹œ™X\ÛÛˆÛÛY][™È\[™Y—KÈ›Ü[Ûˆ‹œÜÜÚX›HÚÚXÙH—KÈœÛÛ][Ûˆ‹Ø^HÈÛÛ™HH›Ø›[H—KÈœİ\‹›Û™HXİ[Ûˆ[ˆH›ØÙ\ÜÈ—KÈ›İ]ÛÛYH‹™š[˜[™\İ[—WKÖÈ›Ü[š[Ûˆ‹Ú][İH[šÈ—KÈ˜YÜ™YH‹š]™HHØ[YHÜ[š[Ûˆ—KÈ™\ØYÜ™YH‹š]™HHY™™\™[Ü[š[Ûˆ—KÈœİYÙÙ\İ[Ûˆ‹šYXHX›İ]Ú]Úİ[™HÛ™H—KÈ˜Xİ[Ûˆ‹œÛÛY][™È]]\İ™HÛ™H—KÈ™›ÛİË]\‹˜ÛÛ[][šXØ][ÛˆY\ˆHYY][™È—WKÖÈ˜˜XÚÙÜ›İ[™‹™YXØ][Ûˆ[™^\šY[˜ÙH—KÈœ›ÛH‹œÜÚ][ÛˆÜˆ[˜İ[Ûˆ—KÈ™^\šY[˜ÙH‹šÛ›İÛYÙHØZ[™Y›İYÚÛÜšÈ—KÈœİ™[™İ‹œÛÛY][™È[İHÈÙ[—KÈœÚÚ[‹˜Xš[]H]™[ÜY›İYÚ˜XİXÙH—KÈœ™\ÜÛœÚXš[]H‹™]H[İHX[˜YÙH—WKÖÈœÚ]X][Ûˆ‹˜ÛÛ^]Hİ\Ùˆ[ˆ^[\H—KÈ\ÚÈ‹Ú][İH™YYYÈÈ—KÈ˜Xİ[Ûˆ‹Ú][İHY—KÈœ™\İ[‹Ú]\[™Y]H[™—KÈ˜XÚY]™[Y[‹œİXØÙ\ÜÙ[™\İ[—KÈ›\ÜÛÛˆ‹œÛÛY][™È\ÙY[X\›™Y—WKÖÈ›[İ]˜][Ûˆ‹œ™X\ÛÛˆ[İHØ[ÈÈÛÛY][™È—KÈ˜ÛÛšX][Ûˆ‹œÛÛY][™È\ÙY[[İHY—KÈ˜[YH‹˜™[™Yš][İHœš[™È—KÈ›ÜÜ[š]H‹™ÛÛÙÚ[˜ÙHÈÈÛÛY][™È—KÈ™[\ŞY\ˆ‹›Ü™Ø[š\Ø][ÛˆÚ]š[™È›ØœÈ—KÈœ]Y\İ[Ûˆ‹œÛÛY][™È\ÚÙY›Üˆ[™›Ü›X][Ûˆ—WKÖÈ›Ü[š[™È‹˜™YÚ[›š[™ÈÙˆH™\Ù[][Ûˆ—KÈœİXİ\™H‹Ø^H\È\™HÜ™Ø[š\ÙY—KÈš\İX[‹š[XYÙKÚ\ÜˆÛYH—KÈœÚ[‹š[\Ü[YXH—KÈ™]šY[˜ÙH‹š[™›Ü›X][Ûˆİ\Ü[™È[ˆYXH—KÈœİ[[X\H‹œÚÜİ][Y[ÙˆXZ[ˆYX\È—WKÖÈœ]Y\İ[Ûˆ‹œÛÛY][™È\ÚÙY›Üˆ[™›Ü›X][Ûˆ—KÈ˜Û\šYH‹›XZÙHYX[š[™ÈÛX\™\ˆ—KÈœ™\ÜÛ™‹˜[œİÙ\ˆ—KÈœÜ›Û[È‹˜ÛÛXİ[ÛˆÙˆÛÜšÈÚİÚ[™È›ÙÜ™\ÜÈ—KÈœ›ÙÜ™\ÜÈ‹š[\›İ™[Y[İ™\ˆ[YH—KÈ›™^İ\‹˜Xİ[Ûˆ]ÛÛY\È™^—WWNÂ˜ÛÛœİØ\™Y\”ÜXÜÏPĞT‘QT—ÓTÔÓÓ—ÔÔPÔÎÂ˜ÛÛœİØ\™Y\•ÙYZÕ›ØØXPĞT‘QT—ÕÑQR×Õ“ĞĞPÂ™[˜İ[ÛˆXÚÓÜ[ÛœÊÛÜœ™XİÛÛ[™^
+^ÂˆÛÛœİİ]VØÛÜœ™XİNÂˆ›ÜŠ]OLNÚOÛÛ›[™İ	‰›İ]›[™İÎÚJÊÊ^ØÛÛœİ\ÛÛÊ[™^
+ÚJI\ÛÛ›[™İNÚYŠOOXÛÜœ™Xİ	‰ˆ[İ]š[˜ÛY\Ê
+J[İ]œ\Ú
+
+_Bˆ™]\›ˆİ]ÂŸB™[˜İ[ÛˆXZÙU›ØØX[\JÜXË]J^ÂˆÛÛœİÛÜ™ÏY]K‹›X\
+OÌJKYœÏY]K‹›X\
+OÌWJNÂˆÛÛœİÛÜ™Ü[ÛœÏJKÚYL
+OOœXÚÓÜ[ÛœÊ]K–ÚWVÌKÛÜ™ËJÜÚY
+NÂˆÛÛœİY“Ü[ÛœÏJKÚYL
+OOœXÚÓÜ[ÛœÊ]K–ÚWVÌWKYœËJÜÚY
+NÂˆ™]\›ˆÚ][\Î–Âˆİ\N‰ØÚÚXÙIËN‰ÓX]ÚHYX[š[™Îˆ	ÊÙ]K–ÌVÌWJÉË‰ËÜ[ÛœÎÛÜ™Ü[ÛœÊ
+K[œİÙ\™]K–ÌVÌKYÎ‰İ›ØØX[\N›YX[š[™ÉßKˆİ\N‰ØÚÚXÙIËN‰Ö[İH\™H\Øİ\ÜÚ[™È	ÊİÜXËÓİÙ\Ø\ÙJ
+JÉËˆÚXÚÛÜ™™\İ^™\ÜÙ\È\ÈYXNˆ	ÊÙ]K–ÌWVÌWJÉÏÉËÜ[ÛœÎÛÜ™Ü[ÛœÊKJK[œİÙ\™]K–ÌWVÌKYÎ‰İ›ØØX[\N˜ÛÛ^	ßKˆİ\N‰ØÚÚXÙIËN‰ĞÛÛ\]HHÛÜÜØ\H[Nˆ××ÈH	ÊÙ]K–Ì—VÌWJÉË‰ËÜ[ÛœÎÛÜ™Ü[ÛœÊ‹ŠK[œİÙ\™]K–Ì—VÌKYÎ‰İ›ØØX[\Nœ™]šY]˜[	ßKˆİ\N‰ØÚÚXÙIËN‰ĞHÛ\ÜÛX]H\ÚÜÈ›ÜˆHÛÜ™YX[š[™È8 '	ÊÙ]K–Ì×VÌWJÉË¸ 'HÚ]Úİ[[İHİYÙÙ\İÉËÜ[ÛœÎÛÜ™Ü[ÛœÊËÊK[œİÙ\™]K–Ì×VÌKYÎ‰İ›ØØX[\N˜ÛÛ^	ßKˆİ\N‰ØÚÚXÙIËN‰ÕÚ]Ù\È8 '	ÊÙ]K–ÍVÌJÉø 'HYX[ÉËÜ[ÛœÎ™Y“Ü[ÛœÊ
+K[œİÙ\™]K–ÍVÌWKYÎ‰İ›ØØX[\Nœ™]™\œÙK[YX[š[™ÉßKˆİ\N‰ØÚÚXÙIËN‰ĞÚÛÜÙHHÛÜœ™XİYš[š][ÛˆÙˆ8 '	ÊÙ]K–ÍWVÌJÉø 'K‰ËÜ[ÛœÎ™Y“Ü[ÛœÊKJK[œİÙ\™]K–ÍWVÌWKYÎ‰İ›ØØX[\Nœ™]™\œÙK[YX[š[™ÉßKˆİ\N‰ØÚÚXÙIËN‰ÕÚXÚ\™Ù]ÛÜ™Ûİ[[İH\ÙHÚ[ˆ[Ú[™ÈX›İ]	ÊÙ]K–ÍVÌWJÉÏÉËÜ[ÛœÎÛÜ™Ü[ÛœÊŠK[œİÙ\™]K–ÍVÌKYÎ‰İ›ØØX[\N˜\XØ][Û‰ßKˆİ\N‰ØÚÚXÙIËN‰ÔXÚÈH™\İ›ØØX[\HX™[›Üˆ\ÈYXNˆ	ÊÙ]K–ÍWVÌWJÉË‰ËÜ[ÛœÎÛÜ™Ü[ÛœÊKÊK[œİÙ\™]K–ÍWVÌKYÎ‰İ›ØØX[\N˜\XØ][Û‰ßKˆİ\N‰Ù^Xİ	ËN‰Õ\HH\™Ù]ÛÜ™]YX[œÎˆ	ÊÙ]K–ÌVÌWJÉË‰Ë[œİÙ\™]K–ÌVÌKZ[ŒKYÎ‰İ›ØØX[\Nœ™XØ[	ßKˆİ\N‰ÛÜ[‰ËN‰Õ\ÙH8 '	ÊÙ]K–ÌWVÌJÉø 'H[ˆÛ™HÛÛ\]HÙ[[˜ÙHX›İ]	ÊİÜXËÓİÙ\Ø\ÙJ
+JÉË‰ËZ[‹YÎ‰İ›ØØX[\Nœ›ÙXİ[Û‰ßBˆ_NÂŸB™[˜İ[ÛˆXZÙT™XY[™ÊÜXË]™[]J^ÂˆÛÛœİÜ\œÛÛ‹XÙKÛØ[Ú[[™ÙKXİ[Û‹™\İ[OY]KœÎÂˆÛÛœİ^[]™[OOHŒˆ‚ˆÈ\œÛÛŠÈˆÛÚÈ\[ˆH›Øİ\ÙY\Øİ\ÜÚ[ÛˆX›İ]ŠİÜXËÓİÙ\Ø\ÙJ
+JÈˆ]ŠÜXÙJÈ‹ˆHZ[HØ\ÈÈŠÙÛØ[
+È‹ˆHÚ]X][ÛˆØ\È[Ü™HÛÛ\XØ]Y[ˆ^XİY™XØ]\ÙHŠØÚ[[™ÙJÈ‹ˆ[œİXYÙˆ™XXİ[™È[[YYX][KŠÜ\œÛÛŠÈˆXÚYYÈŠØXİ[ÛŠÈ‹ˆ\È›ÙXÙYH\ÙY[™\İ[ˆŠÜ™\İ[
+È‹ˆÛÚÚ[™È˜XÚËŠÜ\œÛÛŠÈˆÛÛ˜ÛYY]˜XİXØ[XÚ\Ú[ÛœÈ[\›İ™HÚ[ˆ[ÜHY[YHH™X[›Ø›[KXİ[X™\˜][K[™[ˆ]˜[X]HÚ]Ú[™ÙYˆ‚ˆˆ\œÛÛŠÈˆ\ÈX\›š[™ÈX›İ]ŠİÜXËÓİÙ\Ø\ÙJ
+JÈˆ]ŠÜXÙJÈ‹ˆHXZ[ˆÛØ[\ÈÈŠÙÛØ[
+È‹ˆ]š\œİŠØÚ[[™ÙJÈ‹ˆÈ[\›İ™HHÚ]X][Û‹ŠÜ\œÛÛŠÈˆXÚYYÈŠØXİ[ÛŠÈ‹ˆY\ˆ]ŠÜ™\İ[
+È‹ˆH^\šY[˜ÙHÚİÜÈ]HÛX\ˆXİ[ÛˆØ[ˆXZÙHHY™šXİ[Ú]X][ÛˆX\ÚY\‹ˆÂˆ™]\›ˆİ]NÜXÊÈˆ0­È™XY[™È	ˆ\İ[š[™È‹^]Y\İ[ÛœÎ–ÂˆÜNˆ•ÚÈ\ÈH^XZ[›HX›İ]È‹Ü[ÛœÎ–Ü\œÛÛ‹HXXÚ\ˆ‹Hš\Ú]Üˆ—K[œİÙ\œ\œÛÛ‹YÎˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKˆÜNˆ•Ú\™HÙ\ÈHÚ]X][Ûˆ\[È‹Ü[ÛœÎ–ÜXÙK˜HÜÜÈİY][H‹˜Hİ[—K[œİÙ\œXÙKYÎˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKˆÜNˆ•Ú]\ÈHXZ[ˆÛØ[È‹Ü[ÛœÎ–ÙÛØ[˜]›ÚYXZÚ[™È[H[ˆ‹›X]™H[[YYX][H—K[œİÙ\™ÛØ[YÎˆ›\İ[š[™Ë\™XY[™Î›XZ[‹ZYXHŸKˆÜNˆ•Ú]Ú[[™ÙH\X\œÈš\œİÈ‹Ü[ÛœÎ–ØÚ[[™ÙK™]™\][™ÈØ\È[™XYH\™™Xİ‹\™HØ\È›È›Ø›[H—K[œİÙ\˜Ú[[™ÙKYÎˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKˆÜNˆ•Ú]Xİ[ÛˆÙ\ÈH\œÛÛˆZÙOÈ‹Ü[ÛœÎ–ØXİ[Û‹šYÛ›Ü™HHÚ]X][Ûˆ‹˜Ø[˜Ù[]™\HXİ]š]H—K[œİÙ\˜Xİ[Û‹YÎˆ›\İ[š[™Ë\™XY[™ÎœÙ\]Y[˜ÙHŸKˆÜNˆ•Ú]\[œÈY\ˆ]Xİ[ÛÈ‹Ü[ÛœÎ–Ü™\İ[››İ[™È\ÙY[\[œÈ‹H\ÚÈ\ÈX˜[™Û™Y—K[œİÙ\œ™\İ[YÎˆ›\İ[š[™Ë\™XY[™Î™]Z[ŸKˆÜNˆ•ÚXÚ\[™Yš\œİÈ‹Ü[ÛœÎ–ØÚ[[™ÙKXİ[Û‹™\İ[K[œİÙ\˜Ú[[™ÙKYÎˆ›\İ[š[™Ë\™XY[™ÎœÙ\]Y[˜ÙHŸKˆÜNˆ•ÚXÚ\[™YY\ˆHXİ[ÛÈ‹Ü[ÛœÎ–Ü™\İ[Ú[[™ÙKÛØ[K[œİÙ\œ™\İ[YÎˆ›\İ[š[™Ë\™XY[™ÎœÙ\]Y[˜ÙHŸKˆÜNˆ•Ú]Ù\ÈH^\šY[˜ÙHİYÙÙ\İÈ‹Ü[ÛœÎ–ÈHÛX\ˆXİ[ÛˆØ[ˆ[\›İ™HHY™šXİ[Ú]X][Û‹ˆ‹”[›š[™È™]™\ˆ[Ëˆ‹•H™\İÚÚXÙH\ÈÈÈ›İ[™Ëˆ—K[œİÙ\ˆHÛX\ˆXİ[ÛˆØ[ˆ[\›İ™HHY™šXİ[Ú]X][Û‹ˆ‹YÎˆ›\İ[š[™Ë\™XY[™Îš[™™\™[˜ÙHŸKˆÜNˆ•Ú]\ÈHXZ[ˆYXOÈ‹Ü[ÛœÎ–ÈH\œÛÛˆ˜XÙ\ÈHÜXË\™[]YÚ[[™ÙH[™™\ÜÛ™ÈÈ]ˆ‹•H\œÛÛˆ]›ÚYÈHÜXÈÛÛ\][Kˆ‹•H^\ÈÛ›HH\İÙˆ›ØØX[\Kˆ—K[œİÙ\ˆH\œÛÛˆ˜XÙ\ÈHÜXË\™[]YÚ[[™ÙH[™™\ÜÛ™ÈÈ]ˆ‹YÎˆ›\İ[š[™Ë\™XY[™Î›XZ[‹ZYXHŸBˆ_NÂŸB™[˜İ[ÛˆYÊKÜ[ÛœË[œİÙ\Š^Ü™]\›ˆÜKÜ[ÛœË[œİÙ\‹YÎˆ™Ü˜[[X\˜XØİ\˜XŞHŸ_B™[˜İ[ÛˆÜ˜[[X\”]Y\İ[ÛœÊ›Øİ\Ê^ÂˆÛÛœİY›Øİ\ËÓİÙ\Ø\ÙJ
+NÂˆYŠ‹š[˜ÛY\Êœ™\Ù[\™™XİÛÛ[[İ\ÈŠJH™]\›ˆÂˆYÊÛÛ\]NˆH××È[™Û\Ú›Üˆ™YHYX\œËˆ‹Èš]™H™Y[ˆİYZ[™È‹˜[HİYZ[™ÈÚ[˜ÙH‹š]™HİYYYY\İ\™^H—Kš]™H™Y[ˆİYZ[™ÈŠKYÊ”ÚH××È[[Ü›š[™Ëˆ‹Èš\È™Y[ˆÛÜšÚ[™È‹š\ÈÛÜšÙY‹š\ÈÛÜšÚ[™È—Kš\È™Y[ˆÛÜšÚ[™ÈŠKYÊÚÛÜÙHH›Øİ\ÈÛˆ\˜][Û‹ˆ‹È•^H]™H™Y[ˆØZ][™ÈÚ[˜ÙHš[™Kˆ‹•^HØZ]YÚ[˜ÙHš[™H›İËˆ‹•^H\™HØZ]Ú[˜ÙHš[™Kˆ—K•^H]™H™Y[ˆØZ][™ÈÚ[˜ÙHš[™KˆŠKYÊ’İÈÛ™È××È[İH××È›Üˆ\ÈÛÛ\[OÈ‹Èš]™HÈ™Y[ˆÛÜšÚ[™È‹™YÈ™Y[ˆÛÜšÈ‹˜\™HÈÛÜšÙY—Kš]™HÈ™Y[ˆÛÜšÚ[™ÈŠKYÊ’]××È[^Kˆ‹Èš\È™Y[ˆ˜Z[š[™È‹š\È˜Z[š[™È‹š\È˜Z[™Y—Kš\È™Y[ˆ˜Z[š[™ÈŠKYÊÚÛÜÙHHÛÜœ™Xİ™YØ]]™Kˆ‹È’H]™[¸ &]™Y[ˆÛY\[™ÈÙ[ˆ‹’H]™[¸ &]™Y[ˆÛY\Ù[ˆ‹’HY¸ &]™Y[ˆÛY\[™ÈÙ[ˆ—K’H]™[¸ &]™Y[ˆÛY\[™ÈÙ[ˆŠBˆNÂˆYŠ‹š[˜ÛY\Ê\™ÛÛ™][Û˜[ŠJH™]\›ˆÂˆYÊÛÛ\]NˆYˆHYÛ›İÛ‹H××ÈX\›Y\‹ˆ‹ÈÛİ[]™HØ[Y‹Ûİ[Ø[‹Ú[]™HØ[Y—KÛİ[]™HØ[YŠKYÊ’Yˆ^H××ÈX\›Y\‹^HÛİ[]™HØ]YÚH\Ëˆ‹ÈšYY‹›YÛİ[‹š]™HY—KšYYŠKYÊÚÛÜÙHHÛÜœ™Xİ\İ[œ™X[™\İ[ˆ‹È’YˆÙHY™\\™YÙHÛİ[]™HİXØÙYYYˆ‹’YˆÙH™\\™YÙHÛİ[]™HİXØÙYYYY\İ\™^Kˆ‹’YˆÙHY™\\™KÙHÚ[İXØÙYYˆ—K’YˆÙHY™\\™YÙHÛİ[]™HİXØÙYYYˆŠKYÊ”ÚHÛİ[›İ]™HZ\ÜÙY]YˆÚH××ÈH™[Z[™\‹ˆ‹ÈšYÙY[ˆ‹Ûİ[ÙYH‹š\ÈØ]È—KšYÙY[ˆŠKYÊ’YˆHÙX]\ˆY[\›İ™YÙH××Èİ]ÚYKˆ‹È˜Ûİ[]™HY]‹˜Ûİ[YY]Y\İ\™^H‹˜Ø[ˆ]™HY]—K˜Ûİ[]™HY]ŠKYÊÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹È•Ú]Ûİ[[İH]™HÛ™HYˆ[İHYÛ›İÛÈ‹•Ú]Y[İHÛ™HYˆ[İHÛİ[Û›İÏÈ‹•Ú]Ú[[İH]™HÛ™HYˆ[İHÛ™]ÈY\İ\™^OÈ—K•Ú]Ûİ[[İH]™HÛ™HYˆ[İHYÛ›İÛÈŠBˆNÂˆYŠ‹š[˜ÛY\Ê›Z^YÛÛ™][Û˜[ŠJH™]\›ˆÂˆYÊ’YˆHYZÙ[ˆ]›Ø‹H××ÈXœ›ØY›İËˆ‹ÈÛİ[™H]š[™È‹Ûİ[]™H]™YY\İ\™^H‹Ú[]™H—KÛİ[™H]š[™ÈŠKYÊ’YˆÚHÙ\™H[Ü™HÜ™Ø[š\ÙYÚH××ÈHXY[™HY\İ\™^Kˆ‹ÈÛİ[›İ]™HZ\ÜÙY‹Ûİ[›İZ\ÜÈY\İ\™^H‹Ú[›İ]™HZ\ÜÙY—KÛİ[›İ]™HZ\ÜÙYŠKYÊÚÛÜÙHH\İØ]\ÙHÚ]H™\Ù[™\İ[ˆ‹È’YˆHYİYYYYYXÚ[™KHÛİ[™HHØİÜˆ›İËˆ‹’YˆHİYYYYYXÚ[™HY\İ\™^KH[HHØİÜˆ›İËˆ‹’YˆHYİYHYYXÚ[™KHÚ[™HHØİÜ‹ˆ—K’YˆHYİYYYYYXÚ[™KHÛİ[™HHØİÜˆ›İËˆŠKYÊ’Yˆ^HYØ]™Y[Ü™K^H××ÈHİ\ÙH›İËˆ‹È˜Ûİ[İÛˆ‹˜Ûİ[]™HİÛ™YY\İ\™^HÛ›H‹Ú[İÛˆ—K˜Ûİ[İÛˆŠKYÊ’YˆHÙ\™H[Ü™HØ\™Y[H××È]Z\İZÙKˆ‹ÈÛİ[›İ]™HXYH‹™Y›İXYH‹Ú[›İ]™HXYH—KÛİ[›İ]™HXYHŠKYÊÚÛÜÙHH™\Ù[ÛÛ™][ÛˆÚ]H\İ™\İ[ˆ‹È’YˆHÜÚÙHœ™[˜ÚHÛİ[]™H\YY›ÜˆH›ÛKˆ‹’YˆHYÜÚÙ[ˆœ™[˜ÚH\H›İËˆ‹’YˆHÜXZÈœ™[˜ÚH\YYY\İ\™^Kˆ—K’YˆHÜÚÙHœ™[˜ÚHÛİ[]™H\YY›ÜˆH›ÛKˆŠBˆNÂˆYŠ‹š[˜ÛY\Ê›[Ù[ÈÙˆYXİ[ÛˆŠJH™]\›ˆÂˆYÊ•HYÚÈ\™HÛ‹ˆ^H××È™HÛYKˆ‹È›]\İ‹˜Ø[‰İ‹œÚİ[È—K›]\İŠKYÊ’H\È[ˆ˜Z\›ØšKÛÈH××È™H]\ÈYY][™Ëˆ‹È˜Ø[‰İ‹›]\İ‹›ZYÚÈ—K˜Ø[‰İŠKYÊ’H[H›İİ\™NÈÚH××ÈÛ›İÈH[œİÙ\‹ˆ‹È›ZYÚ‹›]\İYš[š][H‹˜Ø[ˆÈ—K›ZYÚŠKYÊÚÛÜÙHHİ›Û™È\İYXİ[Û‹ˆ‹È•^H]\İ]™H›Ü™Ûİ[‹ˆ‹•^H]\İ›Ü™Ûİˆ‹•^H]™H]\İ›Ü™Ûİ[‹ˆ—K•^H]\İ]™H›Ü™Ûİ[‹ˆŠKYÊ•HÛÜˆØ\ÈØÚÙYˆH××È]™H[\™Y]Ø^Kˆ‹È˜Ø[‰İ‹›]\İ‹œÚİ[—K˜Ø[‰İŠKYÊÚÛÜÙHH[˜Ù\Z[ˆ\İYXİ[Û‹ˆ‹È”ÚHZYÚ]™HZ\ÜÙYH\Ëˆ‹”ÚHZYÚZ\ÜÙYH\Ëˆ‹”ÚHZYÚ\ÈZ\ÜÙYH\Ëˆ—K”ÚHZYÚ]™HZ\ÜÙYH\ËˆŠBˆNÂˆYŠ‹š[˜ÛY\Êœ\ÜÚ]™H™\Ü[™ÈŠJH™]\›ˆÂˆYÊ”[ÜH™[Y]™HH[ˆ\ÈY™™Xİ]™KˆH[ˆ××ÈY™™Xİ]™Kˆ‹Èš\È™[Y]™YÈ™H‹˜™[Y]™\ÈÈ™H‹š\È™[Y]š[™È—Kš\È™[Y]™YÈ™HŠKYÊ•^HØ^HÚH]™\ÈXœ›ØYˆÚH××ÈXœ›ØYˆ‹Èš\ÈØZYÈ]™H‹š\ÈØZY]]™\È‹œØ^\ÈÈ]™H—Kš\ÈØZYÈ]™HŠKYÊÚÛÜÙHHÛÜœ™Xİ™\Ü[™È\ÜÚ]™Kˆ‹È’]\ÈİYÚ]šXÙ\ÈÚ[š\ÙKˆ‹’][šÜÈ]šXÙ\ÈÚ[š\ÙKˆ‹’]\ÈİYÚšXÙ\ÈÚ[š\Ú[™Ëˆ—K’]\ÈİYÚ]šXÙ\ÈÚ[š\ÙKˆŠKYÊ”[ÜH™\ÜY]HYYˆH××ÈYˆ‹ÈØ\È™\ÜYÈ]™H‹œ™\ÜYÈY‹Ø\È™\Ü[™È]™H—KØ\È™\ÜYÈ]™HŠKYÊ•HÛÛ\[H××ÈÈ™HÛÛœÚY\š[™ÈÚ[™Ù\Ëˆ‹Èš\È[™\œİÛÙ‹[™\œİ[™È‹š\È[™\œİ[™—Kš\È[™\œİÛÙŠKYÊÚÛÜÙHH[\\œÛÛ˜[›Ü›Kˆ‹È’]\È^XİY]HÛXŞHÚ[Ú[™ÙKˆ‹’]^XİÈHÛXŞHÚ[™Ú[™Ëˆ‹’]\È^Xİ]ÛXŞHÚ[™ÙKˆ—K’]\È^XİY]HÛXŞHÚ[Ú[™ÙKˆŠBˆNÂˆYŠ‹š[˜ÛY\Êœ˜\Ø[™\˜ˆŠJH™]\›ˆÂˆYÊÛÛ\]NˆÙH™YYÈ××ÈHÛÛ][Û‹ˆ‹È˜ÛÛYH\Ú]‹˜ÛÛYH\‹˜ÛÛYHÚ]\—K˜ÛÛYH\Ú]ŠKYÊ”X\ÙH××ÈH›Ü›H™Y›Ü™HœšY^Kˆ‹È™š[[ˆ‹™š[Ûˆ‹™š[İ™\ˆ—K™š[[ˆŠKYÊÚÛÜÙHHÙ[[˜ÙHYX[š[™ÈÜİÛ™Kˆ‹È•^H]Ù™ˆHYY][™Ëˆ‹•^H]HYY][™È\ˆ‹•^H]İ]HYY][™Ëˆ—K•^H]Ù™ˆHYY][™ËˆŠKYÊ’H™YYÈ××È\ÈÛÜ™[ˆHXİ[Û˜\Kˆ‹È›ÛÚÈ\‹›ÛÚÈY\ˆ‹›ÛÚÈİ]—K›ÛÚÈ\ŠKYÊÚÛÜÙHH[œÙ\\˜X›H˜\Ø[™\˜‹ˆ‹È”ÚHÛÚÜÈY\ˆ\ˆ[İ[™Ù\ˆœ›İ\‹ˆ‹”ÚHÛÚÜÈ\ˆ[İ[™Ù\ˆœ›İ\ˆY\‹ˆ‹”ÚHY\ˆÛÚÜÈ\ˆœ›İ\‹ˆ—K”ÚHÛÚÜÈY\ˆ\ˆ[İ[™Ù\ˆœ›İ\‹ˆŠKYÊ•H›Ú™Xİ××È™XØ]\ÙH[™[™È[™Yˆ‹È™™[›İYÚ‹™™[\‹™™[İ™\ˆÚ]—K™™[›İYÚŠBˆNÂˆYŠ‹š[˜ÛY\ÊÚ\ÚŠ_‹š[˜ÛY\ÊšYˆÛ›HŠJH™]\›ˆÂˆYÊ’HÚ\ÚH××È[Ü™Hœ™YH[YH›İËˆ‹ÈšY‹š]™HYY\İ\™^H‹Ûİ[Y—KšYŠKYÊ’YˆÛ›HÙH××ÈHX\›Y\ˆ\Ëˆ‹ÈšYZÙ[ˆ‹ÛÚÈÛ[Üœ›İÈ‹Ûİ[ZÙHY\İ\™^H—KšYZÙ[ˆŠKYÊÚÛÜÙHHÚ\ÚX›İ]H™\Ù[Ú]X][Û‹ˆ‹È’HÚ\ÚH]™YÛÜÙ\‹ˆ‹’HÚ\ÚHÚ[]™HÛÜÙ\‹ˆ‹’HÚ\ÚH]™H]™YÛÜÙ\ˆY\İ\™^Kˆ—K’HÚ\ÚH]™YÛÜÙ\‹ˆŠKYÊ’HÚ\Ú[İH××ÈXZÚ[™È]›Ú\ÙKˆ‹ÈÛİ[İÜ‹Ú[İÜY‹šYİÜ›İÈ—KÛİ[İÜŠKYÊÚÛÜÙHH™YÜ™]X›İ]H\İˆ‹È’YˆÛ›HHY\İ[™Yˆ‹’YˆÛ›HH\İ[ˆY\İ\™^Kˆ‹’YˆÛ›HHÛİ[\İ[™Yˆ—K’YˆÛ›HHY\İ[™YˆŠKYÊ”ÚHÚ\Ú\ÈÚH××ÈÜXZÈ[Ü™HÛÛ™šY[Kˆ‹È˜Ûİ[‹˜Ø[ˆY\İ\™^H‹Ú[Ûİ[—K˜Ûİ[ŠBˆNÂˆYŠ‹š[˜ÛY\Ê˜ÛÛ™][ÛˆŠJH™]\›ˆÂˆYÊÛÛ\]NˆYˆÙHš[š\ÚX\›KÙH××ÈHÛY[ˆ‹ÈÚ[Ø[‹˜Ø[Y‹˜Ø[[™È—KÚ[Ø[ŠKˆYÊÛÛ\]NˆYˆHY[Ü™H[YKH××È[Ü™Kˆ‹ÈÛİ[˜Xİ\ÙH‹Ú[˜Xİ\ÙY‹œ˜Xİ\ÙHY\İ\™^H—KÛİ[˜Xİ\ÙHŠKˆYÊÚÛÜÙHHÛÜœ™Xİš\œİÛÛ™][Û˜[ˆ‹È’Yˆ]˜Z[œËÙHÚ[İ^H[œÚYKˆ‹’Yˆ]Ú[˜Z[‹ÙHİ^H[œÚYKˆ‹’Yˆ]˜Z[™YÙHÚ[İ^YY[œÚYKˆ—K’Yˆ]˜Z[œËÙHÚ[İ^H[œÚYKˆŠKˆYÊÚÛÜÙHHÛÜœ™XİÙXÛÛ™ÛÛ™][Û˜[ˆ‹È’YˆHÙ\™H[İKHÛİ[\ÚÈ›Üˆ[ˆ‹’YˆH[H[İKHÛİ[\ÚÙYˆ‹’YˆHÙ\™H[İKHÚ[\ÚËˆ—K’YˆHÙ\™H[İKHÛİ[\ÚÈ›Üˆ[ˆŠKˆYÊÛÛ\]NˆYˆHšXÙH›ÜË^H××È]ˆ‹ÈÚ[^H‹Ûİ[›İYÚ‹˜^Z[™È—KÚ[^HŠKˆYÊÛÛ\]NˆYˆÚHÛ™]ÈH[œİÙ\‹ÚH××È\Ëˆ‹ÈÛİ[[‹Ú[Û‹[ÈY\İ\™^H—KÛİ[[ŠKˆYÊÚÛÜÙHH™X[]\™HÜÜÚXš[]Kˆ‹È’Yˆ[X[™Ü›İÜËÙHÚ[\™H[Ü™HİY™‹ˆ‹’Yˆ[X[™Ü™]ËÙHÛİ[\™H[Ü™HİY™‹ˆ‹’Yˆ[X[™Ú[Ü›İËÙH\™Kˆ—K’Yˆ[X[™Ü›İÜËÙHÚ[\™H[Ü™HİY™‹ˆŠKˆYÊÚÛÜÙHH\İ]XØ[Ú]X][Û‹ˆ‹È’YˆHİÛ™YHÛÛ\[KHÛİ[[™\İ[Ü™Kˆ‹’YˆHİÛˆHÛÛ\[KHÛİ[[™\İY[Ü™Kˆ‹’YˆHİÛ™Y]HÚ[[™\İˆ—K’YˆHİÛ™YHÛÛ\[KHÛİ[[™\İ[Ü™KˆŠKˆYÊÛÛ\]NˆYˆH˜Xİ\Ù\ËH××È[\›İ™Kˆ‹ÈÚ[‹Ûİ[]™H‹™Y—KÚ[ŠKˆYÊÛÛ\]NˆÚ]××È[İHÈYˆ[İHYHÚÚXÙOÈ‹ÈÛİ[‹Ú[‹™Y—KÛİ[ŠBˆNÂˆYŠ‹š[˜ÛY\Êœ\ÜÚ]™HŠJH™]\›ˆÂˆYÊÛÛ\]NˆH™\Ü××È]™\HœšY^Kˆ‹Èš\ÈX›\ÚY‹œX›\Ú\È‹š\ÈX›\Ú—Kš\ÈX›\ÚYŠKˆYÊÚÛÜÙHH\ÜÚ]™HÙ[[˜ÙKˆ‹È•HØ\İH\ÈÛÛXİY]™\H[Ü›š[™Ëˆ‹•ÛÜšÙ\œÈÛÛXİHØ\İH]™\H[Ü›š[™Ëˆ‹•HØ\İHÛÛXİÈÛÜšÙ\œËˆ—K•HØ\İH\ÈÛÛXİY]™\H[Ü›š[™ËˆŠKˆYÊÛÛ\]NˆHœšYÙH××È[ˆŒLˆ‹ÈØ\ÈZ[‹˜Z[‹Ø\ÈZ[—KØ\ÈZ[ŠKˆYÊÛÛ\]NˆH™\İ[È××ÈÛ[Üœ›İËˆ‹ÈÚ[™H[››İ[˜ÙY‹Ú[[››İ[˜ÙH‹Ú[™H[››İ[˜ÙH—KÚ[™H[››İ[˜ÙYŠKˆYÊÚÛÜÙHHÛÜœ™Xİ›Ü›Kˆ‹È‘[™Û\Ú\ÈÜÚÙ[ˆ[ˆX[HÛİ[šY\Ëˆ‹‘[™Û\ÚÜXZÜÈ[ˆX[HÛİ[šY\Ëˆ‹‘[™Û\Ú\ÈÜXZÈ[ˆX[HÛİ[šY\Ëˆ—K‘[™Û\Ú\ÈÜÚÙ[ˆ[ˆX[HÛİ[šY\ËˆŠKˆYÊÛÛ\]Nˆ\ÙH›ÙXİÈ××ÈØØ[Kˆ‹È˜\™HXYH‹›XZÙH‹˜\™HXZÙH—K˜\™HXYHŠKˆYÊÚÛÜÙHH]Y\İ[Û‹ˆ‹È•Ú\™H\ÈHÛÙ™™YHÜ›İÛÈ‹•Ú\™HÙ\ÈHÛÙ™™YHÜ›İÛÈ‹•Ú\™HHÛÙ™™YH\ÈÜ›İÏÈ—K•Ú\™H\ÈHÛÙ™™YHÜ›İÛÈŠKˆYÊÛÛ\]NˆHYY][™È××È™XØ]\ÙHÙˆHÙX]\‹ˆ‹ÈØ\ÈØ[˜Ù[Y‹˜Ø[˜Ù[Y]Ù[ˆ‹Ø\ÈØ[˜Ù[—KØ\ÈØ[˜Ù[YŠKˆYÊÚÛÜÙHHYÙ[˜\ÙKˆ‹È•H›ÛÚÈØ\ÈÜš][ˆHHØØ[]]Ü‹ˆ‹•H›ÛÚÈØ\ÈÜš][ˆœ›ÛHHØØ[]]Ü‹ˆ‹•H›ÛÚÈÜ›İHHHØØ[]]Ü‹ˆ—K•H›ÛÚÈØ\ÈÜš][ˆHHØØ[]]Ü‹ˆŠKˆYÊÛÛ\]Nˆ™]È[\È××È™^[Ûˆ‹ÈÚ[™H[›ÙXÙY‹Ú[[›ÙXÙY‹˜\™H[›ÙXÙH—KÚ[™H[›ÙXÙYŠBˆNÂˆYŠ‹š[˜ÛY\Êœ™\ÜYŠJH™]\›ˆÂˆYÊ	Ñ\™Xİˆ’H[H\™Yˆˆ™\ÜYˆÚHØZYÚH××Ë‰ËÈØ\È\™Y‹š\È\™YY\İ\™^H‹Ù\™H\™Y—KØ\È\™YŠKˆYÊ	Ñ\™Xİˆ’HÛÜšÈ\™Kˆˆ™\ÜYˆHØZYH××È\™K‰ËÈÛÜšÙY‹ÛÜšÜÈ\™H›İÈ‹ÛÜšÚ[™È—KÛÜšÙYŠKˆYÊ	Ñ\™Xİˆ’H]™Hš[š\ÚYˆˆ™\ÜYˆÚHØZYÚH××Ë‰ËÈšYš[š\ÚY‹š\Èš[š\Ú‹™š[š\ÚYÛ[Üœ›İÈ—KšYš[š\ÚYŠKˆYÊÚÛÜÙHHÛÜœ™XİÙ[[˜ÙKˆ‹È’HÛYH]HØ\È\ŞKˆ‹’HØZYYH]HØ\È\ŞKˆ‹’HÛ]YHH\ŞKˆ—K’HÛYH]HØ\È\ŞKˆŠKˆYÊÚÛÜÙHHÛÜœ™Xİ]\™H˜XÚÜÚYˆ‹È”ÚHØZYÚHÛİ[Ø[]\‹ˆ‹”ÚHØZYÚHÚ[Ø[Y]\‹ˆ‹”ÚHÛÚHÛİ[Ø[Ëˆ—K”ÚHØZYÚHÛİ[Ø[]\‹ˆŠKˆYÊ	Ñ\™Xİˆ•ÙHØ[ˆ[ˆˆ™\ÜYˆ^HØZY^H××È[‰ËÈ˜Ûİ[‹˜Ø[ˆY\İ\™^H‹Ù\™HØ[ˆ—K˜Ûİ[ŠKˆYÊÛÛ\]NˆHØZYH××ÈÙY[ˆH\XÛH™Y›Ü™Kˆ‹ÈšY‹š\ÈY\İ\™^H‹™Y—KšYŠKˆYÊÚÛÜÙHH[YHÚ[™ÙKˆ‹ÈÙ^H8¡¤ˆ]^H‹Ù^H8¡¤ˆ™^YX\ˆ‹Y\İ\™^H8¡¤ˆÛ[Üœ›İÈ[Ø^\È—KÙ^H8¡¤ˆ]^HŠKˆYÊÚÛÜÙHHXØİ\˜]Hİ][Y[ˆ‹È“][˜HØZYÚHØ\ÈİYZ[™Ëˆ‹“][˜HØZYÚH\ÈİYHY\İ\™^Kˆ‹“][˜HÛÚHİYZ[™Ëˆ—K“][˜HØZYÚHØ\ÈİYZ[™ËˆŠKˆYÊ	Ñ\™Xİˆ’HÚ[Ù[™]ˆˆ™\ÜYˆHØZYH××ÈÙ[™]‰ËÈÛİ[‹Ú[Y\İ\™^H‹Ø\È—KÛİ[ŠBˆNÂˆYŠ‹š[˜ÛY\Êœ™[]]™HŠJH™]\›ˆÂˆYÊHÛÛXYİYH\ÈÛÛY[Û™H××ÈÛÜšÜÈÚ][İKˆ‹ÈÚÈ‹ÚXÚ‹Ú\™H—KÚÈŠKˆYÊH]šXÙH\ÈÛÛY][™È××ÈÛÛ›™XİÈÈH[\›™]ˆ‹È]‹ÚÈ‹Ú\™H—K]ŠKˆYÊ•\È\ÈHÙ™šXÙH××ÈHÛÜšËˆ‹ÈÚ\™H‹ÚÈ‹ÚXÚ\œÛÛˆ—KÚ\™HŠKˆYÊÚÛÜÙHHÛÜœ™XİÙ[[˜ÙKˆ‹È’HÛ›İÈHXXÚ\ˆÚÈÜXZÜÈ™YH[™İXYÙ\Ëˆ‹’HÛ›İÈHXXÚ\ˆÚXÚÜXZÜÈ™YH[™İXYÙ\Ëˆ‹’HÛ›İÈHXXÚ\ˆÚ\™HÜXZÜÈ™YH[™İXYÙ\Ëˆ—K’HÛ›İÈHXXÚ\ˆÚÈÜXZÜÈ™YH[™İXYÙ\ËˆŠKˆYÊ•H›ÛÚÈ××ÈH›İYÚ\È\ÙY[ˆ‹È]‹ÚÈ‹Ú\™H—K]ŠKˆYÊÚÛÜÙHHÛÜœ™XİXÙHÛ]\ÙKˆ‹È›Ü˜[XH\ÈHİÛˆÚ\™HX[HİY[ÈİYKˆ‹›Ü˜[XH\ÈHİÛˆÚÈX[HİY[ÈİYKˆ‹›Ü˜[XH\ÈHİÛˆÚXÚ[ÜHİYY\È\™Kˆ—K›Ü˜[XH\ÈHİÛˆÚ\™HX[HİY[ÈİYKˆŠKˆYÊ•H\œÛÛˆ××ÈØ[Y[İH\È^HX[˜YÙ\‹ˆ‹ÈÚÈ‹Ú\™H‹ÚXÚXÙH—KÚÈŠKˆYÊ•H›Ú™Xİ××ÈÙH\Øİ\ÜÙY\Èİ\Yˆ‹È]‹ÚÈ‹Ú\™H—K]ŠKˆYÊ™\İ™[]]™HÛÜ™›Üˆ[ÜNˆ‹ÈÚÈ‹ÚXÚ‹Ú\™H—KÚÈŠKˆYÊ™\İ™[]]™HÛÜ™›ÜˆXÙ\Îˆ‹ÈÚ\™H‹ÚÈ‹ÚÜÙH\œÛÛˆ—KÚ\™HŠBˆNÂˆYŠ‹š[˜ÛY\Êœ™\Ù[\™™XİŠJH™]\›ˆÂˆYÊ’H××È™]™\ˆ××È]š[Kˆ‹Èš]™HÈÙY[ˆ‹™YÈØ]È‹š]™HÈØ]È—Kš]™HÈÙY[ˆŠKˆYÊ”ÚH××È\İ\œš]™Yˆ‹Èš\È‹™Y‹š\È—Kš\ÈŠKˆYÊÚÛÜÙHH^\šY[˜ÙH]Y\İ[Û‹ˆ‹È’]™H[İH]™\ˆÛÜšÙYXœ›ØYÈ‹‘Y[İH]™\ˆÛÜšÙYXœ›ØYÈ‹\™H[İH]™\ˆÛÜšÈXœ›ØYÈ—K’]™H[İH]™\ˆÛÜšÙYXœ›ØYÈŠKˆYÊ•ÙH]™[¸ &]š[š\ÚY××Ëˆ‹ÈY]‹Y\İ\™^H‹›\İÙYZÈ—KY]ŠKˆYÊÚÛÜÙHHÛÜœ™XİÙ[[˜ÙKˆ‹È’H\È[™XYHÙ[H[XZ[ˆ‹’H[™XYH\ÈÙ[™H[XZ[ˆ‹’HY[™XYHÙ[H[XZ[ˆ—K’H\È[™XYHÙ[H[XZ[ˆŠKˆYÊ•^H××ÈÛÜšÙY\™H›Üˆ™YHYX\œËˆ‹Èš]™H‹™Y‹˜\™H—Kš]™HŠKˆYÊÚÛÜÙHH\İ\XÚ\HÙˆÜš]Kˆ‹ÈÜš][ˆ‹Ü›İH‹Üš]Y—KÜš][ˆŠKˆYÊ”ÚH\È××ÈH™]È›Ø‹ˆ‹È™›İ[™‹™š[™‹™š[™[™È—K™›İ[™ŠKˆYÊÚÛÜÙHHÛÜœ™Xİ™YØ]]™Kˆ‹È’H]™[¸ &]šYY]\ˆ‹’HY¸ &]šYY]\]™\‹ˆ‹’H]™[¸ &]H]\ˆ—K’H]™[¸ &]šYY]\ˆŠKˆYÊ’İÈÛ™È××È[İH]™Y\™OÈ‹Èš]™H‹™Y‹˜\™H—Kš]™HŠBˆNÂˆYŠ‹š[˜ÛY\Êœ\İŠJH™]\›ˆÂˆYÊ–Y\İ\™^HH××ÈH™\Üˆ‹È™š[š\ÚY‹™š[š\Ú‹™š[š\Ú[™È—K™š[š\ÚYŠKˆYÊÚÛÜÙHHÛÜœ™Xİ™YØ]]™Kˆ‹È•ÙHY¸ &]˜]™[\İÙYZËˆ‹•ÙHY¸ &]˜]™[Y\İÙYZËˆ‹•ÙH›İ˜]™[Y\İÙYZËˆ—K•ÙHY¸ &]˜]™[\İÙYZËˆŠKˆYÊÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹È‘YÚHØ[[İOÈ‹‘YÚHØ[Y[İOÈ‹”ÚHYØ[[İOÈ—K‘YÚHØ[[İOÈŠKˆYÊ•Ú[HÚH××ËHÛ™H˜[™Ëˆ‹ÈØ\Èš]š[™È‹™›İ™H[Ø^\È‹š\Èš]™[ˆ—KØ\Èš]š[™ÈŠKˆYÊHH[YHÙH\œš]™YH\È××Ëˆ‹ÈšYY‹Ø\ÈX]™H‹š\ÈYY\İ\™^H—KšYYŠKˆYÊÚÛÜÙHHÛÜœ™XİİÜHÙ[[˜ÙKˆ‹È’HØ\ÈØ[Ú[™ÈÛYHÚ[ˆ]İ\YÈ˜Z[‹ˆ‹’HØ[ÙYÛYHÚ[ˆ]Ø\Èİ\È˜Z[‹ˆ‹’HYØ[Ú[™ÈÛYHÚ[ˆ˜Z[ˆİ\Yˆ—K’HØ\ÈØ[Ú[™ÈÛYHÚ[ˆ]İ\YÈ˜Z[‹ˆŠKˆYÊ’H××ÈH™]È›Øˆ[ˆX^Kˆ‹Èœİ\Y‹œİ\È‹š\Èİ\—Kœİ\YŠKˆYÊÚÛÜÙHH\œ™Yİ[\ˆ\İ›Ü›HÙˆÛËˆ‹ÈÙ[‹™ÛÙY‹™ÛÛ™HY\İ\™^H—KÙ[ŠKˆYÊ•Ú]××È[İHÚ[™ÈÚ[ˆ]\[™YÈ‹ÈÙ\™H‹™Y‹˜\™H—KÙ\™HŠKˆYÊÚÛÜÙHHÛÜœ™XİÙ\]Y[˜ÙKˆ‹È’HYš[š\ÚY™Y›Ü™HHYY][™Èİ\Yˆ‹’H\Èš[š\ÚY™Y›Ü™HHYY][™Èİ\YY\İ\™^Kˆ‹’Hš[š\ÚY™Y›Ü™HHYY][™ÈYİ\[™Ëˆ—K’HYš[š\ÚY™Y›Ü™HHYY][™Èİ\YˆŠBˆNÂˆYŠ‹š[˜ÛY\Ê™]\™HŠ_‹š[˜ÛY\Ê™ÛÚ[™ÈÈŠ_‹š[˜ÛY\ÊÛİ[ZÙHŠ_‹š[˜ÛY\ÊØ[ÈŠJH™]\›ˆÂˆYÊ’H××È\H›ÜˆHÛİ\œÙH™^[Ûˆ‹È˜[HÛÚ[™ÈÈ‹™ÛÚ[™È‹Ú[ÛÚ[™ÈÈ—K˜[HÛÚ[™ÈÈŠKˆYÊ•^H××È][˜ÚH™]ÈÙ\šXÙKˆ‹È˜\™HÛÚ[™ÈÈ‹š\ÈÛÚ[™ÈÈ‹˜\™HÛÈÈ—K˜\™HÛÚ[™ÈÈŠKˆYÊÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹È•Ú]\™H[İHÛÚ[™ÈÈÈ™^È‹•Ú][İH\™HÛÚ[™ÈÈÈ™^È‹•Ú]È[İHÛÚ[™ÈÈÈ™^È—K•Ú]\™H[İHÛÚ[™ÈÈÈ™^ÈŠKˆYÊ’HÛİ[ZÙH××ÈH™]ÈÚÚ[ˆ‹ÈÈX\›ˆ‹›X\›š[™ÈÈ‹›X\›™Y—KÈX\›ˆŠKˆYÊ”ÚHØ[È××ÈXœ›ØYˆ‹ÈÈİYH‹œİYHÈ‹œİYZ[™ÈÈ—KÈİYHŠKˆYÊÚÛÜÙHHÜÛ[™[İ\ÈXÚ\Ú[Û‹ˆ‹È’x &[[œİÙ\ˆHÛ™Kˆ‹’H[H[œİÙ\™YHÛ™HÛ[Üœ›İËˆ‹’HÚ[È[œİÙ\‹ˆ—K’x &[[œİÙ\ˆHÛ™KˆŠKˆYÊÚÛÜÙHHš^Y\œ˜[™Ù[Y[ˆ‹È’x &[HYY][™ÈH\™XİÜˆ]LÛ[Üœ›İËˆ‹’HYY]H\™XİÜˆY\İ\™^Kˆ‹’HÚ[YY][™ÈH\™XİÜˆ]Lˆ—K’x &[HYY][™ÈH\™XİÜˆ]LÛ[Üœ›İËˆŠKˆYÊ“ÛÚÈ]ÜÙHÛİYËˆ]××Ëˆ‹Èš\ÈÛÚ[™ÈÈ˜Z[ˆ‹Ú[˜Z[š[™È‹œ˜Z[œÈY\İ\™^H—Kš\ÈÛÚ[™ÈÈ˜Z[ˆŠKˆYÊÚÛÜÙHHÛ]H™Y™\™[˜ÙKˆ‹È’x &YZÙHÈ\Kˆ‹’HZÙH\Kˆ‹’HÛİ[ZÙH\Z[™Ëˆ—K’x &YZÙHÈ\KˆŠKˆYÊ’H›ÛZ\ÙHH××ÈØ[[İKˆ‹ÈÚ[‹˜[HÛÈ‹Ú[È—KÚ[ŠBˆNÂˆYŠ‹š[˜ÛY\Ê›[Ù[Š_‹š[˜ÛY\ÊœÚİ[Š_‹š[˜ÛY\Ê˜Ø[ˆÈÛİ[Š_‹š[˜ÛY\Ê˜Xš[]HŠ_‹š[˜ÛY\Ê›Ø›YØ][ÛˆŠJH™]\›ˆÂˆYÊ–[İH××ÈÙ][Ü™H™\İˆ‹ÈœÚİ[‹œÚİ[È‹œÚİ[È—KœÚİ[ŠKˆYÊ•š\Ú]ÜœÈ××ÈÙX\ˆ[ˆQ˜YÙKˆ‹È›]\İ‹œÚİ[X^X™H‹˜Ûİ[—K›]\İŠKˆYÊ‘[\ŞYY\È××ÈÚYÛˆ[ˆ]™XÙ\[Û‹ˆ‹Èš]™HÈ‹›ZYÚ‹Ûİ[—Kš]™HÈŠKˆYÊÚÛÜÙH›ÈØ›YØ][Û‹ˆ‹È–[İHÛ¸ &]]™HÈ][™ˆ‹–[İH]\İ¸ &]][™ˆ‹–[İHÚİ[¸ &]È][™ˆ—K–[İHÛ¸ &]]™HÈ][™ˆŠKˆYÊÚÛÜÙH›ÚXš][Û‹ˆ‹È–[İH]\İ¸ &]Û[ÚÙH\™Kˆ‹–[İHÛ¸ &]]™HÈÛ[ÚÙH\™Kˆ‹–[İHÛİ[›İÛ[ÚÙH\™HX^X™Kˆ—K–[İH]\İ¸ &]Û[ÚÙH\™KˆŠKˆYÊ”™\Ù[Xš[]NˆH××ÈİÚ[Kˆ‹È˜Ø[ˆ‹˜Ûİ[Y\İ\™^H‹˜[HØ[ˆ—K˜Ø[ˆŠKˆYÊ”\İXš[]NˆÚ[ˆHØ\È[‹H××ÈšYHHšZÙKˆ‹È˜Ûİ[‹˜Ø[ˆ‹˜[HX›H—K˜Ûİ[ŠKˆYÊÚÛÜÙHHÛ]H™\]Y\İˆ‹ÈÛİ[[İHÙ[™Hš[OÈ‹Ûİ[[İHÈÙ[™Hš[OÈ‹‘ÈÛİ[[İHÙ[™Hš[OÈ—KÛİ[[İHÙ[™Hš[OÈŠKˆYÊ‘]\™HXš[]Nˆ‹È’HÚ[™HX›HÈ›Ú[ˆ™^ÙYZËˆ‹’HÚ[Ø[ˆ›Ú[ˆ™^ÙYZËˆ‹’HÚ[X›H›Ú[ˆ™^ÙYZËˆ—K’HÚ[™HX›HÈ›Ú[ˆ™^ÙYZËˆŠKˆYÊ•H[ˆ××ÈÛÜšË]x &[H›İİ\™Kˆ‹È˜Ûİ[‹›]\İYš[š][H‹˜Ø[ˆÈ—K˜Ûİ[ŠBˆNÂˆYŠ‹š[˜ÛY\Ê˜ÛÛ\\ˆŠ_‹š[˜ÛY\Êœİ\\›Š_‹š[˜ÛY\Êœ]X[YšY\ˆŠ_‹š[˜ÛY\Ê˜\Ë‹‹˜\ÈŠJH™]\›ˆÂˆYÊ•\È›İ]H\È××È[ˆHİ\ˆÛ™Kˆ‹È™˜\İ\ˆ‹›[Ü™H˜\İ‹™˜\İ\İ—K™˜\İ\ˆŠKˆYÊ•\È\ÈH××ÈÜ[Û‹ˆ‹È˜ÚX\\İ‹˜ÚX\\ˆ‹›[Ü™HÚX\—K˜ÚX\\İŠKˆYÊ•HÚ]H\È××ÈÜ›İÙY[ˆHš[YÙKˆ‹È›[Ü™H‹›[Üİ‹›]XÚ\İ—K›[Ü™HŠKˆYÊ•\ÈÜ[Ûˆ\È××È˜XİXØ[\ÈHš\œİÛ™Kˆ‹È˜\È‹›[Ü™H‹›[Üİ—K˜\ÈŠKˆYÊ•\™H\™H××ÈİY[È\™Kˆ‹È›X[H‹›]XÚ‹˜H]H—K›X[HŠKˆYÊ•ÙHÛ¸ &]]™H××È[YKˆ‹È›]XÚ‹›X[H‹˜H™]È—K›]XÚŠKˆYÊÚÛÜÙHHÛX[[X™\ˆÙˆÛİ[X›H[™ÜËˆ‹È˜H™]È‹˜H]H‹›]XÚ—K˜H™]ÈŠKˆYÊÚÛÜÙHHÛX[[[İ[Ùˆ[ˆ[˜Ûİ[X›H[™Ëˆ‹È˜H]H‹˜H™]È‹›X[H—K˜H]HŠKˆYÊ•\™H\™H××ÈØ\œÈ]šYÚˆ‹È™™]Ù\ˆ‹›\ÜÈ‹™™]Ù\İ[ˆ—K™™]Ù\ˆŠKˆYÊ•\™H\È××È›Ú\ÙH[ˆHÛİ[\ÚYKˆ‹È›\ÜÈ‹™™]Ù\ˆ‹›X[H—K›\ÜÈŠBˆNÂˆYŠ‹š[˜ÛY\Ê™Ù\[™Š_‹š[˜ÛY\Êš[™š[š]]™HŠJH™]\›ˆÂˆYÊ’H[š›ŞH××È[ˆH]™[š[™Ëˆ‹Èœ™XY[™È‹È™XYY\ˆ[š›ŞH‹œ™XY—Kœ™XY[™ÈŠKˆYÊ”ÚHXÚYY××ÈH™]ÈÛİ\œÙKˆ‹ÈÈZÙH‹ZÚ[™ÈY\ˆXÚYH‹ZÙHÈ—KÈZÙHŠKˆYÊÚÛÜÙHH›Ü›HY\ˆ]›ÚYˆ‹È˜]›ÚYØ\İ[™È[YH‹˜]›ÚYÈØ\İH[YH‹˜]›ÚYØ\İH[YH—K˜]›ÚYØ\İ[™È[YHŠKˆYÊÚÛÜÙHH›Ü›HY\ˆØ[ˆ‹ÈØ[ÈX\›ˆ‹Ø[X\›š[™È‹Ø[X\›ˆÈ—KØ[ÈX\›ˆŠKˆYÊ’HİYÙÙ\İY××ÈX\›Y\‹ˆ‹È›X]š[™È‹ÈX]™HY\ˆİYÙÙ\İY‹›X]™HÈ—K›X]š[™ÈŠKˆYÊ•ÙHÜH××ÈÛÛÛ‹ˆ‹ÈÈš[š\Ú‹™š[š\Ú[™ÈY\ˆÜH‹™š[š\ÚÈ—KÈš[š\ÚŠKˆYÊÚÛÜÙHHXØİ\˜]HÙ[[˜ÙKˆ‹È’x &[H[\™\İY[ˆX\›š[™ÈİÙÜ˜\Kˆ‹’x &[H[\™\İYÈX\›š[™ÈİÙÜ˜\Kˆ‹’x &[H[\™\İYX\›ˆİÙÜ˜\Kˆ—K’x &[H[\™\İY[ˆX\›š[™ÈİÙÜ˜\KˆŠKˆYÊ”ÚHYÜ™YY××È\Ëˆ‹ÈÈ[‹š[[™ÈY\ˆYÜ™YY‹š[È\È—KÈ[ŠKˆYÊÚÛÜÙHH›Ü›HY\ˆÙY\ˆ‹ÈšÙY\˜Xİ\Ú[™È‹šÙY\È˜Xİ\ÙH‹šÙY\˜Xİ\ÙHÈ—KšÙY\˜Xİ\Ú[™ÈŠKˆYÊÚÛÜÙHHÛÜœ™XİÙ[[˜ÙKˆ‹È•^H[ˆÈ›Ú[ˆHÛX‹ˆ‹•^H[ˆ›Ú[š[™ÈY\ˆ[‹ˆ‹•^H[ˆ›Ú[ˆÈHÛX‹ˆ—K•^H[ˆÈ›Ú[ˆHÛX‹ˆŠBˆNÂˆYŠ‹š[˜ÛY\Êœ]Y\İ[ÛˆŠJH™]\›ˆÂˆYÊÚÛÜÙHHÛÜœ™Xİ\™Xİ]Y\İ[Û‹ˆ‹È•Ú\™HÈ[İHÛÜšÏÈ‹•Ú\™H[İHÛÜšÏÈ‹•Ú\™HÙ\È[İHÛÜšÏÈ—K•Ú\™HÈ[İHÛÜšÏÈŠKˆYÊÚÛÜÙHHÛ]H[™\™Xİ]Y\İ[Û‹ˆ‹ÈÛİ[[İH[YHÚ\™HHİ][Ûˆ\ÏÈ‹Ûİ[[İH[YHÚ\™H\ÈHİ][ÛÈ‹•[YHÚ\™H\Èİ][ÛÈ—KÛİ[[İH[YHÚ\™HHİ][Ûˆ\ÏÈŠKˆYÊ–[İHÛÜšÈ\™K××ÏÈ‹È™Û¸ &][İH‹™È[İH‹˜\™[¸ &][İH—K™Û¸ &][İHŠKˆYÊ”ÚH\Û¸ &]ÛÛZ[™Ë××ÏÈ‹Èš\ÈÚH‹š\Û¸ &]ÚH‹™Ù\ÈÚH—Kš\ÈÚHŠKˆYÊ•^H\œš]™YX\›K××ÏÈ‹È™Y¸ &]^H‹™Y^H‹Ù\™[¸ &]^H—K™Y¸ &]^HŠKˆYÊ‘È[İHÛ›İÈ××ÏÈ‹ÈÚ][YH]İ\È‹Ú][YHÙ\È]İ\‹Ú][YHİ\È]—KÚ][YH]İ\ÈŠKˆYÊ’HØ[ˆš]™K××ÏÈ‹È˜Ø[¸ &]H‹˜Ø[ˆH‹™Ù\Û¸ &]H—K˜Ø[¸ &]HŠKˆYÊÛİ[[İH^Z[ˆ××ÏÈ‹ÈÚHHYY][™ÈØ\ÈØ[˜Ù[Y‹ÚHØ\ÈHYY][™ÈØ[˜Ù[Y‹ÚHYØ[˜Ù[HYY][™È—KÚHHYY][™ÈØ\ÈØ[˜Ù[YŠKˆYÊ–[İH]™[¸ &]ÙY[ˆ]××ÏÈ‹Èš]™H[İH‹š]™[¸ &][İH‹™Y[İH—Kš]™H[İHŠKˆYÊÚÛÜÙHHXØİ\˜]H›Ü›Kˆ‹È’HÛÛ™\ˆÚ]\ˆ[İHÛİ[[YKˆ‹’HÛÛ™\ˆÛİ[[İH[YOÈ‹’HÛÛ™\ˆÚ]\ˆÛİ[[İH[ˆ—K’HÛÛ™\ˆÚ]\ˆ[İHÛİ[[YKˆŠBˆNÂˆYŠ‹š[˜ÛY\Êœ™\Ù[Ú[\HŠ_‹š[˜ÛY\Ê™œ™\]Y[˜ŞHŠJH™]\›ˆÂˆYÊ”ÚH××È[ˆ[ˆÙ™šXÙKˆ‹ÈÛÜšÜÈ‹ÛÜšÈ‹ÛÜšÚ[™È—KÛÜšÜÈŠKˆYÊ’H××ÈÛÙ™™YH]™\H[Ü›š[™Ëˆ‹È™š[šÈ‹™š[šÜÈ‹˜[Hš[šÈ—K™š[šÈŠKˆYÊÚÛÜÙHHÛÜœ™Xİ™YØ]]™Kˆ‹È’HÙ\Û¸ &]š]™HÈÛÜšËˆ‹’HÙ\Û¸ &]š]™\ÈÈÛÜšËˆ‹’H›İš]™HÈÛÜšËˆ—K’HÙ\Û¸ &]š]™HÈÛÜšËˆŠKˆYÊÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹È•Ú\™HÈ[İH]™OÈ‹•Ú\™H[İH]™OÈ‹•Ú\™HÙ\È[İH]™OÈ—K•Ú\™HÈ[İH]™OÈŠKˆYÊ“^Hœ›İ\ˆ××È›Ûİ˜[ˆ‹È›ZÙ\È‹›ZÙH‹›ZÚ[™È—K›ZÙ\ÈŠKˆYÊ•ÙH××ÈÛÈÛ\ÜÙ\ÈÛˆ[Û™^Kˆ‹Èš]™H‹š\È‹š]š[™È—Kš]™HŠKˆYÊÚÛÜÙHHÛÜœ™Xİ™HÙ[[˜ÙKˆ‹È•^H\™HİY[Ëˆ‹•^H\ÈİY[Ëˆ‹•^H™HİY[Ëˆ—K•^H\™HİY[ËˆŠKˆYÊ•Ú]××ÈÚHÏÈ‹È™Ù\È‹™È‹š\È—K™Ù\ÈŠKˆYÊÚÛÜÙHH›İ][™HÙ[[˜ÙKˆ‹È’H\İX[Hİ\]ZYÚˆ‹’H\İX[Hİ\È]ZYÚˆ‹’H[H\İX[Hİ\]ZYÚˆ—K’H\İX[Hİ\]ZYÚˆŠKˆYÊÚÛÜÙHHXØİ\˜]HÙ[[˜ÙKˆ‹È’H\Èœ›ÛH›Ü˜[XH[™ÛÜšÜÈ[ˆ\™ÙZ\ØKˆ‹’H\™Hœ›ÛH›Ü˜[XH[™ÛÜšÈ[ˆ\™ÙZ\ØKˆ‹’Hœ›ÛH›Ü˜[XH[™ÛÜšÚ[™È\™ÙZ\ØKˆ—K’H\Èœ›ÛH›Ü˜[XH[™ÛÜšÜÈ[ˆ\™ÙZ\ØKˆŠBˆNÂˆ™]\›ˆÂˆYÊÚÛÜÙHH[ÜİXØİ\˜]HÙ[[˜ÙKˆ‹È•HX[HÛÛ\]YH\ÚÈÛˆ[YKˆ‹•HX[HÛÛ\]HH\ÚÈY\İ\™^Kˆ‹•HX[HÛÛ\][™È\ÚÈÛˆ[YKˆ—K•HX[HÛÛ\]YH\ÚÈÛˆ[YKˆŠKˆYÊÚÛÜÙHHÛÜœ™Xİ]Y\İ[Û‹ˆ‹È•Ú]Y[İHX\›ˆœ›ÛHH^\šY[˜ÙOÈ‹•Ú][İHX\›™Yœ›ÛHH^\šY[˜ÙOÈ‹•Ú]Y[İHX\›™Yœ›ÛH^\šY[˜ÙOÈ—K•Ú]Y[İHX\›ˆœ›ÛHH^\šY[˜ÙOÈŠKˆYÊÚÛÜÙHHÛÜœ™XİÛÛ›™XİÜ‹ˆ‹È’HØ\È\™Y]Hš[š\ÚYHÛÜšËˆ‹’HØ\È\™Y™XØ]\ÙH]š[š\ÚYˆ‹’HØ\È\™YÛÈ]š[š\ÚYˆ—K’HØ\È\™Y]Hš[š\ÚYHÛÜšËˆŠKˆYÊÚÛÜÙHHÛX\ˆ™X\ÛÛ‹ˆ‹È’H˜Xİ\ÙY™XØ]\ÙHHØ[YÈ[\›İ™Kˆ‹’H˜Xİ\ÙY]HØ[Y™XØ]\ÙH[\›İ™Kˆ‹’H˜Xİ\ÙYÛÈ™XØ]\ÙH[\›İ™Kˆ—K’H˜Xİ\ÙY™XØ]\ÙHHØ[YÈ[\›İ™KˆŠKˆYÊÚÛÜÙHH™\İ[ÛÛ›™XİÜ‹ˆ‹È•HXY[™HÚ[™ÙYÛÈÙH\]YH[‹ˆ‹•HXY[™HÚ[™ÙY™XØ]\ÙHÛÈ\]Y[‹ˆ‹•HXY[™HÚ[™ÙY]\™Y›Ü™H™XØ]\ÙKˆ—K•HXY[™HÚ[™ÙYÛÈÙH\]YH[‹ˆŠKˆYÊÚÛÜÙHHÛÜœ™Xİ\™™XİÙ[[˜ÙKˆ‹È”ÚH\ÈÛÜšÙY\™H›Üˆ™YHYX\œËˆ‹”ÚH\ÈÛÜšÈ\™H›Üˆ™YHYX\œËˆ‹”ÚH\ÈÛÜšÙY\™HÚ[˜ÙH™YHYX\œËˆ—K”ÚH\ÈÛÜšÙY\™H›Üˆ™YHYX\œËˆŠKˆYÊÚÛÜÙHHÛÜœ™XİYšXÙKˆ‹È–[İHÚİ[^Z[ˆH›Ø›[HÛX\›Kˆ‹–[İHÚİ[È^Z[ˆH›Ø›[Kˆ‹–[İHÚİ[^Z[š[™ÈH›Ø›[Kˆ—K–[İHÚİ[^Z[ˆH›Ø›[HÛX\›KˆŠKˆYÊÚÛÜÙHH]\™H[‹ˆ‹È•ÙH\™HÛÚ[™ÈÈ™]šY]ÈH™\İ[ÈÛ[Üœ›İËˆ‹•ÙHÛÚ[™È™]šY]È™\İ[ÈÛ[Üœ›İËˆ‹•ÙH\™HÛÈÈ™]šY]ÈÛ[Üœ›İËˆ—K•ÙH\™HÛÚ[™ÈÈ™]šY]ÈH™\İ[ÈÛ[Üœ›İËˆŠKˆYÊÚÛÜÙHH™[]]™HÛ]\ÙKˆ‹ÈHY[Üˆ\ÈÛÛY[Û™HÚÈÚ]™\ÈİZY[˜ÙKˆ‹HY[Üˆ\ÈÛÛY[Û™HÚXÚÚ]™\ÈİZY[˜ÙKˆ‹HY[Üˆ\ÈÛÛY[Û™HÚ\™HÚ]™\ÈİZY[˜ÙKˆ—KHY[Üˆ\ÈÛÛY[Û™HÚÈÚ]™\ÈİZY[˜ÙKˆŠKˆYÊÚÛÜÙHH\ÜÚ]™HÙ[[˜ÙKˆ‹È•H™\ÜØ\ÈÙ[Y\ˆHYY][™Ëˆ‹•H™\ÜÙ[]Ù[ˆY\ˆYY][™Ëˆ‹•H™\ÜØ\ÈÙ[™Y\ˆYY][™Ëˆ—K•H™\ÜØ\ÈÙ[Y\ˆHYY][™ËˆŠBˆNÂŸB™[˜İ[ÛˆXZÙUÜš][™ÊÜXË›Øİ\Ë]™[
+^ÂˆÛÛœİO[]™[OOHŒˆÂˆ™]\›ˆİ\ÚÜÎ–ÂˆÜ›Û\ˆ•Üš]HÛ™HÛÛ\]HÙ[[˜ÙHX›İ]ŠİÜXËÓİÙ\Ø\ÙJ
+JÈˆ\Ú[™ÈÛ™H\™Ù]›ØØX[\H][Kˆ‹Z[•ÛÜ™ÎŸKˆÜ›Û\ˆ•Üš]HÛ™HXØİ\˜]HÙ[[˜ÙH\Ú[™È\ÈÜ˜[[X\ˆ›Øİ\ÎˆŠÙ›Øİ\ÊÈ‹ˆ‹Z[•ÛÜ™ÎßKˆÜ›Û\ˆ•Üš]HÛ™H]Y\İ[ÛˆÈØ]\ˆ[™›Ü›X][ÛˆX›İ]ŠİÜXËÓİÙ\Ø\ÙJ
+JÈ‹ˆ‹Z[•ÛÜ™ÎßKˆÜ›Û\ˆ•Üš]HÛÈÛÛ›™XİYÙ[[˜Ù\ÈX›İ][İ\ˆİÛˆ^\šY[˜ÙHÙˆŠİÜXËÓİÙ\Ø\ÙJ
+JÈ‹ˆ‹Z[•ÛÜ™ÎŒMKˆÜ›Û\ˆ‘^Z[ˆÛ™HY˜[YÙHÜˆÜÚ]]™HÚ[ÛÛ›™XİYÈŠİÜXËÓİÙ\Ø\ÙJ
+JÈ‹ˆ‹Z[•ÛÜ™ÎŒNKˆÜ›Û\ˆ‘^Z[ˆÛ™HÚ[[™ÙHÛÛ›™XİYÈŠİÜXËÓİÙ\Ø\ÙJ
+JÈˆ[™Ú]™HH™X\ÛÛ‹ˆ‹Z[•ÛÜ™ÎŒŒKˆÜ›Û\ˆ•Üš]HHÚÜY\ÜØYÙHÈHÛ\ÜÛX]HÜˆÛÛXYİYHX›İ]ŠİÜXËÓİÙ\Ø\ÙJ
+JÈ‹ˆ‹Z[•ÛÜ™ÎŒKˆÜ›Û\ˆ•Üš]HHÚÜ\˜YÜ˜\]\Ù\ÈH\™Ù]Ü˜[[X\ˆXØİ\˜][H]X\İÚXÙKˆ‹Z[•ÛÜ™ÎšOÍMNKˆÜ›Û\ˆ•Üš]HHİXİ\™Y™\ÜÛœÙHÚ]HÛX\ˆÚ[™X\ÛÛˆ[™^[\HX›İ]ŠİÜXËÓİÙ\Ø\ÙJ
+JÈ‹ˆ‹Z[•ÛÜ™ÎšOÍÍNM_KˆÜ›Û\ˆ•Üš]HHš[˜[™\ÜÛœÙHÛˆŠİÜXËÓİÙ\Ø\ÙJ
+JÈ‹ˆÚXÚÈ›ØØX[\KÜ˜[[X\‹Ù[[˜ÙHÛ\š]H[™Ü™Ø[š\Ø][Û‹ˆ‹Z[•ÛÜ™ÎšOÌLÌBˆ_NÂŸB™[˜İ[ÛˆXZÙS\ÜÛÛŠ™Yš^[X™\‹]K›Øİ\Ë]™[]J^Âˆ™]\›ˆÚYœ™Yš^
+È‹[ŠÛ[X™\‹[X™\‹]Kİ]ÛÛYNˆZ[›ØØX[\KÛÛ\™Z[œÚ[Û‹Ü˜[[X\ˆ[™Üš][™È›ÜˆŠİ]KÓİÙ\Ø\ÙJ
+JÈ‹ˆ‹™XYNYK›ØØX[\N›XZÙU›ØØX[\J]K]JK\İ[š[™Î›XZÙT™XY[™Ê]K]™[]JKÜ˜[[X\Ù›Øİ\Ë][\Î™Ü˜[[X\”]Y\İ[ÛœÊ›Øİ\Ê_KÜš][™Î›XZÙUÜš][™Ê]K›Øİ\Ë]™[
+_NÂŸB™[˜İ[ÛˆØ\™Y\‘]J]KÙYZÊ^ÂˆÛÛœİXØ\™Y\•ÙYZÕ›ØØX–İÙYZËLWNÂˆ™]\›ˆİ‹Î–È[Z[˜H‹˜HÛÜšÜXÙH˜Z[š[™ÈÙ\ÜÚ[Ûˆ‹š[™HŠİ]KÓİÙ\Ø\ÙJ
+JÈˆ[Ü™HÛX\›H‹Hš\œİ][\Ø\È[˜ÛX\ˆ[™ÛÈÙ[™\˜[‹\ÙHHÚ[\HİXİ\™H[™ÚÛÜÙH\ÙY[^™\ÜÚ[ÛœÈ‹HÙXÛÛ™][\Ø\ÈÛX\™\ˆ[™X\ÚY\ˆÈ›ÛİÈ—_NÂŸB™[˜İ[ÛˆZ[Ø\™Y\›ÛÚÊY]K]™[ÜXÜÏPĞT‘QT—ÓTÔÓÓ—ÔÔPÔÊ^Âˆ™]\›ˆÚY]K]™[[Ù[U]N]K[Ù[QÛØ[ˆ•ÛÜšØ›ÛÚÈ˜XİXÙH[ˆ›ØØX[\K\İ[š[™È	ˆ™XY[™ËÜ˜[[X\ˆ[™Üš][™È]İ\ÜÈH]™HØ\™Y\ˆ›Y[˜ŞHÛİ\œÙKˆ‹İ[\ÜÛÛœÎŒÍ‹\ÜÛÛœÎœÜXÜË›X\
+
+JOO›XZÙS\ÜÛÛŠYJÌKÌKÌWK]™[Ø\™Y\‘]JÌKX]™›ÛÜŠKÌÊJÌJJJ_NÂŸB”ÔPRÕTĞL—ĞŒWĞ“ÓÒË›\ÜÛÛœÏVÔÔPRÕTĞL—ĞŒWĞ“ÓÒË›\ÜÛÛœÖÌK‹‹”ÔPRÕTĞL—ĞŒWÔÖSP•TËœÛXÙJJK›X\
+
+JOO›XZÙS\ÜÛÛŠ	ÜİKXL˜ŒIËJÌ‹ÌKÌWK	ĞLˆ8¡¤ˆŒIËÔP×ÓP”T–VŞÌWJJWNÂ”ÔPRÕTĞL—ĞŒWĞ“ÓÒËİ[\ÜÛÛœÏLŒÂ™[˜İ[ÛˆXZÙP›Y\š[Œ“\ÜÛÛŠ
+^Ü™]\›ÚYšY[X™\›[X™\‹]N]Kİ]ÛÛYN›İ]ÛÛYK™XYNYK\™Ù]›ØØX[\N›ØØX[\K›ØØX[\NÚ][\Î›ØØX[\R][\ßK\İ[š[™Îİ]N]JÉÈ0­È™XY[™È	ˆ\İ[š[™ÉË™XY[™Õ^œ™XY[™Õ^]Y[ÔØÜš\˜]Y[ÔØÜš\^˜]Y[ÔØÜš\]Y\İ[ÛœÎœ]Y\İ[ÛœßKÜ˜[[X\Ù›Øİ\Î™Ü˜[[X\‘›Øİ\Ë[N™Ü˜[[X\”[K][\Î™Ü˜[[X\”]Y\İ[ÛœÊ™Ü˜[[X\‘›Øİ\Ê_KÜš][™ÎÜš][™ß_B˜ÛÛœİŒ—Ğ“QT’S•P\œ˜^Kš\Ğ\œ˜^JÚ[™İË”ÔPRÕTĞŒ—Ğ“QT’S•
+OİÚ[™İË”ÔPRÕTĞŒ—Ğ“QT’S•–×NÂ˜ÛÛœİÔPRÕTĞŒ—Ğ“ÓÒÏ^ÚY‰ÜÜXZİ\XŒ‰Ë]N‰ÔÜXZÕ\[™Û\ÚŒ‰Ë]™[‰ĞŒ‰Ë[Ù[U]N‰ÔÜXZÕ\[™Û\ÚŒ‰Ë[Ù[QÛØ[‰Ò[™\[™[ÛÜšØ›ÛÚÈ˜XİXÙH›Üˆ›ØØX[\K\İ[š[™È	ˆ™XY[™ËÜ˜[[X\ˆ[™Üš][™È]İ\ÜÈH]™HŒˆ›Y[˜ŞHÛİ\œÙK‰Ëİ[\ÜÛÛœÎŒŒ‹\ÜÛÛœÎŒ—Ğ“QT’S•›[™İOOLŒĞŒ—Ğ“QT’S•›X\
+XZÙP›Y\š[Œ“\ÜÛÛŠN”ÔPRÕTĞŒ—ÔÖSP•TË›X\
+
+JOO›XZÙS\ÜÛÛŠ	ÜİKXŒ‰ËJÌKÌKÌWK	ĞŒ‰ËÔP×ÓP”T–VŞÌWJJ_NÂ˜ÛÛœİĞT‘QT—ÓUSWĞ“ÓÒÏXZ[Ø\™Y\›ÛÚÊ	ØØ\™Y\‹Y›Y[˜ŞK[][˜IË	ĞØ\™Y\ˆ›Y[˜ŞH8 %][˜HY][Û‰Ë	ĞLJËĞLˆ8¡¤ˆ[˜İ[Û˜[ŒIËĞT‘QT—Ô‘U’TÑQÓTÔÓÓ—ÔÔPÔÊNÂ˜ÛÛœİĞT‘QT—ĞP‘TĞSS—Ğ“ÓÒÏXZ[Ø\™Y\›ÛÚÊ	ØØ\™Y\‹Y›Y[˜ŞKXX™\Ø[[‰Ë	ĞØ\™Y\ˆ›Y[˜ŞH8 %X™\Ø[[ˆY][Û‰Ë	ĞLŠÈ8¡¤ˆ[˜İ[Û˜[ŒIÊNÂ˜ÛÛœİĞT‘QT—ĞP‘TÒRÕT—Ğ“ÓÒÏXZ[Ø\™Y\›ÛÚÊ	ØØ\™Y\‹Y›Y[˜ŞKXX™\ÚZİ\‰Ë	ĞØ\™Y\ˆ›Y[˜ŞH8 %X™\ÚZİ\ˆY][Û‰Ë	ĞLŠÈ8¡¤ˆ[˜İ[Û˜[ŒIËĞT‘QT—Ô‘U’TÑQÓTÔÓÓ—ÔÔPÔÊNÂ˜ÛÛœİ“ÓÒ×ÔPÒÔÏ^ÉØØ\™Y\‹Y›Y[˜ŞIÎĞT‘QT—Ñ“QSÖWĞ“ÓÒË	ÜÜXZİ\XL‹XŒIÎ”ÔPRÕTĞL—ĞŒWĞ“ÓÒË	ÜÜXZİ\XŒ‰Î”ÔPRÕTĞŒ—Ğ“ÓÒË	ØØ\™Y\‹Y›Y[˜ŞK[][˜IÎĞT‘QT—ÓUSWĞ“ÓÒË	ØØ\™Y\‹Y›Y[˜ŞKXX™\Ø[[‰ÎĞT‘QT—ĞP‘TĞSS—Ğ“ÓÒË	ØØ\™Y\‹Y›Y[˜ŞKXX™\ÚZİ\‰ÎĞT‘QT—ĞP‘TÒRÕT—Ğ“ÓÒßNÂ›]ÓÕT”ÑOPĞT‘QT—Ñ“QSÖWĞ“ÓÒËXİ]™P›ÛÚÒYIØØ\™Y\‹Y›Y[˜ŞIÎÂ˜ÛÛœİÓÔ’Ğ“ÓÒ×ÔÕTÏVÉİ›ØØX[\IË	Û\İ[š[™ÉË	ÙÜ˜[[X\‰Ë	İÜš][™É×NÂ˜ÛÛœİÓÔ’Ğ“ÓÒ×ÓP‘SÏ^İ›ØØX[\N‰Õ›ØØX[\IË\İ[š[™Î‰Ó\İ[š[™È	ˆ™XY[™ÉËÜ˜[[X\‰ÑÜ˜[[X\‰ËÜš][™Î‰ÕÜš][™ÉßNÂ™[˜İ[Ûˆ›ÛÚÓY]JY
+^Ü™]\›ˆÙ]Š
+K˜›ÛÚÜÏË™š[™
+O˜‹šYOOZY
+_[B™[˜İ[ÛˆİY[Û\ÜÊÚY
+^ØÛÛœİOYÙ]Š
+K\Ù\œË™š[™
+OšYOO\ÚY
+NÜ™]\›ˆÙ]Š
+K˜Û\ÜÙ\Ë™š[™
+ÏOOË˜Û\ÜÒYÏËš[˜ÛY\ÊËšY
+J_[B™[˜İ[Ûˆ›ÛÚÒY›Ü”İY[
+ÚY
+^ØÛÛœİÏ\İY[Û\ÜÊÚY
+NÜ™]\›ˆÏË˜›ÛÚÒYÏË˜Ûİ\œÙWÚY	ØØ\™Y\‹Y›Y[˜ŞIßB™[˜İ[ÛˆÛİ\œÙQ›Ü”İY[
+ÚY
+^Ü™]\›ˆ“ÓÒ×ÔPÒÔÖØ›ÛÚÒY›Ü”İY[
+ÚY
+W_ĞT‘QT—Ñ“QSÖWĞ“ÓÒßB™[˜İ[Ûˆ™XYS\ÜÛÛœÊÛİ\œÙOPÓÕT”ÑJ^Ü™]\›ˆÛİ\œÙK›\ÜÛÛœË™š[\ŠO›œ™XYHOOY˜[ÙJ_B™[˜İ[ÛˆÙ]Xİ]™P›ÛÚÊY
+^ÚYŠP“ÓÒ×ÔPÒÔÖÚYJ\™]\›ˆ˜[ÙNØXİ]™P›ÛÚÒYZYĞÓÕT”ÑOP“ÓÒ×ÔPÒÔÖÚYNÚYŠPÓÕT”ÑK›\ÜÛÛœËœÛÛYJO›šYOOXXİ]™S\ÜÛÛ’Y	‰›œ™XYHOOY˜[ÙJJXXİ]™S\ÜÛÛ’Y\™XYS\ÜÛÛœÊÓÕT”ÑJVÌOËšYÓÕT”ÑK›\ÜÛÛœÖÌOËšYÜ™]\›ˆY_B™[˜İ[ÛˆŞ[˜ĞXİ]™P›ÛÚÊ
+^ÚYŠ\Ù\ÜÚ[ÛŸÙ\ÜÚ[Û‹œ›ÛHOOIÜİY[	Ê\™]\›ÜÙ]Xİ]™P›ÛÚÊ›ÛÚÒY›Ü”İY[
+Ù\ÜÚ[Û‹šY
+J_B™[˜İ[Ûˆ\ÜÛÛRY
+Y
+^Ù›ÜŠÛÛœİÈÙˆØš™Xİ˜[Y\Ê“ÓÒ×ÔPÒÔÊJ^ØÛÛœİ]XË›\ÜÛÛœË™š[™
+O›šYOOZY
+NÚYŠ]
+\™]\›ˆ]\™]\›ˆ[B™[˜İ[ÛˆÚÚ[X™[
+Ê^Ü™]\›ˆÏOOIÛ\İ[š[™ÉÏÉÓ\İ[š[™È	ˆ™XY[™ÉÎ˜Ø\
+Ê_B‚‚˜ÛÛœİU^ÜİY[–ÖÉÚÛYIË	ø£ ‰Ë	ÒÛYI×KÉØÛİ\œÙIË	ø¥¨ÉË	Ó^H›ÛÚÉ×KÉÜ›ÙÜ™\ÜÉË	ø¥å	Ë	Ô›ÙÜ™\ÜÉ×KÉÛXY\˜›Ø\™	Ë	ø¥©IË	ÓXY\˜›Ø\™	×WKXXÚ\–ÖÉİXXÚ\‹ZÛYIË	ø£ ‰Ë	ÕÙ^I×KÉİXXÚ	Ë	ø¥¨ÉË	ÕXXÚ	×KÉİXXÚ\‹]ÛÜšØ›ÛÚÜÉË	ø¥©	Ë	ÕÛÜšØ›ÛÚÜÉ×KÉÜİY[ÉË	ø¥ã‰Ë	ÔİY[É×KÉØÛ\ÜÙ\ÉË	ø¥©	Ë	ĞÛ\ÜÙ\É×KÉÛXY\˜›Ø\™	Ë	ø¥©IË	ÓXY\˜›Ø\™	×KÉİÙXZÛ™\ÜÙ\ÉË	ø¥¬ÉË	Ó™YYÈ™]šY]É×KÉÜ™\ÜÉË	ø¥©‰Ë	Ô™\ÜÉ×WKYZ[–ÖÉØYZ[‹ZÛYIË	ø£ ‰Ë	Óİ™\šY]É×KÉØYZ[‹X›ÛÚÜÉË	ø¥¨ÉË	Ğ›ÛÚÜÉ×KÉØYZ[‹XÛ\ÜÙ\ÉË	ø¥©	Ë	ĞÛ\ÜÙ\É×KÉØYZ[‹\™\ÜÉË	ø¥©‰Ë	Ô™\ÜÉ×KÉØYZ[‹XYZ[œÉË	ø¥áÉË	ĞYZ[œÉ×KÉØYZ[‹]XXÚ\œÉË	ø¥ã‰Ë	ÕXXÚ\œÉ×KÉØYZ[‹\İY[ÉË	ø¥âÉË	ÔİY[É×W_NÂ›]Ù\ÜÚ[Û[[İ\œ™[YÙOIÚÛYIËXİ]™S\ÜÛÛ’YIİÌ[IËİ\œ™[İ\Iİ›ØØX[\IË\Q[[Xİ]™UXXÚ\Û\ÜÒY[[Xİ]™UXXÚ\“\ÜÛÛ“[X™\LKXİ]™UXXÚ\”ÙXİ[Û’[™^LXİ]™TİY[]™S\ÜÛÛ“[X™\LKXİ]™TİY[ÙXİ[Û’[™^LÂ™[˜İ[ÛˆÙ]Š
+^Ü™]\›ˆ\QŸİ™\œÚ[ÛË\ÜÚYÛ›Y[Î–×K›ÛÚÜÎ–×K\Ù\œÎ–×KÛ\ÜÙ\Î–×K›Ùš[\ÎßK][\Î–×KÛÛ\][ÛßKÜš][™ÎßK\İ[š[™ÓØÚÜÎß__B™[˜İ[ÛˆØ]™QŠŠ^Ø\QYŸB™[˜İ[Ûˆ	
+Y
+^Ü™]\›ˆØİ[Y[™Ù][[Y[RY
+Y
+_H[˜İ[Ûˆ\ÜÛÛŠYXXİ]™S\ÜÛÛ’Y
+^Ü™]\›ˆ\ÜÛÛRY
+Y
+_ÓÕT”ÑK›\ÜÛÛœÖÌ_H[˜İ[ÛˆØ\
+Ê^Ü™]\›ˆË˜Ú\]
+
+KÕ\\Ø\ÙJ
+JÜËœÛXÙJJ_B˜\Ş[˜È[˜İ[Ûˆ\J]Ü[ÛœÏ^ßJ^ØÛÛœİÜÏ^ØÜ™Y[X[Î‰Ú[˜ÛYIËXY\œÎÉĞÛÛ[U\IÎ‰Ø\XØ][Û‹ÚœÛÛ‰Ë‹‹ŠÜ[ÛœËšXY\œßßJ_K‹‹›Ü[ÛœßNØÛÛœİ™\ÏX]ØZ]™]Ú
+]ÜÊNÛ]]O^ßNİ^Ù]OX]ØZ]™\ËšœÛÛŠ
+_XØ]ÚßZYŠ\™\Ë›ÚÊ]›İÈ™]È\œ›ÜŠ]K™\œ›ÜŸ	Ô™\]Y\İ˜Z[Y	ÊNÜ™]\›ˆ]_B˜\Ş[˜È[˜İ[Ûˆ™Yœ™\Úİ]J
+^Ø\QX]ØZ]\J	ËØ\KÜİ]IÊNÜŞ[˜ĞXİ]™P›ÛÚÊ
+NÚYŠÙ\ÜÚ[ÛËœ›ÛOOOIÜİY[	Ê]\]TİY[XÚÙ\Š
+NÜ™]\›ˆ\QŸB™[˜İ[Ûˆ[š]
+
+^ÚYŠ	ÜØÜ›Û™\İÜ˜][Û‰È[ˆ\İÜJZ\İÜKœØÜ›Û™\İÜ˜][ÛIÛX[X[	ÎÉ
+	ÛÙÚ[‘›Ü›IÊK˜Y]™[\İ[™\Š	ÜİX›Z]	ËOOÙKœ™]™[Y˜][
+
+NÛÙÚ[Š	
+	İ\Ù\›˜[YIÊK˜[YKš[J
+K	
+	Ü\ÜİÛÜ™	ÊK˜[YJ_JNÉ
+	ÛÙÛİ]‰ÊK˜Y]™[\İ[™\Š	ØÛXÚÉËÙÛİ]
+NÉ
+	ÛY[P‰ÊK˜Y]™[\İ[™\Š	ØÛXÚÉË
+
+OO™Øİ[Y[œ]Y\TÙ[XİÜŠ	ËœÚYX˜\‰ÊK˜Û\ÜÓ\İÙÙÛJ	ÛÜ[‰ÊJ_HØİ[Y[˜Y]™[\İ[™\Š	ÑÓPÛÛ[ØYY	Ë[š]
+NÂ˜\Ş[˜È[˜İ[ÛˆÙÚ[Š\Ù\›˜[YK\ÜİÛÜ™
+^É
+	ÛÙÚ[‘\œ›Ü‰ÊK^ÛÛ[IÉÎİ^ØÛÛœİX]ØZ]\J	ËØ\KØ]]ÛÙÚ[‰ËÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJİ\Ù\›˜[YK\ÜİÛÜ™J_JNÜÙ\ÜÚ[Û\‹\Ù\Ø]ØZ]™Yœ™\Úİ]J
+NÚYŠÙ\ÜÚ[Û‹œ›ÛOOOIİXXÚ\‰Ê^Ø]ØZ][œİ\™S]™P›ÛÚÜÊ
+NÜ™\İÜ™UXXÚ\ÛÛ^œ›ÛTİ]J
+NßI
+	ÛÙÚ[”ØÜ™Y[‰ÊK˜Û\ÜÓ\İ˜Y
+	ÚY[‰ÊNÉ
+	Ø\	ÊK˜Û\ÜÓ\İœ™[[İ™J	ÚY[‰ÊNÉ
+	Ø\	ÊK˜Û\ÜÓ\İœ™[[İ™J	ÜİY[[[ÙIË	İXXÚ\‹[[ÙIË	ØYZ[‹[[ÙIÊNÉ
+	Ø\	ÊK˜Û\ÜÓ\İ˜Y
+Ù\ÜÚ[Û‹œ›ÛJÉË[[ÙIÊNÉ
+	ÜÚYX˜\“˜[YIÊK^ÛÛ[\Ù\ÜÚ[Û‹›˜[YNÉ
+	ÜÚYX˜\”›ÛIÊK^ÛÛ[\Ù\ÜÚ[Û‹œ›ÛOOOIØYZ[‰ÏÉÔŞ\İ[HYZ[‰ÎœÙ\ÜÚ[Û‹œ›ÛOOOIİXXÚ\‰ÏÉÕXXÚ\‰Î‰ÔİY[	ÎÉ
+	ÜÚYX˜\]˜]\‰ÊK^ÛÛ[\Ù\ÜÚ[Û‹›˜[YVÌNØİ\œ™[YÙO\Ù\ÜÚ[Û‹œ›ÛOOOIØYZ[‰ÏÉØYZ[‹ZÛYIÎœÙ\ÜÚ[Û‹œ›ÛOOOIİXXÚ\‰ÏÉİXXÚ\‹ZÛYIÎ‰ÚÛYIÎÚYŠÙ\ÜÚ[Û‹œ›ÛOOOIÜİY[	É‰›Ü[\ÜÚYÛ›Y[œ›ÛU\›
+
+J^Ü™[™\“˜]Š
+NÜ™[™\”YÙJ
+NÜ™]\›Ÿ\™[™\“˜]Š
+NÜ™[™\”YÙJ
+_XØ]Ú
+J^É
+	ÛÙÚ[‘\œ›Ü‰ÊK^ÛÛ[YK›Y\ÜØYÙ_	Õ\Ù\›˜[YHÜˆ\ÜİÛÜ™\È[˜ÛÜœ™Xİ‰ß_B˜\Ş[˜È[˜İ[ÛˆÙÛİ]
+
+^İ^Ø]ØZ]\J	ËØ\KØ]]ÛÙÛİ]	ËÛY]Ù‰ÔÔÕ	ßJ_XØ]Úß\Ù\ÜÚ[Û[[Ø\Q[[É
+	Ø\	ÊK˜Û\ÜÓ\İ˜Y
+	ÚY[‰ÊNÉ
+	ÛÙÚ[”ØÜ™Y[‰ÊK˜Û\ÜÓ\İœ™[[İ™J	ÚY[‰ÊNÉ
+	Ü\ÜİÛÜ™	ÊK˜[YOIÉßB™[˜İ[Ûˆ™[™\“˜]Š
+^ØÛÛœİ][\ÏSU–ÜÙ\ÜÚ[Û‹œ›ÛWK[Z][\Ë›X\
+
+ÚYXÛÛ‹X™[JOO˜]ÛˆÛ\ÜÏH›˜]‹Xˆ	Øİ\œ™[YÙOOOZYÉØXİ]™IÎ‰ÉßHˆ]K\YÙOH‰ÚYHÜ[ˆÛ\ÜÏH›˜]‹ZXÛÛˆ‰ÚXÛÛŸOÜÜ[‰ÛX™[OØ]Û˜
+Kš›Ú[Š	ÉÊNÚYŠÙ\ÜÚ[Û‹œ›ÛOOOIÜİY[	Ê^É
+	ÜÚYS˜]‰ÊKš[›™\’SIÉÎÉ
+	ÜİY[Ü˜]‰ÊKš[›™\’SZ[É
+	Ø›İÛS˜]‰ÊKš[›™\’SZ[
+Ø]ÛˆÛ\ÜÏH›˜]‹Xˆ	Øİ\œ™[YÙOOOIÜ›Ùš[IÏÉØXİ]™IÎ‰ÉßHˆ]K\YÙOHœ›Ùš[HÜ[ˆÛ\ÜÏH›˜]‹ZXÛÛˆ¸¥âÏÜÜ[”›Ùš[OØ]Û˜É
+	ÜİY[›Ùš[P‰ÊK˜Û\ÜÓ\İœ™[[İ™J	ÚY[‰ÊNÉ
+	ÜİY[›Ùš[P‰ÊK^ÛÛ[\Ù\ÜÚ[Û‹›˜[YVÌ_Y[Ù^É
+	ÜÚYS˜]‰ÊKš[›™\’SZ[É
+	ÜİY[Ü˜]‰ÊKš[›™\’SIÉÎÉ
+	Ø›İÛS˜]‰ÊKš[›™\’SZ[É
+	ÜİY[›Ùš[P‰ÊK˜Û\ÜÓ\İ˜Y
+	ÚY[‰Ê_YØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K\YÙWIÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOX‹™]\Ù]œYÙNÙØİ[Y[œ]Y\TÙ[XİÜŠ	ËœÚYX˜\‰ÊK˜Û\ÜÓ\İœ™[[İ™J	ÛÜ[‰ÊNÜ™[™\“˜]Š
+NÜ™[™\”YÙJ
+_JNÉ
+	ÜİY[›Ùš[P‰ÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIÜ›Ùš[IÎÜ™[™\“˜]Š
+NÜ™[™\”YÙJ
+_NÜ™\Ù]\ØÜ›Û
+
+_B™[˜İ[Ûˆ[™Û\ÚØ]SÙÛÊ
+^Ü™]\›ˆ	ÉßH[˜İ[Ûˆ]JK
+^É
+	ÜYÙQ^YXœ›İÉÊK^ÛÛ[YNÉ
+	ÜYÙU]IÊK^ÛÛ[ZH[˜İ[Ûˆ›ÙÜ™\ÜÊŠ^Ü™]\›ˆ]ˆÛ\ÜÏHœ›ÙÜ™\ÜÈÜ[ˆİ[OHÚY‰ÓX]›X^
+X]›Z[ŠLŠJ_IHÜÜ[Ù]˜H^ÚYŠ	ÜØÜ›Û™\İÜ˜][Û‰È[ˆ\İÜJZ\İÜKœØÜ›Û™\İÜ˜][ÛIÛX[X[	ßXØ]ÚßB™[˜İ[Ûˆ™\Ù]\ØÜ›Û
+
+^ÂˆÛÛœİ™\Ù]J
+OOÂˆ^İÚ[™İËœØÜ›ÛÊİÜŒYŒ™Z]š[Ü‰Ø]]ÉßJ_XØ]ÚİÚ[™İËœØÜ›ÛÊ
+_BˆYŠØİ[Y[œØÜ›Û[™Ñ[[Y[
+YØİ[Y[œØÜ›Û[™Ñ[[Y[œØÜ›ÛÜLÂˆØİ[Y[™Øİ[Y[[[Y[œØÜ›ÛÜLÂˆØİ[Y[˜›ÙKœØÜ›ÛÜLÂˆÛÛœİXZ[YØİ[Y[œ]Y\TÙ[XİÜŠ	Ë›XZ[‰ÊNÚYŠXZ[Š[XZ[‹œØÜ›ÛÜLÂˆÛÛœİÛÛ[I
+	ØÛÛ[	ÊNÚYŠÛÛ[
+XÛÛ[œØÜ›ÛÜLÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	Ë™YË]XXÚ[™Ë\İ\™˜XÙK™YË]ÛÜšØ›ÛÚË]XXÚ[™Ë\İ\™˜XÙK™YË\İYÙKXÛÛ[›]™KX›ÛÚËXÛÛ[˜Û\ÜÜ›ÛÛK\İYÙKXÛÛ[	ÊK™›Ü‘XXÚ
+[OÙ[œØÜ›ÛÜLJNÂˆNÂˆ™\Ù]
+
+NÂˆ™\]Y\İ[š[X][Û‘œ˜[YJ
+
+OOÜ™\Ù]
+
+NÜ™\]Y\İ[š[X][Û‘œ˜[YJ™\Ù]
+_JNÂˆÙ][Y[İ]
+™\Ù]Œ
+NÂŸH›]\ØÜ›Û™\Ù][Y\LÂ™[˜İ[ÛˆØÚY[P\ØÜ›Û™\Ù]
+
+^Âˆ™\Ù]\ØÜ›Û
+
+NÂˆÛX\•[Y[İ]
+\ØÜ›Û™\Ù][Y\ŠNÂˆ™\]Y\İ[š[X][Û‘œ˜[YJ
+
+OOœ™\]Y\İ[š[X][Û‘œ˜[YJ™\Ù]\ØÜ›Û
+JNÂˆÙ][Y[İ]
+™\Ù]\ØÜ›Û
+NÂˆÙ][Y[İ]
+™\Ù]\ØÜ›ÛŒŒ
+NÂˆ\ØÜ›Û™\Ù][Y\\Ù][Y[İ]
+™\Ù]\ØÜ›ÛL
+NÂŸB™[˜İ[Ûˆ[œİ[˜]šYØ][Û”ØÜ›Û™\Ù]
+
+^ÂˆÛÛœİÛÛ[I
+	ØÛÛ[	ÊNÂˆYŠXÛÛ[ÛÛ[™]\Ù]œØÜ›Û™\Ù][œİ[Y
+\™]\›ÂˆÛÛ[™]\Ù]œØÜ›Û™\Ù][œİ[YIİYIÎÂˆÛÛœİØœÙ\™\[™]È]]][Û“ØœÙ\™\Š]]][ÛœÏOÂˆYŠ]]][ÛœËœÛÛYJOO›K\OOOIØÚ[\İ	É‰ŠK˜YY›Ù\Ë›[™İKœ™[[İ™Y›Ù\Ë›[™İ
+JJ\ØÚY[P\ØÜ›Û™\Ù]
+
+NÂˆJNÂˆØœÙ\™\‹›ØœÙ\™JÛÛ[ØÚ[\İY_JNÂˆÚ[™İË˜Y]™[\İ[™\Š	ÜÜİ]IËØÚY[P\ØÜ›Û™\Ù]
+NÂˆÚ[™İË˜Y]™[\İ[™\Š	ÜYÙ\ÚİÉËØÚY[P\ØÜ›Û™\Ù]
+NÂŸBš[œİ[˜]šYØ][Û”ØÜ›Û™\Ù]
+
+NÂ™[˜İ[Ûˆ›Øİ\ÕÚ]İ]ØÜ›Û
+[
+^ÚYŠY[
+\™]\›İ^Ù[™›Øİ\ÊÜ™]™[ØÜ›ÛY_J_XØ]ÚÙ[™›Øİ\Ê
+_\ØÚY[P\ØÜ›Û™\Ù]
+
+_H[˜İ[ÛˆÙ]ÛÜšØ›ÛÚÑ\ÚYÛ“[ÙJÛŠ^ÙØİ[Y[˜›ÙK˜Û\ÜÓ\İÙÙÛJ	İÛÜšØ›ÛÚËY\ÚYÛ‹[[ÙIË›ÛÛX[ŠÛŠJ_H\Ş[˜È[˜İ[Ûˆ™[™\”YÙJ
+^ÂˆÙ]ÛÜšØ›ÛÚÑ\ÚYÛ“[ÙJÉİÛÜšØ›ÛÚÉË	İXXÚ\‹]ÛÜšØ›ÛÚË]šY]ÉË	ØYZ[‹]ÛÜšØ›ÛÚË]šY]É×Kš[˜ÛY\Êİ\œ™[YÙJJNÂˆÛÛœİ™\İ[\Ù\ÜÚ[Û‹œ›ÛOOOIÜİY[	ÏÜ™[™\”İY[
+
+NœÙ\ÜÚ[Û‹œ›ÛOOOIİXXÚ\‰ÏÜ™[™\•XXÚ\Š
+Nœ™[™\YZ[Š
+NÂˆ]ØZ]›ÛZ\ÙKœ™\ÛÛ™J™\İ[
+NÂˆ™\Ù]\ØÜ›Û
+
+NÂŸB™[˜İ[Ûˆ™[™\”İY[
+
+^Ü™]\›ˆ
+ÚÛYNœİY[ÛYKÛÜšØ›ÛÚËÛİ\œÙNœİY[Ûİ\œÙK	ØÛ\ÜËX›ÛÚÉÎœİY[Û\ÜĞ›ÛÚË	ÜİY[[]™K[\ÜÛÛ‰ÎœİY[]™S\ÜÛÛ‹›ÙÜ™\ÜÎœİY[›ÙÜ™\ÜËXY\˜›Ø\™Š
+OO›XY\˜›Ø\™
+˜[ÙJK›Ùš[_VØİ\œ™[YÙW_İY[ÛYJJ
+_B™[˜İ[Ûˆ™[™\•XXÚ\Š
+^Ü™]\›ˆ
+ÉİXXÚ\‹ZÛYIÎXXÚ\’ÛYKXXÚXXÚ\•XXÚ	İXXÚ\‹X›ÛÚÉÎXXÚ\›ÛÚË	İXXÚ\‹[]™K[\ÜÛÛ‰ÎXXÚ\“]™S\ÜÛÛ‹	İXXÚ\‹]ÛÜšØ›ÛÚÜÉÎXXÚ\•ÛÜšØ›ÛÚÜË	İXXÚ\‹X›ÛÚËXœ›İÜÙIÎXXÚ\›ÛÚĞœ›İÜÙK	İXXÚ\‹]ÛÜšØ›ÛÚË]šY]ÉÎXXÚ\•ÛÜšØ›ÛÚÕšY]ËİY[ËÛ\ÜÙ\ËXY\˜›Ø\™Š
+OO›XY\˜›Ø\™
+YJKÙXZÛ™\ÜÙ\Ë™\ÜßVØİ\œ™[YÙW_XXÚ\’ÛYJJ
+_B™[˜İ[Ûˆ™[™\YZ[Š
+^Ü™]\›ˆ
+ÉØYZ[‹ZÛYIÎ˜YZ[’ÛYK	ØYZ[‹X›ÛÚÜÉÎ˜YZ[›ÛÚÜË	ØYZ[‹[]™KX›ÛÚËXœ›İÜÙIÎ˜YZ[“]™P›ÛÚĞœ›İÜÙK	ØYZ[‹[]™K[\ÜÛÛ‰Î˜YZ[“]™S\ÜÛÛ‹	ØYZ[‹X›ÛÚËXœ›İÜÙIÎ˜YZ[›ÛÚĞœ›İÜÙK	ØYZ[‹]ÛÜšØ›ÛÚÉÎ˜YZ[›ÛÚÜË	ØYZ[‹]ÛÜšØ›ÛÚË]šY]ÉÎ˜YZ[•ÛÜšØ›ÛÚÕšY]Ë	ØYZ[‹XÛ\ÜÙ\ÉÎ˜YZ[Û\ÜÙ\Ë	ØYZ[‹\™\ÜÉÎœ™\ÜË	ØYZ[‹XYZ[œÉÎ˜YZ[YZ[œË	ØYZ[‹]XXÚ\œÉÎ˜YZ[•XXÚ\œË	ØYZ[‹\İY[ÉÎ˜YZ[”İY[ßVØİ\œ™[YÙW_YZ[’ÛYJJ
+_B‚™[˜İ[Ûˆ\ÜÚYÛ›Y[Ñ›ÜÛ\ÜÊÛ\ÜÒY
+^Ü™]\›ˆ
+Ù]Š
+K˜\ÜÚYÛ›Y[ß×JK™š[\ŠOO˜K˜Û\ÜÒYOOXÛ\ÜÒY
+_B™[˜İ[Ûˆ\ÜÚYÛ›Y[›Ü“\ÜÛÛŠÛ\ÜÒY\ÜÛÛ’Y
+^Ü™]\›ˆ\ÜÚYÛ›Y[Ñ›ÜÛ\ÜÊÛ\ÜÒY
+K™š[™
+OO˜K›\ÜÛÛ’YOO[\ÜÛÛ’Y
+_[B™[˜İ[ÛˆXXÚ\Û\ÜÊ
+^Ü™]\›ˆÙ]Š
+K˜Û\ÜÙ\Ë™š[™
+ÏO˜ËšYOOXXİ]™UXXÚ\Û\ÜÒY
+_Ù]Š
+K˜Û\ÜÙ\ÖÌ_[B›]U‘WĞ“ÓÒ×ĞĞPÒO]Ú[™İË“U‘WĞ“ÓÒÔß[Â˜\Ş[˜È[˜İ[Ûˆ[œİ\™S]™P›ÛÚÜÊ
+^ÂˆYŠU‘WĞ“ÓÒ×ĞĞPÒI‰“Øš™XİšÙ^\ÊU‘WĞ“ÓÒ×ĞĞPÒJK›[™İ
+\™]\›ˆU‘WĞ“ÓÒ×ĞĞPÒNÂˆ^ÂˆÛÛœİX]ØZ]™]Ú
+	ËÛ]™KX›ÛÚÜËšœÛÛİ]XXÚ\‹X›ÛÚÜË]Œ‰ËØØXÚN‰Û›Ë\İÜ™IßJNÂˆYŠ‹›ÚÊ^ÓU‘WĞ“ÓÒ×ĞĞPÒOX]ØZ]‹šœÛÛŠ
+NİÚ[™İË“U‘WĞ“ÓÒÔÏSU‘WĞ“ÓÒ×ĞĞPÒ_BˆXØ]Ú
+J^ØÛÛœÛÛKØ\›Š	Ó]™H›ÛÚÈ˜[˜XÚÈ˜Z[Y	ËJ_Bˆ™]\›ˆU‘WĞ“ÓÒ×ĞĞPÒ_ßNÂŸB™[˜İ[Ûˆ›Ü›X[^™P›ÛÚÒÙ^J˜[YJ^Ü™]\›ˆİš[™Ê˜[Y_	ÉÊKÓİÙ\Ø\ÙJ
+Kœ™\XÙJø¡¤‹ÙË	ËIÊKœ™\XÙJÖ×˜K^ŒNWJËÙË	ËIÊKœ™\XÙJ×‹JßJÉÙË	ÉÊ_B™[˜İ[Ûˆ™\ÛÛ™P›ÛÚÒÙ^JÊ^ÂˆYŠXÊ\™]\›ˆ	ÉÎÂˆÛÛœİ\™XİTİš[™ÊË˜›ÛÚÒYË˜Ûİ\œÙWÚY	ÉÊKš[J
+NÂˆYŠ“ÓÒ×ÔPÒÔÖÙ\™Xİ_U‘WĞ“ÓÒ×ĞĞPÒOË–Ù\™Xİ_Ú[™İË“U‘WĞ“ÓÒÔÏË–Ù\™XİJ\™]\›ˆ\™XİÂˆÛÛœİY]OX›ÛÚÓY]J\™Xİ
+KX™[[›Ü›X[^™P›ÛÚÒÙ^JY]OË]_\™Xİ
+NÂˆYŠX™[š[˜ÛY\Ê	ÜÜXZİ\Y[™Û\ÚXL‹XŒIÊ_X™[š[˜ÛY\Ê	ÜÜXZİ\XL‹XŒIÊJ\™]\›ˆ	ÜÜXZİ\XL‹XŒIÎÂˆYŠX™[š[˜ÛY\Ê	ÜÜXZİ\Y[™Û\ÚXŒ‰Ê_X™[OOIÜÜXZİ\XŒ‰Ê\™]\›ˆ	ÜÜXZİ\XŒ‰ÎÂˆYŠX™[š[˜ÛY\Ê	Û][˜IÊJ\™]\›ˆ	ØØ\™Y\‹Y›Y[˜ŞK[][˜IÎÂˆYŠX™[š[˜ÛY\Ê	ØX™\ÚZİ\‰ÊJ\™]\›ˆ	ØØ\™Y\‹Y›Y[˜ŞKXX™\ÚZİ\‰ÎÂˆYŠX™[š[˜ÛY\Ê	ØX™\Ø[[‰ÊJ\™]\›ˆ	ØØ\™Y\‹Y›Y[˜ŞKXX™\Ø[[‰ÎÂˆYŠX™[š[˜ÛY\Ê	ØØ\™Y\‹Y›Y[˜ŞIÊJ\™]\›ˆ	ØØ\™Y\‹Y›Y[˜ŞKXX™\Ø[[‰ÎÂˆ™]\›ˆ\™XİÂŸB™[˜İ[Ûˆ]™P›ÛÚÑ›ÜÛ\ÜÊÊ^ÂˆYŠXÊ\™]\›ˆ[ÂˆÛÛœİY\™\ÛÛ™P›ÛÚÒÙ^JÊK›ÛÚÜÏSU‘WĞ“ÓÒ×ĞĞPÒ_Ú[™İË“U‘WĞ“ÓÒÔßßNÂˆ™]\›ˆ›ÛÚÜÖÚY_[ÂŸB™[˜İ[ÛˆÛÜšØ›ÛÚÑ›ÜÛ\ÜÊÊ^ÂˆYŠXÊ\™]\›ˆ[Âˆ™]\›ˆ“ÓÒ×ÔPÒÔÖÜ™\ÛÛ™P›ÛÚÒÙ^JÊW_[ÂŸB™[˜İ[ÛˆÜ[\ÜÚYÛ›Y[œ›ÛU\›
+
+^ÂˆÛÛœİY[™]ÈT“ÙX\˜Ú\˜[\ÊÚ[™İË›ØØ][Û‹œÙX\˜Ú
+K™Ù]
+	Ø\ÜÚYÛ›Y[	ÊNÚYŠZY
+\™]\›ˆ˜[ÙNÂˆÛÛœİOJÙ]Š
+K˜\ÜÚYÛ›Y[ß×JK™š[™
+OšYOOZY
+NÚYŠXJ\™]\›ˆ˜[ÙNÂˆYŠ\Ù]Xİ]™P›ÛÚÊK˜›ÛÚÒY
+J\™]\›ˆ˜[ÙNØXİ]™S\ÜÛÛ’YXK›\ÜÛÛ’YØİ\œ™[İ\Yš\œİÜ[”İ\
+Ù\ÜÚ[Û‹šYK›\ÜÛÛ’Y
+NØİ\œ™[YÙOIİÛÜšØ›ÛÚÉÎÜ™]\›ˆYNÂŸB‚™[˜İ[Ûˆ›ØØX[\T›İÊ[™J^ÂˆÛÛœİTİš[™Ê[™_	ÉÊKš[J
+NÂˆÛÛœİO]›X]Ú
+×ŠŠÏÊWÊÊ
+Î’_IÛ_Iİ™_IÙ^_Ù_ÙIÜ™_ÙIİ™_^_^IÜ™__IÜßÚ_ÚIÜß]]	Üßİ\Ÿ__[Ÿ\ß]\Ù_ÜÙ_[İ_[İ\Ÿ\ß\ŸĞKV—VØK^—JÊW‹ŠŠIÊNÂˆYŠ[J\™]\›ˆ[ÂˆÛÛœİÛÜ™[VÌWKš[J
+K^[\O[VÌ—Kš[J
+NÂˆYŠ]ÛÜ™Y^[\_ÛÜ™›[™İ_ÖËˆOÎÎ—IË\İ
+ÛÜ™
+_^[\KœÜ]
+×ÊËÊK›[™İŸKÖËˆO×IË\İ
+^[\JJ\™]\›ˆ[Âˆ™]\›ˆİÛÜ™^[\_NÂŸB˜ÛÛœİ“ĞĞP—ÓQPS’S‘ÔÏ^ÚØ˜N‰Ø[ˆXİ]š]H[İH[š›ŞHÚ[™È[ˆ[İ\ˆœ™YH[YIËÛY]İÛ‰İHİÛˆÜˆÚ]HÚ\™H[İHÙ\™H›Ü›ˆÜˆÜ™]È\	ËØØİ\][Û‰Ş[İ\ˆ›ØˆÜˆXZ[ˆ\HÙˆÛÜšÉËX\œšYY‰Ú]š[™ÈH\Ø˜[™ÜˆÚY™IËÚ[™ÛN‰Û›İX\œšYY	Ëİ]ÛÚ[™Î‰ÙœšY[™H[™ÛÛY›ÜX›H[Ú[™ÈÈ[ÜIËÛÛXYİYN‰ØH\œÛÛˆ[İHÛÜšÈÚ]	ËXY[™N‰İH]\İ[YHÜˆ]HÚ[ˆÛÜšÈ]\İ™Hš[š\ÚY	Ë	Ø\H›Ü‰Î‰İÈ\ÚÈÙ™šXÚX[H›ÜˆH›Ø‹Ûİ\œÙHÜˆÜÜ[š]IËÚY‰ØH\š[ÙÙˆÛÜšÈ[YKİXÚ\È[Ü›š[™ÈÜˆ]™[š[™ÈÛÜšÉË›Û[İ[Û‰ØH[İ™HÈHYÚ\ˆ›ØˆÜˆÜÚ][Û‰Ëİ\œ™[N‰Ø]H™\Ù[[YIËYÙØYÙN‰Ø˜YÜÈ[™İZ]Ø\Ù\È\ÙY›Üˆ˜]™[	Ë	Ø›ÛÚÈ
+HXÚÙ]
+IÎ‰İÈ™\Ù\™HÜˆ^HHXÚÙ]™Y›Ü™H˜]™[[™ÉË[^N‰ØH[YHÚ[ˆÛÛY][™È\[œÈ]\ˆ[ˆ[›™Y	ËÛİ]™[š\‰ÜÛÛY][™È[İH^HÜˆÙY\È™[Y[X™\ˆHXÙIËXØÛÛ[[Ù][Û‰ØHXÙHÚ\™H[İHİ^H\š[™È˜]™[	Ë\œš]™N‰İÈ™XXÚHXÙIË\‰ØH›ÙÜ˜[HÛˆHÛ™HÜˆÛÛ\]\‰Ë\]N‰ØH™]È™\œÚ[ÛˆÜˆ[\›İ™[Y[	ËØÜ›Û‰İÈ[İ™H›İYÚÛÛ[ÛˆHØÜ™Y[‰Ë›İYšXØ][Û‰ØHY\ÜØYÙHÜˆ[\œ›ÛH[ˆ\	ËÛÛ›™Xİ[Û‰İH[šÈ]]ÈHÛ™HÜˆÛÛ\]\ˆ\ÙHH[\›™]	Ë^]\İY‰İ™\H\™Y	Ëİ™\ÜÙY‰İÛÜœšYYÜˆ[™\ˆ™\Üİ\™IËŞ[\ÛN‰ØHÚYÛˆ]ÛÛY][™ÈX^H™HÜ›Û™ÈÚ][İ\ˆX[	Ë™\İ‰İÈİÜÛÜšÚ[™ÈÜˆ[İš[™ÈÛÈ[İ\ˆ›ÙHØ[ˆ™XÛİ™\‰ËY]‰İH›ÛÙ[™š[šÈÛÛY[Û™H\İX[H\ÉËXš]‰ÜÛÛY][™È[İHÈ™Yİ[\›IË›]›İ\‰İH\İHÙˆ›ÛÙÜˆš[šÉË[™Üµç;¶‰ËkºwµçJ][OOŠÜİYÙN˜Ë›X™[][_JJJKİ[Z][\Ë›[™İÜ™]\›ˆ]ˆÛ\ÜÏH˜Xİ]š]K\[›™\ˆˆ]KXXİ]š]K\[›™\]ˆÛ\ÜÏHœ[›™\‹[Y]HÜ[ˆ]K\[›™\‹\İYÙO‰Ù\ØØ\R[
+][\ÖÌOËœİYÙ_	Ô˜XİXÙIÊ_OÜÜ[Ü[ˆ]K\[›™\‹Xİ\œ™[ŒOØˆÈ	İİ[OÜÜ[Ù]]ˆÛ\ÜÏHœ[›™\‹\›ÙÜ™\ÜÈÜ[ˆ]K\[›™\‹\›ÙÜ™\ÜÈİ[OHÚY‰İİ[ÌLİİ[ŒLIHÜÜ[Ù]]ˆÛ\ÜÏHœ[›™\‹\]Y\İ[Û‹\İXÚÈˆ]K\[›™\‹\İXÚÏ‰Ú][\Ë›X\
+
+JOO˜]ˆÛ\ÜÏHœ[›™\‹\]Y\İ[Ûˆˆ]K\[›™\‹\]Y\İ[Ûˆ]K\İYÙOH‰Ù\ØØ\P]ŠœİYÙJ_Hˆ	ÚOÉÚY[‰Î‰ÉßO‰Şš][_OÙ]˜
+Kš›Ú[Š	ÉÊ_OÙ]]ˆÛ\ÜÏHœ[›™\‹XXİ[ÛœÈ]ÛˆÛ\ÜÏHœ[›™\‹X˜XÚÈˆ\OH˜]Ûˆˆ]K\[›™\‹\™]ˆY[˜XÚÏØ]Û]ÛˆÛ\ÜÏHœš[X\KXˆ[›™\‹[™^ˆ\OH˜]Ûˆˆ]K\[›™\‹[™^\ØX›Y‰İİ[OOLOÉÑš[š\Ú	Î‰Ó™^	ßOØ]ÛÙ]Ù]˜B™[˜İ[ÛˆÚ\™SXÜPØ\™Ê›ÛİYØİ[Y[
+^Ü›Ûİœ]Y\TÙ[XİÜ[
+	Ë›XÜK\XÚÙ\‰ÊK™›Ü‘XXÚ
+XÚÙ\OÚYŠXÚÙ\‹™]\Ù]Ú\™YOOIÌIÊ\™]\›ÜXÚÙ\‹™]\Ù]Ú\™YIÌIÎØÛÛœİÛİ\XÚÙ\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K[XÜK\ÛİIÊKÛİ^\XÚÙ\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K[XÜK\Ûİ]^IÊKØ\™ÏVË‹‹œXÚÙ\‹œ]Y\TÙ[XİÜ[
+	ÖÙ]K[XÜK[Ü[Û—IÊWK[œ]ÏVË‹‹œXÚÙ\‹œ]Y\TÙ[XİÜ[
+	ÖÙ]K[XÜKZ[œ]IÊWKX\›š[™Ñ™YY˜XÚÏ\XÚÙ\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K]›ØØX‹Y™YY˜XÚ×IÊNÚYŠ\Ûİ\Ûİ^XØ\™Ë›[™İ
+\™]\›ØÛÛœİ[š[X]UÔÛİXØ\™OØÛÛœİœ›ÛOXØ\™™Ù]›İ[™[™ĞÛY[™Xİ
+
+KÏ\Ûİ™Ù]›İ[™[™ĞÛY[™Xİ
+
+KÚÜİYØİ[Y[˜Ü™X]Q[[Y[
+	Ù]‰ÊNÙÚÜİ˜Û\ÜÓ˜[YOIÛXÜKY›KXØ\™	ÎÙÚÜİ^ÛÛ[XØ\™™]\Ù]˜[Y_Ø\™^ÛÛ[š[J
+NÙÚÜİœİ[K›YYœ›ÛK›Y
+ÉÜ	ÎÙÚÜİœİ[KÜYœ›ÛKÜ
+ÉÜ	ÎÙÚÜİœİ[KÚYYœ›ÛKÚY
+ÉÜ	ÎÙÚÜİœİ[KšZYÚYœ›ÛKšZYÚ
+ÉÜ	ÎÙØİ[Y[˜›ÙK˜\[™Ú[
+ÚÜİ
+NÜ™\]Y\İ[š[X][Û‘œ˜[YJ
+
+OOÙÚÜİœİ[K˜[œÙ›Ü›OX˜[œÛ]J	İË›Y
+İËÚYÌ‹Jœ›ÛK›Y
+Ùœ›ÛKÚYÌŠ_\	İËÜ
+İËšZYÚÌ‹Jœ›ÛKÜ
+Ùœ›ÛKšZYÚÌŠ_\
+HØØ[JÎ
+XÙÚÜİœİ[K›ÜXÚ]OIËŒMIßJNÜÙ][Y[İ]
 
 
-const NAV={student:[['home','âŒ‚','Home'],['course','â–£','My book'],['progress','â—”','Progress'],['leaderboard','â–¥','Leaderboard']],teacher:[['teacher-home','âŒ‚','Today'],['teach','â–£','Teach'],['teacher-workbooks','â–¤','Workbooks'],['students','â—','Students'],['classes','â–¤','Classes'],['leaderboard','â–¥','Leaderboard'],['weaknesses','â–³','Needs review'],['reports','â–¦','Reports']],admin:[['admin-home','âŒ‚','Overview'],['admin-books','â–£','Books'],['admin-classes','â–¤','Classes'],['admin-reports','â–¦','Reports'],['admin-admins','â—‡','Admins'],['admin-teachers','â—','Teachers'],['admin-students','â—‹','Students']]};
-let session=null,currentPage='home',activeLessonId='w1l1',currentStep='vocabulary',apiDB=null,activeTeacherClassId=null,activeTeacherLessonNumber=1,activeTeacherSectionIndex=0,activeStudentLiveLessonNumber=1,activeStudentSectionIndex=0;
-function getDB(){return apiDB||{version:7,assignments:[],books:[],users:[],classes:[],profiles:{},attempts:[],completion:{},writing:{},listeningLocks:{}}}
-function saveDB(db){apiDB=db}
-function $(id){return document.getElementById(id)} function lesson(id=activeLessonId){return lessonById(id)||COURSE.lessons[0]} function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
-async function api(path,options={}){const opts={credentials:'include',headers:{'Content-Type':'application/json',...(options.headers||{})},...options};const res=await fetch(path,opts);let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.error||'Request failed');return data}
-async function refreshState(){apiDB=await api('/api/state');syncActiveBook();if(session?.role==='student')updateStudentTicker();return apiDB}
-function init(){if('scrollRestoration' in history)history.scrollRestoration='manual';$('loginForm').addEventListener('submit',e=>{e.preventDefault();login($('username').value.trim(),$('password').value)});$('logoutBtn').addEventListener('click',logout);$('menuBtn').addEventListener('click',()=>document.querySelector('.sidebar').classList.toggle('open'))} document.addEventListener('DOMContentLoaded',init);
-async function login(username,password){$('loginError').textContent='';try{const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username,password})});session=r.user;await refreshState();if(session.role==='teacher'){await ensureLiveBooks();restoreTeacherContextFromState();}$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('app').classList.remove('student-mode','teacher-mode','admin-mode');$('app').classList.add(session.role+'-mode');$('sidebarName').textContent=session.name;$('sidebarRole').textContent=session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'Student';$('sidebarAvatar').textContent=session.name[0];currentPage=session.role==='admin'?'admin-home':session.role==='teacher'?'teacher-home':'home';if(session.role==='student'&&openAssignmentFromUrl()){renderNav();renderPage();return}renderNav();renderPage()}catch(e){$('loginError').textContent=e.message||'Username or password is incorrect.'}}
-async function logout(){try{await api('/api/auth/logout',{method:'POST'})}catch{}session=null;apiDB=null;$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value=''}
-function renderNav(){const items=NAV[session.role],html=items.map(([id,icon,label])=>`<button class="nav-btn ${currentPage===id?'active':''}" data-page="${id}"><span class="nav-icon">${icon}</span>${label}</button>`).join('');if(session.role==='student'){$('sideNav').innerHTML='';$('studentTopNav').innerHTML=html;$('bottomNav').innerHTML=html+`<button class="nav-btn ${currentPage==='profile'?'active':''}" data-page="profile"><span class="nav-icon">â—‹</span>Profile</button>`;$('studentProfileBtn').classList.remove('hidden');$('studentProfileBtn').textContent=session.name[0]}else{$('sideNav').innerHTML=html;$('studentTopNav').innerHTML='';$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.add('hidden')}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{currentPage=b.dataset.page;document.querySelector('.sidebar').classList.remove('open');renderNav();renderPage()});$('studentProfileBtn').onclick=()=>{currentPage='profile';renderNav();renderPage()};resetAppScroll()}
-function englishGateLogo(){return ''} function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} 
-try{if('scrollRestoration' in history)history.scrollRestoration='manual'}catch{}
-function resetAppScroll(){
- const reset=()=>{
-  try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch{window.scrollTo(0,0)}
-  if(document.scrollingElement)document.scrollingElement.scrollTop=0;
-  document.documentElement.scrollTop=0;
-  document.body.scrollTop=0;
-  const main=document.querySelector('.main');if(main)main.scrollTop=0;
-  const content=$('content');if(content)content.scrollTop=0;
-  document.querySelectorAll('.eg-teaching-surface,.eg-workbook-teaching-surface,.eg-stage-content,.live-book-content,.classroom-stage-content').forEach(el=>{el.scrollTop=0});
- };
- reset();
- requestAnimationFrame(()=>{reset();requestAnimationFrame(reset)});
- setTimeout(reset,60);
-} 
-let appScrollResetTimer=0;
-function scheduleAppScrollReset(){
- resetAppScroll();
- clearTimeout(appScrollResetTimer);
- requestAnimationFrame(()=>requestAnimationFrame(resetAppScroll));
- setTimeout(resetAppScroll,80);
- setTimeout(resetAppScroll,220);
- appScrollResetTimer=setTimeout(resetAppScroll,500);
-}
-function installNavigationScrollReset(){
- const content=$('content');
- if(!content||content.dataset.scrollResetInstalled)return;
- content.dataset.scrollResetInstalled='true';
- const observer=new MutationObserver(mutations=>{
-  if(mutations.some(m=>m.type==='childList'&&(m.addedNodes.length||m.removedNodes.length)))scheduleAppScrollReset();
- });
- observer.observe(content,{childList:true});
- window.addEventListener('popstate',scheduleAppScrollReset);
- window.addEventListener('pageshow',scheduleAppScrollReset);
-}
-installNavigationScrollReset();
-function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})}catch{el.focus()}scheduleAppScrollReset()} function setWorkbookDesignMode(on){document.body.classList.toggle('workbook-design-mode',Boolean(on))} async function renderPage(){
- setWorkbookDesignMode(['workbook','teacher-workbook-view','admin-workbook-view'].includes(currentPage));
- const result=session.role==='student'?renderStudent():session.role==='teacher'?renderTeacher():renderAdmin();
- await Promise.resolve(result);
- resetAppScroll();
-}
-function renderStudent(){return ({home:studentHome,workbook,course:studentCourse,'class-book':studentClassBook,'student-live-lesson':studentLiveLesson,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()}
-function renderTeacher(){return ({'teacher-home':teacherHome,teach:teacherTeach,'teacher-book':teacherBook,'teacher-live-lesson':teacherLiveLesson,'teacher-workbooks':teacherWorkbooks,'teacher-book-browse':teacherBookBrowse,'teacher-workbook-view':teacherWorkbookView,students,classes,leaderboard:()=>leaderboard(true),weaknesses,reports}[currentPage]||teacherHome)()}
-function renderAdmin(){return ({'admin-home':adminHome,'admin-books':adminBooks,'admin-live-book-browse':adminLiveBookBrowse,'admin-live-lesson':adminLiveLesson,'admin-book-browse':adminBookBrowse,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-reports':reports,'admin-admins':adminAdmins,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
+OO™ÚÜİœ™[[İ™J
+K
+_NØÛÛœİÚÛÜÙOJØ\™[š[X]O]YJOOÚYŠXÚÙ\‹™]\Ù]›ØØX“ØÚÙYOOIÌIÊ\™]\›ØÛÛœİOS[X™\ŠØ\™™]\Ù]›XÜSÜ[ÛŠK[œ]Z[œ]Ë™š[™
+O“[X™\Š™]\Ù]›XÜR[œ]
+OOOZJNÚYŠZ[œ]
+\™]\›Ú[œ]Ë™›Ü‘XXÚ
+O˜ÚXÚÙYY˜[ÙJNØØ\™Ë™›Ü‘XXÚ
+O˜Û\ÜÓ\İœ™[[İ™J	ÜÙ[XİY	ÊJNÚ[œ]˜ÚXÚÙY]YNÚ[œ]™\Ü]Ú]™[
+™]È]™[
+	ØÚ[™ÙIËØX˜›\ÎY_JJNØØ\™˜Û\ÜÓ\İ˜Y
+	ÜÙ[XİY	ÊNÜÛİ˜Û\ÜÓ\İ˜Y
+	Ùš[Y	ÊNÜÛİ^^ÛÛ[XØ\™™]\Ù]˜[Y_Ø\™^ÛÛ[š[J
+NÚYŠX\›š[™Ñ™YY˜XÚÉ‰œXÚÙ\‹™]\Ù]›ØØX•ÛÜ™
+^ØÛÛœİÛÜœ™XİZ[œ]˜[YOOOZ[œ]™]\Ù]˜[œİÙ\‹Y]O^İÛÜ™œXÚÙ\‹™]\Ù]›ØØX•ÛÜ™YX[š[™ÎœXÚÙ\‹™]\Ù]›ØØX“YX[š[™Ë^[\NœXÚÙ\‹™]\Ù]›ØØX‘^[\_NÜXÚÙ\‹™]\Ù]›ØØX“ØÚÙYIÌIÎÜXÚÙ\‹™]\Ù]™š\œİÛÜœ™XİXÛÜœ™XİÉÌIÎ‰Ì	ÎØØ\™˜Û\ÜÓ\İ˜Y
+ÛÜœ™XİÉÚ\ËXÛÜœ™XİXÚÚXÙIÎ‰Ú\ËZ[˜ÛÜœ™XİXÚÚXÙIÊNØØ\™Ë™›Ü‘XXÚ
+OŞ™\ØX›Y]YNŞœÙ]]šX]J	Ø\šXKY\ØX›Y	Ë	İYIÊ_JNÛX\›š[™Ñ™YY˜XÚËš[›™\’S]›ØØX‘™YY˜XÚÒ[
+Y]KÛÜœ™Xİ
+_ZYŠ[š[X]JX[š[X]UÔÛİ
+Ø\™
+NÚYŠÛİ˜[š[X]J\Ûİ˜[š[X]JŞİ˜[œÙ›Ü›N‰ÜØØ[JNJIßKİ˜[œÙ›Ü›N‰ÜØØ[JKŒŠIßKİ˜[œÙ›Ü›N‰ÜØØ[JJIßWKÙ\˜][ÛŒX\Ú[™Î‰ÙX\ÙK[İ]	ßJ_NØØ\™Ë™›Ü‘XXÚ
+Ø\™OØØ\™›Û˜ÛXÚÏJ
+OO˜ÚÛÜÙJØ\™YJNØØ\™›Û™˜YÜİ\YOOÙK™]U˜[œÙ™\‹™Y™™Xİ[İÙYIÛ[İ™IÎÙK™]U˜[œÙ™\‹œÙ]]J	İ^ÜZ[‰ËØ\™™]\Ù]›XÜSÜ[ÛŠNØØ\™˜Û\ÜÓ\İ˜Y
+	Ù˜YÙÚ[™ÉÊ_NØØ\™›Û™˜YÙ[™J
+OO˜Ø\™˜Û\ÜÓ\İœ™[[İ™J	Ù˜YÙÚ[™ÉÊ_JNÜÛİ›Û™˜YÛİ™\YOOÙKœ™]™[Y˜][
 
-function assignmentsForClass(classId){return (getDB().assignments||[]).filter(a=>a.classId===classId)}
-function assignmentForLesson(classId,lessonId){return assignmentsForClass(classId).find(a=>a.lessonId===lessonId)||null}
-function teacherClass(){return getDB().classes.find(c=>c.id===activeTeacherClassId)||getDB().classes[0]||null}
-let LIVE_BOOK_CACHE=window.LIVE_BOOKS||null;
-async function ensureLiveBooks(){
- if(LIVE_BOOK_CACHE&&Object.keys(LIVE_BOOK_CACHE).length)return LIVE_BOOK_CACHE;
- try{
-  const r=await fetch('/live-books.json?v=teacher-books-v2',{cache:'no-store'});
-  if(r.ok){LIVE_BOOK_CACHE=await r.json();window.LIVE_BOOKS=LIVE_BOOK_CACHE}
- }catch(e){console.warn('Live book fallback failed',e)}
- return LIVE_BOOK_CACHE||{};
-}
-function normalizeBookKey(value){return String(value||'').toLowerCase().replace(/â†’/g,'-').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
-function resolveBookKey(c){
- if(!c)return '';
- const direct=String(c.bookId||c.course_id||'').trim();
- if(BOOK_PACKS[direct]||LIVE_BOOK_CACHE?.[direct]||window.LIVE_BOOKS?.[direct])return direct;
- const meta=bookMeta(direct),label=normalizeBookKey(meta?.title||direct);
- if(label.includes('speakup-english-a2-b1')||label.includes('speakup-a2-b1'))return 'speakup-a2-b1';
- if(label.includes('speakup-english-b2')||label==='speakup-b2')return 'speakup-b2';
- if(label.includes('muna'))return 'career-fluency-muna';
- if(label.includes('abdishakur'))return 'career-fluency-abdishakur';
- if(label.includes('abdisalan'))return 'career-fluency-abdisalan';
- if(label.includes('career-fluency'))return 'career-fluency-abdisalan';
- return direct;
-}
-function liveBookForClass(c){
- if(!c)return null;
- const id=resolveBookKey(c),books=LIVE_BOOK_CACHE||window.LIVE_BOOKS||{};
- return books[id]||null;
-}
-function workbookForClass(c){
- if(!c)return null;
- return BOOK_PACKS[resolveBookKey(c)]||null;
-}
-function openAssignmentFromUrl(){
- const id=new URLSearchParams(window.location.search).get('assignment');if(!id)return false;
- const a=(getDB().assignments||[]).find(x=>x.id===id);if(!a)return false;
- if(!setActiveBook(a.bookId))return false;activeLessonId=a.lessonId;currentStep=firstOpenStep(session.id,a.lessonId);currentPage='workbook';return true;
-}
+NÙK™]U˜[œÙ™\‹™›ÜY™™XİIÛ[İ™IÎÜÛİ˜Û\ÜÓ\İ˜Y
+	Ù˜YË[İ™\‰Ê_NÜÛİ›Û™˜YÛX]™OJ
+OOœÛİ˜Û\ÜÓ\İœ™[[İ™J	Ù˜YË[İ™\‰ÊNÜÛİ›Û™›ÜYOOÙKœ™]™[Y˜][
 
-function vocabularyRow(line){
- const t=String(line||'').trim();
- const m=t.match(/^(.+?)\s+((?:I|I'm|I've|I'd|My|We|We're|We've|They|They're|He|He's|She|She's|It|It's|Our|The|A|An|This|That|These|Those|You|Your|His|Her|[A-Z][a-z]+)\b.*)$/);
- if(!m)return null;
- const word=m[1].trim(),example=m[2].trim();
- if(!word||!example||word.length>45||/[.!?;:]$/.test(word)||example.split(/\s+/).length<2||!/[.!?]$/.test(example))return null;
- return {word,example};
-}
-const VOCAB_MEANINGS={hobby:'an activity you enjoy doing in your free time',hometown:'the town or city where you were born or grew up',occupation:'your job or main type of work',married:'having a husband or wife',single:'not married',outgoing:'friendly and comfortable talking to people',colleague:'a person you work with',deadline:'the latest time or date when work must be finished','apply for':'to ask officially for a job, course or opportunity',shift:'a period of work time, such as morning or evening work',promotion:'a move to a higher job or position',currently:'at the present time',luggage:'bags and suitcases used for travel','book (a ticket)':'to reserve or buy a ticket before travelling',delay:'a time when something happens later than planned',souvenir:'something you buy or keep to remember a place',accommodation:'a place where you stay during travel',arrive:'to reach a place',app:'a program on a phone or computer',update:'a new version or improvement',scroll:'to move through content on a screen',notification:'a message or alert from an app',connection:'the link that lets a phone or computer use the internet',exhausted:'very tired',stressed:'worried or under pressure',symptom:'a sign that something may be wrong with your health',rest:'to stop working or moving so your body can recover',diet:'the food and drink someone usually has',habit:'something you do regularly',flavour:'the taste of food or drink',ingredient:'one of the foods used to make a dish',spicy:'having a hot, strong taste',fresh:'new, clean, or recently made',recipe:'instructions for preparing food',portion:'the amount of food given to one person',background:'your past education, experience, or situation',routine:'the usual way you do things',interest:'something you want to know more about or enjoy',experience:'knowledge gained by doing or seeing something',confident:'sure that you can do something well',achievement:'something important you have successfully done',drought:'a long period with little or no rain','renewable energy':'energy from natural sources that can be replaced, such as sunlight or wind',pollution:'harmful substances or waste that damage air, water, land, or living things',sustainable:'able to continue for a long time without serious harm to people or the environment',deforestation:'the cutting down or clearing of many trees in an area','carbon footprint':'the amount of carbon pollution caused by a person, activity, or product',waste:'unwanted material that is thrown away',resource:'something useful that people can use',conservation:'the protection of nature and natural resources',shortage:'a situation where there is not enough of something'};
-function normalizeVocabWord(word){return String(word||'').replace(/[â€œâ€"]/g,'').replace(/\s+/g,' ').trim().toLowerCase()}
-function meaningFromTopicLibrary(word){const clean=normalizeVocabWord(word);for(const topic of Object.values(TOPIC_LIBRARY||{})){for(const pair of topic.v||[]){if(normalizeVocabWord(pair[0])===clean)return pair[1]}}return ''}
-function meaningFromWorkbookWord(word){const clean=normalizeVocabWord(word);for(const book of Object.values(BOOK_PACKS)){for(const l of book.lessons||[]){for(const item of l.vocabulary?.items||l.vocabularyItems||[]){const q=String(item.q||''),answer=normalizeVocabWord(item.answer),matchWord=q.match(/Match\s+[â€œ"](.+?)[â€"]\s+to its meaning/i);if(matchWord&&normalizeVocabWord(matchWord[1])===clean&&item.answer)return item.answer;const means=q.match(/Which word means [â€œ"](.+?)[â€"]\??/i)||q.match(/Type the target word meaning [â€œ"](.+?)[â€"]\.?/i);if(means&&answer===clean)return means[1];const idea=q.match(/Which target word best matches this idea:\s*(.+?)\??$/i);if(idea&&answer===clean)return idea[1]}}}return ''}
-function vocabMeaning(word){const key=normalizeVocabWord(word);return VOCAB_MEANINGS[key]||meaningFromWorkbookWord(key)||meaningFromTopicLibrary(key)||'a useful lesson word or expression; use the example to understand when it is used'}
-const VOCAB_EXAMPLES={
- commence:'The meeting will commence at 9:00 a.m.',
- hobby:'Reading is my favourite hobby.',
- hometown:'Borama is my hometown.',
- occupation:'Teaching is her occupation.',
- married:'They have been married for five years.',
- single:'He is single and lives with his brother.',
- outgoing:'She is outgoing and enjoys meeting new people.',
- colleague:'I asked my colleague to review the report.',
- deadline:'The deadline for the report is Friday.',
- 'apply for':'She plans to apply for the new position.',
- shift:'My evening shift starts at 4:00 p.m.',
- promotion:'He received a promotion after leading the project.',
- currently:'I am currently working on a new course.',
- luggage:'Please keep your luggage with you.',
- 'book (a ticket)':'I need to book a ticket for Hargeisa.',
- delay:'The flight left after a short delay.',
- souvenir:'She bought a small souvenir for her family.',
- accommodation:'We found affordable accommodation near the university.',
- arrive:'Please arrive ten minutes before the class starts.',
- app:'Open the app and choose your lesson.',
- update:'The latest update fixed the problem.',
- scroll:'Scroll down to see the next activity.',
- notification:'I received a notification from the school app.',
- connection:'The video stopped because the internet connection was weak.',
- exhausted:'I was exhausted after the long journey.',
- stressed:'She felt stressed before the interview.',
- symptom:'A high fever can be a symptom of illness.',
- rest:'You should rest after a busy day.',
- diet:'A balanced diet includes different kinds of food.',
- habit:'Reading every morning is a useful habit.',
- flavour:'This soup has a rich flavour.',
- ingredient:'Tomato is an important ingredient in the sauce.',
- spicy:'The curry is too spicy for me.',
- fresh:'We bought fresh fruit from the market.',
- recipe:'I followed the recipe carefully.',
- portion:'He ordered a small portion of rice.',
- background:'Tell us briefly about your professional background.',
- routine:'Exercise is part of my morning routine.',
- interest:'She has a strong interest in technology.',
- experience:'My work experience helped me answer the question.',
- confident:'She felt confident during the presentation.',
- achievement:'Finishing the course was an important achievement.',
- drought:'The drought caused serious water shortages.',
- 'renewable energy':'Solar power is a form of renewable energy.',
- pollution:'Traffic can cause serious air pollution.',
- sustainable:'The school is looking for a sustainable solution.',
- deforestation:'Deforestation can destroy wildlife habitats.',
- 'carbon footprint':'Using less fuel can reduce your carbon footprint.',
- waste:'We should reduce food waste.',
- resource:'Water is an important natural resource.',
- conservation:'The project supports wildlife conservation.',
- shortage:'The hospital faced a shortage of medicine.'
-};
-function withPeriod(text){const t=String(text||'').trim();return /[.!?]$/.test(t)?t:t+'.'}
-function lowerDefinitionStart(text){const t=String(text||'').trim();if(!t)return t;return /^[A-Z][a-z]/.test(t)?t.charAt(0).toLowerCase()+t.slice(1):t}
-function sentenceWithWord(text,word){
- const source=String(text||'').replace(/\s+/g,' ').trim(),target=normalizeVocabWord(word);if(!source||!target)return '';
- const parts=source.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[];
- for(const part of parts){if(normalizeVocabWord(part).includes(target)){const sentence=part.trim();if(sentence.length>=8&&sentence.length<=180)return sentence}}
- return '';
-}
-function lessonVocabExample(word,l,q={}){
- const key=normalizeVocabWord(word);
- if(q.example)return withPeriod(q.example);
- const expression=(l.expressions||[]).find(x=>normalizeVocabWord(x.text)===key||normalizeVocabWord(x.answer)===key);
- if(expression?.example)return withPeriod(expression.example);
- if(VOCAB_EXAMPLES[key])return VOCAB_EXAMPLES[key];
- const writingText=(l.writing?.tasks||[]).map(x=>x.prompt||'').join(' ');
- const corpus=[l.listening?.readingText,l.listening?.audioScript,l.listening?.text,writingText,l.outcome].filter(Boolean).join(' ');
- const found=sentenceWithWord(corpus,word);if(found)return withPeriod(found);
- if(expression?.text){
-  const phrase=String(expression.text).replace(/[.â€¦]+$/,'').trim();
-  if(phrase)return withPeriod(phrase+' I want to explain this clearly');
- }
- const rawWord=String(word||'').trim(),meaning=lowerDefinitionStart(vocabMeaning(word));
- if(/[.!?]$/.test(rawWord)||/\b(?:I|you|we|they|he|she|my|your|our)\b/i.test(rawWord)){
-  return /\?$/.test(rawWord)?'â€œ'+rawWord+'â€ she asked during the conversation.':'â€œ'+rawWord+'â€ she said during the conversation.';
- }
- if(/^to\s+/i.test(meaning))return withPeriod('We need to '+rawWord+' today');
- if(/^(very|friendly|sure|able|having|not\s|new\b)/i.test(meaning))return withPeriod('She felt '+rawWord+' in that situation');
- return withPeriod('The '+rawWord+' was important in this situation');
-}
-function extractQuotedTarget(question){
- const q=String(question||'').replace(/\*\*/g,'').trim();
- const patterns=[
-  /What does\s+[â€œ"]([^â€"]+)[â€"]\s+mean/i,
-  /definition of\s+[â€œ"]([^â€"]+)[â€"]/i,
-  /Match\s+[â€œ"]([^â€"]+)[â€"]\s+to its meaning/i,
-  /meaning of\s+[â€œ"]([^â€"]+)[â€"]/i
- ];
- for(const p of patterns){const m=q.match(p);if(m)return m[1].trim()}
- return '';
-}
-function meaningFromVocabQuestion(question){
- const q=String(question||'').replace(/\*\*/g,'').trim().replace(/\?$/,'');
- const patterns=[
-  [/^Match the meaning:\s*(.+?)\.?$/i,m=>m[1]],
-  [/Which word best expresses this idea:\s*(.+)$/i,m=>m[1]],
-  [/Complete the glossary entry:\s*___\s*=\s*(.+?)\.?$/i,m=>m[1]],
-  [/word meaning\s+[â€œ"](.+?)[â€"]/i,m=>m[1]],
-  [/Which target word would you use when talking about\s+(.+)$/i,m=>m[1]],
-  [/best vocabulary label for this idea:\s*(.+?)\.?$/i,m=>m[1]],
-  [/Which (?:target )?word (?:best )?means?\s+[â€œ"]?(.+?)[â€"]?$/i,m=>m[1]],
-  [/Which (?:target )?word best matches this idea:\s*(.+)$/i,m=>m[1]],
-  [/Which word describes\s+(.+)$/i,m=>'describes '+m[1].trim()],
-  [/Which expression would you use to\s+(.+)$/i,m=>'to '+m[1].trim().replace(/^to\s+/i,'')],
-  [/Choose the best expression when\s+(.+)$/i,m=>'used when '+m[1].trim()],
-  [/Choose the natural question to\s+(.+)$/i,m=>'used to '+m[1].trim()],
-  [/Which response shows\s+(.+)$/i,m=>'used to show '+m[1].trim()],
-  [/Choose the expression that\s+(.+)$/i,m=>'used to '+m[1].trim()],
-  [/Choose the polite request for\s+(.+)$/i,m=>'used to ask for '+m[1].trim()+' politely'],
-  [/Choose the (?:best|correct|clearest|most natural)\s+(?:word|phrase|expression|response)\s+(?:to|for|when)\s+(.+)$/i,m=>'used to '+m[1].trim().replace(/^to\s+/i,'')],
-  [/Which (?:word|phrase|expression|response)\s+(?:best )?(?:fits|matches|shows)\s+(.+)$/i,m=>'used for '+m[1].trim()]
- ];
- for(const [p,fn] of patterns){const m=q.match(p);if(m)return String(fn(m)||'').trim()}
- return '';
-}
-function vocabFeedbackMeta(l,q,index){
- const question=String(q?.q||'').replace(/\*\*/g,'').trim(),answer=String(q?.answer||'').trim();
- let word=String(q?.word||'').trim(),meaning=String(q?.meaning||'').trim();
- const quoted=extractQuotedTarget(question);
- if(quoted){word=word||quoted;if(!meaning&&answer)meaning=answer}
- if(!word){
-  const forwardMeaning=meaningFromVocabQuestion(question);
-  if(forwardMeaning&&answer){word=answer;meaning=meaning||forwardMeaning}
- }
- const expressions=l.expressions||[];
- let expression=expressions.find(x=>normalizeVocabWord(x.text)===normalizeVocabWord(word||answer));
- if(!expression&&/^Complete from memory:/i.test(question)){
-  expression=expressions.find(x=>normalizeVocabWord(x.answer)===normalizeVocabWord(answer)&&question.includes(String(x.cloze||'')));
- }
- if(expression){word=word||expression.text;meaning=meaning||('to '+String(expression.job||'').replace(/^to\s+/i,''))}
- if(!word&&answer)word=answer;
- if(!meaning&&word){
-  const known=vocabMeaning(word);
-  if(!known.startsWith('a useful lesson word'))meaning=known
- }
- if(!meaning)meaning=meaningFromVocabQuestion(question);
- if(!meaning&&answer&&quoted)meaning=answer;
- if(!meaning)meaning='the correct word or phrase for this situation';
- if(!word)return null;
- return {word,meaning:lowerDefinitionStart(meaning),example:lessonVocabExample(word,l,q),index};
-}
-function vocabFeedbackHtml(meta,correct){
- if(!meta)return '';
- return '<div class="mcq-learning-feedback '+(correct?'is-correct':'is-incorrect')+'" role="status">'+
-   '<strong class="mcq-learning-status">'+(correct?'âœ“ Correct':'âœ— Incorrect')+'</strong>'+
-   '<p><b>'+escapeHtml(meta.word)+' =</b> '+escapeHtml(withPeriod(lowerDefinitionStart(meta.meaning)))+'</p>'+
-   '<p class="mcq-learning-example"><b>Example:</b> '+escapeHtml(withPeriod(meta.example))+'</p>'+
-  '</div>';
-}
-function openVocabularyMeaning(word,example){showModal(`<div class="section-head"><div><span class="role-kicker">Vocabulary meaning</span><h3>${escapeHtml(word)}</h3></div><button class="icon-btn" data-close>Ã—</button></div><div class="vocab-meaning-card"><small>Meaning</small><p>${escapeHtml(withPeriod(vocabMeaning(word)))}</p><small>Example</small><p>${escapeHtml(example)}</p></div>`);document.querySelector('[data-close]').onclick=closeModal}
-function wireLiveVocabulary(){document.querySelectorAll('[data-vocab-word]').forEach(b=>b.onclick=()=>openVocabularyMeaning(b.dataset.vocabWord,b.dataset.vocabExample))}
-function liveCheckKey(text){const role=session?.role||'guest',lesson=role==='teacher'?activeTeacherLessonNumber:activeStudentLiveLessonNumber;return 'eg-live-check:'+role+':'+lesson+':'+normalizeVocabWord(text)}
-function wireLiveChecks(){document.querySelectorAll('[data-live-check]').forEach(input=>{const key=liveCheckKey(input.dataset.liveCheck);input.checked=localStorage.getItem(key)==='1';input.onchange=()=>{if(input.checked)localStorage.setItem(key,'1');else localStorage.removeItem(key)}})}
-function liveLineHtml(line,mode='normal'){
- const t=String(line||'').trim();if(!t)return '';
- if(/^LESSON\s+\d+/i.test(t)||/^WEEK\s+\d+.*LESSON\s+\d+/i.test(t))return '<div class="live-book-marker">'+escapeHtml(t)+'</div>';
- if(/^(PAGE\s+\d+\s*[â€”-]|\d+\s*[|â€¢]\s*|CAN-DO GOAL:|TODAY.?S OUTCOME)/i.test(t))return '<h3 class="live-book-section">'+escapeHtml(t)+'</h3>';
- if(/^(Think & Talk|READ|Useful Expressions|Pronunciation|Examples|Complete the Sentences|Make It Personal|Challenge|Try to cover:|Write their names below:|Check Your Understanding|LANGUAGE BANK|USEFUL EXPRESSIONS|GRAMMAR FOR THE MISSION|HOMEWORK|INDEPENDENT MISSION|REFLECTION|SUCCESS CHECK|SPEAKING CHALLENGE|FLUENCY MISSION|PERFORMANCE MISSION|YOUR MISSION)$/i.test(t))return '<h4 class="live-book-subhead">'+escapeHtml(t)+'</h4>';
- const numbered=t.match(/^(\d+)\.\s*(.+)$/);
- if(numbered)return '<div class="live-prompt-row"><span>'+escapeHtml(numbered[1])+'</span><p>'+escapeHtml(numbered[2])+'</p></div>';
- if(/^â˜/.test(t)){const text=t.replace(/^â˜\s*/,'');return '<label class="live-check-row"><input type="checkbox" data-live-check="'+escapeAttr(text)+'"><span>'+escapeHtml(text)+'</span></label>'}
- if(/^â€¢/.test(t))return '<div class="live-book-bullet">'+escapeHtml(t.replace(/^â€¢\s*/,''))+'</div>';
- if(mode==='vocabulary'){
-  const row=vocabularyRow(t);
-  if(row)return '<button class="live-vocab-row live-vocab-click" type="button" data-vocab-word="'+escapeAttr(row.word)+'" data-vocab-example="'+escapeAttr(row.example)+'"><div class="live-vocab-word"><small>Tap for meaning</small><strong>'+escapeHtml(row.word)+'</strong></div><div class="live-vocab-example"><small>Example</small><span>'+escapeHtml(row.example)+'</span></div></button>';
- }
- if(/^_{3,}/.test(t))return '';
- return '<p>'+escapeHtml(t)+'</p>';
-}
-function renderLiveContent(text){
- const lines=String(text||'').split('\n'),out=[];
- let mode='normal',vocabOpen=false,promptOpen=false;
- const closeVocab=()=>{if(vocabOpen){out.push('</div>');vocabOpen=false}};
- const closePrompts=()=>{if(promptOpen){out.push('</div>');promptOpen=false}};
- for(const raw of lines){
-  const t=raw.trim();if(!t)continue;
-  if(/^WORD\s+EXAMPLE$/i.test(t)){
-   closePrompts();closeVocab();mode='vocabulary';vocabOpen=true;
-   out.push('<div class="live-vocab-table"><div class="live-vocab-head"><span>Target word</span><span>Example in context</span></div>');
-   continue;
-  }
-  if(/^(Useful Expressions|Pronunciation|READ|Examples|Complete the Sentences|Make It Personal|Challenge|Check Your Understanding|SPEAKING CHALLENGE|FLUENCY MISSION|HOMEWORK|REFLECTION)$/i.test(t)){
-   closePrompts();closeVocab();mode='normal';
-  }
-  const html=liveLineHtml(t,mode);
-  if(html){if(html.startsWith('<div class="live-prompt-row"')){if(!promptOpen){out.push('<div class="live-prompt-grid">');promptOpen=true}out.push(html)}else{closePrompts();out.push(html)}}
- }
- closePrompts();
- closeVocab();
- return out.join('');
-}
+NÜÛİ˜Û\ÜÓ\İœ™[[İ™J	Ù˜YË[İ™\‰ÊNØÛÛœİOS[X™\ŠK™]U˜[œÙ™\‹™Ù]]J	İ^ÜZ[‰ÊJKØ\™XØ\™Ë™š[™
+O“[X™\Š™]\Ù]›XÜSÜ[ÛŠOOOZJNÚYŠØ\™
+XÚÛÜÙJØ\™˜[ÙJ_NÜÛİ›ÛšÙ^YİÛYOOÚYŠ
+KšÙ^OOOIÑ[\‰ßKšÙ^OOOIÈ	ÊI‰˜Ø\™Ë›[™İ
+^ÙKœ™]™[Y˜][
 
-function liveSectionHeading(line){
- const t=String(line||'').trim();
- const numbered=t.match(/^\d+\s*(?:\|\s*)?([A-Z][A-Z ,&'-]+?)(?:\s*\|\s*\d+(?:-\d+)?\s*min|\s*â€¢\s*\d+(?:-\d+)?\s*MIN|$)/i);
- if(numbered){
-  const name=numbered[1].replace(/\s+/g,' ').trim();
-  if(/^(CONNECT|MODEL IN ACTION|DECODE THE MODEL|EXPRESSION TOOLKIT|RETRIEVAL CHALLENGE|ACCURACY FOCUS|CLEAR SPEECH COACH|GUIDED REHEARSAL|CAREER PERFORMANCE MISSION|FEEDBACK,? REPAIR AND RETRY|INDEPENDENT TRANSFER|ACTIVATE|LANGUAGE BANK|LISTEN,? NOTICE AND RESPOND|GRAMMAR AND PRONUNCIATION COACH|COMPLETE AND PERSONALISE|LIVE PARTNER PRACTICE|PERFORMANCE MISSION|INDEPENDENT MISSION)$/i.test(name))return name;
- }
- const patterns=[
-  /^(?:PAGE\s+\d+\s*[â€”-]\s*)?(WARM UP|VOCABULARY|READING|LANGUAGE FOCUS|FLUENCY MISSION|REFLECTION(?:\s*&\s*HOMEWORK)?|HOMEWORK)$/i,
-  /^(ACTIVATE|NOTICE|PRACTISE|SPEAK|FEEDBACK|RETRY|CONTINUE|CONNECT|MODEL|DECODE|RETRIEVE|COACH|REHEARSE|PERFORM|REPAIR(?:\s+AND\s+RETRY)?|TRANSFER)$/i,
-  /^(LANGUAGE BANK|USEFUL EXPRESSIONS|GRAMMAR FOR THE MISSION|CLEAR SPEECH COACH|GUIDED REHEARSAL|CAREER PERFORMANCE MISSION|PERFORMANCE MISSION|INDEPENDENT MISSION|ACCURACY FOCUS)$/i
- ];
- for(const p of patterns){const m=t.match(p);if(m)return m[1].replace(/\s+/g,' ').trim()}
- return '';
-}
-function liveSections(text){
- const lines=String(text||'').split('\n'),sections=[],intro=[];let current=null;
- for(const raw of lines){
-  const line=raw.trim();if(!line)continue;
-  if(/^LESSON\s+\d+/i.test(line)||/^WEEK\s+\d+.*LESSON\s+\d+/i.test(line)){intro.push(line);continue}
-  const heading=liveSectionHeading(line);
-  if(heading){if(current&&current.lines.length)sections.push(current);current={title:heading,lines:[]};continue}
-  if(current)current.lines.push(line);else intro.push(line);
- }
- if(current&&current.lines.length)sections.push(current);
- if(!sections.length){const chunks=lines.map(x=>x.trim()).filter(Boolean),size=Math.max(1,Math.ceil(chunks.length/6));for(let i=0;i<chunks.length;i+=size)sections.push({title:'Teach',lines:chunks.slice(i,i+size)})}
- if(intro.length&&sections.length)sections[0].lines=[...intro,...sections[0].lines];
- return sections;
-}
-function sectionLabel(title,index,total){const clean=String(title||'Teach').replace(/\b\w/g,c=>c.toUpperCase());return clean==='Teach'?('Part '+(index+1)+' of '+total):clean;}
-function attempts(sid,skill=null,lid=null){return getDB().attempts.filter(a=>a.studentId===sid&&(!skill||a.skill===skill)&&(!lid||a.lessonId===lid))} function latestScoredAttempts(sid,skill){const rows=attempts(sid,skill).filter(a=>Number.isFinite(Number(a.score))).slice().sort((a,b)=>new Date(a.at)-new Date(b.at)),latest={};rows.forEach(a=>latest[a.lessonId]=a);return Object.values(latest)}
-function latestAttemptFor(sid,lid,skill){return attempts(sid,skill,lid).filter(a=>Number.isFinite(Number(a.score))).slice().sort((a,b)=>new Date(b.at)-new Date(a.at))[0]||null}
-function scoreChip(score,at=''){const n=Number(score),tone=n>=80?'good':n>=60?'warn':'bad';return `<span class="score-chip ${tone}" ${at?`title="${escapeAttr(new Date(at).toLocaleString())}"`:''}>${Number.isFinite(n)?Math.round(n):'â€”'}%</span>`}
-function lessonSkillCell(sid,lid,skill){const a=latestAttemptFor(sid,lid,skill);if(a)return scoreChip(a.score,a.at);return completionFor(sid,lid).includes(skill)?'<span class="score-chip done">Done</span>':'<span class="score-chip empty">â€”</span>'}
-function firstReadyLessonFor(sid){return readyLessons(courseForStudent(sid))[0]||null}
-function latestActivityFor(sid){return attempts(sid).slice().sort((a,b)=>new Date(b.at)-new Date(a.at))[0]||null}
-function reportStudents(){return session?.role==='admin'?adminUsers('student'):classStudents()}
-function studentClassName(st){return getDB().classes.find(c=>st.classIds?.includes(c.id))?.name||'â€”'}
-function studentPerformanceTable(sid){const lessons=readyLessons(courseForStudent(sid));return `<section class="section"><div class="section-head"><div><h3>Lesson-by-lesson performance</h3><p>Latest saved score for each workbook skill.</p></div></div><div class="table-wrap performance-detail-table"><table class="data-table"><thead><tr><th>Lesson</th>${WORKBOOK_STEPS.map(k=>`<th>${skillLabel(k)}</th>`).join('')}<th>Done</th></tr></thead><tbody>${lessons.map(l=>`<tr><td><strong>Lesson ${l.number}</strong><small>${escapeHtml(l.title)}</small></td>${WORKBOOK_STEPS.map(k=>`<td>${lessonSkillCell(sid,l.id,k)}</td>`).join('')}<td>${lessonProgress(sid,l.id)}%</td></tr>`).join('')||'<tr><td colspan="6">No ready lessons in this workbook yet.</td></tr>'}</tbody></table></div></section>`}
-function mastery(sid,skill){const rows=latestScoredAttempts(sid,skill);if(!rows.length)return null;return Math.round(rows.reduce((sum,a)=>sum+Number(a.score),0)/rows.length)}
-function overall(sid){const vals=['vocabulary','listening','grammar','writing'].map(k=>mastery(sid,k)).filter(Number.isFinite);if(!vals.length)return null;return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)}
-function scoredActivityCount(sid){return ['vocabulary','listening','grammar','writing'].reduce((n,k)=>n+latestScoredAttempts(sid,k).length,0)}
-function completedActivityCount(sid){const c=courseForStudent(sid);return (c.lessons||[]).reduce((n,l)=>n+skillCompletionFor(sid,l.id).length,0)}
-function performanceText(v){return Number.isFinite(v)?v+'%':'No scored evidence'}
-function completionFor(sid,lid){return getDB().completion?.[sid]?.[lid]||[]} function skillCompletionFor(sid,lid){return completionFor(sid,lid).filter(x=>WORKBOOK_STEPS.includes(x))} function lessonProgress(sid,lid){return Math.round(skillCompletionFor(sid,lid).length/WORKBOOK_STEPS.length*100)} function completionPct(sid){const c=courseForStudent(sid),lessons=readyLessons(c),total=lessons.length*WORKBOOK_STEPS.length,done=lessons.reduce((n,l)=>n+skillCompletionFor(sid,l.id).length,0);return total?Math.round(done/total*100):0} function writingFor(sid,lid){return getDB().writing?.[sid]?.[lid]||''}
+NØÛÛœİÙ[XİYXØ\™Ë™š[™[™^
+O˜Û\ÜÓ\İ˜ÛÛZ[œÊ	ÜÙ[XİY	ÊJK™^XØ\™ÖÊÙ[XİY
+ÌJIXØ\™Ë›[™İNØÚÛÜÙJ™^YJ___J_B‚™[˜İ[ÛˆÚ\™QİZYYXİ]š]J
+^ØÛÛœİ[›™\YØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXXİ]š]K\[›™\—IÊNÚYŠ\[›™\Š\™]\›ØÛÛœİØ\™ÏVË‹‹œ[›™\‹œ]Y\TÙ[XİÜ[
+	ÖÙ]K\[›™\‹\]Y\İ[Û—IÊWK™]\[›™\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K\[›™\‹\™]—IÊK™^\[›™\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K\[›™\‹[™^IÊKİ\œ™[\[›™\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K\[›™\‹Xİ\œ™[IÊKİYÙO\[›™\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K\[›™\‹\İYÙWIÊK˜\\[›™\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K\[›™\‹\›ÙÜ™\Ü×IÊNÚYŠXØ\™Ë›[™İ[™^
+\™]\›Û][™^LØÛÛœİ[œİÙ\™YXØ\™O›ÛÛX[ŠØ\™œ]Y\TÙ[XİÜŠ	Ú[œ]İ\OHœ˜Y[È—N˜ÚXÚÙY	Ê_Ë‹‹˜Ø\™œ]Y\TÙ[XİÜ[
+	İ^\™XK[œ]İ\OH^—IÊWKœÛÛYJ[O™[˜[YKš[J
+K›[™İŒ
+JNØÛÛœİŞ[˜ÏJ
+OOØØ\™Ë™›Ü‘XXÚ
 
-const ENGAGEMENT_FALLBACK='Every activity moves you closer to your English target. Keep going.';
-function startOfLocalDay(d=new Date()){const x=new Date(d);x.setHours(0,0,0,0);return x}
-function daysBetween(a,b){return Math.floor((startOfLocalDay(b)-startOfLocalDay(a))/86400000)}
-function studentEngagementMessage(sid){
- const db=getDB(),ats=attempts(sid).slice().sort((a,b)=>new Date(a.at)-new Date(b.at)),now=new Date(),today=startOfLocalDay(now),weekAgo=new Date(now.getTime()-7*86400000),latest=ats.at(-1)||null;
- const todayAts=ats.filter(a=>new Date(a.at)>=today),weekAts=ats.filter(a=>new Date(a.at)>=weekAgo);
- const name=(db.users.find(u=>u.id===sid)?.name||session?.name||'').trim().split(/\s+/)[0];
- const prefix=name?name+', ':'';
- const latestBoost=[...ats].reverse().find(a=>(a.tags||[]).includes('boost:mastered'));
- const target=Number(db.profiles?.[sid]?.target??db.profiles?.[sid]?.learningTarget);
- const current=overall(sid);
- if(latest&&new Date(latest.at)>=today){
-  const prevBeforeToday=[...ats].reverse().find(a=>new Date(a.at)<today);
-  if(prevBeforeToday&&daysBetween(new Date(prevBeforeToday.at),new Date(latest.at))>=2)return prefix+'welcome back. Continue where you stopped.';
- }
- if(latestBoost&&new Date(latestBoost.at)>=weekAgo)return prefix+'great recovery. You mastered something you struggled with.';
- if(ats.length>=2){
-  const last=ats.at(-1),previous=[...ats].slice(0,-1).reverse().find(a=>a.skill===last.skill);
-  if(previous&&new Date(last.at)>=weekAgo){
-   const gain=last.score-previous.score;
-   if(gain>=5)return prefix+'your latest '+skillLabel(last.skill)+' score improved by '+gain+' points.';
-  }
- }
- if(todayAts.length){
-  const a=todayAts.at(-1),done=skillCompletionFor(sid,a.lessonId).includes(a.skill);
-  if(done)return prefix+"today's work moved you closer to your target.";
-  if(todayAts.length>=2)return prefix+'you completed '+todayAts.length+' practice checks today. Keep going.';
- }
- if(latest){
-  const inactive=daysBetween(new Date(latest.at),now);
-  if(inactive>=2)return prefix+"it's been "+inactive+" days. Complete one activity to get moving again.";
- }
- if(!todayAts.length&&ats.length)return prefix+"today's activity is waiting for you.";
- if(weekAts.length>=3)return prefix+'you completed '+weekAts.length+' practice checks this week. Keep going.';
- const weak=weakest(sid);
- if(weak&&weak.score<70)return prefix+weak.label+' is your current focus. One activity can strengthen it.';
- if(Number.isFinite(target)&&Number.isFinite(current)&&target>current){
-  const distance=Math.max(0,Math.round(target-current));
-  if(distance<=20)return prefix+"you're only "+distance+" points away from your target.";
- }
- return ENGAGEMENT_FALLBACK;
-}
-function studentTickerHtml(sid=session?.id){
- const message=sid?studentEngagementMessage(sid):ENGAGEMENT_FALLBACK;
- return '<div class="engagement-ticker" id="studentEngagementTicker" role="status" aria-live="polite"><div class="engagement-ticker-track"><span>'+escapeHtml(message)+'</span><span aria-hidden="true">'+escapeHtml(message)+'</span></div></div>';
-}
-function updateStudentTicker(){
- const el=$('studentEngagementTicker');if(!el||!session||session.role!=='student')return;
- const message=studentEngagementMessage(session.id),track=el.querySelector('.engagement-ticker-track');
- if(track)track.innerHTML='<span>'+escapeHtml(message)+'</span><span aria-hidden="true">'+escapeHtml(message)+'</span>';
-}
-function weakest(sid){const tips={vocabulary:'Review the words and expressions that are not yet automatic.',listening:'Practise finding the main idea and key details in short texts and audio.',grammar:'Review the grammar pattern needed for this lesson topic.',writing:'Build clearer sentences, then organise them into a complete written response.'},r=['vocabulary','listening','grammar','writing'].map(k=>[k,mastery(sid,k)]).filter(x=>Number.isFinite(x[1])).sort((a,b)=>a[1]-b[1]);if(!r.length)return null;const [k,score]=r[0];return{key:k,label:skillLabel(k),score,tip:tips[k]}}
+Ø\™JOO˜Ø\™šY[ZHOOZ[™^
+NÚYŠİ\œ™[
+Xİ\œ™[^ÛÛ[Tİš[™Ê[™^
+ÌJNÚYŠİYÙJ\İYÙK^ÛÛ[XØ\™ÖÚ[™^K™]\Ù]œİYÙ_	Ô˜XİXÙIÎÚYŠ˜\ŠX˜\‹œİ[KÚYX	Ê
+[™^
+ÌJKØØ\™Ë›[™İ
+JŒLIXÚYŠ™]Š^Ü™]‹šY[Z[™^OOLÜ™]‹™\ØX›YZ[™^OOL[™^^ÛÛ[Z[™^OOXØ\™Ë›[™İLOÉÑš[š\Ú	Î‰Ó™^	ÎÛ™^™\ØX›YHX[œİÙ\™Y
+Ø\™ÖÚ[™^JNÜÙ][Y[İ]
 
-function skillCard(n,v,d){const has=Number.isFinite(v);return `<div class="card metric-card"><div class="metric-top"><span class="pill">${has?d:'Recorded evidence'}</span><strong>${has?v+'%':'â€”'}</strong></div><h4 style="margin:0">${n}</h4>${has?progress(v):'<small class="muted">No scored activity yet.</small>'}</div>`} function metric(l,v,s){return `<div class="card metric-card"><span class="pill">${s}</span><strong>${v}</strong><h4 style="margin:0">${l}</h4></div>`}
-function studentHome(){
- const sid=session.id;setActiveBook(bookIdForStudent(sid));
- const book=bookMeta(activeBookId)||{title:COURSE.title||COURSE.moduleTitle,level:COURSE.level},available=readyLessons(COURSE),next=available.find(l=>skillCompletionFor(sid,l.id).length<WORKBOOK_STEPS.length),completed=completedActivityCount(sid),total=available.length*WORKBOOK_STEPS.length;
- const step=next?firstOpenStep(sid,next.id):null;
- const recent=attempts(sid).slice().sort((a,b)=>new Date(b.at)-new Date(a.at)).filter(a=>available.some(l=>l.id===a.lessonId)).slice(0,3);
- title('EnglishGate','Home');
- $('content').innerHTML=`<section class="eg-student-home">${studentTickerHtml(sid)}
- <header class="eg-student-welcome"><div><p class="eg-label">${escapeHtml(book.level||'Your workbook')}</p><h1>Hi, ${escapeHtml(session.name?.trim().split(/\s+/)[0]||'there')}.</h1></div><div class="student-cta-row"><button class="ghost-btn" id="viewClassBookBtn">Class book</button><button class="ghost-btn" id="viewCourseBtn">Workbook â†’</button></div></header>
- <div class="eg-home-layout"><section class="eg-next-practice"><p class="eg-label">${next?(completed?'Continue learning':'Start here'):available.length?'Available practice complete':'Your book'}</p><h2>${next?escapeHtml(next.title):available.length?'Youâ€™ve finished the available practice.':'Your activities are on the way.'}</h2><p class="eg-next-context">${escapeHtml(book.title||'Workbook')}${next?' Â· Lesson '+next.number:''}</p>
- ${next?`<div class="eg-next-skill"><span>${WORKBOOK_STEPS.indexOf(step)+1}</span><div><small>Your next activity</small><strong>${WORKBOOK_LABELS[step]}</strong></div></div><button class="primary-btn" id="continueBtn">${completed?'Continue':'Start activity'} â†’</button>`:`<p>${available.length?'Revisit any lesson in your book to keep practising.':'Your teacher will let you know when your workbook is ready.'}</p>`}
- </section><aside class="eg-home-progress"><p class="eg-label">Your book progress</p><strong>${total?Math.round(completed/total*100):0}<span>%</span></strong>${progress(total?completed/total*100:0)}<p>${completed} of ${total} available activities complete</p><button class="text-link" id="openProgressBtn">View progress â†’</button></aside></div>
- <section class="eg-recent-practice"><h2>Recent practice</h2>${recent.length?recent.map(a=>`<div class="eg-recent-row"><div><strong>${escapeHtml(lessonById(a.lessonId)?.title||'Lesson')}</strong><span>${escapeHtml(skillLabel(a.skill))} Â· ${new Date(a.at).toLocaleDateString()}</span></div><b>${a.score!==null&&Number.isFinite(Number(a.score))?Number(a.score)+'%':'Saved'}</b></div>`).join(''):'<p>Your completed practice will appear here.</p>'}</section></section>`;
- $('viewClassBookBtn').onclick=()=>{currentPage='class-book';renderNav();studentClassBook()};
- $('viewCourseBtn').onclick=()=>{currentPage='course';renderNav();studentCourse()};
- $('openProgressBtn').onclick=()=>{currentPage='progress';renderNav();studentProgress()};
- if($('continueBtn'))$('continueBtn').onclick=()=>{activeLessonId=next.id;currentStep=step;currentPage='workbook';renderNav();workbook()};
-}
 
-function studentCourse(){const sid=session.id;setActiveBook(bookIdForStudent(sid));const b=bookMeta(activeBookId)||{title:COURSE.title||COURSE.moduleTitle,level:COURSE.level,totalLessons:COURSE.totalLessons||COURSE.lessons.length};title('EnglishGate Workbook','My Book');$('content').innerHTML=`<section class="course-shell"><button class="back-link" id="courseHome">â† Home</button><div class="course-intro"><div><span class="pill teal">${escapeHtml(b.level||'')}</span><h1>${escapeHtml(b.title)}</h1><p>Revise the class book first, then complete the workbook activities.</p></div><div class="course-overall"><strong>${completionPct(sid)}%</strong><span>Book progress</span>${progress(completionPct(sid))}</div></div><div class="course-path student-course-list">${COURSE.lessons.map(l=>{const pct=lessonProgress(sid,l.id),ready=l.ready!==false,complete=pct===100;return `<div class="course-topic ${complete?'complete':''} ${ready?'current':'pending'}"><span class="topic-state">${complete?'âœ“':ready?'â†’':'â—‹'}</span><span class="topic-copy"><small>Lesson ${l.number}</small><strong>${escapeHtml(l.title)}</strong><span>${complete?'Completed':ready?`${WORKBOOK_LABELS[firstOpenStep(sid,l.id)]} next`:'Workbook activity coming next'}</span></span><span class="topic-actions">${ready?`<button class="ghost-btn" data-revise-lesson="${l.number}">Revise first</button><button class="primary-btn" data-topic="${l.id}">Start workbook</button>`:'â€”'}</span></div>`}).join('')}</div></section>`;$('courseHome').onclick=()=>{currentPage='home';renderNav();studentHome()};document.querySelectorAll('[data-topic]').forEach(btn=>btn.onclick=()=>{activeLessonId=btn.dataset.topic;currentStep=firstOpenStep(sid,activeLessonId);currentPage='workbook';renderNav();workbook()});document.querySelectorAll('[data-revise-lesson]').forEach(btn=>btn.onclick=()=>{activeStudentLiveLessonNumber=Number(btn.dataset.reviseLesson);activeStudentSectionIndex=0;currentPage='student-live-lesson';renderNav();studentLiveLesson()})}
-async function studentClassBook(){await ensureLiveBooks();const sid=session.id,c=studentClass(sid),live=liveBookForClass(c),wb=workbookForClass(c);if(!c||!live){title('EnglishGate','Class book');$('content').innerHTML='<section class="course-shell"><button class="back-link" id="classBookHome">â† Home</button><div class="empty-state"><h3>No class book yet</h3><p>Your teacher or admin must assign a class book first.</p></div></section>';$('classBookHome').onclick=()=>{currentPage='home';renderNav();studentHome()};return}title('EnglishGate','Class book');$('content').innerHTML=`<section class="course-shell"><button class="back-link" id="classBookHome">â† Home</button><div class="course-intro"><div><span class="pill teal">${escapeHtml(c.name)}</span><h1>${escapeHtml(live.title)}</h1><p>Revise the lesson your teacher uses in class. Tap vocabulary words to see the meaning and example.</p></div></div><div class="course-path student-course-list">${live.lessons.map(l=>{const w=wb?.lessons?.find(x=>x.number===l.number),pct=w?lessonProgress(sid,w.id):0;return `<div class="course-topic current"><span class="topic-state">${l.number}</span><span class="topic-copy"><small>Class lesson</small><strong>${escapeHtml(l.title)}</strong><span>${w?pct+'% workbook complete':'Workbook match unavailable'}</span></span><span class="topic-actions"><button class="primary-btn" data-open-live-lesson="${l.number}">Open lesson</button>${w?`<button class="ghost-btn" data-topic="${w.id}">Start workbook</button>`:''}</span></div>`}).join('')}</div></section>`;$('classBookHome').onclick=()=>{currentPage='home';renderNav();studentHome()};document.querySelectorAll('[data-open-live-lesson]').forEach(btn=>btn.onclick=()=>{activeStudentLiveLessonNumber=Number(btn.dataset.openLiveLesson);activeStudentSectionIndex=0;currentPage='student-live-lesson';renderNav();studentLiveLesson()});document.querySelectorAll('[data-topic]').forEach(btn=>btn.onclick=()=>{activeLessonId=btn.dataset.topic;currentStep=firstOpenStep(sid,activeLessonId);currentPage='workbook';renderNav();workbook()})}
-async function studentLiveLesson(){await ensureLiveBooks();const sid=session.id,c=studentClass(sid),live=liveBookForClass(c),wb=workbookForClass(c);if(!live){currentPage='class-book';studentClassBook();return}const l=live.lessons.find(x=>x.number===activeStudentLiveLessonNumber)||live.lessons[0],w=wb?.lessons?.find(x=>x.number===l.number);activeStudentLiveLessonNumber=l.number;const sections=liveSections(l.content),total=sections.length;activeStudentSectionIndex=Math.max(0,Math.min(activeStudentSectionIndex,Math.max(0,total-1)));const section=sections[activeStudentSectionIndex],isLast=activeStudentSectionIndex===total-1,goal=lessonCanDoGoal(l),stageName=section?sectionLabel(section.title,activeStudentSectionIndex,total):'Lesson unavailable';title('Class book','Lesson '+l.number);const stages=sections.map((x,i)=>`<button class="eg-stage ${i===activeStudentSectionIndex?'is-current':''}" data-student-live-section="${i}" ${i===activeStudentSectionIndex?'aria-current="step"':''}><span>${i+1}</span><strong>${escapeHtml(sectionLabel(x.title,i,total).toLowerCase())}</strong></button>`).join('');const nextAction=!total?'':!isLast?'<button class="primary-btn" id="nextStudentLiveSection">Next stage â†’</button>':w&&w.ready!==false?'<button class="primary-btn" id="openStudentWorkbookFooter">Start workbook â†’</button>':'<span class="eg-unavailable">Matching workbook is not available yet.</span>';$('content').innerHTML=`<section class="eg-lesson student-live-book"><header class="eg-lesson-header"><button class="ghost-btn" id="backStudentBook">â† Lessons</button>${englishGateLogo('englishgate-logo-lesson')}<div><p>${escapeHtml(c?.name||'Class')} Â· ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} Â· ${escapeHtml(l.title)}</h1></div>${w&&w.ready!==false?'<button class="ghost-btn" id="openStudentWorkbook">Workbook</button>':''}</header><div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside><div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeStudentSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header><article class="live-book-content eg-stage-content" aria-labelledby="liveStageTitle">${activeStudentSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no learning content yet. Return to the book and choose another lesson.</p>'}</article>${isLast?`<div class="eg-workbook-note">${w?`<strong>After revision</strong><span>Workbook ${w.number} Â· ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}<footer class="eg-lesson-footer"><button class="ghost-btn" id="prevStudentLiveSection" ${activeStudentSectionIndex===0?'disabled':''}>â† Previous</button>${nextAction}</footer></div></div></section>`;$('backStudentBook').onclick=()=>{currentPage='class-book';renderNav();studentClassBook()};const openWorkbook=()=>{activeLessonId=w.id;currentStep=firstOpenStep(sid,w.id);currentPage='workbook';renderNav();workbook()};if($('openStudentWorkbook'))$('openStudentWorkbook').onclick=openWorkbook;if($('openStudentWorkbookFooter'))$('openStudentWorkbookFooter').onclick=openWorkbook;const goToStage=async index=>{activeStudentSectionIndex=index;await studentLiveLesson();focusWithoutScroll($('liveStageTitle'));resetAppScroll()};document.querySelectorAll('[data-student-live-section]').forEach(b=>b.onclick=()=>goToStage(Number(b.dataset.studentLiveSection)));$('prevStudentLiveSection').onclick=()=>{if(activeStudentSectionIndex>0)goToStage(activeStudentSectionIndex-1)};if($('nextStudentLiveSection'))$('nextStudentLiveSection').onclick=()=>goToStage(activeStudentSectionIndex+1);wireLiveVocabulary();wireLiveChecks()}
-function listeningLocked(lid){return Boolean(getDB().listeningLocks?.[session.id]?.includes(lid))||completionFor(session.id,lid).includes('listening')}
-async function loadListeningPrep(l){const box=$('listeningTranscript');if(!box)return;try{const r=await api(`/api/listening/${l.id}/prep`);if(r.locked){await refreshState();renderActivity();return}box.innerHTML=`<p>${escapeHtml(r.script)}</p>`}catch(e){box.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
-async function lockListeningScript(l){const btn=$('readyForQuestions'),msg=$('listeningGateMessage');if(!btn)return;btn.disabled=true;btn.textContent='Locking scriptâ€¦';try{await api(`/api/listening/${l.id}/lock`,{method:'POST'});await refreshState();renderActivity()}catch(e){btn.disabled=false;btn.textContent='Done reading & listening â€” start questions';if(msg)msg.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
-function isWorkbookPreview(){return (session?.role==='admin'&&currentPage==='admin-workbook-view')||(session?.role==='teacher'&&currentPage==='teacher-workbook-view')}
-function firstOpenStep(sid,lid){return WORKBOOK_STEPS.find(step=>!skillCompletionFor(sid,lid).includes(step))||WORKBOOK_STEPS[WORKBOOK_STEPS.length-1]}
-function workbook(){
- setWorkbookDesignMode(true);
- const sid=session.id,l=lesson(),steps=WORKBOOK_STEPS,idx=Math.max(0,steps.indexOf(currentStep)),preview=isWorkbookPreview();
- const completed=preview?[]:skillCompletionFor(sid,l.id),firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id));
- const stageButtons=steps.map((step,i)=>{
-  const allowed=preview||completed.includes(step)||i<=firstOpen,done=!preview&&completed.includes(step);
-  return `<button class="eg-stage ${step===currentStep?'is-current':''} ${done?'is-done':''}" data-workbook-stage="${allowed?step:''}" ${allowed?'':'disabled'} ${step===currentStep?'aria-current="step"':''}><span>${done?'âœ“':i+1}</span><strong>${escapeHtml(WORKBOOK_LABELS[step].toLowerCase())}</strong></button>`;
- }).join('');
- const c=session?.role==='student'?studentClass(sid):null,live=session?.role==='student'?liveBookForClass(c):null,canRevise=Boolean(live?.lessons?.some(x=>x.number===l.number));
- const backLabel=preview?'â† Workbooks':'â† Lessons',goal=l.outcome||`Practise the language from Lesson ${l.number} and check your understanding.`;
- title('Workbook','Lesson '+l.number);
- $('content').innerHTML=`<section class="eg-lesson eg-workbook lesson-book-workbook ${preview?'admin-preview-workbook':''}">
-  <header class="eg-lesson-header">
-   <button class="ghost-btn" id="backWorkbookLessons">${backLabel}</button>
-   ${englishGateLogo('englishgate-logo-lesson')}
-   <div><p>${escapeHtml(COURSE.title||COURSE.moduleTitle||'EnglishGate')} Â· Workbook</p><h1>Lesson ${l.number} Â· ${escapeHtml(l.title)}</h1></div>
-   ${lessonVisualThumbHtml(l)}
-   ${canRevise?'<button class="ghost-btn" id="reviseLessonFromWorkbook">Lesson book</button>':preview?'<span class="eg-unavailable">Preview mode</span>':''}
-  </header>
-  <div class="eg-lesson-layout">
-   <aside class="eg-stage-list">
-    <p class="eg-label">Workbook stages</p>
-    <nav aria-label="Workbook stages">${stageButtons}</nav>
-    <details class="eg-goal"><summary>Practice goal</summary><p>${escapeHtml(goal)}</p></details>
-   </aside>
-   <div class="eg-teaching-surface eg-workbook-teaching-surface">
-    <header class="eg-stage-heading">
-     <p class="eg-label">Workbook stage ${idx+1} of ${steps.length}</p>
-     <h2 id="workbookStageTitle" tabindex="-1">${escapeHtml(WORKBOOK_LABELS[currentStep].toLowerCase())}</h2>
-    </header>
-    <article id="activityPanel" class="eg-stage-content eg-workbook-stage-content" aria-labelledby="workbookStageTitle"></article>
-    <footer class="eg-lesson-footer eg-workbook-footer" id="workbookStageFooter"></footer>
-   </div>
-  </div>
- </section>`;
- $('backWorkbookLessons').onclick=()=>{setWorkbookDesignMode(false);if(preview){returnToWorkbookLessons();return}currentPage='course';renderNav();studentCourse()};
- if($('reviseLessonFromWorkbook'))$('reviseLessonFromWorkbook').onclick=()=>{activeStudentLiveLessonNumber=l.number;activeStudentSectionIndex=0;currentPage='student-live-lesson';renderNav();studentLiveLesson()};
- document.querySelectorAll('[data-workbook-stage]').forEach(btn=>{if(!btn.dataset.workbookStage)return;btn.onclick=()=>{currentStep=btn.dataset.workbookStage;workbook();setTimeout(()=>focusWithoutScroll($('workbookStageTitle')),0)}});
- renderActivity();
- resetAppScroll();
-}
-function renderActivity(){
- const p=$('activityPanel'),l=lesson();
- if(currentStep==='vocabulary')p.innerHTML=vocabActivity(l);
- if(currentStep==='listening')p.innerHTML=listeningActivity(l);
- if(currentStep==='grammar')p.innerHTML=grammarActivity(l);
- if(currentStep==='writing')p.innerHTML=writingActivity(l);
- const row=p.querySelector('.skill-action-row'),footer=$('workbookStageFooter');
- if(row&&footer){
-  row.insertAdjacentHTML('afterbegin','<button class="ghost-btn eg-previous-btn" id="previousActivity">â† Previous</button><button class="ghost-btn eg-hint-btn" id="activityHint">Hint</button>');
-  while(row.firstChild)footer.appendChild(row.firstChild);
-  row.remove();
- }else if(footer){
-  footer.innerHTML='<button class="ghost-btn eg-previous-btn" id="previousActivity">â† Previous</button><button class="ghost-btn eg-hint-btn" id="activityHint">Hint</button>';
- }
- wireActivity(l);
-}
-function buildVocabQuestions(l){const e=l.expressions,all=e.map(x=>x.text);return [
-{type:'choice',stage:'Recognise',q:`Which expression would you use to ${e[0].job}?`,options:all,answer:e[0].text,tag:'vocabulary:meaning'},
-{type:'choice',stage:'Recognise',q:`Which expression would you use to ${e[1].job}?`,options:all,answer:e[1].text,tag:'vocabulary:meaning'},
-{type:'choice',stage:'Retrieve',q:`Complete from memory: ${e[2].cloze}`,options:e[2].choices,answer:e[2].answer,tag:'vocabulary:retrieval'},
-{type:'choice',stage:'Retrieve',q:`Complete from memory: ${e[3].cloze}`,options:e[3].choices,answer:e[3].answer,tag:'vocabulary:retrieval'},
-{type:'choice',stage:'Retrieve',q:`Complete from memory: ${e[4].cloze}`,options:e[4].choices,answer:e[4].answer,tag:'vocabulary:retrieval'},
-{type:'choice',stage:'Apply',q:`In the ${l.title.toLowerCase()} mission, you need to ${e[2].job}. Which expression fits best?`,options:all,answer:e[2].text,tag:'vocabulary:context'},
-{type:'choice',stage:'Apply',q:`A partner needs language to ${e[3].job}. What should they say?`,options:all,answer:e[3].text,tag:'vocabulary:context'},
-{type:'exact',stage:'Repair',q:`Repair the phrase by typing the missing word: ${e[0].cloze}`,answer:e[0].answer,min:1,tag:'vocabulary:repair'},
-{type:'open',stage:'Personalise',q:`Write one true sentence about your own life or work using â€œ${e[1].text}â€`,min:6,tag:'vocabulary:personalisation'},
-{type:'open',stage:'Produce',q:`Without looking back, write three useful expressions from this topic that you could use in this live mission: ${l.review.mission}`,min:10,tag:'vocabulary:independent-retrieval'}]}
-function stageBadge(label){return `<span class="stage-badge">${label}</span>`}
-function openEvidence(name,q,min,tag,exact=''){return `<div class="open-evidence"><textarea name="${name}" data-open="1" data-min="${min}" data-tag="${escapeAttr(tag||'')}" ${exact?`data-exact="${escapeAttr(exact)}"`:''} placeholder="Type your answerâ€¦"></textarea><small class="muted">${exact?'Type the missing/corrected language.':`Write at least ${min} words.`}</small></div>`}
-function spiralReview(l){const idx=COURSE.lessons.findIndex(x=>x.id===l.id);if(idx===0)return `<div class="spiral-card"><strong>First-topic retrieval</strong><p>Close the language bank. Recall three expressions from today, then say one true sentence with each.</p></div>`;const prev=COURSE.lessons[idx-1],older=COURSE.lessons[Math.max(0,idx-3)];const pExp=prev.expressions[0],oExp=older.expressions[1];return `<div class="spiral-grid"><div class="spiral-card"><span class="stage-badge">20% Â· Previous topic</span><strong>${prev.title}</strong><p>Recall the expression used to ${pExp.job}. Then use it in one new sentence.</p><details><summary>Check expression</summary><p>${pExp.text}</p></details></div><div class="spiral-card"><span class="stage-badge">10% Â· Older topic</span><strong>${older.title}</strong><p>Recall one expression for this communication job: ${oExp.job}.</p><details><summary>Check expression</summary><p>${oExp.text}</p></details></div><div class="spiral-card"><span class="stage-badge">Transfer</span><strong>Combine old + new</strong><p>Use one expression from an earlier topic and one from today in a two-sentence response.</p></div></div>`}
-function moduleChallengeHtml(){return `<div class="class-prep-challenge"><strong>Final module prep</strong><label><input type="checkbox" data-challenge> Choose 5 keywords for your talk.</label><label><input type="checkbox" data-challenge> Recall 6 useful expressions without looking.</label><label><input type="checkbox" data-challenge> Practise your 3-minute talk once.</label></div>`}
+OOÚ\™SXÜPØ\™ÊØ\™ÖÚ[™^JK
+_NØÛÛœİ[İ™OZOOÚ[™^SX]›X^
+X]›Z[ŠØ\™Ë›[™İLKJJNÜŞ[˜Ê
+NÜ[›™\‹œØÜ›Û[ÕšY]ÊØ™Z]š[Ü‰ÜÛ[Ûİ	Ë›ØÚÎ‰Üİ\	ßJ_NÜ[›™\‹˜Y]™[\İ[™\Š	ØÚ[™ÙIË
 
-function guidedChunks(chunks){const items=chunks.flatMap(c=>c.items.map(item=>({stage:c.label,item}))),total=items.length;return `<div class="activity-runner" data-activity-runner><div class="runner-meta"><span data-runner-stage>${escapeHtml(items[0]?.stage||'Practice')}</span><span><b data-runner-current>1</b> / ${total}</span></div><div class="runner-progress"><span data-runner-progress style="width:${total?100/total:100}%"></span></div><div class="runner-question-stack" data-runner-stack>${items.map((x,i)=>`<div class="runner-question" data-runner-question data-stage="${escapeAttr(x.stage)}" ${i?'hidden':''}>${x.item}</div>`).join('')}</div><div class="runner-actions"><button class="runner-back" type="button" data-runner-prev hidden>Back</button><button class="primary-btn runner-next" type="button" data-runner-next disabled>${total===1?'Finish':'Next'}</button></div></div>`}
-function wireMcqCards(root=document){root.querySelectorAll('.mcq-picker').forEach(picker=>{if(picker.dataset.wired==='1')return;picker.dataset.wired='1';const slot=picker.querySelector('[data-mcq-slot]'),slotText=picker.querySelector('[data-mcq-slot-text]'),cards=[...picker.querySelectorAll('[data-mcq-option]')],inputs=[...picker.querySelectorAll('[data-mcq-input]')],learningFeedback=picker.querySelector('[data-vocab-feedback]');if(!slot||!slotText||!cards.length)return;const animateToSlot=card=>{const from=card.getBoundingClientRect(),to=slot.getBoundingClientRect(),ghost=document.createElement('div');ghost.className='mcq-fly-card';ghost.textContent=card.dataset.value||card.textContent.trim();ghost.style.left=from.left+'px';ghost.style.top=from.top+'px';ghost.style.width=from.width+'px';ghost.style.height=from.height+'px';document.body.appendChild(ghost);requestAnimationFrame(()=>{ghost.style.transform=`translate(${to.left+to.width/2-(from.left+from.width/2)}px,${to.top+to.height/2-(from.top+from.height/2)}px) scale(.78)`;ghost.style.opacity='.15'});setTimeout(()=>ghost.remove(),280)};const choose=(card,animate=true)=>{if(picker.dataset.vocabLocked==='1')return;const i=Number(card.dataset.mcqOption),input=inputs.find(x=>Number(x.dataset.mcqInput)===i);if(!input)return;inputs.forEach(x=>x.checked=false);cards.forEach(x=>x.classList.remove('selected'));input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));card.classList.add('selected');slot.classList.add('filled');slotText.textContent=card.dataset.value||card.textContent.trim();if(learningFeedback&&picker.dataset.vocabWord){const correct=input.value===input.dataset.answer,meta={word:picker.dataset.vocabWord,meaning:picker.dataset.vocabMeaning,example:picker.dataset.vocabExample};picker.dataset.vocabLocked='1';picker.dataset.firstCorrect=correct?'1':'0';card.classList.add(correct?'is-correct-choice':'is-incorrect-choice');cards.forEach(x=>{x.disabled=true;x.setAttribute('aria-disabled','true')});learningFeedback.innerHTML=vocabFeedbackHtml(meta,correct)}if(animate)animateToSlot(card);if(slot.animate)slot.animate([{transform:'scale(.985)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:240,easing:'ease-out'})};cards.forEach(card=>{card.onclick=()=>choose(card,true);card.ondragstart=e=>{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',card.dataset.mcqOption);card.classList.add('dragging')};card.ondragend=()=>card.classList.remove('dragging')});slot.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='move';slot.classList.add('drag-over')};slot.ondragleave=()=>slot.classList.remove('drag-over');slot.ondrop=e=>{e.preventDefault();slot.classList.remove('drag-over');const i=Number(e.dataTransfer.getData('text/plain')),card=cards.find(x=>Number(x.dataset.mcqOption)===i);if(card)choose(card,false)};slot.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&cards.length){e.preventDefault();const selected=cards.findIndex(x=>x.classList.contains('selected')),next=cards[(selected+1)%cards.length];choose(next,true)}}})}
+OOœŞ[˜Ê
+JNÜ[›™\‹˜Y]™[\İ[™\Š	Ú[œ]	Ë
 
-function wireGuidedActivity(){const runner=document.querySelector('[data-activity-runner]');if(!runner)return;const cards=[...runner.querySelectorAll('[data-runner-question]')],prev=runner.querySelector('[data-runner-prev]'),next=runner.querySelector('[data-runner-next]'),current=runner.querySelector('[data-runner-current]'),stage=runner.querySelector('[data-runner-stage]'),bar=runner.querySelector('[data-runner-progress]');if(!cards.length||!next)return;let index=0;const answered=card=>Boolean(card.querySelector('input[type="radio"]:checked')||[...card.querySelectorAll('textarea,input[type="text"]')].some(el=>el.value.trim().length>0));const sync=()=>{cards.forEach((card,i)=>card.hidden=i!==index);if(current)current.textContent=String(index+1);if(stage)stage.textContent=cards[index].dataset.stage||'Practice';if(bar)bar.style.width=`${((index+1)/cards.length)*100}%`;if(prev){prev.hidden=index===0;prev.disabled=index===0}next.textContent=index===cards.length-1?'Finish':'Next';next.disabled=!answered(cards[index]);setTimeout(()=>wireMcqCards(cards[index]),0)};const move=i=>{index=Math.max(0,Math.min(cards.length-1,i));sync();runner.scrollIntoView({behavior:'smooth',block:'start'})};runner.addEventListener('change',()=>sync());runner.addEventListener('input',()=>sync());if(prev)prev.onclick=()=>move(index-1);next.onclick=()=>{if(!answered(cards[index]))return;if(index<cards.length-1){move(index+1);return}const submit=$('checkActivity')||$('saveWriting');if(submit)submit.click()};sync()}
-function workbookVocabReferences(l){
- const seen=new Set(),items=[];
- const push=(word,meaning,example='')=>{word=String(word||'').trim();if(!word||seen.has(word.toLowerCase()))return;seen.add(word.toLowerCase());items.push({word,meaning:String(meaning||vocabMeaning(word)),example:String(example||lessonVocabExample(word,l))})};
- (l.expressions||[]).forEach(x=>push(x.text,x.job,x.example||''));
- (Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).forEach(x=>push(x,vocabMeaning(x),''));
- const questions=l.vocabulary?.items||[];
- questions.forEach((q,i)=>{if(items.length>=4)return;const meta=vocabFeedbackMeta(l,q,i);if(meta)push(meta.word,meta.meaning,meta.example)});
- return items.slice(0,4);
-}
-function vocabRecycleItems(l,qs){
- const seen=new Set(),out=[];
- qs.forEach((q,i)=>{const meta=vocabFeedbackMeta(l,q,i);if(!meta)return;const key=normalizeVocabWord(meta.word);if(seen.has(key))return;seen.add(key);out.push(meta)});
- return out.slice(0,2);
-}
-function vocabRecycleHtml(items){
- if(!items.length)return '';
- return '<section class="eg-vocab-recycle"><div class="eg-vocab-recycle-head"><div><small>Retrieve it again</small><h3>Recall the word from its meaning</h3></div><span>Different direction Â· stronger memory</span></div>'+
-  '<div class="eg-vocab-recycle-grid">'+items.map((x,i)=>'<article class="eg-vocab-recycle-card"><span class="stage-badge">Recall '+(i+1)+'</span><p>'+escapeHtml(withPeriod(x.meaning))+'</p><div class="eg-vocab-recycle-entry"><input type="text" autocomplete="off" data-vocab-recycle data-answer="'+escapeAttr(x.word)+'" data-word="'+escapeAttr(x.word)+'" data-meaning="'+escapeAttr(x.meaning)+'" data-example="'+escapeAttr(x.example)+'" placeholder="Type the word or phrase"><button class="secondary-btn" type="button" data-vocab-recycle-check>Check recall</button></div><div data-vocab-recycle-feedback aria-live="polite"></div></article>').join('')+
-  '</div></section>';
-}
-function vocabActivity(l){
- const qs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),refs=workbookVocabReferences(l);
- return `<div class="eg-skill-page eg-vocabulary-page">
-  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Vocabulary</span><h1>Words in context</h1><p>Explore useful language, then use it in real situations.</p></div><span class="eg-question-count">${qs.length} questions</span></header>
-  <div class="eg-skill-layout">
-   <aside class="eg-editorial-panel eg-vocab-reference">
-    <div class="eg-panel-heading"><small>Language bank</small><h2>${escapeHtml(l.title)}</h2><p>Meaning first. Then notice how the word or expression works in context.</p></div>
-    <div class="eg-vocab-reference-grid">${refs.length?refs.map((x,i)=>`<article class="eg-vocab-reference-card"><span>${i+1}</span><strong>${escapeHtml(x.word)}</strong><p>${escapeHtml(x.meaning)}</p>${x.example?`<small>â€œ${escapeHtml(x.example)}â€</small>`:''}</article>`).join(''):'<p class="muted">Use the activity questions to discover todayâ€™s key language.</p>'}</div>
-    <div class="eg-tip-card"><b>Use it</b><span>After recognising a word, say or write one true sentence with it.</span></div>
-   </aside>
-   <main class="eg-task-panel">
-    <div class="eg-task-panel-head"><div><small>Practice</small><h2>Complete the activities</h2></div><span>Recognise â†’ retrieve â†’ apply</span></div>
-    <div class="activity-question-list">${qs.map((q,i)=>{const meta=vocabFeedbackMeta(l,q,i);return `<article class="guided-question"><div class="question-stage"><span>${q.stage||'Question'} Â· ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${q.type&&q.type!=='choice'?openEvidence('v'+i,q.q,q.min||1,q.tag,q.type==='exact'?q.answer:''):radio('v'+i,q.options,q.answer,q.tag,meta)}</article>`}).join('')}</div>
-   </main>
-  </div>
-  <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check vocabulary</button>${activityDoneButton(l)}</div>
- </div>`;
-}
-function questionSetHtml(qs,prefix,label){
- return qs.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>${label} Â· ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${radio(prefix+i,q.options,q.answer,q.tag)}</article>`).join('');
-}
-const LESSON_VISUALS={
- w1l1:{src:'/assets/lesson-visuals/w1l1.svg',alt:'Two adult learners discussing English goals together at a table with a laptop and notebooks.',prompt:'Where might these learners use English in real life?'},
- w1l2:{src:'/assets/lesson-visuals/w1l2.svg',alt:'Two professionals greeting each other with a handshake in a modern office.',prompt:'What information do people usually share when they meet professionally?'},
- w1l3:{src:'/assets/lesson-visuals/w1l3.svg',alt:'Two adults having a focused conversation while one person takes a moment to think.',prompt:'What can a speaker do when they need more time to think?'}
-};
-function lessonVisualHtml(l){
- const v=LESSON_VISUALS[l?.id];
- if(!v)return '';
- return `<figure class="eg-lesson-visual"><div class="eg-lesson-visual-media"><img src="${escapeAttr(v.src)}" alt="${escapeAttr(v.alt)}" loading="eager"></div><figcaption><span>Before you begin</span><strong>${escapeHtml(v.prompt)}</strong></figcaption></figure>`;
-}
-function lessonVisualThumbHtml(l){
- const v=LESSON_VISUALS[l?.id];
- if(!v)return '';
- return `<div class="eg-lesson-visual-thumb" title="Lesson visual"><img src="${escapeAttr(v.src)}" alt="" aria-hidden="true"></div>`;
-}
-function listeningActivity(l){
- const all=(l.listening?.questions||[]).slice(0,10),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');
- const readingQs=all.filter(q=>String(q.tag||'').startsWith('reading:'));
- const listeningQs=all.filter(q=>String(q.tag||'').startsWith('listening:'));
- const sharedQs=all.filter(q=>!String(q.tag||'').startsWith('reading:')&&!String(q.tag||'').startsWith('listening:'));
- const split=Boolean(reading&&script&&readingQs.length&&listeningQs.length);
- const player=`<div class="audio-player eg-audio-console" data-audio-player><button id="playAudio" class="play-btn" title="Play or pause audio" aria-label="Play or pause audio">â–¶</button><div class="eg-audio-body"><div class="eg-waveform" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="audio-timeline"><input id="audioSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Audio progress"><div class="audio-time"><span id="audioCurrent">0:00</span><span id="audioDuration">0:00</span></div></div></div><button id="restartAudio" class="audio-icon-btn" title="Restart audio" aria-label="Restart audio">â†º</button><select id="audioSpeed" class="audio-speed" aria-label="Playback speed"><option value="0.75">0.75Ã—</option><option value="1" selected>1Ã—</option><option value="1.25">1.25Ã—</option><option value="1.5">1.5Ã—</option></select><span id="audioStatus" class="muted">Listen twice before answering the listening questions.</span></div>`;
- if(split){
-  return `<div class="eg-skill-page eg-reading-listening-page">
-   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Reading & Listening</span><h1>Read, listen and respond</h1><p>The reading questions use only the article. The listening questions use only the audio.</p></div><span class="eg-question-count">${all.length} questions</span></header>${lessonVisualHtml(l,{compact:true})}
-   <section class="eg-source-task-section eg-reading-section">
-    <div class="eg-reading-article"><span class="eg-skill-kicker">Part 1 Â· Reading</span><h2>${escapeHtml(l.title)}</h2><p>${escapeHtml(reading)}</p></div>
-    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Reading tasks</small><h2>Answer from the article</h2></div><span>${readingQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(readingQs,'lr','Reading')}</div></div>
-   </section>
-   <section class="eg-source-task-section eg-listening-section">
-    <div class="eg-listening-scene"><span class="eg-skill-kicker">Part 2 Â· Listening</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2><p>Now listen. These questions are based only on what you hear.</p><div class="eg-listening-quote">Listen for the overall message first. Replay for detail.</div><div class="eg-audio-card">${player}</div></div>
-    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Listening tasks</small><h2>Answer from the audio</h2></div><span>${listeningQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(listeningQs,'ll','Listening')}</div></div>
-   </section>
-   ${sharedQs.length?`<section class="eg-shared-comprehension"><div class="eg-task-panel-head"><div><small>Combined understanding</small><h2>Use both sources</h2></div></div><div class="activity-question-list">${questionSetHtml(sharedQs,'ls','Combined')}</div></section>`:''}
-   ${completed&&l.listening?.audioScript?listeningTranscript(l):''}<div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check answers</button>${activityDoneButton(l)}</div>
-  </div>`;
- }
- const sourceText=reading||script;
- return `<div class="eg-skill-page eg-listening-page">
-  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${reading?'Reading & Listening':'Listening'}</span><h1>${reading?'Read, listen and do':'Listen and do'}</h1><p>${reading?'Read the source, then use the matching audio to confirm meaning and detail.':'Listen to the conversation and complete the tasks.'}</p></div><span class="eg-question-count">${all.length} questions</span></header>${lessonVisualHtml(l,{compact:true})}
-  <div class="eg-skill-layout eg-listening-layout">
-   <section class="eg-source-column">
-    ${sourceText?`<article class="eg-reading-article"><span class="eg-skill-kicker">${reading?'Reading text':'Listening situation'}</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2><p>${escapeHtml(sourceText)}</p></article>`:''}
-    <div class="eg-audio-card"><small>Audio</small><h3>${escapeHtml(l.listening?.title||l.title)}</h3>${player}</div>
-   </section>
-   <main class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Comprehension</small><h2>Show what you understood</h2></div></div><div class="activity-question-list">${questionSetHtml(all,'l','Question')}</div></main>
-  </div>
-  ${completed&&l.listening?.audioScript?listeningTranscript(l):''}<div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check answers</button>${activityDoneButton(l)}</div>
- </div>`;
-}
-function listeningTranscript(l){return `<details class="transcript-card"><summary>View listening transcript</summary><p>${escapeHtml(l.listening.audioScript)}</p></details>`}
-function grammarActivity(l){
- const qs=(l.grammar?.items||[]).slice(0,10),sample=qs[0],vocabQs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),recycle=vocabRecycleItems(l,vocabQs);
- return `<div class="eg-skill-page eg-grammar-page">
-  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Grammar</span><h1>Build accurate English</h1><p>Notice the pattern, manipulate it, then apply it in context.</p></div><span class="eg-question-count">${qs.length} questions</span></header>
-  ${vocabRecycleHtml(recycle)}
-  <div class="eg-skill-layout eg-grammar-layout">
-   <aside class="eg-editorial-panel eg-grammar-coach"><div class="eg-panel-heading"><small>Grammar coach</small><h2>${escapeHtml(l.grammar?.focus||l.title)}</h2></div>${l.grammar?.rule?`<section class="grammar-rule-card"><small>Mini rule</small><p>${escapeHtml(l.grammar.rule)}</p></section>`:''}${sample?`<div class="eg-sentence-lab"><small>Sentence lab</small><p>${escapeHtml(sample.q)}</p><div>${(sample.options||[]).slice(0,3).map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div></div>`:''}<div class="eg-tip-card"><b>Strategy</b><span>Read the whole sentence. Decide the meaning before choosing the form.</span></div></aside>
-   <main class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Practice</small><h2>Use the pattern</h2></div></div><div class="activity-question-list">${qs.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>Question ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${radio('g'+i,q.options,q.answer,q.tag)}</article>`).join('')}</div></main>
-  </div>
-  <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check grammar</button>${!isWorkbookPreview()&&boostRecovery(l).ready?'<button class="ghost-btn" id="boostActivity">Practise missed questions with Boost</button>':''}${activityDoneButton(l)}</div>
- </div>`;
-}
-function boostHint(q){const tag=String(q.tag||'');const rules=[
-['question','Look at the word order. English questions often need a helping verb before the subject.'],
-['infinitive','After language about a goal or something you want to do, look for â€œto + base verbâ€.'],
-['present-simple','Check the subject first, then choose the present-simple form that agrees with it.'],
-['negative','A present-simple negative normally uses do/does + not + the base verb.'],
-['connector-because','Use â€œbecauseâ€ when the second idea gives a reason.'],
-['connector-but','Use â€œbutâ€ when the second idea contrasts with the first.'],
-['connector-so','Use â€œsoâ€ when the second idea is a result.'],
-['connector','Decide whether the ideas show addition, contrast, reason or result.'],
-['gerund','After â€œresponsible forâ€, the next verb normally uses the -ing form.'],
-['be','Check whether the subject needs am, is or are.'],
-['collocation','Use the fixed phrase from the lesson rather than translating word by word.'],
-['time-phrase','Check which preposition naturally introduces the time expression.'],
-['complete-sentence','Look for a complete subject + verb + idea.'],
-['do','Check the subject before choosing do or does.']
-];const hit=rules.find(([key])=>tag.includes(key));return hit?hit[1]:'Compare the choices with the model language from this topic. Read the whole sentence, not just one word.'}
-function boostRecovery(l){const core=[...attempts(session.id,'grammar',l.id)].reverse().find(a=>!(a.tags||[]).some(t=>String(t).startsWith('boost:')));if(!core)return{ready:false,reason:'Try and check the grammar activity first.',missed:[]};const tags=core.tags||[],missed=[...new Set(tags.filter(t=>/^missq:[0-9]$/.test(String(t))).map(t=>Number(String(t).split(':')[1])))].sort((a,b)=>a-b),diagnosed=tags.includes('diagnostic:no-misses')||missed.length>0;if(!diagnosed)return{ready:false,reason:'Check the grammar activity once more so EnglishGate can identify the exact questions you miss.',missed:[]};if(!missed.length)return{ready:false,reason:'No Boost is needed. You did not miss any automatically checked grammar questions in your latest attempt.',missed:[]};return{ready:true,reason:'',missed,core}}
-function boostFreshQuestion(q){const tag=String(q.tag||'');if(tag.includes('question'))return{q:'Choose the correctly formed question.',options:['Where do they use English?','Where they use English?','Where does they use English?'],answer:'Where do they use English?'};if(tag.includes('third-person'))return{q:'Complete: Amina ___ with international clients every week.',options:['works','work','working'],answer:'works'};if(tag.includes('negative'))return{q:'Choose the correct negative sentence.',options:['He does not need more time.','He not needs more time.','He does not needs more time.'],answer:'He does not need more time.'};if(tag.includes('present-simple'))return{q:'Choose the accurate routine sentence.',options:['I usually practise English after work.','I usually practises English after work.','I am usually practise English after work.'],answer:'I usually practise English after work.'};if(tag.includes('infinitive'))return{q:'Complete: My next goal is ___ lead a larger project.',options:['to','for','at'],answer:'to'};if(tag.includes('gerund'))return{q:'Complete: She is responsible for ___ the weekly schedule.',options:['checking','check','to check'],answer:'checking'};if(tag.includes('because'))return{q:'Choose the best connector: I practise every day ___ I want to speak more confidently.',options:['because','but','so'],answer:'because'};if(tag.includes('but')||tag.includes('contrast'))return{q:'Choose the best connector: I understand the topic, ___ I need more time to answer.',options:['but','because','so'],answer:'but'};if(tag.includes('connector-so'))return{q:'Choose the best connector: I have a presentation tomorrow, ___ I am practising tonight.',options:['so','but','because'],answer:'so'};if(tag.includes('modal'))return{q:'Complete: You ___ ask the speaker to repeat the question.',options:['can','are','have'],answer:'can'};if(tag.includes('present-perfect'))return{q:'Complete: I ___ worked with this team for two years.',options:['have','has','am'],answer:'have'};if(tag.includes('present-continuous'))return{q:'Complete: We ___ preparing the final report now.',options:['are','do','have'],answer:'are'};if(tag.includes('will')||tag.includes('deadline'))return{q:'Complete: I ___ send the final version tomorrow morning.',options:['will','am','have'],answer:'will'};if(tag.includes('be'))return{q:'Complete: My main challenge ___ speaking without long pauses.',options:['is','are','be'],answer:'is'};if(tag.includes('have'))return{q:'Complete: I ___ two main responsibilities in my current role.',options:['have','has','having'],answer:'have'};if(tag.includes('complete-sentence'))return{q:'Choose the complete sentence.',options:['We use English at work.','We English at work.','Use English work.'],answer:'We use English at work.'};return{q:'Fresh practice for the same grammar rule: '+q.q,options:q.options,answer:q.answer}}
-function startBoost(l){if(!l.grammar?.items?.length)return;const recovery=boostRecovery(l);if(!recovery.ready){showModal('<div class="boost-modal boost-result"><span class="boost-kicker">EnglishGate Boost</span><h3>Boost is not ready yet</h3><p>'+escapeHtml(recovery.reason)+'</p><button class="primary-btn" id="boostBack">Back to grammar</button></div>');$('boostBack').onclick=closeModal;return}const qs=recovery.missed.map(i=>({index:i,original:l.grammar.items[i],retest:boostFreshQuestion(l.grammar.items[i])})).filter(x=>x.original);renderBoost(l,{questions:qs,index:0,wrong:0,hints:0,totalAttempts:0,mastered:0,unresolved:0,saving:false,feedback:''})}
-function renderBoost(l,state){const item=state.questions[state.index],q=item.retest,original=item.original,lesson=boostHint(original);showModal('<div class="boost-modal"><div class="boost-modal-head"><div><span class="boost-kicker">EnglishGate Boost Â· Targeted recovery</span><h3>Fix what you missed</h3><p>Question '+(state.index+1)+' of '+state.questions.length+' missed grammar skill'+(state.questions.length===1?'':'s')+'.</p></div><button class="icon-btn" data-close>Ã—</button></div><div class="boost-flow"><span class="active">1 Â· Review</span><span class="active">2 Â· Retest</span><span>3 Â· Mastery</span></div><div class="boost-question-card"><div class="boost-original"><small>Workbook question you missed</small><strong>'+escapeHtml(original.q)+'</strong></div><div class="boost-mini"><strong>Mini lesson</strong><span>'+escapeHtml(lesson)+'</span><small>Model answer from the original item: '+escapeHtml(original.answer)+'</small></div><div class="question-stage">'+stageBadge('Fresh retest')+'<span>'+(state.index+1)+'/'+state.questions.length+'</span></div><p class="boost-question">'+escapeHtml(q.q)+'</p>'+radio('boostChoice',q.options,q.answer,original.tag)+(state.wrong?'<div class="boost-hint"><strong>Try once more</strong><span>'+escapeHtml(lesson)+'</span></div>':'')+'<div id="boostFeedback">'+(state.feedback?'<div class="feedback bad">'+escapeHtml(state.feedback)+'</div>':'')+'</div><button class="primary-btn boost-submit" id="boostSubmit">Check retest answer</button></div><p class="boost-note">The retest changes the context so you apply the rule instead of memorising the old answer.</p></div>');document.querySelector('[data-close]').onclick=closeModal;wireMcqCards(document.getElementById('modalRoot')||document);$('boostSubmit').onclick=()=>submitBoost(l,state)}
-async function submitBoost(l,state){const selected=document.querySelector('input[name="boostChoice"]:checked');if(!selected){$('boostFeedback').innerHTML='<div class="feedback bad">Choose an answer first.</div>';return}const item=state.questions[state.index];state.totalAttempts++;if(selected.value===item.retest.answer){state.mastered++;state.feedback='';state.wrong=0;state.index++;if(state.index>=state.questions.length){await finishBoost(l,state);return}renderBoost(l,state);return}state.wrong++;state.hints++;if(state.wrong<2){state.feedback='Not yet. Read the mini lesson and try this fresh question once more.';renderBoost(l,state);return}state.unresolved++;state.feedback='';state.wrong=0;state.index++;if(state.index>=state.questions.length){await finishBoost(l,state);return}renderBoost(l,state)}
-async function finishBoost(l,state){if(state.saving)return;state.saving=true;const total=state.questions.length,score=Math.round(state.mastered/Math.max(1,total)*100),mastered=state.unresolved===0&&state.mastered===total,tags=['boost:retest','boost:grammar',mastered?'boost:mastered':'boost:needs-practice',...state.questions.slice(0,7).map(x=>'boostq:'+x.index)].slice(0,10);try{await recordAttempt(session.id,l.id,'grammar',score,tags);await refreshState();showModal('<div class="boost-modal boost-result"><div class="boost-result-icon">'+(mastered?'âœ“':'â†»')+'</div><span class="boost-kicker">EnglishGate Boost</span><h3>'+(mastered?'Missed grammar repaired':'Some grammar still needs practice')+'</h3><p>'+(mastered?'You reviewed the rules and answered fresh retest questions successfully. Your original workbook score remains saved separately.':'Your recovery result has been saved. Run Boost again after your next grammar attempt if these skills are still missed.')+'</p><div class="boost-result-grid"><div><small>Original misses</small><strong>'+total+'</strong></div><div><small>Recovered</small><strong>'+state.mastered+'</strong></div><div><small>Boost mastery</small><strong>'+score+'%</strong></div></div><button class="primary-btn" id="boostBack">Back to grammar</button></div>');$('boostBack').onclick=()=>{closeModal();renderActivity()}}catch(e){state.saving=false;state.feedback='Could not save Boost progress: '+e.message;renderBoost(l,state)}}
-function writingSubmission(sid,lid){
- const raw=writingFor(sid,lid);
- if(!raw)return{builder:[],core:{},final:'',score:null};
- try{
-  const parsed=JSON.parse(raw);
-  if(Array.isArray(parsed))return{builder:[],core:{},final:parsed.at(-1)||'',legacy:parsed,score:null};
-  if(parsed&&typeof parsed==='object')return{builder:Array.isArray(parsed.builder)?parsed.builder:[],core:parsed.core&&typeof parsed.core==='object'?parsed.core:{},final:String(parsed.final||''),score:parsed.score??null};
-  return{builder:[],core:{},final:String(parsed||''),score:null}
- }catch{return{builder:[],core:{},final:raw,score:null}}
-}
-function writingResponses(sid,lid){const submission=writingSubmission(sid,lid);return submission.legacy||[submission.final]}
-function writingNormalize(text){return String(text||'').toLowerCase().replace(/[â€œâ€"'â€™]/g,"'").replace(/[^a-z0-9'&]+/g,' ').replace(/\s+/g,' ').trim()}
-function writingShuffle(items,seed){
- const out=items.map((value,index)=>({value,index}));let hash=2166136261;const key=String(seed||'writing');
- for(let i=0;i<key.length;i++){hash^=key.charCodeAt(i);hash=Math.imul(hash,16777619)}
- for(let i=out.length-1;i>0;i--){hash=Math.imul(hash^i,16777619);const j=Math.abs(hash)%(i+1);[out[i],out[j]]=[out[j],out[i]]}
- if(out.length>1&&out.every((x,i)=>x.index===i))[out[0],out[1]]=[out[1],out[0]];
- return out;
-}
-function writingFinalSpec(l){
- const w=l.writing||{};
- if(w.task)return{task:String(w.task),min:Number(w.minWords||40),max:Number(w.maxWords||80),genre:writingGenre(w.task,l.number)};
- const tasks=Array.isArray(w.tasks)?w.tasks:[],last=tasks.at(-1),topic=String(l.title||'this topic').toLowerCase();
- const variants=[
-  {genre:'message',task:`Write a short WhatsApp message to a classmate about ${topic}. Explain your main point and include one useful detail.`},
-  {genre:'email',task:`Write a short email to a colleague about ${topic}. State your purpose and include one relevant detail.`},
-  {genre:'post',task:`Write a short social media post about ${topic}. Share one clear point and one reason or example.`},
-  {genre:'form',task:`Write a short form response about ${topic}. Explain your experience or opinion clearly.`},
-  {genre:'request',task:`Write a short request to a teacher or colleague connected to ${topic}. State what you need and why.`}
- ],pick=variants[Math.abs(Number(l.number||1)-1)%variants.length],base=Number(last?.minWords||60),min=Math.max(40,Math.min(70,Math.round(base*.7))),max=min+30;
- return{...pick,min,max}
-}
-function writingGenre(task,number=1){
- const t=String(task||'').toLowerCase();
- if(/whatsapp|text message|short message|message/.test(t))return'message';
- if(/email/.test(t))return'email';
- if(/social|post|facebook|\bx\b/.test(t))return'post';
- if(/form/.test(t))return'form';
- if(/complain/.test(t))return'complaint';
- if(/request|ask for/.test(t))return'request';
- return['message','email','post','form','request'][Math.abs(Number(number||1)-1)%5]
-}
-function writingBuildModels(l){
- const topic=String(l.title||'this topic').toLowerCase(),seen=new Set(),out=[];
- const add=value=>{const clean=String(value||'').trim().replace(/[.!?]+$/,'');const n=clean.split(/\s+/).length,key=writingNormalize(clean);if(n>=4&&n<=16&&key&&!seen.has(key)){seen.add(key);out.push(clean)}};
- (l.grammar?.items||[]).forEach(q=>add(q.answer));
- (l.expressions||[]).forEach(x=>add(x.example||x.text));
- [
-  `I can explain my ideas clearly about ${topic}`,
-  `Clear writing helps the reader understand ${topic}`,
-  `I check my message before I send it`
- ].forEach(add);
- return out.slice(0,3)
-}
-function writingCombineModels(l){
- const topic=String(l.title||'this topic').toLowerCase();
- return[
-  {a:`I want to communicate clearly about ${topic}.`,b:'It is important for my work or studies.',connector:'because',answer:`I want to communicate clearly about ${topic} because it is important for my work or studies.`},
-  {a:`${cap(topic)} can be challenging.`,b:'I keep practising.',connector:'but',answer:`${cap(topic)} can be challenging, but I keep practising.`},
-  {a:`I need to communicate clearly about ${topic}.`,b:'I prepare my ideas first.',connector:'so',answer:`I need to communicate clearly about ${topic}, so I prepare my ideas first.`}
- ]
-}
-function writingCorrectionModels(l){
- const topic=String(l.title||'this topic').toLowerCase(),seen=new Set(),out=[];
- const add=(wrong,answer)=>{wrong=withPeriod(wrong);answer=withPeriod(answer);const key=writingNormalize(answer);if(wrong&&answer&&key&&!seen.has(key)&&writingNormalize(wrong)!==key){seen.add(key);out.push({wrong,answer})}};
- (l.grammar?.items||[]).forEach(q=>{
-  const correct=String(q.answer||'').trim();
-  const wrong=(q.options||[]).map(String).find(x=>writingNormalize(x)!==writingNormalize(correct));
-  if(correct&&wrong&&correct.split(/\s+/).length>=3)add(wrong,correct)
- });
- [
-  [`I am write about ${topic}.`,`I am writing about ${topic}.`],
-  ['She explain her idea clearly.','She explains her idea clearly.'],
-  ['I sent the message yesterday, but I forget the attachment.','I sent the message yesterday, but I forgot the attachment.']
- ].forEach(x=>add(x[0],x[1]));
- return out.slice(0,3)
-}
-function writingParagraphModels(l,spec){
- const topic=String(l.title||'this topic').toLowerCase(),genre=spec.genre;
- const taskParagraph=genre==='email'
-  ?['Dear colleague,',`I am writing about ${topic}.`,'One important detail is that clear information helps the reader understand the purpose.','Kind regards,']
-  :genre==='post'
-   ?[`Here is one thought about ${topic}.`,'The main point is that clear communication helps people understand the issue.','For example, one specific detail can make a message stronger.','What do you think?']
-   :genre==='complaint'
-    ?['Dear Sir or Madam,',`I am writing to complain about an issue connected to ${topic}.`,'The problem has affected me, so I would appreciate a clear solution.','I look forward to your response.']
-    :genre==='request'
-     ?['Hello,',`I am writing to make a request about ${topic}.`,'The reason is that I need clear information before I continue.','Thank you for your help.']
-     :['Hi,',`I wanted to message you about ${topic}.`,'One important detail is that clear communication makes the situation easier.','Thanks for reading.'];
- return[
-  taskParagraph,
-  [`${cap(topic)} is the main topic I want to explain.`,'First, I state the main idea clearly.','Then, I add one specific detail or example.','Finally, I end with a clear conclusion.'],
-  ['Hello,',`I want to share one point about ${topic}.`,'This matters because clear details help the reader respond correctly.','Please let me know if you need any more information.']
- ]
-}
-function writingCoreExercises(l){
- const spec=writingFinalSpec(l),builds=writingBuildModels(l),combines=writingCombineModels(l),corrections=writingCorrectionModels(l),paragraphs=writingParagraphModels(l,spec),out=[];
- builds.forEach((answer,i)=>out.push({type:'build',label:`${i+1} Â· Sentence Building`,instruction:'Tap the words in the correct order to build the sentence.',answer,pieces:writingShuffle(answer.split(/\s+/),l.id+`|build|${i}`)}));
- combines.forEach((x,i)=>out.push({type:'combine',label:`${i+4} Â· Sentence Combining`,instruction:`Combine the two sentences using â€œ${x.connector}â€.`,...x}));
- corrections.forEach((x,i)=>out.push({type:'correct',label:`${i+7} Â· Error Correction`,instruction:'Rewrite the sentence correctly.',...x}));
- paragraphs.forEach((answer,i)=>out.push({type:'organize',label:`${i+10} Â· Paragraph Ordering`,instruction:'Tap the sentences in the most logical paragraph order.',answer,pieces:writingShuffle(answer,l.id+`|organize|${i}`)}));
- return out
-}
-function writingArrangeHtml(ex){
- const sentenceMode=ex.type==='build';
- return `<article class="guided-question writing-core-card" data-writing-core="${ex.type}" data-answer="${escapeAttr(sentenceMode?ex.answer:ex.answer.join('||'))}">
-  <div class="question-stage"><span>${escapeHtml(ex.label)}</span></div><p>${escapeHtml(ex.instruction)}</p>
-  <div class="writing-arrange-zone ${sentenceMode?'is-words':'is-sentences'}" data-writing-arrange>
-   <div class="writing-piece-bank" data-writing-bank aria-label="Available ${sentenceMode?'words':'sentences'}">${ex.pieces.map((x,i)=>`<button type="button" class="writing-piece" data-writing-piece data-value="${escapeAttr(x.value)}" data-source-index="${x.index}" data-shuffle-index="${i}">${escapeHtml(x.value)}</button>`).join('')}</div>
-   <div class="writing-piece-answer" data-writing-piece-answer aria-label="Your ordered answer"><span class="writing-arrange-placeholder">Your answer appears here</span></div>
-  </div>
-  <div class="writing-core-actions"><button type="button" class="ghost-btn" data-writing-reset>Reset</button><button type="button" class="secondary-btn" data-writing-core-check>Check</button></div>
-  <div data-writing-core-feedback aria-live="polite"></div>
- </article>`
-}
-function writingTextCoreHtml(ex){
- const source=ex.type==='combine'?`<div class="writing-combine-source"><p><b>A.</b> ${escapeHtml(ex.a)}</p><p><b>B.</b> ${escapeHtml(ex.b)}</p><span>Connector: <strong>${escapeHtml(ex.connector)}</strong></span></div>`:`<div class="writing-error-source"><span>Sentence with an error</span><p>${escapeHtml(ex.wrong)}</p></div>`;
- return `<article class="guided-question writing-core-card" data-writing-core="${ex.type}" data-answer="${escapeAttr(ex.answer)}">
-  <div class="question-stage"><span>${escapeHtml(ex.label)}</span></div><p>${escapeHtml(ex.instruction)}</p>${source}
-  <input class="writing-core-input" type="text" autocomplete="off" data-writing-core-input placeholder="${ex.type==='combine'?'Write the combined sentenceâ€¦':'Write the corrected sentenceâ€¦'}">
-  <div class="writing-core-actions"><button type="button" class="secondary-btn" data-writing-core-check>Check</button></div>
-  <div data-writing-core-feedback aria-live="polite"></div>
- </article>`
-}
-function writingCoreHtml(l){
- const groups={build:'Sentence Building',combine:'Sentence Combining',correct:'Error Correction',organize:'Paragraph Ordering'};
- let last='';
- return writingCoreExercises(l).map(ex=>{
-  const heading=ex.type!==last?`<div class="writing-core-group-head"><span>${escapeHtml(groups[ex.type])}</span><strong>3 questions</strong></div>`:'';
-  last=ex.type;
-  return heading+(ex.type==='build'||ex.type==='organize'?writingArrangeHtml(ex):writingTextCoreHtml(ex))
- }).join('')
-}
-function writingActivity(l){
- const saved=writingSubmission(session.id,l.id),spec=writingFinalSpec(l),assessment=Boolean(l.writing?.humanGraded),teacherGrade=getDB().writingScores?.[session.id]?.[l.id],phrases=(l.expressions||[]).slice(0,5).map(x=>x.text);
- return `<div class="eg-skill-page eg-writing-page">
-  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${assessment?'Final assessment':'Writing'}</span><h1>Build, combine, correct, organize</h1><p>Practise the building blocks first. Then write one real-life response.</p></div><span class="eg-question-count">12 auto-graded + 1 real writing</span></header>
-  ${assessment?`<div class="assessment-notice"><strong>Independent final writing</strong><p>${teacherGrade===null||teacherGrade===undefined?'The 12 preparation questions are auto-graded. Your final response will be graded by your teacher.':`Your teacher awarded ${teacherGrade}% for the final response. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}
-  <div class="eg-writing-layout eg-writing-layout-designed">
-   <main class="eg-writing-workspace">
-    <section class="writing-builder writing-core-sequence"><div class="eg-task-panel-head"><div><small>Part 1 Â· Auto-graded practice</small><h2>Build â†’ Combine â†’ Correct â†’ Organize</h2><p>Complete 3 questions for each type before the final real-life writing task.</p></div></div>${writingCoreHtml(l)}</section>
-    <article class="guided-question writing-guided-question final-writing-card eg-message-composer">
-     <div class="eg-message-bar"><div class="eg-message-avatar">Y</div><div><strong>You</strong><small>Real-life writing</small></div></div>
-     <div class="writing-task-head"><div><span class="stage-badge">Part 2 Â· Write it yourself</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}â€“${spec.max} words</span></div>
-     <textarea class="writing-final-response" data-count-key="final" data-min="${spec.min}" data-max="${spec.max}" placeholder="Type your response hereâ€¦">${escapeHtml(saved.final)}</textarea><div class="word-count" data-count="final">0 words</div>
-    </article>
-   </main>
-   <aside class="eg-writing-brief"><small>Writing support</small><h2>${escapeHtml(l.title)}</h2>${phrases.length?`<div class="eg-phrase-bank">${phrases.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div>`:''}<div class="eg-writing-reminder"><strong>Remember</strong><span>Keep the purpose clear.</span><span>Use complete sentences.</span><span>Connect ideas naturally.</span><span>Check order and punctuation before saving.</span></div></aside>
-  </div>
-  <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="saveWriting">${assessment?'Submit final writing':'Check & save writing'}</button>${activityDoneButton(l)}</div>
- </div>`
-}
-function reviewActivity(l){const w=isWorkbookPreview()?{label:'Student focus'}:weakest(session.id),firstTopic=l.number===1,retrieval=firstTopic?'Recall 3 useful expressions from this topic and say one sentence with each.':`Recall 1 useful expression from the previous topic and use it in one new sentence.`;return `<div class="class-prep"><div class="class-prep-focus"><span>Focus</span><strong>${escapeHtml(w.label)}</strong></div><section class="class-prep-mission"><span class="role-kicker">Live class mission</span><h2>${escapeHtml(l.review.mission)}</h2><div class="keyword-line"><small>Keywords</small><strong>${escapeHtml(l.review.keywords)}</strong></div></section><section class="class-prep-recall"><span class="role-kicker">Before class</span><p>${escapeHtml(retrieval)}</p></section>${l.number===9?moduleChallengeHtml():''}<div id="activityFeedback"></div><button class="primary-btn class-prep-ready" id="finishReview">${l.number===9?'Module prep complete':'Iâ€™m ready for class â†’'}</button></div>`}
+OOœŞ[˜Ê
+JNÚYŠ™]Š\™]‹›Û˜ÛXÚÏJ
+OO›[İ™J[™^LJNÛ™^›Û˜ÛXÚÏJ
+OOÚYŠX[œİÙ\™Y
+Ø\™ÖÚ[™^JJ\™]\›ÚYŠ[™^Ø\™Ë›[™İLJ^Û[İ™J[™^
+ÌJNÜ™]\›ŸXÛÛœİİX›Z]I
+	ØÚXÚĞXİ]š]IÊ_	
+	ÜØ]™UÜš][™ÉÊNÚYŠİX›Z]
+\İX›Z]˜ÛXÚÊ
+_NÜŞ[˜Ê
+_B™[˜İ[ÛˆÛÜšØ›ÛÚÕ›ØØX”™Y™\™[˜Ù\Ê
+^ÂˆÛÛœİÙY[[™]ÈÙ]
 
-function balancedOptions(name,options,answer){
- const source=[...options],correctIndex=source.indexOf(answer);
- if(source.length<2||correctIndex<0)return source;
- const distractors=source.filter((_,i)=>i!==correctIndex);
- let hash=2166136261;const seed=String(name)+'|'+String(answer);
- for(let i=0;i<seed.length;i++){hash^=seed.charCodeAt(i);hash=Math.imul(hash,16777619)}
- for(let i=distractors.length-1;i>0;i--){const j=Math.abs(hash+i*31)%(i+1);[distractors[i],distractors[j]]=[distractors[j],distractors[i]]}
- const target=Math.abs(hash)%source.length,out=[];let d=0;
- for(let i=0;i<source.length;i++)out.push(i===target?answer:distractors[d++]);
- return out;
-}
-function radio(name,options,answer,tag='',learningMeta=null){
- const shown=balancedOptions(name,options,answer);
- const learningAttrs=learningMeta?` data-vocab-word="${escapeAttr(learningMeta.word)}" data-vocab-meaning="${escapeAttr(learningMeta.meaning)}" data-vocab-example="${escapeAttr(learningMeta.example)}"`:'';
- return `<div class="mcq-picker" data-mcq="${escapeAttr(name)}"${learningAttrs}><div class="mcq-answer-slot" data-mcq-slot tabindex="0" aria-label="Selected answer"><span class="mcq-slot-label">Your answer</span><strong data-mcq-slot-text>Choose an answer</strong><small>Tap an option or drag it here</small></div><div class="mcq-option-cards">${shown.map((o,i)=>`<button class="mcq-option-card" type="button" draggable="true" data-mcq-option="${i}" data-value="${escapeAttr(o)}"><span class="mcq-option-index">${String.fromCharCode(65+i)}</span><span class="mcq-option-text">${escapeHtml(o)}</span></button><input class="mcq-native-input" type="radio" name="${name}" value="${escapeAttr(o)}" data-answer="${escapeAttr(answer)}" data-tag="${escapeAttr(tag)}" data-mcq-input="${i}" tabindex="-1" aria-hidden="true">`).join('')}</div>${learningMeta?'<div class="mcq-learning-feedback-slot" data-vocab-feedback aria-live="polite"></div>':''}</div>`;
-}
-function activityDoneButton(l){
- if(isWorkbookPreview())return '';
- const done=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes(currentStep);
- return `<button class="secondary-btn done-activity-btn" id="doneActivity" ${done?'':'disabled'}>Done â†’</button>`;
-}
-function advanceAfterDone(){
- if(!skillCompletionFor(session.id,activeLessonId).includes(currentStep))return;
- const i=WORKBOOK_STEPS.indexOf(currentStep);
- if(i<WORKBOOK_STEPS.length-1){currentStep=WORKBOOK_STEPS[i+1];workbook();return}
- currentPage='home';renderNav();studentHome();
-}
-const audioCache={};let activeAudio=null,activeAudioLessonKey=null;
+K][\ÏV×NÂˆÛÛœİ\ÚJÛÜ™YX[š[™Ë^[\OIÉÊOOİÛÜ™Tİš[™ÊÛÜ™	ÉÊKš[J
+NÚYŠ]ÛÜ™ÙY[‹š\ÊÛÜ™ÓİÙ\Ø\ÙJ
+JJ\™]\›ÜÙY[‹˜Y
+ÛÜ™ÓİÙ\Ø\ÙJ
+JNÚ][\Ëœ\Ú
+İÛÜ™YX[š[™Î”İš[™ÊYX[š[™ß›ØØX“YX[š[™ÊÛÜ™
+JK^[\N”İš[™Ê^[\_\ÜÛÛ•›ØØX‘^[\JÛÜ™
+J_J_NÂˆ
+™^™\ÜÚ[Ûœß×JK™›Ü‘XXÚ
+Oœ\Ú
+^š›Ø‹™^[\_	ÉÊJNÂˆ
+\œ˜^Kš\Ğ\œ˜^J\™Ù]›ØØX[\JOÛ\™Ù]›ØØX[\N–×JK™›Ü‘XXÚ
+Oœ\Ú
+›ØØX“YX[š[™Ê
+K	ÉÊJNÂˆÛÛœİ]Y\İ[ÛœÏ[›ØØX[\OËš][\ß×NÂˆ]Y\İ[ÛœË™›Ü‘XXÚ
 
-function formatAudioTime(seconds){const n=Number.isFinite(seconds)?Math.max(0,seconds):0,m=Math.floor(n/60),s=Math.floor(n%60);return m+':'+String(s).padStart(2,'0')}
-function syncAudioUi(){
- const seek=$('audioSeek'),cur=$('audioCurrent'),dur=$('audioDuration'),btn=$('playAudio');
- if(!activeAudio)return;
- if(seek&&Number.isFinite(activeAudio.duration)&&activeAudio.duration>0)seek.value=String((activeAudio.currentTime/activeAudio.duration)*100);
- if(cur)cur.textContent=formatAudioTime(activeAudio.currentTime);
- if(dur)dur.textContent=formatAudioTime(activeAudio.duration);
- if(btn)btn.textContent=activeAudio.paused?'â–¶':'âšâš';
-}
-function audioLessonKey(l,text){let hash=2166136261;const s=String(activeBookId||'book')+'|'+String(l.id||'lesson')+'|'+String(text||'');for(let i=0;i<s.length;i++){hash^=s.charCodeAt(i);hash=Math.imul(hash,16777619)}return String(activeBookId||'book')+':'+String(l.id||'lesson')+':'+(hash>>>0).toString(16)}
-async function ensureLessonAudio(l){
- const text=String(l.listening?.audioScript||l.listening?.text||'').trim();if(!text)throw new Error('Listening audio is unavailable.');
- const key=audioLessonKey(l,text);
- if(activeAudio&&activeAudioLessonKey===key)return activeAudio;
- if(activeAudio){activeAudio.pause();activeAudio=null;activeAudioLessonKey=null}
- let url=audioCache[key];
- if(!url){
-  const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text})});
-  if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const e=await res.json();if(e?.error)message=e.error}catch{}throw new Error(message)}
-  const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
-  url=URL.createObjectURL(blob);audioCache[key]=url;
- }
- activeAudio=new Audio(url);activeAudioLessonKey=key;
- activeAudio.preload='auto';
- activeAudio.onloadedmetadata=syncAudioUi;
- activeAudio.ontimeupdate=syncAudioUi;
- activeAudio.onplay=syncAudioUi;
- activeAudio.onpause=syncAudioUi;
- activeAudio.onended=()=>{syncAudioUi();const status=$('audioStatus');if(status)status.textContent='Finished. Replay when you are ready.'};
- activeAudio.onerror=()=>{const status=$('audioStatus');if(status)status.textContent='Audio playback failed. Try again.'};
- return activeAudio;
-}
-async function playListening(l){
- const btn=$('playAudio'),status=$('audioStatus');if(!btn)return;
- try{
-  btn.disabled=true;status.textContent='Loading natural listening audioâ€¦';
-  const audio=await ensureLessonAudio(l),speed=$('audioSpeed');
-  if(speed)audio.playbackRate=Number(speed.value)||1;
-  btn.disabled=false;
-  if(audio.paused){await audio.play();status.textContent='Playing Â· natural English voice'}else{audio.pause();status.textContent='Paused'}
-  syncAudioUi();
- }catch(e){btn.disabled=false;btn.textContent='â–¶';status.textContent=e.message||'Natural listening audio is unavailable. Try again.'}
-}
-async function restartListening(l){
- try{const audio=await ensureLessonAudio(l);audio.currentTime=0;await audio.play();const status=$('audioStatus');if(status)status.textContent='Playing from the beginning';syncAudioUi()}catch(e){const status=$('audioStatus');if(status)status.textContent=e.message||'Audio unavailable.'}
-}
-function wireAudioControls(l){
- const seek=$('audioSeek'),speed=$('audioSpeed'),restart=$('restartAudio');
- if(restart)restart.onclick=()=>restartListening(l);
- if(speed)speed.onchange=async()=>{try{const audio=await ensureLessonAudio(l);audio.playbackRate=Number(speed.value)||1}catch{}};
- if(seek)seek.oninput=async()=>{try{const audio=await ensureLessonAudio(l);if(Number.isFinite(audio.duration)&&audio.duration>0){audio.currentTime=(Number(seek.value)/100)*audio.duration;syncAudioUi()}}catch{}};
-}
+KJOOÚYŠ][\Ë›[™İM
+\™]\›ØÛÛœİY]O]›ØØX‘™YY˜XÚÓY]JKJNÚYŠY]J\\Ú
+Y]KÛÜ™Y]K›YX[š[™ËY]K™^[\J_JNÂˆ™]\›ˆ][\ËœÛXÙJ
+NÂŸB™[˜İ[Ûˆ›ØØX”™XŞXÛR][\Ê\Ê^ÂˆÛÛœİÙY[[™]ÈÙ]
 
-function wireVocabRecycle(){
- document.querySelectorAll('[data-vocab-recycle-check]').forEach(btn=>{btn.onclick=()=>{const card=btn.closest('.eg-vocab-recycle-card'),input=card?.querySelector('[data-vocab-recycle]'),feedback=card?.querySelector('[data-vocab-recycle-feedback]');if(!input||!feedback)return;const answer=String(input.dataset.answer||''),typed=input.value.trim(),correct=normalizeVocabWord(typed)===normalizeVocabWord(answer),meta={word:input.dataset.word,meaning:input.dataset.meaning,example:input.dataset.example};feedback.innerHTML=vocabFeedbackHtml(meta,correct);input.classList.toggle('is-correct',correct);input.classList.toggle('is-incorrect',!correct)}});
-}
-function writingCoreResponse(card){
- const type=card.dataset.writingCore||'';
- if(type==='build'||type==='organize'){
-  const values=[...card.querySelectorAll('[data-writing-piece-answer] [data-writing-piece]')].map(x=>x.dataset.value||'');
-  return type==='organize'?values:values.join(' ')
- }
- return card.querySelector('[data-writing-core-input]')?.value.trim()||''
-}
-function writingCoreFeedback(card,correct,complete){
- const box=card.querySelector('[data-writing-core-feedback]');if(!box)return;
- if(!complete){box.innerHTML='<div class="writing-core-feedback is-incomplete">Finish this activity first.</div>';return}
- const type=card.dataset.writingCore||'',answer=String(card.dataset.answer||'');
- if(correct){box.innerHTML='<div class="writing-core-feedback is-correct"><strong>âœ“ Correct</strong></div>';return}
- if(type==='organize'){
-  const order=answer.split('||');
-  box.innerHTML='<div class="writing-core-feedback is-incorrect"><strong>âœ— Not quite</strong><span>Correct order:</span><ol>'+order.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ol></div>';return
- }
- const label=type==='combine'?'Best combined sentence:':'Correct sentence:';
- box.innerHTML='<div class="writing-core-feedback is-incorrect"><strong>âœ— Not quite</strong><span>'+label+' <b>'+escapeHtml(withPeriod(answer))+'</b></span></div>'
-}
-function checkWritingCoreCard(card,show=true){
- const type=card.dataset.writingCore||'',answer=String(card.dataset.answer||''),response=writingCoreResponse(card);let complete=false,correct=false;
- if(type==='build'){
-  const total=card.querySelectorAll('[data-writing-piece]').length,used=card.querySelectorAll('[data-writing-piece-answer] [data-writing-piece]').length;
-  complete=total>0&&used===total;correct=complete&&writingNormalize(response)===writingNormalize(answer)
- }else if(type==='organize'){
-  const expected=answer.split('||'),actual=Array.isArray(response)?response:[];complete=actual.length===expected.length&&expected.length>0;correct=complete&&expected.every((x,i)=>writingNormalize(x)===writingNormalize(actual[i]))
- }else{
-  complete=Boolean(String(response||'').trim());correct=complete&&writingNormalize(response)===writingNormalize(answer)
- }
- card.dataset.coreComplete=complete?'1':'0';card.dataset.coreCorrect=correct?'1':'0';
- if(show)writingCoreFeedback(card,correct,complete);
- return{type,complete,correct,response}
-}
-function syncWritingArrange(card){
- const answer=card.querySelector('[data-writing-piece-answer]'),placeholder=answer?.querySelector('.writing-arrange-placeholder');
- if(placeholder)placeholder.hidden=Boolean(answer.querySelector('[data-writing-piece]'));
- card.dataset.coreComplete='0';card.dataset.coreCorrect='0';
- const feedback=card.querySelector('[data-writing-core-feedback]');if(feedback)feedback.innerHTML=''
-}
-function wireWritingCore(){
- document.querySelectorAll('[data-writing-core]').forEach(card=>{
-  const bank=card.querySelector('[data-writing-bank]'),answer=card.querySelector('[data-writing-piece-answer]');
-  card.querySelectorAll('[data-writing-piece]').forEach(piece=>{piece.onclick=()=>{
-   if(!bank||!answer)return;
-   if(piece.parentElement===bank)answer.appendChild(piece);else{bank.appendChild(piece);[...bank.querySelectorAll('[data-writing-piece]')].sort((a,b)=>Number(a.dataset.shuffleIndex)-Number(b.dataset.shuffleIndex)).forEach(x=>bank.appendChild(x))}
-   syncWritingArrange(card)
-  }});
-  const reset=card.querySelector('[data-writing-reset]');if(reset)reset.onclick=()=>{if(!bank)return;[...card.querySelectorAll('[data-writing-piece]')].sort((a,b)=>Number(a.dataset.shuffleIndex)-Number(b.dataset.shuffleIndex)).forEach(x=>bank.appendChild(x));syncWritingArrange(card)};
-  const input=card.querySelector('[data-writing-core-input]');if(input)input.oninput=()=>{card.dataset.coreComplete='0';card.dataset.coreCorrect='0';const feedback=card.querySelector('[data-writing-core-feedback]');if(feedback)feedback.innerHTML=''};
-  const check=card.querySelector('[data-writing-core-check]');if(check)check.onclick=()=>checkWritingCoreCard(card,true);
-  syncWritingArrange(card)
- })
-}
-function wireActivity(l){wireMcqCards();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();
- if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
- if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:'Build the sentence, connect the ideas, correct the error, then check paragraph order before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>Ã—</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
- if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words Â· target ${t.dataset.min}â€“${max}`:`${n} words Â· minimum ${t.dataset.min}`};t.oninput=update;update()});if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill â†’';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
-function formativeWritingChecks(l,text,spec=writingFinalSpec(l)){const words=text.trim()?text.trim().split(/\s+/):[],sentences=text.split(/[.!?]+/).filter(x=>x.trim()),targets=(Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).filter(w=>text.toLowerCase().includes(String(w).toLowerCase()));return{words:words.length,length:words.length>=spec.min&&words.length<=spec.max,organisation:sentences.length>=2||text.includes('\n'),vocabulary:targets}}
-async function saveWriting(l){
- const f=$('activityFeedback'),cards=[...document.querySelectorAll('[data-writing-core]')],results=cards.map(card=>checkWritingCoreCard(card,true)),firstIncomplete=results.findIndex(x=>!x.complete);
- if(firstIncomplete>=0){if(f)f.innerHTML='<div class="feedback bad">Complete all 12 writing practice questions before saving your final response.</div>';cards[firstIncomplete]?.scrollIntoView({behavior:'smooth',block:'center'});return}
- const box=document.querySelector('.writing-final-response'),response=box?.value.trim()||'',spec=writingFinalSpec(l),checks=formativeWritingChecks(l,response,spec);
- if(!checks.length){if(f)f.innerHTML=`<div class="feedback bad">Your final response has ${checks.words} words. Write ${spec.min}â€“${spec.max} words.</div>`;box?.focus();return}
- const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100),core=results.map((x,i)=>({question:i+1,type:x.type,response:x.response,correct:x.correct})),payload={core,final:response,score,submittedAt:new Date().toISOString()};
- try{
-  await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(payload)})});
-  if(!l.writing?.humanGraded)await recordAttempt(session.id,l.id,'writing',score,['writing:sentence-building','writing:sentence-combining','writing:error-correction','writing:paragraph-ordering']);
-  await refreshState();const done=$('doneActivity');if(done)done.disabled=false;
-  if(l.writing?.humanGraded){if(f)f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> The 12 practice questions were auto-graded and your real-life writing is saved for your teacher.</div>';return}
-  const tone=score>=75?'good':'bad',label=score===100?'All 12 correct':score>=75?'Strong preparation':'Review the practice';
-  if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> practice questions correct</span><span><b>${12-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. Review any practice item you missed, then press <strong>Done</strong>.</p></div>`
- }catch(e){if(f)f.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}
-}
-async function checkCurrent(){
- const open=[...document.querySelectorAll('[data-open="1"]')];
- const groups=[...new Set([...document.querySelectorAll('input[type=radio]')].map(x=>x.name))];
- const openDone=open.filter(el=>el.value.trim()).length;
- const mcqDone=groups.filter(g=>document.querySelector(`input[name="${g}"]:checked`)).length;
- const totalItems=open.length+groups.length,answered=openDone+mcqDone,feedback=$('activityFeedback');
- if(answered<totalItems){if(feedback)feedback.innerHTML=`<div class="feedback bad">Finish all ${totalItems} questions before checking. You have answered ${answered}/${totalItems}.</div>`;return}
- let correct=0,tags=[],grammarMissed=[];
- open.forEach(el=>{const value=el.value.trim(),exact=el.dataset.exact||'',min=Number(el.dataset.min||1);let ok=false;if(exact)ok=writingNormalize(value)===writingNormalize(exact);else ok=(value?value.split(/\s+/).length:0)>=min;if(ok)correct++;if(el.dataset.tag)tags.push(el.dataset.tag)});
- groups.forEach(g=>{const c=document.querySelector(`input[name="${g}"]:checked`),isGrammarAuto=currentStep==='grammar'&&/^g[0-9]$/.test(g);if(c&&c.value===c.dataset.answer)correct++;else if(isGrammarAuto)grammarMissed.push(Number(g.slice(1)));if(c&&c.dataset.tag)tags.push(c.dataset.tag)});
- if(currentStep==='grammar')tags=grammarMissed.length?grammarMissed.map(i=>`missq:${i}`):['diagnostic:no-misses'];
- const score=Math.round(correct/Math.max(1,totalItems)*100),missed=totalItems-correct;
- try{
-  await recordAttempt(session.id,activeLessonId,currentStep,score,tags);
-  await markDone(session.id,activeLessonId,currentStep);
-  await refreshState();
-  const done=$('doneActivity');if(done)done.disabled=false;
-  const band=score>=80?'Strong':score>=60?'Developing':'Needs practice',tone=score>=70?'good':'bad';
-  const boost=currentStep==='grammar'&&grammarMissed.length?`<button class="ghost-btn" id="boostFromResult">Practise ${grammarMissed.length} missed grammar question${grammarMissed.length===1?'':'s'} with Boost</button>`:'';
-  const transcript=currentStep==='listening'&&lesson().listening?.audioScript?listeningTranscript(lesson()):'';
-  if(feedback)feedback.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${band}</span></div><div class="performance-breakdown"><span><b>${correct}</b> correct</span><span><b>${missed}</b> to review</span><span><b>${totalItems}</b> total</span></div><p>Your activity is complete. Press <strong>Done</strong> to continue, or review your mistakes first.</p>${boost}</div>${transcript}`;
-  if($('boostFromResult'))$('boostFromResult').onclick=()=>startBoost(lesson());
- }catch(e){if(feedback)feedback.innerHTML=`<div class="feedback bad">Could not save progress: ${escapeHtml(e.message)}</div>`}
-}
-async function recordAttempt(studentId,lessonId,skill,score,tags=[]){await api('/api/attempts',{method:'POST',body:JSON.stringify({lessonId,skill,score,tags:[...new Set(tags)]})})}
-async function markDone(studentId,lid,step){await api('/api/completion',{method:'POST',body:JSON.stringify({lessonId:lid,step})})}
-function studentProgress(){const sid=session.id,w=weakest(sid),ats=attempts(sid).slice(-5).reverse(),c=courseForStudent(sid),b=bookMeta(bookIdForStudent(sid))||{title:c.title||c.moduleTitle},scored=scoredActivityCount(sid),completed=completedActivityCount(sid);title('EnglishGate Workbook','Progress');$('content').innerHTML=`<section class="progress-shell"><div class="progress-hero-card"><div><span class="pill teal">${escapeHtml(b.title)}</span><h1>${completionPct(sid)}% complete</h1><p>${completed} of ${readyLessons(c).length*WORKBOOK_STEPS.length} available workbook activities completed.</p></div><button class="ghost-btn" id="progressCourseBtn">My book</button></div><div class="student-skill-grid">${['vocabulary','listening','grammar','writing'].map(k=>skillCard(skillLabel(k),mastery(sid,k),'Latest lesson scores')).join('')}</div><section class="section student-progress-grid"><div class="card"><span class="pill gold">Lowest recorded score average</span>${w?`<h3>${w.label} Â· ${w.score}%</h3><p>${w.tip}</p>${progress(w.score)}`:'<h3>No scored evidence yet</h3><p>Complete a scored activity to see a performance area.</p>'}</div><div class="card"><span class="pill">Evidence</span><h3>${scored} scored activities</h3><p>${completed} workbook activities completed.</p></div></section><section class="section card"><div class="section-head"><div><h3>Recent practice</h3><p>Exact scores from your latest five recorded workbook attempts.</p></div></div>${ats.length?ats.map(a=>`<div class="attempt-row"><div><strong>${escapeHtml(lessonById(a.lessonId)?.title||'Lesson')} Â· ${skillLabel(a.skill)}</strong><span>${new Date(a.at).toLocaleDateString()}</span></div><strong>${a.score}%</strong></div>`).join(''):'<p class="muted">Complete an activity to start your evidence history.</p>'}</section></section>`;$('progressCourseBtn').onclick=()=>{currentPage='course';renderNav();studentCourse()}}
+Kİ]V×NÂˆ\Ë™›Ü‘XXÚ
 
-function profile(){const u=getDB().users.find(x=>x.id===session.id)||session,c=studentClass(session.id),b=bookMeta(bookIdForStudent(session.id)),teacher=getDB().users.find(x=>x.id===c?.teacher_id);title('EnglishGate Workbook','Profile');$('content').innerHTML=`<section class="profile-shell"><div class="card profile-card"><div class="profile-avatar-large">${escapeHtml(u.name[0])}</div><h2>${escapeHtml(u.name)}</h2><p class="muted">${escapeHtml(b?.title||'Workbook')}</p><div class="profile-row"><span>Class</span><strong>${escapeHtml(c?.name||'â€”')}</strong></div><div class="profile-row"><span>Teacher</span><strong>${escapeHtml(teacher?.name||'â€”')}</strong></div><div class="profile-row"><span>Username</span><strong>${escapeHtml(u.username)}</strong></div><button class="ghost-btn" id="resetHelp">Password help</button><button class="ghost-btn danger-action" id="studentLogout">Sign out</button></div></section>`;$('resetHelp').onclick=()=>alert('Ask your teacher to reset your password.');$('studentLogout').onclick=logout}
-function teacherClassIds(){return getDB().classes.map(c=>c.id)}
-function classStudents(){const ids=teacherClassIds();return getDB().users.filter(u=>u.role==='student'&&u.classIds?.some(id=>ids.includes(id)))}
+KJOOØÛÛœİY]O]›ØØX‘™YY˜XÚÓY]JKJNÚYŠ[Y]J\™]\›ØÛÛœİÙ^O[›Ü›X[^™U›ØØX•ÛÜ™
+Y]KÛÜ™
+NÚYŠÙY[‹š\ÊÙ^JJ\™]\›ÜÙY[‹˜Y
+Ù^JNÛİ]œ\Ú
+Y]J_JNÂˆ™]\›ˆİ]œÛXÙJŠNÂŸB™[˜İ[Ûˆ›ØØX”™XŞXÛR[
+][\Ê^ÂˆYŠZ][\Ë›[™İ
+\™]\›ˆ	ÉÎÂˆ™]\›ˆ	ÏÙXİ[ÛˆÛ\ÜÏH™YË]›ØØX‹\™XŞXÛH]ˆÛ\ÜÏH™YË]›ØØX‹\™XŞXÛKZXY]ÛX[”™]šY]™H]YØZ[ÜÛX[Ï”™XØ[HÛÜ™œ›ÛH]ÈYX[š[™ÏÚÏÙ]Ü[‘Y™™\™[\™Xİ[Ûˆ0­Èİ›Û™Ù\ˆY[[ÜOÜÜ[Ù]‰ÊÂˆ	Ï]ˆÛ\ÜÏH™YË]›ØØX‹\™XŞXÛKYÜšY‰ÊÚ][\Ë›X\
 
-function teacherResumeContext(){
- const ctx=getDB().teacherContext;
- if(!ctx?.classId)return null;
- const c=getDB().classes.find(x=>x.id===ctx.classId);
- if(!c)return null;
- const live=liveBookForClass(c),wb=workbookForClass(c);
- if(!live)return null;
- const lesson=live.lessons.find(x=>x.number===Number(ctx.lessonNumber));
- if(!lesson)return null;
- const sections=liveSections(lesson.content),max=Math.max(0,sections.length-1),sectionIndex=Math.max(0,Math.min(Number(ctx.sectionIndex)||0,max));
- const section=sections[sectionIndex],stageName=section?sectionLabel(section.title,sectionIndex,sections.length):'Lesson';
- return {ctx,c,live,wb,lesson,sections,sectionIndex,section,stageName};
-}
-function restoreTeacherContextFromState(){
- const r=teacherResumeContext();if(!r)return false;
- activeTeacherClassId=r.c.id;activeTeacherLessonNumber=r.lesson.number;activeTeacherSectionIndex=r.sectionIndex;return true;
-}
-function teacherContextAge(value){
- if(!value)return'Last teaching position saved';
- const ms=Date.now()-new Date(value).getTime();if(!Number.isFinite(ms)||ms<0)return'Last teaching position saved';
- const mins=Math.floor(ms/60000);if(mins<2)return'Just now';if(mins<60)return mins+' min ago';
- const hrs=Math.floor(mins/60);if(hrs<24)return hrs+' hr'+(hrs===1?'':'s')+' ago';
- const days=Math.floor(hrs/24);if(days<7)return days+' day'+(days===1?'':'s')+' ago';
- return new Date(value).toLocaleDateString();
-}
-function rememberTeacherContext(classId,lessonNumber,sectionIndex){
- if(session?.role!=='teacher'||!classId)return;
- const next={classId,lessonNumber:Number(lessonNumber),sectionIndex:Number(sectionIndex),updatedAt:new Date().toISOString()};
- getDB().teacherContext=next;
- api('/api/teacher/context',{method:'PUT',body:JSON.stringify(next)}).then(r=>{if(r?.teacherContext&&apiDB)apiDB.teacherContext=r.teacherContext}).catch(()=>{});
-}
-function teacherAttentionSummary(){
- const students=classStudents(),assignments=getDB().assignments||[],unfinished=new Set();
- assignments.forEach(a=>students.filter(s=>s.classIds?.includes(a.classId)).forEach(s=>{if(skillCompletionFor(s.id,a.lessonId).length<WORKBOOK_STEPS.length)unfinished.add(s.id)}));
- let writingToGrade=0;
- const writing=getDB().writing||{},scores=getDB().writingScores||{};
- students.forEach(s=>Object.keys(writing[s.id]||{}).forEach(lid=>{if((writing[s.id]?.[lid]||'').trim()&&(scores[s.id]?.[lid]===null||scores[s.id]?.[lid]===undefined))writingToGrade++}));
- return {unfinishedStudents:unfinished.size,writingToGrade};
-}
-function teacherHome(){
- const cls=getDB().classes,sts=classStudents(),resume=teacherResumeContext(),attention=teacherAttentionSummary(),last=(getDB().assignments||[])[0];
- let hero;
- if(resume){
-  const workbookLesson=resume.wb?.lessons?.find(x=>x.number===resume.lesson.number),assigned=workbookLesson?assignmentForLesson(resume.c.id,workbookLesson.id):null,isLast=resume.sectionIndex>=Math.max(0,resume.sections.length-1);
-  const nextHint=!isLast?'Continue from the exact stage you last opened.':!assigned&&workbookLesson?.ready!==false?'You reached the last stage. The next action is to assign the matching workbook.':attention.unfinishedStudents?attention.unfinishedStudents+' student'+(attention.unfinishedStudents===1?'':'s')+' still have assigned workbook work to finish.':'Your teaching position is saved and ready.';
-  hero=`<section class="teacher-assist-hero">
-   <div class="teacher-assist-badge">Teacher Assist</div>
-   <div class="teacher-assist-main"><div><span class="role-kicker">Continue where you left off</span><h1>Lesson ${resume.lesson.number} Â· ${escapeHtml(resume.lesson.title)}</h1><p><strong>${escapeHtml(resume.c.name)}</strong> Â· ${escapeHtml(resume.stageName)} Â· Stage ${resume.sectionIndex+1} of ${Math.max(1,resume.sections.length)}</p><small>${escapeHtml(teacherContextAge(resume.ctx.updatedAt))}</small></div><button class="primary-btn teacher-resume-btn" id="continueTeaching">Continue teaching â†’</button></div>
-   <div class="teacher-assist-reason"><strong>Recommended next step</strong><span>${escapeHtml(nextHint)}</span></div>
-  </section>`;
- }else{
-  hero=`<section class="teacher-assist-hero is-empty"><div class="teacher-assist-badge">Teacher Assist</div><div class="teacher-assist-main"><div><span class="role-kicker">Ready when you are</span><h1>Start your next class</h1><p>Once you open a lesson, EnglishGate will remember the exact class, lesson and stage for your next login.</p></div><button class="primary-btn" id="openTeachNow">Open live book</button></div></section>`;
- }
- title('Teacher','Today');
- $('content').innerHTML=`${hero}
- <section class="teacher-assist-grid">
-  <article class="teacher-assist-card ${attention.unfinishedStudents?'needs-attention':''}"><span>Workbook follow-up</span><strong>${attention.unfinishedStudents}</strong><p>${attention.unfinishedStudents?'students still have assigned work to complete':'No unfinished assigned work needs attention'}</p><button class="text-link" id="openFollowUpStudents">Review students</button></article>
-  <article class="teacher-assist-card ${attention.writingToGrade?'needs-attention':''}"><span>Writing to review</span><strong>${attention.writingToGrade}</strong><p>${attention.writingToGrade?'submitted writing pieces are waiting for a teacher grade':'No writing submissions are waiting for a grade'}</p><button class="text-link" id="openWritingReview">Open students</button></article>
-  <article class="teacher-assist-card"><span>Teaching context</span><strong>${cls.length}</strong><p>${cls.length===1?'class assigned to you':cls.length+' classes assigned to you'} Â· ${sts.length} students</p><button class="text-link" id="openTeachNowCard">Open classes</button></article>
- </section>
- ${last?`<section class="section card teacher-latest-action"><span class="role-kicker">Latest assignment</span><h3>Lesson ${last.lessonNumber} Â· ${escapeHtml(last.lessonTitle)}</h3><p class="muted">${escapeHtml(getDB().classes.find(c=>c.id===last.classId)?.name||'Class')} Â· ${new Date(last.createdAt).toLocaleString()}</p><button class="secondary-btn" id="openLatestClass">Open class book</button></section>`:''}`;
- if($('continueTeaching'))$('continueTeaching').onclick=()=>{const r=teacherResumeContext();if(!r)return;activeTeacherClassId=r.c.id;activeTeacherLessonNumber=r.lesson.number;activeTeacherSectionIndex=r.sectionIndex;currentPage='teacher-live-lesson';renderNav();teacherLiveLesson()};
- const openTeach=()=>{currentPage='teach';renderNav();teacherTeach()};
- if($('openTeachNow'))$('openTeachNow').onclick=openTeach;
- $('openTeachNowCard').onclick=openTeach;
- $('openFollowUpStudents').onclick=()=>{currentPage='students';renderNav();students()};
- $('openWritingReview').onclick=()=>{currentPage='students';renderNav();students()};
- if($('openLatestClass'))$('openLatestClass').onclick=()=>{activeTeacherClassId=last.classId;currentPage='teacher-book';renderNav();teacherBook()};
-}
-async function teacherTeach(){await ensureLiveBooks();const cls=getDB().classes;title('Teacher','Teach');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Live class</span><h1>Choose your class</h1><p>Your class book opens directly inside EnglishGate.</p></div></div><div class="class-card-grid">${cls.map(c=>{const b=bookMeta(c.bookId||c.course_id),live=liveBookForClass(c),wb=workbookForClass(c),last=assignmentsForClass(c.id)[0],canOpen=Boolean(live||wb);return `<article class="management-card teacher-book-card"><div class="management-card-head"><span class="pill teal">${escapeHtml(c.level)}</span><span>${classStudents().filter(st=>st.classIds?.includes(c.id)).length} students</span></div><h3>${escapeHtml(c.name)}</h3><p class="book-line">Book: <strong>${escapeHtml(b?.title||c.course_id)}</strong></p>${last?`<p class="muted">Last assigned: Lesson ${last.lessonNumber} Â· ${escapeHtml(last.lessonTitle)}</p>`:''}<button class="primary-btn" data-teach-class="${c.id}" ${canOpen?'':'disabled'}>${canOpen?'Open live book':'Live book unavailable'}</button></article>`}).join('')||'<div class="empty-state"><h3>No classes assigned</h3><p>Ask the System Admin to assign a class and book.</p></div>'}</div>`;document.querySelectorAll('[data-teach-class]').forEach(b=>b.onclick=()=>{const saved=teacherResumeContext();activeTeacherClassId=b.dataset.teachClass;if(saved?.c.id===activeTeacherClassId){activeTeacherLessonNumber=saved.lesson.number;activeTeacherSectionIndex=saved.sectionIndex}else{activeTeacherLessonNumber=1;activeTeacherSectionIndex=0}currentPage='teacher-book';renderNav();teacherBook()})}
-async function teacherBook(){await ensureLiveBooks();const c=teacherClass(),live=liveBookForClass(c),wb=workbookForClass(c);if(!c||!live||!wb){currentPage='teach';teacherTeach();return}title('Teacher','Live Book');$('content').innerHTML=`<section class="teacher-book-shell"><button class="back-link" id="backTeachClasses">â† Classes</button><div class="course-intro"><div><span class="pill teal">${escapeHtml(c.level)}</span><h1>${escapeHtml(live.title)}</h1><p>${escapeHtml(c.name)} Â· Teach the live lesson here, then assign the matching workbook.</p></div></div><div class="teacher-lesson-list">${live.lessons.map(l=>{const w=wb.lessons.find(x=>x.number===l.number),assigned=w?assignmentForLesson(c.id,w.id):null;return `<button class="teacher-live-row" data-live-lesson="${l.number}"><span class="teacher-live-num">${l.number}</span><span><strong>${escapeHtml(l.title)}</strong><small>${w?'Workbook matched':'Workbook match missing'}</small></span><b>${assigned?'Assigned âœ“':'Teach â†’'}</b></button>`}).join('')}</div></section>`;$('backTeachClasses').onclick=()=>{currentPage='teach';renderNav();teacherTeach()};document.querySelectorAll('[data-live-lesson]').forEach(b=>b.onclick=()=>{activeTeacherLessonNumber=Number(b.dataset.liveLesson);activeTeacherSectionIndex=0;currentPage='teacher-live-lesson';renderNav();teacherLiveLesson()})}
-function lessonCanDoGoal(l){const line=String(l?.content||'').split('\n').map(x=>x.trim()).find(x=>/^CAN-DO GOAL:/i.test(x));return line?line.replace(/^CAN-DO GOAL:\s*/i,'').trim():''}
-function liveSectionContent(section){return (section?.lines||[]).filter(x=>!/^CAN-DO GOAL:/i.test(String(x).trim())).join('\n')}
-function teacherLiveLesson(){
- const c=teacherClass(),live=liveBookForClass(c),wb=workbookForClass(c);
- if(!c||!live||!wb){currentPage='teach';teacherTeach();return}
- const l=live.lessons.find(x=>x.number===activeTeacherLessonNumber),w=wb.lessons.find(x=>x.number===activeTeacherLessonNumber);
- if(!l){currentPage='teacher-book';teacherBook();return}
- const sections=liveSections(l.content),total=sections.length,assigned=w?assignmentForLesson(c.id,w.id):null;
- activeTeacherSectionIndex=Math.max(0,Math.min(activeTeacherSectionIndex,Math.max(0,total-1)));
- const section=sections[activeTeacherSectionIndex],isLast=activeTeacherSectionIndex===total-1,goal=lessonCanDoGoal(l);
- rememberTeacherContext(c.id,l.number,activeTeacherSectionIndex);
- const stageName=section?sectionLabel(section.title,activeTeacherSectionIndex,total):'Lesson unavailable';
- title('Teacher','Lesson '+l.number);
- const stages=sections.map((x,i)=>`<button class="eg-stage ${i===activeTeacherSectionIndex?'is-current':''}" data-live-section="${i}" ${i===activeTeacherSectionIndex?'aria-current="step"':''}><span>${i+1}</span><strong>${escapeHtml(sectionLabel(x.title,i,total).toLowerCase())}</strong></button>`).join('');
- const nextAction=!total?'':!isLast?'<button class="primary-btn" id="nextLiveSection">Next stage â†’</button>':assigned?'<span class="eg-assigned" role="status">Workbook assigned âœ“</span>':w&&w.ready!==false?'<button class="primary-btn" id="finishAndAssign">Assign workbook â†’</button>':'<span class="eg-unavailable">Matching workbook is not available yet.</span>';
- $('content').innerHTML=`<section class="eg-lesson">
-  <header class="eg-lesson-header"><button class="ghost-btn" id="backTeacherBook">â† Lessons</button>${englishGateLogo('englishgate-logo-lesson')}<div><p>${escapeHtml(c.name)} Â· ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} Â· ${escapeHtml(l.title)}</h1></div>${w&&w.ready!==false?'<button class="ghost-btn" id="openTeacherWorkbook">Workbook</button>':''}</header>
-  <div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside>
-  <div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeTeacherSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header>
-  <article class="live-book-content eg-stage-content" aria-labelledby="liveStageTitle">${activeTeacherSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no teaching content yet. Return to the book and choose another lesson.</p>'}</article>
-  ${isLast?`<div class="eg-workbook-note">${w?`<strong>After class</strong><span>Workbook ${w.number} Â· ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}
-  <footer class="eg-lesson-footer"><button class="ghost-btn" id="prevLiveSection" ${activeTeacherSectionIndex===0?'disabled':''}>â† Previous</button>${nextAction}</footer></div></div>
- </section>`;
- $('backTeacherBook').onclick=()=>{currentPage='teacher-book';renderNav();teacherBook()};
- if($('openTeacherWorkbook'))$('openTeacherWorkbook').onclick=()=>openTeacherWorkbook(c.id,w.id);
- const goToStage=index=>{activeTeacherSectionIndex=index;teacherLiveLesson();focusWithoutScroll($('liveStageTitle'));resetAppScroll()};
- document.querySelectorAll('[data-live-section]').forEach(b=>b.onclick=()=>goToStage(Number(b.dataset.liveSection)));
- $('prevLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0)goToStage(activeTeacherSectionIndex-1)};
- if($('nextLiveSection'))$('nextLiveSection').onclick=()=>goToStage(activeTeacherSectionIndex+1);
- if($('finishAndAssign'))$('finishAndAssign').onclick=()=>openAssignWorkbook(c,l,w);
- wireLiveVocabulary();wireLiveChecks();
-}
+JOO‰Ï\XÛHÛ\ÜÏH™YË]›ØØX‹\™XŞXÛKXØ\™Ü[ˆÛ\ÜÏHœİYÙKX˜YÙH”™XØ[	ÊÊJÌJJÉÏÜÜ[‰ÊÙ\ØØ\R[
+Ú]\š[Ù
+›YX[š[™ÊJJÉÏÜ]ˆÛ\ÜÏH™YË]›ØØX‹\™XŞXÛKY[H[œ]\OH^ˆ]]ØÛÛ\]OH›Ù™ˆˆ]K]›ØØX‹\™XŞXÛH]KX[œİÙ\H‰ÊÙ\ØØ\P]ŠÛÜ™
+JÉÈˆ]K]ÛÜ™H‰ÊÙ\ØØ\P]ŠÛÜ™
+JÉÈˆ]K[YX[š[™ÏH‰ÊÙ\ØØ\P]Š›YX[š[™ÊJÉÈˆ]KY^[\OH‰ÊÙ\ØØ\P]Š™^[\JJÉÈˆXÙZÛ\H•\HHÛÜ™Üˆ˜\ÙH]ÛˆÛ\ÜÏHœÙXÛÛ™\KXˆˆ\OH˜]Ûˆˆ]K]›ØØX‹\™XŞXÛKXÚXÚÏÚXÚÈ™XØ[Ø]ÛÙ]]ˆ]K]›ØØX‹\™XŞXÛKY™YY˜XÚÈ\šXK[]™OHœÛ]HÙ]Ø\XÛO‰ÊKš›Ú[Š	ÉÊJÂˆ	ÏÙ]ÜÙXİ[Û‰ÎÂŸB™[˜İ[Ûˆ›ØØXXİ]š]J
+^ÂˆÛÛœİ\ÏJ›ØØX[\OËš][\ßZ[›ØØX”]Y\İ[ÛœÊ
+JKœÛXÙJL
+K™YœÏ]ÛÜšØ›ÛÚÕ›ØØX”™Y™\™[˜Ù\Ê
+NÂˆ™]\›ˆ]ˆÛ\ÜÏH™YË\ÚÚ[\YÙHYË]›ØØX[\K\YÙH‚ˆXY\ˆÛ\ÜÏH™YË\ÚÚ[Z\›È]Ü[ˆÛ\ÜÏH™YË\ÚÚ[ZÚXÚÙ\ˆ•›ØØX[\OÜÜ[O•ÛÜ™È[ˆÛÛ^ÚO‘^Ü™H\ÙY[[™İXYÙK[ˆ\ÙH][ˆ™X[Ú]X][ÛœËÜÙ]Ü[ˆÛ\ÜÏH™YË\]Y\İ[Û‹XÛİ[‰Ü\Ë›[™İH]Y\İ[ÛœÏÜÜ[ÚXY\‚ˆ]ˆÛ\ÜÏH™YË\ÚÚ[[^[İ]‚ˆ\ÚYHÛ\ÜÏH™YËYY]ÜšX[\[™[YË]›ØØX‹\™Y™\™[˜ÙH‚ˆ]ˆÛ\ÜÏH™YË\[™[ZXY[™ÈÛX[“[™İXYÙH˜[šÏÜÛX[‰Ù\ØØ\R[
+]J_OÚ“YX[š[™Èš\œİˆ[ˆ›İXÙHİÈHÛÜ™Üˆ^™\ÜÚ[ÛˆÛÜšÜÈ[ˆÛÛ^ÜÙ]‚ˆ]ˆÛ\ÜÏH™YË]›ØØX‹\™Y™\™[˜ÙKYÜšY‰Ü™YœË›[™İÜ™YœË›X\
 
-function openAssignWorkbook(c,liveLesson,workbookLesson){showModal(`<div class="section-head"><div><span class="role-kicker">Post-class action</span><h3>Assign matching workbook</h3><p class="muted">${escapeHtml(c.name)}</p></div><button class="icon-btn" data-close>Ã—</button></div><div class="assignment-match-card"><span>Live lesson</span><strong>Lesson ${liveLesson.number} Â· ${escapeHtml(liveLesson.title)}</strong><span>â†“ automatically matched</span><strong>Workbook Lesson ${workbookLesson.number} Â· ${escapeHtml(workbookLesson.title)}</strong></div><div class="assignment-skill-row"><span>Vocabulary</span><span>Listening & Reading</span><span>Grammar</span><span>Writing</span></div><button class="primary-btn" id="confirmAssignment">Assign to class</button><div id="assignResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('confirmAssignment').onclick=async()=>{const btn=$('confirmAssignment');btn.disabled=true;btn.textContent='Assigningâ€¦';try{const a=await api('/api/teacher/assignments',{method:'POST',body:JSON.stringify({classId:c.id,bookId:c.bookId||c.course_id,lessonId:workbookLesson.id,lessonNumber:workbookLesson.number,lessonTitle:workbookLesson.title,skills:WORKBOOK_STEPS})});await refreshState();const link=window.location.origin+'/?assignment='+encodeURIComponent(a.id),message=`${c.name}: Lesson ${workbookLesson.number} Â· ${workbookLesson.title} workbook is ready. Complete Vocabulary, Listening & Reading, Grammar and Writing: ${link}`;$('assignResult').innerHTML=`<div class="assignment-success"><strong>Assigned to ${escapeHtml(c.name)}</strong><p>Share this WhatsApp message with the class. The link opens the exact workbook lesson.</p><textarea id="whatsappMessage" readonly>${escapeHtml(message)}</textarea><div class="student-cta-row"><button class="secondary-btn" id="copyWhatsApp">Copy WhatsApp message</button><button class="primary-btn" id="openWhatsApp">Open WhatsApp</button></div></div>`;btn.classList.add('hidden');$('copyWhatsApp').onclick=async()=>{await navigator.clipboard.writeText(message);$('copyWhatsApp').textContent='Copied âœ“'};$('openWhatsApp').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank')}catch(e){btn.disabled=false;btn.textContent='Assign to class';$('assignResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
-function students(){const sts=classStudents();title('Teacher','Students');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Roster</span><h1>Your students</h1><p>Students in classes assigned to you.</p></div><button class="primary-btn" id="addStudent">+ Add student</button></div><div class="card table-wrap clean-table"><table class="data-table"><thead><tr><th>Student</th><th>Class</th><th>Progress</th><th>Focus</th><th></th></tr></thead><tbody>${sts.map(s=>studentRow(s)).join('')}</tbody></table></div>`;$('addStudent').onclick=openAddStudent;bindStudentActions()}
-function studentRow(s){const w=weakest(s.id),className=getDB().classes.find(c=>s.classIds?.includes(c.id))?.name||'â€”';return `<tr><td><div class="student-cell"><div class="avatar">${escapeHtml(s.name[0])}</div><div><button class="student-name-link" data-student-report="${escapeAttr(s.id)}" type="button">${escapeHtml(s.name)}</button><div class="muted">@${escapeHtml(s.username)}</div><small>WhatsApp: ${escapeHtml(s.whatsappNumber||'Not recorded')}</small></div></div></td><td>${escapeHtml(className)}</td><td>${completionPct(s.id)}%</td><td>${w?.label||'No scored activity yet'}</td><td><div class="management-row-meta"><button class="ghost-btn" data-transfer-student="${escapeAttr(s.id)}">Transfer</button><button class="ghost-btn" data-password-student="${escapeAttr(s.id)}">Password</button><button class="ghost-btn" data-review-student="${escapeAttr(s.id)}">View report</button></div></td></tr>`}
-function bindStudentActions(){document.querySelectorAll('[data-student-report]').forEach(b=>b.onclick=()=>openStudentDetail(b.dataset.studentReport));document.querySelectorAll('[data-review-student]').forEach(b=>b.onclick=()=>openStudentDetail(b.dataset.reviewStudent));document.querySelectorAll('[data-password-student]').forEach(b=>b.onclick=()=>openStudentPasswordHelp(b.dataset.passwordStudent));document.querySelectorAll('[data-transfer-student]').forEach(b=>b.onclick=()=>openTransferStudent(b.dataset.transferStudent))}
-function openStudentPasswordHelp(id){
- const st=getDB().users.find(u=>u.id===id);if(!st||st.role!=='student')return;
- const endpoint=session?.role==='admin'?'/api/admin/users/'+encodeURIComponent(id)+'/reset-password':'/api/teacher/students/'+encodeURIComponent(id)+'/reset-password';
- showModal(`<div class="section-head"><div><span class="role-kicker">Student access</span><h3>Password help Â· ${escapeHtml(st.name)}</h3><p class="muted">@${escapeHtml(st.username)} Â· Existing passwords cannot be viewed. You can replace the password below.</p></div><button class="icon-btn" data-close>Ã—</button></div>
-  <section class="password-help-card">
-   <label>Set a new password
-    <div class="password-edit-row"><input id="studentNewPassword" type="password" inputmode="numeric" autocomplete="new-password" minlength="8" maxlength="20" pattern="[0-9]{8,20}" placeholder="8â€“20 digits"><button class="ghost-btn" id="toggleStudentPassword" type="button">Show</button></div>
-    <small>Use 8â€“20 digits. Give the new password directly to the student.</small>
-   </label>
-   <div class="password-help-actions"><button class="primary-btn" id="setStudentPassword" type="button">Set new password</button><button class="secondary-btn" id="generateStudentPassword" type="button">Generate temporary password</button></div>
-   <div id="studentPasswordResult"></div>
-  </section>`);
- document.querySelector('[data-close]').onclick=closeModal;
- const input=$('studentNewPassword'),result=$('studentPasswordResult');
- $('toggleStudentPassword').onclick=()=>{const showing=input.type==='text';input.type=showing?'password':'text';$('toggleStudentPassword').textContent=showing?'Show':'Hide'};
- const save=async password=>{
-  result.innerHTML='<div class="muted">Updating passwordâ€¦</div>';
-  try{
-   const body=password?JSON.stringify({password}):JSON.stringify({});
-   const r=await api(endpoint,{method:'POST',body});
-   const pw=r.password||r.temporaryPassword;
-   result.innerHTML=`<div class="credential-card password-result-card"><span>${r.generated?'Temporary password generated':'New password saved'}</span><strong>@${escapeHtml(st.username)}</strong><code id="studentPasswordValue">${escapeHtml(pw)}</code><small>Share this password with the student. It will not be shown here again after you close this window.</small><button class="ghost-btn" id="copyStudentPassword" type="button">Copy password</button></div>`;
-   $('copyStudentPassword').onclick=async()=>{try{await navigator.clipboard.writeText(pw);$('copyStudentPassword').textContent='Copied âœ“'}catch{$('copyStudentPassword').textContent='Copy failed'}};
-  }catch(e){result.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}
- };
- $('setStudentPassword').onclick=()=>{const pw=input.value.trim();if(!/^\d{8,20}$/.test(pw)){result.innerHTML='<div class="feedback bad">Enter a password containing 8â€“20 digits.</div>';return}save(pw)};
- $('generateStudentPassword').onclick=()=>save('');
-}
-function openTransferStudent(id){const db=getDB(),st=db.users.find(u=>u.id===id),classes=db.classes||[],current=studentClass(id);if(!st)return;if(!classes.length){showModal(`<div class="section-head"><div><span class="role-kicker">Transfer student</span><h3>No available classes</h3><p class="muted">Create or assign a class before moving students.</p></div><button class="icon-btn" data-close>Ã—</button></div>`);document.querySelector('[data-close]').onclick=closeModal;return}showModal(`<div class="section-head"><div><span class="role-kicker">Transfer student</span><h3>${escapeHtml(st.name)}</h3><p class="muted">Current class: ${escapeHtml(current?.name||'â€”')}</p></div><button class="icon-btn" data-close>Ã—</button></div><form id="transferStudentForm" class="form-grid"><label>Move to class<select id="transferClass">${classes.map(c=>`<option value="${escapeAttr(c.id)}" ${c.id===current?.id?'selected':''}>${escapeHtml(c.name)} Â· ${escapeHtml(bookMeta(c.bookId||c.course_id)?.title||c.level)}</option>`).join('')}</select></label><button class="primary-btn" type="submit">Transfer student</button></form><div id="transferResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('transferStudentForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter||$('transferStudentForm').querySelector('button[type="submit"]'),result=$('transferResult'),classId=$('transferClass').value;btn.disabled=true;btn.textContent='Transferring...';try{const endpoint=session?.role==='admin'?`/api/admin/students/${id}/class`:`/api/teacher/students/${id}/class`;await api(endpoint,{method:'PATCH',body:JSON.stringify({classId})});await refreshState();closeModal();renderPage()}catch(err){btn.disabled=false;btn.textContent='Transfer student';result.innerHTML=`<div class="feedback bad">${escapeHtml(err.message)}</div>`}}}
-function openAddStudent(){const cls=getDB().classes;if(!cls.length){showModal(`<div class="section-head"><div><span class="role-kicker">Students</span><h3>No class assigned</h3><p class="muted">A System Admin must assign at least one class before you can create students.</p></div><button class="icon-btn" data-close>Ã—</button></div>`);document.querySelector('[data-close]').onclick=closeModal;return}showModal(`<div class="section-head"><div><span class="role-kicker">New student</span><h3>Create student access</h3></div><button class="icon-btn" data-close>Ã—</button></div><form id="studentForm" class="form-grid"><label>Student name<input id="newName" required></label><label>WhatsApp number<input id="newWhatsapp" type="tel" autocomplete="tel" required maxlength="40" placeholder="+252 63 1234567"><small>Include the country code, starting with +.</small></label><label>Username<input id="newUsername" required placeholder="e.g. ahmed.ali"></label><label>Class<select id="newClass">${cls.map(c=>`<option value="${c.id}">${escapeHtml(c.name)} Â· ${escapeHtml(bookMeta(c.bookId||c.course_id)?.title||c.level)}</option>`).join('')}</select></label><button class="primary-btn" type="submit">Create student</button></form><div id="createResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('studentForm').onsubmit=async e=>{e.preventDefault();const name=$('newName').value.trim(),username=$('newUsername').value.trim().toLowerCase(),classId=$('newClass').value;try{const r=await api('/api/teacher/students',{method:'POST',body:JSON.stringify({name,username,classId,whatsappNumber:$('newWhatsapp').value.trim()})});await refreshState();$('createResult').innerHTML=`<div class="credential-card"><span>Student created</span><strong>@${escapeHtml(r.username)}</strong><code>${escapeHtml(r.temporaryPassword)}</code><small>Copy this temporary password now. It will not be shown again.</small></div>`}catch(err){$('createResult').innerHTML=`<div class="feedback bad">${escapeHtml(err.message)}</div>`}}}
-function finalWritingAssessmentHtml(id){const raw=writingFor(id,'su-b2-l22');if(!raw)return'';const submission=writingSubmission(id,'su-b2-l22'),score=getDB().writingScores?.[id]?.['su-b2-l22'],canGrade=session?.role==='teacher';if(!submission.final)return'';return `<section class="section teacher-writing-assessment"><div class="section-head"><div><span class="pill gold">Lesson 22 Â· Human graded</span><h3>Final B2 writing assessment</h3></div>${score===null||score===undefined?'':`<strong>${score}%</strong>`}</div><div class="submitted-writing">${escapeHtml(submission.final)}</div>${canGrade?`<label>Grade (0â€“100)<input id="finalWritingGrade" type="number" min="0" max="100" step="1" value="${score??''}"></label><button class="primary-btn" id="saveFinalWritingGrade">Save grade</button>`:`<p class="muted">${score===null||score===undefined?'Waiting for teacher grade.':'Teacher grade saved.'}</p>`}<div id="writingGradeResult"></div></section>`}
-function openStudentDetail(id){const db=getDB(),st=db.users.find(u=>u.id===id);if(!st||st.role!=='student')return;const w=weakest(id),ats=attempts(id).slice(-10).reverse(),c=studentClass(id),b=bookMeta(bookIdForStudent(id)),completed=completedActivityCount(id),scored=scoredActivityCount(id);showModal(`<div class="section-head student-report-head"><div><p class="eyebrow">Student report Â· ${escapeHtml(b?.title||'Workbook')}</p><h3>${escapeHtml(st.name)}</h3><p>WhatsApp: ${escapeHtml(st.whatsappNumber||'Not recorded')}</p><p class="muted">${escapeHtml(c?.name||'')}</p></div><button class="icon-btn" data-close>Ã—</button></div><div class="grid grid-4 compact-grid">${['vocabulary','listening','grammar','writing'].map(k=>skillCard(skillLabel(k),mastery(id,k),'Recorded average')).join('')}</div><div class="section card"><strong>${completed} completed activities</strong><span class="muted"> Â· ${scored} scored activities</span></div>${w?`<div class="weakness section"><strong>Lowest recorded area: ${w.label} Â· ${w.score}%</strong><span>${w.tip}</span></div>`:'<div class="weakness section"><strong>No scored performance evidence yet.</strong></div>'}${studentPerformanceTable(id)}${finalWritingAssessmentHtml(id)}<div class="section-head section"><div><h3>Recent attempts</h3><p>Exact saved workbook scores.</p></div><button class="ghost-btn" id="resetPass">Password help</button></div>${ats.length?ats.map(a=>`<div class="attempt-row"><div><strong>Lesson ${lessonById(a.lessonId)?.number||'â€”'} Â· ${skillLabel(a.skill)} ${(a.tags||[]).some(t=>String(t).startsWith('boost:'))?'<span class="pill teal">Boost</span>':''}</strong><span>${new Date(a.at).toLocaleString()}</span></div><strong>${a.score}%</strong></div>`).join(''):'<p class="muted">No activity attempts yet.</p>'}<div id="resetResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('resetPass').onclick=()=>openStudentPasswordHelp(id);if(session?.role==='teacher'&&$('saveFinalWritingGrade'))$('saveFinalWritingGrade').onclick=async()=>{const score=Number($('finalWritingGrade').value),result=$('writingGradeResult');try{await api(`/api/teacher/writing/${id}/su-b2-l22/grade`,{method:'POST',body:JSON.stringify({score})});await refreshState();result.innerHTML=`<div class="feedback good">Final writing grade saved: ${score}%.</div>`}catch(e){result.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
+JOO˜\XÛHÛ\ÜÏH™YË]›ØØX‹\™Y™\™[˜ÙKXØ\™Ü[‰ÚJÌ_OÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+ÛÜ™
+_OÜİ›Û™Ï‰Ù\ØØ\R[
+›YX[š[™Ê_OÜ‰Ş™^[\OØÛX[¸ '	Ù\ØØ\R[
+™^[\J_x 'OÜÛX[˜‰ÉßOØ\XÛO˜
+Kš›Ú[Š	ÉÊN‰ÏÛ\ÜÏH›]]Y•\ÙHHXİ]š]H]Y\İ[ÛœÈÈ\ØÛİ™\ˆÙ^x &\ÈÙ^H[™İXYÙKÜ‰ßOÙ]‚ˆ]ˆÛ\ÜÏH™YË]\XØ\™•\ÙH]ØÜ[Y\ˆ™XÛÙÛš\Ú[™ÈHÛÜ™Ø^HÜˆÜš]HÛ™HYHÙ[[˜ÙHÚ]]ÜÜ[Ù]‚ˆØ\ÚYO‚ˆXZ[ˆÛ\ÜÏH™YË]\ÚË\[™[‚ˆ]ˆÛ\ÜÏH™YË]\ÚË\[™[ZXY]ÛX[”˜XİXÙOÜÛX[ÛÛ\]HHXİ]š]Y\ÏÚÙ]Ü[”™XÛÙÛš\ÙH8¡¤ˆ™]šY]™H8¡¤ˆ\OÜÜ[Ù]‚ˆ]ˆÛ\ÜÏH˜Xİ]š]K\]Y\İ[Û‹[\İ‰Ü\Ë›X\
 
-function classes(){const cls=getDB().classes;title('Teacher','Classes');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Assigned to you</span><h1>Your classes</h1><p>Each class is connected to one book. The live class handles speaking and fluency; EnglishGate tracks the four workbook skills.</p></div></div><div class="class-card-grid">${cls.map(c=>{const sts=classStudents().filter(st=>st.classIds?.includes(c.id)),avg=sts.length?Math.round(sts.reduce((a,st)=>a+completionPct(st.id),0)/sts.length):0,b=bookMeta(c.bookId||c.course_id);return `<article class="management-card"><div class="management-card-head"><span class="pill teal">${escapeHtml(c.level)}</span><span>${sts.length} students</span></div><h3>${escapeHtml(c.name)}</h3><p class="book-line">Book: <strong>${escapeHtml(b?.title||c.course_id)}</strong></p><p>${avg}% average recorded completion</p>${progress(avg)}</article>`}).join('')||'<div class="empty-state"><h3>No classes yet</h3><p>Your System Admin must create a class and assign it to you.</p></div>'}</div>`}
-function aggregateWeaknesses(){const map={};classStudents().forEach(s=>{const w=weakest(s.id);if(!w)return;map[w.key]=map[w.key]||{key:w.key,label:w.label,count:0,total:0};map[w.key].count++;map[w.key].total+=w.score});return Object.values(map).map(x=>({...x,avg:Math.round(x.total/x.count)})).sort((a,b)=>b.count-a.count||a.avg-b.avg)}
+KJOOØÛÛœİY]O]›ØØX‘™YY˜XÚÓY]JKJNÜ™]\›ˆ\XÛHÛ\ÜÏH™İZYY\]Y\İ[Ûˆ]ˆÛ\ÜÏHœ]Y\İ[Û‹\İYÙHÜ[‰ÜKœİYÙ_	Ô]Y\İ[Û‰ßH0­È	ÚJÌ_OÜÜ[Ù]‰Ù\ØØ\R[
+KœJ_OÜ‰ÜK\I‰œK\HOOIØÚÚXÙIÏÛÜ[‘]šY[˜ÙJ	İ‰ÊÚKKœKK›Z[ŸKKYËK\OOOIÙ^Xİ	ÏÜK˜[œİÙ\‰ÉÊNœ˜Y[Ê	İ‰ÊÚKK›Ü[ÛœËK˜[œİÙ\‹KYËY]J_OØ\XÛO˜JKš›Ú[Š	ÉÊ_OÙ]‚ˆÛXZ[‚ˆÙ]‚ˆ]ˆYH˜Xİ]š]Q™YY˜XÚÈÙ]]ˆÛ\ÜÏHœÚÚ[XXİ[Û‹\›İÈ]ÛˆÛ\ÜÏHœš[X\KXˆİZYY\İX›Z]ÚÚ[\İX›Z]ˆYH˜ÚXÚĞXİ]š]HÚXÚÈ›ØØX[\OØ]Û‰ØXİ]š]QÛ™P]ÛŠ
+_OÙ]‚ˆÙ]˜ÂŸB™[˜İ[Ûˆ]Y\İ[Û”Ù][
+\Ë™Yš^X™[
+^Âˆ™]\›ˆ\Ë›X\
 
-function weaknesses(){const areas=aggregateWeaknesses(),students=classStudents();title('Teacher intelligence','Recorded performance');$('content').innerHTML=`<div class="grid grid-2"><div class="card"><h3>Lowest recorded skill averages</h3><p class="muted">Calculated only from saved scored activities. Students without scored evidence are excluded.</p>${areas.length?areas.map(a=>`<div class="question"><div style="display:flex;justify-content:space-between"><strong>${a.label}</strong><span class="pill ${a.avg<65?'gold':'teal'}">${a.count} student${a.count!==1?'s':''}</span></div><div style="margin-top:10px">${progress(a.avg)}</div><small class="muted">Recorded average ${a.avg}%</small></div>`).join(''):'<p class="muted">No scored evidence yet.</p>'}</div><div><div class="card"><h3>Student evidence</h3>${students.map(st=>{const w=weakest(st.id);return `<p><strong>${escapeHtml(st.name)}:</strong> ${w?`${w.label} ${w.score}%`:'No scored evidence'}</p>`}).join('')}</div></div></div>`}
+KJOO˜\XÛHÛ\ÜÏH™İZYY\]Y\İ[Ûˆ]ˆÛ\ÜÏHœ]Y\İ[Û‹\İYÙHÜ[‰ÛX™[H0­È	ÚJÌ_OÜÜ[Ù]‰Ù\ØØ\R[
+KœJ_OÜ‰Ü˜Y[Ê™Yš^
+ÚKK›Ü[ÛœËK˜[œİÙ\‹KYÊ_OØ\XÛO˜
+Kš›Ú[Š	ÉÊNÂŸB˜ÛÛœİTÔÓÓ—Õ’TÕPSÏ^ÂˆÌ[NÜÜ˜Î‰ËØ\ÜÙ]ËÛ\ÜÛÛ‹]š\İX[ËİÌ[Kœİ™ÉË[‰ÕÛÈY[X\›™\œÈ\Øİ\ÜÚ[™È[™Û\ÚÛØ[ÈÙÙ]\ˆ]HX›HÚ]H\Ü[™›İX›ÛÚÜË‰Ë›Û\‰ÕÚ\™HZYÚ\ÙHX\›™\œÈ\ÙH[™Û\Ú[ˆ™X[Y™OÉßKˆÌ[ÜÜ˜Î‰ËØ\ÜÙ]ËÛ\ÜÛÛ‹]š\İX[ËİÌ[‹œİ™ÉË[‰ÕÛÈ›Ù™\ÜÚ[Û˜[ÈÜ™Y][™ÈXXÚİ\ˆÚ]H[™ÚZÙH[ˆH[Ù\›ˆÙ™šXÙK‰Ë›Û\‰ÕÚ][™›Ü›X][ÛˆÈ[ÜH\İX[HÚ\™HÚ[ˆ^HYY]›Ù™\ÜÚ[Û˜[OÉßKˆÌ[ÎÜÜ˜Î‰ËØ\ÜÙ]ËÛ\ÜÛÛ‹]š\İX[ËİÌ[Ëœİ™ÉË[‰ÕÛÈY[È]š[™ÈH›Øİ\ÙYÛÛ™\œØ][ÛˆÚ[HÛ™H\œÛÛˆZÙ\ÈH[ÛY[È[šË‰Ë›Û\‰ÕÚ]Ø[ˆHÜXZÙ\ˆÈÚ[ˆ^H™YY[Ü™H[YHÈ[šÏÉßBŸNÂ™[˜İ[Ûˆ\ÜÛÛ•š\İX[[
+
+^ÂˆÛÛœİSTÔÓÓ—Õ’TÕPSÖÛËšYNÂˆYŠ]Š\™]\›ˆ	ÉÎÂˆ™]\›ˆšYİ\™HÛ\ÜÏH™YË[\ÜÛÛ‹]š\İX[]ˆÛ\ÜÏH™YË[\ÜÛÛ‹]š\İX[[YYXH[YÈÜ˜ÏH‰Ù\ØØ\P]Š‹œÜ˜Ê_Hˆ[H‰Ù\ØØ\P]Š‹˜[
+_HˆØY[™ÏH™XYÙ\ˆÙ]šYØØ\[ÛÜ[™Y›Ü™H[İH™YÚ[ÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+‹œ›Û\
+_OÜİ›Û™ÏÙšYØØ\[ÛÙšYİ\™O˜ÂŸB™[˜İ[Ûˆ\ÜÛÛ•š\İX[[X’[
+
+^ÂˆÛÛœİSTÔÓÓ—Õ’TÕPSÖÛËšYNÂˆYŠ]Š\™]\›ˆ	ÉÎÂˆ™]\›ˆ]ˆÛ\ÜÏH™YË[\ÜÛÛ‹]š\İX[][Xˆˆ]OH“\ÜÛÛˆš\İX[[YÈÜ˜ÏH‰Ù\ØØ\P]Š‹œÜ˜Ê_Hˆ[Hˆˆ\šXKZY[HYHÙ]˜ÂŸB™[˜İ[Ûˆ\İ[š[™ĞXİ]š]J
+^ÂˆÛÛœİ[J›\İ[š[™ÏËœ]Y\İ[Ûœß×JKœÛXÙJL
+K™XY[™Ï[›\İ[š[™ÏËœ™XY[™Õ^ØÜš\Tİš[™Ê›\İ[š[™ÏË˜]Y[ÔØÜš\›\İ[š[™ÏË^	ÉÊKš[J
+KÛÛ\]YHZ\ÕÛÜšØ›ÛÚÔ™]šY]Ê
+I‰œÚÚ[ÛÛ\][Û‘›ÜŠÙ\ÜÚ[Û‹šYšY
+Kš[˜ÛY\Ê	Û\İ[š[™ÉÊNÂˆÛÛœİ™XY[™Ô\ÏX[™š[\ŠOO”İš[™ÊKYß	ÉÊKœİ\ÕÚ]
+	Ü™XY[™Î‰ÊJNÂˆÛÛœİ\İ[š[™Ô\ÏX[™š[\ŠOO”İš[™ÊKYß	ÉÊKœİ\ÕÚ]
+	Û\İ[š[™Î‰ÊJNÂˆÛÛœİÚ\™Y\ÏX[™š[\ŠOOˆTİš[™ÊKYß	ÉÊKœİ\ÕÚ]
+	Ü™XY[™Î‰ÊI‰ˆTİš[™ÊKYß	ÉÊKœİ\ÕÚ]
+	Û\İ[š[™Î‰ÊJNÂˆÛÛœİÜ]P›ÛÛX[Š™XY[™É‰œØÜš\	‰œ™XY[™Ô\Ë›[™İ	‰›\İ[š[™Ô\Ë›[™İ
+NÂˆÛÛœİ^Y\X]ˆÛ\ÜÏH˜]Y[Ë\^Y\ˆYËX]Y[ËXÛÛœÛÛHˆ]KX]Y[Ë\^Y\]ÛˆYHœ^P]Y[ÈˆÛ\ÜÏHœ^KXˆˆ]OH”^HÜˆ]\ÙH]Y[Èˆ\šXK[X™[H”^HÜˆ]\ÙH]Y[È¸¥­Ø]Û]ˆÛ\ÜÏH™YËX]Y[ËX›ÙH]ˆÛ\ÜÏH™YË]Ø]™Y›Ü›Hˆ\šXKZY[HYHOÚOOÚOOÚOOÚOOÚOOÚOOÚOOÚOOÚOOÚOOÚOOÚOÙ]]ˆÛ\ÜÏH˜]Y[Ë][Y[[™H[œ]YH˜]Y[ÔÙYZÈˆ\OHœ˜[™ÙHˆZ[HŒˆX^HŒLˆ˜[YOHŒˆİ\HŒŒHˆ\šXK[X™[H]Y[È›ÙÜ™\ÜÈ]ˆÛ\ÜÏH˜]Y[Ë][YHÜ[ˆYH˜]Y[Ğİ\œ™[ŒŒÜÜ[Ü[ˆYH˜]Y[Ñ\˜][ÛˆŒŒÜÜ[Ù]Ù]Ù]]ÛˆYHœ™\İ\]Y[ÈˆÛ\ÜÏH˜]Y[ËZXÛÛ‹Xˆˆ]OH”™\İ\]Y[Èˆ\šXK[X™[H”™\İ\]Y[È¸¡®Ø]ÛÙ[XİYH˜]Y[ÔÜYYˆÛ\ÜÏH˜]Y[Ë\ÜYYˆ\šXK[X™[H”^X˜XÚÈÜYYÜ[Ûˆ˜[YOHŒÍHŒÍpåÏÛÜ[ÛÜ[Ûˆ˜[YOHŒHˆÙ[XİYŒpåÏÛÜ[ÛÜ[Ûˆ˜[YOHŒKŒHŒKŒpåÏÛÜ[ÛÜ[Ûˆ˜[YOHŒKHŒKpåÏÛÜ[ÛÜÙ[XİÜ[ˆYH˜]Y[Ôİ]\ÈˆÛ\ÜÏH›]]Y“\İ[ˆÚXÙH™Y›Ü™H[œİÙ\š[™ÈH\İ[š[™È]Y\İ[ÛœËÜÜ[Ù]˜ÂˆYŠÜ]
+^Âˆ™]\›ˆ]ˆÛ\ÜÏH™YË\ÚÚ[\YÙHYË\™XY[™Ë[\İ[š[™Ë\YÙH‚ˆXY\ˆÛ\ÜÏH™YË\ÚÚ[Z\›È]Ü[ˆÛ\ÜÏH™YË\ÚÚ[ZÚXÚÙ\ˆ”™XY[™È	ˆ\İ[š[™ÏÜÜ[O”™XY\İ[ˆ[™™\ÜÛ™ÚO•H™XY[™È]Y\İ[ÛœÈ\ÙHÛ›HH\XÛKˆH\İ[š[™È]Y\İ[ÛœÈ\ÙHÛ›HH]Y[ËÜÙ]Ü[ˆÛ\ÜÏH™YË\]Y\İ[Û‹XÛİ[‰Ø[›[™İH]Y\İ[ÛœÏÜÜ[ÚXY\‰Û\ÜÛÛ•š\İX[[
+ØÛÛ\XİY_J_BˆÙXİ[ÛˆÛ\ÜÏH™YË\Ûİ\˜ÙK]\ÚË\ÙXİ[ÛˆYË\™XY[™Ë\ÙXİ[Ûˆ‚ˆ]ˆÛ\ÜÏH™YË\™XY[™ËX\XÛHÜ[ˆÛ\ÜÏH™YË\ÚÚ[ZÚXÚÙ\ˆ”\H0­È™XY[™ÏÜÜ[‰Ù\ØØ\R[
+]J_OÚ‰Ù\ØØ\R[
+™XY[™Ê_OÜÙ]‚ˆ]ˆÛ\ÜÏH™YË]\ÚË\[™[]ˆÛ\ÜÏH™YË]\ÚË\[™[ZXY]ÛX[”™XY[™È\ÚÜÏÜÛX[[œİÙ\ˆœ›ÛHH\XÛOÚÙ]Ü[‰Ü™XY[™Ô\Ë›[™İH]Y\İ[ÛœÏÜÜ[Ù]]ˆÛ\ÜÏH˜Xİ]š]K\]Y\İ[Û‹[\İ‰Ü]Y\İ[Û”Ù][
+™XY[™Ô\Ë	Û‰Ë	Ô™XY[™ÉÊ_OÙ]Ù]‚ˆÜÙXİ[Û‚ˆÙXİ[ÛˆÛ\ÜÏH™YË\Ûİ\˜ÙK]\ÚË\ÙXİ[ÛˆYË[\İ[š[™Ë\ÙXİ[Ûˆ‚ˆ]ˆÛ\ÜÏH™YË[\İ[š[™Ë\ØÙ[™HÜ[ˆÛ\ÜÏH™YË\ÚÚ[ZÚXÚÙ\ˆ”\ˆ0­È\İ[š[™ÏÜÜ[‰Ù\ØØ\R[
+›\İ[š[™ÏË]_]J_OÚ“›İÈ\İ[‹ˆ\ÙH]Y\İ[ÛœÈ\™H˜\ÙYÛ›HÛˆÚ][İHX\‹Ü]ˆÛ\ÜÏH™YË[\İ[š[™Ë\][İH“\İ[ˆ›ÜˆHİ™\˜[Y\ÜØYÙHš\œİˆ™\^H›Üˆ]Z[Ù]]ˆÛ\ÜÏH™YËX]Y[ËXØ\™‰Ü^Y\ŸOÙ]Ù]‚ˆ]ˆÛ\ÜÏH™YË]\ÚË\[™[]ˆÛ\ÜÏH™YË]\ÚË\[™[ZXY]ÛX[“\İ[š[™È\ÚÜÏÜÛX[[œİÙ\ˆœ›ÛHH]Y[ÏÚÙ]Ü[‰Û\İ[š[™Ô\Ë›[™İH]Y\İ[ÛœÏÜÜ[Ù]]ˆÛ\ÜÏH˜Xİ]š]K\]Y\İ[Û‹[\İ‰Ü]Y\İ[Û”Ù][
+\İ[š[™Ô\Ë	Û	Ë	Ó\İ[š[™ÉÊ_OÙ]Ù]‚ˆÜÙXİ[Û‚ˆ	ÜÚ\™Y\Ë›[™İØÙXİ[ÛˆÛ\ÜÏH™YË\Ú\™YXÛÛ\™Z[œÚ[Ûˆ]ˆÛ\ÜÏH™YË]\ÚË\[™[ZXY]ÛX[ÛÛXš[™Y[™\œİ[™[™ÏÜÛX[•\ÙH›İÛİ\˜Ù\ÏÚÙ]Ù]]ˆÛ\ÜÏH˜Xİ]š]K\]Y\İ[Û‹[\İ‰Ü]Y\İ[Û”Ù][
+Ú\™Y\Ë	ÛÉË	ĞÛÛXš[™Y	Ê_OÙ]ÜÙXİ[Û˜‰ÉßBˆ	ØÛÛ\]Y	‰››\İ[š[™ÏË˜]Y[ÔØÜš\Û\İ[š[™Õ˜[œØÜš\
+
+N‰ÉßO]ˆYH˜Xİ]š]Q™YY˜XÚÈÙ]]ˆÛ\ÜÏHœÚÚ[XXİ[Û‹\›İÈ]ÛˆÛ\ÜÏHœš[X\KXˆİZYY\İX›Z]ÚÚ[\İX›Z]ˆYH˜ÚXÚĞXİ]š]HÚXÚÈ[œİÙ\œÏØ]Û‰ØXİ]š]QÛ™P]ÛŠ
+_OÙ]‚ˆÙ]˜ÂˆBˆÛÛœİÛİ\˜ÙU^\™XY[™ßØÜš\Âˆ™]\›ˆ]ˆÛ\ÜÏH™YË\ÚÚ[\YÙHYË[\İ[š[™Ë\YÙH‚ˆXY\ˆÛ\ÜÏH™YË\ÚÚ[Z\›È]Ü[ˆÛ\ÜÏH™YË\ÚÚ[ZÚXÚÙ\ˆ‰Ü™XY[™ÏÉÔ™XY[™È	ˆ\İ[š[™ÉÎ‰Ó\İ[š[™ÉßOÜÜ[O‰Ü™XY[™ÏÉÔ™XY\İ[ˆ[™ÉÎ‰Ó\İ[ˆ[™ÉßOÚO‰Ü™XY[™ÏÉÔ™XYHÛİ\˜ÙK[ˆ\ÙHHX]Ú[™È]Y[ÈÈÛÛ™š\›HYX[š[™È[™]Z[‰Î‰Ó\İ[ˆÈHÛÛ™\œØ][Ûˆ[™ÛÛ\]HH\ÚÜË‰ßOÜÙ]Ü[ˆÛ\ÜÏH™YË\]Y\İ[Û‹XÛİ[‰Ø[›[™İH]Y\İ[ÛœÏÜÜ[ÚXY\‰Û\ÜÛÛ•š\İX[[
+ØÛÛ\XİY_J_Bˆ]ˆÛ\ÜÏH™YË\ÚÚ[[^[İ]YË[\İ[š[™Ë[^[İ]‚ˆÙXİ[ÛˆÛ\ÜÏH™YË\Ûİ\˜ÙKXÛÛ[[ˆ‚ˆ	ÜÛİ\˜ÙU^Ø\XÛHÛ\ÜÏH™YË\™XY[™ËX\XÛHÜ[ˆÛ\ÜÏH™YË\ÚÚ[ZÚXÚÙ\ˆ‰Ü™XY[™ÏÉÔ™XY[™È^	Î‰Ó\İ[š[™ÈÚ]X][Û‰ßOÜÜ[‰Ù\ØØ\R[
+›\İ[š[™ÏË]_]J_OÚ‰Ù\ØØ\R[
+Ûİ\˜ÙU^
+_OÜØ\XÛO˜‰ÉßBˆ]ˆÛ\ÜÏH™YËX]Y[ËXØ\™ÛX[]Y[ÏÜÛX[Ï‰Ù\ØØ\R[
+›\İ[š[™ÏË]_]J_OÚÏ‰Ü^Y\ŸOÙ]‚ˆÜÙXİ[Û‚ˆXZ[ˆÛ\ÜÏH™YË]\ÚË\[™[]ˆÛ\ÜÏH™YË]\ÚË\[™[ZXY]ÛX[ÛÛ\™Z[œÚ[ÛÜÛX[”ÚİÈÚ][İH[™\œİÛÙÚÙ]Ù]]ˆÛ\ÜÏH˜Xİ]š]K\]Y\İ[Û‹[\İ‰Ü]Y\İ[Û”Ù][
+[	Û	Ë	Ô]Y\İ[Û‰Ê_OÙ]ÛXZ[‚ˆÙ]‚ˆ	ØÛÛ\]Y	‰››\İ[š[™ÏË˜]Y[ÔØÜš\Û\İ[š[™Õ˜[œØÜš\
+
+N‰ÉßO]ˆYH˜Xİ]š]Q™YY˜XÚÈÙ]]ˆÛ\ÜÏHœÚÚ[XXİ[Û‹\›İÈ]ÛˆÛ\ÜÏHœš[X\KXˆİZYY\İX›Z]ÚÚ[\İX›Z]ˆYH˜ÚXÚĞXİ]š]HÚXÚÈ[œİÙ\œÏØ]Û‰ØXİ]š]QÛ™P]ÛŠ
+_OÙ]‚ˆÙ]˜ÂŸB™[˜İ[Ûˆ\İ[š[™Õ˜[œØÜš\
+
+^Ü™]\›ˆ]Z[ÈÛ\ÜÏH˜[œØÜš\XØ\™İ[[X\O•šY]È\İ[š[™È˜[œØÜš\Üİ[[X\O‰Ù\ØØ\R[
+›\İ[š[™Ë˜]Y[ÔØÜš\
+_OÜÙ]Z[Ï˜B™[˜İ[ÛˆÜ˜[[X\Xİ]š]J
+^ÂˆÛÛœİ\ÏJ™Ü˜[[X\Ëš][\ß×JKœÛXÙJL
+KØ[\O\\ÖÌK›ØØX”\ÏJ›ØØX[\OËš][\ßZ[›ØØX”]Y\İ[ÛœÊ
+JKœÛXÙJL
+K™XŞXÛO]›ØØX”™XŞXÛR][\Ê›ØØX”\ÊNÂˆ™]\›ˆ]ˆÛ\ÜÏH™YË\ÚÚ[\YÙHYËYÜ˜[[X\‹\YÙH‚ˆXY\ˆÛ\ÜÏH™YË\ÚÚ[Z\›È]Ü[ˆÛ\ÜÏH™YË\ÚÚ[ZÚXÚÙ\ˆ‘Ü˜[[X\ÜÜ[OZ[XØİ\˜]H[™Û\ÚÚO“›İXÙHH]\›‹X[š\[]H][ˆ\H][ˆÛÛ^ÜÙ]Ü[ˆÛ\ÜÏH™YË\]Y\İ[Û‹XÛİ[‰Ü\Ë›[™İH]Y\İ[ÛœÏÜÜ[ÚXY\‚ˆ	İ›ØØX”™XŞXÛR[
+™XŞXÛJ_Bˆ]ˆÛ\ÜÏH™YË\ÚÚ[[^[İ]YËYÜ˜[[X\‹[^[İ]‚ˆ\ÚYHÛ\ÜÏH™YËYY]ÜšX[\[™[YËYÜ˜[[X\‹XÛØXÚ]ˆÛ\ÜÏH™YË\[™[ZXY[™ÈÛX[‘Ü˜[[X\ˆÛØXÚÜÛX[‰Ù\ØØ\R[
+™Ü˜[[X\Ë™›Øİ\ß]J_OÚÙ]‰Û™Ü˜[[X\Ëœ[OØÙXİ[ÛˆÛ\ÜÏH™Ü˜[[X\‹\[KXØ\™ÛX[“Z[šH[OÜÛX[‰Ù\ØØ\R[
+™Ü˜[[X\‹œ[J_OÜÜÙXİ[Û˜‰ÉßIÜØ[\OØ]ˆÛ\ÜÏH™YË\Ù[[˜ÙK[XˆÛX[”Ù[[˜ÙHXÜÛX[‰Ù\ØØ\R[
+Ø[\KœJ_OÜ]‰ÊØ[\K›Ü[Ûœß×JKœÛXÙJÊK›X\
+O˜Ü[‰Ù\ØØ\R[
+
+_OÜÜ[˜
+Kš›Ú[Š	ÉÊ_OÙ]Ù]˜‰ÉßO]ˆÛ\ÜÏH™YË]\XØ\™”İ˜]YŞOØÜ[”™XYHÚÛHÙ[[˜ÙKˆXÚYHHYX[š[™È™Y›Ü™HÚÛÜÚ[™ÈH›Ü›KÜÜ[Ù]Ø\ÚYO‚ˆXZ[ˆÛ\ÜÏH™YË]\ÚË\[™[]ˆÛ\ÜÏH™YË]\ÚË\[™[ZXY]ÛX[”˜XİXÙOÜÛX[•\ÙHH]\›ÚÙ]Ù]]ˆÛ\ÜÏH˜Xİ]š]K\]Y\İ[Û‹[\İ‰Ü\Ë›X\
 
-function reports(){const sts=reportStudents(),ids=new Set(sts.map(s=>s.id)),ats=getDB().attempts.filter(a=>ids.has(a.studentId)),avgComp=sts.length?Math.round(sts.reduce((a,st)=>a+completionPct(st.id),0)/sts.length):0,scoredStudents=sts.map(st=>overall(st.id)).filter(Number.isFinite),avgScore=scoredStudents.length?Math.round(scoredStudents.reduce((a,b)=>a+b,0)/scoredStudents.length):null;title(session?.role==='admin'?'System Admin':'Workbook evidence','Student performance');$('content').innerHTML=`<div class="grid grid-3">${metric('Workbook completion',avgComp+'%','Exact completion records')}${metric('Recorded score average',Number.isFinite(avgScore)?avgScore+'%':'â€”',scoredStudents.length+' students with scores')}${metric('Attempts saved',ats.length,'Exact practice records')}</div><section class="section card"><div class="section-head"><div><h3>Detailed student evidence</h3><p>Lesson 1 Listening & Reading plus full student review for every workbook lesson.</p></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Student</th><th>Class</th><th>Book</th><th>Lesson 1 Listening & Reading</th><th>Latest activity</th><th>Completion</th><th>Overall</th><th></th></tr></thead><tbody>${sts.map(st=>{const first=firstReadyLessonFor(st.id),latest=latestActivityFor(st.id),o=overall(st.id);return `<tr><td>${escapeHtml(st.name)}</td><td>${escapeHtml(studentClassName(st))}</td><td>${escapeHtml(bookMeta(bookIdForStudent(st.id))?.title||'â€”')}</td><td>${first?lessonSkillCell(st.id,first.id,'listening'):'â€”'}</td><td>${latest?`Lesson ${lessonById(latest.lessonId)?.number||'â€”'} Â· ${skillLabel(latest.skill)} Â· ${latest.score}%`:'â€”'}</td><td>${completionPct(st.id)}%</td><td>${Number.isFinite(o)?o+'%':'â€”'}</td><td><div class="management-row-meta"><button class="ghost-btn" data-transfer-student="${st.id}">Transfer</button><button class="ghost-btn" data-review-student="${st.id}">Review</button></div></td></tr>`}).join('')||'<tr><td colspan="8">No students found.</td></tr>'}</tbody></table></div></section>`;bindStudentActions()}
+KJOO˜\XÛHÛ\ÜÏH™İZYY\]Y\İ[Ûˆ]ˆÛ\ÜÏHœ]Y\İ[Û‹\İYÙHÜ[”]Y\İ[Ûˆ	ÚJÌ_OÜÜ[Ù]‰Ù\ØØ\R[
+KœJ_OÜ‰Ü˜Y[Ê	ÙÉÊÚKK›Ü[ÛœËK˜[œİÙ\‹KYÊ_OØ\XÛO˜
+Kš›Ú[Š	ÉÊ_OÙ]ÛXZ[‚ˆÙ]‚ˆ]ˆYH˜Xİ]š]Q™YY˜XÚÈÙ]]ˆÛ\ÜÏHœÚÚ[XXİ[Û‹\›İÈ]ÛˆÛ\ÜÏHœš[X\KXˆİZYY\İX›Z]ÚÚ[\İX›Z]ˆYH˜ÚXÚĞXİ]š]HÚXÚÈÜ˜[[X\Ø]Û‰ÈZ\ÕÛÜšØ›ÛÚÔ™]šY]Ê
+I‰˜›ÛÜİ™XÛİ™\J
+Kœ™XYOÉÏ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜›ÛÜİXİ]š]H”˜Xİ\ÙHZ\ÜÙY]Y\İ[ÛœÈÚ]›ÛÜİØ]Û‰Î‰ÉßIØXİ]š]QÛ™P]ÛŠ
+_OÙ]‚ˆÙ]˜ÂŸB™[˜İ[Ûˆ›ÛÜİ[
+J^ØÛÛœİYÏTİš[™ÊKYß	ÉÊNØÛÛœİ[\ÏVÂ–ÉÜ]Y\İ[Û‰Ë	ÓÛÚÈ]HÛÜ™Ü™\‹ˆ[™Û\Ú]Y\İ[ÛœÈÙ[ˆ™YYH[[™È™\˜ˆ™Y›Ü™HHİXš™Xİ‰×K–ÉÚ[™š[š]]™IË	ĞY\ˆ[™İXYÙHX›İ]HÛØ[ÜˆÛÛY][™È[İHØ[ÈËÛÚÈ›Üˆ8 'È
+È˜\ÙH™\˜¸ 'K‰×K–ÉÜ™\Ù[\Ú[\IË	ĞÚXÚÈHİXš™Xİš\œİ[ˆÚÛÜÙHH™\Ù[\Ú[\H›Ü›H]YÜ™Y\ÈÚ]]‰×K–ÉÛ™YØ]]™IË	ĞH™\Ù[\Ú[\H™YØ]]™H›Ü›X[H\Ù\ÈËÙÙ\È
+È›İ
+ÈH˜\ÙH™\˜‹‰×K–ÉØÛÛ›™XİÜ‹X™XØ]\ÙIË	Õ\ÙH8 '™XØ]\Ùx 'HÚ[ˆHÙXÛÛ™YXHÚ]™\ÈH™X\ÛÛ‹‰×K–ÉØÛÛ›™XİÜ‹X]	Ë	Õ\ÙH8 ']8 'HÚ[ˆHÙXÛÛ™YXHÛÛ˜\İÈÚ]Hš\œİ‰×K–ÉØÛÛ›™XİÜ‹\ÛÉË	Õ\ÙH8 'Ûø 'HÚ[ˆHÙXÛÛ™YXH\ÈH™\İ[‰×K–ÉØÛÛ›™XİÜ‰Ë	ÑXÚYHÚ]\ˆHYX\ÈÚİÈY][Û‹ÛÛ˜\İ™X\ÛÛˆÜˆ™\İ[‰×K–ÉÙÙ\[™	Ë	ĞY\ˆ8 '™\ÜÛœÚX›H›Ü¸ 'KH™^™\˜ˆ›Ü›X[H\Ù\ÈHZ[™È›Ü›K‰×K–ÉØ™IË	ĞÚXÚÈÚ]\ˆHİXš™Xİ™YYÈ[K\ÈÜˆ\™K‰×K–ÉØÛÛØØ][Û‰Ë	Õ\ÙHHš^Y˜\ÙHœ›ÛHH\ÜÛÛˆ˜]\ˆ[ˆ˜[œÛ][™ÈÛÜ™HÛÜ™‰×K–Éİ[YK\˜\ÙIË	ĞÚXÚÈÚXÚ™\ÜÚ][Ûˆ˜]\˜[H[›ÙXÙ\ÈH[YH^™\ÜÚ[Û‹‰×K–ÉØÛÛ\]K\Ù[[˜ÙIË	ÓÛÚÈ›ÜˆHÛÛ\]HİXš™Xİ
+È™\˜ˆ
+ÈYXK‰×K–ÉÙÉË	ĞÚXÚÈHİXš™Xİ™Y›Ü™HÚÛÜÚ[™ÈÈÜˆÙ\Ë‰×B—NØÛÛœİ]\[\Ë™š[™
 
-async function leaderboard(teacher=false){
- title('EnglishGate','Leaderboard');
- const content=$('content');
- content.innerHTML='<section class="professional-leaderboard"><div class="leaderboard-loading">Loading leaderboardâ€¦</div></section>';
- try{
-  const result=await api('/api/leaderboard'),rows=Array.isArray(result.students)?result.students:[],me=rows.find(x=>x.id===session.id),top=rows.slice(0,3);
-  const rankText=me?`#${me.rank} of ${rows.length}`:'View only';
-  content.innerHTML=`<section class="professional-leaderboard">
-   <div class="leaderboard-hero">
-    <div><span class="role-kicker">All active learners</span><h1>Learning leaderboard</h1><p>Professional progress view based on completed workbook activities. Average recorded performance breaks ties.</p></div>
-    <div class="leaderboard-my-standing"><small>${teacher?'Learners ranked': 'Your standing'}</small><strong>${teacher?rows.length:escapeHtml(rankText)}</strong><span>${teacher?'Across EnglishGate':me?`${me.completed} activities completed`:'Complete an activity to enter the ranking'}</span></div>
-   </div>
-   ${top.length?`<div class="leaderboard-top-three">${top.map(st=>`<article class="leaderboard-top-card ${st.id===session.id?'is-me':''}"><span class="leaderboard-rank-label">#${st.rank}</span><div class="leaderboard-avatar">${escapeHtml((st.name||'?')[0])}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id?' Â· You':''}</strong><small>${escapeHtml(st.className||st.level||'EnglishGate learner')}</small></div><div class="leaderboard-top-metrics"><span><b>${st.completed}</b> activities</span><span><b>${Number.isFinite(st.average)?st.average+'%':'â€”'}</b> average</span></div></article>`).join('')}</div>`:''}
-   <div class="leaderboard-table-card">
-    <div class="leaderboard-table-head"><div><h2>All students</h2><p>Ranking updates as workbook activity is completed.</p></div><span>${rows.length} learners</span></div>
-    <div class="leaderboard-table-wrap"><table class="professional-leaderboard-table"><thead><tr><th>Rank</th><th>Learner</th><th>Class</th><th>Completed</th><th>Average</th><th>Last active</th></tr></thead><tbody>
-     ${rows.map(st=>`<tr class="${st.id===session.id?'is-me':''}"><td><span class="leaderboard-rank-number">#${st.rank}</span></td><td><div class="leaderboard-person"><span class="leaderboard-avatar small">${escapeHtml((st.name||'?')[0])}</span><div><strong>${escapeHtml(st.name)}${st.id===session.id?' Â· You':''}</strong><small>${escapeHtml(st.level||'English learner')}</small></div></div></td><td>${escapeHtml(st.className||'â€”')}</td><td><strong>${st.completed}</strong></td><td><strong>${Number.isFinite(st.average)?st.average+'%':'â€”'}</strong></td><td>${st.lastActive?escapeHtml(new Date(st.lastActive).toLocaleDateString()):'â€”'}</td></tr>`).join('')||'<tr><td colspan="6">No learner activity yet.</td></tr>'}
-    </tbody></table></div>
-   </div>
-   <p class="leaderboard-method">Ranking method: completed workbook activities first, then average recorded activity score, then most recent activity. No contact information is shown.</p>
-  </section>`;
- }catch(e){content.innerHTML=`<section class="professional-leaderboard"><div class="feedback bad">Could not load the leaderboard: ${escapeHtml(e.message)}</div></section>`}
-}
-function adminBooks(){
-  const books=getDB().books||[];
-  title('System Admin','Books');
-  $('content').innerHTML=`<section class="book-library">
-    <div class="role-page-head"><div><span class="role-kicker">Curriculum browser</span><h1>Books</h1><p>System Admin can browse both the lesson book and the matching workbook without joining a class.</p></div></div>
-    <div class="book-card-grid">
-      ${books.map(b=>{
-        const pack=BOOK_PACKS[b.id],readyCount=pack?readyLessons(pack).length:0,canUse=['ready','pilot'].includes(b.status)&&Boolean(pack);
-        return `<article class="book-card">
-          <div class="book-card-top"><span class="pill teal">${escapeHtml(b.level)}</span><span class="book-status ${b.status}">${b.status==='pilot'?'Pilot':b.status==='ready'?'Ready':'Queued'}</span></div>
-          <div class="book-cover-mini"><span>EnglishGate</span><strong>${escapeHtml(b.title)}</strong><small>${b.totalLessons} lessons</small></div>
-          <p>${escapeHtml(b.audience||'')}</p>
-          <div class="book-card-meta"><span>${readyCount}/${b.totalLessons} digital lessons ready</span><span>Vocabulary Â· Listening & Reading Â· Grammar Â· Writing</span></div>
-          <div class="book-card-actions">
-            ${canUse?`<button class="primary-btn" data-open-lesson-book="${b.id}">Open lesson book</button>`:''}
-            ${pack?`<button class="ghost-btn" data-browse-book="${b.id}">Browse workbook</button>`:`<button class="ghost-btn" disabled>Workbook not digitized yet</button>`}
-            ${canUse?`<button class="ghost-btn" data-class-book="${b.id}">Create class</button>`:''}
-            <button class="ghost-btn danger-action" data-admin-delete-book="${escapeAttr(b.id)}" data-name="${escapeAttr(b.title)}">Delete book</button>
-          </div>
-        </article>`;
-      }).join('')}
-    </div>
-  </section>`;
-  document.querySelectorAll('[data-open-lesson-book]').forEach(btn=>btn.onclick=async()=>{
-    const id=btn.dataset.openLessonBook;
-    await ensureLiveBooks();
-    if(!setActiveBook(id))return;
-    activeTeacherLessonNumber=1;
-    activeTeacherSectionIndex=0;
-    currentPage='admin-live-book-browse';
-    renderNav();
-    adminLiveBookBrowse();
-  });
-  document.querySelectorAll('[data-browse-book]').forEach(btn=>btn.onclick=()=>{
-    setActiveBook(btn.dataset.browseBook);
-    currentPage='admin-book-browse';
-    renderNav();
-    adminBookBrowse();
-  });
-  document.querySelectorAll('[data-class-book]').forEach(btn=>btn.onclick=()=>openAdminClass(btn.dataset.classBook));
-  bindAdminBookActions();
-}
-function bindAdminBookActions(){document.querySelectorAll('[data-admin-delete-book]').forEach(b=>b.onclick=()=>openAdminBookDelete(b.dataset.adminDeleteBook,b.dataset.name))}
-function adminActiveLiveBook(){
- const books=LIVE_BOOK_CACHE||window.LIVE_BOOKS||{};
- return books[activeBookId]||null;
-}
-async function adminLiveBookBrowse(){
- await ensureLiveBooks();
- const live=adminActiveLiveBook(),wb=BOOK_PACKS[activeBookId],meta=bookMeta(activeBookId)||{title:live?.title||wb?.title||'Book',level:wb?.level||''};
- if(!live){currentPage='admin-books';renderNav();adminBooks();return}
- title('System Admin','Lesson Book');
- $('content').innerHTML=`<section class="teacher-book-shell admin-live-book-shell">
-  <button class="back-link" id="adminBackBookLibrary">â† Books</button>
-  <div class="course-intro"><div><span class="pill teal">${escapeHtml(meta.level||'')}</span><h1>${escapeHtml(live.title||meta.title)}</h1><p>Admin preview Â· browse the same lesson book used by teachers and students.</p></div><button class="ghost-btn" id="adminOpenWorkbookFromLive">Browse workbook</button></div>
-  <div class="teacher-lesson-list">${live.lessons.map(l=>{const w=wb?.lessons?.find(x=>x.number===l.number);return `<button class="teacher-live-row" data-admin-live-lesson="${l.number}"><span class="teacher-live-num">${l.number}</span><span><strong>${escapeHtml(l.title)}</strong><small>${w?'Matching workbook available':'Workbook match unavailable'}</small></span><b>Open â†’</b></button>`}).join('')}</div>
- </section>`;
- $('adminBackBookLibrary').onclick=()=>{currentPage='admin-books';renderNav();adminBooks()};
- $('adminOpenWorkbookFromLive').onclick=()=>{currentPage='admin-book-browse';renderNav();adminBookBrowse()};
- document.querySelectorAll('[data-admin-live-lesson]').forEach(btn=>btn.onclick=()=>{activeTeacherLessonNumber=Number(btn.dataset.adminLiveLesson);activeTeacherSectionIndex=0;currentPage='admin-live-lesson';renderNav();adminLiveLesson()});
-}
-async function adminLiveLesson(){
- await ensureLiveBooks();
- const live=adminActiveLiveBook(),wb=BOOK_PACKS[activeBookId];
- if(!live){currentPage='admin-live-book-browse';adminLiveBookBrowse();return}
- const l=live.lessons.find(x=>x.number===activeTeacherLessonNumber)||live.lessons[0],w=wb?.lessons?.find(x=>x.number===l.number);
- activeTeacherLessonNumber=l.number;
- const sections=liveSections(l.content),total=sections.length;
- activeTeacherSectionIndex=Math.max(0,Math.min(activeTeacherSectionIndex,Math.max(0,total-1)));
- const section=sections[activeTeacherSectionIndex],isLast=activeTeacherSectionIndex===total-1,goal=lessonCanDoGoal(l),stageName=section?sectionLabel(section.title,activeTeacherSectionIndex,total):'Lesson unavailable';
- title('System Admin','Lesson '+l.number);
- const stages=sections.map((x,i)=>`<button class="eg-stage ${i===activeTeacherSectionIndex?'is-current':''}" data-admin-live-section="${i}" ${i===activeTeacherSectionIndex?'aria-current="step"':''}><span>${i+1}</span><strong>${escapeHtml(sectionLabel(x.title,i,total).toLowerCase())}</strong></button>`).join('');
- const nextAction=!total?'':!isLast?'<button class="primary-btn" id="nextAdminLiveSection">Next stage â†’</button>':w&&w.ready!==false?'<button class="primary-btn" id="openAdminWorkbookFromLesson">Open matching workbook â†’</button>':'<span class="eg-unavailable">Matching workbook is not available yet.</span>';
- $('content').innerHTML=`<section class="eg-lesson admin-live-book">
-  <header class="eg-lesson-header"><button class="ghost-btn" id="backAdminLiveBook">â† Lessons</button><div><p>Admin preview Â· ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} Â· ${escapeHtml(l.title)}</h1></div>${w&&w.ready!==false?'<button class="ghost-btn" id="openAdminWorkbookTop">Workbook</button>':''}</header>
-  <div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside>
-  <div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeTeacherSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header>
-  <article class="live-book-content eg-stage-content" aria-labelledby="liveStageTitle">${activeTeacherSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no teaching content yet.</p>'}</article>
-  ${isLast?`<div class="eg-workbook-note">${w?`<strong>Matching workbook</strong><span>Workbook ${w.number} Â· ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}
-  <footer class="eg-lesson-footer"><button class="ghost-btn" id="prevAdminLiveSection" ${activeTeacherSectionIndex===0?'disabled':''}>â† Previous</button>${nextAction}</footer></div></div>
- </section>`;
- $('backAdminLiveBook').onclick=()=>{currentPage='admin-live-book-browse';renderNav();adminLiveBookBrowse()};
- const openWorkbook=()=>{if(!w)return;activeLessonId=w.id;currentStep='vocabulary';currentPage='admin-workbook-view';renderNav();adminWorkbookView()};
- if($('openAdminWorkbookTop'))$('openAdminWorkbookTop').onclick=openWorkbook;
- if($('openAdminWorkbookFromLesson'))$('openAdminWorkbookFromLesson').onclick=openWorkbook;
- const goToStage=index=>{activeTeacherSectionIndex=index;adminLiveLesson();focusWithoutScroll($('liveStageTitle'));resetAppScroll()};
- document.querySelectorAll('[data-admin-live-section]').forEach(btn=>btn.onclick=()=>goToStage(Number(btn.dataset.adminLiveSection)));
- $('prevAdminLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0)goToStage(activeTeacherSectionIndex-1)};
- if($('nextAdminLiveSection'))$('nextAdminLiveSection').onclick=()=>goToStage(activeTeacherSectionIndex+1);
- wireLiveVocabulary();wireLiveChecks();
-}
+ÚÙ^WJOOYËš[˜ÛY\ÊÙ^JJNÜ™]\›ˆ]Ú]ÌWN‰ĞÛÛ\\™HHÚÚXÙ\ÈÚ]H[Ù[[™İXYÙHœ›ÛH\ÈÜXËˆ™XYHÚÛHÙ[[˜ÙK›İ\İÛ™HÛÜ™‰ßB™[˜İ[Ûˆ›ÛÜİ™XÛİ™\J
+^ØÛÛœİÛÜ™OVË‹‹˜][\ÊÙ\ÜÚ[Û‹šY	ÙÜ˜[[X\‰ËšY
+WKœ™]™\œÙJ
+K™š[™
+OOˆJKYÜß×JKœÛÛYJO”İš[™Ê
+Kœİ\ÕÚ]
+	Ø›ÛÜİ‰ÊJJNÚYŠXÛÜ™J\™]\›Ü™XYN™˜[ÙK™X\ÛÛ‰ÕH[™ÚXÚÈHÜ˜[[X\ˆXİ]š]Hš\œİ‰ËZ\ÜÙY–×_NØÛÛœİYÜÏXÛÜ™KYÜß×KZ\ÜÙYVË‹‹›™]ÈÙ]
+YÜË™š[\ŠO‹×›Z\ÜÜN–ÌNWIË\İ
+İš[™Ê
+JJK›X\
+O“[X™\Šİš[™Ê
+KœÜ]
+	Î‰ÊVÌWJJJWKœÛÜ
 
-function adminBookBrowse(){const teacher=session?.role==='teacher';const meta=bookMeta(activeBookId)||{title:COURSE.title||COURSE.moduleTitle,level:COURSE.level,totalLessons:COURSE.totalLessons||COURSE.lessons.length},lessons=COURSE.lessons||[];title(teacher?'Teacher':'System Admin','Workbook');$('content').innerHTML=`<section class="admin-book-browser"><button class="back-link" id="adminBackBooks">â† Books</button><div class="role-page-head"><div><span class="pill teal">${escapeHtml(meta.level||'')}</span><h1>${escapeHtml(meta.title||COURSE.title||COURSE.moduleTitle)}</h1><p>Browse any available lesson and all four skills. Preview answers are not saved as student work.</p></div></div><div class="admin-browser-list">${lessons.map(l=>`<button class="admin-browser-lesson ${l.ready===false?'is-pending':''}" data-admin-browse-lesson="${l.ready===false?'':l.id}" ${l.ready===false?'disabled':''}><span class="admin-browser-num">${l.number}</span><span><strong>${escapeHtml(l.title)}</strong><small>${l.ready===false?'Workbook activities not built yet':escapeHtml(l.outcome||'All 4 skill pages available')}</small></span><b>${l.ready===false?'Not built':'Open â†’'}</b></button>`).join('')}</div></section>`;$('adminBackBooks').onclick=()=>{currentPage=teacher?'teacher-workbooks':'admin-books';renderNav();teacher?teacherWorkbooks():adminBooks()};document.querySelectorAll('[data-admin-browse-lesson]').forEach(btn=>{if(!btn.dataset.adminBrowseLesson)return;btn.onclick=()=>{activeLessonId=btn.dataset.adminBrowseLesson;currentStep='vocabulary';currentPage=teacher?'teacher-workbook-view':'admin-workbook-view';renderNav();teacher?teacherWorkbookView():adminWorkbookView()}})}
-function teacherWorkbooks(){
- title('Teacher','Workbooks');
- const classes=getDB().classes;
- $('content').innerHTML=`<div class="role-page-head"><h1>Class workbooks</h1></div><div class="class-card-grid">${classes.map(c=>{const book=workbookForClass(c);return `<article class="management-card"><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(book?.title||bookMeta(c.bookId||c.course_id)?.title||'Workbook unavailable')}</p><button class="primary-btn" data-teacher-workbook="${escapeAttr(c.id)}" ${book?'':'disabled'}>${book?'Open workbook':'Workbook unavailable'}</button></article>`}).join('')||'<div class="empty-state"><h3>No classes assigned</h3><p>Your class workbooks will appear here.</p></div>'}</div>`;
- document.querySelectorAll('[data-teacher-workbook]').forEach(b=>b.onclick=()=>openTeacherWorkbook(b.dataset.teacherWorkbook));
-}
-function openTeacherWorkbook(classId,lessonId=null){
- const c=getDB().classes.find(c=>c.id===classId),book=workbookForClass(c);
- if(!c||!book||!setActiveBook(resolveBookKey(c)))return;
- activeTeacherClassId=c.id;
- const selected=lessonId?book.lessons.find(l=>l.id===lessonId&&l.ready!==false):null;
- if(selected){activeLessonId=selected.id;currentStep='vocabulary';currentPage='teacher-workbook-view'}else currentPage='teacher-book-browse';
- renderNav();selected?teacherWorkbookView():teacherBookBrowse();
-}
-function teacherBookBrowse(){
- const book=workbookForClass(teacherClass());
- if(!book||!setActiveBook(resolveBookKey(teacherClass()))){currentPage='teacher-workbooks';renderNav();teacherWorkbooks();return}
- adminBookBrowse();
-}
-function teacherWorkbookView(){
- const book=workbookForClass(teacherClass());
- if(!book||!book.lessons.some(l=>l.id===activeLessonId&&l.ready!==false)){currentPage='teacher-book-browse';teacherBookBrowse();return}
- setActiveBook(resolveBookKey(teacherClass()));workbook();
-}
-function returnToWorkbookLessons(){
- setWorkbookDesignMode(false);currentPage=session?.role==='teacher'?'teacher-book-browse':'admin-book-browse';renderNav();session?.role==='teacher'?teacherBookBrowse():adminBookBrowse();
-}
+KŠOO˜KXŠKXYÛ›ÜÙY]YÜËš[˜ÛY\Ê	ÙXYÛ›ÜİXÎ››Ë[Z\ÜÙ\ÉÊ_Z\ÜÙY›[™İŒÚYŠYXYÛ›ÜÙY
+\™]\›Ü™XYN™˜[ÙK™X\ÛÛ‰ĞÚXÚÈHÜ˜[[X\ˆXİ]š]HÛ˜ÙH[Ü™HÛÈ[™Û\ÚØ]HØ[ˆY[YHH^Xİ]Y\İ[ÛœÈ[İHZ\ÜË‰ËZ\ÜÙY–×_NÚYŠ[Z\ÜÙY›[™İ
+\™]\›Ü™XYN™˜[ÙK™X\ÛÛ‰Ó›È›ÛÜİ\È™YYYˆ[İHY›İZ\ÜÈ[H]]ÛX]XØ[HÚXÚÙYÜ˜[[X\ˆ]Y\İ[ÛœÈ[ˆ[İ\ˆ]\İ][\‰ËZ\ÜÙY–×_NÜ™]\›Ü™XYNYK™X\ÛÛ‰ÉËZ\ÜÙYÛÜ™__B™[˜İ[Ûˆ›ÛÜİœ™\Ú]Y\İ[ÛŠJ^ØÛÛœİYÏTİš[™ÊKYß	ÉÊNÚYŠYËš[˜ÛY\Ê	Ü]Y\İ[Û‰ÊJ\™]\›ÜN‰ĞÚÛÜÙHHÛÜœ™XİH›Ü›YY]Y\İ[Û‹‰ËÜ[ÛœÎ–ÉÕÚ\™HÈ^H\ÙH[™Û\ÚÉË	ÕÚ\™H^H\ÙH[™Û\ÚÉË	ÕÚ\™HÙ\È^H\ÙH[™Û\ÚÉ×K[œİÙ\‰ÕÚ\™HÈ^H\ÙH[™Û\ÚÉßNÚYŠYËš[˜ÛY\Ê	İ\™\\œÛÛ‰ÊJ\™]\›ÜN‰ĞÛÛ\]Nˆ[Z[˜H××ÈÚ][\›˜][Û˜[ÛY[È]™\HÙYZË‰ËÜ[ÛœÎ–ÉİÛÜšÜÉË	İÛÜšÉË	İÛÜšÚ[™É×K[œİÙ\‰İÛÜšÜÉßNÚYŠYËš[˜ÛY\Ê	Û™YØ]]™IÊJ\™]\›ÜN‰ĞÚÛÜÙHHÛÜœ™Xİ™YØ]]™HÙ[[˜ÙK‰ËÜ[ÛœÎ–ÉÒHÙ\È›İ™YY[Ü™H[YK‰Ë	ÒH›İ™YYÈ[Ü™H[YK‰Ë	ÒHÙ\È›İ™YYÈ[Ü™H[YK‰×K[œİÙ\‰ÒHÙ\È›İ™YY[Ü™H[YK‰ßNÚYŠYËš[˜ÛY\Ê	Ü™\Ù[\Ú[\IÊJ\™]\›ÜN‰ĞÚÛÜÙHHXØİ\˜]H›İ][™HÙ[[˜ÙK‰ËÜ[ÛœÎ–ÉÒH\İX[H˜Xİ\ÙH[™Û\ÚY\ˆÛÜšË‰Ë	ÒH\İX[H˜Xİ\Ù\È[™Û\ÚY\ˆÛÜšË‰Ë	ÒH[H\İX[H˜Xİ\ÙH[™Û\ÚY\ˆÛÜšË‰×K[œİÙ\‰ÒH\İX[H˜Xİ\ÙH[™Û\ÚY\ˆÛÜšË‰ßNÚYŠYËš[˜ÛY\Ê	Ú[™š[š]]™IÊJ\™]\›ÜN‰ĞÛÛ\]Nˆ^H™^ÛØ[\È××ÈXYH\™Ù\ˆ›Ú™Xİ‰ËÜ[ÛœÎ–ÉİÉË	Ù›Ü‰Ë	Ø]	×K[œİÙ\‰İÉßNÚYŠYËš[˜ÛY\Ê	ÙÙ\[™	ÊJ\™]\›ÜN‰ĞÛÛ\]NˆÚH\È™\ÜÛœÚX›H›Üˆ××ÈHÙYZÛHØÚY[K‰ËÜ[ÛœÎ–ÉØÚXÚÚ[™ÉË	ØÚXÚÉË	İÈÚXÚÉ×K[œİÙ\‰ØÚXÚÚ[™ÉßNÚYŠYËš[˜ÛY\Ê	Ø™XØ]\ÙIÊJ\™]\›ÜN‰ĞÚÛÜÙHH™\İÛÛ›™XİÜˆH˜Xİ\ÙH]™\H^H××ÈHØ[ÈÜXZÈ[Ü™HÛÛ™šY[K‰ËÜ[ÛœÎ–ÉØ™XØ]\ÙIË	Ø]	Ë	ÜÛÉ×K[œİÙ\‰Ø™XØ]\ÙIßNÚYŠYËš[˜ÛY\Ê	Ø]	Ê_YËš[˜ÛY\Ê	ØÛÛ˜\İ	ÊJ\™]\›ÜN‰ĞÚÛÜÙHH™\İÛÛ›™XİÜˆH[™\œİ[™HÜXË××ÈH™YY[Ü™H[YHÈ[œİÙ\‹‰ËÜ[ÛœÎ–ÉØ]	Ë	Ø™XØ]\ÙIË	ÜÛÉ×K[œİÙ\‰Ø]	ßNÚYŠYËš[˜ÛY\Ê	ØÛÛ›™XİÜ‹\ÛÉÊJ\™]\›ÜN‰ĞÚÛÜÙHH™\İÛÛ›™XİÜˆH]™HH™\Ù[][ÛˆÛ[Üœ›İË××ÈH[H˜Xİ\Ú[™ÈÛšYÚ‰ËÜ[ÛœÎ–ÉÜÛÉË	Ø]	Ë	Ø™XØ]\ÙI×K[œİÙ\‰ÜÛÉßNÚYŠYËš[˜ÛY\Ê	Û[Ù[	ÊJ\™]\›ÜN‰ĞÛÛ\]Nˆ[İH××È\ÚÈHÜXZÙ\ˆÈ™\X]H]Y\İ[Û‹‰ËÜ[ÛœÎ–ÉØØ[‰Ë	Ø\™IË	Ú]™I×K[œİÙ\‰ØØ[‰ßNÚYŠYËš[˜ÛY\Ê	Ü™\Ù[\\™™Xİ	ÊJ\™]\›ÜN‰ĞÛÛ\]NˆH××ÈÛÜšÙYÚ]\ÈX[H›ÜˆÛÈYX\œË‰ËÜ[ÛœÎ–ÉÚ]™IË	Ú\ÉË	Ø[I×K[œİÙ\‰Ú]™IßNÚYŠYËš[˜ÛY\Ê	Ü™\Ù[XÛÛ[[İ\ÉÊJ\™]\›ÜN‰ĞÛÛ\]NˆÙH××È™\\š[™ÈHš[˜[™\Ü›İË‰ËÜ[ÛœÎ–ÉØ\™IË	ÙÉË	Ú]™I×K[œİÙ\‰Ø\™IßNÚYŠYËš[˜ÛY\Ê	İÚ[	Ê_YËš[˜ÛY\Ê	ÙXY[™IÊJ\™]\›ÜN‰ĞÛÛ\]NˆH××ÈÙ[™Hš[˜[™\œÚ[ÛˆÛ[Üœ›İÈ[Ü›š[™Ë‰ËÜ[ÛœÎ–ÉİÚ[	Ë	Ø[IË	Ú]™I×K[œİÙ\‰İÚ[	ßNÚYŠYËš[˜ÛY\Ê	Ø™IÊJ\™]\›ÜN‰ĞÛÛ\]Nˆ^HXZ[ˆÚ[[™ÙH××ÈÜXZÚ[™ÈÚ]İ]Û™È]\Ù\Ë‰ËÜ[ÛœÎ–ÉÚ\ÉË	Ø\™IË	Ø™I×K[œİÙ\‰Ú\ÉßNÚYŠYËš[˜ÛY\Ê	Ú]™IÊJ\™]\›ÜN‰ĞÛÛ\]NˆH××ÈÛÈXZ[ˆ™\ÜÛœÚXš[]Y\È[ˆ^Hİ\œ™[›ÛK‰ËÜ[ÛœÎ–ÉÚ]™IË	Ú\ÉË	Ú]š[™É×K[œİÙ\‰Ú]™IßNÚYŠYËš[˜ÛY\Ê	ØÛÛ\]K\Ù[[˜ÙIÊJ\™]\›ÜN‰ĞÚÛÜÙHHÛÛ\]HÙ[[˜ÙK‰ËÜ[ÛœÎ–ÉÕÙH\ÙH[™Û\Ú]ÛÜšË‰Ë	ÕÙH[™Û\Ú]ÛÜšË‰Ë	Õ\ÙH[™Û\ÚÛÜšË‰×K[œİÙ\‰ÕÙH\ÙH[™Û\Ú]ÛÜšË‰ßNÜ™]\›ÜN‰Ñœ™\Ú˜XİXÙH›ÜˆHØ[YHÜ˜[[X\ˆ[Nˆ	ÊÜKœKÜ[ÛœÎœK›Ü[ÛœË[œİÙ\œK˜[œİÙ\Ÿ_B™[˜İ[Ûˆİ\›ÛÜİ
+
+^ÚYŠ[™Ü˜[[X\Ëš][\ÏË›[™İ
+\™]\›ØÛÛœİ™XÛİ™\OX›ÛÜİ™XÛİ™\J
+NÚYŠ\™XÛİ™\Kœ™XYJ^ÜÚİÓ[Ù[
+	Ï]ˆÛ\ÜÏH˜›ÛÜİ[[Ù[›ÛÜİ\™\İ[Ü[ˆÛ\ÜÏH˜›ÛÜİZÚXÚÙ\ˆ‘[™Û\ÚØ]H›ÛÜİÜÜ[Ï›ÛÜİ\È›İ™XYHY]ÚÏ‰ÊÙ\ØØ\R[
+™XÛİ™\Kœ™X\ÛÛŠJÉÏÜ]ÛˆÛ\ÜÏHœš[X\KXˆˆYH˜›ÛÜİ˜XÚÈ˜XÚÈÈÜ˜[[X\Ø]ÛÙ]‰ÊNÉ
+	Ø›ÛÜİ˜XÚÉÊK›Û˜ÛXÚÏXÛÜÙS[Ù[Ü™]\›ŸXÛÛœİ\Ï\™XÛİ™\K›Z\ÜÙY›X\
+OOŠÚ[™^šKÜšYÚ[˜[›™Ü˜[[X\‹š][\ÖÚWK™]\İ˜›ÛÜİœ™\Ú]Y\İ[ÛŠ™Ü˜[[X\‹š][\ÖÚWJ_JJK™š[\ŠO›ÜšYÚ[˜[
+NÜ™[™\›ÛÜİ
+Ü]Y\İ[ÛœÎœ\Ë[™^ŒÜ›Û™ÎŒ[ÎŒİ[][\ÎŒX\İ\™YŒ[œ™\ÛÛ™YŒØ]š[™Î™˜[ÙK™YY˜XÚÎ‰ÉßJ_B™[˜İ[Ûˆ™[™\›ÛÜİ
+İ]J^ØÛÛœİ][O\İ]Kœ]Y\İ[ÛœÖÜİ]Kš[™^KOZ][Kœ™]\İÜšYÚ[˜[Z][K›ÜšYÚ[˜[\ÜÛÛX›ÛÜİ[
+ÜšYÚ[˜[
+NÜÚİÓ[Ù[
+	Ï]ˆÛ\ÜÏH˜›ÛÜİ[[Ù[]ˆÛ\ÜÏH˜›ÛÜİ[[Ù[ZXY]Ü[ˆÛ\ÜÏH˜›ÛÜİZÚXÚÙ\ˆ‘[™Û\ÚØ]H›ÛÜİ0­È\™Ù]Y™XÛİ™\OÜÜ[Ï‘š^Ú][İHZ\ÜÙYÚÏ”]Y\İ[Ûˆ	ÊÊİ]Kš[™^
+ÌJJÉÈÙˆ	ÊÜİ]Kœ]Y\İ[ÛœË›[™İ
+ÉÈZ\ÜÙYÜ˜[[X\ˆÚÚ[	ÊÊİ]Kœ]Y\İ[ÛœË›[™İOOLOÉÉÎ‰ÜÉÊJÉËÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]]ˆÛ\ÜÏH˜›ÛÜİY›İÈÜ[ˆÛ\ÜÏH˜Xİ]™HŒH0­È™]šY]ÏÜÜ[Ü[ˆÛ\ÜÏH˜Xİ]™HŒˆ0­È™]\İÜÜ[Ü[ŒÈ0­ÈX\İ\OÜÜ[Ù]]ˆÛ\ÜÏH˜›ÛÜİ\]Y\İ[Û‹XØ\™]ˆÛ\ÜÏH˜›ÛÜİ[ÜšYÚ[˜[ÛX[•ÛÜšØ›ÛÚÈ]Y\İ[Ûˆ[İHZ\ÜÙYÜÛX[İ›Û™Ï‰ÊÙ\ØØ\R[
+ÜšYÚ[˜[œJJÉÏÜİ›Û™ÏÙ]]ˆÛ\ÜÏH˜›ÛÜİ[Z[šHİ›Û™Ï“Z[šH\ÜÛÛÜİ›Û™ÏÜ[‰ÊÙ\ØØ\R[
+\ÜÛÛŠJÉÏÜÜ[ÛX[“[Ù[[œİÙ\ˆœ›ÛHHÜšYÚ[˜[][Nˆ	ÊÙ\ØØ\R[
+ÜšYÚ[˜[˜[œİÙ\ŠJÉÏÜÛX[Ù]]ˆÛ\ÜÏHœ]Y\İ[Û‹\İYÙH‰ÊÜİYÙP˜YÙJ	Ñœ™\Ú™]\İ	ÊJÉÏÜ[‰ÊÊİ]Kš[™^
+ÌJJÉËÉÊÜİ]Kœ]Y\İ[ÛœË›[™İ
+ÉÏÜÜ[Ù]Û\ÜÏH˜›ÛÜİ\]Y\İ[Ûˆ‰ÊÙ\ØØ\R[
+KœJJÉÏÜ‰ÊÜ˜Y[Ê	Ø›ÛÜİÚÚXÙIËK›Ü[ÛœËK˜[œİÙ\‹ÜšYÚ[˜[YÊJÊİ]KÜ›Û™ÏÉÏ]ˆÛ\ÜÏH˜›ÛÜİZ[İ›Û™Ï•HÛ˜ÙH[Ü™OÜİ›Û™ÏÜ[‰ÊÙ\ØØ\R[
+\ÜÛÛŠJÉÏÜÜ[Ù]‰Î‰ÉÊJÉÏ]ˆYH˜›ÛÜİ™YY˜XÚÈ‰ÊÊİ]K™™YY˜XÚÏÉÏ]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰ÊÙ\ØØ\R[
+İ]K™™YY˜XÚÊJÉÏÙ]‰Î‰ÉÊJÉÏÙ]]ÛˆÛ\ÜÏHœš[X\KXˆ›ÛÜİ\İX›Z]ˆYH˜›ÛÜİİX›Z]ÚXÚÈ™]\İ[œİÙ\Ø]ÛÙ]Û\ÜÏH˜›ÛÜİ[›İH•H™]\İÚ[™Ù\ÈHÛÛ^ÛÈ[İH\HH[H[œİXYÙˆY[[Üš\Ú[™ÈHÛ[œİÙ\‹ÜÙ]‰ÊNÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[İÚ\™SXÜPØ\™ÊØİ[Y[™Ù][[Y[RY
+	Û[Ù[›Ûİ	Ê_Øİ[Y[
+NÉ
+	Ø›ÛÜİİX›Z]	ÊK›Û˜ÛXÚÏJ
+OOœİX›Z]›ÛÜİ
+İ]J_B˜\Ş[˜È[˜İ[ÛˆİX›Z]›ÛÜİ
+İ]J^ØÛÛœİÙ[XİYYØİ[Y[œ]Y\TÙ[XİÜŠ	Ú[œ]Û˜[YOH˜›ÛÜİÚÚXÙH—N˜ÚXÚÙY	ÊNÚYŠ\Ù[XİY
+^É
+	Ø›ÛÜİ™YY˜XÚÉÊKš[›™\’SIÏ]ˆÛ\ÜÏH™™YY˜XÚÈ˜YÚÛÜÙH[ˆ[œİÙ\ˆš\œİÙ]‰ÎÜ™]\›ŸXÛÛœİ][O\İ]Kœ]Y\İ[ÛœÖÜİ]Kš[™^NÜİ]Kİ[][\ÊÊÎÚYŠÙ[XİY˜[YOOOZ][Kœ™]\İ˜[œİÙ\Š^Üİ]K›X\İ\™Y
+ÊÎÜİ]K™™YY˜XÚÏIÉÎÜİ]KÜ›Û™ÏLÜİ]Kš[™^
+ÊÎÚYŠİ]Kš[™^\İ]Kœ]Y\İ[ÛœË›[™İ
+^Ø]ØZ]š[š\Ú›ÛÜİ
+İ]JNÜ™]\›Ÿ\™[™\›ÛÜİ
+İ]JNÜ™]\›Ÿ\İ]KÜ›Û™ÊÊÎÜİ]Kš[ÊÊÎÚYŠİ]KÜ›Û™ÏŠ^Üİ]K™™YY˜XÚÏIÓ›İY]ˆ™XYHZ[šH\ÜÛÛˆ[™H\Èœ™\Ú]Y\İ[ÛˆÛ˜ÙH[Ü™K‰ÎÜ™[™\›ÛÜİ
+İ]JNÜ™]\›Ÿ\İ]K[œ™\ÛÛ™Y
+ÊÎÜİ]K™™YY˜XÚÏIÉÎÜİ]KÜ›Û™ÏLÜİ]Kš[™^
+ÊÎÚYŠİ]Kš[™^\İ]Kœ]Y\İ[ÛœË›[™İ
+^Ø]ØZ]š[š\Ú›ÛÜİ
+İ]JNÜ™]\›Ÿ\™[™\›ÛÜİ
+İ]J_B˜\Ş[˜È[˜İ[Ûˆš[š\Ú›ÛÜİ
+İ]J^ÚYŠİ]KœØ]š[™Ê\™]\›Üİ]KœØ]š[™Ï]YNØÛÛœİİ[\İ]Kœ]Y\İ[ÛœË›[™İØÛÜ™OSX]œ›İ[™
+İ]K›X\İ\™YÓX]›X^
+Kİ[
+JŒL
+KX\İ\™Y\İ]K[œ™\ÛÛ™YOOL	‰œİ]K›X\İ\™YOO]İ[YÜÏVÉØ›ÛÜİœ™]\İ	Ë	Ø›ÛÜİ™Ü˜[[X\‰ËX\İ\™YÉØ›ÛÜİ›X\İ\™Y	Î‰Ø›ÛÜİ›™YYË\˜XİXÙIË‹‹œİ]Kœ]Y\İ[ÛœËœÛXÙJÊK›X\
+O‰Ø›ÛÜİN‰ÊŞš[™^
+WKœÛXÙJL
+Nİ^Ø]ØZ]™XÛÜ™][\
+Ù\ÜÚ[Û‹šYšY	ÙÜ˜[[X\‰ËØÛÜ™KYÜÊNØ]ØZ]™Yœ™\Úİ]J
+NÜÚİÓ[Ù[
+	Ï]ˆÛ\ÜÏH˜›ÛÜİ[[Ù[›ÛÜİ\™\İ[]ˆÛ\ÜÏH˜›ÛÜİ\™\İ[ZXÛÛˆ‰ÊÊX\İ\™YÉø§$ÉÎ‰ø¡®ÉÊJÉÏÙ]Ü[ˆÛ\ÜÏH˜›ÛÜİZÚXÚÙ\ˆ‘[™Û\ÚØ]H›ÛÜİÜÜ[Ï‰ÊÊX\İ\™YÉÓZ\ÜÙYÜ˜[[X\ˆ™\Z\™Y	Î‰ÔÛÛYHÜ˜[[X\ˆİ[™YYÈ˜XİXÙIÊJÉÏÚÏ‰ÊÊX\İ\™YÉÖ[İH™]šY]ÙYH[\È[™[œİÙ\™Yœ™\Ú™]\İ]Y\İ[ÛœÈİXØÙ\ÜÙ[Kˆ[İ\ˆÜšYÚ[˜[ÛÜšØ›ÛÚÈØÛÜ™H™[XZ[œÈØ]™YÙ\\˜][K‰Î‰Ö[İ\ˆ™XÛİ™\H™\İ[\È™Y[ˆØ]™Yˆ[ˆ›ÛÜİYØZ[ˆY\ˆ[İ\ˆ™^Ü˜[[X\ˆ][\Yˆ\ÙHÚÚ[È\™Hİ[Z\ÜÙY‰ÊJÉÏÜ]ˆÛ\ÜÏH˜›ÛÜİ\™\İ[YÜšY]ÛX[“ÜšYÚ[˜[Z\ÜÙ\ÏÜÛX[İ›Û™Ï‰Êİİ[
+ÉÏÜİ›Û™ÏÙ]]ÛX[”™XÛİ™\™YÜÛX[İ›Û™Ï‰ÊÜİ]K›X\İ\™Y
+ÉÏÜİ›Û™ÏÙ]]ÛX[›ÛÜİX\İ\OÜÛX[İ›Û™Ï‰ÊÜØÛÜ™JÉÉOÜİ›Û™ÏÙ]Ù]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH˜›ÛÜİ˜XÚÈ˜XÚÈÈÜ˜[[X\Ø]ÛÙ]‰ÊNÉ
+	Ø›ÛÜİ˜XÚÉÊK›Û˜ÛXÚÏJ
+OOØÛÜÙS[Ù[
 
-function adminWorkbookView(){workbook()}
+NÜ™[™\Xİ]š]J
+__XØ]Ú
+J^Üİ]KœØ]š[™ÏY˜[ÙNÜİ]K™™YY˜XÚÏIĞÛİ[›İØ]™H›ÛÜİ›ÙÜ™\ÜÎˆ	ÊÙK›Y\ÜØYÙNÜ™[™\›ÛÜİ
+İ]J__B™[˜İ[ÛˆÜš][™ÔİX›Z\ÜÚ[ÛŠÚYY
+^ÂˆÛÛœİ˜]Ï]Üš][™Ñ›ÜŠÚYY
+NÂˆYŠ\˜]Ê\™]\›ØZ[\–×KÛÜ™NßKš[˜[‰ÉËØÛÜ™N›[NÂˆ^ÂˆÛÛœİ\œÙYR”ÓÓ‹œ\œÙJ˜]ÊNÂˆYŠ\œ˜^Kš\Ğ\œ˜^J\œÙY
+J\™]\›ØZ[\–×KÛÜ™NßKš[˜[œ\œÙY˜]
+LJ_	ÉËYØXŞNœ\œÙYØÛÜ™N›[NÂˆYŠ\œÙY	‰\[Ùˆ\œÙYOOIÛØš™Xİ	Ê\™]\›ØZ[\\œ˜^Kš\Ğ\œ˜^J\œÙY˜Z[\ŠOÜ\œÙY˜Z[\–×KÛÜ™Nœ\œÙY˜ÛÜ™I‰\[Ùˆ\œÙY˜ÛÜ™OOOIÛØš™Xİ	ÏÜ\œÙY˜ÛÜ™NßKš[˜[”İš[™Ê\œÙY™š[˜[	ÉÊKØÛÜ™Nœ\œÙYœØÛÜ™OÏÛ[NÂˆ™]\›ØZ[\–×KÛÜ™NßKš[˜[”İš[™Ê\œÙY	ÉÊKØÛÜ™N›[BˆXØ]ÚÜ™]\›ØZ[\–×KÛÜ™NßKš[˜[œ˜]ËØÛÜ™N›[_BŸB™[˜İ[ÛˆÜš][™Ô™\ÜÛœÙ\ÊÚYY
+^ØÛÛœİİX›Z\ÜÚ[Û]Üš][™ÔİX›Z\ÜÚ[ÛŠÚYY
+NÜ™]\›ˆİX›Z\ÜÚ[Û‹›YØXŞ_ÜİX›Z\ÜÚ[Û‹™š[˜[_B™[˜İ[ÛˆÜš][™Ó›Ü›X[^™J^
+^Ü™]\›ˆİš[™Ê^	ÉÊKÓİÙ\Ø\ÙJ
+Kœ™\XÙJÖø '8 'H‰ø &WKÙË‰ÈŠKœ™\XÙJÖ×˜K^ŒNIÉ—JËÙË	È	ÊKœ™\XÙJ×ÊËÙË	È	ÊKš[J
+_B™[˜İ[ÛˆÜš][™ÔÚY™›J][\ËÙYY
+^ÂˆÛÛœİİ]Z][\Ë›X\
 
-function adminUsers(role){return getDB().users.filter(u=>u.role===role)}
-function adminHome(){const admins=adminUsers('admin'),teachers=adminUsers('teacher'),students=adminUsers('student'),cls=getDB().classes,books=getDB().books||[],liveBooks=books.filter(b=>['ready','pilot'].includes(b.status)).length;title('System Admin','Overview');$('content').innerHTML=`<section class="role-hero admin-hero"><div><span class="role-kicker">EnglishGate setup</span><h1>Books power the classes.</h1><p>Choose the curriculum first. Every student then receives workbook activities from the book assigned to their class.</p></div><button class="primary-btn" id="adminOpenBooks">Open books</button></section><section class="admin-metrics">${metric('Books',books.length,liveBooks+' usable now')}${metric('Classes',cls.length,'Book-based cohorts')}${metric('Admins',admins.length,'System access')}${metric('Teachers',teachers.length,'Accounts')}${metric('Students',students.length,'Accounts')}</section><section class="section setup-flow"><div class="setup-step"><b>1</b><div><strong>Books</strong><span>Choose the curriculum.</span></div><button id="goBooks" class="text-link">Open</button></div><div class="setup-step"><b>2</b><div><strong>Classes</strong><span>Connect a book and teacher.</span></div><button id="goClasses" class="text-link">Open</button></div><div class="setup-step"><b>3</b><div><strong>User accounts</strong><span>Manage admins, teachers and students.</span></div><button id="goAdmins" class="text-link">Open</button></div></section>`;const go=(page)=>{currentPage=page;renderNav();renderPage()};$('adminOpenBooks').onclick=()=>go('admin-books');$('goBooks').onclick=()=>go('admin-books');$('goClasses').onclick=()=>go('admin-classes');$('goAdmins').onclick=()=>go('admin-admins')}
-function adminClasses(){const cls=getDB().classes,teachers=adminUsers('teacher');title('System Admin','Classes');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Book-based cohorts</span><h1>Classes</h1><p>Assign one book to each class. Every student in that class automatically gets the same book.</p></div><button class="primary-btn" id="newAdminClass">+ Create class</button></div><div class="class-card-grid">${cls.map(c=>{const t=teachers.find(x=>x.id===c.teacher_id),count=adminUsers('student').filter(st=>st.classIds?.includes(c.id)).length,b=bookMeta(c.bookId||c.course_id);return `<article class="management-card"><div class="management-card-head"><span class="pill teal">${escapeHtml(c.level)}</span><span>${count} students</span></div><h3>${escapeHtml(c.name)}</h3><p class="book-line">Book assigned: <strong>${escapeHtml(b?.title||c.course_id)}</strong></p><p>Teacher: <strong>${escapeHtml(t?.name||'Unassigned')}</strong></p><div class="management-card-actions"><button class="ghost-btn" data-admin-class-book="${escapeAttr(c.id)}">Assign book</button><button class="ghost-btn danger-action" data-admin-delete-class="${escapeAttr(c.id)}" data-name="${escapeAttr(c.name)}" data-students="${count}">Delete class</button></div></article>`}).join('')||'<div class="empty-state"><h3>No classes</h3><p>Create a class from a ready book. The selected book will appear for all students in that class.</p></div>'}</div>`;$('newAdminClass').onclick=()=>openAdminClass;bindAdminClassActions()}
-function bindAdminUserActions(){document.querySelectorAll('[data-admin-reset]').forEach(b=>b.onclick=()=>adminResetPassword(b.dataset.adminReset));document.querySelectorAll('[data-admin-delete]').forEach(b=>b.onclick=()=>openAdminDelete(b.dataset.adminDelete,b.dataset.name,b.dataset.role))}
-function bindAdminClassActions(){document.querySelectorAll('[data-admin-delete-class]').forEach(b=>b.onclick=()=>openAdminClassDelete(b.dataset.adminDeleteClass,b.dataset.name,Number(b.dataset.students||0)));document.querySelectorAll('[data-admin-class-book]').forEach(b=>b.onclick=()=>openAssignClassBook(b.dataset.adminClassBook))}
-function adminAdmins(){const admins=adminUsers('admin');title('System Admin','Admins');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">System access</span><h1>Administrators</h1><p>Manage admin accounts that can control users, classes and books.</p></div></div><div class="card clean-list">${admins.map(a=>{const current=a.id===session?.id;return `<div class="management-row"><div class="student-cell"><div class="avatar">${escapeHtml(a.name[0]||'A')}</div><div><strong>${escapeHtml(a.name)}</strong><small>@${escapeHtml(a.username)}</small></div></div><div class="management-row-meta"><span>${current?'Current account':'Admin account'}</span>${current?'<button class="ghost-btn" disabled>Signed in</button>':`<button class="ghost-btn danger-action" data-admin-delete="${a.id}" data-name="${escapeAttr(a.name)}" data-role="admin">Delete</button>`}</div></div>`}).join('')||'<div class="empty-state"><h3>No admins</h3><p>At least one admin account is required.</p></div>'}</div>`;bindAdminUserActions()}
-function adminTeachers(){const teachers=adminUsers('teacher'),cls=getDB().classes;title('System Admin','Teachers');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Staff</span><h1>Teachers</h1><p>Create teacher accounts and see assigned classes.</p></div><button class="primary-btn" id="newAdminTeacher">+ Create teacher</button></div><div class="card clean-list">${teachers.map(t=>{const names=cls.filter(c=>c.teacher_id===t.id).map(c=>c.name);return `<div class="management-row"><div class="student-cell"><div class="avatar">${escapeHtml(t.name[0])}</div><div><strong>${escapeHtml(t.name)}</strong><small>@${escapeHtml(t.username)}</small></div></div><div class="management-row-meta"><span>${escapeHtml(names.join(', ')||'No class assigned')}</span><button class="ghost-btn" data-admin-reset="${t.id}">Reset password</button><button class="ghost-btn danger-action" data-admin-delete="${t.id}" data-name="${escapeAttr(t.name)}" data-role="teacher">Delete</button></div></div>`}).join('')||'<div class="empty-state"><h3>No teachers</h3><p>Create the first teacher account.</p></div>'}</div>`;$('newAdminTeacher').onclick=openAdminTeacher;bindAdminUserActions()}
-function adminStudents(){const students=adminUsers('student'),cls=getDB().classes;title('System Admin','Students');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Initial enrollment</span><h1>Students</h1><p>Add initial students. Teachers can add future students to their own classes.</p></div><button class="primary-btn" id="newAdminStudent">+ Add student</button></div><div class="card table-wrap clean-table"><table class="data-table"><thead><tr><th>Student</th><th>Class</th><th></th></tr></thead><tbody>${students.map(s=>`<tr><td><div class="student-cell"><div class="avatar">${escapeHtml(s.name[0])}</div><div><button class="student-name-link" data-student-report="${escapeAttr(s.id)}" type="button">${escapeHtml(s.name)}</button><small>@${escapeHtml(s.username)}</small><small>WhatsApp: ${escapeHtml(s.whatsappNumber||'Not recorded')}</small></div></div></td><td>${escapeHtml(cls.find(c=>s.classIds?.includes(c.id))?.name||'â€”')}</td><td><div class="management-row-meta"><button class="ghost-btn" data-transfer-student="${s.id}">Transfer</button><button class="ghost-btn" data-review-student="${escapeAttr(s.id)}">View report</button><button class="ghost-btn" data-admin-reset="${s.id}">Reset password</button><button class="ghost-btn danger-action" data-admin-delete="${s.id}" data-name="${escapeAttr(s.name)}" data-role="student">Delete</button></div></td></tr>`).join('')}</tbody></table></div>`;$('newAdminStudent').onclick=openAdminStudent;bindAdminUserActions();bindStudentActions()}
-function openAdminTeacher(){showModal(`<div class="section-head"><div><span class="role-kicker">Teacher account</span><h3>Create teacher</h3></div><button class="icon-btn" data-close>Ã—</button></div><form id="adminTeacherForm" class="form-grid"><label>Teacher name<input id="adminTeacherName" required></label><label>Username<input id="adminTeacherUsername" required placeholder="e.g. teacher.ahmed"></label>${manualPasswordField('adminTeacherPassword')}<button class="primary-btn" type="submit">Create teacher</button></form><div id="adminCreateResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('adminTeacherForm').onsubmit=async e=>{e.preventDefault();try{const r=await api('/api/admin/teachers',{method:'POST',body:JSON.stringify({name:$('adminTeacherName').value.trim(),username:$('adminTeacherUsername').value.trim(),password:$('adminTeacherPassword').value})});await refreshState();$('adminCreateResult').innerHTML=credentialResult('Teacher',r)}catch(err){$('adminCreateResult').innerHTML=`<div class="feedback bad">${escapeHtml(err.message)}</div>`}}}
-function openAdminClass(prefillBookId=''){const teachers=adminUsers('teacher'),books=(getDB().books||[]).filter(b=>['ready','pilot'].includes(b.status)&&BOOK_PACKS[b.id]);if(!teachers.length){showModal(`<div class="section-head"><div><span class="role-kicker">Create class</span><h3>Create a teacher first</h3><p class="muted">A class needs an assigned teacher.</p></div><button class="icon-btn" data-close>Ã—</button></div><button class="primary-btn" id="goCreateTeacher">Create teacher</button>`);document.querySelector('[data-close]').onclick=closeModal;$('goCreateTeacher').onclick=openAdminTeacher;return}if(!books.length){showModal(`<div class="section-head"><div><span class="role-kicker">Create class</span><h3>No ready book</h3><p class="muted">A class must be connected to a ready curriculum book.</p></div><button class="icon-btn" data-close>Ã—</button></div>`);document.querySelector('[data-close]').onclick=closeModal;return}const selected=books.some(b=>b.id===prefillBookId)?prefillBookId:books[0].id;showModal(`<div class="section-head"><div><span class="role-kicker">Class setup</span><h3>Create class</h3><p class="muted">Choose the book. The level comes from the book automatically.</p></div><button class="icon-btn" data-close>Ã—</button></div><form id="adminClassForm" class="form-grid"><label>Class name<input id="adminClassName" required placeholder="e.g. A2-B1 Evening"></label><label>Book<select id="adminClassBook">${books.map(b=>`<option value="${b.id}" ${b.id===selected?'selected':''}>${escapeHtml(b.title)} Â· ${escapeHtml(b.level)}</option>`).join('')}</select></label><label>Teacher<select id="adminClassTeacher">${teachers.map(t=>`<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('')}</select></label><button class="primary-btn" type="submit">Create class</button></form><div id="adminCreateResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('adminClassForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/admin/classes',{method:'POST',body:JSON.stringify({name:$('adminClassName').value.trim(),bookId:$('adminClassBook').value,teacherId:$('adminClassTeacher').value})});await refreshState();closeModal();currentPage='admin-classes';renderNav();adminClasses()}catch(err){$('adminCreateResult').innerHTML=`<div class="feedback bad">${escapeHtml(err.message)}</div>`}}}
-function openAssignClassBook(classId){const c=getDB().classes.find(x=>x.id===classId),books=(getDB().books||[]).filter(b=>['ready','pilot'].includes(b.status)&&BOOK_PACKS[b.id]);if(!c)return;if(!books.length){showModal(`<div class="section-head"><div><span class="role-kicker">Assign book</span><h3>No ready books</h3><p class="muted">Add or restore a ready book before assigning it to a class.</p></div><button class="icon-btn" data-close>Ã—</button></div>`);document.querySelector('[data-close]').onclick=closeModal;return}showModal(`<div class="section-head"><div><span class="role-kicker">Assign book</span><h3>${escapeHtml(c.name)}</h3><p class="muted">All students in this class will see this book.</p></div><button class="icon-btn" data-close>Ã—</button></div><form id="assignClassBookForm" class="form-grid"><label>Class book<select id="assignClassBook">${books.map(b=>`<option value="${escapeAttr(b.id)}" ${b.id===(c.bookId||c.course_id)?'selected':''}>${escapeHtml(b.title)} Â· ${escapeHtml(b.level)}</option>`).join('')}</select></label><button class="primary-btn" type="submit">Save class book</button></form><p class="muted">Changing the class book clears old lesson assignments for this class, but student accounts and saved performance records remain.</p><div id="assignClassBookResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('assignClassBookForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter||$('assignClassBookForm').querySelector('button[type="submit"]');btn.disabled=true;btn.textContent='Saving...';try{await api(`/api/admin/classes/${classId}/book`,{method:'PATCH',body:JSON.stringify({bookId:$('assignClassBook').value})});await refreshState();closeModal();adminClasses()}catch(err){btn.disabled=false;btn.textContent='Save class book';$('assignClassBookResult').innerHTML=`<div class="feedback bad">${escapeHtml(err.message)}</div>`}}}
-function manualPasswordField(id){return `<label>Password (optional)<input id="${id}" type="password" inputmode="numeric" pattern="[0-9]{8,20}" autocomplete="new-password" minlength="8" maxlength="20" placeholder="Enter numbers or leave blank"><small>Use 8â€“20 numbers only. Blank creates a secure numeric password automatically.</small></label>`}
-function openAdminStudent(){const cls=getDB().classes;if(!cls.length){showModal(`<div class="section-head"><div><span class="role-kicker">Add student</span><h3>Create a class first</h3><p class="muted">Students must belong to a class.</p></div><button class="icon-btn" data-close>Ã—</button></div>`);document.querySelector('[data-close]').onclick=closeModal;return}showModal(`<div class="section-head"><div><span class="role-kicker">Student account</span><h3>Add initial student</h3></div><button class="icon-btn" data-close>Ã—</button></div><form id="adminStudentForm" class="form-grid"><label>Student name<input id="adminStudentName" required></label><label>WhatsApp number<input id="adminStudentWhatsapp" type="tel" autocomplete="tel" required maxlength="40" placeholder="+252 63 1234567"><small>Include the country code, starting with +.</small></label><label>Username<input id="adminStudentUsername" required placeholder="e.g. amina.ali"></label>${manualPasswordField('adminStudentPassword')}<label>Class<select id="adminStudentClass">${cls.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('')}</select></label><button class="primary-btn" type="submit">Create student</button></form><div id="adminCreateResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('adminStudentForm').onsubmit=async e=>{e.preventDefault();try{const r=await api('/api/admin/students',{method:'POST',body:JSON.stringify({name:$('adminStudentName').value.trim(),username:$('adminStudentUsername').value.trim(),classId:$('adminStudentClass').value,whatsappNumber:$('adminStudentWhatsapp').value.trim(),password:$('adminStudentPassword').value})});await refreshState();$('adminCreateResult').innerHTML=credentialResult('Student',r)}catch(err){$('adminCreateResult').innerHTML=`<div class="feedback bad">${escapeHtml(err.message)}</div>`}}}
-function credentialResult(label,r){return `<div class="credential-card"><span>${label} created</span><strong>@${escapeHtml(r.username)}</strong><code>${escapeHtml(r.temporaryPassword)}</code><small>${r.passwordWasGenerated?'A secure password was generated. ':''}Copy this password now. It will not be shown again.</small></div>`}
-async function adminResetPassword(id){try{const r=await api(`/api/admin/users/${id}/reset-password`,{method:'POST'});showModal(`<div class="section-head"><div><span class="role-kicker">Password reset</span><h3>New temporary password</h3></div><button class="icon-btn" data-close>Ã—</button></div><div class="credential-card"><code>${escapeHtml(r.temporaryPassword)}</code><small>Copy and share it privately.</small></div>`);document.querySelector('[data-close]').onclick=closeModal}catch(e){alert(e.message)}}
-function openAdminDelete(id,name,role){const labels={admin:'admin',teacher:'teacher',student:'student'},label=labels[role]||'user',effect=role==='admin'?'This removes their system admin access and sign-in account. At least one other admin must remain.':role==='teacher'?'Their classes and assignments will remain, but their classes will become unassigned.':'Their enrollment, progress, scores, and workbook responses will also be deleted.';showModal(`<div class="section-head"><div><span class="role-kicker">Permanent action</span><h3>Delete ${escapeHtml(name)}?</h3></div><button class="icon-btn" data-close>Ã—</button></div><p>${effect}</p><p class="muted">This cannot be undone.</p><div class="delete-user-actions"><button class="ghost-btn" id="cancelAdminDelete">Cancel</button><button class="primary-btn danger-button" id="confirmAdminDelete">Delete ${label}</button></div><div id="adminDeleteResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('cancelAdminDelete').onclick=closeModal;$('confirmAdminDelete').onclick=async()=>{const button=$('confirmAdminDelete');button.disabled=true;button.textContent='Deleting...';try{await api(`/api/admin/users/${id}`,{method:'DELETE'});await refreshState();closeModal();renderPage()}catch(e){button.disabled=false;button.textContent=`Delete ${label}`;$('adminDeleteResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
-function openAdminClassDelete(id,name,studentCount){showModal(`<div class="section-head"><div><span class="role-kicker">Permanent action</span><h3>Delete class ${escapeHtml(name)}?</h3></div><button class="icon-btn" data-close>Ã—</button></div><p>This deletes the class, its roster links, and its workbook assignments. User accounts stay in the system.</p><p class="muted">${studentCount} student${studentCount===1?' is':'s are'} currently enrolled. This cannot be undone.</p><div class="delete-user-actions"><button class="ghost-btn" id="cancelAdminDelete">Cancel</button><button class="primary-btn danger-button" id="confirmAdminDelete">Delete class</button></div><div id="adminDeleteResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('cancelAdminDelete').onclick=closeModal;$('confirmAdminDelete').onclick=async()=>{const button=$('confirmAdminDelete');button.disabled=true;button.textContent='Deleting...';try{await api(`/api/admin/classes/${id}`,{method:'DELETE'});await refreshState();closeModal();renderPage()}catch(e){button.disabled=false;button.textContent='Delete class';$('adminDeleteResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
-function openAdminBookDelete(id,name){const used=getDB().classes.filter(c=>(c.bookId||c.course_id)===id).length;showModal(`<div class="section-head"><div><span class="role-kicker">Permanent action</span><h3>Delete book ${escapeHtml(name)}?</h3></div><button class="icon-btn" data-close>Ã—</button></div><p>This removes the book from the admin library and prevents it from being used for new classes.</p><p class="muted">${used?`${used} class${used===1?' is':'es are'} still using this book. Delete those classes first.`:'No class is currently using this book.'} This cannot be undone.</p><div class="delete-user-actions"><button class="ghost-btn" id="cancelAdminDelete">Cancel</button><button class="primary-btn danger-button" id="confirmAdminDelete" ${used?'disabled':''}>Delete book</button></div><div id="adminDeleteResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('cancelAdminDelete').onclick=closeModal;if(!$('confirmAdminDelete').disabled)$('confirmAdminDelete').onclick=async()=>{const button=$('confirmAdminDelete');button.disabled=true;button.textContent='Deleting...';try{await api(`/api/admin/books/${id}`,{method:'DELETE'});await refreshState();closeModal();renderPage()}catch(e){button.disabled=false;button.textContent='Delete book';$('adminDeleteResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
+˜[YK[™^
+OOŠİ˜[YK[™^JJNÛ]\ÚLŒMŒLÍŒŒNØÛÛœİÙ^OTİš[™ÊÙYY	İÜš][™ÉÊNÂˆ›ÜŠ]OLÚOÙ^K›[™İÚJÊÊ^Ú\ÚZÙ^K˜Ú\ÛÙP]
+JNÚ\ÚSX]š[][
+\ÚMÍÍÍŒNJ_Bˆ›ÜŠ]O[İ]›[™İLNÚOŒÚKKJ^Ú\ÚSX]š[][
+\ÚšKMÍÍÍŒNJNØÛÛœİSX]˜XœÊ\Ú
+IJJÌJNÖÛİ]ÚWKİ]Ú—WOVÛİ]Ú—Kİ]ÚWW_BˆYŠİ]›[™İŒI‰›İ]™]™\J
+JOOš[™^OOZJJVÛİ]ÌKİ]ÌWWOVÛİ]ÌWKİ]ÌWNÂˆ™]\›ˆİ]ÂŸB™[˜İ[ÛˆÜš][™Ñš[˜[ÜXÊ
+^ÂˆÛÛœİÏ[Üš][™ßßNÂˆYŠË\ÚÊ\™]\›İ\ÚÎ”İš[™ÊË\ÚÊKZ[“[X™\ŠË›Z[•ÛÜ™ß
+KX^“[X™\ŠË›X^ÛÜ™ß
+KÙ[œ™NÜš][™ÑÙ[œ™JË\ÚË›[X™\Š_NÂˆÛÛœİ\ÚÜÏP\œ˜^Kš\Ğ\œ˜^JË\ÚÜÊOİË\ÚÜÎ–×K\İ]\ÚÜË˜]
+LJKÜXÏTİš[™Ê]_	İ\ÈÜXÉÊKÓİÙ\Ø\ÙJ
+NÂˆÛÛœİ˜\šX[ÏVÂˆÙÙ[œ™N‰ÛY\ÜØYÙIË\ÚÎ˜Üš]HHÚÜÚ]Ğ\Y\ÜØYÙHÈHÛ\ÜÛX]HX›İ]	İÜXßKˆ^Z[ˆ[İ\ˆXZ[ˆÚ[[™[˜ÛYHÛ™H\ÙY[]Z[˜KˆÙÙ[œ™N‰Ù[XZ[	Ë\ÚÎ˜Üš]HHÚÜ[XZ[ÈHÛÛXYİYHX›İ]	İÜXßKˆİ]H[İ\ˆ\œÜÙH[™[˜ÛYHÛ™H™[]˜[]Z[˜KˆÙÙ[œ™N‰ÜÜİ	Ë\ÚÎ˜Üš]HHÚÜÛØÚX[YYXHÜİX›İ]	İÜXßKˆÚ\™HÛ™HÛX\ˆÚ[[™Û™H™X\ÛÛˆÜˆ^[\K˜KˆÙÙ[œ™N‰Ù›Ü›IË\ÚÎ˜Üš]HHÚÜ›Ü›H™\ÜÛœÙHX›İ]	İÜXßKˆ^Z[ˆ[İ\ˆ^\šY[˜ÙHÜˆÜ[š[ÛˆÛX\›K˜KˆÙÙ[œ™N‰Ü™\]Y\İ	Ë\ÚÎ˜Üš]HHÚÜ™\]Y\İÈHXXÚ\ˆÜˆÛÛXYİYHÛÛ›™XİYÈ	İÜXßKˆİ]HÚ][İH™YY[™ÚK˜BˆKXÚÏ]˜\šX[ÖÓX]˜XœÊ[X™\Š›[X™\ŸJKLJI]˜\šX[Ë›[™İK˜\ÙOS[X™\Š\İË›Z[•ÛÜ™ßŒ
+KZ[SX]›X^
+X]›Z[ŠÌX]œ›İ[™
+˜\ÙJ‹ÊJJKX^[Z[ŠÌÌÂˆ™]\›Ë‹‹œXÚËZ[‹X^BŸB™[˜İ[ÛˆÜš][™ÑÙ[œ™J\ÚË[X™\LJ^ÂˆÛÛœİTİš[™Ê\Úß	ÉÊKÓİÙ\Ø\ÙJ
+NÂˆYŠİÚ]Ø\^Y\ÜØYÙ_ÚÜY\ÜØYÙ_Y\ÜØYÙKË\İ
+
+J\™]\›‰ÛY\ÜØYÙIÎÂˆYŠÙ[XZ[Ë\İ
+
+J\™]\›‰Ù[XZ[	ÎÂˆYŠÜÛØÚX[Üİ˜XÙX›ÛÚß‹Ë\İ
+
+J\™]\›‰ÜÜİ	ÎÂˆYŠÙ›Ü›KË\İ
+
+J\™]\›‰Ù›Ü›IÎÂˆYŠØÛÛ\Z[‹Ë\İ
+
+J\™]\›‰ØÛÛ\Z[	ÎÂˆYŠÜ™\]Y\İ\ÚÈ›Ü‹Ë\İ
+
+J\™]\›‰Ü™\]Y\İ	ÎÂˆ™]\›–ÉÛY\ÜØYÙIË	Ù[XZ[	Ë	ÜÜİ	Ë	Ù›Ü›IË	Ü™\]Y\İ	×VÓX]˜XœÊ[X™\Š[X™\ŸJKLJIMWBŸB™[˜İ[ÛˆÜš][™ĞZ[[Ù[Ê
+^ÂˆÛÛœİÜXÏTİš[™Ê]_	İ\ÈÜXÉÊKÓİÙ\Ø\ÙJ
+KÙY[[™]ÈÙ]
 
-function showModal(html){let m=$('modalRoot');if(!m){m=document.createElement('div');m.id='modalRoot';document.body.appendChild(m)}m.innerHTML=`<div class="modal-backdrop"><div class="modal-card">${html}</div></div>`;m.querySelector('.modal-backdrop').onclick=e=>{if(e.target.classList.contains('modal-backdrop'))closeModal()}}
-function closeModal(){const m=$('modalRoot');if(m)m.innerHTML=''}
-function escapeAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')} function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+Kİ]V×NÂˆÛÛœİY]˜[YOOØÛÛœİÛX[Tİš[™Ê˜[Y_	ÉÊKš[J
+Kœ™\XÙJÖËˆO×JÉË	ÉÊNØÛÛœİXÛX[‹œÜ]
+×ÊËÊK›[™İÙ^O]Üš][™Ó›Ü›X[^™JÛX[ŠNÚYŠM	‰›LM‰‰šÙ^I‰ˆ\ÙY[‹š\ÊÙ^JJ^ÜÙY[‹˜Y
+Ù^JNÛİ]œ\Ú
+ÛX[Š__NÂˆ
+™Ü˜[[X\Ëš][\ß×JK™›Ü‘XXÚ
+OO˜Y
+K˜[œİÙ\ŠJNÂˆ
+™^™\ÜÚ[Ûœß×JK™›Ü‘XXÚ
+O˜Y
+™^[\_^
+JNÂˆÂˆHØ[ˆ^Z[ˆ^HYX\ÈÛX\›HX›İ]	İÜXßXˆÛX\ˆÜš][™È[ÈH™XY\ˆ[™\œİ[™	İÜXßXˆHÚXÚÈ^HY\ÜØYÙH™Y›Ü™HHÙ[™]ˆK™›Ü‘XXÚ
+Y
+NÂˆ™]\›ˆİ]œÛXÙJÊBŸB™[˜İ[ÛˆÜš][™ĞÛÛXš[™S[Ù[Ê
+^ÂˆÛÛœİÜXÏTİš[™Ê]_	İ\ÈÜXÉÊKÓİÙ\Ø\ÙJ
+NÂˆ™]\›–ÂˆØN˜HØ[ÈÛÛ[][šXØ]HÛX\›HX›İ]	İÜXßK˜‰Ò]\È[\Ü[›Üˆ^HÛÜšÈÜˆİYY\Ë‰ËÛÛ›™XİÜ‰Ø™XØ]\ÙIË[œİÙ\˜HØ[ÈÛÛ[][šXØ]HÛX\›HX›İ]	İÜXßH™XØ]\ÙH]\È[\Ü[›Üˆ^HÛÜšÈÜˆİYY\Ë˜KˆØN˜	ØØ\
+ÜXÊ_HØ[ˆ™HÚ[[™Ú[™Ë˜‰ÒHÙY\˜Xİ\Ú[™Ë‰ËÛÛ›™XİÜ‰Ø]	Ë[œİÙ\˜	ØØ\
+ÜXÊ_HØ[ˆ™HÚ[[™Ú[™Ë]HÙY\˜Xİ\Ú[™Ë˜KˆØN˜H™YYÈÛÛ[][šXØ]HÛX\›HX›İ]	İÜXßK˜‰ÒH™\\™H^HYX\Èš\œİ‰ËÛÛ›™XİÜ‰ÜÛÉË[œİÙ\˜H™YYÈÛÛ[][šXØ]HÛX\›HX›İ]	İÜXßKÛÈH™\\™H^HYX\Èš\œİ˜BˆBŸB™[˜İ[ÛˆÜš][™ĞÛÜœ™Xİ[Û“[Ù[Ê
+^ÂˆÛÛœİÜXÏTİš[™Ê]_	İ\ÈÜXÉÊKÓİÙ\Ø\ÙJ
+KÙY[[™]ÈÙ]
+
+Kİ]V×NÂˆÛÛœİYJÜ›Û™Ë[œİÙ\ŠOOİÜ›Û™Ï]Ú]\š[Ù
+Ü›Û™ÊNØ[œİÙ\]Ú]\š[Ù
+[œİÙ\ŠNØÛÛœİÙ^O]Üš][™Ó›Ü›X[^™J[œİÙ\ŠNÚYŠÜ›Û™É‰˜[œİÙ\‰‰šÙ^I‰ˆ\ÙY[‹š\ÊÙ^JI‰Üš][™Ó›Ü›X[^™JÜ›Û™ÊHOOZÙ^J^ÜÙY[‹˜Y
+Ù^JNÛİ]œ\Ú
+İÜ›Û™Ë[œİÙ\ŸJ__NÂˆ
+™Ü˜[[X\Ëš][\ß×JK™›Ü‘XXÚ
+OOÂˆÛÛœİÛÜœ™XİTİš[™ÊK˜[œİÙ\Ÿ	ÉÊKš[J
+NÂˆÛÛœİÜ›Û™ÏJK›Ü[Ûœß×JK›X\
+İš[™ÊK™š[™
+OÜš][™Ó›Ü›X[^™J
+HOO]Üš][™Ó›Ü›X[^™JÛÜœ™Xİ
+JNÂˆYŠÛÜœ™Xİ	‰Ü›Û™É‰˜ÛÜœ™XİœÜ]
+×ÊËÊK›[™İLÊXY
+Ü›Û™ËÛÜœ™Xİ
+BˆJNÂˆÂˆØH[HÜš]HX›İ]	İÜXßK˜H[HÜš][™ÈX›İ]	İÜXßK˜KˆÉÔÚH^Z[ˆ\ˆYXHÛX\›K‰Ë	ÔÚH^Z[œÈ\ˆYXHÛX\›K‰×KˆÉÒHÙ[HY\ÜØYÙHY\İ\™^K]H›Ü™Ù]H]XÚY[‰Ë	ÒHÙ[HY\ÜØYÙHY\İ\™^K]H›Ü™ÛİH]XÚY[‰×BˆK™›Ü‘XXÚ
+O˜Y
+ÌKÌWJJNÂˆ™]\›ˆİ]œÛXÙJÊBŸB™[˜İ[ÛˆÜš][™Ô\˜YÜ˜\[Ù[ÊÜXÊ^ÂˆÛÛœİÜXÏTİš[™Ê]_	İ\ÈÜXÉÊKÓİÙ\Ø\ÙJ
+KÙ[œ™O\ÜXË™Ù[œ™NÂˆÛÛœİ\ÚÔ\˜YÜ˜\YÙ[œ™OOOIÙ[XZ[	ÂˆÖÉÑX\ˆÛÛXYİYK	ËH[HÜš][™ÈX›İ]	İÜXßK˜	ÓÛ™H[\Ü[]Z[\È]ÛX\ˆ[™›Ü›X][Ûˆ[ÈH™XY\ˆ[™\œİ[™H\œÜÙK‰Ë	ÒÚ[™™YØ\™Ë	×Bˆ™Ù[œ™OOOIÜÜİ	ÂˆÖØ\™H\ÈÛ™HİYÚX›İ]	İÜXßK˜	ÕHXZ[ˆÚ[\È]ÛX\ˆÛÛ[][šXØ][Ûˆ[È[ÜH[™\œİ[™H\ÜİYK‰Ë	Ñ›Üˆ^[\KÛ™HÜXÚYšXÈ]Z[Ø[ˆXZÙHHY\ÜØYÙHİ›Û™Ù\‹‰Ë	ÕÚ]È[İH[šÏÉ×Bˆ™Ù[œ™OOOIØÛÛ\Z[	ÂˆÖÉÑX\ˆÚ\ˆÜˆXY[K	ËH[HÜš][™ÈÈÛÛ\Z[ˆX›İ][ˆ\ÜİYHÛÛ›™XİYÈ	İÜXßK˜	ÕH›Ø›[H\ÈY™™XİYYKÛÈHÛİ[\™XÚX]HHÛX\ˆÛÛ][Û‹‰Ë	ÒHÛÚÈ›ÜØ\™È[İ\ˆ™\ÜÛœÙK‰×Bˆ™Ù[œ™OOOIÜ™\]Y\İ	ÂˆÖÉÒ[Ë	ËH[HÜš][™ÈÈXZÙHH™\]Y\İX›İ]	İÜXßK˜	ÕH™X\ÛÛˆ\È]H™YYÛX\ˆ[™›Ü›X][Ûˆ™Y›Ü™HHÛÛ[YK‰Ë	Õ[šÈ[İH›Üˆ[İ\ˆ[‰×Bˆ–ÉÒK	ËHØ[YÈY\ÜØYÙH[İHX›İ]	İÜXßK˜	ÓÛ™H[\Ü[]Z[\È]ÛX\ˆÛÛ[][šXØ][ÛˆXZÙ\ÈHÚ]X][ÛˆX\ÚY\‹‰Ë	Õ[šÜÈ›Üˆ™XY[™Ë‰×NÂˆ™]\›–Âˆ\ÚÔ\˜YÜ˜\ˆØ	ØØ\
+ÜXÊ_H\ÈHXZ[ˆÜXÈHØ[È^Z[‹˜	Ñš\œİHİ]HHXZ[ˆYXHÛX\›K‰Ë	Õ[‹HYÛ™HÜXÚYšXÈ]Z[Üˆ^[\K‰Ë	Ñš[˜[KH[™Ú]HÛX\ˆÛÛ˜Û\Ú[Û‹‰×KˆÉÒ[Ë	ËHØ[ÈÚ\™HÛ™HÚ[X›İ]	İÜXßK˜	Õ\ÈX]\œÈ™XØ]\ÙHÛX\ˆ]Z[È[H™XY\ˆ™\ÜÛ™ÛÜœ™XİK‰Ë	ÔX\ÙH]YHÛ›İÈYˆ[İH™YY[H[Ü™H[™›Ü›X][Û‹‰×BˆBŸB™[˜İ[ÛˆÜš][™ĞÛÜ™Q^\˜Ú\Ù\Ê
+^ÂˆÛÛœİÜXÏ]Üš][™Ñš[˜[ÜXÊ
+KZ[Ï]Üš][™ĞZ[[Ù[Ê
+KÛÛXš[™\Ï]Üš][™ĞÛÛXš[™S[Ù[Ê
+KÛÜœ™Xİ[ÛœÏ]Üš][™ĞÛÜœ™Xİ[Û“[Ù[Ê
+K\˜YÜ˜\Ï]Üš][™Ô\˜YÜ˜\[Ù[ÊÜXÊKİ]V×NÂˆZ[Ë™›Ü‘XXÚ
+
+[œİÙ\‹JOO›İ]œ\Ú
+İ\N‰ØZ[	ËX™[˜	ÚJÌ_H0­ÈÙ[[˜ÙHZ[[™Ø[œİXİ[Û‰Õ\HÛÜ™È[ˆHÛÜœ™XİÜ™\ˆÈZ[HÙ[[˜ÙK‰Ë[œİÙ\‹YXÙ\ÎÜš][™ÔÚY™›J[œİÙ\‹œÜ]
+×ÊËÊKšY
+ØZ[	Ú_X
+_JJNÂˆÛÛXš[™\Ë™›Ü‘XXÚ
+
+JOO›İ]œ\Ú
+İ\N‰ØÛÛXš[™IËX™[˜	ÚJÍH0­ÈÙ[[˜ÙHÛÛXš[š[™Ø[œİXİ[Û˜ÛÛXš[™HHÛÈÙ[[˜Ù\È\Ú[™È8 '	Ş˜ÛÛ›™XİÜŸx 'K˜‹‹JJNÂˆÛÜœ™Xİ[ÛœË™›Ü‘XXÚ
+
+JOO›İ]œ\Ú
+İ\N‰ØÛÜœ™Xİ	ËX™[˜	ÚJÍßH0­È\œ›ÜˆÛÜœ™Xİ[Û˜[œİXİ[Û‰Ô™]Üš]HHÙ[[˜ÙHÛÜœ™XİK‰Ë‹‹JJNÂˆ\˜YÜ˜\Ë™›Ü‘XXÚ
+
+[œİÙ\‹JOO›İ]œ\Ú
+İ\N‰ÛÜ™Ø[š^™IËX™[˜	ÚJÌLH0­È\˜YÜ˜\Ü™\š[™Ø[œİXİ[Û‰Õ\HÙ[[˜Ù\È[ˆH[ÜİÙÚXØ[\˜YÜ˜\Ü™\‹‰Ë[œİÙ\‹YXÙ\ÎÜš][™ÔÚY™›J[œİÙ\‹šY
+ØÜ™Ø[š^™_	Ú_X
+_JJNÂˆ™]\›ˆİ]ŸB™[˜İ[ÛˆÜš][™Ğ\œ˜[™ÙR[
+^
+^ÂˆÛÛœİÙ[[˜ÙS[ÙOY^\OOOIØZ[	ÎÂˆ™]\›ˆ\XÛHÛ\ÜÏH™İZYY\]Y\İ[ÛˆÜš][™ËXÛÜ™KXØ\™ˆ]K]Üš][™ËXÛÜ™OH‰Ù^\_Hˆ]KX[œİÙ\H‰Ù\ØØ\P]ŠÙ[[˜ÙS[ÙOÙ^˜[œİÙ\™^˜[œİÙ\‹š›Ú[Š	ß	ÊJ_H‚ˆ]ˆÛ\ÜÏHœ]Y\İ[Û‹\İYÙHÜ[‰Ù\ØØ\R[
+^›X™[
+_OÜÜ[Ù]‰Ù\ØØ\R[
+^š[œİXİ[ÛŠ_OÜ‚ˆ]ˆÛ\ÜÏHÜš][™ËX\œ˜[™ÙK^›Û™H	ÜÙ[[˜ÙS[ÙOÉÚ\Ë]ÛÜ™ÉÎ‰Ú\Ë\Ù[[˜Ù\ÉßHˆ]K]Üš][™ËX\œ˜[™ÙO‚ˆ]ˆÛ\ÜÏHÜš][™Ë\YXÙKX˜[šÈˆ]K]Üš][™ËX˜[šÈ\šXK[X™[H]˜Z[X›H	ÜÙ[[˜ÙS[ÙOÉİÛÜ™ÉÎ‰ÜÙ[[˜Ù\ÉßH‰Ù^œYXÙ\Ë›X\
+
+JOO˜]Ûˆ\OH˜]ÛˆˆÛ\ÜÏHÜš][™Ë\YXÙHˆ]K]Üš][™Ë\YXÙH]K]˜[YOH‰Ù\ØØ\P]Š˜[YJ_Hˆ]K\Ûİ\˜ÙKZ[™^H‰Şš[™^Hˆ]K\ÚY™›KZ[™^H‰Ú_H‰Ù\ØØ\R[
+˜[YJ_OØ]Û˜
+Kš›Ú[Š	ÉÊ_OÙ]‚ˆ]ˆÛ\ÜÏHÜš][™Ë\YXÙKX[œİÙ\ˆˆ]K]Üš][™Ë\YXÙKX[œİÙ\ˆ\šXK[X™[H–[İ\ˆÜ™\™Y[œİÙ\ˆÜ[ˆÛ\ÜÏHÜš][™ËX\œ˜[™ÙK\XÙZÛ\ˆ–[İ\ˆ[œİÙ\ˆ\X\œÈ\™OÜÜ[Ù]‚ˆÙ]‚ˆ]ˆÛ\ÜÏHÜš][™ËXÛÜ™KXXİ[ÛœÈ]Ûˆ\OH˜]ÛˆˆÛ\ÜÏH™ÚÜİXˆˆ]K]Üš][™Ë\™\Ù]”™\Ù]Ø]Û]Ûˆ\OH˜]ÛˆˆÛ\ÜÏHœÙXÛÛ™\KXˆˆ]K]Üš][™ËXÛÜ™KXÚXÚÏÚXÚÏØ]ÛÙ]‚ˆ]ˆ]K]Üš][™ËXÛÜ™KY™YY˜XÚÈ\šXK[]™OHœÛ]HÙ]‚ˆØ\XÛO˜ŸB™[˜İ[ÛˆÜš][™Õ^ÛÜ™R[
+^
+^ÂˆÛÛœİÛİ\˜ÙOY^\OOOIØÛÛXš[™IÏØ]ˆÛ\ÜÏHÜš][™ËXÛÛXš[™K\Ûİ\˜ÙHKØˆ	Ù\ØØ\R[
+^˜J_OÜ‹Øˆ	Ù\ØØ\R[
+^˜Š_OÜÜ[ÛÛ›™XİÜˆİ›Û™Ï‰Ù\ØØ\R[
+^˜ÛÛ›™XİÜŠ_OÜİ›Û™ÏÜÜ[Ù]˜˜]ˆÛ\ÜÏHÜš][™ËY\œ›Ü‹\Ûİ\˜ÙHÜ[”Ù[[˜ÙHÚ][ˆ\œ›ÜÜÜ[‰Ù\ØØ\R[
+^Ü›Û™Ê_OÜÙ]˜Âˆ™]\›ˆ\XÛHÛ\ÜÏH™İZYY\]Y\İ[ÛˆÜš][™ËXÛÜ™KXØ\™ˆ]K]Üš][™ËXÛÜ™OH‰Ù^\_Hˆ]KX[œİÙ\H‰Ù\ØØ\P]Š^˜[œİÙ\Š_H‚ˆ]ˆÛ\ÜÏHœ]Y\İ[Û‹\İYÙHÜ[‰Ù\ØØ\R[
+^›X™[
+_OÜÜ[Ù]‰Ù\ØØ\R[
+^š[œİXİ[ÛŠ_OÜ‰ÜÛİ\˜Ù_Bˆ[œ]Û\ÜÏHÜš][™ËXÛÜ™KZ[œ]ˆ\OH^ˆ]]ØÛÛ\]OH›Ù™ˆˆ]K]Üš][™ËXÛÜ™KZ[œ]XÙZÛ\H‰Ù^\OOOIØÛÛXš[™IÏÉÕÜš]HHÛÛXš[™YÙ[[˜Ùx )‰Î‰ÕÜš]HHÛÜœ™XİYÙ[[˜Ùx )‰ßH‚ˆ]ˆÛ\ÜÏHÜš][™ËXÛÜ™KXXİ[ÛœÈ]Ûˆ\OH˜]ÛˆˆÛ\ÜÏHœÙXÛÛ™\KXˆˆ]K]Üš][™ËXÛÜ™KXÚXÚÏÚXÚÏØ]ÛÙ]‚ˆ]ˆ]K]Üš][™ËXÛÜ™KY™YY˜XÚÈ\šXK[]™OHœÛ]HÙ]‚ˆØ\XÛO˜ŸB™[˜İ[ÛˆÜš][™ĞÛÜ™R[
+
+^ÂˆÛÛœİÜ›İ\Ï^ØZ[‰ÔÙ[[˜ÙHZ[[™ÉËÛÛXš[™N‰ÔÙ[[˜ÙHÛÛXš[š[™ÉËÛÜœ™Xİ‰Ñ\œ›ÜˆÛÜœ™Xİ[Û‰ËÜ™Ø[š^™N‰Ô\˜YÜ˜\Ü™\š[™ÉßNÂˆ]\İIÉÎÂˆ™]\›ˆÜš][™ĞÛÜ™Q^\˜Ú\Ù\Ê
+K›X\
+^OÂˆÛÛœİXY[™ÏY^\HOO[\İØ]ˆÛ\ÜÏHÜš][™ËXÛÜ™KYÜ›İ\ZXYÜ[‰Ù\ØØ\R[
+Ü›İ\ÖÙ^\WJ_OÜÜ[İ›Û™ÏŒÈ]Y\İ[ÛœÏÜİ›Û™ÏÙ]˜‰ÉÎÂˆ\İY^\NÂˆ™]\›ˆXY[™ÊÊ^\OOOIØZ[	ß^\OOOIÛÜ™Ø[š^™IÏİÜš][™Ğ\œ˜[™ÙR[
+^
+NÜš][™Õ^ÛÜ™R[
+^
+JBˆJKš›Ú[Š	ÉÊBŸB™[˜İ[ÛˆÜš][™ĞXİ]š]J
+^ÂˆÛÛœİØ]™Y]Üš][™ÔİX›Z\ÜÚ[ÛŠÙ\ÜÚ[Û‹šYšY
+KÜXÏ]Üš][™Ñš[˜[ÜXÊ
+K\ÜÙ\ÜÛY[P›ÛÛX[ŠÜš][™ÏËš[X[‘Ü˜YY
+KXXÚ\‘Ü˜YOYÙ]Š
+KÜš][™ÔØÛÜ™\ÏË–ÜÙ\ÜÚ[Û‹šYOË–ÛšYK˜\Ù\ÏJ™^™\ÜÚ[Ûœß×JKœÛXÙJJK›X\
+O^
+NÂˆ™]\›ˆ]ˆÛ\ÜÏH™YË\ÚÚ[\YÙHYË]Üš][™Ë\YÙH‚ˆXY\ˆÛ\ÜÏH™YË\ÚÚ[Z\›È]Ü[ˆÛ\ÜÏH™YË\ÚÚ[ZÚXÚÙ\ˆ‰Ø\ÜÙ\ÜÛY[ÉÑš[˜[\ÜÙ\ÜÛY[	Î‰ÕÜš][™ÉßOÜÜ[OZ[ÛÛXš[™KÛÜœ™XİÜ™Ø[š^™OÚO”˜Xİ\ÙHHZ[[™È›ØÚÜÈš\œİˆ[ˆÜš]HÛ™H™X[[Y™H™\ÜÛœÙKÜÙ]Ü[ˆÛ\ÜÏH™YË\]Y\İ[Û‹XÛİ[ŒLˆ]]ËYÜ˜YY
+ÈH™X[Üš][™ÏÜÜ[ÚXY\‚ˆ	Ø\ÜÙ\ÜÛY[Ø]ˆÛ\ÜÏH˜\ÜÙ\ÜÛY[[›İXÙHİ›Û™Ï’[™\[™[š[˜[Üš][™ÏÜİ›Û™Ï‰İXXÚ\‘Ü˜YOOO[[XXÚ\‘Ü˜YOOO][™Yš[™YÉÕHLˆ™\\˜][Ûˆ]Y\İ[ÛœÈ\™H]]ËYÜ˜YYˆ[İ\ˆš[˜[™\ÜÛœÙHÚ[™HÜ˜YYH[İ\ˆXXÚ\‹‰Î˜[İ\ˆXXÚ\ˆ]Ø\™Y	İXXÚ\‘Ü˜Y_IH›ÜˆHš[˜[™\ÜÛœÙKˆY][™™\İX›Z]Û›HYˆ[İ\ˆXXÚ\ˆ\ÚÜÈ[İHË˜OÜÙ]˜‰ÉßBˆ]ˆÛ\ÜÏH™YË]Üš][™Ë[^[İ]YË]Üš][™Ë[^[İ]Y\ÚYÛ™Y‚ˆXZ[ˆÛ\ÜÏH™YË]Üš][™Ë]ÛÜšÜÜXÙH‚ˆÙXİ[ÛˆÛ\ÜÏHÜš][™ËXZ[\ˆÜš][™ËXÛÜ™K\Ù\]Y[˜ÙH]ˆÛ\ÜÏH™YË]\ÚË\[™[ZXY]ÛX[”\H0­È]]ËYÜ˜YY˜XİXÙOÜÛX[Z[8¡¤ˆÛÛXš[™H8¡¤ˆÛÜœ™Xİ8¡¤ˆÜ™Ø[š^™OÚÛÛ\]HÈ]Y\İ[ÛœÈ›ÜˆXXÚ\H™Y›Ü™HHš[˜[™X[[Y™HÜš][™È\ÚËÜÙ]Ù]‰İÜš][™ĞÛÜ™R[
+
+_OÜÙXİ[Û‚ˆ\XÛHÛ\ÜÏH™İZYY\]Y\İ[ÛˆÜš][™ËYİZYY\]Y\İ[Ûˆš[˜[]Üš][™ËXØ\™YË[Y\ÜØYÙKXÛÛ\ÜÙ\ˆ‚ˆ]ˆÛ\ÜÏH™YË[Y\ÜØYÙKX˜\ˆ]ˆÛ\ÜÏH™YË[Y\ÜØYÙKX]˜]\ˆ–OÙ]]İ›Û™Ï–[İOÜİ›Û™ÏÛX[”™X[[Y™HÜš][™ÏÜÛX[Ù]Ù]‚ˆ]ˆÛ\ÜÏHÜš][™Ë]\ÚËZXY]Ü[ˆÛ\ÜÏHœİYÙKX˜YÙH”\ˆ0­ÈÜš]H][İ\œÙ[ÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+ÜXË\ÚÊ_OÜİ›Û™ÏÙ]Ü[‰ÜÜXË›Z[Ÿx $ÉÜÜXË›X^HÛÜ™ÏÜÜ[Ù]‚ˆ^\™XHÛ\ÜÏHÜš][™ËYš[˜[\™\ÜÛœÙHˆ]KXÛİ[ZÙ^OH™š[˜[ˆ]K[Z[H‰ÜÜXË›Z[ŸHˆ]K[X^H‰ÜÜXË›X^HˆXÙZÛ\H•\H[İ\ˆ™\ÜÛœÙH\™x )ˆ‰Ù\ØØ\R[
+Ø]™Y™š[˜[
+_Oİ^\™XO]ˆÛ\ÜÏHÛÜ™XÛİ[ˆ]KXÛİ[H™š[˜[ŒÛÜ™ÏÙ]‚ˆØ\XÛO‚ˆÛXZ[‚ˆ\ÚYHÛ\ÜÏH™YË]Üš][™ËXœšYYˆÛX[•Üš][™Èİ\ÜÜÛX[‰Ù\ØØ\R[
+]J_OÚ‰Ü˜\Ù\Ë›[™İØ]ˆÛ\ÜÏH™YË\˜\ÙKX˜[šÈ‰Ü˜\Ù\Ë›X\
+O˜Ü[‰Ù\ØØ\R[
+
+_OÜÜ[˜
+Kš›Ú[Š	ÉÊ_OÙ]˜‰ÉßO]ˆÛ\ÜÏH™YË]Üš][™Ë\™[Z[™\ˆİ›Û™Ï”™[Y[X™\Üİ›Û™ÏÜ[’ÙY\H\œÜÙHÛX\‹ÜÜ[Ü[•\ÙHÛÛ\]HÙ[[˜Ù\ËÜÜ[Ü[ÛÛ›™XİYX\È˜]\˜[KÜÜ[Ü[ÚXÚÈÜ™\ˆ[™[˜İX][Ûˆ™Y›Ü™HØ]š[™ËÜÜ[Ù]Ø\ÚYO‚ˆÙ]‚ˆ]ˆYH˜Xİ]š]Q™YY˜XÚÈÙ]]ˆÛ\ÜÏHœÚÚ[XXİ[Û‹\›İÈ]ÛˆÛ\ÜÏHœš[X\KXˆİZYY\İX›Z]ÚÚ[\İX›Z]ˆYHœØ]™UÜš][™È‰Ø\ÜÙ\ÜÛY[ÉÔİX›Z]š[˜[Üš][™ÉÎ‰ĞÚXÚÈ	ˆØ]™HÜš][™ÉßOØ]Û‰ØXİ]š]QÛ™P]ÛŠ
+_OÙ]‚ˆÙ]˜ŸB™[˜İ[Ûˆ™]šY]ĞXİ]š]J
+^ØÛÛœİÏZ\ÕÛÜšØ›ÛÚÔ™]šY]Ê
+OŞÛX™[‰ÔİY[›Øİ\ÉßNÙXZÙ\İ
+Ù\ÜÚ[Û‹šY
+Kš\œİÜXÏ[›[X™\OOLK™]šY]˜[Yš\œİÜXÏÉÔ™XØ[È\ÙY[^™\ÜÚ[ÛœÈœ›ÛH\ÈÜXÈ[™Ø^HÛ™HÙ[[˜ÙHÚ]XXÚ‰Î˜™XØ[H\ÙY[^™\ÜÚ[Ûˆœ›ÛHH™]š[İ\ÈÜXÈ[™\ÙH][ˆÛ™H™]ÈÙ[[˜ÙK˜Ü™]\›ˆ]ˆÛ\ÜÏH˜Û\ÜË\™\]ˆÛ\ÜÏH˜Û\ÜË\™\Y›Øİ\ÈÜ[‘›Øİ\ÏÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+Ë›X™[
+_OÜİ›Û™ÏÙ]ÙXİ[ÛˆÛ\ÜÏH˜Û\ÜË\™\[Z\ÜÚ[ÛˆÜ[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ“]™HÛ\ÜÈZ\ÜÚ[ÛÜÜ[‰Ù\ØØ\R[
+œ™]šY]Ë›Z\ÜÚ[ÛŠ_OÚ]ˆÛ\ÜÏHšÙ^]ÛÜ™[[™HÛX[’Ù^]ÛÜ™ÏÜÛX[İ›Û™Ï‰Ù\ØØ\R[
+œ™]šY]ËšÙ^]ÛÜ™Ê_OÜİ›Û™ÏÙ]ÜÙXİ[ÛÙXİ[ÛˆÛ\ÜÏH˜Û\ÜË\™\\™XØ[Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ™Y›Ü™HÛ\ÜÏÜÜ[‰Ù\ØØ\R[
+™]šY]˜[
+_OÜÜÙXİ[Û‰Û›[X™\OONOÛ[Ù[PÚ[[™ÙR[
+
+N‰ÉßO]ˆYH˜Xİ]š]Q™YY˜XÚÈÙ]]ÛˆÛ\ÜÏHœš[X\KXˆÛ\ÜË\™\\™XYHˆYH™š[š\Ú™]šY]È‰Û›[X™\OONOÉÓ[Ù[H™\ÛÛ\]IÎ‰Òx &[H™XYH›ÜˆÛ\ÜÈ8¡¤‰ßOØ]ÛÙ]˜B‚™[˜İ[Ûˆ˜[[˜ÙYÜ[ÛœÊ˜[YKÜ[ÛœË[œİÙ\Š^ÂˆÛÛœİÛİ\˜ÙOVË‹‹›Ü[Ûœ×KÛÜœ™Xİ[™^\Ûİ\˜ÙKš[™^ÙŠ[œİÙ\ŠNÂˆYŠÛİ\˜ÙK›[™İŸÛÜœ™Xİ[™^
+\™]\›ˆÛİ\˜ÙNÂˆÛÛœİ\İ˜XİÜœÏ\Ûİ\˜ÙK™š[\Š
+ËJOOšHOOXÛÜœ™Xİ[™^
+NÂˆ]\ÚLŒMŒLÍŒŒNØÛÛœİÙYYTİš[™Ê˜[YJJÉß	ÊÔİš[™Ê[œİÙ\ŠNÂˆ›ÜŠ]OLÚOÙYY›[™İÚJÊÊ^Ú\Ú\ÙYY˜Ú\ÛÙP]
+JNÚ\ÚSX]š[][
+\ÚMÍÍÍŒNJ_Bˆ›ÜŠ]OY\İ˜XİÜœË›[™İLNÚOŒÚKKJ^ØÛÛœİSX]˜XœÊ\Ú
+ÚJŒÌJIJJÌJNÖÙ\İ˜XİÜœÖÚWK\İ˜XİÜœÖÚ—WOVÙ\İ˜XİÜœÖÚ—K\İ˜XİÜœÖÚWW_BˆÛÛœİ\™Ù]SX]˜XœÊ\Ú
+I\Ûİ\˜ÙK›[™İİ]V×NÛ]LÂˆ›ÜŠ]OLÚOÛİ\˜ÙK›[™İÚJÊÊ[İ]œ\Ú
+OOO]\™Ù]Ø[œİÙ\™\İ˜XİÜœÖÙ
+Ê×JNÂˆ™]\›ˆİ]ÂŸB™[˜İ[Ûˆ˜Y[Ê˜[YKÜ[ÛœË[œİÙ\‹YÏIÉËX\›š[™ÓY]O[[
+^ÂˆÛÛœİÚİÛX˜[[˜ÙYÜ[ÛœÊ˜[YKÜ[ÛœË[œİÙ\ŠNÂˆÛÛœİX\›š[™Ğ]œÏ[X\›š[™ÓY]OØ]K]›ØØX‹]ÛÜ™H‰Ù\ØØ\P]ŠX\›š[™ÓY]KÛÜ™
+_Hˆ]K]›ØØX‹[YX[š[™ÏH‰Ù\ØØ\P]ŠX\›š[™ÓY]K›YX[š[™Ê_Hˆ]K]›ØØX‹Y^[\OH‰Ù\ØØ\P]ŠX\›š[™ÓY]K™^[\J_H˜‰ÉÎÂˆ™]\›ˆ]ˆÛ\ÜÏH›XÜK\XÚÙ\ˆˆ]K[XÜOH‰Ù\ØØ\P]Š˜[YJ_H‰ÛX\›š[™Ğ]œßO]ˆÛ\ÜÏH›XÜKX[œİÙ\‹\Ûİˆ]K[XÜK\ÛİXš[™^HŒˆ\šXK[X™[H”Ù[XİY[œİÙ\ˆÜ[ˆÛ\ÜÏH›XÜK\Ûİ[X™[–[İ\ˆ[œİÙ\ÜÜ[İ›Û™È]K[XÜK\Ûİ]^ÚÛÜÙH[ˆ[œİÙ\Üİ›Û™ÏÛX[•\[ˆÜ[ÛˆÜˆ˜YÈ]\™OÜÛX[Ù]]ˆÛ\ÜÏH›XÜK[Ü[Û‹XØ\™È‰ÜÚİÛ‹›X\
+
+ËJOO˜]ÛˆÛ\ÜÏH›XÜK[Ü[Û‹XØ\™ˆ\OH˜]Ûˆˆ˜YÙØX›OHYHˆ]K[XÜK[Ü[ÛH‰Ú_Hˆ]K]˜[YOH‰Ù\ØØ\P]ŠÊ_HÜ[ˆÛ\ÜÏH›XÜK[Ü[Û‹Z[™^‰Ôİš[™Ë™œ›ÛPÚ\ÛÙJJÚJ_OÜÜ[Ü[ˆÛ\ÜÏH›XÜK[Ü[Û‹]^‰Ù\ØØ\R[
+Ê_OÜÜ[Ø]Û[œ]Û\ÜÏH›XÜK[˜]]™KZ[œ]ˆ\OHœ˜Y[Èˆ˜[YOH‰Û˜[Y_Hˆ˜[YOH‰Ù\ØØ\P]ŠÊ_Hˆ]KX[œİÙ\H‰Ù\ØØ\P]Š[œİÙ\Š_Hˆ]K]YÏH‰Ù\ØØ\P]ŠYÊ_Hˆ]K[XÜKZ[œ]H‰Ú_HˆXš[™^H‹LHˆ\šXKZY[HYH˜
+Kš›Ú[Š	ÉÊ_OÙ]‰ÛX\›š[™ÓY]OÉÏ]ˆÛ\ÜÏH›XÜK[X\›š[™ËY™YY˜XÚË\Ûİˆ]K]›ØØX‹Y™YY˜XÚÈ\šXK[]™OHœÛ]HÙ]‰Î‰ÉßOÙ]˜ÂŸB™[˜İ[ÛˆXİ]š]QÛ™P]ÛŠ
+^ÂˆYŠ\ÕÛÜšØ›ÛÚÔ™]šY]Ê
+J\™]\›ˆ	ÉÎÂˆÛÛœİÛ™OHZ\ÕÛÜšØ›ÛÚÔ™]šY]Ê
+I‰œÚÚ[ÛÛ\][Û‘›ÜŠÙ\ÜÚ[Û‹šYšY
+Kš[˜ÛY\Êİ\œ™[İ\
+NÂˆ™]\›ˆ]ÛˆÛ\ÜÏHœÙXÛÛ™\KXˆÛ™KXXİ]š]KXˆˆYH™Û™PXİ]š]Hˆ	ÙÛ™OÉÉÎ‰Ù\ØX›Y	ßO‘Û™H8¡¤Ø]Û˜ÂŸB™[˜İ[ÛˆY˜[˜ÙPY\‘Û™J
+^ÂˆYŠ\ÚÚ[ÛÛ\][Û‘›ÜŠÙ\ÜÚ[Û‹šYXİ]™S\ÜÛÛ’Y
+Kš[˜ÛY\Êİ\œ™[İ\
+J\™]\›ÂˆÛÛœİOUÓÔ’Ğ“ÓÒ×ÔÕTËš[™^ÙŠİ\œ™[İ\
+NÂˆYŠOÓÔ’Ğ“ÓÒ×ÔÕTË›[™İLJ^Øİ\œ™[İ\UÓÔ’Ğ“ÓÒ×ÔÕTÖÚJÌWNİÛÜšØ›ÛÚÊ
+NÜ™]\›ŸBˆİ\œ™[YÙOIÚÛYIÎÜ™[™\“˜]Š
+NÜİY[ÛYJ
+NÂŸB˜ÛÛœİ]Y[ĞØXÚO^ßNÛ]Xİ]™P]Y[Ï[[Xİ]™P]Y[Ó\ÜÛÛ’Ù^O[[Â‚™[˜İ[Ûˆ›Ü›X]]Y[Õ[YJÙXÛÛ™Ê^ØÛÛœİS[X™\‹š\Ñš[š]JÙXÛÛ™ÊOÓX]›X^
+ÙXÛÛ™ÊNŒOSX]™›ÛÜŠ‹ÍŒ
+KÏSX]™›ÛÜŠ‰MŒ
+NÜ™]\›ˆJÉÎ‰ÊÔİš[™ÊÊKœYİ\
+‹	Ì	Ê_B™[˜İ[ÛˆŞ[˜Ğ]Y[ÕZJ
+^ÂˆÛÛœİÙYZÏI
+	Ø]Y[ÔÙYZÉÊKİ\I
+	Ø]Y[Ğİ\œ™[	ÊK\I
+	Ø]Y[Ñ\˜][Û‰ÊKI
+	Ü^P]Y[ÉÊNÂˆYŠXXİ]™P]Y[Ê\™]\›ÂˆYŠÙYZÉ‰“[X™\‹š\Ñš[š]JXİ]™P]Y[Ë™\˜][ÛŠI‰˜Xİ]™P]Y[Ë™\˜][ÛŒ
+\ÙYZË˜[YOTİš[™Ê
+Xİ]™P]Y[Ë˜İ\œ™[[YKØXİ]™P]Y[Ë™\˜][ÛŠJŒL
+NÂˆYŠİ\ŠXİ\‹^ÛÛ[Y›Ü›X]]Y[Õ[YJXİ]™P]Y[Ë˜İ\œ™[[YJNÂˆYŠ\ŠY\‹^ÛÛ[Y›Ü›X]]Y[Õ[YJXİ]™P]Y[Ë™\˜][ÛŠNÂˆYŠŠX‹^ÛÛ[XXİ]™P]Y[Ëœ]\ÙYÉø¥­‰Î‰ø§f¸§f‰ÎÂŸB™[˜İ[Ûˆ]Y[Ó\ÜÛÛ’Ù^J^
+^Û]\ÚLŒMŒLÍŒŒNØÛÛœİÏTİš[™ÊXİ]™P›ÛÚÒY	Ø›ÛÚÉÊJÉß	ÊÔİš[™ÊšY	Û\ÜÛÛ‰ÊJÉß	ÊÔİš[™Ê^	ÉÊNÙ›ÜŠ]OLÚOË›[™İÚJÊÊ^Ú\Ú\Ë˜Ú\ÛÙP]
+JNÚ\ÚSX]š[][
+\ÚMÍÍÍŒNJ_\™]\›ˆİš[™ÊXİ]™P›ÛÚÒY	Ø›ÛÚÉÊJÉÎ‰ÊÔİš[™ÊšY	Û\ÜÛÛ‰ÊJÉÎ‰ÊÊ\ÚŒ
+KÔİš[™ÊMŠ_B˜\Ş[˜È[˜İ[Ûˆ[œİ\™S\ÜÛÛ]Y[Ê
+^ÂˆÛÛœİ^Tİš[™Ê›\İ[š[™ÏË˜]Y[ÔØÜš\›\İ[š[™ÏË^	ÉÊKš[J
+NÚYŠ]^
+]›İÈ™]È\œ›ÜŠ	Ó\İ[š[™È]Y[È\È[˜]˜Z[X›K‰ÊNÂˆÛÛœİÙ^OX]Y[Ó\ÜÛÛ’Ù^J^
+NÂˆYŠXİ]™P]Y[É‰˜Xİ]™P]Y[Ó\ÜÛÛ’Ù^OOOZÙ^J\™]\›ˆXİ]™P]Y[ÎÂˆYŠXİ]™P]Y[Ê^ØXİ]™P]Y[Ëœ]\ÙJ
+NØXİ]™P]Y[Ï[[ØXİ]™P]Y[Ó\ÜÛÛ’Ù^O[[Bˆ]\›X]Y[ĞØXÚVÚÙ^WNÂˆYŠ]\›
+^ÂˆÛÛœİ™\ÏX]ØZ]™]Ú
+	ËØ\KØ]Y[ÉËÛY]Ù‰ÔÔÕ	ËÜ™Y[X[Î‰Ú[˜ÛYIËXY\œÎÉĞÛÛ[U\IÎ‰Ø\XØ][Û‹ÚœÛÛ‰ßK›ÙN’”ÓÓ‹œİš[™ÚYJÛ\ÜÛÛ’YšÙ^K^J_JNÂˆYŠ\™\Ë›ÚÊ^Û]Y\ÜØYÙOIÓ˜]\˜[\İ[š[™È]Y[È\È[˜]˜Z[X›KˆHYØZ[‹‰Îİ^ØÛÛœİOX]ØZ]™\ËšœÛÛŠ
+NÚYŠOË™\œ›ÜŠ[Y\ÜØYÙOYK™\œ›ÜŸXØ]Úß]›İÈ™]È\œ›ÜŠY\ÜØYÙJ_BˆÛÛœİ›ØX]ØZ]™\Ë˜›ØŠ
+NÚYŠX›Ø‹\Kœİ\ÕÚ]
+	Ø]Y[ËÉÊJ]›İÈ™]È\œ›ÜŠ	Ó˜]\˜[\İ[š[™È]Y[È\È[˜]˜Z[X›KˆHYØZ[‹‰ÊNÂˆ\›UT“˜Ü™X]SØš™XİT“
+›ØŠNØ]Y[ĞØXÚVÚÙ^WO]\›ÂˆBˆXİ]™P]Y[Ï[™]È]Y[Ê\›
+NØXİ]™P]Y[Ó\ÜÛÛ’Ù^OZÙ^NÂˆXİ]™P]Y[Ëœ™[ØYIØ]]ÉÎÂˆXİ]™P]Y[Ë›Û›ØYYY]Y]O\Ş[˜Ğ]Y[ÕZNÂˆXİ]™P]Y[Ë›Û[Y]\]O\Ş[˜Ğ]Y[ÕZNÂˆXİ]™P]Y[Ë›Ûœ^O\Ş[˜Ğ]Y[ÕZNÂˆXİ]™P]Y[Ë›Ûœ]\ÙO\Ş[˜Ğ]Y[ÕZNÂˆXİ]™P]Y[Ë›Û™[™YJ
+OOÜŞ[˜Ğ]Y[ÕZJ
+NØÛÛœİİ]\ÏI
+	Ø]Y[Ôİ]\ÉÊNÚYŠİ]\Ê\İ]\Ë^ÛÛ[IÑš[š\ÚYˆ™\^HÚ[ˆ[İH\™H™XYK‰ßNÂˆXİ]™P]Y[Ë›Û™\œ›ÜJ
+OOØÛÛœİİ]\ÏI
+	Ø]Y[Ôİ]\ÉÊNÚYŠİ]\Ê\İ]\Ë^ÛÛ[IĞ]Y[È^X˜XÚÈ˜Z[YˆHYØZ[‹‰ßNÂˆ™]\›ˆXİ]™P]Y[ÎÂŸB˜\Ş[˜È[˜İ[Ûˆ^S\İ[š[™Ê
+^ÂˆÛÛœİI
+	Ü^P]Y[ÉÊKİ]\ÏI
+	Ø]Y[Ôİ]\ÉÊNÚYŠXŠ\™]\›Âˆ^Âˆ‹™\ØX›Y]YNÜİ]\Ë^ÛÛ[IÓØY[™È˜]\˜[\İ[š[™È]Y[ø )‰ÎÂˆÛÛœİ]Y[ÏX]ØZ][œİ\™S\ÜÛÛ]Y[Ê
+KÜYYI
+	Ø]Y[ÔÜYY	ÊNÂˆYŠÜYY
+X]Y[Ëœ^X˜XÚÔ˜]OS[X™\ŠÜYY˜[YJ_NÂˆ‹™\ØX›YY˜[ÙNÂˆYŠ]Y[Ëœ]\ÙY
+^Ø]ØZ]]Y[Ëœ^J
+NÜİ]\Ë^ÛÛ[IÔ^Z[™È0­È˜]\˜[[™Û\Ú›ÚXÙIßY[Ù^Ø]Y[Ëœ]\ÙJ
+NÜİ]\Ë^ÛÛ[IÔ]\ÙY	ßBˆŞ[˜Ğ]Y[ÕZJ
+NÂˆXØ]Ú
+J^Ø‹™\ØX›YY˜[ÙNØ‹^ÛÛ[Iø¥­‰ÎÜİ]\Ë^ÛÛ[YK›Y\ÜØYÙ_	Ó˜]\˜[\İ[š[™È]Y[È\È[˜]˜Z[X›KˆHYØZ[‹‰ßBŸB˜\Ş[˜È[˜İ[Ûˆ™\İ\\İ[š[™Ê
+^Âˆ^ØÛÛœİ]Y[ÏX]ØZ][œİ\™S\ÜÛÛ]Y[Ê
+NØ]Y[Ë˜İ\œ™[[YOLØ]ØZ]]Y[Ëœ^J
+NØÛÛœİİ]\ÏI
+	Ø]Y[Ôİ]\ÉÊNÚYŠİ]\Ê\İ]\Ë^ÛÛ[IÔ^Z[™Èœ›ÛHH™YÚ[›š[™ÉÎÜŞ[˜Ğ]Y[ÕZJ
+_XØ]Ú
+J^ØÛÛœİİ]\ÏI
+	Ø]Y[Ôİ]\ÉÊNÚYŠİ]\Ê\İ]\Ë^ÛÛ[YK›Y\ÜØYÙ_	Ğ]Y[È[˜]˜Z[X›K‰ßBŸB™[˜İ[ÛˆÚ\™P]Y[ĞÛÛ›ÛÊ
+^ÂˆÛÛœİÙYZÏI
+	Ø]Y[ÔÙYZÉÊKÜYYI
+	Ø]Y[ÔÜYY	ÊK™\İ\I
+	Ü™\İ\]Y[ÉÊNÂˆYŠ™\İ\
+\™\İ\›Û˜ÛXÚÏJ
+OOœ™\İ\\İ[š[™Ê
+NÂˆYŠÜYY
+\ÜYY›Û˜Ú[™ÙOX\Ş[˜Ê
+OOİ^ØÛÛœİ]Y[ÏX]ØZ][œİ\™S\ÜÛÛ]Y[Ê
+NØ]Y[Ëœ^X˜XÚÔ˜]OS[X™\ŠÜYY˜[YJ__XØ]Úß_NÂˆYŠÙYZÊ\ÙYZË›Ûš[œ]X\Ş[˜Ê
+OOİ^ØÛÛœİ]Y[ÏX]ØZ][œİ\™S\ÜÛÛ]Y[Ê
+NÚYŠ[X™\‹š\Ñš[š]J]Y[Ë™\˜][ÛŠI‰˜]Y[Ë™\˜][ÛŒ
+^Ø]Y[Ë˜İ\œ™[[YOJ[X™\ŠÙYZË˜[YJKÌL
+J˜]Y[Ë™\˜][ÛÜŞ[˜Ğ]Y[ÕZJ
+__XØ]Úß_NÂŸB‚™[˜İ[ÛˆÚ\™U›ØØX”™XŞXÛJ
+^ÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K]›ØØX‹\™XŞXÛKXÚXÚ×IÊK™›Ü‘XXÚ
+OØ‹›Û˜ÛXÚÏJ
+OOØÛÛœİØ\™X‹˜ÛÜÙ\İ
+	Ë™YË]›ØØX‹\™XŞXÛKXØ\™	ÊK[œ]XØ\™Ëœ]Y\TÙ[XİÜŠ	ÖÙ]K]›ØØX‹\™XŞXÛWIÊK™YY˜XÚÏXØ\™Ëœ]Y\TÙ[XİÜŠ	ÖÙ]K]›ØØX‹\™XŞXÛKY™YY˜XÚ×IÊNÚYŠZ[œ]Y™YY˜XÚÊ\™]\›ØÛÛœİ[œİÙ\Tİš[™Ê[œ]™]\Ù]˜[œİÙ\Ÿ	ÉÊK\YZ[œ]˜[YKš[J
+KÛÜœ™Xİ[›Ü›X[^™U›ØØX•ÛÜ™
+\Y
+OOO[›Ü›X[^™U›ØØX•ÛÜ™
+[œİÙ\ŠKY]O^İÛÜ™š[œ]™]\Ù]ÛÜ™YX[š[™Îš[œ]™]\Ù]›YX[š[™Ë^[\Nš[œ]™]\Ù]™^[\_NÙ™YY˜XÚËš[›™\’S]›ØØX‘™YY˜XÚÒ[
+Y]KÛÜœ™Xİ
+NÚ[œ]˜Û\ÜÓ\İÙÙÛJ	Ú\ËXÛÜœ™Xİ	ËÛÜœ™Xİ
+NÚ[œ]˜Û\ÜÓ\İÙÙÛJ	Ú\ËZ[˜ÛÜœ™Xİ	ËXÛÜœ™Xİ
+__JNÂŸB™[˜İ[ÛˆÜš][™ĞÛÜ™T™\ÜÛœÙJØ\™
+^ÂˆÛÛœİ\OXØ\™™]\Ù]Üš][™ĞÛÜ™_	ÉÎÂˆYŠ\OOOIØZ[	ß\OOOIÛÜ™Ø[š^™IÊ^ÂˆÛÛœİ˜[Y\ÏVË‹‹˜Ø\™œ]Y\TÙ[XİÜ[
+	ÖÙ]K]Üš][™Ë\YXÙKX[œİÙ\—HÙ]K]Üš][™Ë\YXÙWIÊWK›X\
+O™]\Ù]˜[Y_	ÉÊNÂˆ™]\›ˆ\OOOIÛÜ™Ø[š^™IÏİ˜[Y\Î˜[Y\Ëš›Ú[Š	È	ÊBˆBˆ™]\›ˆØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™ËXÛÜ™KZ[œ]IÊOË˜[YKš[J
+_	ÉÂŸB™[˜İ[ÛˆÜš][™ĞÛÜ™Q™YY˜XÚÊØ\™ÛÜœ™XİÛÛ\]J^ÂˆÛÛœİ›ŞXØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™ËXÛÜ™KY™YY˜XÚ×IÊNÚYŠX›Ş
+\™]\›ÂˆYŠXÛÛ\]J^Ø›Şš[›™\’SIÏ]ˆÛ\ÜÏHÜš][™ËXÛÜ™KY™YY˜XÚÈ\ËZ[˜ÛÛ\]H‘š[š\Ú\ÈXİ]š]Hš\œİÙ]‰ÎÜ™]\›ŸBˆÛÛœİ\OXØ\™™]\Ù]Üš][™ĞÛÜ™_	ÉË[œİÙ\Tİš[™ÊØ\™™]\Ù]˜[œİÙ\Ÿ	ÉÊNÂˆYŠÛÜœ™Xİ
+^Ø›Şš[›™\’SIÏ]ˆÛ\ÜÏHÜš][™ËXÛÜ™KY™YY˜XÚÈ\ËXÛÜœ™Xİİ›Û™Ï¸§$ÈÛÜœ™XİÜİ›Û™ÏÙ]‰ÎÜ™]\›ŸBˆYŠ\OOOIÛÜ™Ø[š^™IÊ^ÂˆÛÛœİÜ™\X[œİÙ\‹œÜ]
+	ß	ÊNÂˆ›Şš[›™\’SIÏ]ˆÛ\ÜÏHÜš][™ËXÛÜ™KY™YY˜XÚÈ\ËZ[˜ÛÜœ™Xİİ›Û™Ï¸§%È›İ]Z]OÜİ›Û™ÏÜ[ÛÜœ™XİÜ™\ÜÜ[Û‰ÊÛÜ™\‹›X\
+O‰ÏO‰ÊÙ\ØØ\R[
+
+JÉÏÛO‰ÊKš›Ú[Š	ÉÊJÉÏÛÛÙ]‰ÎÜ™]\›‚ˆBˆÛÛœİX™[]\OOOIØÛÛXš[™IÏÉĞ™\İÛÛXš[™YÙ[[˜ÙN‰Î‰ĞÛÜœ™XİÙ[[˜ÙN‰ÎÂˆ›Şš[›™\’SIÏ]ˆÛ\ÜÏHÜš][™ËXÛÜ™KY™YY˜XÚÈ\ËZ[˜ÛÜœ™Xİİ›Û™Ï¸§%È›İ]Z]OÜİ›Û™ÏÜ[‰ÊÛX™[
+ÉÈ‰ÊÙ\ØØ\R[
+Ú]\š[Ù
+[œİÙ\ŠJJÉÏØÜÜ[Ù]‰ÂŸB™[˜İ[ÛˆÚXÚÕÜš][™ĞÛÜ™PØ\™
+Ø\™ÚİÏ]YJ^ÂˆÛÛœİ\OXØ\™™]\Ù]Üš][™ĞÛÜ™_	ÉË[œİÙ\Tİš[™ÊØ\™™]\Ù]˜[œİÙ\Ÿ	ÉÊK™\ÜÛœÙO]Üš][™ĞÛÜ™T™\ÜÛœÙJØ\™
+NÛ]ÛÛ\]OY˜[ÙKÛÜœ™XİY˜[ÙNÂˆYŠ\OOOIØZ[	Ê^ÂˆÛÛœİİ[XØ\™œ]Y\TÙ[XİÜ[
+	ÖÙ]K]Üš][™Ë\YXÙWIÊK›[™İ\ÙYXØ\™œ]Y\TÙ[XİÜ[
+	ÖÙ]K]Üš][™Ë\YXÙKX[œİÙ\—HÙ]K]Üš][™Ë\YXÙWIÊK›[™İÂˆÛÛ\]O]İ[Œ	‰\ÙYOO]İ[ØÛÜœ™XİXÛÛ\]I‰Üš][™Ó›Ü›X[^™J™\ÜÛœÙJOOO]Üš][™Ó›Ü›X[^™J[œİÙ\ŠBˆY[ÙHYŠ\OOOIÛÜ™Ø[š^™IÊ^ÂˆÛÛœİ^XİYX[œİÙ\‹œÜ]
+	ß	ÊKXİX[P\œ˜^Kš\Ğ\œ˜^J™\ÜÛœÙJOÜ™\ÜÛœÙN–×NØÛÛ\]OXXİX[›[™İOOY^XİY›[™İ	‰™^XİY›[™İŒØÛÜœ™XİXÛÛ\]I‰™^XİY™]™\J
+JOOÜš][™Ó›Ü›X[^™J
+OOO]Üš][™Ó›Ü›X[^™JXİX[ÚWJJBˆY[Ù^ÂˆÛÛ\]OP›ÛÛX[Šİš[™Ê™\ÜÛœÙ_	ÉÊKš[J
+JNØÛÜœ™XİXÛÛ\]I‰Üš][™Ó›Ü›X[^™J™\ÜÛœÙJOOO]Üš][™Ó›Ü›X[^™J[œİÙ\ŠBˆBˆØ\™™]\Ù]˜ÛÜ™PÛÛ\]OXÛÛ\]OÉÌIÎ‰Ì	ÎØØ\™™]\Ù]˜ÛÜ™PÛÜœ™XİXÛÜœ™XİÉÌIÎ‰Ì	ÎÂˆYŠÚİÊ]Üš][™ĞÛÜ™Q™YY˜XÚÊØ\™ÛÜœ™XİÛÛ\]JNÂˆ™]\›İ\KÛÛ\]KÛÜœ™Xİ™\ÜÛœÙ_BŸB™[˜İ[ÛˆŞ[˜ÕÜš][™Ğ\œ˜[™ÙJØ\™
+^ÂˆÛÛœİ[œİÙ\XØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™Ë\YXÙKX[œİÙ\—IÊKXÙZÛ\X[œİÙ\Ëœ]Y\TÙ[XİÜŠ	ËÜš][™ËX\œ˜[™ÙK\XÙZÛ\‰ÊNÂˆYŠXÙZÛ\Š\XÙZÛ\‹šY[P›ÛÛX[Š[œİÙ\‹œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™Ë\YXÙWIÊJNÂˆØ\™™]\Ù]˜ÛÜ™PÛÛ\]OIÌ	ÎØØ\™™]\Ù]˜ÛÜ™PÛÜœ™XİIÌ	ÎÂˆÛÛœİ™YY˜XÚÏXØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™ËXÛÜ™KY™YY˜XÚ×IÊNÚYŠ™YY˜XÚÊY™YY˜XÚËš[›™\’SIÉÂŸB™[˜İ[ÛˆÚ\™UÜš][™ĞÛÜ™J
+^ÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K]Üš][™ËXÛÜ™WIÊK™›Ü‘XXÚ
+Ø\™OÂˆÛÛœİ˜[šÏXØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™ËX˜[š×IÊK[œİÙ\XØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™Ë\YXÙKX[œİÙ\—IÊNÂˆØ\™œ]Y\TÙ[XİÜ[
+	ÖÙ]K]Üš][™Ë\YXÙWIÊK™›Ü‘XXÚ
+YXÙOOÜYXÙK›Û˜ÛXÚÏJ
+OOÂˆYŠX˜[šßX[œİÙ\Š\™]\›ÂˆYŠYXÙKœ\™[[[Y[OOX˜[šÊX[œİÙ\‹˜\[™Ú[
+YXÙJNÙ[Ù^Ø˜[šË˜\[™Ú[
+YXÙJNÖË‹‹˜˜[šËœ]Y\TÙ[XİÜ[
+	ÖÙ]K]Üš][™Ë\YXÙWIÊWKœÛÜ
+
+KŠOO“[X™\ŠK™]\Ù]œÚY™›R[™^
+KS[X™\Š‹™]\Ù]œÚY™›R[™^
+JK™›Ü‘XXÚ
+O˜˜[šË˜\[™Ú[
+
+J_BˆŞ[˜ÕÜš][™Ğ\œ˜[™ÙJØ\™
+Bˆ_JNÂˆÛÛœİ™\Ù]XØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™Ë\™\Ù]IÊNÚYŠ™\Ù]
+\™\Ù]›Û˜ÛXÚÏJ
+OOÚYŠX˜[šÊ\™]\›ÖË‹‹˜Ø\™œ]Y\TÙ[XİÜ[
+	ÖÙ]K]Üš][™Ë\YXÙWIÊWKœÛÜ
+
+KŠOO“[X™\ŠK™]\Ù]œÚY™›R[™^
+KS[X™\Š‹™]\Ù]œÚY™›R[™^
+JK™›Ü‘XXÚ
+O˜˜[šË˜\[™Ú[
+
+JNÜŞ[˜ÕÜš][™Ğ\œ˜[™ÙJØ\™
+_NÂˆÛÛœİ[œ]XØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™ËXÛÜ™KZ[œ]IÊNÚYŠ[œ]
+Z[œ]›Ûš[œ]J
+OOØØ\™™]\Ù]˜ÛÜ™PÛÛ\]OIÌ	ÎØØ\™™]\Ù]˜ÛÜ™PÛÜœ™XİIÌ	ÎØÛÛœİ™YY˜XÚÏXØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™ËXÛÜ™KY™YY˜XÚ×IÊNÚYŠ™YY˜XÚÊY™YY˜XÚËš[›™\’SIÉßNÂˆÛÛœİÚXÚÏXØ\™œ]Y\TÙ[XİÜŠ	ÖÙ]K]Üš][™ËXÛÜ™KXÚXÚ×IÊNÚYŠÚXÚÊXÚXÚË›Û˜ÛXÚÏJ
+OO˜ÚXÚÕÜš][™ĞÛÜ™PØ\™
+Ø\™YJNÂˆŞ[˜ÕÜš][™Ğ\œ˜[™ÙJØ\™
+BˆJBŸB™[˜İ[ÛˆÚ\™PXİ]š]J
+^İÚ\™SXÜPØ\™Ê
+NİÚ\™U›ØØX”™XŞXÛJ
+NÚYŠİ\œ™[İ\OOIİÜš][™ÉÊ]Ú\™UÜš][™ĞÛÜ™J
+NÂˆYŠ	
+	Ü™]š[İ\ĞXİ]š]IÊJI
+	Ü™]š[İ\ĞXİ]š]IÊK›Û˜ÛXÚÏJ
+OOØÛÛœİYUÓÔ’Ğ“ÓÒ×ÔÕTËš[™^ÙŠİ\œ™[İ\
+NÚYŠYŒ
+^Øİ\œ™[İ\UÓÔ’Ğ“ÓÒ×ÔÕTÖÚYLWNİÛÜšØ›ÛÚÊ
+NÜ™]\›ŸZYŠ\ÕÛÜšØ›ÛÚÔ™]šY]Ê
+J^ÜÙ]ÛÜšØ›ÛÚÑ\ÚYÛ“[ÙJ˜[ÙJNÜ™]\›•ÕÛÜšØ›ÛÚÓ\ÜÛÛœÊ
+NÜ™]\›Ÿ\Ù]ÛÜšØ›ÛÚÑ\ÚYÛ“[ÙJ˜[ÙJNØİ\œ™[YÙOIØÛİ\œÙIÎÜ™[™\“˜]Š
+NÜİY[Ûİ\œÙJ
+_NÂˆYŠ	
+	ØXİ]š]R[	ÊJI
+	ØXİ]š]R[	ÊK›Û˜ÛXÚÏJ
+OOØÛÛœİ[Ï^İ›ØØX[\N‰ÓÛÚÈ]YX[š[™È[™ÛÛ^™Y›Ü™HÚÛÜÚ[™ÈHÛÜ™‰Ë\İ[š[™Î‰Ó\İ[ˆÛ˜ÙH›ÜˆHXZ[ˆYXK[ˆ™\^H›Üˆ]Z[‰ËÜ˜[[X\‰Ô™XYHÚÛHÙ[[˜ÙH[™XÚYHHYX[š[™È™Y›Ü™HH›Ü›K‰ËÜš][™Î‰ĞZ[HÙ[[˜ÙKÛÛ›™XİHYX\ËÛÜœ™XİH\œ›Ü‹[ˆÚXÚÈ\˜YÜ˜\Ü™\ˆ™Y›Ü™H[İHÜš]K‰ßNÜÚİÓ[Ù[
+	Ï]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ’[ÜÜ[Ï‰ÊÙ\ØØ\R[
+ÓÔ’Ğ“ÓÒ×ÓP‘SÖØİ\œ™[İ\JJÉÏÚÏÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]‰ÊÙ\ØØ\R[
+[ÖØİ\œ™[İ\_	Õ\ÙHH\ÜÛÛˆÛÛ^ÈİZYH[İ\ˆ[œİÙ\‹‰ÊJÉÏÜ‰ÊNÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[NÂˆYŠ	
+	Ü^P]Y[ÉÊJI
+	Ü^P]Y[ÉÊK›Û˜ÛXÚÏJ
+OOœ^S\İ[š[™Ê
+NİÚ\™P]Y[ĞÛÛ›ÛÊ
+NÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ËÜš][™Ë\™\ÜÛœÙKÜš][™ËYš[˜[\™\ÜÛœÙIÊK™›Ü‘XXÚ
+OØÛÛœİ\]OJ
+OOØÛÛœİ]˜[YKš[J
+Oİ˜[YKš[J
+KœÜ]
+×ÊËÊK›[™İŒÙ^O]™]\Ù]˜Ûİ[Ù^_™]\Ù]Üš][™ËÏYØİ[Y[œ]Y\TÙ[XİÜŠÙ]KXÛİ[H‰ÚÙ^_H—X
+KX^S[X™\Š™]\Ù]›X^
+NÚYŠÊXË^ÛÛ[[X^Ø	ÛŸHÛÜ™È0­È\™Ù]	İ™]\Ù]›Z[Ÿx $ÉÛX^X˜	ÛŸHÛÜ™È0­ÈZ[š[][H	İ™]\Ù]›Z[ŸXNİ›Ûš[œ]]\]Nİ\]J
+_JNÚYŠ\ÕÛÜšØ›ÛÚÔ™]šY]Ê
+J^ÚYŠ	
+	Ø›ÛÜİXİ]š]IÊJI
+	Ø›ÛÜİXİ]š]IÊKšY[]YNØÛÛœİİ\ÏUÓÔ’Ğ“ÓÒ×ÔÕTËY\İ\Ëš[™^ÙŠİ\œ™[İ\
+K™XYO\™XYS\ÜÛÛœÊÓÕT”ÑJKY˜[˜ÙOJ
+OOÚYŠYİ\Ë›[™İLJ^Øİ\œ™[İ\\İ\ÖÚY
+ÌWNİÛÜšØ›ÛÚÊ
+NÜ™]\›ŸXÛÛœİO\™XYK™š[™[™^
+OšYOOXXİ]™S\ÜÛÛ’Y
+NÚYŠOL	‰›O™XYK›[™İLJ^ØXİ]™S\ÜÛÛ’Y\™XYVÛJÌWKšYØİ\œ™[İ\Iİ›ØØX[\IÎİÛÜšØ›ÛÚÊ
+_Y[Ù^Ü™]\›•ÕÛÜšØ›ÛÚÓ\ÜÛÛœÊ
+__NÚYŠ	
+	ØÚXÚĞXİ]š]IÊJ^É
+	ØÚXÚĞXİ]š]IÊK^ÛÛ[ZYOO\İ\Ë›[™İLOÉÑš[š\Ú™]šY]ÉÎ‰Ó™^ÚÚ[8¡¤‰ÎÉ
+	ØÚXÚĞXİ]š]IÊK›Û˜ÛXÚÏXY˜[˜Ù_ZYŠ	
+	ÜØ]™UÜš][™ÉÊJ^É
+	ÜØ]™UÜš][™ÉÊK^ÛÛ[IÑš[š\Ú™]šY]ÉÎÉ
+	ÜØ]™UÜš][™ÉÊK›Û˜ÛXÚÏXY˜[˜Ù_\™]\›ŸZYŠ	
+	Ø›ÛÜİXİ]š]IÊJI
+	Ø›ÛÜİXİ]š]IÊK›Û˜ÛXÚÏJ
+OOœİ\›ÛÜİ
+
+NÚYŠ	
+	ØÚXÚĞXİ]š]IÊJI
+	ØÚXÚĞXİ]š]IÊK›Û˜ÛXÚÏXÚXÚĞİ\œ™[ÚYŠ	
+	ÜØ]™UÜš][™ÉÊJI
+	ÜØ]™UÜš][™ÉÊK›Û˜ÛXÚÏJ
+OOœØ]™UÜš][™Ê
+NÚYŠ	
+	ÙÛ™PXİ]š]IÊJI
+	ÙÛ™PXİ]š]IÊK›Û˜ÛXÚÏXY˜[˜ÙPY\‘Û™_B™[˜İ[Ûˆ›Ü›X]]™UÜš][™ĞÚXÚÜÊ^ÜXÏ]Üš][™Ñš[˜[ÜXÊ
+J^ØÛÛœİÛÜ™Ï]^š[J
+Oİ^š[J
+KœÜ]
+×ÊËÊN–×KÙ[[˜Ù\Ï]^œÜ]
+ÖËˆO×JËÊK™š[\ŠOš[J
+JK\™Ù]ÏJ\œ˜^Kš\Ğ\œ˜^J\™Ù]›ØØX[\JOÛ\™Ù]›ØØX[\N–×JK™š[\ŠÏO^ÓİÙ\Ø\ÙJ
+Kš[˜ÛY\Êİš[™ÊÊKÓİÙ\Ø\ÙJ
+JJNÜ™]\›İÛÜ™ÎÛÜ™Ë›[™İ[™İÛÜ™Ë›[™İ\ÜXË›Z[‰‰ÛÜ™Ë›[™İ\ÜXË›X^Ü™Ø[š\Ø][ÛœÙ[[˜Ù\Ë›[™İLŸ^š[˜ÛY\Ê	×‰ÊK›ØØX[\N\™Ù]ß_B˜\Ş[˜È[˜İ[ÛˆØ]™UÜš][™Ê
+^ÂˆÛÛœİI
+	ØXİ]š]Q™YY˜XÚÉÊKØ\™ÏVË‹‹™Øİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K]Üš][™ËXÛÜ™WIÊWK™\İ[ÏXØ\™Ë›X\
+Ø\™O˜ÚXÚÕÜš][™ĞÛÜ™PØ\™
+Ø\™YJJKš\œİ[˜ÛÛ\]O\™\İ[Ë™š[™[™^
+Oˆ^˜ÛÛ\]JNÂˆYŠš\œİ[˜ÛÛ\]OL
+^ÚYŠŠY‹š[›™\’SIÏ]ˆÛ\ÜÏH™™YY˜XÚÈ˜YÛÛ\]H[LˆÜš][™È˜XİXÙH]Y\İ[ÛœÈ™Y›Ü™HØ]š[™È[İ\ˆš[˜[™\ÜÛœÙKÙ]‰ÎØØ\™ÖÙš\œİ[˜ÛÛ\]WOËœØÜ›Û[ÕšY]ÊØ™Z]š[Ü‰ÜÛ[Ûİ	Ë›ØÚÎ‰ØÙ[\‰ßJNÜ™]\›ŸBˆÛÛœİ›ŞYØİ[Y[œ]Y\TÙ[XİÜŠ	ËÜš][™ËYš[˜[\™\ÜÛœÙIÊK™\ÜÛœÙOX›ŞË˜[YKš[J
+_	ÉËÜXÏ]Üš][™Ñš[˜[ÜXÊ
+KÚXÚÜÏY›Ü›X]]™UÜš][™ĞÚXÚÜÊ™\ÜÛœÙKÜXÊNÂˆYŠXÚXÚÜË›[™İ
+^ÚYŠŠY‹š[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y–[İ\ˆš[˜[™\ÜÛœÙH\È	ØÚXÚÜËÛÜ™ßHÛÜ™ËˆÜš]H	ÜÜXË›Z[Ÿx $ÉÜÜXË›X^HÛÜ™ËÙ]˜Ø›ŞË™›Øİ\Ê
+NÜ™]\›ŸBˆÛÛœİÛÜœ™Xİ\™\İ[Ë™š[\ŠO˜ÛÜœ™Xİ
+K›[™İØÛÜ™OSX]œ›İ[™
+ÛÜœ™XİÓX]›X^
+K™\İ[Ë›[™İ
+JŒL
+KÛÜ™O\™\İ[Ë›X\
+
+JOOŠÜ]Y\İ[ÛšJÌK\N\K™\ÜÛœÙNœ™\ÜÛœÙKÛÜœ™Xİ˜ÛÜœ™XİJJK^[ØY^ØÛÜ™Kš[˜[œ™\ÜÛœÙKØÛÜ™KİX›Z]Y]›™]È]J
+KÒTÓÔİš[™Ê
+_NÂˆ^Âˆ]ØZ]\JØ\KİÜš][™ËÉÛšYXÛY]Ù‰ÔU	Ë›ÙN’”ÓÓ‹œİš[™ÚYJØÛÛ[’”ÓÓ‹œİš[™ÚYJ^[ØY
+_J_JNÂˆYŠ[Üš][™ÏËš[X[‘Ü˜YY
+X]ØZ]™XÛÜ™][\
+Ù\ÜÚ[Û‹šYšY	İÜš][™ÉËØÛÜ™KÉİÜš][™ÎœÙ[[˜ÙKXZ[[™ÉË	İÜš][™ÎœÙ[[˜ÙKXÛÛXš[š[™ÉË	İÜš][™Î™\œ›Ü‹XÛÜœ™Xİ[Û‰Ë	İÜš][™Îœ\˜YÜ˜\[Ü™\š[™É×JNÂˆ]ØZ]™Yœ™\Úİ]J
+NØÛÛœİÛ™OI
+	ÙÛ™PXİ]š]IÊNÚYŠÛ™JYÛ™K™\ØX›YY˜[ÙNÂˆYŠÜš][™ÏËš[X[‘Ü˜YY
+^ÚYŠŠY‹š[›™\’SIÏ]ˆÛ\ÜÏH™™YY˜XÚÈÛÛÙİ›Û™Ï”İX›Z]Y›ÜˆXXÚ\ˆÜ˜Y[™ËÜİ›Û™ÏˆHLˆ˜XİXÙH]Y\İ[ÛœÈÙ\™H]]ËYÜ˜YY[™[İ\ˆ™X[[Y™HÜš][™È\ÈØ]™Y›Üˆ[İ\ˆXXÚ\‹Ù]‰ÎÜ™]\›ŸBˆÛÛœİÛ™O\ØÛÜ™OMÍOÉÙÛÛÙ	Î‰Ø˜Y	ËX™[\ØÛÜ™OOOLLÉĞ[LˆÛÜœ™Xİ	ÎœØÛÜ™OMÍOÉÔİ›Û™È™\\˜][Û‰Î‰Ô™]šY]ÈH˜XİXÙIÎÂˆYŠŠY‹š[›™\’SX]ˆÛ\ÜÏHœ\™›Ü›X[˜ÙK\™\İ[	İÛ™_H]ˆÛ\ÜÏHœ\™›Ü›X[˜ÙK\ØÛÜ™Hİ›Û™Ï‰ÜØÛÜ™_IOÜİ›Û™ÏÜ[‰ÛX™[OÜÜ[Ù]]ˆÛ\ÜÏHœ\™›Ü›X[˜ÙKXœ™XZÙİÛˆÜ[‰ØÛÜœ™XİOØˆ˜XİXÙH]Y\İ[ÛœÈÛÜœ™XİÜÜ[Ü[‰ÌL‹XÛÜœ™XİOØˆÈ™]šY]ÏÜÜ[Ü[ŒOØˆ™X[[Y™H™\ÜÛœÙHØ]™YÜÜ[Ù]–[İ\ˆš[˜[Üš][™È\ÈØ]™Yˆ™]šY]È[H˜XİXÙH][H[İHZ\ÜÙY[ˆ™\ÜÈİ›Û™Ï‘Û™OÜİ›Û™Ï‹ÜÙ]˜ˆXØ]Ú
+J^ÚYŠŠY‹š[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]˜BŸB˜\Ş[˜È[˜İ[ÛˆÚXÚĞİ\œ™[
+
+^ÂˆÛÛœİÜ[VË‹‹™Øİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K[Ü[HŒH—IÊWNÂˆÛÛœİÜ›İ\ÏVË‹‹›™]ÈÙ]
+Ë‹‹™Øİ[Y[œ]Y\TÙ[XİÜ[
+	Ú[œ]İ\O\˜Y[×IÊWK›X\
+O›˜[YJJWNÂˆÛÛœİÜ[‘Û™O[Ü[‹™š[\Š[O™[˜[YKš[J
+JK›[™İÂˆÛÛœİXÜQÛ™OYÜ›İ\Ë™š[\ŠÏO™Øİ[Y[œ]Y\TÙ[XİÜŠ[œ]Û˜[YOH‰ÙßH—N˜ÚXÚÙY
+JK›[™İÂˆÛÛœİİ[][\Ï[Ü[‹›[™İ
+ÙÜ›İ\Ë›[™İ[œİÙ\™Y[Ü[‘Û™JÛXÜQÛ™K™YY˜XÚÏI
+	ØXİ]š]Q™YY˜XÚÉÊNÂˆYŠ[œİÙ\™Yİ[][\Ê^ÚYŠ™YY˜XÚÊY™YY˜XÚËš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‘š[š\Ú[	İİ[][\ßH]Y\İ[ÛœÈ™Y›Ü™HÚXÚÚ[™Ëˆ[İH]™H[œİÙ\™Y	Ø[œİÙ\™YKÉİİ[][\ßKÙ]˜Ü™]\›ŸBˆ]ÛÜœ™XİLYÜÏV×KÜ˜[[X\“Z\ÜÙYV×NÂˆÜ[‹™›Ü‘XXÚ
+[OØÛÛœİ˜[YOY[˜[YKš[J
+K^XİY[™]\Ù]™^Xİ	ÉËZ[S[X™\Š[™]\Ù]›Z[ŸJNÛ]ÚÏY˜[ÙNÚYŠ^Xİ
+[ÚÏ]Üš][™Ó›Ü›X[^™J˜[YJOOO]Üš][™Ó›Ü›X[^™J^Xİ
+NÙ[ÙHÚÏJ˜[YOİ˜[YKœÜ]
+×ÊËÊK›[™İŒ
+O[Z[ÚYŠÚÊXÛÜœ™Xİ
+ÊÎÚYŠ[™]\Ù]YÊ]YÜËœ\Ú
+[™]\Ù]YÊ_JNÂˆÜ›İ\Ë™›Ü‘XXÚ
+ÏOØÛÛœİÏYØİ[Y[œ]Y\TÙ[XİÜŠ[œ]Û˜[YOH‰ÙßH—N˜ÚXÚÙY
+K\ÑÜ˜[[X\]]ÏXİ\œ™[İ\OOIÙÜ˜[[X\‰É‰‹×™ÖÌNWIË\İ
+ÊNÚYŠÉ‰˜Ë˜[YOOOXË™]\Ù]˜[œİÙ\ŠXÛÜœ™Xİ
+ÊÎÙ[ÙHYŠ\ÑÜ˜[[X\]]ÊYÜ˜[[X\“Z\ÜÙYœ\Ú
+[X™\ŠËœÛXÙJJJJNÚYŠÉ‰˜Ë™]\Ù]YÊ]YÜËœ\Ú
+Ë™]\Ù]YÊ_JNÂˆYŠİ\œ™[İ\OOIÙÜ˜[[X\‰Ê]YÜÏYÜ˜[[X\“Z\ÜÙY›[™İÙÜ˜[[X\“Z\ÜÙY›X\
+OO˜Z\ÜÜN‰Ú_X
+N–ÉÙXYÛ›ÜİXÎ››Ë[Z\ÜÙ\É×NÂˆÛÛœİØÛÜ™OSX]œ›İ[™
+ÛÜœ™XİÓX]›X^
+Kİ[][\ÊJŒL
+KZ\ÜÙY]İ[][\ËXÛÜœ™XİÂˆ^Âˆ]ØZ]™XÛÜ™][\
+Ù\ÜÚ[Û‹šYXİ]™S\ÜÛÛ’Yİ\œ™[İ\ØÛÜ™KYÜÊNÂˆ]ØZ]X\šÑÛ™JÙ\ÜÚ[Û‹šYXİ]™S\ÜÛÛ’Yİ\œ™[İ\
+NÂˆ]ØZ]™Yœ™\Úİ]J
+NÂˆÛÛœİÛ™OI
+	ÙÛ™PXİ]š]IÊNÚYŠÛ™JYÛ™K™\ØX›YY˜[ÙNÂˆÛÛœİ˜[™\ØÛÜ™ONÉÔİ›Û™ÉÎœØÛÜ™OMŒÉÑ]™[Ü[™ÉÎ‰Ó™YYÈ˜XİXÙIËÛ™O\ØÛÜ™OMÌÉÙÛÛÙ	Î‰Ø˜Y	ÎÂˆÛÛœİ›ÛÜİXİ\œ™[İ\OOIÙÜ˜[[X\‰É‰™Ü˜[[X\“Z\ÜÙY›[™İØ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜›ÛÜİœ›ÛT™\İ[”˜Xİ\ÙH	ÙÜ˜[[X\“Z\ÜÙY›[™İHZ\ÜÙYÜ˜[[X\ˆ]Y\İ[Û‰ÙÜ˜[[X\“Z\ÜÙY›[™İOOLOÉÉÎ‰ÜÉßHÚ]›ÛÜİØ]Û˜‰ÉÎÂˆÛÛœİ˜[œØÜš\Xİ\œ™[İ\OOIÛ\İ[š[™ÉÉ‰›\ÜÛÛŠ
+K›\İ[š[™ÏË˜]Y[ÔØÜš\Û\İ[š[™Õ˜[œØÜš\
+\ÜÛÛŠ
+JN‰ÉÎÂˆYŠ™YY˜XÚÊY™YY˜XÚËš[›™\’SX]ˆÛ\ÜÏHœ\™›Ü›X[˜ÙK\™\İ[	İÛ™_H]ˆÛ\ÜÏHœ\™›Ü›X[˜ÙK\ØÛÜ™Hİ›Û™Ï‰ÜØÛÜ™_IOÜİ›Û™ÏÜ[‰Ø˜[™OÜÜ[Ù]]ˆÛ\ÜÏHœ\™›Ü›X[˜ÙKXœ™XZÙİÛˆÜ[‰ØÛÜœ™XİOØˆÛÜœ™XİÜÜ[Ü[‰ÛZ\ÜÙYOØˆÈ™]šY]ÏÜÜ[Ü[‰İİ[][\ßOØˆİ[ÜÜ[Ù]–[İ\ˆXİ]š]H\ÈÛÛ\]Kˆ™\ÜÈİ›Û™Ï‘Û™OÜİ›Û™ÏˆÈÛÛ[YKÜˆ™]šY]È[İ\ˆZ\İZÙ\Èš\œİÜ‰Ø›ÛÜİOÙ]‰İ˜[œØÜš\XÂˆYŠ	
+	Ø›ÛÜİœ›ÛT™\İ[	ÊJI
+	Ø›ÛÜİœ›ÛT™\İ[	ÊK›Û˜ÛXÚÏJ
+OOœİ\›ÛÜİ
+\ÜÛÛŠ
+JNÂˆXØ]Ú
+J^ÚYŠ™YY˜XÚÊY™YY˜XÚËš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜YÛİ[›İØ]™H›ÙÜ™\ÜÎˆ	Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]˜BŸB˜\Ş[˜È[˜İ[Ûˆ™XÛÜ™][\
+İY[Y\ÜÛÛ’YÚÚ[ØÛÜ™KYÜÏV×J^Ø]ØZ]\J	ËØ\KØ][\ÉËÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJÛ\ÜÛÛ’YÚÚ[ØÛÜ™KYÜÎ–Ë‹‹›™]ÈÙ]
+YÜÊW_J_J_B˜\Ş[˜È[˜İ[ÛˆX\šÑÛ™JİY[YYİ\
+^Ø]ØZ]\J	ËØ\KØÛÛ\][Û‰ËÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJÛ\ÜÛÛ’Y›Yİ\J_J_B™[˜İ[ÛˆİY[›ÙÜ™\ÜÊ
+^ØÛÛœİÚY\Ù\ÜÚ[Û‹šYÏ]ÙXZÙ\İ
+ÚY
+K]ÏX][\ÊÚY
+KœÛXÙJMJKœ™]™\œÙJ
+KÏXÛİ\œÙQ›Ü”İY[
+ÚY
+KX›ÛÚÓY]J›ÛÚÒY›Ü”İY[
+ÚY
+J_İ]N˜Ë]_Ë›[Ù[U]_KØÛÜ™Y\ØÛÜ™YXİ]š]PÛİ[
+ÚY
+KÛÛ\]YXÛÛ\]YXİ]š]PÛİ[
+ÚY
+Nİ]J	Ñ[™Û\ÚØ]HÛÜšØ›ÛÚÉË	Ô›ÙÜ™\ÜÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏHœ›ÙÜ™\ÜË\Ú[]ˆÛ\ÜÏHœ›ÙÜ™\ÜËZ\›ËXØ\™]Ü[ˆÛ\ÜÏHœ[X[‰Ù\ØØ\R[
+‹]J_OÜÜ[O‰ØÛÛ\][Û”İ
+ÚY
+_IHÛÛ\]OÚO‰ØÛÛ\]YHÙˆ	Ü™XYS\ÜÛÛœÊÊK›[™İ
+•ÓÔ’Ğ“ÓÒ×ÔÕTË›[™İH]˜Z[X›HÛÜšØ›ÛÚÈXİ]š]Y\ÈÛÛ\]YÜÙ]]ÛˆÛ\ÜÏH™ÚÜİXˆˆYHœ›ÙÜ™\ÜĞÛİ\œÙPˆ“^H›ÛÚÏØ]ÛÙ]]ˆÛ\ÜÏHœİY[\ÚÚ[YÜšY‰ÖÉİ›ØØX[\IË	Û\İ[š[™ÉË	ÙÜ˜[[X\‰Ë	İÜš][™É×K›X\
+ÏOœÚÚ[Ø\™
+ÚÚ[X™[
+ÊKX\İ\JÚYÊK	Ó]\İ\ÜÛÛˆØÛÜ™\ÉÊJKš›Ú[Š	ÉÊ_OÙ]ÙXİ[ÛˆÛ\ÜÏHœÙXİ[ÛˆİY[\›ÙÜ™\ÜËYÜšY]ˆÛ\ÜÏH˜Ø\™Ü[ˆÛ\ÜÏHœ[ÛÛ“İÙ\İ™XÛÜ™YØÛÜ™H]™\˜YÙOÜÜ[‰İÏØÏ‰İË›X™[H0­È	İËœØÛÜ™_IOÚÏ‰İË\OÜ‰Ü›ÙÜ™\ÜÊËœØÛÜ™J_X‰ÏÏ“›ÈØÛÜ™Y]šY[˜ÙHY]ÚÏÛÛ\]HHØÛÜ™YXİ]š]HÈÙYHH\™›Ü›X[˜ÙH\™XKÜ‰ßOÙ]]ˆÛ\ÜÏH˜Ø\™Ü[ˆÛ\ÜÏHœ[‘]šY[˜ÙOÜÜ[Ï‰ÜØÛÜ™YHØÛÜ™YXİ]š]Y\ÏÚÏ‰ØÛÛ\]YHÛÜšØ›ÛÚÈXİ]š]Y\ÈÛÛ\]YÜÙ]ÜÙXİ[ÛÙXİ[ÛˆÛ\ÜÏHœÙXİ[ÛˆØ\™]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ï”™XÙ[˜XİXÙOÚÏ‘^XİØÛÜ™\Èœ›ÛH[İ\ˆ]\İš]™H™XÛÜ™YÛÜšØ›ÛÚÈ][\ËÜÙ]Ù]‰Ø]Ë›[™İØ]Ë›X\
+OO˜]ˆÛ\ÜÏH˜][\\›İÈ]İ›Û™Ï‰Ù\ØØ\R[
+\ÜÛÛRY
+K›\ÜÛÛ’Y
+OË]_	Ó\ÜÛÛ‰Ê_H0­È	ÜÚÚ[X™[
+KœÚÚ[
+_OÜİ›Û™ÏÜ[‰Û™]È]JK˜]
+KÓØØ[Q]Tİš[™Ê
+_OÜÜ[Ù]İ›Û™Ï‰ØKœØÛÜ™_IOÜİ›Û™ÏÙ]˜
+Kš›Ú[Š	ÉÊN‰ÏÛ\ÜÏH›]]YÛÛ\]H[ˆXİ]š]HÈİ\[İ\ˆ]šY[˜ÙH\İÜKÜ‰ßOÜÙXİ[ÛÜÙXİ[Û˜É
+	Ü›ÙÜ™\ÜĞÛİ\œÙP‰ÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIØÛİ\œÙIÎÜ™[™\“˜]Š
+NÜİY[Ûİ\œÙJ
+__B‚™[˜İ[Ûˆ›Ùš[J
+^ØÛÛœİOYÙ]Š
+K\Ù\œË™š[™
+OšYOO\Ù\ÜÚ[Û‹šY
+_Ù\ÜÚ[Û‹Ï\İY[Û\ÜÊÙ\ÜÚ[Û‹šY
+KX›ÛÚÓY]J›ÛÚÒY›Ü”İY[
+Ù\ÜÚ[Û‹šY
+JKXXÚ\YÙ]Š
+K\Ù\œË™š[™
+OšYOOXÏËXXÚ\—ÚY
+Nİ]J	Ñ[™Û\ÚØ]HÛÜšØ›ÛÚÉË	Ô›Ùš[IÊNÉ
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏHœ›Ùš[K\Ú[]ˆÛ\ÜÏH˜Ø\™›Ùš[KXØ\™]ˆÛ\ÜÏHœ›Ùš[KX]˜]\‹[\™ÙH‰Ù\ØØ\R[
+K›˜[YVÌJ_OÙ]‰Ù\ØØ\R[
+K›˜[YJ_OÚÛ\ÜÏH›]]Y‰Ù\ØØ\R[
+Ë]_	ÕÛÜšØ›ÛÚÉÊ_OÜ]ˆÛ\ÜÏHœ›Ùš[K\›İÈÜ[Û\ÜÏÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+ÏË›˜[Y_	ø %	Ê_OÜİ›Û™ÏÙ]]ˆÛ\ÜÏHœ›Ùš[K\›İÈÜ[•XXÚ\ÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+XXÚ\Ë›˜[Y_	ø %	Ê_OÜİ›Û™ÏÙ]]ˆÛ\ÜÏHœ›Ùš[K\›İÈÜ[•\Ù\›˜[YOÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+K\Ù\›˜[YJ_OÜİ›Û™ÏÙ]]ÛˆÛ\ÜÏH™ÚÜİXˆˆYHœ™\Ù][”\ÜİÛÜ™[Ø]Û]ÛˆÛ\ÜÏH™ÚÜİXˆ[™Ù\‹XXİ[ÛˆˆYHœİY[ÙÛİ]”ÚYÛˆİ]Ø]ÛÙ]ÜÙXİ[Û˜É
+	Ü™\Ù][	ÊK›Û˜ÛXÚÏJ
+OO˜[\
+	Ğ\ÚÈ[İ\ˆXXÚ\ˆÈ™\Ù][İ\ˆ\ÜİÛÜ™‰ÊNÉ
+	ÜİY[ÙÛİ]	ÊK›Û˜ÛXÚÏ[ÙÛİ]B™[˜İ[ÛˆXXÚ\Û\ÜÒYÊ
+^Ü™]\›ˆÙ]Š
+K˜Û\ÜÙ\Ë›X\
+ÏO˜ËšY
+_B™[˜İ[ÛˆÛ\ÜÔİY[Ê
+^ØÛÛœİYÏ]XXÚ\Û\ÜÒYÊ
+NÜ™]\›ˆÙ]Š
+K\Ù\œË™š[\ŠOOKœ›ÛOOOIÜİY[	É‰K˜Û\ÜÒYÏËœÛÛYJYOšYËš[˜ÛY\ÊY
+JJ_B‚™[˜İ[ÛˆXXÚ\”™\İ[YPÛÛ^
+
+^ÂˆÛÛœİİYÙ]Š
+KXXÚ\ÛÛ^ÂˆYŠXİË˜Û\ÜÒY
+\™]\›ˆ[ÂˆÛÛœİÏYÙ]Š
+K˜Û\ÜÙ\Ë™š[™
+OšYOOXİ˜Û\ÜÒY
+NÂˆYŠXÊ\™]\›ˆ[ÂˆÛÛœİ]™O[]™P›ÛÚÑ›ÜÛ\ÜÊÊKØ]ÛÜšØ›ÛÚÑ›ÜÛ\ÜÊÊNÂˆYŠ[]™J\™]\›ˆ[ÂˆÛÛœİ\ÜÛÛ[]™K›\ÜÛÛœË™š[™
+O›[X™\OOS[X™\Šİ›\ÜÛÛ“[X™\ŠJNÂˆYŠ[\ÜÛÛŠ\™]\›ˆ[ÂˆÛÛœİÙXİ[ÛœÏ[]™TÙXİ[ÛœÊ\ÜÛÛ‹˜ÛÛ[
+KX^SX]›X^
+ÙXİ[ÛœË›[™İLJKÙXİ[Û’[™^SX]›X^
+X]›Z[Š[X™\ŠİœÙXİ[Û’[™^
+_X^
+JNÂˆÛÛœİÙXİ[Û\ÙXİ[ÛœÖÜÙXİ[Û’[™^KİYÙS˜[YO\ÙXİ[ÛÜÙXİ[Û“X™[
+ÙXİ[Û‹]KÙXİ[Û’[™^ÙXİ[ÛœË›[™İ
+N‰Ó\ÜÛÛ‰ÎÂˆ™]\›ˆØİË]™KØ‹\ÜÛÛ‹ÙXİ[ÛœËÙXİ[Û’[™^ÙXİ[Û‹İYÙS˜[Y_NÂŸB™[˜İ[Ûˆ™\İÜ™UXXÚ\ÛÛ^œ›ÛTİ]J
+^ÂˆÛÛœİ]XXÚ\”™\İ[YPÛÛ^
+
+NÚYŠ\Š\™]\›ˆ˜[ÙNÂˆXİ]™UXXÚ\Û\ÜÒY\‹˜ËšYØXİ]™UXXÚ\“\ÜÛÛ“[X™\\‹›\ÜÛÛ‹›[X™\ØXİ]™UXXÚ\”ÙXİ[Û’[™^\‹œÙXİ[Û’[™^Ü™]\›ˆYNÂŸB™[˜İ[ÛˆXXÚ\ÛÛ^YÙJ˜[YJ^ÂˆYŠ]˜[YJ\™]\›‰Ó\İXXÚ[™ÈÜÚ][ÛˆØ]™Y	ÎÂˆÛÛœİ\ÏQ]K››İÊ
+K[™]È]J˜[YJK™Ù][YJ
+NÚYŠS[X™\‹š\Ñš[š]J\Ê_\Ï
+\™]\›‰Ó\İXXÚ[™ÈÜÚ][ÛˆØ]™Y	ÎÂˆÛÛœİZ[œÏSX]™›ÛÜŠ\ËÍŒ
+NÚYŠZ[œÏŠ\™]\›‰Ò\İ›İÉÎÚYŠZ[œÏŒ
+\™]\›ˆZ[œÊÉÈZ[ˆYÛÉÎÂˆÛÛœİœÏSX]™›ÛÜŠZ[œËÍŒ
+NÚYŠœÏ
+\™]\›ˆœÊÉÈ‰ÊÊœÏOOLOÉÉÎ‰ÜÉÊJÉÈYÛÉÎÂˆÛÛœİ^\ÏSX]™›ÛÜŠœËÌ
+NÚYŠ^\ÏÊ\™]\›ˆ^\ÊÉÈ^IÊÊ^\ÏOOLOÉÉÎ‰ÜÉÊJÉÈYÛÉÎÂˆ™]\›ˆ™]È]J˜[YJKÓØØ[Q]Tİš[™Ê
+NÂŸB™[˜İ[Ûˆ™[Y[X™\•XXÚ\ÛÛ^
+Û\ÜÒY\ÜÛÛ“[X™\‹ÙXİ[Û’[™^
+^ÂˆYŠÙ\ÜÚ[ÛËœ›ÛHOOIİXXÚ\‰ßXÛ\ÜÒY
+\™]\›ÂˆÛÛœİ™^^ØÛ\ÜÒY\ÜÛÛ“[X™\“[X™\Š\ÜÛÛ“[X™\ŠKÙXİ[Û’[™^“[X™\ŠÙXİ[Û’[™^
+K\]Y]›™]È]J
+KÒTÓÔİš[™Ê
+_NÂˆÙ]Š
+KXXÚ\ÛÛ^[™^Âˆ\J	ËØ\KİXXÚ\‹ØÛÛ^	ËÛY]Ù‰ÔU	Ë›ÙN’”ÓÓ‹œİš[™ÚYJ™^
+_JK[ŠOÚYŠËXXÚ\ÛÛ^	‰˜\QŠX\Q‹XXÚ\ÛÛ^\‹XXÚ\ÛÛ^JK˜Ø]Ú
+
+
+OOßJNÂŸB™[˜İ[ÛˆXXÚ\][[Û”İ[[X\J
+^ÂˆÛÛœİİY[ÏXÛ\ÜÔİY[Ê
+K\ÜÚYÛ›Y[ÏYÙ]Š
+K˜\ÜÚYÛ›Y[ß×K[™š[š\ÚY[™]ÈÙ]
+
+NÂˆ\ÜÚYÛ›Y[Ë™›Ü‘XXÚ
+OOœİY[Ë™š[\ŠÏOœË˜Û\ÜÒYÏËš[˜ÛY\ÊK˜Û\ÜÒY
+JK™›Ü‘XXÚ
+ÏOÚYŠÚÚ[ÛÛ\][Û‘›ÜŠËšYK›\ÜÛÛ’Y
+K›[™İÓÔ’Ğ“ÓÒ×ÔÕTË›[™İ
+][™š[š\ÚY˜Y
+ËšY
+_JJNÂˆ]Üš][™ÕÑÜ˜YOLÂˆÛÛœİÜš][™ÏYÙ]Š
+KÜš][™ßßKØÛÜ™\ÏYÙ]Š
+KÜš][™ÔØÛÜ™\ßßNÂˆİY[Ë™›Ü‘XXÚ
+ÏO“Øš™XİšÙ^\ÊÜš][™ÖÜËšY_ßJK™›Ü‘XXÚ
+YOÚYŠ
+Üš][™ÖÜËšYOË–ÛY_	ÉÊKš[J
+I‰ŠØÛÜ™\ÖÜËšYOË–ÛYOOO[[ØÛÜ™\ÖÜËšYOË–ÛYOOO][™Yš[™Y
+J]Üš][™ÕÑÜ˜YJÊßJJNÂˆ™]\›ˆİ[™š[š\ÚYİY[Î[™š[š\ÚYœÚ^™KÜš][™ÕÑÜ˜Y_NÂŸB™[˜İ[ÛˆXXÚ\’ÛYJ
+^ÂˆÛÛœİÛÏYÙ]Š
+K˜Û\ÜÙ\ËİÏXÛ\ÜÔİY[Ê
+K™\İ[YO]XXÚ\”™\İ[YPÛÛ^
+
+K][[Û]XXÚ\][[Û”İ[[X\J
+K\İJÙ]Š
+K˜\ÜÚYÛ›Y[ß×JVÌNÂˆ]\›ÎÂˆYŠ™\İ[YJ^ÂˆÛÛœİÛÜšØ›ÛÚÓ\ÜÛÛ\™\İ[YKØË›\ÜÛÛœÏË™š[™
+O›[X™\OO\™\İ[YK›\ÜÛÛ‹›[X™\ŠK\ÜÚYÛ™Y]ÛÜšØ›ÛÚÓ\ÜÛÛØ\ÜÚYÛ›Y[›Ü“\ÜÛÛŠ™\İ[YK˜ËšYÛÜšØ›ÛÚÓ\ÜÛÛ‹šY
+N›[\Ó\İ\™\İ[YKœÙXİ[Û’[™^SX]›X^
+™\İ[YKœÙXİ[ÛœË›[™İLJNÂˆÛÛœİ™^[HZ\Ó\İÉĞÛÛ[YHœ›ÛHH^XİİYÙH[İH\İÜ[™Y‰ÎˆX\ÜÚYÛ™Y	‰ÛÜšØ›ÛÚÓ\ÜÛÛËœ™XYHOOY˜[ÙOÉÖ[İH™XXÚYH\İİYÙKˆH™^Xİ[Ûˆ\ÈÈ\ÜÚYÛˆHX]Ú[™ÈÛÜšØ›ÛÚË‰Î˜][[Û‹[™š[š\ÚYİY[ÏØ][[Û‹[™š[š\ÚYİY[ÊÉÈİY[	ÊÊ][[Û‹[™š[š\ÚYİY[ÏOOLOÉÉÎ‰ÜÉÊJÉÈİ[]™H\ÜÚYÛ™YÛÜšØ›ÛÚÈÛÜšÈÈš[š\Ú‰Î‰Ö[İ\ˆXXÚ[™ÈÜÚ][Ûˆ\ÈØ]™Y[™™XYK‰ÎÂˆ\›ÏXÙXİ[ÛˆÛ\ÜÏHXXÚ\‹X\ÜÚ\İZ\›È‚ˆ]ˆÛ\ÜÏHXXÚ\‹X\ÜÚ\İX˜YÙH•XXÚ\ˆ\ÜÚ\İÙ]‚ˆ]ˆÛ\ÜÏHXXÚ\‹X\ÜÚ\İ[XZ[ˆ]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆÛÛ[YHÚ\™H[İHYÙ™ÜÜ[O“\ÜÛÛˆ	Ü™\İ[YK›\ÜÛÛ‹›[X™\ŸH0­È	Ù\ØØ\R[
+™\İ[YK›\ÜÛÛ‹]J_OÚOİ›Û™Ï‰Ù\ØØ\R[
+™\İ[YK˜Ë›˜[YJ_OÜİ›Û™Ïˆ0­È	Ù\ØØ\R[
+™\İ[YKœİYÙS˜[YJ_H0­ÈİYÙH	Ü™\İ[YKœÙXİ[Û’[™^
+Ì_HÙˆ	ÓX]›X^
+K™\İ[YKœÙXİ[ÛœË›[™İ
+_OÜÛX[‰Ù\ØØ\R[
+XXÚ\ÛÛ^YÙJ™\İ[YK˜İ\]Y]
+J_OÜÛX[Ù]]ÛˆÛ\ÜÏHœš[X\KXˆXXÚ\‹\™\İ[YKXˆˆYH˜ÛÛ[YUXXÚ[™ÈÛÛ[YHXXÚ[™È8¡¤Ø]ÛÙ]‚ˆ]ˆÛ\ÜÏHXXÚ\‹X\ÜÚ\İ\™X\ÛÛˆİ›Û™Ï”™XÛÛ[Y[™Y™^İ\Üİ›Û™ÏÜ[‰Ù\ØØ\R[
+™^[
+_OÜÜ[Ù]‚ˆÜÙXİ[Û˜ÂˆY[Ù^Âˆ\›ÏXÙXİ[ÛˆÛ\ÜÏHXXÚ\‹X\ÜÚ\İZ\›È\ËY[\H]ˆÛ\ÜÏHXXÚ\‹X\ÜÚ\İX˜YÙH•XXÚ\ˆ\ÜÚ\İÙ]]ˆÛ\ÜÏHXXÚ\‹X\ÜÚ\İ[XZ[ˆ]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”™XYHÚ[ˆ[İH\™OÜÜ[O”İ\[İ\ˆ™^Û\ÜÏÚO“Û˜ÙH[İHÜ[ˆH\ÜÛÛ‹[™Û\ÚØ]HÚ[™[Y[X™\ˆH^XİÛ\ÜË\ÜÛÛˆ[™İYÙH›Üˆ[İ\ˆ™^ÙÚ[‹ÜÙ]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH›Ü[•XXÚ›İÈ“Ü[ˆ]™H›ÛÚÏØ]ÛÙ]ÜÙXİ[Û˜ÂˆBˆ]J	ÕXXÚ\‰Ë	ÕÙ^IÊNÂˆ	
+	ØÛÛ[	ÊKš[›™\’SX	Ú\›ßBˆÙXİ[ÛˆÛ\ÜÏHXXÚ\‹X\ÜÚ\İYÜšY‚ˆ\XÛHÛ\ÜÏHXXÚ\‹X\ÜÚ\İXØ\™	Ø][[Û‹[™š[š\ÚYİY[ÏÉÛ™YYËX][[Û‰Î‰ÉßHÜ[•ÛÜšØ›ÛÚÈ›ÛİË]\ÜÜ[İ›Û™Ï‰Ø][[Û‹[™š[š\ÚYİY[ßOÜİ›Û™Ï‰Ø][[Û‹[™š[š\ÚYİY[ÏÉÜİY[Èİ[]™H\ÜÚYÛ™YÛÜšÈÈÛÛ\]IÎ‰Ó›È[™š[š\ÚY\ÜÚYÛ™YÛÜšÈ™YYÈ][[Û‰ßOÜ]ÛˆÛ\ÜÏH^[[šÈˆYH›Ü[‘›ÛİÕ\İY[È”™]šY]ÈİY[ÏØ]ÛØ\XÛO‚ˆ\XÛHÛ\ÜÏHXXÚ\‹X\ÜÚ\İXØ\™	Ø][[Û‹Üš][™ÕÑÜ˜YOÉÛ™YYËX][[Û‰Î‰ÉßHÜ[•Üš][™ÈÈ™]šY]ÏÜÜ[İ›Û™Ï‰Ø][[Û‹Üš][™ÕÑÜ˜Y_OÜİ›Û™Ï‰Ø][[Û‹Üš][™ÕÑÜ˜YOÉÜİX›Z]YÜš][™ÈYXÙ\È\™HØZ][™È›ÜˆHXXÚ\ˆÜ˜YIÎ‰Ó›ÈÜš][™ÈİX›Z\ÜÚ[ÛœÈ\™HØZ][™È›ÜˆHÜ˜YIßOÜ]ÛˆÛ\ÜÏH^[[šÈˆYH›Ü[•Üš][™Ô™]šY]È“Ü[ˆİY[ÏØ]ÛØ\XÛO‚ˆ\XÛHÛ\ÜÏHXXÚ\‹X\ÜÚ\İXØ\™Ü[•XXÚ[™ÈÛÛ^ÜÜ[İ›Û™Ï‰ØÛË›[™İOÜİ›Û™Ï‰ØÛË›[™İOOLOÉØÛ\ÜÈ\ÜÚYÛ™YÈ[İIÎ˜ÛË›[™İ
+ÉÈÛ\ÜÙ\È\ÜÚYÛ™YÈ[İIßH0­È	ÜİË›[™İHİY[ÏÜ]ÛˆÛ\ÜÏH^[[šÈˆYH›Ü[•XXÚ›İĞØ\™“Ü[ˆÛ\ÜÙ\ÏØ]ÛØ\XÛO‚ˆÜÙXİ[Û‚ˆ	Û\İØÙXİ[ÛˆÛ\ÜÏHœÙXİ[ÛˆØ\™XXÚ\‹[]\İXXİ[ÛˆÜ[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ“]\İ\ÜÚYÛ›Y[ÜÜ[Ï“\ÜÛÛˆ	Û\İ›\ÜÛÛ“[X™\ŸH0­È	Ù\ØØ\R[
+\İ›\ÜÛÛ•]J_OÚÏÛ\ÜÏH›]]Y‰Ù\ØØ\R[
+Ù]Š
+K˜Û\ÜÙ\Ë™š[™
+ÏO˜ËšYOO[\İ˜Û\ÜÒY
+OË›˜[Y_	ĞÛ\ÜÉÊ_H0­È	Û™]È]J\İ˜Ü™X]Y]
+KÓØØ[Tİš[™Ê
+_OÜ]ÛˆÛ\ÜÏHœÙXÛÛ™\KXˆˆYH›Ü[“]\İÛ\ÜÈ“Ü[ˆÛ\ÜÈ›ÛÚÏØ]ÛÜÙXİ[Û˜‰ÉßXÂˆYŠ	
+	ØÛÛ[YUXXÚ[™ÉÊJI
+	ØÛÛ[YUXXÚ[™ÉÊK›Û˜ÛXÚÏJ
+OOØÛÛœİ]XXÚ\”™\İ[YPÛÛ^
+
+NÚYŠ\Š\™]\›ØXİ]™UXXÚ\Û\ÜÒY\‹˜ËšYØXİ]™UXXÚ\“\ÜÛÛ“[X™\\‹›\ÜÛÛ‹›[X™\ØXİ]™UXXÚ\”ÙXİ[Û’[™^\‹œÙXİ[Û’[™^Øİ\œ™[YÙOIİXXÚ\‹[]™K[\ÜÛÛ‰ÎÜ™[™\“˜]Š
+NİXXÚ\“]™S\ÜÛÛŠ
+_NÂˆÛÛœİÜ[•XXÚJ
+OOØİ\œ™[YÙOIİXXÚ	ÎÜ™[™\“˜]Š
+NİXXÚ\•XXÚ
+
+_NÂˆYŠ	
+	ÛÜ[•XXÚ›İÉÊJI
+	ÛÜ[•XXÚ›İÉÊK›Û˜ÛXÚÏ[Ü[•XXÚÂˆ	
+	ÛÜ[•XXÚ›İĞØ\™	ÊK›Û˜ÛXÚÏ[Ü[•XXÚÂˆ	
+	ÛÜ[‘›ÛİÕ\İY[ÉÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIÜİY[ÉÎÜ™[™\“˜]Š
+NÜİY[Ê
+_NÂˆ	
+	ÛÜ[•Üš][™Ô™]šY]ÉÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIÜİY[ÉÎÜ™[™\“˜]Š
+NÜİY[Ê
+_NÂˆYŠ	
+	ÛÜ[“]\İÛ\ÜÉÊJI
+	ÛÜ[“]\İÛ\ÜÉÊK›Û˜ÛXÚÏJ
+OOØXİ]™UXXÚ\Û\ÜÒY[\İ˜Û\ÜÒYØİ\œ™[YÙOIİXXÚ\‹X›ÛÚÉÎÜ™[™\“˜]Š
+NİXXÚ\›ÛÚÊ
+_NÂŸB˜\Ş[˜È[˜İ[ÛˆXXÚ\•XXÚ
+
+^Ø]ØZ][œİ\™S]™P›ÛÚÜÊ
+NØÛÛœİÛÏYÙ]Š
+K˜Û\ÜÙ\Îİ]J	ÕXXÚ\‰Ë	ÕXXÚ	ÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ“]™HÛ\ÜÏÜÜ[OÚÛÜÙH[İ\ˆÛ\ÜÏÚO–[İ\ˆÛ\ÜÈ›ÛÚÈÜ[œÈ\™XİH[œÚYH[™Û\ÚØ]KÜÙ]Ù]]ˆÛ\ÜÏH˜Û\ÜËXØ\™YÜšY‰ØÛË›X\
+ÏOØÛÛœİX›ÛÚÓY]JË˜›ÛÚÒYË˜Ûİ\œÙWÚY
+K]™O[]™P›ÛÚÑ›ÜÛ\ÜÊÊKØ]ÛÜšØ›ÛÚÑ›ÜÛ\ÜÊÊK\İX\ÜÚYÛ›Y[Ñ›ÜÛ\ÜÊËšY
+VÌKØ[“Ü[P›ÛÛX[Š]™_ØŠNÜ™]\›ˆ\XÛHÛ\ÜÏH›X[˜YÙ[Y[XØ\™XXÚ\‹X›ÛÚËXØ\™]ˆÛ\ÜÏH›X[˜YÙ[Y[XØ\™ZXYÜ[ˆÛ\ÜÏHœ[X[‰Ù\ØØ\R[
+Ë›]™[
+_OÜÜ[Ü[‰ØÛ\ÜÔİY[Ê
+K™š[\ŠİOœİ˜Û\ÜÒYÏËš[˜ÛY\ÊËšY
+JK›[™İHİY[ÏÜÜ[Ù]Ï‰Ù\ØØ\R[
+Ë›˜[YJ_OÚÏÛ\ÜÏH˜›ÛÚË[[™H›ÛÚÎˆİ›Û™Ï‰Ù\ØØ\R[
+Ë]_Ë˜Ûİ\œÙWÚY
+_OÜİ›Û™ÏÜ‰Û\İØÛ\ÜÏH›]]Y“\İ\ÜÚYÛ™Yˆ\ÜÛÛˆ	Û\İ›\ÜÛÛ“[X™\ŸH0­È	Ù\ØØ\R[
+\İ›\ÜÛÛ•]J_OÜ˜‰ÉßO]ÛˆÛ\ÜÏHœš[X\KXˆˆ]K]XXÚXÛ\ÜÏH‰ØËšYHˆ	ØØ[“Ü[ÉÉÎ‰Ù\ØX›Y	ßO‰ØØ[“Ü[ÉÓÜ[ˆ]™H›ÛÚÉÎ‰Ó]™H›ÛÚÈ[˜]˜Z[X›IßOØ]ÛØ\XÛO˜JKš›Ú[Š	ÉÊ_	Ï]ˆÛ\ÜÏH™[\K\İ]HÏ“›ÈÛ\ÜÙ\È\ÜÚYÛ™YÚÏ\ÚÈHŞ\İ[HYZ[ˆÈ\ÜÚYÛˆHÛ\ÜÈ[™›ÛÚËÜÙ]‰ßOÙ]˜ÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K]XXÚXÛ\Ü×IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OOØÛÛœİØ]™Y]XXÚ\”™\İ[YPÛÛ^
+
+NØXİ]™UXXÚ\Û\ÜÒYX‹™]\Ù]XXÚÛ\ÜÎÚYŠØ]™YË˜ËšYOOXXİ]™UXXÚ\Û\ÜÒY
+^ØXİ]™UXXÚ\“\ÜÛÛ“[X™\\Ø]™Y›\ÜÛÛ‹›[X™\ØXİ]™UXXÚ\”ÙXİ[Û’[™^\Ø]™YœÙXİ[Û’[™^Y[Ù^ØXİ]™UXXÚ\“\ÜÛÛ“[X™\LNØXİ]™UXXÚ\”ÙXİ[Û’[™^LXİ\œ™[YÙOIİXXÚ\‹X›ÛÚÉÎÜ™[™\“˜]Š
+NİXXÚ\›ÛÚÊ
+_J_B˜\Ş[˜È[˜İ[ÛˆXXÚ\›ÛÚÊ
+^Ø]ØZ][œİ\™S]™P›ÛÚÜÊ
+NØÛÛœİÏ]XXÚ\Û\ÜÊ
+K]™O[]™P›ÛÚÑ›ÜÛ\ÜÊÊKØ]ÛÜšØ›ÛÚÑ›ÜÛ\ÜÊÊNÚYŠXß[]™_]ØŠ^Øİ\œ™[YÙOIİXXÚ	ÎİXXÚ\•XXÚ
+
+NÜ™]\›Ÿ]]J	ÕXXÚ\‰Ë	Ó]™H›ÛÚÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏHXXÚ\‹X›ÛÚË\Ú[]ÛˆÛ\ÜÏH˜˜XÚË[[šÈˆYH˜˜XÚÕXXÚÛ\ÜÙ\È¸¡¤Û\ÜÙ\ÏØ]Û]ˆÛ\ÜÏH˜Ûİ\œÙKZ[›È]Ü[ˆÛ\ÜÏHœ[X[‰Ù\ØØ\R[
+Ë›]™[
+_OÜÜ[O‰Ù\ØØ\R[
+]™K]J_OÚO‰Ù\ØØ\R[
+Ë›˜[YJ_H0­ÈXXÚH]™H\ÜÛÛˆ\™K[ˆ\ÜÚYÛˆHX]Ú[™ÈÛÜšØ›ÛÚËÜÙ]Ù]]ˆÛ\ÜÏHXXÚ\‹[\ÜÛÛ‹[\İ‰Û]™K›\ÜÛÛœË›X\
+OØÛÛœİÏ]Ø‹›\ÜÛÛœË™š[™
+O›[X™\OO[›[X™\ŠK\ÜÚYÛ™Y]ÏØ\ÜÚYÛ›Y[›Ü“\ÜÛÛŠËšYËšY
+N›[Ü™]\›ˆ]ÛˆÛ\ÜÏHXXÚ\‹[]™K\›İÈˆ]K[]™K[\ÜÛÛH‰Û›[X™\ŸHÜ[ˆÛ\ÜÏHXXÚ\‹[]™K[[H‰Û›[X™\ŸOÜÜ[Ü[İ›Û™Ï‰Ù\ØØ\R[
+]J_OÜİ›Û™ÏÛX[‰İÏÉÕÛÜšØ›ÛÚÈX]ÚY	Î‰ÕÛÜšØ›ÛÚÈX]ÚZ\ÜÚ[™ÉßOÜÛX[ÜÜ[‰Ø\ÜÚYÛ™YÉĞ\ÜÚYÛ™Y8§$ÉÎ‰ÕXXÚ8¡¤‰ßOØØ]Û˜JKš›Ú[Š	ÉÊ_OÙ]ÜÙXİ[Û˜É
+	Ø˜XÚÕXXÚÛ\ÜÙ\ÉÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIİXXÚ	ÎÜ™[™\“˜]Š
+NİXXÚ\•XXÚ
+
+_NÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K[]™K[\ÜÛÛ—IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OOØXİ]™UXXÚ\“\ÜÛÛ“[X™\S[X™\Š‹™]\Ù]›]™S\ÜÛÛŠNØXİ]™UXXÚ\”ÙXİ[Û’[™^LØİ\œ™[YÙOIİXXÚ\‹[]™K[\ÜÛÛ‰ÎÜ™[™\“˜]Š
+NİXXÚ\“]™S\ÜÛÛŠ
+_J_B™[˜İ[Ûˆ\ÜÛÛØ[‘ÑÛØ[
+
+^ØÛÛœİ[™OTİš[™ÊË˜ÛÛ[	ÉÊKœÜ]
+	×‰ÊK›X\
+Oš[J
+JK™š[™
+O‹×ĞS‹QÈÓĞS‹ÚK\İ
+
+JNÜ™]\›ˆ[™OÛ[™Kœ™\XÙJ×ĞS‹QÈÓĞS—Ê‹ÚK	ÉÊKš[J
+N‰ÉßB™[˜İ[Ûˆ]™TÙXİ[ÛÛÛ[
+ÙXİ[ÛŠ^Ü™]\›ˆ
+ÙXİ[ÛË›[™\ß×JK™š[\ŠOˆK×ĞS‹QÈÓĞS‹ÚK\İ
+İš[™Ê
+Kš[J
+JJKš›Ú[Š	×‰Ê_B™[˜İ[ÛˆXXÚ\“]™S\ÜÛÛŠ
+^ÂˆÛÛœİÏ]XXÚ\Û\ÜÊ
+K]™O[]™P›ÛÚÑ›ÜÛ\ÜÊÊKØ]ÛÜšØ›ÛÚÑ›ÜÛ\ÜÊÊNÂˆYŠXß[]™_]ØŠ^Øİ\œ™[YÙOIİXXÚ	ÎİXXÚ\•XXÚ
+
+NÜ™]\›ŸBˆÛÛœİ[]™K›\ÜÛÛœË™š[™
+O›[X™\OOXXİ]™UXXÚ\“\ÜÛÛ“[X™\ŠKÏ]Ø‹›\ÜÛÛœË™š[™
+O›[X™\OOXXİ]™UXXÚ\“\ÜÛÛ“[X™\ŠNÂˆYŠ[
+^Øİ\œ™[YÙOIİXXÚ\‹X›ÛÚÉÎİXXÚ\›ÛÚÊ
+NÜ™]\›ŸBˆÛÛœİÙXİ[ÛœÏ[]™TÙXİ[ÛœÊ˜ÛÛ[
+Kİ[\ÙXİ[ÛœË›[™İ\ÜÚYÛ™Y]ÏØ\ÜÚYÛ›Y[›Ü“\ÜÛÛŠËšYËšY
+N›[ÂˆXİ]™UXXÚ\”ÙXİ[Û’[™^SX]›X^
+X]›Z[ŠXİ]™UXXÚ\”ÙXİ[Û’[™^X]›X^
+İ[LJJJNÂˆÛÛœİÙXİ[Û\ÙXİ[ÛœÖØXİ]™UXXÚ\”ÙXİ[Û’[™^K\Ó\İXXİ]™UXXÚ\”ÙXİ[Û’[™^OO]İ[LKÛØ[[\ÜÛÛØ[‘ÑÛØ[
+
+NÂˆ™[Y[X™\•XXÚ\ÛÛ^
+ËšY›[X™\‹Xİ]™UXXÚ\”ÙXİ[Û’[™^
+NÂˆÛÛœİİYÙS˜[YO\ÙXİ[ÛÜÙXİ[Û“X™[
+ÙXİ[Û‹]KXİ]™UXXÚ\”ÙXİ[Û’[™^İ[
+N‰Ó\ÜÛÛˆ[˜]˜Z[X›IÎÂˆ]J	ÕXXÚ\‰Ë	Ó\ÜÛÛˆ	ÊÛ›[X™\ŠNÂˆÛÛœİİYÙ\Ï\ÙXİ[ÛœË›X\
+
+JOO˜]ÛˆÛ\ÜÏH™YË\İYÙH	ÚOOOXXİ]™UXXÚ\”ÙXİ[Û’[™^ÉÚ\ËXİ\œ™[	Î‰ÉßHˆ]K[]™K\ÙXİ[ÛH‰Ú_Hˆ	ÚOOOXXİ]™UXXÚ\”ÙXİ[Û’[™^ÉØ\šXKXİ\œ™[Hœİ\‰Î‰ÉßOÜ[‰ÚJÌ_OÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+ÙXİ[Û“X™[
+]KKİ[
+KÓİÙ\Ø\ÙJ
+J_OÜİ›Û™ÏØ]Û˜
+Kš›Ú[Š	ÉÊNÂˆÛÛœİ™^Xİ[ÛH]İ[ÉÉÎˆZ\Ó\İÉÏ]ÛˆÛ\ÜÏHœš[X\KXˆˆYH›™^]™TÙXİ[Ûˆ“™^İYÙH8¡¤Ø]Û‰Î˜\ÜÚYÛ™YÉÏÜ[ˆÛ\ÜÏH™YËX\ÜÚYÛ™Yˆ›ÛOHœİ]\È•ÛÜšØ›ÛÚÈ\ÜÚYÛ™Y8§$ÏÜÜ[‰ÎÉ‰Ëœ™XYHOOY˜[ÙOÉÏ]ÛˆÛ\ÜÏHœš[X\KXˆˆYH™š[š\Ú[™\ÜÚYÛˆ\ÜÚYÛˆÛÜšØ›ÛÚÈ8¡¤Ø]Û‰Î‰ÏÜ[ˆÛ\ÜÏH™YË][˜]˜Z[X›H“X]Ú[™ÈÛÜšØ›ÛÚÈ\È›İ]˜Z[X›HY]ÜÜ[‰ÎÂˆ	
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏH™YË[\ÜÛÛˆ‚ˆXY\ˆÛ\ÜÏH™YË[\ÜÛÛ‹ZXY\ˆ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜˜XÚÕXXÚ\›ÛÚÈ¸¡¤\ÜÛÛœÏØ]Û‰Ù[™Û\ÚØ]SÙÛÊ	Ù[™Û\ÚØ]K[ÙÛË[\ÜÛÛ‰Ê_O]‰Ù\ØØ\R[
+Ë›˜[YJ_H0­È	Ù\ØØ\R[
+]™K]J_OÜO“\ÜÛÛˆ	Û›[X™\ŸH0­È	Ù\ØØ\R[
+]J_OÚOÙ]‰İÉ‰Ëœ™XYHOOY˜[ÙOÉÏ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH›Ü[•XXÚ\•ÛÜšØ›ÛÚÈ•ÛÜšØ›ÛÚÏØ]Û‰Î‰ÉßOÚXY\‚ˆ]ˆÛ\ÜÏH™YË[\ÜÛÛ‹[^[İ]\ÚYHÛ\ÜÏH™YË\İYÙK[\İÛ\ÜÏH™YË[X™[“\ÜÛÛˆİYÙ\ÏÜ˜]ˆ\šXK[X™[H“\ÜÛÛˆİYÙ\È‰ÜİYÙ\ßOÛ˜]‰ÙÛØ[Ø]Z[ÈÛ\ÜÏH™YËYÛØ[İ[[X\O“\ÜÛÛˆÛØ[Üİ[[X\O‰Ù\ØØ\R[
+ÛØ[
+_OÜÙ]Z[Ï˜‰ÉßOØ\ÚYO‚ˆ]ˆÛ\ÜÏH™YË]XXÚ[™Ë\İ\™˜XÙHXY\ˆÛ\ÜÏH™YË\İYÙKZXY[™ÈÛ\ÜÏH™YË[X™[‰İİ[ÉÔİYÙH	ÊÊXİ]™UXXÚ\”ÙXİ[Û’[™^
+ÌJJÉÈÙˆ	Êİİ[‰Ó›ÈİYÙ\ÉßOÜˆYH›]™TİYÙU]HˆXš[™^H‹LH‰Ù\ØØ\R[
+İYÙS˜[YKÓİÙ\Ø\ÙJ
+J_OÚÚXY\‚ˆ\XÛHÛ\ÜÏH›]™KX›ÛÚËXÛÛ[YË\İYÙKXÛÛ[ˆ\šXK[X™[YOH›]™TİYÙU]H‰ØXİ]™UXXÚ\”ÙXİ[Û’[™^OOLÛ\ÜÛÛ•š\İX[[
+
+N‰ÉßIÜÙXİ[ÛÜ™[™\“]™PÛÛ[
+]™TÙXİ[ÛÛÛ[
+ÙXİ[ÛŠKœÜ]
+	×‰ÊK™š[\Š[™OOˆK×“TÔÓÓ—Ê×
+ß•ÑQR×Ê×
+ËŠ“TÔÓÓ—Ê×
+ËÚK\İ
+[™Kš[J
+JJKš›Ú[Š	×‰ÊJN‰Ï•\È\ÜÛÛˆ\È›ÈXXÚ[™ÈÛÛ[Y]ˆ™]\›ˆÈH›ÛÚÈ[™ÚÛÜÙH[›İ\ˆ\ÜÛÛ‹Ü‰ßOØ\XÛO‚ˆ	Ú\Ó\İØ]ˆÛ\ÜÏH™YË]ÛÜšØ›ÛÚË[›İH‰İÏØİ›Û™ÏY\ˆÛ\ÜÏÜİ›Û™ÏÜ[•ÛÜšØ›ÛÚÈ	İË›[X™\ŸH0­È	Ù\ØØ\R[
+Ë]J_OÜÜ[˜‰ÏÜ[“›ÈX]Ú[™ÈÛÜšØ›ÛÚÈ›Üˆ\È\ÜÛÛ‹ÜÜ[‰ßOÙ]˜‰ÉßBˆ›Ûİ\ˆÛ\ÜÏH™YË[\ÜÛÛ‹Y›Ûİ\ˆ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYHœ™]“]™TÙXİ[Ûˆˆ	ØXİ]™UXXÚ\”ÙXİ[Û’[™^OOLÉÙ\ØX›Y	Î‰ÉßO¸¡¤™]š[İ\ÏØ]Û‰Û™^Xİ[ÛŸOÙ›Ûİ\Ù]Ù]‚ˆÜÙXİ[Û˜Âˆ	
+	Ø˜XÚÕXXÚ\›ÛÚÉÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIİXXÚ\‹X›ÛÚÉÎÜ™[™\“˜]Š
+NİXXÚ\›ÛÚÊ
+_NÂˆYŠ	
+	ÛÜ[•XXÚ\•ÛÜšØ›ÛÚÉÊJI
+	ÛÜ[•XXÚ\•ÛÜšØ›ÛÚÉÊK›Û˜ÛXÚÏJ
+OO›Ü[•XXÚ\•ÛÜšØ›ÛÚÊËšYËšY
+NÂˆÛÛœİÛÕÔİYÙOZ[™^OØXİ]™UXXÚ\”ÙXİ[Û’[™^Z[™^İXXÚ\“]™S\ÜÛÛŠ
+NÙ›Øİ\ÕÚ]İ]ØÜ›Û
+	
+	Û]™TİYÙU]IÊJNÜ™\Ù]\ØÜ›Û
+
+_NÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K[]™K\ÙXİ[Û—IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO™ÛÕÔİYÙJ[X™\Š‹™]\Ù]›]™TÙXİ[ÛŠJJNÂˆ	
+	Ü™]“]™TÙXİ[Û‰ÊK›Û˜ÛXÚÏJ
+OOÚYŠXİ]™UXXÚ\”ÙXİ[Û’[™^Œ
+YÛÕÔİYÙJXİ]™UXXÚ\”ÙXİ[Û’[™^LJ_NÂˆYŠ	
+	Û™^]™TÙXİ[Û‰ÊJI
+	Û™^]™TÙXİ[Û‰ÊK›Û˜ÛXÚÏJ
+OO™ÛÕÔİYÙJXİ]™UXXÚ\”ÙXİ[Û’[™^
+ÌJNÂˆYŠ	
+	Ùš[š\Ú[™\ÜÚYÛ‰ÊJI
+	Ùš[š\Ú[™\ÜÚYÛ‰ÊK›Û˜ÛXÚÏJ
+OO›Ü[\ÜÚYÛ•ÛÜšØ›ÛÚÊËÊNÂˆÚ\™S]™U›ØØX[\J
+NİÚ\™S]™PÚXÚÜÊ
+NÂŸB‚™[˜İ[ÛˆÜ[\ÜÚYÛ•ÛÜšØ›ÛÚÊË]™S\ÜÛÛ‹ÛÜšØ›ÛÚÓ\ÜÛÛŠ^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”ÜİXÛ\ÜÈXİ[ÛÜÜ[Ï\ÜÚYÛˆX]Ú[™ÈÛÜšØ›ÛÚÏÚÏÛ\ÜÏH›]]Y‰Ù\ØØ\R[
+Ë›˜[YJ_OÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]]ˆÛ\ÜÏH˜\ÜÚYÛ›Y[[X]ÚXØ\™Ü[“]™H\ÜÛÛÜÜ[İ›Û™Ï“\ÜÛÛˆ	Û]™S\ÜÛÛ‹›[X™\ŸH0­È	Ù\ØØ\R[
+]™S\ÜÛÛ‹]J_OÜİ›Û™ÏÜ[¸¡¤È]]ÛX]XØ[HX]ÚYÜÜ[İ›Û™Ï•ÛÜšØ›ÛÚÈ\ÜÛÛˆ	İÛÜšØ›ÛÚÓ\ÜÛÛ‹›[X™\ŸH0­È	Ù\ØØ\R[
+ÛÜšØ›ÛÚÓ\ÜÛÛ‹]J_OÜİ›Û™ÏÙ]]ˆÛ\ÜÏH˜\ÜÚYÛ›Y[\ÚÚ[\›İÈÜ[•›ØØX[\OÜÜ[Ü[“\İ[š[™È	ˆ™XY[™ÏÜÜ[Ü[‘Ü˜[[X\ÜÜ[Ü[•Üš][™ÏÜÜ[Ù]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH˜ÛÛ™š\›P\ÜÚYÛ›Y[\ÜÚYÛˆÈÛ\ÜÏØ]Û]ˆYH˜\ÜÚYÛ”™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØÛÛ™š\›P\ÜÚYÛ›Y[	ÊK›Û˜ÛXÚÏX\Ş[˜Ê
+OOØÛÛœİI
+	ØÛÛ™š\›P\ÜÚYÛ›Y[	ÊNØ‹™\ØX›Y]YNØ‹^ÛÛ[IĞ\ÜÚYÛš[™ø )‰Îİ^ØÛÛœİOX]ØZ]\J	ËØ\KİXXÚ\‹Ø\ÜÚYÛ›Y[ÉËÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJØÛ\ÜÒY˜ËšY›ÛÚÒY˜Ë˜›ÛÚÒYË˜Ûİ\œÙWÚY\ÜÛÛ’YÛÜšØ›ÛÚÓ\ÜÛÛ‹šY\ÜÛÛ“[X™\ÛÜšØ›ÛÚÓ\ÜÛÛ‹›[X™\‹\ÜÛÛ•]NÛÜšØ›ÛÚÓ\ÜÛÛ‹]KÚÚ[Î•ÓÔ’Ğ“ÓÒ×ÔÕTßJ_JNØ]ØZ]™Yœ™\Úİ]J
+NØÛÛœİ[šÏ]Ú[™İË›ØØ][Û‹›ÜšYÚ[ŠÉËÏØ\ÜÚYÛ›Y[IÊÙ[˜ÛÙUT’PÛÛ\Û™[
+KšY
+KY\ÜØYÙOX	ØË›˜[Y_Nˆ\ÜÛÛˆ	İÛÜšØ›ÛÚÓ\ÜÛÛ‹›[X™\ŸH0­È	İÛÜšØ›ÛÚÓ\ÜÛÛ‹]_HÛÜšØ›ÛÚÈ\È™XYKˆÛÛ\]H›ØØX[\K\İ[š[™È	ˆ™XY[™ËÜ˜[[X\ˆ[™Üš][™Îˆ	Û[šßXÉ
+	Ø\ÜÚYÛ”™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH˜\ÜÚYÛ›Y[\İXØÙ\ÜÈİ›Û™Ï\ÜÚYÛ™YÈ	Ù\ØØ\R[
+Ë›˜[YJ_OÜİ›Û™Ï”Ú\™H\ÈÚ]Ğ\Y\ÜØYÙHÚ]HÛ\ÜËˆH[šÈÜ[œÈH^XİÛÜšØ›ÛÚÈ\ÜÛÛ‹Ü^\™XHYHÚ]Ø\Y\ÜØYÙHˆ™XYÛ›O‰Ù\ØØ\R[
+Y\ÜØYÙJ_Oİ^\™XO]ˆÛ\ÜÏHœİY[XİK\›İÈ]ÛˆÛ\ÜÏHœÙXÛÛ™\KXˆˆYH˜ÛÜUÚ]Ğ\ÛÜHÚ]Ğ\Y\ÜØYÙOØ]Û]ÛˆÛ\ÜÏHœš[X\KXˆˆYH›Ü[•Ú]Ğ\“Ü[ˆÚ]Ğ\Ø]ÛÙ]Ù]˜Ø‹˜Û\ÜÓ\İ˜Y
+	ÚY[‰ÊNÉ
+	ØÛÜUÚ]Ğ\	ÊK›Û˜ÛXÚÏX\Ş[˜Ê
+OOØ]ØZ]˜]šYØ]Ü‹˜Û\›Ø\™Üš]U^
+Y\ÜØYÙJNÉ
+	ØÛÜUÚ]Ğ\	ÊK^ÛÛ[IĞÛÜYY8§$ÉßNÉ
+	ÛÜ[•Ú]Ğ\	ÊK›Û˜ÛXÚÏJ
+OOÚ[™İË›Ü[Š	ÚÎ‹ËİØK›YKÏİ^IÊÙ[˜ÛÙUT’PÛÛ\Û™[
+Y\ÜØYÙJK	×Ø›[šÉÊ_XØ]Ú
+J^Ø‹™\ØX›YY˜[ÙNØ‹^ÛÛ[IĞ\ÜÚYÛˆÈÛ\ÜÉÎÉ
+	Ø\ÜÚYÛ”™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[ÛˆİY[Ê
+^ØÛÛœİİÏXÛ\ÜÔİY[Ê
+Nİ]J	ÕXXÚ\‰Ë	ÔİY[ÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”›Üİ\ÜÜ[O–[İ\ˆİY[ÏÚO”İY[È[ˆÛ\ÜÙ\È\ÜÚYÛ™YÈ[İKÜÙ]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH˜YİY[ŠÈYİY[Ø]ÛÙ]]ˆÛ\ÜÏH˜Ø\™X›K]Ü˜\ÛX[‹]X›HX›HÛ\ÜÏH™]K]X›HXY”İY[İÛ\ÜÏİ”›ÙÜ™\ÜÏİ‘›Øİ\ÏİİİİXY›ÙO‰ÜİË›X\
+ÏOœİY[›İÊÊJKš›Ú[Š	ÉÊ_Oİ›ÙOİX›OÙ]˜É
+	ØYİY[	ÊK›Û˜ÛXÚÏ[Ü[YİY[Øš[™İY[Xİ[ÛœÊ
+_B™[˜İ[ÛˆİY[›İÊÊ^ØÛÛœİÏ]ÙXZÙ\İ
+ËšY
+KÛ\ÜÓ˜[YOYÙ]Š
+K˜Û\ÜÙ\Ë™š[™
+ÏOœË˜Û\ÜÒYÏËš[˜ÛY\ÊËšY
+JOË›˜[Y_	ø %	ÎÜ™]\›ˆ]ˆÛ\ÜÏHœİY[XÙ[]ˆÛ\ÜÏH˜]˜]\ˆ‰Ù\ØØ\R[
+Ë›˜[YVÌJ_OÙ]]]ÛˆÛ\ÜÏHœİY[[˜[YK[[šÈˆ]K\İY[\™\ÜH‰Ù\ØØ\P]ŠËšY
+_Hˆ\OH˜]Ûˆ‰Ù\ØØ\R[
+Ë›˜[YJ_OØ]Û]ˆÛ\ÜÏH›]]Y	Ù\ØØ\R[
+Ë\Ù\›˜[YJ_OÙ]ÛX[•Ú]Ğ\ˆ	Ù\ØØ\R[
+ËÚ]Ø\[X™\Ÿ	Ó›İ™XÛÜ™Y	Ê_OÜÛX[Ù]Ù]İ‰Ù\ØØ\R[
+Û\ÜÓ˜[YJ_Oİ‰ØÛÛ\][Û”İ
+ËšY
+_IOİ‰İÏË›X™[	Ó›ÈØÛÜ™YXİ]š]HY]	ßOİ]ˆÛ\ÜÏH›X[˜YÙ[Y[\›İË[Y]H]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]K]˜[œÙ™\‹\İY[H‰Ù\ØØ\P]ŠËšY
+_H•˜[œÙ™\Ø]Û]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]K\\ÜİÛÜ™\İY[H‰Ù\ØØ\P]ŠËšY
+_H”\ÜİÛÜ™Ø]Û]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]K\™]šY]Ë\İY[H‰Ù\ØØ\P]ŠËšY
+_H•šY]È™\ÜØ]ÛÙ]İİ˜B™[˜İ[Ûˆš[™İY[Xİ[ÛœÊ
+^ÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K\İY[\™\ÜIÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[”İY[]Z[
+‹™]\Ù]œİY[™\Ü
+JNÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K\™]šY]Ë\İY[IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[”İY[]Z[
+‹™]\Ù]œ™]šY]ÔİY[
+JNÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K\\ÜİÛÜ™\İY[IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[”İY[\ÜİÛÜ™[
+‹™]\Ù]œ\ÜİÛÜ™İY[
+JNÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K]˜[œÙ™\‹\İY[IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[•˜[œÙ™\”İY[
+‹™]\Ù]˜[œÙ™\”İY[
+J_B™[˜İ[ÛˆÜ[”İY[\ÜİÛÜ™[
+Y
+^ÂˆÛÛœİİYÙ]Š
+K\Ù\œË™š[™
+OOKšYOOZY
+NÚYŠ\İİœ›ÛHOOIÜİY[	Ê\™]\›ÂˆÛÛœİ[™Ú[\Ù\ÜÚ[ÛËœ›ÛOOOIØYZ[‰ÏÉËØ\KØYZ[‹İ\Ù\œËÉÊÙ[˜ÛÙUT’PÛÛ\Û™[
+Y
+JÉËÜ™\Ù]\\ÜİÛÜ™	Î‰ËØ\KİXXÚ\‹ÜİY[ËÉÊÙ[˜ÛÙUT’PÛÛ\Û™[
+Y
+JÉËÜ™\Ù]\\ÜİÛÜ™	ÎÂˆÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”İY[XØÙ\ÜÏÜÜ[Ï”\ÜİÛÜ™[0­È	Ù\ØØ\R[
+İ›˜[YJ_OÚÏÛ\ÜÏH›]]Y	Ù\ØØ\R[
+İ\Ù\›˜[YJ_H0­È^\İ[™È\ÜİÛÜ™ÈØ[››İ™HšY]ÙYˆ[İHØ[ˆ™\XÙHH\ÜİÛÜ™™[İËÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]‚ˆÙXİ[ÛˆÛ\ÜÏHœ\ÜİÛÜ™Z[XØ\™‚ˆX™[”Ù]H™]È\ÜİÛÜ™ˆ]ˆÛ\ÜÏHœ\ÜİÛÜ™YY]\›İÈ[œ]YHœİY[™]Ô\ÜİÛÜ™ˆ\OHœ\ÜİÛÜ™ˆ[œ][ÙOH›[Y\šXÈˆ]]ØÛÛ\]OH›™]Ë\\ÜİÛÜ™ˆZ[›[™İHˆX^[™İHŒŒˆ]\›H–ÌNW^ÎŒHˆXÙZÛ\H8 $ÌŒYÚ]È]ÛˆÛ\ÜÏH™ÚÜİXˆˆYHÙÙÛTİY[\ÜİÛÜ™ˆ\OH˜]Ûˆ”ÚİÏØ]ÛÙ]‚ˆÛX[•\ÙH8 $ÌŒYÚ]ËˆÚ]™HH™]È\ÜİÛÜ™\™XİHÈHİY[ÜÛX[‚ˆÛX™[‚ˆ]ˆÛ\ÜÏHœ\ÜİÛÜ™Z[XXİ[ÛœÈ]ÛˆÛ\ÜÏHœš[X\KXˆˆYHœÙ]İY[\ÜİÛÜ™ˆ\OH˜]Ûˆ”Ù]™]È\ÜİÛÜ™Ø]Û]ÛˆÛ\ÜÏHœÙXÛÛ™\KXˆˆYH™Ù[™\˜]TİY[\ÜİÛÜ™ˆ\OH˜]Ûˆ‘Ù[™\˜]H[\Ü˜\H\ÜİÛÜ™Ø]ÛÙ]‚ˆ]ˆYHœİY[\ÜİÛÜ™™\İ[Ù]‚ˆÜÙXİ[Û˜
+NÂˆØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[ÂˆÛÛœİ[œ]I
+	ÜİY[™]Ô\ÜİÛÜ™	ÊK™\İ[I
+	ÜİY[\ÜİÛÜ™™\İ[	ÊNÂˆ	
+	İÙÙÛTİY[\ÜİÛÜ™	ÊK›Û˜ÛXÚÏJ
+OOØÛÛœİÚİÚ[™ÏZ[œ]\OOOIİ^	ÎÚ[œ]\O\ÚİÚ[™ÏÉÜ\ÜİÛÜ™	Î‰İ^	ÎÉ
+	İÙÙÛTİY[\ÜİÛÜ™	ÊK^ÛÛ[\ÚİÚ[™ÏÉÔÚİÉÎ‰ÒYIßNÂˆÛÛœİØ]™OX\Ş[˜È\ÜİÛÜ™OÂˆ™\İ[š[›™\’SIÏ]ˆÛ\ÜÏH›]]Y•\][™È\ÜİÛÜ™8 )Ù]‰ÎÂˆ^ÂˆÛÛœİ›ÙO\\ÜİÛÜ™Ò”ÓÓ‹œİš[™ÚYJÜ\ÜİÛÜ™JN’”ÓÓ‹œİš[™ÚYJßJNÂˆÛÛœİX]ØZ]\J[™Ú[ÛY]Ù‰ÔÔÕ	Ë›Ù_JNÂˆÛÛœİÏ\‹œ\ÜİÛÜ™‹[\Ü˜\T\ÜİÛÜ™Âˆ™\İ[š[›™\’SX]ˆÛ\ÜÏH˜Ü™Y[X[XØ\™\ÜİÛÜ™\™\İ[XØ\™Ü[‰Ü‹™Ù[™\˜]YÉÕ[\Ü˜\H\ÜİÛÜ™Ù[™\˜]Y	Î‰Ó™]È\ÜİÛÜ™Ø]™Y	ßOÜÜ[İ›Û™Ï	Ù\ØØ\R[
+İ\Ù\›˜[YJ_OÜİ›Û™ÏÛÙHYHœİY[\ÜİÛÜ™˜[YH‰Ù\ØØ\R[
+Ê_OØÛÙOÛX[”Ú\™H\È\ÜİÛÜ™Ú]HİY[ˆ]Ú[›İ™HÚİÛˆ\™HYØZ[ˆY\ˆ[İHÛÜÙH\ÈÚ[™İËÜÛX[]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜ÛÜTİY[\ÜİÛÜ™ˆ\OH˜]ÛˆÛÜH\ÜİÛÜ™Ø]ÛÙ]˜Âˆ	
+	ØÛÜTİY[\ÜİÛÜ™	ÊK›Û˜ÛXÚÏX\Ş[˜Ê
+OOİ^Ø]ØZ]˜]šYØ]Ü‹˜Û\›Ø\™Üš]U^
+ÊNÉ
+	ØÛÜTİY[\ÜİÛÜ™	ÊK^ÛÛ[IĞÛÜYY8§$ÉßXØ]ÚÉ
+	ØÛÜTİY[\ÜİÛÜ™	ÊK^ÛÛ[IĞÛÜH˜Z[Y	ß_NÂˆXØ]Ú
+J^Ü™\İ[š[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]˜BˆNÂˆ	
+	ÜÙ]İY[\ÜİÛÜ™	ÊK›Û˜ÛXÚÏJ
+OOØÛÛœİÏZ[œ]˜[YKš[J
+NÚYŠK×—ÎŒIË\İ
+ÊJ^Ü™\İ[š[›™\’SIÏ]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‘[\ˆH\ÜİÛÜ™ÛÛZ[š[™È8 $ÌŒYÚ]ËÙ]‰ÎÜ™]\›Ÿ\Ø]™JÊ_NÂˆ	
+	ÙÙ[™\˜]TİY[\ÜİÛÜ™	ÊK›Û˜ÛXÚÏJ
+OOœØ]™J	ÉÊNÂŸB™[˜İ[ÛˆÜ[•˜[œÙ™\”İY[
+Y
+^ØÛÛœİYÙ]Š
+KİY‹\Ù\œË™š[™
+OOKšYOOZY
+KÛ\ÜÙ\ÏY‹˜Û\ÜÙ\ß×Kİ\œ™[\İY[Û\ÜÊY
+NÚYŠ\İ
+\™]\›ÚYŠXÛ\ÜÙ\Ë›[™İ
+^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ•˜[œÙ™\ˆİY[ÜÜ[Ï“›È]˜Z[X›HÛ\ÜÙ\ÏÚÏÛ\ÜÏH›]]YÜ™X]HÜˆ\ÜÚYÛˆHÛ\ÜÈ™Y›Ü™H[İš[™ÈİY[ËÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[Ü™]\›Ÿ\ÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ•˜[œÙ™\ˆİY[ÜÜ[Ï‰Ù\ØØ\R[
+İ›˜[YJ_OÚÏÛ\ÜÏH›]]Yİ\œ™[Û\ÜÎˆ	Ù\ØØ\R[
+İ\œ™[Ë›˜[Y_	ø %	Ê_OÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]›Ü›HYH˜[œÙ™\”İY[›Ü›HˆÛ\ÜÏH™›Ü›KYÜšYX™[“[İ™HÈÛ\ÜÏÙ[XİYH˜[œÙ™\Û\ÜÈ‰ØÛ\ÜÙ\Ë›X\
+ÏO˜Ü[Ûˆ˜[YOH‰Ù\ØØ\P]ŠËšY
+_Hˆ	ØËšYOOXİ\œ™[ËšYÉÜÙ[XİY	Î‰ÉßO‰Ù\ØØ\R[
+Ë›˜[YJ_H0­È	Ù\ØØ\R[
+›ÛÚÓY]JË˜›ÛÚÒYË˜Ûİ\œÙWÚY
+OË]_Ë›]™[
+_OÛÜ[Û˜
+Kš›Ú[Š	ÉÊ_OÜÙ[XİÛX™[]ÛˆÛ\ÜÏHœš[X\KXˆˆ\OHœİX›Z]•˜[œÙ™\ˆİY[Ø]ÛÙ›Ü›O]ˆYH˜[œÙ™\”™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	İ˜[œÙ™\”İY[›Ü›IÊK›ÛœİX›Z]X\Ş[˜ÈOOÙKœ™]™[Y˜][
+
+NØÛÛœİYKœİX›Z]\Ÿ	
+	İ˜[œÙ™\”İY[›Ü›IÊKœ]Y\TÙ[XİÜŠ	Ø]Û–İ\OHœİX›Z]—IÊK™\İ[I
+	İ˜[œÙ™\”™\İ[	ÊKÛ\ÜÒYI
+	İ˜[œÙ™\Û\ÜÉÊK˜[YNØ‹™\ØX›Y]YNØ‹^ÛÛ[IÕ˜[œÙ™\œš[™Ë‹‹‰Îİ^ØÛÛœİ[™Ú[\Ù\ÜÚ[ÛËœ›ÛOOOIØYZ[‰ÏØØ\KØYZ[‹ÜİY[ËÉÚYKØÛ\ÜØ˜Ø\KİXXÚ\‹ÜİY[ËÉÚYKØÛ\ÜØØ]ØZ]\J[™Ú[ÛY]Ù‰ÔUÒ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJØÛ\ÜÒYJ_JNØ]ØZ]™Yœ™\Úİ]J
+NØÛÜÙS[Ù[
+
+NÜ™[™\”YÙJ
+_XØ]Ú
+\œŠ^Ø‹™\ØX›YY˜[ÙNØ‹^ÛÛ[IÕ˜[œÙ™\ˆİY[	ÎÜ™\İ[š[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+\œ‹›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[ÛˆÜ[YİY[
+
+^ØÛÛœİÛÏYÙ]Š
+K˜Û\ÜÙ\ÎÚYŠXÛË›[™İ
+^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”İY[ÏÜÜ[Ï“›ÈÛ\ÜÈ\ÜÚYÛ™YÚÏÛ\ÜÏH›]]YHŞ\İ[HYZ[ˆ]\İ\ÜÚYÛˆ]X\İÛ™HÛ\ÜÈ™Y›Ü™H[İHØ[ˆÜ™X]HİY[ËÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[Ü™]\›Ÿ\ÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ“™]ÈİY[ÜÜ[ÏÜ™X]HİY[XØÙ\ÜÏÚÏÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]›Ü›HYHœİY[›Ü›HˆÛ\ÜÏH™›Ü›KYÜšYX™[”İY[˜[YO[œ]YH›™]Ó˜[YHˆ™\]Z\™YÛX™[X™[•Ú]Ğ\[X™\[œ]YH›™]ÕÚ]Ø\ˆ\OH[ˆ]]ØÛÛ\]OH[ˆ™\]Z\™YX^[™İHˆXÙZÛ\HŠÌLˆŒÈLŒÍMÈÛX[’[˜ÛYHHÛİ[HÛÙKİ\[™ÈÚ]
+ËÜÛX[ÛX™[X™[•\Ù\›˜[YO[œ]YH›™]Õ\Ù\›˜[YHˆ™\]Z\™YXÙZÛ\H™K™ËˆZYY˜[HÛX™[X™[Û\ÜÏÙ[XİYH›™]ĞÛ\ÜÈ‰ØÛË›X\
+ÏO˜Ü[Ûˆ˜[YOH‰ØËšYH‰Ù\ØØ\R[
+Ë›˜[YJ_H0­È	Ù\ØØ\R[
+›ÛÚÓY]JË˜›ÛÚÒYË˜Ûİ\œÙWÚY
+OË]_Ë›]™[
+_OÛÜ[Û˜
+Kš›Ú[Š	ÉÊ_OÜÙ[XİÛX™[]ÛˆÛ\ÜÏHœš[X\KXˆˆ\OHœİX›Z]Ü™X]HİY[Ø]ÛÙ›Ü›O]ˆYH˜Ü™X]T™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ÜİY[›Ü›IÊK›ÛœİX›Z]X\Ş[˜ÈOOÙKœ™]™[Y˜][
+
+NØÛÛœİ˜[YOI
+	Û™]Ó˜[YIÊK˜[YKš[J
+K\Ù\›˜[YOI
+	Û™]Õ\Ù\›˜[YIÊK˜[YKš[J
+KÓİÙ\Ø\ÙJ
+KÛ\ÜÒYI
+	Û™]ĞÛ\ÜÉÊK˜[YNİ^ØÛÛœİX]ØZ]\J	ËØ\KİXXÚ\‹ÜİY[ÉËÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJÛ˜[YK\Ù\›˜[YKÛ\ÜÒYÚ]Ø\[X™\‰
+	Û™]ÕÚ]Ø\	ÊK˜[YKš[J
+_J_JNØ]ØZ]™Yœ™\Úİ]J
+NÉ
+	ØÜ™X]T™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH˜Ü™Y[X[XØ\™Ü[”İY[Ü™X]YÜÜ[İ›Û™Ï	Ù\ØØ\R[
+‹\Ù\›˜[YJ_OÜİ›Û™ÏÛÙO‰Ù\ØØ\R[
+‹[\Ü˜\T\ÜİÛÜ™
+_OØÛÙOÛX[ÛÜH\È[\Ü˜\H\ÜİÛÜ™›İËˆ]Ú[›İ™HÚİÛˆYØZ[‹ÜÛX[Ù]˜XØ]Ú
+\œŠ^É
+	ØÜ™X]T™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+\œ‹›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[Ûˆš[˜[Üš][™Ğ\ÜÙ\ÜÛY[[
+Y
+^ØÛÛœİ˜]Ï]Üš][™Ñ›ÜŠY	ÜİKXŒ‹[Œ‰ÊNÚYŠ\˜]Ê\™]\›‰ÉÎØÛÛœİİX›Z\ÜÚ[Û]Üš][™ÔİX›Z\ÜÚ[ÛŠY	ÜİKXŒ‹[Œ‰ÊKØÛÜ™OYÙ]Š
+KÜš][™ÔØÛÜ™\ÏË–ÚYOË–ÉÜİKXŒ‹[Œ‰×KØ[‘Ü˜YO\Ù\ÜÚ[ÛËœ›ÛOOOIİXXÚ\‰ÎÚYŠ\İX›Z\ÜÚ[Û‹™š[˜[
+\™]\›‰ÉÎÜ™]\›ˆÙXİ[ÛˆÛ\ÜÏHœÙXİ[ÛˆXXÚ\‹]Üš][™ËX\ÜÙ\ÜÛY[]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ[ÛÛ“\ÜÛÛˆŒˆ0­È[X[ˆÜ˜YYÜÜ[Ï‘š[˜[ŒˆÜš][™È\ÜÙ\ÜÛY[ÚÏÙ]‰ÜØÛÜ™OOO[[ØÛÜ™OOO][™Yš[™YÉÉÎ˜İ›Û™Ï‰ÜØÛÜ™_IOÜİ›Û™Ï˜OÙ]]ˆÛ\ÜÏHœİX›Z]Y]Üš][™È‰Ù\ØØ\R[
+İX›Z\ÜÚ[Û‹™š[˜[
+_OÙ]‰ØØ[‘Ü˜YOØX™[‘Ü˜YH
+8 $ÌL
+O[œ]YH™š[˜[Üš][™ÑÜ˜YHˆ\OH›[X™\ˆˆZ[HŒˆX^HŒLˆİ\HŒHˆ˜[YOH‰ÜØÛÜ™OÏÉÉßHÛX™[]ÛˆÛ\ÜÏHœš[X\KXˆˆYHœØ]™Qš[˜[Üš][™ÑÜ˜YH”Ø]™HÜ˜YOØ]Û˜˜Û\ÜÏH›]]Y‰ÜØÛÜ™OOO[[ØÛÜ™OOO][™Yš[™YÉÕØZ][™È›ÜˆXXÚ\ˆÜ˜YK‰Î‰ÕXXÚ\ˆÜ˜YHØ]™Y‰ßOÜ˜O]ˆYHÜš][™ÑÜ˜YT™\İ[Ù]ÜÙXİ[Û˜B™[˜İ[ÛˆÜ[”İY[]Z[
+Y
+^ØÛÛœİYÙ]Š
+KİY‹\Ù\œË™š[™
+OOKšYOOZY
+NÚYŠ\İİœ›ÛHOOIÜİY[	Ê\™]\›ØÛÛœİÏ]ÙXZÙ\İ
+Y
+K]ÏX][\ÊY
+KœÛXÙJLL
+Kœ™]™\œÙJ
+KÏ\İY[Û\ÜÊY
+KX›ÛÚÓY]J›ÛÚÒY›Ü”İY[
+Y
+JKÛÛ\]YXÛÛ\]YXİ]š]PÛİ[
+Y
+KØÛÜ™Y\ØÛÜ™YXİ]š]PÛİ[
+Y
+NÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXYİY[\™\ÜZXY]Û\ÜÏH™^YXœ›İÈ”İY[™\Ü0­È	Ù\ØØ\R[
+Ë]_	ÕÛÜšØ›ÛÚÉÊ_OÜÏ‰Ù\ØØ\R[
+İ›˜[YJ_OÚÏ•Ú]Ğ\ˆ	Ù\ØØ\R[
+İÚ]Ø\[X™\Ÿ	Ó›İ™XÛÜ™Y	Ê_OÜÛ\ÜÏH›]]Y‰Ù\ØØ\R[
+ÏË›˜[Y_	ÉÊ_OÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]]ˆÛ\ÜÏH™ÜšYÜšYMÛÛ\XİYÜšY‰ÖÉİ›ØØX[\IË	Û\İ[š[™ÉË	ÙÜ˜[[X\‰Ë	İÜš][™É×K›X\
+ÏOœÚÚ[Ø\™
+ÚÚ[X™[
+ÊKX\İ\JYÊK	Ô™XÛÜ™Y]™\˜YÙIÊJKš›Ú[Š	ÉÊ_OÙ]]ˆÛ\ÜÏHœÙXİ[ÛˆØ\™İ›Û™Ï‰ØÛÛ\]YHÛÛ\]YXİ]š]Y\ÏÜİ›Û™ÏÜ[ˆÛ\ÜÏH›]]Yˆ0­È	ÜØÛÜ™YHØÛÜ™YXİ]š]Y\ÏÜÜ[Ù]‰İÏØ]ˆÛ\ÜÏHÙXZÛ™\ÜÈÙXİ[Ûˆİ›Û™Ï“İÙ\İ™XÛÜ™Y\™XNˆ	İË›X™[H0­È	İËœØÛÜ™_IOÜİ›Û™ÏÜ[‰İË\OÜÜ[Ù]˜‰Ï]ˆÛ\ÜÏHÙXZÛ™\ÜÈÙXİ[Ûˆİ›Û™Ï“›ÈØÛÜ™Y\™›Ü›X[˜ÙH]šY[˜ÙHY]Üİ›Û™ÏÙ]‰ßIÜİY[\™›Ü›X[˜ÙUX›JY
+_IÙš[˜[Üš][™Ğ\ÜÙ\ÜÛY[[
+Y
+_O]ˆÛ\ÜÏHœÙXİ[Û‹ZXYÙXİ[Ûˆ]Ï”™XÙ[][\ÏÚÏ‘^XİØ]™YÛÜšØ›ÛÚÈØÛÜ™\ËÜÙ]]ÛˆÛ\ÜÏH™ÚÜİXˆˆYHœ™\Ù]\ÜÈ”\ÜİÛÜ™[Ø]ÛÙ]‰Ø]Ë›[™İØ]Ë›X\
+OO˜]ˆÛ\ÜÏH˜][\\›İÈ]İ›Û™Ï“\ÜÛÛˆ	Û\ÜÛÛRY
+K›\ÜÛÛ’Y
+OË›[X™\Ÿ	ø %	ßH0­È	ÜÚÚ[X™[
+KœÚÚ[
+_H	ÊKYÜß×JKœÛÛYJO”İš[™Ê
+Kœİ\ÕÚ]
+	Ø›ÛÜİ‰ÊJOÉÏÜ[ˆÛ\ÜÏHœ[X[›ÛÜİÜÜ[‰Î‰ÉßOÜİ›Û™ÏÜ[‰Û™]È]JK˜]
+KÓØØ[Tİš[™Ê
+_OÜÜ[Ù]İ›Û™Ï‰ØKœØÛÜ™_IOÜİ›Û™ÏÙ]˜
+Kš›Ú[Š	ÉÊN‰ÏÛ\ÜÏH›]]Y“›ÈXİ]š]H][\ÈY]Ü‰ßO]ˆYHœ™\Ù]™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	Ü™\Ù]\ÜÉÊK›Û˜ÛXÚÏJ
+OO›Ü[”İY[\ÜİÛÜ™[
+Y
+NÚYŠÙ\ÜÚ[ÛËœ›ÛOOOIİXXÚ\‰É‰‰
+	ÜØ]™Qš[˜[Üš][™ÑÜ˜YIÊJI
+	ÜØ]™Qš[˜[Üš][™ÑÜ˜YIÊK›Û˜ÛXÚÏX\Ş[˜Ê
+OOØÛÛœİØÛÜ™OS[X™\Š	
+	Ùš[˜[Üš][™ÑÜ˜YIÊK˜[YJK™\İ[I
+	İÜš][™ÑÜ˜YT™\İ[	ÊNİ^Ø]ØZ]\JØ\KİXXÚ\‹İÜš][™ËÉÚYKÜİKXŒ‹[Œ‹ÙÜ˜YXÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJÜØÛÜ™_J_JNØ]ØZ]™Yœ™\Úİ]J
+NÜ™\İ[š[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈÛÛÙ‘š[˜[Üš][™ÈÜ˜YHØ]™Yˆ	ÜØÛÜ™_IKÙ]˜XØ]Ú
+J^Ü™\İ[š[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]˜__B‚™[˜İ[ÛˆÛ\ÜÙ\Ê
+^ØÛÛœİÛÏYÙ]Š
+K˜Û\ÜÙ\Îİ]J	ÕXXÚ\‰Ë	ĞÛ\ÜÙ\ÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ\ÜÚYÛ™YÈ[İOÜÜ[O–[İ\ˆÛ\ÜÙ\ÏÚO‘XXÚÛ\ÜÈ\ÈÛÛ›™XİYÈÛ™H›ÛÚËˆH]™HÛ\ÜÈ[™\ÈÜXZÚ[™È[™›Y[˜ŞNÈ[™Û\ÚØ]H˜XÚÜÈH›İ\ˆÛÜšØ›ÛÚÈÚÚ[ËÜÙ]Ù]]ˆÛ\ÜÏH˜Û\ÜËXØ\™YÜšY‰ØÛË›X\
+ÏOØÛÛœİİÏXÛ\ÜÔİY[Ê
+K™š[\ŠİOœİ˜Û\ÜÒYÏËš[˜ÛY\ÊËšY
+JK]™Ï\İË›[™İÓX]œ›İ[™
+İËœ™YXÙJ
+Kİ
+OO˜JØÛÛ\][Û”İ
+İšY
+K
+KÜİË›[™İ
+NŒX›ÛÚÓY]JË˜›ÛÚÒYË˜Ûİ\œÙWÚY
+NÜ™]\›ˆ\XÛHÛ\ÜÏH›X[˜YÙ[Y[XØ\™]ˆÛ\ÜÏH›X[˜YÙ[Y[XØ\™ZXYÜ[ˆÛ\ÜÏHœ[X[‰Ù\ØØ\R[
+Ë›]™[
+_OÜÜ[Ü[‰ÜİË›[™İHİY[ÏÜÜ[Ù]Ï‰Ù\ØØ\R[
+Ë›˜[YJ_OÚÏÛ\ÜÏH˜›ÛÚË[[™H›ÛÚÎˆİ›Û™Ï‰Ù\ØØ\R[
+Ë]_Ë˜Ûİ\œÙWÚY
+_OÜİ›Û™ÏÜ‰Ø]™ßIH]™\˜YÙH™XÛÜ™YÛÛ\][ÛÜ‰Ü›ÙÜ™\ÜÊ]™Ê_OØ\XÛO˜JKš›Ú[Š	ÉÊ_	Ï]ˆÛ\ÜÏH™[\K\İ]HÏ“›ÈÛ\ÜÙ\ÈY]ÚÏ–[İ\ˆŞ\İ[HYZ[ˆ]\İÜ™X]HHÛ\ÜÈ[™\ÜÚYÛˆ]È[İKÜÙ]‰ßOÙ]˜B™[˜İ[ÛˆYÙÜ™YØ]UÙXZÛ™\ÜÙ\Ê
+^ØÛÛœİX\^ßNØÛ\ÜÔİY[Ê
+K™›Ü‘XXÚ
+ÏOØÛÛœİÏ]ÙXZÙ\İ
+ËšY
+NÚYŠ]Ê\™]\›ÛX\İËšÙ^WO[X\İËšÙ^W_ÚÙ^NËšÙ^KX™[Ë›X™[Ûİ[Œİ[ŒNÛX\İËšÙ^WK˜Ûİ[
+ÊÎÛX\İËšÙ^WKİ[
+Ï]ËœØÛÜ™_JNÜ™]\›ˆØš™Xİ˜[Y\ÊX\
+K›X\
+OŠË‹‹]™Î“X]œ›İ[™
+İ[Ş˜Ûİ[
+_JJKœÛÜ
+
+KŠOO˜‹˜Ûİ[XK˜Ûİ[K˜]™ËX‹˜]™Ê_B‚™[˜İ[ÛˆÙXZÛ™\ÜÙ\Ê
+^ØÛÛœİ\™X\ÏXYÙÜ™YØ]UÙXZÛ™\ÜÙ\Ê
+KİY[ÏXÛ\ÜÔİY[Ê
+Nİ]J	ÕXXÚ\ˆ[[YÙ[˜ÙIË	Ô™XÛÜ™Y\™›Ü›X[˜ÙIÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™ÜšYÜšYLˆ]ˆÛ\ÜÏH˜Ø\™Ï“İÙ\İ™XÛÜ™YÚÚ[]™\˜YÙ\ÏÚÏÛ\ÜÏH›]]YØ[İ[]YÛ›Hœ›ÛHØ]™YØÛÜ™YXİ]š]Y\ËˆİY[ÈÚ]İ]ØÛÜ™Y]šY[˜ÙH\™H^ÛYYÜ‰Ø\™X\Ë›[™İØ\™X\Ë›X\
+OO˜]ˆÛ\ÜÏHœ]Y\İ[Ûˆ]ˆİ[OH™\Ü^N™›^Ú\İYKXÛÛ[œÜXÙKX™]ÙY[ˆİ›Û™Ï‰ØK›X™[OÜİ›Û™ÏÜ[ˆÛ\ÜÏHœ[	ØK˜]™ÏOÉÙÛÛ	Î‰İX[	ßH‰ØK˜Ûİ[HİY[	ØK˜Ûİ[OOLOÉÜÉÎ‰ÉßOÜÜ[Ù]]ˆİ[OH›X\™Ú[‹]ÜŒL‰Ü›ÙÜ™\ÜÊK˜]™Ê_OÙ]ÛX[Û\ÜÏH›]]Y”™XÛÜ™Y]™\˜YÙH	ØK˜]™ßIOÜÛX[Ù]˜
+Kš›Ú[Š	ÉÊN‰ÏÛ\ÜÏH›]]Y“›ÈØÛÜ™Y]šY[˜ÙHY]Ü‰ßOÙ]]]ˆÛ\ÜÏH˜Ø\™Ï”İY[]šY[˜ÙOÚÏ‰ÜİY[Ë›X\
+İOØÛÛœİÏ]ÙXZÙ\İ
+İšY
+NÜ™]\›ˆİ›Û™Ï‰Ù\ØØ\R[
+İ›˜[YJ_NÜİ›Û™Ïˆ	İÏØ	İË›X™[H	İËœØÛÜ™_IX‰Ó›ÈØÛÜ™Y]šY[˜ÙIßOÜ˜JKš›Ú[Š	ÉÊ_OÙ]Ù]Ù]˜B‚™[˜İ[Ûˆ™\ÜÊ
+^ØÛÛœİİÏ\™\ÜİY[Ê
+KYÏ[™]ÈÙ]
+İË›X\
+ÏOœËšY
+JK]ÏYÙ]Š
+K˜][\Ë™š[\ŠOOšYËš\ÊKœİY[Y
+JK]™ĞÛÛ\\İË›[™İÓX]œ›İ[™
+İËœ™YXÙJ
+Kİ
+OO˜JØÛÛ\][Û”İ
+İšY
+K
+KÜİË›[™İ
+NŒØÛÜ™YİY[Ï\İË›X\
+İO›İ™\˜[
+İšY
+JK™š[\Š[X™\‹š\Ñš[š]JK]™ÔØÛÜ™O\ØÛÜ™YİY[Ë›[™İÓX]œ›İ[™
+ØÛÜ™YİY[Ëœ™YXÙJ
+KŠOO˜JØ‹
+KÜØÛÜ™YİY[Ë›[™İ
+N›[İ]JÙ\ÜÚ[ÛËœ›ÛOOOIØYZ[‰ÏÉÔŞ\İ[HYZ[‰Î‰ÕÛÜšØ›ÛÚÈ]šY[˜ÙIË	ÔİY[\™›Ü›X[˜ÙIÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™ÜšYÜšYLÈ‰ÛY]šXÊ	ÕÛÜšØ›ÛÚÈÛÛ\][Û‰Ë]™ĞÛÛ\
+ÉÉIË	Ñ^XİÛÛ\][Ûˆ™XÛÜ™ÉÊ_IÛY]šXÊ	Ô™XÛÜ™YØÛÜ™H]™\˜YÙIË[X™\‹š\Ñš[š]J]™ÔØÛÜ™JOØ]™ÔØÛÜ™JÉÉIÎ‰ø %	ËØÛÜ™YİY[Ë›[™İ
+ÉÈİY[ÈÚ]ØÛÜ™\ÉÊ_IÛY]šXÊ	Ğ][\ÈØ]™Y	Ë]Ë›[™İ	Ñ^Xİ˜XİXÙH™XÛÜ™ÉÊ_OÙ]ÙXİ[ÛˆÛ\ÜÏHœÙXİ[ÛˆØ\™]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ï‘]Z[YİY[]šY[˜ÙOÚÏ“\ÜÛÛˆH\İ[š[™È	ˆ™XY[™È\È[İY[™]šY]È›Üˆ]™\HÛÜšØ›ÛÚÈ\ÜÛÛ‹ÜÙ]Ù]]ˆÛ\ÜÏHX›K]Ü˜\X›HÛ\ÜÏH™]K]X›HXY”İY[İÛ\ÜÏİ›ÛÚÏİ“\ÜÛÛˆH\İ[š[™È	ˆ™XY[™Ïİ“]\İXİ]š]OİÛÛ\][Ûİ“İ™\˜[İİİİXY›ÙO‰ÜİË›X\
+İOØÛÛœİš\œİYš\œİ™XYS\ÜÛÛ‘›ÜŠİšY
+K]\İ[]\İXİ]š]Q›ÜŠİšY
+KÏ[İ™\˜[
+İšY
+NÜ™]\›ˆ‰Ù\ØØ\R[
+İ›˜[YJ_Oİ‰Ù\ØØ\R[
+İY[Û\ÜÓ˜[YJİ
+J_Oİ‰Ù\ØØ\R[
+›ÛÚÓY]J›ÛÚÒY›Ü”İY[
+İšY
+JOË]_	ø %	Ê_Oİ‰Ùš\œİÛ\ÜÛÛ”ÚÚ[Ù[
+İšYš\œİšY	Û\İ[š[™ÉÊN‰ø %	ßOİ‰Û]\İØ\ÜÛÛˆ	Û\ÜÛÛRY
+]\İ›\ÜÛÛ’Y
+OË›[X™\Ÿ	ø %	ßH0­È	ÜÚÚ[X™[
+]\İœÚÚ[
+_H0­È	Û]\İœØÛÜ™_IX‰ø %	ßOİ‰ØÛÛ\][Û”İ
+İšY
+_IOİ‰Ó[X™\‹š\Ñš[š]JÊOÛÊÉÉIÎ‰ø %	ßOİ]ˆÛ\ÜÏH›X[˜YÙ[Y[\›İË[Y]H]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]K]˜[œÙ™\‹\İY[H‰ÜİšYH•˜[œÙ™\Ø]Û]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]K\™]šY]Ë\İY[H‰ÜİšYH”™]šY]ÏØ]ÛÙ]İİ˜JKš›Ú[Š	ÉÊ_	ÏÛÛÜ[H“›ÈİY[È›İ[™İİ‰ßOİ›ÙOİX›OÙ]ÜÙXİ[Û˜Øš[™İY[Xİ[ÛœÊ
+_B‚˜\Ş[˜È[˜İ[ÛˆXY\˜›Ø\™
+XXÚ\Y˜[ÙJ^Âˆ]J	Ñ[™Û\ÚØ]IË	ÓXY\˜›Ø\™	ÊNÂˆÛÛœİÛÛ[I
+	ØÛÛ[	ÊNÂˆÛÛ[š[›™\’SIÏÙXİ[ÛˆÛ\ÜÏHœ›Ù™\ÜÚ[Û˜[[XY\˜›Ø\™]ˆÛ\ÜÏH›XY\˜›Ø\™[ØY[™È“ØY[™ÈXY\˜›Ø\™8 )Ù]ÜÙXİ[Û‰ÎÂˆ^ÂˆÛÛœİ™\İ[X]ØZ]\J	ËØ\KÛXY\˜›Ø\™	ÊK›İÜÏP\œ˜^Kš\Ğ\œ˜^J™\İ[œİY[ÊOÜ™\İ[œİY[Î–×KYO\›İÜË™š[™
+OšYOO\Ù\ÜÚ[Û‹šY
+KÜ\›İÜËœÛXÙJÊNÂˆÛÛœİ˜[šÕ^[YOØÉÛYKœ˜[šßHÙˆ	Ü›İÜË›[™İX‰ÕšY]ÈÛ›IÎÂˆÛÛ[š[›™\’SXÙXİ[ÛˆÛ\ÜÏHœ›Ù™\ÜÚ[Û˜[[XY\˜›Ø\™‚ˆ]ˆÛ\ÜÏH›XY\˜›Ø\™Z\›È‚ˆ]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ[Xİ]™HX\›™\œÏÜÜ[O“X\›š[™ÈXY\˜›Ø\™ÚO”›Ù™\ÜÚ[Û˜[›ÙÜ™\ÜÈšY]È˜\ÙYÛˆH˜[[˜ÙYØÛÜ™Nˆ™XÛÜ™Y\™›Ü›X[˜ÙKÛÜšØ›ÛÚÈÛÛ\][Û‹[™ÛÛœÚ\İ[˜XİXÙKÜÙ]‚ˆ]ˆÛ\ÜÏH›XY\˜›Ø\™[^K\İ[™[™ÈÛX[‰İXXÚ\ÉÓX\›™\œÈ˜[šÙY	Îˆ	Ö[İ\ˆİ[™[™ÉßOÜÛX[İ›Û™Ï‰İXXÚ\Ü›İÜË›[™İ™\ØØ\R[
+˜[šÕ^
+_OÜİ›Û™ÏÜ[‰İXXÚ\ÉĞXÜ›ÜÜÈ[™Û\ÚØ]IÎ›YOØ	ÛYKœØÛÜ™_IH\™›Ü›X[˜ÙHØÛÜ™X‰ĞÛÛ\]H[ˆXİ]š]HÈ[\ˆH˜[šÚ[™ÉßOÜÜ[Ù]‚ˆÙ]‚ˆ	İÜ›[™İØ]ˆÛ\ÜÏH›XY\˜›Ø\™]Ü]™YH‰İÜ›X\
+İO˜\XÛHÛ\ÜÏH›XY\˜›Ø\™]ÜXØ\™	ÜİšYOO\Ù\ÜÚ[Û‹šYÉÚ\Ë[YIÎ‰ÉßHÜ[ˆÛ\ÜÏH›XY\˜›Ø\™\˜[šË[X™[ˆÉÜİœ˜[šßOÜÜ[]ˆÛ\ÜÏH›XY\˜›Ø\™X]˜]\ˆ‰Ù\ØØ\R[
+
+İ›˜[Y_	ÏÉÊVÌJ_OÙ]]İ›Û™Ï‰Ù\ØØ\R[
+İ›˜[YJ_IÜİšYOO\Ù\ÜÚ[Û‹šYÉÈ0­È[İIÎ‰ÉßOÜİ›Û™ÏÛX[‰Ù\ØØ\R[
+İ˜Û\ÜÓ˜[Y_İ›]™[	Ñ[™Û\ÚØ]HX\›™\‰Ê_OÜÛX[Ù]]ˆÛ\ÜÏH›XY\˜›Ø\™]Ü[Y]šXÜÈÜ[‰ÜİœØÛÜ™_IOØˆØÛÜ™OÜÜ[Ü[‰Üİ˜ÛÛ\][ÛŸIOØˆÛÛ\]OÜÜ[Ü[‰Ó[X™\‹š\Ñš[š]Jİ˜]™\˜YÙJOÜİ˜]™\˜YÙJÉÉIÎ‰ø %	ßOØˆ]™\˜YÙOÜÜ[Ù]Ø\XÛO˜
+Kš›Ú[Š	ÉÊ_OÙ]˜‰ÉßBˆ]ˆÛ\ÜÏH›XY\˜›Ø\™]X›KXØ\™‚ˆ]ˆÛ\ÜÏH›XY\˜›Ø\™]X›KZXY][İY[ÏÚ”˜[šÚ[™È\]\ÈÚ[ˆİY[ÈÛÛ\]HÛÜšØ›ÛÚÈXİ]š]Y\È[™İX›Z]ØÛÜ™YÛÜšËÜÙ]Ü[‰Ü›İÜË›[™İHX\›™\œÏÜÜ[Ù]‚ˆ]ˆÛ\ÜÏH›XY\˜›Ø\™]X›K]Ü˜\X›HÛ\ÜÏHœ›Ù™\ÜÚ[Û˜[[XY\˜›Ø\™]X›HXY”˜[šÏİ“X\›™\İÛ\ÜÏİ”ØÛÜ™Oİ]™\˜YÙOİÛÛ\][Ûİ”˜XİXÙOİİİXY›ÙO‚ˆ	Ü›İÜË›X\
+İO˜ˆÛ\ÜÏH‰ÜİšYOO\Ù\ÜÚ[Û‹šYÉÚ\Ë[YIÎ‰ÉßHÜ[ˆÛ\ÜÏH›XY\˜›Ø\™\˜[šË[[X™\ˆˆÉÜİœ˜[šßOÜÜ[İ]ˆÛ\ÜÏH›XY\˜›Ø\™\\œÛÛˆÜ[ˆÛ\ÜÏH›XY\˜›Ø\™X]˜]\ˆÛX[‰Ù\ØØ\R[
+
+İ›˜[Y_	ÏÉÊVÌJ_OÜÜ[]İ›Û™Ï‰Ù\ØØ\R[
+İ›˜[YJ_IÜİšYOO\Ù\ÜÚ[Û‹šYÉÈ0­È[İIÎ‰ÉßOÜİ›Û™ÏÛX[‰Ù\ØØ\R[
+İ˜›ÛÚÕ]_İ›]™[	Ñ[™Û\ÚX\›™\‰Ê_OÜÛX[Ù]Ù]İ‰Ù\ØØ\R[
+İ˜Û\ÜÓ˜[Y_	ø %	Ê_Oİİ›Û™Ï‰ÜİœØÛÜ™_IOÜİ›Û™Ïİİ›Û™Ï‰Ó[X™\‹š\Ñš[š]Jİ˜]™\˜YÙJOÜİ˜]™\˜YÙJÉÉIÎ‰ø %	ßOÜİ›Û™Ïİ‰Üİ˜ÛÛ\][ÛŸIOİ‰Üİ˜ÛÛ\]YHÛ™H0­È	ÜİœØÛÜ™YHØÛÜ™Yİİ˜
+Kš›Ú[Š	ÉÊ_	ÏÛÛÜ[HÈ“›ÈX\›™\ˆXİ]š]HY]İİ‰ßBˆİ›ÙOİX›OÙ]‚ˆÙ]‚ˆÛ\ÜÏH›XY\˜›Ø\™[Y]Ù”˜[šÚ[™ÈY]ÙˆIH™XÛÜ™YXİ]š]H]™\˜YÙKÍIHÛÜšØ›ÛÚÈÛÛ\][Û‹Œ	H˜XİXÙHÛÛœÚ\İ[˜ŞKˆ›ÈÛÛXİ[™›Ü›X][Ûˆ\ÈÚİÛ‹Ü‚ˆÜÙXİ[Û˜ÂˆXØ]Ú
+J^ØÛÛ[š[›™\’SXÙXİ[ÛˆÛ\ÜÏHœ›Ù™\ÜÚ[Û˜[[XY\˜›Ø\™]ˆÛ\ÜÏH™™YY˜XÚÈ˜YÛİ[›İØYHXY\˜›Ø\™ˆ	Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]ÜÙXİ[Û˜BŸB™[˜İ[ÛˆYZ[›ÛÚÜÊ
+^ÂˆÛÛœİ›ÛÚÜÏYÙ]Š
+K˜›ÛÚÜß×NÂˆ]J	ÔŞ\İ[HYZ[‰Ë	Ğ›ÛÚÜÉÊNÂˆ	
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏH˜›ÛÚË[Xœ˜\H‚ˆ]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆİ\œšXİ[[Hœ›İÜÙ\ÜÜ[O›ÛÚÜÏÚO”Ş\İ[HYZ[ˆØ[ˆœ›İÜÙH›İH\ÜÛÛˆ›ÛÚÈ[™HX]Ú[™ÈÛÜšØ›ÛÚÈÚ]İ]›Ú[š[™ÈHÛ\ÜËÜÙ]Ù]‚ˆ]ˆÛ\ÜÏH˜›ÛÚËXØ\™YÜšY‚ˆ	Ø›ÛÚÜË›X\
+OÂˆÛÛœİXÚÏP“ÓÒ×ÔPÒÔÖØ‹šYK™XYPÛİ[\XÚÏÜ™XYS\ÜÛÛœÊXÚÊK›[™İŒØ[•\ÙOVÉÜ™XYIË	Ü[İ	×Kš[˜ÛY\Ê‹œİ]\ÊI‰›ÛÛX[ŠXÚÊNÂˆ™]\›ˆ\XÛHÛ\ÜÏH˜›ÛÚËXØ\™‚ˆ]ˆÛ\ÜÏH˜›ÛÚËXØ\™]ÜÜ[ˆÛ\ÜÏHœ[X[‰Ù\ØØ\R[
+‹›]™[
+_OÜÜ[Ü[ˆÛ\ÜÏH˜›ÛÚË\İ]\È	Ø‹œİ]\ßH‰Ø‹œİ]\ÏOOIÜ[İ	ÏÉÔ[İ	Î˜‹œİ]\ÏOOIÜ™XYIÏÉÔ™XYIÎ‰Ô]Y]YY	ßOÜÜ[Ù]‚ˆ]ˆÛ\ÜÏH˜›ÛÚËXÛİ™\‹[Z[šHÜ[‘[™Û\ÚØ]OÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+‹]J_OÜİ›Û™ÏÛX[‰Ø‹İ[\ÜÛÛœßH\ÜÛÛœÏÜÛX[Ù]‚ˆ‰Ù\ØØ\R[
+‹˜]YY[˜Ù_	ÉÊ_OÜ‚ˆ]ˆÛ\ÜÏH˜›ÛÚËXØ\™[Y]HÜ[‰Ü™XYPÛİ[KÉØ‹İ[\ÜÛÛœßHYÚ][\ÜÛÛœÈ™XYOÜÜ[Ü[•›ØØX[\H0­È\İ[š[™È	ˆ™XY[™È0­ÈÜ˜[[X\ˆ0­ÈÜš][™ÏÜÜ[Ù]‚ˆ]ˆÛ\ÜÏH˜›ÛÚËXØ\™XXİ[ÛœÈ‚ˆ	ØØ[•\ÙOØ]ÛˆÛ\ÜÏHœš[X\KXˆˆ]K[Ü[‹[\ÜÛÛ‹X›ÛÚÏH‰Ø‹šYH“Ü[ˆ\ÜÛÛˆ›ÛÚÏØ]Û˜‰ÉßBˆ	ÜXÚÏØ]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]KXœ›İÜÙKX›ÛÚÏH‰Ø‹šYHœ›İÜÙHÛÜšØ›ÛÚÏØ]Û˜˜]ÛˆÛ\ÜÏH™ÚÜİXˆˆ\ØX›Y•ÛÜšØ›ÛÚÈ›İYÚ]^™YY]Ø]Û˜Bˆ	ØØ[•\ÙOØ]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]KXÛ\ÜËX›ÛÚÏH‰Ø‹šYHÜ™X]HÛ\ÜÏØ]Û˜‰ÉßBˆ]ÛˆÛ\ÜÏH™ÚÜİXˆ[™Ù\‹XXİ[Ûˆˆ]KXYZ[‹Y[]KX›ÛÚÏH‰Ù\ØØ\P]Š‹šY
+_Hˆ]K[˜[YOH‰Ù\ØØ\P]Š‹]J_H‘[]H›ÛÚÏØ]Û‚ˆÙ]‚ˆØ\XÛO˜ÂˆJKš›Ú[Š	ÉÊ_BˆÙ]‚ˆÜÙXİ[Û˜ÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K[Ü[‹[\ÜÛÛ‹X›ÛÚ×IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏX\Ş[˜Ê
+OOÂˆÛÛœİYX‹™]\Ù]›Ü[“\ÜÛÛ›ÛÚÎÂˆ]ØZ][œİ\™S]™P›ÛÚÜÊ
+NÂˆYŠ\Ù]Xİ]™P›ÛÚÊY
+J\™]\›ÂˆXİ]™UXXÚ\“\ÜÛÛ“[X™\LNÂˆXİ]™UXXÚ\”ÙXİ[Û’[™^LÂˆİ\œ™[YÙOIØYZ[‹[]™KX›ÛÚËXœ›İÜÙIÎÂˆ™[™\“˜]Š
+NÂˆYZ[“]™P›ÛÚĞœ›İÜÙJ
+NÂˆJNÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXœ›İÜÙKX›ÛÚ×IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OOÂˆÙ]Xİ]™P›ÛÚÊ‹™]\Ù]˜œ›İÜÙP›ÛÚÊNÂˆİ\œ™[YÙOIØYZ[‹X›ÛÚËXœ›İÜÙIÎÂˆ™[™\“˜]Š
+NÂˆYZ[›ÛÚĞœ›İÜÙJ
+NÂˆJNÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXÛ\ÜËX›ÛÚ×IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[YZ[Û\ÜÊ‹™]\Ù]˜Û\ÜĞ›ÛÚÊJNÂˆš[™YZ[›ÛÚĞXİ[ÛœÊ
+NÂŸB™[˜İ[Ûˆš[™YZ[›ÛÚĞXİ[ÛœÊ
+^ÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXYZ[‹Y[]KX›ÛÚ×IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[YZ[›ÛÚÑ[]J‹™]\Ù]˜YZ[‘[]P›ÛÚË‹™]\Ù]›˜[YJJ_B™[˜İ[ÛˆYZ[Xİ]™S]™P›ÛÚÊ
+^ÂˆÛÛœİ›ÛÚÜÏSU‘WĞ“ÓÒ×ĞĞPÒ_Ú[™İË“U‘WĞ“ÓÒÔßßNÂˆ™]\›ˆ›ÛÚÜÖØXİ]™P›ÛÚÒY_[ÂŸB˜\Ş[˜È[˜İ[ÛˆYZ[“]™P›ÛÚĞœ›İÜÙJ
+^Âˆ]ØZ][œİ\™S]™P›ÛÚÜÊ
+NÂˆÛÛœİ]™OXYZ[Xİ]™S]™P›ÛÚÊ
+KØP“ÓÒ×ÔPÒÔÖØXİ]™P›ÛÚÒYKY]OX›ÛÚÓY]JXİ]™P›ÛÚÒY
+_İ]N›]™OË]_ØË]_	Ğ›ÛÚÉË]™[ØË›]™[	ÉßNÂˆYŠ[]™J^Øİ\œ™[YÙOIØYZ[‹X›ÛÚÜÉÎÜ™[™\“˜]Š
+NØYZ[›ÛÚÜÊ
+NÜ™]\›ŸBˆ]J	ÔŞ\İ[HYZ[‰Ë	Ó\ÜÛÛˆ›ÛÚÉÊNÂˆ	
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏHXXÚ\‹X›ÛÚË\Ú[YZ[‹[]™KX›ÛÚË\Ú[‚ˆ]ÛˆÛ\ÜÏH˜˜XÚË[[šÈˆYH˜YZ[˜XÚĞ›ÛÚÓXœ˜\H¸¡¤›ÛÚÜÏØ]Û‚ˆ]ˆÛ\ÜÏH˜Ûİ\œÙKZ[›È]Ü[ˆÛ\ÜÏHœ[X[‰Ù\ØØ\R[
+Y]K›]™[	ÉÊ_OÜÜ[O‰Ù\ØØ\R[
+]™K]_Y]K]J_OÚOYZ[ˆ™]šY]È0­Èœ›İÜÙHHØ[YH\ÜÛÛˆ›ÛÚÈ\ÙYHXXÚ\œÈ[™İY[ËÜÙ]]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜YZ[“Ü[•ÛÜšØ›ÛÚÑœ›ÛS]™Hœ›İÜÙHÛÜšØ›ÛÚÏØ]ÛÙ]‚ˆ]ˆÛ\ÜÏHXXÚ\‹[\ÜÛÛ‹[\İ‰Û]™K›\ÜÛÛœË›X\
+OØÛÛœİÏ]ØË›\ÜÛÛœÏË™š[™
+O›[X™\OO[›[X™\ŠNÜ™]\›ˆ]ÛˆÛ\ÜÏHXXÚ\‹[]™K\›İÈˆ]KXYZ[‹[]™K[\ÜÛÛH‰Û›[X™\ŸHÜ[ˆÛ\ÜÏHXXÚ\‹[]™K[[H‰Û›[X™\ŸOÜÜ[Ü[İ›Û™Ï‰Ù\ØØ\R[
+]J_OÜİ›Û™ÏÛX[‰İÏÉÓX]Ú[™ÈÛÜšØ›ÛÚÈ]˜Z[X›IÎ‰ÕÛÜšØ›ÛÚÈX]Ú[˜]˜Z[X›IßOÜÛX[ÜÜ[“Ü[ˆ8¡¤ØØ]Û˜JKš›Ú[Š	ÉÊ_OÙ]‚ˆÜÙXİ[Û˜Âˆ	
+	ØYZ[˜XÚĞ›ÛÚÓXœ˜\IÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIØYZ[‹X›ÛÚÜÉÎÜ™[™\“˜]Š
+NØYZ[›ÛÚÜÊ
+_NÂˆ	
+	ØYZ[“Ü[•ÛÜšØ›ÛÚÑœ›ÛS]™IÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIØYZ[‹X›ÛÚËXœ›İÜÙIÎÜ™[™\“˜]Š
+NØYZ[›ÛÚĞœ›İÜÙJ
+_NÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXYZ[‹[]™K[\ÜÛÛ—IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OOØXİ]™UXXÚ\“\ÜÛÛ“[X™\S[X™\Š‹™]\Ù]˜YZ[“]™S\ÜÛÛŠNØXİ]™UXXÚ\”ÙXİ[Û’[™^LØİ\œ™[YÙOIØYZ[‹[]™K[\ÜÛÛ‰ÎÜ™[™\“˜]Š
+NØYZ[“]™S\ÜÛÛŠ
+_JNÂŸB˜\Ş[˜È[˜İ[ÛˆYZ[“]™S\ÜÛÛŠ
+^Âˆ]ØZ][œİ\™S]™P›ÛÚÜÊ
+NÂˆÛÛœİ]™OXYZ[Xİ]™S]™P›ÛÚÊ
+KØP“ÓÒ×ÔPÒÔÖØXİ]™P›ÛÚÒYNÂˆYŠ[]™J^Øİ\œ™[YÙOIØYZ[‹[]™KX›ÛÚËXœ›İÜÙIÎØYZ[“]™P›ÛÚĞœ›İÜÙJ
+NÜ™]\›ŸBˆÛÛœİ[]™K›\ÜÛÛœË™š[™
+O›[X™\OOXXİ]™UXXÚ\“\ÜÛÛ“[X™\Š_]™K›\ÜÛÛœÖÌKÏ]ØË›\ÜÛÛœÏË™š[™
+O›[X™\OO[›[X™\ŠNÂˆXİ]™UXXÚ\“\ÜÛÛ“[X™\[›[X™\ÂˆÛÛœİÙXİ[ÛœÏ[]™TÙXİ[ÛœÊ˜ÛÛ[
+Kİ[\ÙXİ[ÛœË›[™İÂˆXİ]™UXXÚ\”ÙXİ[Û’[™^SX]›X^
+X]›Z[ŠXİ]™UXXÚ\”ÙXİ[Û’[™^X]›X^
+İ[LJJJNÂˆÛÛœİÙXİ[Û\ÙXİ[ÛœÖØXİ]™UXXÚ\”ÙXİ[Û’[™^K\Ó\İXXİ]™UXXÚ\”ÙXİ[Û’[™^OO]İ[LKÛØ[[\ÜÛÛØ[‘ÑÛØ[
+
+KİYÙS˜[YO\ÙXİ[ÛÜÙXİ[Û“X™[
+ÙXİ[Û‹]KXİ]™UXXÚ\”ÙXİ[Û’[™^İ[
+N‰Ó\ÜÛÛˆ[˜]˜Z[X›IÎÂˆ]J	ÔŞ\İ[HYZ[‰Ë	Ó\ÜÛÛˆ	ÊÛ›[X™\ŠNÂˆÛÛœİİYÙ\Ï\ÙXİ[ÛœË›X\
+
+JOO˜]ÛˆÛ\ÜÏH™YË\İYÙH	ÚOOOXXİ]™UXXÚ\”ÙXİ[Û’[™^ÉÚ\ËXİ\œ™[	Î‰ÉßHˆ]KXYZ[‹[]™K\ÙXİ[ÛH‰Ú_Hˆ	ÚOOOXXİ]™UXXÚ\”ÙXİ[Û’[™^ÉØ\šXKXİ\œ™[Hœİ\‰Î‰ÉßOÜ[‰ÚJÌ_OÜÜ[İ›Û™Ï‰Ù\ØØ\R[
+ÙXİ[Û“X™[
+]KKİ[
+KÓİÙ\Ø\ÙJ
+J_OÜİ›Û™ÏØ]Û˜
+Kš›Ú[Š	ÉÊNÂˆÛÛœİ™^Xİ[ÛH]İ[ÉÉÎˆZ\Ó\İÉÏ]ÛˆÛ\ÜÏHœš[X\KXˆˆYH›™^YZ[“]™TÙXİ[Ûˆ“™^İYÙH8¡¤Ø]Û‰ÎÉ‰Ëœ™XYHOOY˜[ÙOÉÏ]ÛˆÛ\ÜÏHœš[X\KXˆˆYH›Ü[YZ[•ÛÜšØ›ÛÚÑœ›ÛS\ÜÛÛˆ“Ü[ˆX]Ú[™ÈÛÜšØ›ÛÚÈ8¡¤Ø]Û‰Î‰ÏÜ[ˆÛ\ÜÏH™YË][˜]˜Z[X›H“X]Ú[™ÈÛÜšØ›ÛÚÈ\È›İ]˜Z[X›HY]ÜÜ[‰ÎÂˆ	
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏH™YË[\ÜÛÛˆYZ[‹[]™KX›ÛÚÈ‚ˆXY\ˆÛ\ÜÏH™YË[\ÜÛÛ‹ZXY\ˆ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜˜XÚĞYZ[“]™P›ÛÚÈ¸¡¤\ÜÛÛœÏØ]Û]YZ[ˆ™]šY]È0­È	Ù\ØØ\R[
+]™K]J_OÜO“\ÜÛÛˆ	Û›[X™\ŸH0­È	Ù\ØØ\R[
+]J_OÚOÙ]‰İÉ‰Ëœ™XYHOOY˜[ÙOÉÏ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH›Ü[YZ[•ÛÜšØ›ÛÚÕÜ•ÛÜšØ›ÛÚÏØ]Û‰Î‰ÉßOÚXY\‚ˆ]ˆÛ\ÜÏH™YË[\ÜÛÛ‹[^[İ]\ÚYHÛ\ÜÏH™YË\İYÙK[\İÛ\ÜÏH™YË[X™[“\ÜÛÛˆİYÙ\ÏÜ˜]ˆ\šXK[X™[H“\ÜÛÛˆİYÙ\È‰ÜİYÙ\ßOÛ˜]‰ÙÛØ[Ø]Z[ÈÛ\ÜÏH™YËYÛØ[İ[[X\O“\ÜÛÛˆÛØ[Üİ[[X\O‰Ù\ØØ\R[
+ÛØ[
+_OÜÙ]Z[Ï˜‰ÉßOØ\ÚYO‚ˆ]ˆÛ\ÜÏH™YË]XXÚ[™Ë\İ\™˜XÙHXY\ˆÛ\ÜÏH™YË\İYÙKZXY[™ÈÛ\ÜÏH™YË[X™[‰İİ[ÉÔİYÙH	ÊÊXİ]™UXXÚ\”ÙXİ[Û’[™^
+ÌJJÉÈÙˆ	Êİİ[‰Ó›ÈİYÙ\ÉßOÜˆYH›]™TİYÙU]HˆXš[™^H‹LH‰Ù\ØØ\R[
+İYÙS˜[YKÓİÙ\Ø\ÙJ
+J_OÚÚXY\‚ˆ\XÛHÛ\ÜÏH›]™KX›ÛÚËXÛÛ[YË\İYÙKXÛÛ[ˆ\šXK[X™[YOH›]™TİYÙU]H‰ØXİ]™UXXÚ\”ÙXİ[Û’[™^OOLÛ\ÜÛÛ•š\İX[[
+
+N‰ÉßIÜÙXİ[ÛÜ™[™\“]™PÛÛ[
+]™TÙXİ[ÛÛÛ[
+ÙXİ[ÛŠKœÜ]
+	×‰ÊK™š[\Š[™OOˆK×“TÔÓÓ—Ê×
+ß•ÑQR×Ê×
+ËŠ“TÔÓÓ—Ê×
+ËÚK\İ
+[™Kš[J
+JJKš›Ú[Š	×‰ÊJN‰Ï•\È\ÜÛÛˆ\È›ÈXXÚ[™ÈÛÛ[Y]Ü‰ßOØ\XÛO‚ˆ	Ú\Ó\İØ]ˆÛ\ÜÏH™YË]ÛÜšØ›ÛÚË[›İH‰İÏØİ›Û™Ï“X]Ú[™ÈÛÜšØ›ÛÚÏÜİ›Û™ÏÜ[•ÛÜšØ›ÛÚÈ	İË›[X™\ŸH0­È	Ù\ØØ\R[
+Ë]J_OÜÜ[˜‰ÏÜ[“›ÈX]Ú[™ÈÛÜšØ›ÛÚÈ›Üˆ\È\ÜÛÛ‹ÜÜ[‰ßOÙ]˜‰ÉßBˆ›Ûİ\ˆÛ\ÜÏH™YË[\ÜÛÛ‹Y›Ûİ\ˆ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYHœ™]YZ[“]™TÙXİ[Ûˆˆ	ØXİ]™UXXÚ\”ÙXİ[Û’[™^OOLÉÙ\ØX›Y	Î‰ÉßO¸¡¤™]š[İ\ÏØ]Û‰Û™^Xİ[ÛŸOÙ›Ûİ\Ù]Ù]‚ˆÜÙXİ[Û˜Âˆ	
+	Ø˜XÚĞYZ[“]™P›ÛÚÉÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙOIØYZ[‹[]™KX›ÛÚËXœ›İÜÙIÎÜ™[™\“˜]Š
+NØYZ[“]™P›ÛÚĞœ›İÜÙJ
+_NÂˆÛÛœİÜ[•ÛÜšØ›ÛÚÏJ
+OOÚYŠ]Ê\™]\›ØXİ]™S\ÜÛÛ’Y]ËšYØİ\œ™[İ\Iİ›ØØX[\IÎØİ\œ™[YÙOIØYZ[‹]ÛÜšØ›ÛÚË]šY]ÉÎÜ™[™\“˜]Š
+NØYZ[•ÛÜšØ›ÛÚÕšY]Ê
+_NÂˆYŠ	
+	ÛÜ[YZ[•ÛÜšØ›ÛÚÕÜ	ÊJI
+	ÛÜ[YZ[•ÛÜšØ›ÛÚÕÜ	ÊK›Û˜ÛXÚÏ[Ü[•ÛÜšØ›ÛÚÎÂˆYŠ	
+	ÛÜ[YZ[•ÛÜšØ›ÛÚÑœ›ÛS\ÜÛÛ‰ÊJI
+	ÛÜ[YZ[•ÛÜšØ›ÛÚÑœ›ÛS\ÜÛÛ‰ÊK›Û˜ÛXÚÏ[Ü[•ÛÜšØ›ÛÚÎÂˆÛÛœİÛÕÔİYÙOZ[™^OØXİ]™UXXÚ\”ÙXİ[Û’[™^Z[™^ØYZ[“]™S\ÜÛÛŠ
+NÙ›Øİ\ÕÚ]İ]ØÜ›Û
+	
+	Û]™TİYÙU]IÊJNÜ™\Ù]\ØÜ›Û
+
+_NÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXYZ[‹[]™K\ÙXİ[Û—IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO™ÛÕÔİYÙJ[X™\Š‹™]\Ù]˜YZ[“]™TÙXİ[ÛŠJJNÂˆ	
+	Ü™]YZ[“]™TÙXİ[Û‰ÊK›Û˜ÛXÚÏJ
+OOÚYŠXİ]™UXXÚ\”ÙXİ[Û’[™^Œ
+YÛÕÔİYÙJXİ]™UXXÚ\”ÙXİ[Û’[™^LJ_NÂˆYŠ	
+	Û™^YZ[“]™TÙXİ[Û‰ÊJI
+	Û™^YZ[“]™TÙXİ[Û‰ÊK›Û˜ÛXÚÏJ
+OO™ÛÕÔİYÙJXİ]™UXXÚ\”ÙXİ[Û’[™^
+ÌJNÂˆÚ\™S]™U›ØØX[\J
+NİÚ\™S]™PÚXÚÜÊ
+NÂŸB‚™[˜İ[ÛˆYZ[›ÛÚĞœ›İÜÙJ
+^ØÛÛœİXXÚ\\Ù\ÜÚ[ÛËœ›ÛOOOIİXXÚ\‰ÎØÛÛœİY]OX›ÛÚÓY]JXİ]™P›ÛÚÒY
+_İ]NÓÕT”ÑK]_ÓÕT”ÑK›[Ù[U]K]™[ÓÕT”ÑK›]™[İ[\ÜÛÛœÎÓÕT”ÑKİ[\ÜÛÛœßÓÕT”ÑK›\ÜÛÛœË›[™İK\ÜÛÛœÏPÓÕT”ÑK›\ÜÛÛœß×Nİ]JXXÚ\ÉÕXXÚ\‰Î‰ÔŞ\İ[HYZ[‰Ë	ÕÛÜšØ›ÛÚÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏH˜YZ[‹X›ÛÚËXœ›İÜÙ\ˆ]ÛˆÛ\ÜÏH˜˜XÚË[[šÈˆYH˜YZ[˜XÚĞ›ÛÚÜÈ¸¡¤›ÛÚÜÏØ]Û]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ[X[‰Ù\ØØ\R[
+Y]K›]™[	ÉÊ_OÜÜ[O‰Ù\ØØ\R[
+Y]K]_ÓÕT”ÑK]_ÓÕT”ÑK›[Ù[U]J_OÚOœ›İÜÙH[H]˜Z[X›H\ÜÛÛˆ[™[›İ\ˆÚÚ[Ëˆ™]šY]È[œİÙ\œÈ\™H›İØ]™Y\ÈİY[ÛÜšËÜÙ]Ù]]ˆÛ\ÜÏH˜YZ[‹Xœ›İÜÙ\‹[\İ‰Û\ÜÛÛœË›X\
+O˜]ÛˆÛ\ÜÏH˜YZ[‹Xœ›İÜÙ\‹[\ÜÛÛˆ	Ûœ™XYOOOY˜[ÙOÉÚ\Ë\[™[™ÉÎ‰ÉßHˆ]KXYZ[‹Xœ›İÜÙK[\ÜÛÛH‰Ûœ™XYOOOY˜[ÙOÉÉÎ›šYHˆ	Ûœ™XYOOOY˜[ÙOÉÙ\ØX›Y	Î‰ÉßOÜ[ˆÛ\ÜÏH˜YZ[‹Xœ›İÜÙ\‹[[H‰Û›[X™\ŸOÜÜ[Ü[İ›Û™Ï‰Ù\ØØ\R[
+]J_OÜİ›Û™ÏÛX[‰Ûœ™XYOOOY˜[ÙOÉÕÛÜšØ›ÛÚÈXİ]š]Y\È›İZ[Y]	Î™\ØØ\R[
+›İ]ÛÛY_	Ğ[ÚÚ[YÙ\È]˜Z[X›IÊ_OÜÛX[ÜÜ[‰Ûœ™XYOOOY˜[ÙOÉÓ›İZ[	Î‰ÓÜ[ˆ8¡¤‰ßOØØ]Û˜
+Kš›Ú[Š	ÉÊ_OÙ]ÜÙXİ[Û˜É
+	ØYZ[˜XÚĞ›ÛÚÜÉÊK›Û˜ÛXÚÏJ
+OOØİ\œ™[YÙO]XXÚ\ÉİXXÚ\‹]ÛÜšØ›ÛÚÜÉÎ‰ØYZ[‹X›ÛÚÜÉÎÜ™[™\“˜]Š
+NİXXÚ\İXXÚ\•ÛÜšØ›ÛÚÜÊ
+N˜YZ[›ÛÚÜÊ
+_NÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXYZ[‹Xœ›İÜÙK[\ÜÛÛ—IÊK™›Ü‘XXÚ
+OÚYŠX‹™]\Ù]˜YZ[œ›İÜÙS\ÜÛÛŠ\™]\›Ø‹›Û˜ÛXÚÏJ
+OOØXİ]™S\ÜÛÛ’YX‹™]\Ù]˜YZ[œ›İÜÙS\ÜÛÛØİ\œ™[İ\Iİ›ØØX[\IÎØİ\œ™[YÙO]XXÚ\ÉİXXÚ\‹]ÛÜšØ›ÛÚË]šY]ÉÎ‰ØYZ[‹]ÛÜšØ›ÛÚË]šY]ÉÎÜ™[™\“˜]Š
+NİXXÚ\İXXÚ\•ÛÜšØ›ÛÚÕšY]Ê
+N˜YZ[•ÛÜšØ›ÛÚÕšY]Ê
+__J_B™[˜İ[ÛˆXXÚ\•ÛÜšØ›ÛÚÜÊ
+^Âˆ]J	ÕXXÚ\‰Ë	ÕÛÜšØ›ÛÚÜÉÊNÂˆÛÛœİÛ\ÜÙ\ÏYÙ]Š
+K˜Û\ÜÙ\ÎÂˆ	
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏHœ›ÛK\YÙKZXYOÛ\ÜÈÛÜšØ›ÛÚÜÏÚOÙ]]ˆÛ\ÜÏH˜Û\ÜËXØ\™YÜšY‰ØÛ\ÜÙ\Ë›X\
+ÏOØÛÛœİ›ÛÚÏ]ÛÜšØ›ÛÚÑ›ÜÛ\ÜÊÊNÜ™]\›ˆ\XÛHÛ\ÜÏH›X[˜YÙ[Y[XØ\™Ï‰Ù\ØØ\R[
+Ë›˜[YJ_OÚÏ‰Ù\ØØ\R[
+›ÛÚÏË]_›ÛÚÓY]JË˜›ÛÚÒYË˜Ûİ\œÙWÚY
+OË]_	ÕÛÜšØ›ÛÚÈ[˜]˜Z[X›IÊ_OÜ]ÛˆÛ\ÜÏHœš[X\KXˆˆ]K]XXÚ\‹]ÛÜšØ›ÛÚÏH‰Ù\ØØ\P]ŠËšY
+_Hˆ	Ø›ÛÚÏÉÉÎ‰Ù\ØX›Y	ßO‰Ø›ÛÚÏÉÓÜ[ˆÛÜšØ›ÛÚÉÎ‰ÕÛÜšØ›ÛÚÈ[˜]˜Z[X›IßOØ]ÛØ\XÛO˜JKš›Ú[Š	ÉÊ_	Ï]ˆÛ\ÜÏH™[\K\İ]HÏ“›ÈÛ\ÜÙ\È\ÜÚYÛ™YÚÏ–[İ\ˆÛ\ÜÈÛÜšØ›ÛÚÜÈÚ[\X\ˆ\™KÜÙ]‰ßOÙ]˜ÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K]XXÚ\‹]ÛÜšØ›ÛÚ×IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[•XXÚ\•ÛÜšØ›ÛÚÊ‹™]\Ù]XXÚ\•ÛÜšØ›ÛÚÊJNÂŸB™[˜İ[ÛˆÜ[•XXÚ\•ÛÜšØ›ÛÚÊÛ\ÜÒY\ÜÛÛ’Y[[
+^ÂˆÛÛœİÏYÙ]Š
+K˜Û\ÜÙ\Ë™š[™
+ÏO˜ËšYOOXÛ\ÜÒY
+K›ÛÚÏ]ÛÜšØ›ÛÚÑ›ÜÛ\ÜÊÊNÂˆYŠXßX›ÛÚß\Ù]Xİ]™P›ÛÚÊ™\ÛÛ™P›ÛÚÒÙ^JÊJJ\™]\›ÂˆXİ]™UXXÚ\Û\ÜÒYXËšYÂˆÛÛœİÙ[XİY[\ÜÛÛ’YØ›ÛÚË›\ÜÛÛœË™š[™
+O›šYOO[\ÜÛÛ’Y	‰›œ™XYHOOY˜[ÙJN›[ÂˆYŠÙ[XİY
+^ØXİ]™S\ÜÛÛ’Y\Ù[XİYšYØİ\œ™[İ\Iİ›ØØX[\IÎØİ\œ™[YÙOIİXXÚ\‹]ÛÜšØ›ÛÚË]šY]ÉßY[ÙHİ\œ™[YÙOIİXXÚ\‹X›ÛÚËXœ›İÜÙIÎÂˆ™[™\“˜]Š
+NÜÙ[XİYİXXÚ\•ÛÜšØ›ÛÚÕšY]Ê
+NXXÚ\›ÛÚĞœ›İÜÙJ
+NÂŸB™[˜İ[ÛˆXXÚ\›ÛÚĞœ›İÜÙJ
+^ÂˆÛÛœİ›ÛÚÏ]ÛÜšØ›ÛÚÑ›ÜÛ\ÜÊXXÚ\Û\ÜÊ
+JNÂˆYŠX›ÛÚß\Ù]Xİ]™P›ÛÚÊ™\ÛÛ™P›ÛÚÒÙ^JXXÚ\Û\ÜÊ
+JJJ^Øİ\œ™[YÙOIİXXÚ\‹]ÛÜšØ›ÛÚÜÉÎÜ™[™\“˜]Š
+NİXXÚ\•ÛÜšØ›ÛÚÜÊ
+NÜ™]\›ŸBˆYZ[›ÛÚĞœ›İÜÙJ
+NÂŸB™[˜İ[ÛˆXXÚ\•ÛÜšØ›ÛÚÕšY]Ê
+^ÂˆÛÛœİ›ÛÚÏ]ÛÜšØ›ÛÚÑ›ÜÛ\ÜÊXXÚ\Û\ÜÊ
+JNÂˆYŠX›ÛÚßX›ÛÚË›\ÜÛÛœËœÛÛYJO›šYOOXXİ]™S\ÜÛÛ’Y	‰›œ™XYHOOY˜[ÙJJ^Øİ\œ™[YÙOIİXXÚ\‹X›ÛÚËXœ›İÜÙIÎİXXÚ\›ÛÚĞœ›İÜÙJ
+NÜ™]\›ŸBˆÙ]Xİ]™P›ÛÚÊ™\ÛÛ™P›ÛÚÒÙ^JXXÚ\Û\ÜÊ
+JJNİÛÜšØ›ÛÚÊ
+NÂŸB™[˜İ[Ûˆ™]\›•ÕÛÜšØ›ÛÚÓ\ÜÛÛœÊ
+^ÂˆÙ]ÛÜšØ›ÛÚÑ\ÚYÛ“[ÙJ˜[ÙJNØİ\œ™[YÙO\Ù\ÜÚ[ÛËœ›ÛOOOIİXXÚ\‰ÏÉİXXÚ\‹X›ÛÚËXœ›İÜÙIÎ‰ØYZ[‹X›ÛÚËXœ›İÜÙIÎÜ™[™\“˜]Š
+NÜÙ\ÜÚ[ÛËœ›ÛOOOIİXXÚ\‰ÏİXXÚ\›ÛÚĞœ›İÜÙJ
+N˜YZ[›ÛÚĞœ›İÜÙJ
+NÂŸB‚™[˜İ[ÛˆYZ[•ÛÜšØ›ÛÚÕšY]Ê
+^İÛÜšØ›ÛÚÊ
+_B‚™[˜İ[ÛˆYZ[•\Ù\œÊ›ÛJ^Ü™]\›ˆÙ]Š
+K\Ù\œË™š[\ŠOOKœ›ÛOOO\›ÛJ_B™[˜İ[ÛˆYZ[’ÛYJ
+^ØÛÛœİYZ[œÏXYZ[•\Ù\œÊ	ØYZ[‰ÊKXXÚ\œÏXYZ[•\Ù\œÊ	İXXÚ\‰ÊKİY[ÏXYZ[•\Ù\œÊ	ÜİY[	ÊKÛÏYÙ]Š
+K˜Û\ÜÙ\Ë›ÛÚÜÏYÙ]Š
+K˜›ÛÚÜß×K]™P›ÛÚÜÏX›ÛÚÜË™š[\ŠO–ÉÜ™XYIË	Ü[İ	×Kš[˜ÛY\Ê‹œİ]\ÊJK›[™İİ]J	ÔŞ\İ[HYZ[‰Ë	Óİ™\šY]ÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SXÙXİ[ÛˆÛ\ÜÏHœ›ÛKZ\›ÈYZ[‹Z\›È]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ‘[™Û\ÚØ]HÙ]\ÜÜ[O›ÛÚÜÈİÙ\ˆHÛ\ÜÙ\ËÚOÚÛÜÙHHİ\œšXİ[[Hš\œİˆ]™\HİY[[ˆ™XÙZ]™\ÈÛÜšØ›ÛÚÈXİ]š]Y\Èœ›ÛHH›ÛÚÈ\ÜÚYÛ™YÈZ\ˆÛ\ÜËÜÙ]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH˜YZ[“Ü[›ÛÚÜÈ“Ü[ˆ›ÛÚÜÏØ]ÛÜÙXİ[ÛÙXİ[ÛˆÛ\ÜÏH˜YZ[‹[Y]šXÜÈ‰ÛY]šXÊ	Ğ›ÛÚÜÉË›ÛÚÜË›[™İ]™P›ÛÚÜÊÉÈ\ØX›H›İÉÊ_IÛY]šXÊ	ĞÛ\ÜÙ\ÉËÛË›[™İ	Ğ›ÛÚËX˜\ÙYÛÚÜÉÊ_IÛY]šXÊ	ĞYZ[œÉËYZ[œË›[™İ	ÔŞ\İ[HXØÙ\ÜÉÊ_IÛY]šXÊ	ÕXXÚ\œÉËXXÚ\œË›[™İ	ĞXØÛİ[ÉÊ_IÛY]šXÊ	ÔİY[ÉËİY[Ë›[™İ	ĞXØÛİ[ÉÊ_OÜÙXİ[ÛÙXİ[ÛˆÛ\ÜÏHœÙXİ[ÛˆÙ]\Y›İÈ]ˆÛ\ÜÏHœÙ]\\İ\ŒOØ]İ›Û™Ï›ÛÚÜÏÜİ›Û™ÏÜ[ÚÛÜÙHHİ\œšXİ[[KÜÜ[Ù]]ÛˆYH™ÛĞ›ÛÚÜÈˆÛ\ÜÏH^[[šÈ“Ü[Ø]ÛÙ]]ˆÛ\ÜÏHœÙ]\\İ\ŒØ]İ›Û™ÏÛ\ÜÙ\ÏÜİ›Û™ÏÜ[ÛÛ›™XİH›ÛÚÈ[™XXÚ\‹ÜÜ[Ù]]ÛˆYH™ÛĞÛ\ÜÙ\ÈˆÛ\ÜÏH^[[šÈ“Ü[Ø]ÛÙ]]ˆÛ\ÜÏHœÙ]\\İ\ŒÏØ]İ›Û™Ï•\Ù\ˆXØÛİ[ÏÜİ›Û™ÏÜ[“X[˜YÙHYZ[œËXXÚ\œÈ[™İY[ËÜÜ[Ù]]ÛˆYH™ÛĞYZ[œÈˆÛ\ÜÏH^[[šÈ“Ü[Ø]ÛÙ]ÜÙXİ[Û˜ØÛÛœİÛÏJYÙJOOØİ\œ™[YÙO\YÙNÜ™[™\“˜]Š
+NÜ™[™\”YÙJ
+_NÉ
+	ØYZ[“Ü[›ÛÚÜÉÊK›Û˜ÛXÚÏJ
+OO™ÛÊ	ØYZ[‹X›ÛÚÜÉÊNÉ
+	ÙÛĞ›ÛÚÜÉÊK›Û˜ÛXÚÏJ
+OO™ÛÊ	ØYZ[‹X›ÛÚÜÉÊNÉ
+	ÙÛĞÛ\ÜÙ\ÉÊK›Û˜ÛXÚÏJ
+OO™ÛÊ	ØYZ[‹XÛ\ÜÙ\ÉÊNÉ
+	ÙÛĞYZ[œÉÊK›Û˜ÛXÚÏJ
+OO™ÛÊ	ØYZ[‹XYZ[œÉÊ_B™[˜İ[ÛˆYZ[Û\ÜÙ\Ê
+^ØÛÛœİÛÏYÙ]Š
+K˜Û\ÜÙ\ËXXÚ\œÏXYZ[•\Ù\œÊ	İXXÚ\‰ÊNİ]J	ÔŞ\İ[HYZ[‰Ë	ĞÛ\ÜÙ\ÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ›ÛÚËX˜\ÙYÛÚÜÏÜÜ[OÛ\ÜÙ\ÏÚO\ÜÚYÛˆÛ™H›ÛÚÈÈXXÚÛ\ÜËˆ]™\HİY[[ˆ]Û\ÜÈ]]ÛX]XØ[HÙ]ÈHØ[YH›ÛÚËÜÙ]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH›™]ĞYZ[Û\ÜÈŠÈÜ™X]HÛ\ÜÏØ]ÛÙ]]ˆÛ\ÜÏH˜Û\ÜËXØ\™YÜšY‰ØÛË›X\
+ÏOØÛÛœİ]XXÚ\œË™š[™
+OšYOOXËXXÚ\—ÚY
+KÛİ[XYZ[•\Ù\œÊ	ÜİY[	ÊK™š[\ŠİOœİ˜Û\ÜÒYÏËš[˜ÛY\ÊËšY
+JK›[™İX›ÛÚÓY]JË˜›ÛÚÒYË˜Ûİ\œÙWÚY
+NÜ™]\›ˆ\XÛHÛ\ÜÏH›X[˜YÙ[Y[XØ\™]ˆÛ\ÜÏH›X[˜YÙ[Y[XØ\™ZXYÜ[ˆÛ\ÜÏHœ[X[‰Ù\ØØ\R[
+Ë›]™[
+_OÜÜ[Ü[‰ØÛİ[HİY[ÏÜÜ[Ù]Ï‰Ù\ØØ\R[
+Ë›˜[YJ_OÚÏÛ\ÜÏH˜›ÛÚË[[™H›ÛÚÈ\ÜÚYÛ™Yˆİ›Û™Ï‰Ù\ØØ\R[
+Ë]_Ë˜Ûİ\œÙWÚY
+_OÜİ›Û™ÏÜ•XXÚ\ˆİ›Û™Ï‰Ù\ØØ\R[
+Ë›˜[Y_	Õ[˜\ÜÚYÛ™Y	Ê_OÜİ›Û™ÏÜ]ˆÛ\ÜÏH›X[˜YÙ[Y[XØ\™XXİ[ÛœÈ]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]KXYZ[‹XÛ\ÜËX›ÛÚÏH‰Ù\ØØ\P]ŠËšY
+_H\ÜÚYÛˆ›ÛÚÏØ]Û]ÛˆÛ\ÜÏH™ÚÜİXˆ[™Ù\‹XXİ[Ûˆˆ]KXYZ[‹Y[]KXÛ\ÜÏH‰Ù\ØØ\P]ŠËšY
+_Hˆ]K[˜[YOH‰Ù\ØØ\P]ŠË›˜[YJ_Hˆ]K\İY[ÏH‰ØÛİ[H‘[]HÛ\ÜÏØ]ÛÙ]Ø\XÛO˜JKš›Ú[Š	ÉÊ_	Ï]ˆÛ\ÜÏH™[\K\İ]HÏ“›ÈÛ\ÜÙ\ÏÚÏÜ™X]HHÛ\ÜÈœ›ÛHH™XYH›ÛÚËˆHÙ[XİY›ÛÚÈÚ[\X\ˆ›Üˆ[İY[È[ˆ]Û\ÜËÜÙ]‰ßOÙ]˜É
+	Û™]ĞYZ[Û\ÜÉÊK›Û˜ÛXÚÏJ
+OO›Ü[YZ[Û\ÜÎØš[™YZ[Û\ÜĞXİ[ÛœÊ
+_B™[˜İ[Ûˆš[™YZ[•\Ù\Xİ[ÛœÊ
+^ÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXYZ[‹\™\Ù]IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO˜YZ[”™\Ù]\ÜİÛÜ™
+‹™]\Ù]˜YZ[”™\Ù]
+JNÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXYZ[‹Y[]WIÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[YZ[‘[]J‹™]\Ù]˜YZ[‘[]K‹™]\Ù]›˜[YK‹™]\Ù]œ›ÛJJ_B™[˜İ[Ûˆš[™YZ[Û\ÜĞXİ[ÛœÊ
+^ÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXYZ[‹Y[]KXÛ\Ü×IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[YZ[Û\ÜÑ[]J‹™]\Ù]˜YZ[‘[]PÛ\ÜË‹™]\Ù]›˜[YK[X™\Š‹™]\Ù]œİY[ß
+JJNÙØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]KXYZ[‹XÛ\ÜËX›ÛÚ×IÊK™›Ü‘XXÚ
+O˜‹›Û˜ÛXÚÏJ
+OO›Ü[\ÜÚYÛÛ\ÜĞ›ÛÚÊ‹™]\Ù]˜YZ[Û\ÜĞ›ÛÚÊJ_B™[˜İ[ÛˆYZ[YZ[œÊ
+^ØÛÛœİYZ[œÏXYZ[•\Ù\œÊ	ØYZ[‰ÊNİ]J	ÔŞ\İ[HYZ[‰Ë	ĞYZ[œÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”Ş\İ[HXØÙ\ÜÏÜÜ[OYZ[š\İ˜]ÜœÏÚO“X[˜YÙHYZ[ˆXØÛİ[È]Ø[ˆÛÛ›Û\Ù\œËÛ\ÜÙ\È[™›ÛÚÜËÜÙ]Ù]]ˆÛ\ÜÏH˜Ø\™ÛX[‹[\İ‰ØYZ[œË›X\
+OOØÛÛœİİ\œ™[XKšYOO\Ù\ÜÚ[ÛËšYÜ™]\›ˆ]ˆÛ\ÜÏH›X[˜YÙ[Y[\›İÈ]ˆÛ\ÜÏHœİY[XÙ[]ˆÛ\ÜÏH˜]˜]\ˆ‰Ù\ØØ\R[
+K›˜[YVÌ_	ĞIÊ_OÙ]]İ›Û™Ï‰Ù\ØØ\R[
+K›˜[YJ_OÜİ›Û™ÏÛX[	Ù\ØØ\R[
+K\Ù\›˜[YJ_OÜÛX[Ù]Ù]]ˆÛ\ÜÏH›X[˜YÙ[Y[\›İË[Y]HÜ[‰Øİ\œ™[ÉĞİ\œ™[XØÛİ[	Î‰ĞYZ[ˆXØÛİ[	ßOÜÜ[‰Øİ\œ™[ÉÏ]ÛˆÛ\ÜÏH™ÚÜİXˆˆ\ØX›Y”ÚYÛ™Y[Ø]Û‰Î˜]ÛˆÛ\ÜÏH™ÚÜİXˆ[™Ù\‹XXİ[Ûˆˆ]KXYZ[‹Y[]OH‰ØKšYHˆ]K[˜[YOH‰Ù\ØØ\P]ŠK›˜[YJ_Hˆ]K\›ÛOH˜YZ[ˆ‘[]OØ]Û˜OÙ]Ù]˜JKš›Ú[Š	ÉÊ_	Ï]ˆÛ\ÜÏH™[\K\İ]HÏ“›ÈYZ[œÏÚÏ]X\İÛ™HYZ[ˆXØÛİ[\È™\]Z\™YÜÙ]‰ßOÙ]˜Øš[™YZ[•\Ù\Xİ[ÛœÊ
+_B™[˜İ[ÛˆYZ[•XXÚ\œÊ
+^ØÛÛœİXXÚ\œÏXYZ[•\Ù\œÊ	İXXÚ\‰ÊKÛÏYÙ]Š
+K˜Û\ÜÙ\Îİ]J	ÔŞ\İ[HYZ[‰Ë	ÕXXÚ\œÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”İY™ÜÜ[O•XXÚ\œÏÚOÜ™X]HXXÚ\ˆXØÛİ[È[™ÙYH\ÜÚYÛ™YÛ\ÜÙ\ËÜÙ]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH›™]ĞYZ[•XXÚ\ˆŠÈÜ™X]HXXÚ\Ø]ÛÙ]]ˆÛ\ÜÏH˜Ø\™ÛX[‹[\İ‰İXXÚ\œË›X\
+OØÛÛœİ˜[Y\ÏXÛË™š[\ŠÏO˜ËXXÚ\—ÚYOO]šY
+K›X\
+ÏO˜Ë›˜[YJNÜ™]\›ˆ]ˆÛ\ÜÏH›X[˜YÙ[Y[\›İÈ]ˆÛ\ÜÏHœİY[XÙ[]ˆÛ\ÜÏH˜]˜]\ˆ‰Ù\ØØ\R[
+›˜[YVÌJ_OÙ]]İ›Û™Ï‰Ù\ØØ\R[
+›˜[YJ_OÜİ›Û™ÏÛX[	Ù\ØØ\R[
+\Ù\›˜[YJ_OÜÛX[Ù]Ù]]ˆÛ\ÜÏH›X[˜YÙ[Y[\›İË[Y]HÜ[‰Ù\ØØ\R[
+˜[Y\Ëš›Ú[Š	Ë	Ê_	Ó›ÈÛ\ÜÈ\ÜÚYÛ™Y	Ê_OÜÜ[]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]KXYZ[‹\™\Ù]H‰İšYH”™\Ù]\ÜİÛÜ™Ø]Û]ÛˆÛ\ÜÏH™ÚÜİXˆ[™Ù\‹XXİ[Ûˆˆ]KXYZ[‹Y[]OH‰İšYHˆ]K[˜[YOH‰Ù\ØØ\P]Š›˜[YJ_Hˆ]K\›ÛOHXXÚ\ˆ‘[]OØ]ÛÙ]Ù]˜JKš›Ú[Š	ÉÊ_	Ï]ˆÛ\ÜÏH™[\K\İ]HÏ“›ÈXXÚ\œÏÚÏÜ™X]HHš\œİXXÚ\ˆXØÛİ[ÜÙ]‰ßOÙ]˜É
+	Û™]ĞYZ[•XXÚ\‰ÊK›Û˜ÛXÚÏ[Ü[YZ[•XXÚ\Øš[™YZ[•\Ù\Xİ[ÛœÊ
+_B™[˜İ[ÛˆYZ[”İY[Ê
+^ØÛÛœİİY[ÏXYZ[•\Ù\œÊ	ÜİY[	ÊKÛÏYÙ]Š
+K˜Û\ÜÙ\Îİ]J	ÔŞ\İ[HYZ[‰Ë	ÔİY[ÉÊNÉ
+	ØÛÛ[	ÊKš[›™\’SX]ˆÛ\ÜÏHœ›ÛK\YÙKZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ’[š]X[[œ›ÛY[ÜÜ[O”İY[ÏÚOY[š]X[İY[ËˆXXÚ\œÈØ[ˆY]\™HİY[ÈÈZ\ˆİÛˆÛ\ÜÙ\ËÜÙ]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH›™]ĞYZ[”İY[ŠÈYİY[Ø]ÛÙ]]ˆÛ\ÜÏH˜Ø\™X›K]Ü˜\ÛX[‹]X›HX›HÛ\ÜÏH™]K]X›HXY”İY[İÛ\ÜÏİİİİXY›ÙO‰ÜİY[Ë›X\
+ÏO˜]ˆÛ\ÜÏHœİY[XÙ[]ˆÛ\ÜÏH˜]˜]\ˆ‰Ù\ØØ\R[
+Ë›˜[YVÌJ_OÙ]]]ÛˆÛ\ÜÏHœİY[[˜[YK[[šÈˆ]K\İY[\™\ÜH‰Ù\ØØ\P]ŠËšY
+_Hˆ\OH˜]Ûˆ‰Ù\ØØ\R[
+Ë›˜[YJ_OØ]ÛÛX[	Ù\ØØ\R[
+Ë\Ù\›˜[YJ_OÜÛX[ÛX[•Ú]Ğ\ˆ	Ù\ØØ\R[
+ËÚ]Ø\[X™\Ÿ	Ó›İ™XÛÜ™Y	Ê_OÜÛX[Ù]Ù]İ‰Ù\ØØ\R[
+ÛË™š[™
+ÏOœË˜Û\ÜÒYÏËš[˜ÛY\ÊËšY
+JOË›˜[Y_	ø %	Ê_Oİ]ˆÛ\ÜÏH›X[˜YÙ[Y[\›İË[Y]H]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]K]˜[œÙ™\‹\İY[H‰ÜËšYH•˜[œÙ™\Ø]Û]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]K\™]šY]Ë\İY[H‰Ù\ØØ\P]ŠËšY
+_H•šY]È™\ÜØ]Û]ÛˆÛ\ÜÏH™ÚÜİXˆˆ]KXYZ[‹\™\Ù]H‰ÜËšYH”™\Ù]\ÜİÛÜ™Ø]Û]ÛˆÛ\ÜÏH™ÚÜİXˆ[™Ù\‹XXİ[Ûˆˆ]KXYZ[‹Y[]OH‰ÜËšYHˆ]K[˜[YOH‰Ù\ØØ\P]ŠË›˜[YJ_Hˆ]K\›ÛOHœİY[‘[]OØ]ÛÙ]İİ˜
+Kš›Ú[Š	ÉÊ_Oİ›ÙOİX›OÙ]˜É
+	Û™]ĞYZ[”İY[	ÊK›Û˜ÛXÚÏ[Ü[YZ[”İY[Øš[™YZ[•\Ù\Xİ[ÛœÊ
+NØš[™İY[Xİ[ÛœÊ
+_B™[˜İ[ÛˆÜ[YZ[•XXÚ\Š
+^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ•XXÚ\ˆXØÛİ[ÜÜ[ÏÜ™X]HXXÚ\ÚÏÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]›Ü›HYH˜YZ[•XXÚ\‘›Ü›HˆÛ\ÜÏH™›Ü›KYÜšYX™[•XXÚ\ˆ˜[YO[œ]YH˜YZ[•XXÚ\“˜[YHˆ™\]Z\™YÛX™[X™[•\Ù\›˜[YO[œ]YH˜YZ[•XXÚ\•\Ù\›˜[YHˆ™\]Z\™YXÙZÛ\H™K™ËˆXXÚ\‹˜ZYYÛX™[‰ÛX[X[\ÜİÛÜ™šY[
+	ØYZ[•XXÚ\”\ÜİÛÜ™	Ê_O]ÛˆÛ\ÜÏHœš[X\KXˆˆ\OHœİX›Z]Ü™X]HXXÚ\Ø]ÛÙ›Ü›O]ˆYH˜YZ[Ü™X]T™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØYZ[•XXÚ\‘›Ü›IÊK›ÛœİX›Z]X\Ş[˜ÈOOÙKœ™]™[Y˜][
+
+Nİ^ØÛÛœİX]ØZ]\J	ËØ\KØYZ[‹İXXÚ\œÉËÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJÛ˜[YN‰
+	ØYZ[•XXÚ\“˜[YIÊK˜[YKš[J
+K\Ù\›˜[YN‰
+	ØYZ[•XXÚ\•\Ù\›˜[YIÊK˜[YKš[J
+K\ÜİÛÜ™‰
+	ØYZ[•XXÚ\”\ÜİÛÜ™	ÊK˜[Y_J_JNØ]ØZ]™Yœ™\Úİ]J
+NÉ
+	ØYZ[Ü™X]T™\İ[	ÊKš[›™\’SXÜ™Y[X[™\İ[
+	ÕXXÚ\‰ËŠ_XØ]Ú
+\œŠ^É
+	ØYZ[Ü™X]T™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+\œ‹›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[ÛˆÜ[YZ[Û\ÜÊ™Yš[›ÛÚÒYIÉÊ^ØÛÛœİXXÚ\œÏXYZ[•\Ù\œÊ	İXXÚ\‰ÊK›ÛÚÜÏJÙ]Š
+K˜›ÛÚÜß×JK™š[\ŠO–ÉÜ™XYIË	Ü[İ	×Kš[˜ÛY\Ê‹œİ]\ÊI‰“ÓÒ×ÔPÒÔÖØ‹šYJNÚYŠ]XXÚ\œË›[™İ
+^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆÜ™X]HÛ\ÜÏÜÜ[ÏÜ™X]HHXXÚ\ˆš\œİÚÏÛ\ÜÏH›]]YHÛ\ÜÈ™YYÈ[ˆ\ÜÚYÛ™YXXÚ\‹ÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]]ÛˆÛ\ÜÏHœš[X\KXˆˆYH™ÛĞÜ™X]UXXÚ\ˆÜ™X]HXXÚ\Ø]Û˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ÙÛĞÜ™X]UXXÚ\‰ÊK›Û˜ÛXÚÏ[Ü[YZ[•XXÚ\Ü™]\›ŸZYŠX›ÛÚÜË›[™İ
+^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆÜ™X]HÛ\ÜÏÜÜ[Ï“›È™XYH›ÛÚÏÚÏÛ\ÜÏH›]]YHÛ\ÜÈ]\İ™HÛÛ›™XİYÈH™XYHİ\œšXİ[[H›ÛÚËÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[Ü™]\›ŸXÛÛœİÙ[XİYX›ÛÚÜËœÛÛYJO˜‹šYOO\™Yš[›ÛÚÒY
+OÜ™Yš[›ÛÚÒY˜›ÛÚÜÖÌKšYÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆÛ\ÜÈÙ]\ÜÜ[ÏÜ™X]HÛ\ÜÏÚÏÛ\ÜÏH›]]YÚÛÜÙHH›ÛÚËˆH]™[ÛÛY\Èœ›ÛHH›ÛÚÈ]]ÛX]XØ[KÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]›Ü›HYH˜YZ[Û\ÜÑ›Ü›HˆÛ\ÜÏH™›Ü›KYÜšYX™[Û\ÜÈ˜[YO[œ]YH˜YZ[Û\ÜÓ˜[YHˆ™\]Z\™YXÙZÛ\H™K™ËˆL‹PŒH]™[š[™ÈÛX™[X™[›ÛÚÏÙ[XİYH˜YZ[Û\ÜĞ›ÛÚÈ‰Ø›ÛÚÜË›X\
+O˜Ü[Ûˆ˜[YOH‰Ø‹šYHˆ	Ø‹šYOO\Ù[XİYÉÜÙ[XİY	Î‰ÉßO‰Ù\ØØ\R[
+‹]J_H0­È	Ù\ØØ\R[
+‹›]™[
+_OÛÜ[Û˜
+Kš›Ú[Š	ÉÊ_OÜÙ[XİÛX™[X™[•XXÚ\Ù[XİYH˜YZ[Û\ÜÕXXÚ\ˆ‰İXXÚ\œË›X\
+O˜Ü[Ûˆ˜[YOH‰İšYH‰Ù\ØØ\R[
+›˜[YJ_OÛÜ[Û˜
+Kš›Ú[Š	ÉÊ_OÜÙ[XİÛX™[]ÛˆÛ\ÜÏHœš[X\KXˆˆ\OHœİX›Z]Ü™X]HÛ\ÜÏØ]ÛÙ›Ü›O]ˆYH˜YZ[Ü™X]T™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØYZ[Û\ÜÑ›Ü›IÊK›ÛœİX›Z]X\Ş[˜ÈOOÙKœ™]™[Y˜][
+
+Nİ^Ø]ØZ]\J	ËØ\KØYZ[‹ØÛ\ÜÙ\ÉËÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJÛ˜[YN‰
+	ØYZ[Û\ÜÓ˜[YIÊK˜[YKš[J
+K›ÛÚÒY‰
+	ØYZ[Û\ÜĞ›ÛÚÉÊK˜[YKXXÚ\’Y‰
+	ØYZ[Û\ÜÕXXÚ\‰ÊK˜[Y_J_JNØ]ØZ]™Yœ™\Úİ]J
+NØÛÜÙS[Ù[
+
+NØİ\œ™[YÙOIØYZ[‹XÛ\ÜÙ\ÉÎÜ™[™\“˜]Š
+NØYZ[Û\ÜÙ\Ê
+_XØ]Ú
+\œŠ^É
+	ØYZ[Ü™X]T™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+\œ‹›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[ÛˆÜ[\ÜÚYÛÛ\ÜĞ›ÛÚÊÛ\ÜÒY
+^ØÛÛœİÏYÙ]Š
+K˜Û\ÜÙ\Ë™š[™
+OšYOOXÛ\ÜÒY
+K›ÛÚÜÏJÙ]Š
+K˜›ÛÚÜß×JK™š[\ŠO–ÉÜ™XYIË	Ü[İ	×Kš[˜ÛY\Ê‹œİ]\ÊI‰“ÓÒ×ÔPÒÔÖØ‹šYJNÚYŠXÊ\™]\›ÚYŠX›ÛÚÜË›[™İ
+^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ\ÜÚYÛˆ›ÛÚÏÜÜ[Ï“›È™XYH›ÛÚÜÏÚÏÛ\ÜÏH›]]YYÜˆ™\İÜ™HH™XYH›ÛÚÈ™Y›Ü™H\ÜÚYÛš[™È]ÈHÛ\ÜËÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[Ü™]\›Ÿ\ÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ\ÜÚYÛˆ›ÛÚÏÜÜ[Ï‰Ù\ØØ\R[
+Ë›˜[YJ_OÚÏÛ\ÜÏH›]]Y[İY[È[ˆ\ÈÛ\ÜÈÚ[ÙYH\È›ÛÚËÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]›Ü›HYH˜\ÜÚYÛÛ\ÜĞ›ÛÚÑ›Ü›HˆÛ\ÜÏH™›Ü›KYÜšYX™[Û\ÜÈ›ÛÚÏÙ[XİYH˜\ÜÚYÛÛ\ÜĞ›ÛÚÈ‰Ø›ÛÚÜË›X\
+O˜Ü[Ûˆ˜[YOH‰Ù\ØØ\P]Š‹šY
+_Hˆ	Ø‹šYOOJË˜›ÛÚÒYË˜Ûİ\œÙWÚY
+OÉÜÙ[XİY	Î‰ÉßO‰Ù\ØØ\R[
+‹]J_H0­È	Ù\ØØ\R[
+‹›]™[
+_OÛÜ[Û˜
+Kš›Ú[Š	ÉÊ_OÜÙ[XİÛX™[]ÛˆÛ\ÜÏHœš[X\KXˆˆ\OHœİX›Z]”Ø]™HÛ\ÜÈ›ÛÚÏØ]ÛÙ›Ü›OÛ\ÜÏH›]]YÚ[™Ú[™ÈHÛ\ÜÈ›ÛÚÈÛX\œÈÛ\ÜÛÛˆ\ÜÚYÛ›Y[È›Üˆ\ÈÛ\ÜË]İY[XØÛİ[È[™Ø]™Y\™›Ü›X[˜ÙH™XÛÜ™È™[XZ[‹Ü]ˆYH˜\ÜÚYÛÛ\ÜĞ›ÛÚÔ™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	Ø\ÜÚYÛÛ\ÜĞ›ÛÚÑ›Ü›IÊK›ÛœİX›Z]X\Ş[˜ÈOOÙKœ™]™[Y˜][
+
+NØÛÛœİYKœİX›Z]\Ÿ	
+	Ø\ÜÚYÛÛ\ÜĞ›ÛÚÑ›Ü›IÊKœ]Y\TÙ[XİÜŠ	Ø]Û–İ\OHœİX›Z]—IÊNØ‹™\ØX›Y]YNØ‹^ÛÛ[IÔØ]š[™Ë‹‹‰Îİ^Ø]ØZ]\JØ\KØYZ[‹ØÛ\ÜÙ\ËÉØÛ\ÜÒYKØ›ÛÚØÛY]Ù‰ÔUÒ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJØ›ÛÚÒY‰
+	Ø\ÜÚYÛÛ\ÜĞ›ÛÚÉÊK˜[Y_J_JNØ]ØZ]™Yœ™\Úİ]J
+NØÛÜÙS[Ù[
+
+NØYZ[Û\ÜÙ\Ê
+_XØ]Ú
+\œŠ^Ø‹™\ØX›YY˜[ÙNØ‹^ÛÛ[IÔØ]™HÛ\ÜÈ›ÛÚÉÎÉ
+	Ø\ÜÚYÛÛ\ÜĞ›ÛÚÔ™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+\œ‹›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[ÛˆX[X[\ÜİÛÜ™šY[
+Y
+^Ü™]\›ˆX™[”\ÜİÛÜ™
+Ü[Û˜[
+O[œ]YH‰ÚYHˆ\OHœ\ÜİÛÜ™ˆ[œ][ÙOH›[Y\šXÈˆ]\›H–ÌNW^ÎŒHˆ]]ØÛÛ\]OH›™]Ë\\ÜİÛÜ™ˆZ[›[™İHˆX^[™İHŒŒˆXÙZÛ\H‘[\ˆ[X™\œÈÜˆX]™H›[šÈÛX[•\ÙH8 $ÌŒ[X™\œÈÛ›Kˆ›[šÈÜ™X]\ÈHÙXİ\™H[Y\šXÈ\ÜİÛÜ™]]ÛX]XØ[KÜÛX[ÛX™[˜B™[˜İ[ÛˆÜ[YZ[”İY[
+
+^ØÛÛœİÛÏYÙ]Š
+K˜Û\ÜÙ\ÎÚYŠXÛË›[™İ
+^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆYİY[ÜÜ[ÏÜ™X]HHÛ\ÜÈš\œİÚÏÛ\ÜÏH›]]Y”İY[È]\İ™[Û™ÈÈHÛ\ÜËÜÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[Ü™]\›Ÿ\ÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”İY[XØÛİ[ÜÜ[ÏY[š]X[İY[ÚÏÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]›Ü›HYH˜YZ[”İY[›Ü›HˆÛ\ÜÏH™›Ü›KYÜšYX™[”İY[˜[YO[œ]YH˜YZ[”İY[˜[YHˆ™\]Z\™YÛX™[X™[•Ú]Ğ\[X™\[œ]YH˜YZ[”İY[Ú]Ø\ˆ\OH[ˆ]]ØÛÛ\]OH[ˆ™\]Z\™YX^[™İHˆXÙZÛ\HŠÌLˆŒÈLŒÍMÈÛX[’[˜ÛYHHÛİ[HÛÙKİ\[™ÈÚ]
+ËÜÛX[ÛX™[X™[•\Ù\›˜[YO[œ]YH˜YZ[”İY[\Ù\›˜[YHˆ™\]Z\™YXÙZÛ\H™K™Ëˆ[Z[˜K˜[HÛX™[‰ÛX[X[\ÜİÛÜ™šY[
+	ØYZ[”İY[\ÜİÛÜ™	Ê_OX™[Û\ÜÏÙ[XİYH˜YZ[”İY[Û\ÜÈ‰ØÛË›X\
+ÏO˜Ü[Ûˆ˜[YOH‰ØËšYH‰Ù\ØØ\R[
+Ë›˜[YJ_OÛÜ[Û˜
+Kš›Ú[Š	ÉÊ_OÜÙ[XİÛX™[]ÛˆÛ\ÜÏHœš[X\KXˆˆ\OHœİX›Z]Ü™X]HİY[Ø]ÛÙ›Ü›O]ˆYH˜YZ[Ü™X]T™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØYZ[”İY[›Ü›IÊK›ÛœİX›Z]X\Ş[˜ÈOOÙKœ™]™[Y˜][
+
+Nİ^ØÛÛœİX]ØZ]\J	ËØ\KØYZ[‹ÜİY[ÉËÛY]Ù‰ÔÔÕ	Ë›ÙN’”ÓÓ‹œİš[™ÚYJÛ˜[YN‰
+	ØYZ[”İY[˜[YIÊK˜[YKš[J
+K\Ù\›˜[YN‰
+	ØYZ[”İY[\Ù\›˜[YIÊK˜[YKš[J
+KÛ\ÜÒY‰
+	ØYZ[”İY[Û\ÜÉÊK˜[YKÚ]Ø\[X™\‰
+	ØYZ[”İY[Ú]Ø\	ÊK˜[YKš[J
+K\ÜİÛÜ™‰
+	ØYZ[”İY[\ÜİÛÜ™	ÊK˜[Y_J_JNØ]ØZ]™Yœ™\Úİ]J
+NÉ
+	ØYZ[Ü™X]T™\İ[	ÊKš[›™\’SXÜ™Y[X[™\İ[
+	ÔİY[	ËŠ_XØ]Ú
+\œŠ^É
+	ØYZ[Ü™X]T™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+\œ‹›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[ÛˆÜ™Y[X[™\İ[
+X™[Š^Ü™]\›ˆ]ˆÛ\ÜÏH˜Ü™Y[X[XØ\™Ü[‰ÛX™[HÜ™X]YÜÜ[İ›Û™Ï	Ù\ØØ\R[
+‹\Ù\›˜[YJ_OÜİ›Û™ÏÛÙO‰Ù\ØØ\R[
+‹[\Ü˜\T\ÜİÛÜ™
+_OØÛÙOÛX[‰Ü‹œ\ÜİÛÜ™Ø\ÑÙ[™\˜]YÉĞHÙXİ\™H\ÜİÛÜ™Ø\ÈÙ[™\˜]Yˆ	Î‰ÉßPÛÜH\È\ÜİÛÜ™›İËˆ]Ú[›İ™HÚİÛˆYØZ[‹ÜÛX[Ù]˜B˜\Ş[˜È[˜İ[ÛˆYZ[”™\Ù]\ÜİÛÜ™
+Y
+^İ^ØÛÛœİX]ØZ]\JØ\KØYZ[‹İ\Ù\œËÉÚYKÜ™\Ù]\\ÜİÛÜ™ÛY]Ù‰ÔÔÕ	ßJNÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”\ÜİÛÜ™™\Ù]ÜÜ[Ï“™]È[\Ü˜\H\ÜİÛÜ™ÚÏÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]]ˆÛ\ÜÏH˜Ü™Y[X[XØ\™ÛÙO‰Ù\ØØ\R[
+‹[\Ü˜\T\ÜİÛÜ™
+_OØÛÙOÛX[ÛÜH[™Ú\™H]š]˜][KÜÛX[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[XØ]Ú
+J^Ø[\
+K›Y\ÜØYÙJ__B™[˜İ[ÛˆÜ[YZ[‘[]JY˜[YK›ÛJ^ØÛÛœİX™[Ï^ØYZ[‰ØYZ[‰ËXXÚ\‰İXXÚ\‰ËİY[‰ÜİY[	ßKX™[[X™[ÖÜ›ÛW_	İ\Ù\‰ËY™™Xİ\›ÛOOOIØYZ[‰ÏÉÕ\È™[[İ™\ÈZ\ˆŞ\İ[HYZ[ˆXØÙ\ÜÈ[™ÚYÛ‹Z[ˆXØÛİ[ˆ]X\İÛ™Hİ\ˆYZ[ˆ]\İ™[XZ[‹‰Îœ›ÛOOOIİXXÚ\‰ÏÉÕZ\ˆÛ\ÜÙ\È[™\ÜÚYÛ›Y[ÈÚ[™[XZ[‹]Z\ˆÛ\ÜÙ\ÈÚ[™XÛÛYH[˜\ÜÚYÛ™Y‰Î‰ÕZ\ˆ[œ›ÛY[›ÙÜ™\ÜËØÛÜ™\Ë[™ÛÜšØ›ÛÚÈ™\ÜÛœÙ\ÈÚ[[ÛÈ™H[]Y‰ÎÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”\›X[™[Xİ[ÛÜÜ[Ï‘[]H	Ù\ØØ\R[
+˜[YJ_OÏÚÏÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]‰ÙY™™XİOÜÛ\ÜÏH›]]Y•\ÈØ[››İ™H[™Û™KÜ]ˆÛ\ÜÏH™[]K]\Ù\‹XXİ[ÛœÈ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜Ø[˜Ù[YZ[‘[]HØ[˜Ù[Ø]Û]ÛˆÛ\ÜÏHœš[X\KXˆ[™Ù\‹X]ÛˆˆYH˜ÛÛ™š\›PYZ[‘[]H‘[]H	ÛX™[OØ]ÛÙ]]ˆYH˜YZ[‘[]T™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØØ[˜Ù[YZ[‘[]IÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØÛÛ™š\›PYZ[‘[]IÊK›Û˜ÛXÚÏX\Ş[˜Ê
+OOØÛÛœİ]ÛI
+	ØÛÛ™š\›PYZ[‘[]IÊNØ]Û‹™\ØX›Y]YNØ]Û‹^ÛÛ[IÑ[][™Ë‹‹‰Îİ^Ø]ØZ]\JØ\KØYZ[‹İ\Ù\œËÉÚYXÛY]Ù‰ÑSUIßJNØ]ØZ]™Yœ™\Úİ]J
+NØÛÜÙS[Ù[
+
+NÜ™[™\”YÙJ
+_XØ]Ú
+J^Ø]Û‹™\ØX›YY˜[ÙNØ]Û‹^ÛÛ[X[]H	ÛX™[XÉ
+	ØYZ[‘[]T™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[ÛˆÜ[YZ[Û\ÜÑ[]JY˜[YKİY[Ûİ[
+^ÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”\›X[™[Xİ[ÛÜÜ[Ï‘[]HÛ\ÜÈ	Ù\ØØ\R[
+˜[YJ_OÏÚÏÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]•\È[]\ÈHÛ\ÜË]È›Üİ\ˆ[šÜË[™]ÈÛÜšØ›ÛÚÈ\ÜÚYÛ›Y[Ëˆ\Ù\ˆXØÛİ[Èİ^H[ˆHŞ\İ[KÜÛ\ÜÏH›]]Y‰ÜİY[Ûİ[HİY[	ÜİY[Ûİ[OOLOÉÈ\ÉÎ‰ÜÈ\™IßHİ\œ™[H[œ›ÛYˆ\ÈØ[››İ™H[™Û™KÜ]ˆÛ\ÜÏH™[]K]\Ù\‹XXİ[ÛœÈ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜Ø[˜Ù[YZ[‘[]HØ[˜Ù[Ø]Û]ÛˆÛ\ÜÏHœš[X\KXˆ[™Ù\‹X]ÛˆˆYH˜ÛÛ™š\›PYZ[‘[]H‘[]HÛ\ÜÏØ]ÛÙ]]ˆYH˜YZ[‘[]T™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØØ[˜Ù[YZ[‘[]IÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØÛÛ™š\›PYZ[‘[]IÊK›Û˜ÛXÚÏX\Ş[˜Ê
+OOØÛÛœİ]ÛI
+	ØÛÛ™š\›PYZ[‘[]IÊNØ]Û‹™\ØX›Y]YNØ]Û‹^ÛÛ[IÑ[][™Ë‹‹‰Îİ^Ø]ØZ]\JØ\KØYZ[‹ØÛ\ÜÙ\ËÉÚYXÛY]Ù‰ÑSUIßJNØ]ØZ]™Yœ™\Úİ]J
+NØÛÜÙS[Ù[
+
+NÜ™[™\”YÙJ
+_XØ]Ú
+J^Ø]Û‹™\ØX›YY˜[ÙNØ]Û‹^ÛÛ[IÑ[]HÛ\ÜÉÎÉ
+	ØYZ[‘[]T™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]˜__B™[˜İ[ÛˆÜ[YZ[›ÛÚÑ[]JY˜[YJ^ØÛÛœİ\ÙYYÙ]Š
+K˜Û\ÜÙ\Ë™š[\ŠÏOŠË˜›ÛÚÒYË˜Ûİ\œÙWÚY
+OOOZY
+K›[™İÜÚİÓ[Ù[
+]ˆÛ\ÜÏHœÙXİ[Û‹ZXY]Ü[ˆÛ\ÜÏHœ›ÛKZÚXÚÙ\ˆ”\›X[™[Xİ[ÛÜÜ[Ï‘[]H›ÛÚÈ	Ù\ØØ\R[
+˜[YJ_OÏÚÏÙ]]ÛˆÛ\ÜÏHšXÛÛ‹Xˆˆ]KXÛÜÙO°åÏØ]ÛÙ]•\È™[[İ™\ÈH›ÛÚÈœ›ÛHHYZ[ˆXœ˜\H[™™]™[È]œ›ÛH™Z[™È\ÙY›Üˆ™]ÈÛ\ÜÙ\ËÜÛ\ÜÏH›]]Y‰İ\ÙYØ	İ\ÙYHÛ\ÜÉİ\ÙYOOLOÉÈ\ÉÎ‰Ù\È\™IßHİ[\Ú[™È\È›ÛÚËˆ[]HÜÙHÛ\ÜÙ\Èš\œİ˜‰Ó›ÈÛ\ÜÈ\Èİ\œ™[H\Ú[™È\È›ÛÚË‰ßH\ÈØ[››İ™H[™Û™KÜ]ˆÛ\ÜÏH™[]K]\Ù\‹XXİ[ÛœÈ]ÛˆÛ\ÜÏH™ÚÜİXˆˆYH˜Ø[˜Ù[YZ[‘[]HØ[˜Ù[Ø]Û]ÛˆÛ\ÜÏHœš[X\KXˆ[™Ù\‹X]ÛˆˆYH˜ÛÛ™š\›PYZ[‘[]Hˆ	İ\ÙYÉÙ\ØX›Y	Î‰ÉßO‘[]H›ÛÚÏØ]ÛÙ]]ˆYH˜YZ[‘[]T™\İ[Ù]˜
+NÙØİ[Y[œ]Y\TÙ[XİÜŠ	ÖÙ]KXÛÜÙWIÊK›Û˜ÛXÚÏXÛÜÙS[Ù[É
+	ØØ[˜Ù[YZ[‘[]IÊK›Û˜ÛXÚÏXÛÜÙS[Ù[ÚYŠI
+	ØÛÛ™š\›PYZ[‘[]IÊK™\ØX›Y
+I
+	ØÛÛ™š\›PYZ[‘[]IÊK›Û˜ÛXÚÏX\Ş[˜Ê
+OOØÛÛœİ]ÛI
+	ØÛÛ™š\›PYZ[‘[]IÊNØ]Û‹™\ØX›Y]YNØ]Û‹^ÛÛ[IÑ[][™Ë‹‹‰Îİ^Ø]ØZ]\JØ\KØYZ[‹Ø›ÛÚÜËÉÚYXÛY]Ù‰ÑSUIßJNØ]ØZ]™Yœ™\Úİ]J
+NØÛÜÙS[Ù[
+
+NÜ™[™\”YÙJ
+_XØ]Ú
+J^Ø]Û‹™\ØX›YY˜[ÙNØ]Û‹^ÛÛ[IÑ[]H›ÛÚÉÎÉ
+	ØYZ[‘[]T™\İ[	ÊKš[›™\’SX]ˆÛ\ÜÏH™™YY˜XÚÈ˜Y‰Ù\ØØ\R[
+K›Y\ÜØYÙJ_OÙ]˜__B‚™[˜İ[ÛˆÚİÓ[Ù[
+[
+^Û]OI
+	Û[Ù[›Ûİ	ÊNÚYŠ[J^ÛOYØİ[Y[˜Ü™X]Q[[Y[
+	Ù]‰ÊNÛKšYIÛ[Ù[›Ûİ	ÎÙØİ[Y[˜›ÙK˜\[™Ú[
+J_[Kš[›™\’SX]ˆÛ\ÜÏH›[Ù[X˜XÚÙ›Ü]ˆÛ\ÜÏH›[Ù[XØ\™‰Ú[OÙ]Ù]˜ÛKœ]Y\TÙ[XİÜŠ	Ë›[Ù[X˜XÚÙ›Ü	ÊK›Û˜ÛXÚÏYOOÚYŠK\™Ù]˜Û\ÜÓ\İ˜ÛÛZ[œÊ	Û[Ù[X˜XÚÙ›Ü	ÊJXÛÜÙS[Ù[
+
+__B™[˜İ[ÛˆÛÜÙS[Ù[
+
+^ØÛÛœİOI
+	Û[Ù[›Ûİ	ÊNÚYŠJ[Kš[›™\’SIÉßB™[˜İ[Ûˆ\ØØ\P]ŠÊ^Ü™]\›ˆİš[™ÊÊKœ™\XÙJÉ‹ÙË	É˜[\ÉÊKœ™\XÙJÈ‹ÙË	Éœ][İÉÊKœ™\XÙJÏÙË	É›ÉÊ_H[˜İ[Ûˆ\ØØ\R[
+Ê^Ü™]\›ˆİš[™ÊÊKœ™\XÙJÉ‹ÙË	É˜[\ÉÊKœ™\XÙJÏÙË	É›ÉÊKœ™\XÙJÏ‹ÙË	É™İÉÊ_B
