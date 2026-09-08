@@ -3381,3 +3381,127 @@ html{scroll-behavior:auto!important}
  .teacher-spotlight-card>footer{grid-template-columns:1fr 1fr}
  .teacher-spotlight-card>footer>span{display:none}
 }
+
+
+/* Reading spotlight */
+.reading-spotlight-trigger{
+ display:inline-flex;
+ align-items:center;
+ gap:8px;
+ min-height:40px;
+ margin:4px 0 14px;
+ padding:8px 12px;
+ border:1px solid #b8ccc4;
+ border-radius:10px;
+ background:#eef8f4;
+ color:#145c49;
+ font:inherit;
+ font-size:.82rem;
+ font-weight:850;
+ cursor:pointer
+}
+.reading-spotlight-trigger:hover{
+ background:#e4f3ed;
+ border-color:#8fb6a8
+}
+.teacher-reading-spotlight-card{
+ width:min(1180px,95vw);
+ min-height:min(720px,88vh);
+ background:#fff
+}
+.teacher-reading-controls{
+ display:flex;
+ align-items:center;
+ gap:8px
+}
+.teacher-reading-size{
+ min-width:42px;
+ min-height:40px;
+ padding:7px 10px;
+ border:1px solid rgba(15,23,42,.12);
+ border-radius:10px;
+ background:#fff;
+ color:#334155;
+ font:inherit;
+ font-weight:900;
+ cursor:pointer
+}
+.teacher-reading-size:hover{background:#f8fafc}
+.teacher-reading-spotlight-body{
+ overflow:auto;
+ padding:38px clamp(28px,6vw,78px) 52px;
+ background:#fff
+}
+.teacher-reading-spotlight-body h2{
+ margin:0 0 24px;
+ color:#17644f;
+ font-size:clamp(1.2rem,2vw,1.6rem);
+ text-transform:uppercase;
+ letter-spacing:.04em
+}
+.teacher-reading-copy{
+ --reading-scale:1;
+ max-width:900px;
+ margin:0 auto;
+ color:#183247
+}
+.teacher-reading-copy>p,
+.teacher-reading-copy>.live-book-bullet,
+.teacher-reading-copy blockquote{
+ font-size:calc(clamp(1.55rem,2.5vw,2.15rem) * var(--reading-scale));
+ line-height:1.72;
+ margin:0 0 1.15em;
+ font-weight:500;
+ letter-spacing:-.01em
+}
+.teacher-reading-copy>.live-book-bullet{
+ position:relative;
+ padding-left:1.2em
+}
+.teacher-reading-copy>.live-book-bullet::before{
+ content:'•';
+ position:absolute;
+ left:0;
+ color:#17644f;
+ font-weight:900
+}
+.teacher-reading-copy img,
+.teacher-reading-copy figure{
+ max-width:100%;
+ height:auto;
+ margin:24px auto;
+ border-radius:16px
+}
+.teacher-reading-spotlight-card>footer{
+ grid-template-columns:1fr auto
+}
+.teacher-reading-spotlight-card>footer>span{
+ text-align:left
+}
+.teacher-presentation-mode .reading-spotlight-trigger{
+ font-size:.9rem;
+ min-height:44px;
+ margin-top:6px
+}
+@media(max-width:760px){
+ .teacher-reading-spotlight-card{
+  width:100%;
+  min-height:90vh
+ }
+ .teacher-reading-controls{
+  gap:5px
+ }
+ .teacher-reading-size{
+  min-width:38px;
+  padding:6px 8px
+ }
+ .teacher-reading-spotlight-body{
+  padding:28px 22px 36px
+ }
+ .teacher-reading-copy>p,
+ .teacher-reading-copy>.live-book-bullet,
+ .teacher-reading-copy blockquote{
+  font-size:calc(clamp(1.35rem,6vw,1.85rem) * var(--reading-scale));
+  line-height:1.65
+ }
+}
