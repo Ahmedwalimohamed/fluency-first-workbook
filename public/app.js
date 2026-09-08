@@ -279,7 +279,7 @@ function lessonById(id){for(const c of Object.values(BOOK_PACKS)){const hit=c.le
 function skillLabel(k){return k==='listening'?'Listening & Reading':cap(k)}
 
 
-const NAV={student:[['home','⌂','Home'],['course','▣','My book'],['progress','◔','Progress']],teacher:[['teacher-home','⌂','Today'],['teach','▣','Teach'],['teacher-workbooks','▤','Workbooks'],['students','◎','Students'],['classes','▤','Classes'],['weaknesses','△','Needs review'],['reports','▦','Reports']],admin:[['admin-home','⌂','Overview'],['admin-books','▣','Books'],['admin-classes','▤','Classes'],['admin-reports','▦','Reports'],['admin-admins','◇','Admins'],['admin-teachers','◎','Teachers'],['admin-students','○','Students']]};
+const NAV={student:[['home','⌂','Home'],['course','▣','My book'],['progress','◔','Progress'],['leaderboard','▥','Leaderboard']],teacher:[['teacher-home','⌂','Today'],['teach','▣','Teach'],['teacher-workbooks','▤','Workbooks'],['students','◎','Students'],['classes','▤','Classes'],['leaderboard','▥','Leaderboard'],['weaknesses','△','Needs review'],['reports','▦','Reports']],admin:[['admin-home','⌂','Overview'],['admin-books','▣','Books'],['admin-classes','▤','Classes'],['admin-reports','▦','Reports'],['admin-admins','◇','Admins'],['admin-teachers','◎','Teachers'],['admin-students','○','Students']]};
 let session=null,currentPage='home',activeLessonId='w1l1',currentStep='vocabulary',apiDB=null,activeTeacherClassId=null,activeTeacherLessonNumber=1,activeTeacherSectionIndex=0,activeStudentLiveLessonNumber=1,activeStudentSectionIndex=0;
 function getDB(){return apiDB||{version:7,assignments:[],books:[],users:[],classes:[],profiles:{},attempts:[],completion:{},writing:{},listeningLocks:{}}}
 function saveDB(db){apiDB=db}
@@ -334,7 +334,7 @@ function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})
  resetAppScroll();
 }
 function renderStudent(){return ({home:studentHome,workbook,course:studentCourse,'class-book':studentClassBook,'student-live-lesson':studentLiveLesson,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()}
-function renderTeacher(){return ({'teacher-home':teacherHome,teach:teacherTeach,'teacher-book':teacherBook,'teacher-live-lesson':teacherLiveLesson,'teacher-workbooks':teacherWorkbooks,'teacher-book-browse':teacherBookBrowse,'teacher-workbook-view':teacherWorkbookView,students,classes,weaknesses,reports}[currentPage]||teacherHome)()}
+function renderTeacher(){return ({'teacher-home':teacherHome,teach:teacherTeach,'teacher-book':teacherBook,'teacher-live-lesson':teacherLiveLesson,'teacher-workbooks':teacherWorkbooks,'teacher-book-browse':teacherBookBrowse,'teacher-workbook-view':teacherWorkbookView,students,classes,leaderboard:()=>leaderboard(true),weaknesses,reports}[currentPage]||teacherHome)()}
 function renderAdmin(){return ({'admin-home':adminHome,'admin-books':adminBooks,'admin-book-browse':adminBookBrowse,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-reports':reports,'admin-admins':adminAdmins,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
 
 function assignmentsForClass(classId){return (getDB().assignments||[]).filter(a=>a.classId===classId)}
@@ -475,33 +475,49 @@ function lessonVocabExample(word,l,q={}){
  return withPeriod('The '+rawWord+' was important in this situation');
 }
 function extractQuotedTarget(question){
- const q=String(question||'');
- const m=q.match(/(?:What does|Match)\s+[“"]?([^”“"?]+?)[”"]?\s+(?:mean|to its meaning)/i);
- return m?m[1].replace(/\*\*/g,'').trim():'';
+ const q=String(question||'').replace(/\*\*/g,'').trim();
+ const patterns=[
+  /What does\s+[“"]([^”"]+)[”"]\s+mean/i,
+  /definition of\s+[“"]([^”"]+)[”"]/i,
+  /Match\s+[“"]([^”"]+)[”"]\s+to its meaning/i,
+  /meaning of\s+[“"]([^”"]+)[”"]/i
+ ];
+ for(const p of patterns){const m=q.match(p);if(m)return m[1].trim()}
+ return '';
 }
 function meaningFromVocabQuestion(question){
  const q=String(question||'').replace(/\*\*/g,'').trim().replace(/\?$/,'');
- let m=q.match(/Which word describes\s+(.+)$/i);if(m)return 'describes '+m[1].trim();
- m=q.match(/Choose the best expression when\s+(.+)$/i);if(m)return 'used when '+m[1].trim();
- m=q.match(/Choose the natural question to\s+(.+)$/i);if(m)return 'used to '+m[1].trim();
- m=q.match(/Which response shows\s+(.+)$/i);if(m)return 'used to show '+m[1].trim();
- m=q.match(/Choose the expression that\s+(.+)$/i);if(m)return 'used to '+m[1].trim();
- m=q.match(/Choose the polite request for\s+(.+)$/i);if(m)return 'used to ask for '+m[1].trim()+' politely';
- m=q.match(/Choose the (?:best|correct|clearest|most natural)\s+(?:word|phrase|expression|response)\s+(?:to|for|when)\s+(.+)$/i);if(m)return 'used to '+m[1].trim().replace(/^to\s+/i,'');
- m=q.match(/Which (?:word|phrase|expression|response)\s+(?:best )?(?:fits|matches|shows)\s+(.+)$/i);if(m)return 'used for '+m[1].trim();
+ const patterns=[
+  [/^Match the meaning:\s*(.+?)\.?$/i,m=>m[1]],
+  [/Which word best expresses this idea:\s*(.+)$/i,m=>m[1]],
+  [/Complete the glossary entry:\s*___\s*=\s*(.+?)\.?$/i,m=>m[1]],
+  [/word meaning\s+[“"](.+?)[”"]/i,m=>m[1]],
+  [/Which target word would you use when talking about\s+(.+)$/i,m=>m[1]],
+  [/best vocabulary label for this idea:\s*(.+?)\.?$/i,m=>m[1]],
+  [/Which (?:target )?word (?:best )?means?\s+[“"]?(.+?)[”"]?$/i,m=>m[1]],
+  [/Which (?:target )?word best matches this idea:\s*(.+)$/i,m=>m[1]],
+  [/Which word describes\s+(.+)$/i,m=>'describes '+m[1].trim()],
+  [/Which expression would you use to\s+(.+)$/i,m=>'to '+m[1].trim().replace(/^to\s+/i,'')],
+  [/Choose the best expression when\s+(.+)$/i,m=>'used when '+m[1].trim()],
+  [/Choose the natural question to\s+(.+)$/i,m=>'used to '+m[1].trim()],
+  [/Which response shows\s+(.+)$/i,m=>'used to show '+m[1].trim()],
+  [/Choose the expression that\s+(.+)$/i,m=>'used to '+m[1].trim()],
+  [/Choose the polite request for\s+(.+)$/i,m=>'used to ask for '+m[1].trim()+' politely'],
+  [/Choose the (?:best|correct|clearest|most natural)\s+(?:word|phrase|expression|response)\s+(?:to|for|when)\s+(.+)$/i,m=>'used to '+m[1].trim().replace(/^to\s+/i,'')],
+  [/Which (?:word|phrase|expression|response)\s+(?:best )?(?:fits|matches|shows)\s+(.+)$/i,m=>'used for '+m[1].trim()]
+ ];
+ for(const [p,fn] of patterns){const m=q.match(p);if(m)return String(fn(m)||'').trim()}
  return '';
 }
 function vocabFeedbackMeta(l,q,index){
  const question=String(q?.q||'').replace(/\*\*/g,'').trim(),answer=String(q?.answer||'').trim();
  let word=String(q?.word||'').trim(),meaning=String(q?.meaning||'').trim();
  const quoted=extractQuotedTarget(question);
- if(!word&&quoted)word=quoted;
- let m=question.match(/Which (?:target )?word (?:best )?means?\s+[“"]?(.+?)[”"]?\??$/i);
- if(!m)m=question.match(/Which (?:target )?word best matches this idea:\s*(.+?)\??$/i);
- if(m&&!word){word=answer;meaning=meaning||m[1].trim()}
- m=question.match(/Which expression would you use to\s+(.+?)\??$/i);
- if(m&&!word){word=answer;meaning=meaning||('to '+m[1].trim().replace(/^to\s+/i,''))}
- if(word&&!meaning&&quoted&&answer)meaning=answer;
+ if(quoted){word=word||quoted;if(!meaning&&answer)meaning=answer}
+ if(!word){
+  const forwardMeaning=meaningFromVocabQuestion(question);
+  if(forwardMeaning&&answer){word=answer;meaning=meaning||forwardMeaning}
+ }
  const expressions=l.expressions||[];
  let expression=expressions.find(x=>normalizeVocabWord(x.text)===normalizeVocabWord(word||answer));
  if(!expression&&/^Complete from memory:/i.test(question)){
@@ -509,10 +525,14 @@ function vocabFeedbackMeta(l,q,index){
  }
  if(expression){word=word||expression.text;meaning=meaning||('to '+String(expression.job||'').replace(/^to\s+/i,''))}
  if(!word&&answer)word=answer;
- if(!meaning&&word){const known=vocabMeaning(word);meaning=known.startsWith('a useful lesson word')?'':known}
+ if(!meaning&&word){
+  const known=vocabMeaning(word);
+  if(!known.startsWith('a useful lesson word'))meaning=known
+ }
  if(!meaning)meaning=meaningFromVocabQuestion(question);
- if(!meaning&&answer)meaning='the correct word or phrase for this situation';
- if(!word||!meaning)return null;
+ if(!meaning&&answer&&quoted)meaning=answer;
+ if(!meaning)meaning='the correct word or phrase for this situation';
+ if(!word)return null;
  return {word,meaning:lowerDefinitionStart(meaning),example:lessonVocabExample(word,l,q),index};
 }
 function vocabFeedbackHtml(meta,correct){
@@ -1262,8 +1282,29 @@ function weaknesses(){const areas=aggregateWeaknesses(),students=classStudents()
 
 function reports(){const sts=reportStudents(),ids=new Set(sts.map(s=>s.id)),ats=getDB().attempts.filter(a=>ids.has(a.studentId)),avgComp=sts.length?Math.round(sts.reduce((a,st)=>a+completionPct(st.id),0)/sts.length):0,scoredStudents=sts.map(st=>overall(st.id)).filter(Number.isFinite),avgScore=scoredStudents.length?Math.round(scoredStudents.reduce((a,b)=>a+b,0)/scoredStudents.length):null;title(session?.role==='admin'?'System Admin':'Workbook evidence','Student performance');$('content').innerHTML=`<div class="grid grid-3">${metric('Workbook completion',avgComp+'%','Exact completion records')}${metric('Recorded score average',Number.isFinite(avgScore)?avgScore+'%':'—',scoredStudents.length+' students with scores')}${metric('Attempts saved',ats.length,'Exact practice records')}</div><section class="section card"><div class="section-head"><div><h3>Detailed student evidence</h3><p>Lesson 1 Listening & Reading plus full student review for every workbook lesson.</p></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Student</th><th>Class</th><th>Book</th><th>Lesson 1 Listening & Reading</th><th>Latest activity</th><th>Completion</th><th>Overall</th><th></th></tr></thead><tbody>${sts.map(st=>{const first=firstReadyLessonFor(st.id),latest=latestActivityFor(st.id),o=overall(st.id);return `<tr><td>${escapeHtml(st.name)}</td><td>${escapeHtml(studentClassName(st))}</td><td>${escapeHtml(bookMeta(bookIdForStudent(st.id))?.title||'—')}</td><td>${first?lessonSkillCell(st.id,first.id,'listening'):'—'}</td><td>${latest?`Lesson ${lessonById(latest.lessonId)?.number||'—'} · ${skillLabel(latest.skill)} · ${latest.score}%`:'—'}</td><td>${completionPct(st.id)}%</td><td>${Number.isFinite(o)?o+'%':'—'}</td><td><div class="management-row-meta"><button class="ghost-btn" data-transfer-student="${st.id}">Transfer</button><button class="ghost-btn" data-review-student="${st.id}">Review</button></div></td></tr>`}).join('')||'<tr><td colspan="8">No students found.</td></tr>'}</tbody></table></div></section>`;bindStudentActions()}
 
-function leaderboard(teacher){title('Workbook evidence','Class activity');const data=classStudents().map(st=>({...st,completed:completedActivityCount(st.id),recorded:overall(st.id),completion:completionPct(st.id)})).sort((a,b)=>b.completed-a.completed||(Number(b.recorded)||-1)-(Number(a.recorded)||-1));$('content').innerHTML=`<div class="card"><div class="section-head"><div><h3>Recorded workbook activity</h3><p>Ranked by completed activities. Score is shown only when scored evidence exists.</p></div></div>${data.map((st,i)=>`<div class="leader-row ${st.id===session.id&&!teacher?'me':''}"><div class="rank">${i+1}</div><div class="student-cell"><div class="avatar">${escapeHtml(st.name[0])}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id&&!teacher?' · You':''}</strong><div class="muted">${st.completed} activities complete · ${st.completion}% workbook</div></div></div><strong>${Number.isFinite(st.recorded)?st.recorded+'%':'—'}</strong></div>`).join('')}</div>`}
-
+async function leaderboard(teacher=false){
+ title('EnglishGate','Leaderboard');
+ const content=$('content');
+ content.innerHTML='<section class="professional-leaderboard"><div class="leaderboard-loading">Loading leaderboard…</div></section>';
+ try{
+  const result=await api('/api/leaderboard'),rows=Array.isArray(result.students)?result.students:[],me=rows.find(x=>x.id===session.id),top=rows.slice(0,3);
+  const rankText=me?`#${me.rank} of ${rows.length}`:'View only';
+  content.innerHTML=`<section class="professional-leaderboard">
+   <div class="leaderboard-hero">
+    <div><span class="role-kicker">All active learners</span><h1>Learning leaderboard</h1><p>Professional progress view based on completed workbook activities. Average recorded performance breaks ties.</p></div>
+    <div class="leaderboard-my-standing"><small>${teacher?'Learners ranked': 'Your standing'}</small><strong>${teacher?rows.length:escapeHtml(rankText)}</strong><span>${teacher?'Across EnglishGate':me?`${me.completed} activities completed`:'Complete an activity to enter the ranking'}</span></div>
+   </div>
+   ${top.length?`<div class="leaderboard-top-three">${top.map(st=>`<article class="leaderboard-top-card ${st.id===session.id?'is-me':''}"><span class="leaderboard-rank-label">#${st.rank}</span><div class="leaderboard-avatar">${escapeHtml((st.name||'?')[0])}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.className||st.level||'EnglishGate learner')}</small></div><div class="leaderboard-top-metrics"><span><b>${st.completed}</b> activities</span><span><b>${Number.isFinite(st.average)?st.average+'%':'—'}</b> average</span></div></article>`).join('')}</div>`:''}
+   <div class="leaderboard-table-card">
+    <div class="leaderboard-table-head"><div><h2>All students</h2><p>Ranking updates as workbook activity is completed.</p></div><span>${rows.length} learners</span></div>
+    <div class="leaderboard-table-wrap"><table class="professional-leaderboard-table"><thead><tr><th>Rank</th><th>Learner</th><th>Class</th><th>Completed</th><th>Average</th><th>Last active</th></tr></thead><tbody>
+     ${rows.map(st=>`<tr class="${st.id===session.id?'is-me':''}"><td><span class="leaderboard-rank-number">#${st.rank}</span></td><td><div class="leaderboard-person"><span class="leaderboard-avatar small">${escapeHtml((st.name||'?')[0])}</span><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.level||'English learner')}</small></div></div></td><td>${escapeHtml(st.className||'—')}</td><td><strong>${st.completed}</strong></td><td><strong>${Number.isFinite(st.average)?st.average+'%':'—'}</strong></td><td>${st.lastActive?escapeHtml(new Date(st.lastActive).toLocaleDateString()):'—'}</td></tr>`).join('')||'<tr><td colspan="6">No learner activity yet.</td></tr>'}
+    </tbody></table></div>
+   </div>
+   <p class="leaderboard-method">Ranking method: completed workbook activities first, then average recorded activity score, then most recent activity. No contact information is shown.</p>
+  </section>`;
+ }catch(e){content.innerHTML=`<section class="professional-leaderboard"><div class="feedback bad">Could not load the leaderboard: ${escapeHtml(e.message)}</div></section>`}
+}
 function adminBooks(){
   const books=getDB().books||[];
   title('System Admin','Books');
