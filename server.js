@@ -254,7 +254,9 @@ async function transferStudent(req,res,isAdmin){
 app.patch('/api/admin/students/:id/class',auth,adminOnly,(req,res)=>transferStudent(req,res,true));
 app.post('/api/admin/users/:id/reset-password',auth,adminOnly,async(req,res)=>{
  const q=await pool.query("select id,role from users where id=$1 and role in ('teacher','student')",[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'User not found.'});
- const pw=tempPassword();await pool.query('update users set password_hash=$1 where id=$2',[await bcrypt.hash(pw,12),req.params.id]);res.json({temporaryPassword:pw});
+ const pw=chosenPassword(req.body?.password);if(!pw)return res.status(400).json({error:'Password must contain 8–20 digits.'});
+ await pool.query('update users set password_hash=$1 where id=$2',[await bcrypt.hash(pw,12),req.params.id]);
+ res.json({password:pw,temporaryPassword:pw,generated:!req.body?.password});
 });
 app.delete('/api/admin/users/:id',auth,adminOnly,async(req,res)=>{
  const client=await pool.connect();try{await client.query('begin');const q=await client.query("select id,username,role,name from users where id=$1 and role in ('admin','teacher','student') for update",[req.params.id]);if(!q.rowCount){await client.query('rollback');return res.status(404).json({error:'User not found.'});}const user=q.rows[0];if(user.id===req.user.id){await client.query('rollback');return res.status(400).json({error:'You cannot delete the account you are currently using.'});}if(user.role==='admin'){const admins=await client.query("select count(*)::int as count from users where role='admin'");if(Number(admins.rows[0]?.count||0)<=1){await client.query('rollback');return res.status(400).json({error:'At least one admin account must remain.'});}}await client.query('insert into deleted_seed_accounts(username) values($1) on conflict(username) do nothing',[user.username.toLowerCase()]);let unassignedClasses=0;if(user.role==='teacher'){const classes=await client.query('update classes set teacher_id=null where teacher_id=$1',[user.id]);unassignedClasses=classes.rowCount;}await client.query('update assignments set created_by=null where created_by=$1',[user.id]);await client.query('delete from users where id=$1',[user.id]);await client.query('commit');res.json({ok:true,id:user.id,name:user.name,role:user.role,unassignedClasses});}catch(e){await client.query('rollback');throw e}finally{client.release()}
@@ -288,7 +290,14 @@ app.post('/api/teacher/assignments',auth,teacherOnly,async(req,res)=>{
  await pool.query('insert into assignments(id,class_id,book_id,lesson_id,lesson_number,lesson_title,skills,created_by) values($1,$2,$3,$4,$5,$6,$7,$8)',[id,classId,bookId,lessonId,lessonNumber,lessonTitle,[...new Set(skills)],req.user.id]);
  res.status(201).json({id,classId,bookId,lessonId,lessonNumber,lessonTitle,skills:[...new Set(skills)]});
 });
-app.post('/api/teacher/students/:id/reset-password',auth,teacherOnly,async(req,res)=>{const owns=await pool.query(`select 1 from enrollments es join classes c on c.id=es.class_id where es.user_id=$1 and c.teacher_id=$2`,[req.params.id,req.user.id]);if(!owns.rowCount)return res.status(404).json({error:'Student not found in your classes.'});const pw=tempPassword();await pool.query('update users set password_hash=$1 where id=$2 and role=$3',[await bcrypt.hash(pw,12),req.params.id,'student']);res.json({temporaryPassword:pw})});
+app.post('/api/teacher/students/:id/reset-password',auth,teacherOnly,async(req,res)=>{
+ const owns=await pool.query(`select 1 from enrollments es join classes c on c.id=es.class_id where es.user_id=$1 and c.teacher_id=$2`,[req.params.id,req.user.id]);
+ if(!owns.rowCount)return res.status(404).json({error:'Student not found in your classes.'});
+ const pw=chosenPassword(req.body?.password);if(!pw)return res.status(400).json({error:'Password must contain 8–20 digits.'});
+ const updated=await pool.query('update users set password_hash=$1 where id=$2 and role=$3 returning id',[await bcrypt.hash(pw,12),req.params.id,'student']);
+ if(!updated.rowCount)return res.status(404).json({error:'Student not found.'});
+ res.json({password:pw,temporaryPassword:pw,generated:!req.body?.password});
+});
 
 app.use('/assets',express.static(path.join(__dirname,'public','assets')));
 app.get('/lesson-visuals.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','lesson-visuals.js')));
