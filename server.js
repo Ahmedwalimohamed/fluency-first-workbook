@@ -53,6 +53,7 @@ async function initDb(){
   create table if not exists teacher_contexts(teacher_id text primary key references users(id) on delete cascade,class_id text references classes(id) on delete set null,lesson_number int not null default 1,section_index int not null default 0,updated_at timestamptz default now());\n create table if not exists assignments(id text primary key,class_id text references classes(id) on delete cascade,book_id text not null,lesson_id text not null,lesson_number int not null,lesson_title text not null,skills text[] not null default '{vocabulary,listening,grammar,writing}',created_by text references users(id),created_at timestamptz default now());\n create table if not exists deleted_seed_accounts(username text primary key,deleted_at timestamptz default now());\n create table if not exists deleted_seed_classes(id text primary key,deleted_at timestamptz default now());\n create table if not exists deleted_seed_books(id text primary key,deleted_at timestamptz default now());`);
  await pool.query("alter table users add column if not exists whatsapp_number text");
  await pool.query("alter table users add column if not exists login_token text");
+ await pool.query("alter table profiles add column if not exists profile_photo text");
  await pool.query("create unique index if not exists users_login_token_unique on users(login_token) where login_token is not null");
  await pool.query("alter table writing_samples alter column score drop not null");
  await pool.query("delete from attempts where skill='writing' and tags @> array['writing:organisation','writing:task-completion']::text[]");
@@ -77,7 +78,7 @@ async function initDb(){
 }
 
 app.get('/api/health',async(req,res)=>{try{await pool.query('select 1');const adminCount=await pool.query("select count(*)::int as count from users where role='admin'");res.json({ok:true,service:'fluency-first-api',systemAdminConfigured:Boolean(process.env.SYSTEM_ADMIN_PASSWORD),systemAdminAccountExists:Number(adminCount.rows[0]?.count||0)>0,openaiTtsConfigured:Boolean(process.env.OPENAI_API_KEY),ttsModel:OPENAI_TTS_MODEL})}catch(e){res.status(503).json({ok:false})}});
-app.post('/api/auth/login',loginLimiter,async(req,res)=>{const username=String(req.body.username||'').trim().toLowerCase(),password=String(req.body.password||'');const q=await pool.query('select id,username,password_hash,role,name from users where lower(username)=lower($1)',[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))return res.status(401).json({error:'Username or password is incorrect.'});const u=q.rows[0];setSession(res,u);res.json({user:{id:u.id,username:u.username,role:u.role,name:u.name}})});
+app.post('/api/auth/login',loginLimiter,async(req,res)=>{const username=String(req.body.username||'').trim().toLowerCase(),password=String(req.body.password||'');const q=await pool.query(`select u.id,u.username,u.password_hash,u.role,u.name,p.profile_photo from users u left join profiles p on p.user_id=u.id where lower(u.username)=lower($1)`,[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))return res.status(401).json({error:'Username or password is incorrect.'});const u=q.rows[0];setSession(res,u);res.json({user:{id:u.id,username:u.username,role:u.role,name:u.name,profilePhoto:u.profile_photo||null}})});
 app.get('/api/auth/access',loginLimiter,async(req,res)=>{
  const accessToken=String(req.query.token||'').trim();
  if(!/^[A-Za-z0-9_-]{24,128}$/.test(accessToken))return res.status(404).json({error:'Personal login link not found.'});
@@ -111,6 +112,24 @@ app.post('/api/auth/forgot-password',passwordResetLimiter,async(req,res)=>{
 });
 app.post('/api/auth/logout',(req,res)=>{res.clearCookie('ff_session',{path:'/'});res.json({ok:true})});
 app.get('/api/me',auth,(req,res)=>res.json({user:req.user}));
+
+function normalizedProfilePhoto(value){
+ if(typeof value!=='string')return null;
+ const m=value.match(/^data:image\/jpeg;base64,([A-Za-z0-9+/=]+)$/);
+ if(!m)return null;
+ let buf;try{buf=Buffer.from(m[1],'base64')}catch{return null}
+ if(buf.length<500||buf.length>180000)return null;
+ if(buf[0]!==0xff||buf[1]!==0xd8||buf[2]!==0xff)return null;
+ return 'data:image/jpeg;base64,'+buf.toString('base64');
+}
+app.put('/api/student/profile-photo',auth,studentOnly,async(req,res)=>{
+ const photo=normalizedProfilePhoto(req.body.photo);
+ if(!photo)return res.status(400).json({error:'Choose a JPG, PNG, or WebP photo. EnglishGate will resize it automatically.'});
+ await pool.query(`insert into profiles(user_id,profile_photo) values($1,$2) on conflict(user_id) do update set profile_photo=excluded.profile_photo`,[req.user.id,photo]);
+ res.set('Cache-Control','no-store');
+ res.json({ok:true,photo});
+});
+
 
 async function classIdsFor(user){if(user.role==='admin'){const q=await pool.query('select id from classes order by created_at,name');return q.rows.map(r=>r.id)}if(user.role==='teacher'){const q=await pool.query('select id from classes where teacher_id=$1 order by created_at,name',[user.id]);return q.rows.map(r=>r.id)}const q=await pool.query('select class_id from enrollments where user_id=$1',[user.id]);return q.rows.map(r=>r.class_id)}
 
@@ -162,8 +181,8 @@ app.get('/api/state',auth,async(req,res)=>{
  const studentIds=users.filter(u=>u.role==='student').map(u=>u.id);
  const ownStudent=req.user.role==='student'?[req.user.id]:studentIds;
  const profileIds=req.user.role==='student'?[req.user.id]:studentIds;
- const profRows=profileIds.length?(await pool.query('select user_id,points,base from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
- const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base});
+ const profRows=profileIds.length?(await pool.query('select user_id,points,base,profile_photo from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
+ const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base,photo:p.profile_photo||null});
  const evidenceIds=req.user.role==='admin'?studentIds:ownStudent;
  const atRows=evidenceIds.length?(await pool.query('select id,student_id,lesson_id,skill,score,tags,at from attempts where student_id=any($1::text[]) order by at',[evidenceIds])).rows:[];
  const cRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,step from completion where student_id=any($1::text[])',[evidenceIds])).rows:[];
@@ -182,7 +201,7 @@ app.get('/api/state',auth,async(req,res)=>{
 
 app.get('/api/leaderboard',auth,async(req,res)=>{
  const rows=(await pool.query(`
-  select u.id,u.name,
+  select u.id,u.name,p.profile_photo,
          coalesce(cls.name,'') as class_name,
          coalesce(cls.level,'') as level,
          coalesce(cls.book_title,'Workbook') as book_title,
@@ -192,6 +211,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
          perf.average,
          perf.last_active
   from users u
+  left join profiles p on p.user_id=u.id
   left join lateral (
     select c.name,c.level,b.title as book_title,coalesce(b.total_lessons,22) as total_lessons
     from enrollments e
@@ -222,6 +242,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   return {
   id:r.id,
   name:r.name,
+  photo:r.profile_photo||null,
   className:r.class_name||'',
   level:r.level||'',
   bookTitle:r.book_title||'Workbook',
