@@ -4877,3 +4877,87 @@ html{scroll-behavior:auto!important}
  .profile-job-input-row{grid-template-columns:1fr}
  .profile-job-input-row .secondary-btn{width:100%}
 }
+
+
+/* Reading alignment: one clean reading column in live view and Spotlight */
+.eg-stage-content.is-reading-stage{
+ text-align:left;
+}
+.eg-stage-content.is-reading-stage>p,
+.eg-stage-content.is-reading-stage>.live-book-bullet{
+ width:100%;
+ max-width:72ch;
+ margin-left:auto;
+ margin-right:auto;
+ text-align:left;
+ text-indent:0;
+}
+.eg-stage-content.is-reading-stage>.live-book-subhead,
+.eg-stage-content.is-reading-stage>.live-book-section,
+.eg-stage-content.is-reading-stage>.reading-spotlight-trigger{
+ width:min(100%,72ch);
+ margin-left:auto;
+ margin-right:auto;
+ text-align:left;
+}
+.eg-stage-content.is-reading-stage>p{
+ margin-top:0;
+ margin-bottom:1.05em;
+}
+.eg-stage-content.is-reading-stage>.live-book-bullet{
+ box-sizing:border-box;
+}
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>p,
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-book-bullet,
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-book-subhead,
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-book-section,
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.reading-spotlight-trigger{
+ max-width:68ch;
+}
+.teacher-reading-spotlight-body{
+ display:block;
+}
+.teacher-reading-spotlight-body>h2,
+.teacher-reading-copy{
+ width:min(100%,900px);
+ max-width:900px;
+ margin-left:auto;
+ margin-right:auto;
+ text-align:left;
+}
+.teacher-reading-spotlight-body>h2{
+ margin-top:0;
+ margin-bottom:24px;
+}
+.teacher-reading-copy{
+ box-sizing:border-box;
+}
+.teacher-reading-copy>p,
+.teacher-reading-copy>.live-book-bullet,
+.teacher-reading-copy blockquote{
+ width:100%;
+ max-width:none;
+ margin-left:0;
+ margin-right:0;
+ text-align:left;
+ text-indent:0;
+}
+.teacher-reading-copy>p:first-child{margin-top:0}
+.teacher-reading-copy>p:last-child,
+.teacher-reading-copy>.live-book-bullet:last-child,
+.teacher-reading-copy blockquote:last-child{margin-bottom:0}
+@media(max-width:760px){
+ .eg-stage-content.is-reading-stage>p,
+ .eg-stage-content.is-reading-stage>.live-book-bullet,
+ .eg-stage-content.is-reading-stage>.live-book-subhead,
+ .eg-stage-content.is-reading-stage>.live-book-section,
+ .eg-stage-content.is-reading-stage>.reading-spotlight-trigger{
+  max-width:100%;
+  width:100%;
+ }
+ .teacher-reading-spotlight-body>h2,
+ .teacher-reading-copy{
+  width:100%;
+  max-width:none;
+ }
+}
