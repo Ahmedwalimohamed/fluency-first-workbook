@@ -72,6 +72,17 @@ async function initDb(){
 
 app.get('/api/health',async(req,res)=>{try{await pool.query('select 1');const adminCount=await pool.query("select count(*)::int as count from users where role='admin'");res.json({ok:true,service:'fluency-first-api',systemAdminConfigured:Boolean(process.env.SYSTEM_ADMIN_PASSWORD),systemAdminAccountExists:Number(adminCount.rows[0]?.count||0)>0,openaiTtsConfigured:Boolean(process.env.OPENAI_API_KEY),ttsModel:OPENAI_TTS_MODEL})}catch(e){res.status(503).json({ok:false})}});
 app.post('/api/auth/login',loginLimiter,async(req,res)=>{const username=String(req.body.username||'').trim().toLowerCase(),password=String(req.body.password||'');const q=await pool.query('select id,username,password_hash,role,name from users where lower(username)=lower($1)',[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))return res.status(401).json({error:'Username or password is incorrect.'});const u=q.rows[0];setSession(res,u);res.json({user:{id:u.id,username:u.username,role:u.role,name:u.name}})});
+app.post('/api/auth/forgot-password',loginLimiter,async(req,res)=>{
+ const username=String(req.body.username||'').trim().toLowerCase(),whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);
+ if(!/^[a-z0-9._-]{3,32}$/.test(username)||!whatsappNumber)return res.status(400).json({error:'Enter your username and registered WhatsApp number with country code.'});
+ const q=await pool.query("select id,username,role,name,whatsapp_number from users where lower(username)=lower($1) and role in ('teacher','student')",[username]);
+ if(!q.rowCount||q.rows[0].whatsapp_number!==whatsappNumber)return res.status(404).json({error:'No matching student or teacher account was found for that username and WhatsApp number.'});
+ const user=q.rows[0],pw=tempPassword();
+ await pool.query('update users set password_hash=$1 where id=$2',[await bcrypt.hash(pw,12),user.id]);
+ const access=await accountAccessContext(user);
+ const message=accountAccessMessage({name:user.name,username:user.username,password:pw,className:access.className,courseName:access.courseName,role:user.role,appUrl:appBaseUrl(req),kind:'reset'});
+ res.json({ok:true,username:user.username,role:user.role,name:user.name,temporaryPassword:pw,whatsappNumber,whatsappMessage:message,whatsappLink:whatsappHref(whatsappNumber,message),className:access.className,courseName:access.courseName});
+});
 app.post('/api/auth/logout',(req,res)=>{res.clearCookie('ff_session',{path:'/'});res.json({ok:true})});
 app.get('/api/me',auth,(req,res)=>res.json({user:req.user}));
 
@@ -240,14 +251,37 @@ function normalizeWhatsapp(value){
  const number=value.trim().replace(/[\s().-]/g,'').replace(/^00/,'+');
  return /^\+[1-9]\d{7,14}$/.test(number)?number:null;
 }
+function appBaseUrl(req){const proto=req.get('x-forwarded-proto')||req.protocol,host=req.get('x-forwarded-host')||req.get('host');return process.env.PUBLIC_APP_URL||`${proto}://${host}`}
+function whatsappHref(number,message){return `https://wa.me/${number.replace(/\D/g,'')}?text=${encodeURIComponent(message)}`}
+function accountAccessMessage({name,username,password,className,courseName,role,appUrl,kind='welcome'}){
+ const greeting=kind==='reset'?'Your EnglishGate password has been reset.':'Welcome to EnglishGate.';
+ const lines=[`${greeting} ${name}`,`Role: ${role==='teacher'?'Teacher':'Student'}`];
+ if(className)lines.push(`Class: ${className}`);
+ if(courseName)lines.push(`Course: ${courseName}`);
+ lines.push(`Username: ${username}`,`Password: ${password}`,`Sign in: ${appUrl}`);
+ return lines.join('\n');
+}
+async function accountAccessContext(user){
+ if(user.role==='student'){
+  const q=await pool.query(`select c.name as class_name,c.level,b.title as course_name from enrollments e join classes c on c.id=e.class_id left join books b on b.id=c.course_id where e.user_id=$1 order by c.created_at desc nulls last,c.name limit 1`,[user.id]);
+  const row=q.rows[0]||{};
+  return {className:row.class_name||'Not assigned',courseName:row.course_name||row.level||'EnglishGate Workbook'};
+ }
+ if(user.role==='teacher'){
+  const q=await pool.query(`select string_agg(c.name, ', ' order by c.name) as class_name,string_agg(distinct coalesce(b.title,c.level), ', ') as course_name from classes c left join books b on b.id=c.course_id where c.teacher_id=$1`,[user.id]);
+  const row=q.rows[0]||{};
+  return {className:row.class_name||'Teacher classes',courseName:row.course_name||'EnglishGate Workbook'};
+ }
+ return {className:null,courseName:null};
+}
 app.post('/api/admin/students',auth,adminOnly,async(req,res)=>{
  const whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();
  if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});
  const passwordWasGenerated=req.body.password===undefined||req.body.password===null||req.body.password==='';
  const pw=chosenPassword(req.body.password);if(!pw)return res.status(400).json({error:'Password must contain numbers only and be 8–20 digits long.'});
- const c=await pool.query('select id from classes where id=$1',[classId]);if(!c.rowCount)return res.status(400).json({error:'Choose a valid class.'});
+ const c=await pool.query('select c.id,c.name,c.level,b.title as course_name from classes c left join books b on b.id=c.course_id where c.id=$1',[classId]);if(!c.rowCount)return res.status(400).json({error:'Choose a valid class.'});
  const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
- const id='s_'+crypto.randomUUID(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw,passwordWasGenerated})}catch(e){await client.query('rollback');throw e}finally{client.release()}
+ const id='s_'+crypto.randomUUID(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');const classInfo=c.rows[0],courseName=classInfo.course_name||classInfo.level||'EnglishGate Workbook',message=accountAccessMessage({name,username,password:pw,className:classInfo.name,courseName,role:'student',appUrl:appBaseUrl(req)});res.status(201).json({id,username,temporaryPassword:pw,passwordWasGenerated,whatsappNumber,className:classInfo.name,courseName,whatsappMessage:message,whatsappLink:whatsappHref(whatsappNumber,message)})}catch(e){await client.query('rollback');throw e}finally{client.release()}
 });
 async function transferStudent(req,res,isAdmin){
  const studentId=String(req.params.id||'').trim(),classId=String(req.body.classId||'').trim();
@@ -277,7 +311,15 @@ app.delete('/api/admin/classes/:id',auth,adminOnly,async(req,res)=>{
  const client=await pool.connect();try{await client.query('begin');const q=await client.query('delete from classes where id=$1 returning id,name',[req.params.id]);if(!q.rowCount){await client.query('rollback');return res.status(404).json({error:'Class not found.'});}await client.query('insert into deleted_seed_classes(id) values($1) on conflict(id) do nothing',[q.rows[0].id]);await client.query('commit');res.json({ok:true,id:q.rows[0].id,name:q.rows[0].name});}catch(e){await client.query('rollback');throw e}finally{client.release()}
 });
 
-app.post('/api/teacher/students',auth,teacherOnly,async(req,res)=>{const whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});const owns=await pool.query('select 1 from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);if(!owns.rowCount)return res.status(403).json({error:'You cannot add students to this class.'});const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');res.status(201).json({id,username,temporaryPassword:pw})}catch(e){await client.query('rollback');throw e}finally{client.release()}});
+app.post('/api/teacher/students',auth,teacherOnly,async(req,res)=>{
+ const whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber);if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});
+ const name=String(req.body.name||'').trim(),username=String(req.body.username||'').trim().toLowerCase(),classId=String(req.body.classId||'').trim();
+ if(name.length<2||!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a valid name and a 3–32 character username.'});
+ const owns=await pool.query('select c.id,c.name,c.level,b.title as course_name from classes c left join books b on b.id=c.course_id where c.id=$1 and c.teacher_id=$2',[classId,req.user.id]);if(!owns.rowCount)return res.status(403).json({error:'You cannot add students to this class.'});
+ const exists=await pool.query('select 1 from users where lower(username)=lower($1)',[username]);if(exists.rowCount)return res.status(409).json({error:'That username already exists.'});
+ const id='s_'+crypto.randomUUID(),pw=tempPassword(),client=await pool.connect();
+ try{await client.query('begin');await client.query('insert into users(id,username,password_hash,role,name,whatsapp_number) values($1,$2,$3,$4,$5,$6)',[id,username,await bcrypt.hash(pw,12),'student',name,whatsappNumber]);await client.query('insert into profiles(user_id) values($1)',[id]);await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,id]);await client.query('commit');const classInfo=owns.rows[0],courseName=classInfo.course_name||classInfo.level||'EnglishGate Workbook',message=accountAccessMessage({name,username,password:pw,className:classInfo.name,courseName,role:'student',appUrl:appBaseUrl(req)});res.status(201).json({id,username,temporaryPassword:pw,passwordWasGenerated:true,whatsappNumber,className:classInfo.name,courseName,whatsappMessage:message,whatsappLink:whatsappHref(whatsappNumber,message)})}catch(e){await client.query('rollback');throw e}finally{client.release()}
+});
 app.patch('/api/teacher/students/:id/class',auth,teacherOnly,(req,res)=>transferStudent(req,res,false));
 app.put('/api/teacher/context',auth,teacherOnly,async(req,res)=>{
  const classId=String(req.body.classId||'').trim(),lessonNumber=Number(req.body.lessonNumber),sectionIndex=Number(req.body.sectionIndex);
