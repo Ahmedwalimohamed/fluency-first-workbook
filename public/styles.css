@@ -1908,3 +1908,36 @@ html{scroll-behavior:auto!important}
 .eg-workbook-teaching-surface{
  overflow-anchor:none;
 }
+
+
+/* Vocabulary learning feedback */
+.mcq-learning-feedback-slot:empty{display:none}
+.mcq-learning-feedback{display:grid;gap:5px;margin-top:2px;padding:13px 15px;border:1px solid;border-radius:12px;font-size:.86rem;line-height:1.45}
+.mcq-learning-feedback.is-correct{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.mcq-learning-feedback.is-incorrect{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.mcq-learning-status{font-size:.78rem;font-weight:900;letter-spacing:.02em}
+.mcq-learning-feedback p{margin:0;color:#0f172a}
+.mcq-learning-feedback p>b:first-child{font-weight:900}
+.mcq-learning-example{color:#475569!important}
+.mcq-learning-example b{color:#0f172a}
+.mcq-option-card:disabled{cursor:default;opacity:.66;transform:none!important;box-shadow:none!important}
+.mcq-option-card.is-correct-choice{border-color:#16a34a!important;background:#f0fdf4!important;color:#166534!important;opacity:1}
+.mcq-option-card.is-incorrect-choice{border-color:#dc2626!important;background:#fef2f2!important;color:#991b1b!important;opacity:1}
+.eg-vocab-recycle{margin-top:22px;padding:20px;border:1px solid #dbe4ea;border-radius:16px;background:#f8fafc}
+.eg-vocab-recycle-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:14px}
+.eg-vocab-recycle-head small{display:block;color:#2563eb;font-size:.7rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.eg-vocab-recycle-head h3{margin:3px 0 0;color:#0f172a;font-size:1.05rem}
+.eg-vocab-recycle-head>span{color:#64748b;font-size:.75rem;font-weight:700}
+.eg-vocab-recycle-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.eg-vocab-recycle-card{padding:15px;border:1px solid #e2e8f0;border-radius:13px;background:#fff}
+.eg-vocab-recycle-card>p{min-height:42px;margin:10px 0 12px;color:#334155;font-size:.9rem;line-height:1.5}
+.eg-vocab-recycle-entry{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.eg-vocab-recycle-entry input{min-width:0}
+.eg-vocab-recycle-entry input.is-correct{border-color:#16a34a;box-shadow:0 0 0 2px rgba(22,163,74,.08)}
+.eg-vocab-recycle-entry input.is-incorrect{border-color:#dc2626;box-shadow:0 0 0 2px rgba(220,38,38,.08)}
+.eg-vocab-recycle-card [data-vocab-recycle-feedback] .mcq-learning-feedback{margin-top:10px}
+@media(max-width:760px){
+ .eg-vocab-recycle-head{align-items:flex-start;flex-direction:column;gap:5px}
+ .eg-vocab-recycle-grid{grid-template-columns:1fr}
+ .eg-vocab-recycle-entry{grid-template-columns:1fr}
+}
