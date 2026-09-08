@@ -849,12 +849,19 @@ function liveLineHtml(line,mode='normal'){
 }
 function renderLiveContent(text){
  const lines=String(text||'').split('\n'),out=[];
- let mode='normal',vocabOpen=false,promptOpen=false,findOpen=false;
+ let mode='normal',vocabOpen=false,promptOpen=false,findOpen=false,readingLines=[];
  const closeVocab=()=>{if(vocabOpen){out.push('</div>');vocabOpen=false}};
  const closePrompts=()=>{if(promptOpen){out.push('</div>');promptOpen=false}};
  const closeFind=()=>{if(findOpen){out.push('</div>');findOpen=false}};
+ const closeReading=()=>{if(readingLines.length){out.push('<p class="live-reading-paragraph">'+escapeHtml(readingLines.join(' ').replace(/\s+/g,' ').trim())+'</p>');readingLines=[]}};
+ const readingBoundary=t=>/^(Check Your Understanding|Useful Expressions|Pronunciation|Examples|Complete the Sentences|Make It Personal|Challenge|Try to cover:|Write their names below:|LANGUAGE BANK|USEFUL EXPRESSIONS|GRAMMAR FOR THE MISSION|HOMEWORK|INDEPENDENT MISSION|REFLECTION|SUCCESS CHECK|SPEAKING CHALLENGE|FLUENCY MISSION|PERFORMANCE MISSION|YOUR MISSION)$/i.test(t)||/^PAGE\s+\d+\s*[—-]/i.test(t);
  for(const raw of lines){
   const t=raw.trim();if(!t)continue;
+  if(mode==='reading'&&!readingBoundary(t)){
+   readingLines.push(t);
+   continue;
+  }
+  if(mode==='reading')closeReading();
   if(/^WORD\s+EXAMPLE$/i.test(t)){
    closePrompts();closeFind();closeVocab();mode='vocabulary';vocabOpen=true;
    out.push('<div class="live-vocab-table"><div class="live-vocab-head"><span>Target word</span><span>Example in context</span></div>');
@@ -862,8 +869,9 @@ function renderLiveContent(text){
   }
   if(/^Think & Talk$/i.test(t)){closePrompts();closeFind();closeVocab();mode='talk'}
   else if(/^Find someone who\.{0,3}$/i.test(t)){closePrompts();closeFind();closeVocab();mode='find'}
+  else if(/^READ$/i.test(t)){closePrompts();closeFind();closeVocab();mode='reading'}
   else if(/^Write their names below:$/i.test(t)){closePrompts();closeFind();closeVocab();mode='normal'}
-  else if(/^(Useful Expressions|Pronunciation|READ|Examples|Complete the Sentences|Make It Personal|Challenge|Check Your Understanding|SPEAKING CHALLENGE|FLUENCY MISSION|HOMEWORK|REFLECTION)$/i.test(t)){
+  else if(/^(Useful Expressions|Pronunciation|Examples|Complete the Sentences|Make It Personal|Challenge|Check Your Understanding|SPEAKING CHALLENGE|FLUENCY MISSION|HOMEWORK|REFLECTION)$/i.test(t)){
    closePrompts();closeFind();closeVocab();mode='normal';
   }
   const html=liveLineHtml(t,mode);
@@ -873,7 +881,7 @@ function renderLiveContent(text){
    else{closePrompts();closeFind();out.push(html)}
   }
  }
- closePrompts();closeFind();closeVocab();
+ closeReading();closePrompts();closeFind();closeVocab();
  return out.join('');
 }
 
