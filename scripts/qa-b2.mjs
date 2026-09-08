@@ -94,7 +94,8 @@ for(let i=0;i<22;i++){
 
   const allText=JSON.stringify(l);
   if(/placeholder|lorem ipsum|todo\b|tbd\b/i.test(allText)) fail(`Lesson ${n}: placeholder/TODO content detected.`);
-  if(/\bunrelated\b|\bordinary\b/.test(allText)) warn(`Lesson ${n}: generic vocabulary distractor detected; replace with plausible level-appropriate distractors.`);
+  const vocabText=JSON.stringify(l.vocabularyItems||[]);
+  if(/\bunrelated\b|\bordinary\b/i.test(vocabText)) warn(`Lesson ${n}: generic vocabulary distractor detected; replace with plausible level-appropriate distractors.`);
 
   if(!live || live.number!==n || live.title!==l.title) fail(`Lesson ${n}: live book / workbook topic mismatch.`);
   if(live && !/CAN-DO GOAL:/i.test(live.content||'')) fail(`Lesson ${n}: live lesson missing Can-Do goal.`);
