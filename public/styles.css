@@ -5127,7 +5127,7 @@ html{scroll-behavior:auto!important}
 .writing-review-quote{position:absolute;left:14px;top:2px;color:#cbd5e1;font:700 2.2rem Georgia,serif;line-height:1}
 .writing-review-actions{display:flex;align-items:center;gap:8px;margin-top:auto;padding:10px 14px;border-top:1px solid #eef2f6;background:#fcfdff}
 .writing-review-actions .writing-like-btn{min-height:34px;padding:5px 10px}
-.writing-read-btn{border:0;background:transparent;color:#2452b8;font:700 .76rem/1.2 inherit;cursor:pointer;padding:7px 5px}
+.writing-read-btn{border:0;background:transparent;color:#2452b8;font:inherit;font-size:.76rem;font-weight:700;line-height:1.2;cursor:pointer;padding:7px 5px}
 .writing-read-btn:hover{text-decoration:underline;text-underline-offset:3px}
 .writing-review-actions .writing-share-btn{margin-left:auto;min-height:34px;padding:6px 10px;font-size:.76rem}
 .writing-pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin:18px 0 0;padding:10px}
