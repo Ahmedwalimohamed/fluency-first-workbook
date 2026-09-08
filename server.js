@@ -54,6 +54,7 @@ async function initDb(){
  await pool.query("alter table users add column if not exists whatsapp_number text");
  await pool.query("alter table users add column if not exists login_token text");
  await pool.query("alter table profiles add column if not exists profile_photo text");
+ await pool.query("alter table profiles add column if not exists profile_photo_updated_at timestamptz");
  await pool.query("create unique index if not exists users_login_token_unique on users(login_token) where login_token is not null");
  await pool.query("alter table writing_samples alter column score drop not null");
  await pool.query("delete from attempts where skill='writing' and tags @> array['writing:organisation','writing:task-completion']::text[]");
@@ -78,7 +79,7 @@ async function initDb(){
 }
 
 app.get('/api/health',async(req,res)=>{try{await pool.query('select 1');const adminCount=await pool.query("select count(*)::int as count from users where role='admin'");res.json({ok:true,service:'fluency-first-api',systemAdminConfigured:Boolean(process.env.SYSTEM_ADMIN_PASSWORD),systemAdminAccountExists:Number(adminCount.rows[0]?.count||0)>0,openaiTtsConfigured:Boolean(process.env.OPENAI_API_KEY),ttsModel:OPENAI_TTS_MODEL})}catch(e){res.status(503).json({ok:false})}});
-app.post('/api/auth/login',loginLimiter,async(req,res)=>{const username=String(req.body.username||'').trim().toLowerCase(),password=String(req.body.password||'');const q=await pool.query(`select u.id,u.username,u.password_hash,u.role,u.name,p.profile_photo from users u left join profiles p on p.user_id=u.id where lower(u.username)=lower($1)`,[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))return res.status(401).json({error:'Username or password is incorrect.'});const u=q.rows[0];setSession(res,u);res.json({user:{id:u.id,username:u.username,role:u.role,name:u.name,profilePhoto:u.profile_photo||null}})});
+app.post('/api/auth/login',loginLimiter,async(req,res)=>{const username=String(req.body.username||'').trim().toLowerCase(),password=String(req.body.password||'');const q=await pool.query(`select u.id,u.username,u.password_hash,u.role,u.name,(p.profile_photo is not null) as has_profile_photo from users u left join profiles p on p.user_id=u.id where lower(u.username)=lower($1)`,[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))return res.status(401).json({error:'Username or password is incorrect.'});const u=q.rows[0];setSession(res,u);res.json({user:{id:u.id,username:u.username,role:u.role,name:u.name,hasProfilePhoto:Boolean(u.has_profile_photo),profilePhotoUrl:u.has_profile_photo?'/api/profile-photo/'+encodeURIComponent(u.id):null}})});
 app.get('/api/auth/access',loginLimiter,async(req,res)=>{
  const accessToken=String(req.query.token||'').trim();
  if(!/^[A-Za-z0-9_-]{24,128}$/.test(accessToken))return res.status(404).json({error:'Personal login link not found.'});
@@ -125,9 +126,20 @@ function normalizedProfilePhoto(value){
 app.put('/api/student/profile-photo',auth,studentOnly,async(req,res)=>{
  const photo=normalizedProfilePhoto(req.body.photo);
  if(!photo)return res.status(400).json({error:'Choose a JPG, PNG, or WebP photo. EnglishGate will resize it automatically.'});
- await pool.query(`insert into profiles(user_id,profile_photo) values($1,$2) on conflict(user_id) do update set profile_photo=excluded.profile_photo`,[req.user.id,photo]);
+ await pool.query(`insert into profiles(user_id,profile_photo,profile_photo_updated_at) values($1,$2,now()) on conflict(user_id) do update set profile_photo=excluded.profile_photo,profile_photo_updated_at=now()`,[req.user.id,photo]);
  res.set('Cache-Control','no-store');
- res.json({ok:true,photo});
+ res.json({ok:true,photoUrl:'/api/profile-photo/'+encodeURIComponent(req.user.id)});
+});
+app.get('/api/profile-photo/:studentId',auth,async(req,res)=>{
+ const studentId=String(req.params.studentId||'');
+ const q=await pool.query(`select p.profile_photo from profiles p join users u on u.id=p.user_id where p.user_id=$1 and u.role='student'`,[studentId]);
+ if(!q.rowCount||!q.rows[0].profile_photo)return res.status(404).end();
+ const photo=normalizedProfilePhoto(q.rows[0].profile_photo);
+ if(!photo)return res.status(404).end();
+ const base64=photo.slice(photo.indexOf(',')+1);
+ res.set('Content-Type','image/jpeg');
+ res.set('Cache-Control','private, no-store');
+ res.send(Buffer.from(base64,'base64'));
 });
 
 
@@ -181,8 +193,8 @@ app.get('/api/state',auth,async(req,res)=>{
  const studentIds=users.filter(u=>u.role==='student').map(u=>u.id);
  const ownStudent=req.user.role==='student'?[req.user.id]:studentIds;
  const profileIds=req.user.role==='student'?[req.user.id]:studentIds;
- const profRows=profileIds.length?(await pool.query('select user_id,points,base,profile_photo from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
- const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base,photo:p.profile_photo||null});
+ const profRows=profileIds.length?(await pool.query('select user_id,points,base,(profile_photo is not null) as has_photo from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
+ const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base,hasPhoto:Boolean(p.has_photo),photoUrl:p.has_photo?'/api/profile-photo/'+encodeURIComponent(p.user_id):null});
  const evidenceIds=req.user.role==='admin'?studentIds:ownStudent;
  const atRows=evidenceIds.length?(await pool.query('select id,student_id,lesson_id,skill,score,tags,at from attempts where student_id=any($1::text[]) order by at',[evidenceIds])).rows:[];
  const cRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,step from completion where student_id=any($1::text[])',[evidenceIds])).rows:[];
@@ -201,7 +213,7 @@ app.get('/api/state',auth,async(req,res)=>{
 
 app.get('/api/leaderboard',auth,async(req,res)=>{
  const rows=(await pool.query(`
-  select u.id,u.name,p.profile_photo,
+  select u.id,u.name,(p.profile_photo is not null) as has_photo,
          coalesce(cls.name,'') as class_name,
          coalesce(cls.level,'') as level,
          coalesce(cls.book_title,'Workbook') as book_title,
@@ -242,7 +254,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   return {
   id:r.id,
   name:r.name,
-  photo:r.profile_photo||null,
+  photoUrl:r.has_photo?'/api/profile-photo/'+encodeURIComponent(r.id):null,
   className:r.class_name||'',
   level:r.level||'',
   bookTitle:r.book_title||'Workbook',
