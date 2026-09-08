@@ -895,16 +895,130 @@ function startBoost(l){if(!l.grammar?.items?.length)return;const recovery=boostR
 function renderBoost(l,state){const item=state.questions[state.index],q=item.retest,original=item.original,lesson=boostHint(original);showModal('<div class="boost-modal"><div class="boost-modal-head"><div><span class="boost-kicker">EnglishGate Boost · Targeted recovery</span><h3>Fix what you missed</h3><p>Question '+(state.index+1)+' of '+state.questions.length+' missed grammar skill'+(state.questions.length===1?'':'s')+'.</p></div><button class="icon-btn" data-close>×</button></div><div class="boost-flow"><span class="active">1 · Review</span><span class="active">2 · Retest</span><span>3 · Mastery</span></div><div class="boost-question-card"><div class="boost-original"><small>Workbook question you missed</small><strong>'+escapeHtml(original.q)+'</strong></div><div class="boost-mini"><strong>Mini lesson</strong><span>'+escapeHtml(lesson)+'</span><small>Model answer from the original item: '+escapeHtml(original.answer)+'</small></div><div class="question-stage">'+stageBadge('Fresh retest')+'<span>'+(state.index+1)+'/'+state.questions.length+'</span></div><p class="boost-question">'+escapeHtml(q.q)+'</p>'+radio('boostChoice',q.options,q.answer,original.tag)+(state.wrong?'<div class="boost-hint"><strong>Try once more</strong><span>'+escapeHtml(lesson)+'</span></div>':'')+'<div id="boostFeedback">'+(state.feedback?'<div class="feedback bad">'+escapeHtml(state.feedback)+'</div>':'')+'</div><button class="primary-btn boost-submit" id="boostSubmit">Check retest answer</button></div><p class="boost-note">The retest changes the context so you apply the rule instead of memorising the old answer.</p></div>');document.querySelector('[data-close]').onclick=closeModal;wireMcqCards(document.getElementById('modalRoot')||document);$('boostSubmit').onclick=()=>submitBoost(l,state)}
 async function submitBoost(l,state){const selected=document.querySelector('input[name="boostChoice"]:checked');if(!selected){$('boostFeedback').innerHTML='<div class="feedback bad">Choose an answer first.</div>';return}const item=state.questions[state.index];state.totalAttempts++;if(selected.value===item.retest.answer){state.mastered++;state.feedback='';state.wrong=0;state.index++;if(state.index>=state.questions.length){await finishBoost(l,state);return}renderBoost(l,state);return}state.wrong++;state.hints++;if(state.wrong<2){state.feedback='Not yet. Read the mini lesson and try this fresh question once more.';renderBoost(l,state);return}state.unresolved++;state.feedback='';state.wrong=0;state.index++;if(state.index>=state.questions.length){await finishBoost(l,state);return}renderBoost(l,state)}
 async function finishBoost(l,state){if(state.saving)return;state.saving=true;const total=state.questions.length,score=Math.round(state.mastered/Math.max(1,total)*100),mastered=state.unresolved===0&&state.mastered===total,tags=['boost:retest','boost:grammar',mastered?'boost:mastered':'boost:needs-practice',...state.questions.slice(0,7).map(x=>'boostq:'+x.index)].slice(0,10);try{await recordAttempt(session.id,l.id,'grammar',score,tags);await refreshState();showModal('<div class="boost-modal boost-result"><div class="boost-result-icon">'+(mastered?'✓':'↻')+'</div><span class="boost-kicker">EnglishGate Boost</span><h3>'+(mastered?'Missed grammar repaired':'Some grammar still needs practice')+'</h3><p>'+(mastered?'You reviewed the rules and answered fresh retest questions successfully. Your original workbook score remains saved separately.':'Your recovery result has been saved. Run Boost again after your next grammar attempt if these skills are still missed.')+'</p><div class="boost-result-grid"><div><small>Original misses</small><strong>'+total+'</strong></div><div><small>Recovered</small><strong>'+state.mastered+'</strong></div><div><small>Boost mastery</small><strong>'+score+'%</strong></div></div><button class="primary-btn" id="boostBack">Back to grammar</button></div>');$('boostBack').onclick=()=>{closeModal();renderActivity()}}catch(e){state.saving=false;state.feedback='Could not save Boost progress: '+e.message;renderBoost(l,state)}}
-function writingSubmission(sid,lid){const raw=writingFor(sid,lid);if(!raw)return{builder:[],final:'',score:null};try{const parsed=JSON.parse(raw);if(Array.isArray(parsed))return{builder:[],final:parsed.at(-1)||'',legacy:parsed,score:null};if(parsed&&typeof parsed==='object')return{builder:Array.isArray(parsed.builder)?parsed.builder:[],final:String(parsed.final||''),score:parsed.score??null};return{builder:[],final:String(parsed||''),score:null}}catch{return{builder:[],final:raw,score:null}}}
+function writingSubmission(sid,lid){
+ const raw=writingFor(sid,lid);
+ if(!raw)return{builder:[],core:{},final:'',score:null};
+ try{
+  const parsed=JSON.parse(raw);
+  if(Array.isArray(parsed))return{builder:[],core:{},final:parsed.at(-1)||'',legacy:parsed,score:null};
+  if(parsed&&typeof parsed==='object')return{builder:Array.isArray(parsed.builder)?parsed.builder:[],core:parsed.core&&typeof parsed.core==='object'?parsed.core:{},final:String(parsed.final||''),score:parsed.score??null};
+  return{builder:[],core:{},final:String(parsed||''),score:null}
+ }catch{return{builder:[],core:{},final:raw,score:null}}
+}
 function writingResponses(sid,lid){const submission=writingSubmission(sid,lid);return submission.legacy||[submission.final]}
-function writingActivity(l){
- const tasks=(l.writing?.tasks||[]).slice(0,10);
- if(!l.writing?.builder){
-  const saved=writingResponses(session.id,l.id);
-  return `<div class="eg-skill-page eg-writing-page"><header class="eg-skill-hero"><div><span class="eg-skill-kicker">Writing</span><h1>Write a real message</h1><p>Build your answer step by step, then make it sound natural.</p></div><span class="eg-question-count">${tasks.length} tasks</span></header><div class="eg-writing-layout eg-writing-layout-designed"><main class="eg-writing-workspace"><div class="activity-question-list">${tasks.map((t,i)=>`<article class="guided-question writing-guided-question"><div class="writing-task-head"><div><span class="stage-badge">Task ${i+1}</span><strong>${escapeHtml(t.prompt)}</strong></div><span>${t.minWords}+ words</span></div><textarea class="writing-response" data-writing="${i}" data-min="${t.minWords}" placeholder="Type your response…">${escapeHtml(saved[i]||'')}</textarea><div class="word-count" data-count="${i}">0 words</div></article>`).join('')}</div></main><aside class="eg-writing-brief"><small>Writing support</small><h2>${escapeHtml(l.title)}</h2><p>Imagine the reader. Keep the purpose clear and use natural English.</p><div class="eg-writing-reminder"><strong>Remember</strong><span>Be clear and friendly.</span><span>Include the key information.</span><span>Read it once before saving.</span></div></aside></div><div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="saveWriting">Save writing</button>${activityDoneButton(l)}</div></div>`;
+function writingNormalize(text){return String(text||'').toLowerCase().replace(/[“”"'’]/g,"'").replace(/[^a-z0-9'&]+/g,' ').replace(/\s+/g,' ').trim()}
+function writingShuffle(items,seed){
+ const out=items.map((value,index)=>({value,index}));let hash=2166136261;const key=String(seed||'writing');
+ for(let i=0;i<key.length;i++){hash^=key.charCodeAt(i);hash=Math.imul(hash,16777619)}
+ for(let i=out.length-1;i>0;i--){hash=Math.imul(hash^i,16777619);const j=Math.abs(hash)%(i+1);[out[i],out[j]]=[out[j],out[i]]}
+ if(out.length>1&&out.every((x,i)=>x.index===i))[out[0],out[1]]=[out[1],out[0]];
+ return out;
+}
+function writingFinalSpec(l){
+ const w=l.writing||{};
+ if(w.task)return{task:String(w.task),min:Number(w.minWords||40),max:Number(w.maxWords||80),genre:writingGenre(w.task,l.number)};
+ const tasks=Array.isArray(w.tasks)?w.tasks:[],last=tasks.at(-1),topic=String(l.title||'this topic').toLowerCase();
+ const variants=[
+  {genre:'message',task:`Write a short WhatsApp message to a classmate about ${topic}. Explain your main point and include one useful detail.`},
+  {genre:'email',task:`Write a short email to a colleague about ${topic}. State your purpose and include one relevant detail.`},
+  {genre:'post',task:`Write a short social media post about ${topic}. Share one clear point and one reason or example.`},
+  {genre:'form',task:`Write a short form response about ${topic}. Explain your experience or opinion clearly.`},
+  {genre:'request',task:`Write a short request to a teacher or colleague connected to ${topic}. State what you need and why.`}
+ ],pick=variants[Math.abs(Number(l.number||1)-1)%variants.length],base=Number(last?.minWords||60),min=Math.max(40,Math.min(70,Math.round(base*.7))),max=min+30;
+ return{...pick,min,max}
+}
+function writingGenre(task,number=1){
+ const t=String(task||'').toLowerCase();
+ if(/whatsapp|text message|short message|message/.test(t))return'message';
+ if(/email/.test(t))return'email';
+ if(/social|post|facebook|\bx\b/.test(t))return'post';
+ if(/form/.test(t))return'form';
+ if(/complain/.test(t))return'complaint';
+ if(/request|ask for/.test(t))return'request';
+ return['message','email','post','form','request'][Math.abs(Number(number||1)-1)%5]
+}
+function writingModelSentence(l){
+ const items=l.grammar?.items||[];
+ const candidates=items.map(q=>String(q.answer||'').trim()).filter(x=>{const n=x.split(/\s+/).length;return n>=4&&n<=14});
+ if(candidates.length)return withPeriod(candidates[0]);
+ const phrase=String((l.expressions||[])[0]?.text||'').replace(/[…]+/g,'').trim();
+ if(phrase&&phrase.split(/\s+/).length>=3)return withPeriod(phrase);
+ return withPeriod('I can communicate clearly about '+String(l.title||'this topic').toLowerCase());
+}
+function writingCombineModel(l){
+ const topic=String(l.title||'this topic').toLowerCase(),mode=Math.abs(Number(l.number||1))%4;
+ if(mode===0)return{a:`I want to communicate clearly about ${topic}.`,b:'It is important for my work or studies.',connector:'because',answer:`I want to communicate clearly about ${topic} because it is important for my work or studies.`};
+ if(mode===1)return{a:`${cap(topic)} can be challenging.`,b:'I keep practising.',connector:'but',answer:`${cap(topic)} can be challenging, but I keep practising.`};
+ if(mode===2)return{a:`I need to communicate clearly about ${topic}.`,b:'I prepare my ideas first.',connector:'so',answer:`I need to communicate clearly about ${topic}, so I prepare my ideas first.`};
+ return{a:'I prepare my main idea.',b:'I check my message before I send it.',connector:'and',answer:'I prepare my main idea and check my message before I send it.'}
+}
+function writingCorrectionModel(l){
+ const items=l.grammar?.items||[];
+ for(const q of items){
+  const correct=String(q.answer||'').trim(),wrong=(q.options||[]).map(String).find(x=>writingNormalize(x)!==writingNormalize(correct));
+  if(correct&&wrong&&correct.split(/\s+/).length>=3)return{wrong:withPeriod(wrong),answer:withPeriod(correct)}
  }
- const saved=writingSubmission(session.id,l.id),builder=l.writing.builder,assessment=l.writing.humanGraded,teacherGrade=getDB().writingScores?.[session.id]?.[l.id],phrases=(l.expressions||[]).slice(0,5).map(x=>x.text);
- return `<div class="eg-skill-page eg-writing-page"><header class="eg-skill-hero"><div><span class="eg-skill-kicker">${assessment?'Final assessment':'Writing'}</span><h1>Write a message</h1><p>Use the phrases to help you, then write one authentic response.</p></div><span class="eg-question-count">${assessment?(teacherGrade===null||teacherGrade===undefined?'Teacher graded':teacherGrade+'%'):builder.length+' checks'}</span></header>${assessment?`<div class="assessment-notice"><strong>Independent final assessment</strong><p>${teacherGrade===null||teacherGrade===undefined?'Your teacher will grade the final response. Automatic correction is intentionally disabled for this lesson.':`Your teacher awarded ${teacherGrade}%. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}<div class="eg-writing-layout eg-writing-layout-designed"><main class="eg-writing-workspace"><section class="writing-builder"><div class="eg-task-panel-head"><div><small>Part 1 · Plan</small><h2>Build your response</h2><p>Check register, task completion, cohesion and vocabulary.</p></div></div>${builder.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>Builder ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${radio('wb'+i,q.options,q.answer,q.tag)}</article>`).join('')}</section><article class="guided-question writing-guided-question final-writing-card eg-message-composer"><div class="eg-message-bar"><div class="eg-message-avatar">Y</div><div><strong>You</strong><small>Writing now</small></div></div><div class="writing-task-head"><div><span class="stage-badge">Part 2 · Real-life writing</span><strong>${escapeHtml(l.writing.task)}</strong></div><span>${l.writing.minWords}–${l.writing.maxWords} words</span></div><textarea class="writing-final-response" data-count-key="final" data-min="${l.writing.minWords}" data-max="${l.writing.maxWords}" placeholder="Type your message here…">${escapeHtml(saved.final)}</textarea><div class="word-count" data-count="final">0 words</div></article></main><aside class="eg-writing-brief"><small>Use these phrases to help you</small>${phrases.length?`<div class="eg-phrase-bank">${phrases.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div>`:''}<div class="eg-writing-reminder"><strong>Remember</strong><span>Be polite and friendly.</span><span>Use clear and natural English.</span><span>Include the key information.</span><span>Keep it focused on the purpose.</span></div></aside></div><div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="saveWriting">${assessment?'Submit for teacher grading':'Check & save writing'}</button>${activityDoneButton(l)}</div></div>`;
+ const topic=String(l.title||'this topic').toLowerCase();
+ return{wrong:`I am write about ${topic}.`,answer:`I am writing about ${topic}.`}
+}
+function writingParagraphModel(l,spec){
+ const topic=String(l.title||'this topic').toLowerCase(),genre=spec.genre;
+ if(genre==='email')return['Dear colleague,',`I am writing about ${topic}.`,'One important detail is that clear information helps the reader understand the purpose.','Kind regards,'];
+ if(genre==='post')return[`Here is one thought about ${topic}.`,'The main point is that clear communication helps people understand the issue.','For example, one specific detail can make a message stronger.','What do you think?'];
+ if(genre==='form')return[`My experience with ${topic} has been useful.`,'The main reason is that it helps me explain my ideas clearly.','For example, I can give a specific detail instead of a general answer.','Overall, I want to keep improving.'];
+ if(genre==='complaint')return['Dear Sir or Madam,',`I am writing to complain about an issue connected to ${topic}.`,'The problem has affected me, so I would appreciate a clear solution.','I look forward to your response.'];
+ if(genre==='request')return['Hello,',`I am writing to make a request about ${topic}.`,'The reason is that I need clear information before I continue.','Thank you for your help.'];
+ return['Hi,',`I wanted to message you about ${topic}.`,'One important detail is that clear communication makes the situation easier.','Thanks for reading.']
+}
+function writingCoreExercises(l){
+ const spec=writingFinalSpec(l),sentence=writingModelSentence(l),cleanSentence=sentence.replace(/[.!?]+$/,'').trim(),words=cleanSentence.split(/\s+/),combine=writingCombineModel(l),correct=writingCorrectionModel(l),paragraph=writingParagraphModel(l,spec);
+ return[
+  {type:'build',label:'1 · Sentence Building',instruction:'Tap the words in the correct order to build the sentence.',answer:cleanSentence,pieces:writingShuffle(words,l.id+'|build')},
+  {type:'combine',label:'2 · Sentence Combining',instruction:`Combine the two sentences using “${combine.connector}”.`,a:combine.a,b:combine.b,connector:combine.connector,answer:combine.answer},
+  {type:'correct',label:'3 · Error Correction',instruction:'Rewrite the sentence correctly.',wrong:correct.wrong,answer:correct.answer},
+  {type:'organize',label:'4 · Paragraph Ordering',instruction:'Tap the sentences in the most logical paragraph order.',answer:paragraph,pieces:writingShuffle(paragraph,l.id+'|organize')}
+ ]
+}
+function writingArrangeHtml(ex){
+ const sentenceMode=ex.type==='build';
+ return `<article class="guided-question writing-core-card" data-writing-core="${ex.type}" data-answer="${escapeAttr(sentenceMode?ex.answer:ex.answer.join('||'))}">
+  <div class="question-stage"><span>${escapeHtml(ex.label)}</span></div><p>${escapeHtml(ex.instruction)}</p>
+  <div class="writing-arrange-zone ${sentenceMode?'is-words':'is-sentences'}" data-writing-arrange>
+   <div class="writing-piece-bank" data-writing-bank aria-label="Available ${sentenceMode?'words':'sentences'}">${ex.pieces.map((x,i)=>`<button type="button" class="writing-piece" data-writing-piece data-value="${escapeAttr(x.value)}" data-source-index="${x.index}" data-shuffle-index="${i}">${escapeHtml(x.value)}</button>`).join('')}</div>
+   <div class="writing-piece-answer" data-writing-piece-answer aria-label="Your ordered answer"><span class="writing-arrange-placeholder">Your answer appears here</span></div>
+  </div>
+  <div class="writing-core-actions"><button type="button" class="ghost-btn" data-writing-reset>Reset</button><button type="button" class="secondary-btn" data-writing-core-check>Check</button></div>
+  <div data-writing-core-feedback aria-live="polite"></div>
+ </article>`
+}
+function writingTextCoreHtml(ex){
+ const source=ex.type==='combine'?`<div class="writing-combine-source"><p><b>A.</b> ${escapeHtml(ex.a)}</p><p><b>B.</b> ${escapeHtml(ex.b)}</p><span>Connector: <strong>${escapeHtml(ex.connector)}</strong></span></div>`:`<div class="writing-error-source"><span>Sentence with an error</span><p>${escapeHtml(ex.wrong)}</p></div>`;
+ return `<article class="guided-question writing-core-card" data-writing-core="${ex.type}" data-answer="${escapeAttr(ex.answer)}">
+  <div class="question-stage"><span>${escapeHtml(ex.label)}</span></div><p>${escapeHtml(ex.instruction)}</p>${source}
+  <input class="writing-core-input" type="text" autocomplete="off" data-writing-core-input placeholder="${ex.type==='combine'?'Write the combined sentence…':'Write the corrected sentence…'}">
+  <div class="writing-core-actions"><button type="button" class="secondary-btn" data-writing-core-check>Check</button></div>
+  <div data-writing-core-feedback aria-live="polite"></div>
+ </article>`
+}
+function writingCoreHtml(l){return writingCoreExercises(l).map(ex=>ex.type==='build'||ex.type==='organize'?writingArrangeHtml(ex):writingTextCoreHtml(ex)).join('')}
+function writingActivity(l){
+ const saved=writingSubmission(session.id,l.id),spec=writingFinalSpec(l),assessment=Boolean(l.writing?.humanGraded),teacherGrade=getDB().writingScores?.[session.id]?.[l.id],phrases=(l.expressions||[]).slice(0,5).map(x=>x.text);
+ return `<div class="eg-skill-page eg-writing-page">
+  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${assessment?'Final assessment':'Writing'}</span><h1>Build, combine, correct, organize</h1><p>Practise the building blocks first. Then write one real-life response.</p></div><span class="eg-question-count">4 auto-graded + 1 real writing</span></header>
+  ${assessment?`<div class="assessment-notice"><strong>Independent final writing</strong><p>${teacherGrade===null||teacherGrade===undefined?'The four preparation activities are auto-graded. Your final response will be graded by your teacher.':`Your teacher awarded ${teacherGrade}% for the final response. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}
+  <div class="eg-writing-layout eg-writing-layout-designed">
+   <main class="eg-writing-workspace">
+    <section class="writing-builder writing-core-sequence"><div class="eg-task-panel-head"><div><small>Part 1 · Auto-graded practice</small><h2>Build → Combine → Correct → Organize</h2><p>Each activity prepares one writing skill you will use in the final task.</p></div></div>${writingCoreHtml(l)}</section>
+    <article class="guided-question writing-guided-question final-writing-card eg-message-composer">
+     <div class="eg-message-bar"><div class="eg-message-avatar">Y</div><div><strong>You</strong><small>Real-life writing</small></div></div>
+     <div class="writing-task-head"><div><span class="stage-badge">Part 2 · Write it yourself</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}–${spec.max} words</span></div>
+     <textarea class="writing-final-response" data-count-key="final" data-min="${spec.min}" data-max="${spec.max}" placeholder="Type your response here…">${escapeHtml(saved.final)}</textarea><div class="word-count" data-count="final">0 words</div>
+    </article>
+   </main>
+   <aside class="eg-writing-brief"><small>Writing support</small><h2>${escapeHtml(l.title)}</h2>${phrases.length?`<div class="eg-phrase-bank">${phrases.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div>`:''}<div class="eg-writing-reminder"><strong>Remember</strong><span>Keep the purpose clear.</span><span>Use complete sentences.</span><span>Connect ideas naturally.</span><span>Check order and punctuation before saving.</span></div></aside>
+  </div>
+  <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="saveWriting">${assessment?'Submit final writing':'Check & save writing'}</button>${activityDoneButton(l)}</div>
+ </div>`
 }
 function reviewActivity(l){const w=isWorkbookPreview()?{label:'Student focus'}:weakest(session.id),firstTopic=l.number===1,retrieval=firstTopic?'Recall 3 useful expressions from this topic and say one sentence with each.':`Recall 1 useful expression from the previous topic and use it in one new sentence.`;return `<div class="class-prep"><div class="class-prep-focus"><span>Focus</span><strong>${escapeHtml(w.label)}</strong></div><section class="class-prep-mission"><span class="role-kicker">Live class mission</span><h2>${escapeHtml(l.review.mission)}</h2><div class="keyword-line"><small>Keywords</small><strong>${escapeHtml(l.review.keywords)}</strong></div></section><section class="class-prep-recall"><span class="role-kicker">Before class</span><p>${escapeHtml(retrieval)}</p></section>${l.number===9?moduleChallengeHtml():''}<div id="activityFeedback"></div><button class="primary-btn class-prep-ready" id="finishReview">${l.number===9?'Module prep complete':'I’m ready for class →'}</button></div>`}
 
