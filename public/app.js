@@ -957,47 +957,65 @@ function writingGenre(task,number=1){
  if(/request|ask for/.test(t))return'request';
  return['message','email','post','form','request'][Math.abs(Number(number||1)-1)%5]
 }
-function writingModelSentence(l){
- const items=l.grammar?.items||[];
- const candidates=items.map(q=>String(q.answer||'').trim()).filter(x=>{const n=x.split(/\s+/).length;return n>=4&&n<=14});
- if(candidates.length)return withPeriod(candidates[0]);
- const phrase=String((l.expressions||[])[0]?.text||'').replace(/[…]+/g,'').trim();
- if(phrase&&phrase.split(/\s+/).length>=3)return withPeriod(phrase);
- return withPeriod('I can communicate clearly about '+String(l.title||'this topic').toLowerCase());
+function writingBuildModels(l){
+ const topic=String(l.title||'this topic').toLowerCase(),seen=new Set(),out=[];
+ const add=value=>{const clean=String(value||'').trim().replace(/[.!?]+$/,'');const n=clean.split(/\s+/).length,key=writingNormalize(clean);if(n>=4&&n<=16&&key&&!seen.has(key)){seen.add(key);out.push(clean)}};
+ (l.grammar?.items||[]).forEach(q=>add(q.answer));
+ (l.expressions||[]).forEach(x=>add(x.example||x.text));
+ [
+  `I can explain my ideas clearly about ${topic}`,
+  `Clear writing helps the reader understand ${topic}`,
+  `I check my message before I send it`
+ ].forEach(add);
+ return out.slice(0,3)
 }
-function writingCombineModel(l){
- const topic=String(l.title||'this topic').toLowerCase(),mode=Math.abs(Number(l.number||1))%4;
- if(mode===0)return{a:`I want to communicate clearly about ${topic}.`,b:'It is important for my work or studies.',connector:'because',answer:`I want to communicate clearly about ${topic} because it is important for my work or studies.`};
- if(mode===1)return{a:`${cap(topic)} can be challenging.`,b:'I keep practising.',connector:'but',answer:`${cap(topic)} can be challenging, but I keep practising.`};
- if(mode===2)return{a:`I need to communicate clearly about ${topic}.`,b:'I prepare my ideas first.',connector:'so',answer:`I need to communicate clearly about ${topic}, so I prepare my ideas first.`};
- return{a:'I prepare my main idea.',b:'I check my message before I send it.',connector:'and',answer:'I prepare my main idea and check my message before I send it.'}
-}
-function writingCorrectionModel(l){
- const items=l.grammar?.items||[];
- for(const q of items){
-  const correct=String(q.answer||'').trim(),wrong=(q.options||[]).map(String).find(x=>writingNormalize(x)!==writingNormalize(correct));
-  if(correct&&wrong&&correct.split(/\s+/).length>=3)return{wrong:withPeriod(wrong),answer:withPeriod(correct)}
- }
+function writingCombineModels(l){
  const topic=String(l.title||'this topic').toLowerCase();
- return{wrong:`I am write about ${topic}.`,answer:`I am writing about ${topic}.`}
+ return[
+  {a:`I want to communicate clearly about ${topic}.`,b:'It is important for my work or studies.',connector:'because',answer:`I want to communicate clearly about ${topic} because it is important for my work or studies.`},
+  {a:`${cap(topic)} can be challenging.`,b:'I keep practising.',connector:'but',answer:`${cap(topic)} can be challenging, but I keep practising.`},
+  {a:`I need to communicate clearly about ${topic}.`,b:'I prepare my ideas first.',connector:'so',answer:`I need to communicate clearly about ${topic}, so I prepare my ideas first.`}
+ ]
 }
-function writingParagraphModel(l,spec){
+function writingCorrectionModels(l){
+ const topic=String(l.title||'this topic').toLowerCase(),seen=new Set(),out=[];
+ const add=(wrong,answer)=>{wrong=withPeriod(wrong);answer=withPeriod(answer);const key=writingNormalize(answer);if(wrong&&answer&&key&&!seen.has(key)&&writingNormalize(wrong)!==key){seen.add(key);out.push({wrong,answer})}};
+ (l.grammar?.items||[]).forEach(q=>{
+  const correct=String(q.answer||'').trim();
+  const wrong=(q.options||[]).map(String).find(x=>writingNormalize(x)!==writingNormalize(correct));
+  if(correct&&wrong&&correct.split(/\s+/).length>=3)add(wrong,correct)
+ });
+ [
+  [`I am write about ${topic}.`,`I am writing about ${topic}.`],
+  ['She explain her idea clearly.','She explains her idea clearly.'],
+  ['I sent the message yesterday, but I forget the attachment.','I sent the message yesterday, but I forgot the attachment.']
+ ].forEach(x=>add(x[0],x[1]));
+ return out.slice(0,3)
+}
+function writingParagraphModels(l,spec){
  const topic=String(l.title||'this topic').toLowerCase(),genre=spec.genre;
- if(genre==='email')return['Dear colleague,',`I am writing about ${topic}.`,'One important detail is that clear information helps the reader understand the purpose.','Kind regards,'];
- if(genre==='post')return[`Here is one thought about ${topic}.`,'The main point is that clear communication helps people understand the issue.','For example, one specific detail can make a message stronger.','What do you think?'];
- if(genre==='form')return[`My experience with ${topic} has been useful.`,'The main reason is that it helps me explain my ideas clearly.','For example, I can give a specific detail instead of a general answer.','Overall, I want to keep improving.'];
- if(genre==='complaint')return['Dear Sir or Madam,',`I am writing to complain about an issue connected to ${topic}.`,'The problem has affected me, so I would appreciate a clear solution.','I look forward to your response.'];
- if(genre==='request')return['Hello,',`I am writing to make a request about ${topic}.`,'The reason is that I need clear information before I continue.','Thank you for your help.'];
- return['Hi,',`I wanted to message you about ${topic}.`,'One important detail is that clear communication makes the situation easier.','Thanks for reading.']
+ const taskParagraph=genre==='email'
+  ?['Dear colleague,',`I am writing about ${topic}.`,'One important detail is that clear information helps the reader understand the purpose.','Kind regards,']
+  :genre==='post'
+   ?[`Here is one thought about ${topic}.`,'The main point is that clear communication helps people understand the issue.','For example, one specific detail can make a message stronger.','What do you think?']
+   :genre==='complaint'
+    ?['Dear Sir or Madam,',`I am writing to complain about an issue connected to ${topic}.`,'The problem has affected me, so I would appreciate a clear solution.','I look forward to your response.']
+    :genre==='request'
+     ?['Hello,',`I am writing to make a request about ${topic}.`,'The reason is that I need clear information before I continue.','Thank you for your help.']
+     :['Hi,',`I wanted to message you about ${topic}.`,'One important detail is that clear communication makes the situation easier.','Thanks for reading.'];
+ return[
+  taskParagraph,
+  [`${cap(topic)} is the main topic I want to explain.`,'First, I state the main idea clearly.','Then, I add one specific detail or example.','Finally, I end with a clear conclusion.'],
+  ['Hello,',`I want to share one point about ${topic}.`,'This matters because clear details help the reader respond correctly.','Please let me know if you need any more information.']
+ ]
 }
 function writingCoreExercises(l){
- const spec=writingFinalSpec(l),sentence=writingModelSentence(l),cleanSentence=sentence.replace(/[.!?]+$/,'').trim(),words=cleanSentence.split(/\s+/),combine=writingCombineModel(l),correct=writingCorrectionModel(l),paragraph=writingParagraphModel(l,spec);
- return[
-  {type:'build',label:'1 · Sentence Building',instruction:'Tap the words in the correct order to build the sentence.',answer:cleanSentence,pieces:writingShuffle(words,l.id+'|build')},
-  {type:'combine',label:'2 · Sentence Combining',instruction:`Combine the two sentences using “${combine.connector}”.`,a:combine.a,b:combine.b,connector:combine.connector,answer:combine.answer},
-  {type:'correct',label:'3 · Error Correction',instruction:'Rewrite the sentence correctly.',wrong:correct.wrong,answer:correct.answer},
-  {type:'organize',label:'4 · Paragraph Ordering',instruction:'Tap the sentences in the most logical paragraph order.',answer:paragraph,pieces:writingShuffle(paragraph,l.id+'|organize')}
- ]
+ const spec=writingFinalSpec(l),builds=writingBuildModels(l),combines=writingCombineModels(l),corrections=writingCorrectionModels(l),paragraphs=writingParagraphModels(l,spec),out=[];
+ builds.forEach((answer,i)=>out.push({type:'build',label:`${i+1} · Sentence Building`,instruction:'Tap the words in the correct order to build the sentence.',answer,pieces:writingShuffle(answer.split(/\s+/),l.id+`|build|${i}`)}));
+ combines.forEach((x,i)=>out.push({type:'combine',label:`${i+4} · Sentence Combining`,instruction:`Combine the two sentences using “${x.connector}”.`,...x}));
+ corrections.forEach((x,i)=>out.push({type:'correct',label:`${i+7} · Error Correction`,instruction:'Rewrite the sentence correctly.',...x}));
+ paragraphs.forEach((answer,i)=>out.push({type:'organize',label:`${i+10} · Paragraph Ordering`,instruction:'Tap the sentences in the most logical paragraph order.',answer,pieces:writingShuffle(answer,l.id+`|organize|${i}`)}));
+ return out
 }
 function writingArrangeHtml(ex){
  const sentenceMode=ex.type==='build';
@@ -1020,15 +1038,23 @@ function writingTextCoreHtml(ex){
   <div data-writing-core-feedback aria-live="polite"></div>
  </article>`
 }
-function writingCoreHtml(l){return writingCoreExercises(l).map(ex=>ex.type==='build'||ex.type==='organize'?writingArrangeHtml(ex):writingTextCoreHtml(ex)).join('')}
+function writingCoreHtml(l){
+ const groups={build:'Sentence Building',combine:'Sentence Combining',correct:'Error Correction',organize:'Paragraph Ordering'};
+ let last='';
+ return writingCoreExercises(l).map(ex=>{
+  const heading=ex.type!==last?`<div class="writing-core-group-head"><span>${escapeHtml(groups[ex.type])}</span><strong>3 questions</strong></div>`:'';
+  last=ex.type;
+  return heading+(ex.type==='build'||ex.type==='organize'?writingArrangeHtml(ex):writingTextCoreHtml(ex))
+ }).join('')
+}
 function writingActivity(l){
  const saved=writingSubmission(session.id,l.id),spec=writingFinalSpec(l),assessment=Boolean(l.writing?.humanGraded),teacherGrade=getDB().writingScores?.[session.id]?.[l.id],phrases=(l.expressions||[]).slice(0,5).map(x=>x.text);
  return `<div class="eg-skill-page eg-writing-page">
-  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${assessment?'Final assessment':'Writing'}</span><h1>Build, combine, correct, organize</h1><p>Practise the building blocks first. Then write one real-life response.</p></div><span class="eg-question-count">4 auto-graded + 1 real writing</span></header>
-  ${assessment?`<div class="assessment-notice"><strong>Independent final writing</strong><p>${teacherGrade===null||teacherGrade===undefined?'The four preparation activities are auto-graded. Your final response will be graded by your teacher.':`Your teacher awarded ${teacherGrade}% for the final response. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}
+  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${assessment?'Final assessment':'Writing'}</span><h1>Build, combine, correct, organize</h1><p>Practise the building blocks first. Then write one real-life response.</p></div><span class="eg-question-count">12 auto-graded + 1 real writing</span></header>
+  ${assessment?`<div class="assessment-notice"><strong>Independent final writing</strong><p>${teacherGrade===null||teacherGrade===undefined?'The 12 preparation questions are auto-graded. Your final response will be graded by your teacher.':`Your teacher awarded ${teacherGrade}% for the final response. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}
   <div class="eg-writing-layout eg-writing-layout-designed">
    <main class="eg-writing-workspace">
-    <section class="writing-builder writing-core-sequence"><div class="eg-task-panel-head"><div><small>Part 1 · Auto-graded practice</small><h2>Build → Combine → Correct → Organize</h2><p>Each activity prepares one writing skill you will use in the final task.</p></div></div>${writingCoreHtml(l)}</section>
+    <section class="writing-builder writing-core-sequence"><div class="eg-task-panel-head"><div><small>Part 1 · Auto-graded practice</small><h2>Build → Combine → Correct → Organize</h2><p>Complete 3 questions for each type before the final real-life writing task.</p></div></div>${writingCoreHtml(l)}</section>
     <article class="guided-question writing-guided-question final-writing-card eg-message-composer">
      <div class="eg-message-bar"><div class="eg-message-avatar">Y</div><div><strong>You</strong><small>Real-life writing</small></div></div>
      <div class="writing-task-head"><div><span class="stage-badge">Part 2 · Write it yourself</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}–${spec.max} words</span></div>
