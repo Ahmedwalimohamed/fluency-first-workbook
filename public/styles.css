@@ -5177,3 +5177,28 @@ html{scroll-behavior:auto!important}
  .writing-detail-actions{align-items:stretch;flex-direction:column}
  .writing-detail-actions>*{width:100%;justify-content:center}
 }
+
+
+/* Authentic writing integrity + My Writings opt-in */
+.writing-integrity-note{display:flex;align-items:flex-start;gap:10px;margin:0 0 14px;padding:12px 14px;border:1px solid #dbe5f0;border-radius:14px;background:#f8fafc}
+.writing-integrity-note>div{display:grid;gap:3px}
+.writing-integrity-note strong{color:var(--navy);font-size:.86rem}
+.writing-integrity-note small{color:var(--muted);line-height:1.4}
+.writing-integrity-badge{display:inline-flex;align-items:center;white-space:nowrap;padding:5px 8px;border-radius:999px;background:#e8f1ff;color:#234fa5;font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+.writing-final-response{user-select:text}
+.writing-integrity-status{min-height:18px;margin-top:5px;color:#9a5b00;font-size:.75rem;font-weight:700;opacity:0;transition:opacity .15s ease}
+.writing-integrity-status.is-visible{opacity:1}
+.writing-share-choice{margin:16px 0 0;padding:15px;border:1px solid var(--border);border-radius:16px;background:#fff}
+.writing-share-choice legend{padding:0 5px;color:var(--navy);font-size:.95rem;font-weight:900}
+.writing-share-choice>p{margin:2px 0 12px;color:var(--muted);font-size:.8rem;line-height:1.45}
+.writing-share-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.writing-share-options label{position:relative;display:flex;align-items:flex-start;gap:9px;padding:12px;border:1px solid #dfe6ee;border-radius:13px;background:#fbfdff;cursor:pointer;transition:border-color .15s ease,background .15s ease,box-shadow .15s ease}
+.writing-share-options label:has(input:checked){border-color:#8db5ff;background:#f2f7ff;box-shadow:0 0 0 2px rgba(37,99,235,.08)}
+.writing-share-options input{margin-top:3px;accent-color:#2563eb}
+.writing-share-options span{display:grid;gap:3px}
+.writing-share-options strong{color:var(--navy);font-size:.82rem}
+.writing-share-options small{color:var(--muted);font-size:.73rem;line-height:1.35}
+@media(max-width:620px){
+ .writing-integrity-note{flex-direction:column}
+ .writing-share-options{grid-template-columns:1fr}
+}
