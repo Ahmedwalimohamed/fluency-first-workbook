@@ -3766,3 +3766,14 @@ html{scroll-behavior:auto!important}
   padding:13px 14px
  }
 }
+
+
+/* Keep only the completed Find Someone Who statement crossed out, not its speaking hint. */
+.eg-stage-content .live-check-row:has(input:checked) .live-check-copy{
+ text-decoration:none
+}
+.eg-stage-content .live-check-row:has(input:checked) .live-check-copy>b{
+ text-decoration:line-through;
+ text-decoration-thickness:2px;
+ text-decoration-color:#7fb5a3
+}
