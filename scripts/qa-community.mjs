@@ -54,6 +54,11 @@ const manageSegment=manageStart>=0&&manageEnd>manageStart?serverCode.slice(manag
 if(!manageSegment.includes("You can only move students to your own classes."))fail('Teacher class-transfer ownership restriction is missing.');
 if(/delete from attempts|delete from completion|delete from writing_samples/i.test(manageSegment))fail('Student management must preserve learning history.');
 
+if(!appCode.includes('const WRITINGS_PAGE_SIZE=10;'))fail('My Writings must show no more than 10 cards per page.');
+if(!appCode.includes('function openWritingContributor(studentId)'))fail('Contributor profile view is missing.');
+if(!appCode.includes('data-writing-profile'))fail('Writing cards must link to the contributor profile.');
+if(!appCode.includes('writingPage=1'))fail('My Writings pagination state is missing.');
+if(!appCode.includes('writing-review-card'))fail('Review-style writing card design is missing.');
 if(!appCode.includes("Only you can share your writing outside EnglishGate."))fail('Student-facing external-sharing privacy message is missing.');
 if(!appCode.includes("Likes encourage learners; they do not change academic grades or leaderboard scores."))fail('Non-academic likes message is missing.');
 if(!indexCode.includes('student-management-my-writings-v1'))fail('Community asset cache-bust version is missing.');

@@ -5100,3 +5100,80 @@ html{scroll-behavior:auto!important}
  .student-manage-actions{display:grid}
  .student-manage-actions>*{width:100%}
 }
+
+
+/* My Writings reviews design v2 */
+.writing-community-hero-cozy{padding:22px 24px;border-radius:20px;box-shadow:0 8px 24px rgba(15,23,42,.045)}
+.writing-community-hero-cozy h1{font-size:clamp(1.8rem,4vw,2.5rem)}
+.writing-review-toolbar{padding:10px 0 2px}
+.writing-review-toolbar>div{display:flex;gap:8px;flex-wrap:wrap}
+.writing-review-toolbar>span{font-size:.76rem}
+.writing-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.writing-review-card{display:flex;flex-direction:column;min-width:0;border:1px solid #e4e9ef;border-radius:18px;background:#fff;box-shadow:0 7px 22px rgba(15,23,42,.045);overflow:hidden;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.writing-review-card:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(15,23,42,.07);border-color:#d6dee8}
+.writing-review-author{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 15px 10px}
+.writing-profile-link{display:flex;align-items:center;gap:10px;min-width:0;border:0;background:transparent;padding:0;text-align:left;color:inherit;font:inherit;cursor:pointer}
+.writing-profile-link:hover strong{text-decoration:underline;text-underline-offset:3px}
+.writing-review-avatar{width:42px;height:42px;flex:0 0 42px}
+.writing-review-author-copy{display:grid;gap:2px;min-width:0}
+.writing-review-author-copy strong{color:var(--navy);font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.writing-review-author-copy small{color:var(--muted);font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.writing-review-date{color:#94a3b8;font-size:.7rem;white-space:nowrap}
+.writing-review-meta{padding:0 15px 8px}
+.writing-review-meta span{display:inline-flex;max-width:100%;padding:4px 8px;border-radius:999px;background:#f5f7fa;color:#526373;font-size:.7rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.writing-review-body{position:relative;display:block;width:100%;min-height:126px;padding:10px 16px 14px 36px;border:0;background:transparent;color:#243248;text-align:left;font:inherit;cursor:pointer}
+.writing-review-body:hover{background:#fbfcfe}
+.writing-review-body p{margin:0;font-family:Georgia,'Times New Roman',serif;font-size:.94rem;line-height:1.62;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.writing-review-quote{position:absolute;left:14px;top:2px;color:#cbd5e1;font:700 2.2rem Georgia,serif;line-height:1}
+.writing-review-actions{display:flex;align-items:center;gap:8px;margin-top:auto;padding:10px 14px;border-top:1px solid #eef2f6;background:#fcfdff}
+.writing-review-actions .writing-like-btn{min-height:34px;padding:5px 10px}
+.writing-read-btn{border:0;background:transparent;color:#2452b8;font:700 .76rem/1.2 inherit;cursor:pointer;padding:7px 5px}
+.writing-read-btn:hover{text-decoration:underline;text-underline-offset:3px}
+.writing-review-actions .writing-share-btn{margin-left:auto;min-height:34px;padding:6px 10px;font-size:.76rem}
+.writing-pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin:18px 0 0;padding:10px}
+.writing-pagination span{color:var(--muted);font-size:.82rem}
+.writing-pagination .ghost-btn{min-height:36px;padding:7px 11px}
+.writing-pagination .ghost-btn:disabled{opacity:.45;cursor:not-allowed}
+
+.writing-detail-modal{display:grid;gap:16px;max-width:760px}
+.writing-detail-profile span{display:grid;gap:2px}
+.writing-detail-profile small,.writing-detail-profile em{color:var(--muted);font-size:.75rem;font-style:normal}
+.writing-detail-profile strong{color:var(--navy);font-size:1rem}
+.writing-detail-avatar{width:52px;height:52px;flex:0 0 52px}
+.writing-detail-context{display:flex;gap:8px;flex-wrap:wrap}
+.writing-detail-context span{padding:5px 9px;border-radius:999px;background:#f5f7fa;color:var(--muted);font-size:.72rem}
+.writing-detail-text{padding:20px;border:1px solid var(--border);border-radius:16px;background:#fff;color:#1f2a3d;font-family:Georgia,'Times New Roman',serif;font-size:1rem;line-height:1.75;max-height:52vh;overflow:auto}
+.writing-detail-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+.writing-contributor-modal{display:grid;gap:16px;max-width:760px}
+.writing-contributor-hero{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.writing-contributor-avatar{width:72px;height:72px;flex:0 0 72px}
+.writing-contributor-hero h2{margin:3px 0;color:var(--navy);font-size:1.45rem}
+.writing-contributor-hero p{margin:0;color:var(--muted)}
+.writing-contributor-stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.writing-contributor-stats span{padding:6px 9px;border-radius:10px;background:#f7f9fb;color:var(--muted);font-size:.75rem}
+.writing-contributor-stats strong{color:var(--navy)}
+.writing-contributor-list{display:grid;gap:10px;max-height:58vh;overflow:auto;padding-right:3px}
+.writing-contributor-item{display:grid;gap:8px;padding:13px 14px;border:1px solid #e7ebf0;border-radius:14px;background:#fff}
+.writing-contributor-item>div:first-child,.writing-contributor-item>div:last-child{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.writing-contributor-item span{color:#526373;font-size:.75rem}
+.writing-contributor-item small{color:#94a3b8}
+.writing-contributor-item p{margin:0;color:#2a3649;font-family:Georgia,'Times New Roman',serif;font-size:.9rem;line-height:1.55}
+
+@media(max-width:900px){
+ .writing-review-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+ .writing-review-card{border-radius:15px}
+ .writing-review-author{padding:12px}
+ .writing-review-body{padding-right:12px}
+ .writing-review-actions{flex-wrap:wrap}
+ .writing-review-actions .writing-share-btn{margin-left:0}
+ .writing-pagination{gap:8px}
+ .writing-pagination .ghost-btn{font-size:.75rem}
+ .writing-contributor-hero{grid-template-columns:auto 1fr}
+ .writing-contributor-hero>.icon-btn{grid-column:2;grid-row:1;justify-self:end}
+ .writing-contributor-avatar{width:58px;height:58px;flex-basis:58px}
+ .writing-detail-actions{align-items:stretch;flex-direction:column}
+ .writing-detail-actions>*{width:100%;justify-content:center}
+}
