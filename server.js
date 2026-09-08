@@ -148,14 +148,18 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   select u.id,u.name,
          coalesce(cls.name,'') as class_name,
          coalesce(cls.level,'') as level,
+         coalesce(cls.book_title,'Workbook') as book_title,
+         coalesce(cls.total_lessons,22)::int as total_lessons,
          coalesce(comp.completed,0)::int as completed,
+         coalesce(perf.scored,0)::int as scored,
          perf.average,
          perf.last_active
   from users u
   left join lateral (
-    select c.name,c.level
+    select c.name,c.level,b.title as book_title,coalesce(b.total_lessons,22) as total_lessons
     from enrollments e
     join classes c on c.id=e.class_id
+    left join books b on b.id=c.course_id
     where e.user_id=u.id
     order by c.created_at desc nulls last,c.name
     limit 1
@@ -166,29 +170,36 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
     where c.student_id=u.id and c.step in ('vocabulary','listening','grammar','writing')
   ) comp on true
   left join lateral (
-    select round(avg(latest.score)::numeric,0)::int as average,max(latest.at) as last_active
+    select round(avg(latest.score)::numeric,0)::int as average,count(*)::int as scored,max(latest.at) as last_active
     from (
       select distinct on (a.lesson_id,a.skill) a.lesson_id,a.skill,a.score,a.at
       from attempts a
-      where a.student_id=u.id
+      where a.student_id=u.id and a.skill in ('vocabulary','listening','grammar','writing')
       order by a.lesson_id,a.skill,a.at desc
     ) latest
   ) perf on true
   where u.role='student'
-  order by coalesce(comp.completed,0) desc,perf.average desc nulls last,perf.last_active desc nulls last,u.name asc
  `)).rows;
- const students=rows.map((r,i)=>({
+ const students=rows.map(r=>{
+  const completed=Number(r.completed||0),average=r.average===null||r.average===undefined?null:Number(r.average),scored=Number(r.scored||0),total=Math.max(1,Number(r.total_lessons||22)*4),completion=Math.min(100,Math.round(completed/total*100)),practice=Math.min(100,scored*8),score=Math.round((Number.isFinite(average)?average:0)*0.45+completion*0.35+practice*0.2);
+  return {
   id:r.id,
   name:r.name,
   className:r.class_name||'',
   level:r.level||'',
-  completed:Number(r.completed||0),
-  average:r.average===null||r.average===undefined?null:Number(r.average),
+  bookTitle:r.book_title||'Workbook',
+  completed,
+  scored,
+  completion,
+  practice,
+  score,
+  average,
   lastActive:r.last_active||null,
-  rank:i+1
- }));
+  rank:0
+ }}).sort((a,b)=>b.score-a.score||b.completion-a.completion||b.completed-a.completed||b.scored-a.scored||String(a.name).localeCompare(String(b.name)));
+ students.forEach((s,i)=>s.rank=i+1);
  res.set('Cache-Control','no-store');
- res.json({students,rankingMethod:'completed activities, then average recorded score, then recent activity'});
+ res.json({students,rankingMethod:'45% recorded activity average, 35% workbook completion, 20% practice consistency'});
 });
 
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{const {lessonId,skill,score,tags=[]}=req.body;if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,lessonId,skill,score,Array.isArray(tags)?tags.slice(0,10):[]]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);res.json({ok:true})});
