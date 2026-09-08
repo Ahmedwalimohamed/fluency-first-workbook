@@ -2260,3 +2260,33 @@ html{scroll-behavior:auto!important}
  .teacher-assist-grid{grid-template-columns:1fr}
  .teacher-assist-grid .teacher-assist-card:last-child{grid-column:auto}
 }
+
+
+
+/* Clickable student report names v1 */
+.student-name-link{
+ appearance:none;
+ border:0;
+ padding:0;
+ margin:0;
+ background:transparent;
+ color:#183247;
+ font:inherit;
+ font-weight:800;
+ text-align:left;
+ cursor:pointer;
+ text-decoration:none
+}
+.student-name-link:hover{
+ color:#17644f;
+ text-decoration:underline;
+ text-underline-offset:3px
+}
+.student-name-link:focus-visible{
+ outline:3px solid rgba(23,100,79,.22);
+ outline-offset:3px;
+ border-radius:4px
+}
+.student-report-head .eyebrow{
+ margin-bottom:4px
+}
