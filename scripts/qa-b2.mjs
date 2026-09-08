@@ -32,7 +32,7 @@ function phaseWritingRange(n){
   if(n<=14) return [90,140];
   return [110,170];
 }
-function normalized(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); }
+function normalized(s){ return String(s||'').toLowerCase().replace(/\s+/g,' ').trim(); }
 
 const blueprint = loadWindowScript('public/speakup-b2-blueprint.js','SPEAKUP_B2_BLUEPRINT');
 const books = loadWindowScript('public/live-books.js','LIVE_BOOKS');
