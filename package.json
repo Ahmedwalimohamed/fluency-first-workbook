@@ -5,6 +5,8 @@
   "description": "Fluency First digital workbook with Railway API and PostgreSQL",
   "main": "server.js",
   "scripts": {
+    "qa:b2": "node scripts/qa-b2.mjs",
+    "prestart": "npm run qa:b2",
     "start": "node server.js"
   },
   "engines": {
