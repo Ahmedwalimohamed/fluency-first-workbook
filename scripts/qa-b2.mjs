@@ -131,4 +131,11 @@ if(!appCode.includes('eg-workbook-draft-b2-living-standard-v1')) fail('Student m
 if(!serverCode.includes('b2_upgrade_notice_version')) fail('Student migration: persistent notice acknowledgement is missing.');
 if(!serverCode.includes('curriculum:b2-living-standard-v1')) fail('Student migration: new B2 attempts are not version-tagged.');
 
+if(failures.length){
+  console.error('\nB2 QA FAILED:');
+  failures.forEach(x=>console.error('  - '+x));
+  console.error(`\n${failures.length} blocking migration issue(s). Production start is blocked until they are fixed.\n`);
+  process.exit(1);
+}
+
 console.log(`B2 QA PASSED: 22 lessons validated, ${warnings.length} warning(s).\n`);
