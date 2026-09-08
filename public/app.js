@@ -391,7 +391,124 @@ function normalizeVocabWord(word){return String(word||'').replace(/[“”"]/g,'
 function meaningFromTopicLibrary(word){const clean=normalizeVocabWord(word);for(const topic of Object.values(TOPIC_LIBRARY||{})){for(const pair of topic.v||[]){if(normalizeVocabWord(pair[0])===clean)return pair[1]}}return ''}
 function meaningFromWorkbookWord(word){const clean=normalizeVocabWord(word);for(const book of Object.values(BOOK_PACKS)){for(const l of book.lessons||[]){for(const item of l.vocabulary?.items||l.vocabularyItems||[]){const q=String(item.q||''),answer=normalizeVocabWord(item.answer),matchWord=q.match(/Match\s+[“"](.+?)[”"]\s+to its meaning/i);if(matchWord&&normalizeVocabWord(matchWord[1])===clean&&item.answer)return item.answer;const means=q.match(/Which word means [“"](.+?)[”"]\??/i)||q.match(/Type the target word meaning [“"](.+?)[”"]\.?/i);if(means&&answer===clean)return means[1];const idea=q.match(/Which target word best matches this idea:\s*(.+?)\??$/i);if(idea&&answer===clean)return idea[1]}}}return ''}
 function vocabMeaning(word){const key=normalizeVocabWord(word);return VOCAB_MEANINGS[key]||meaningFromWorkbookWord(key)||meaningFromTopicLibrary(key)||'a useful lesson word or expression; use the example to understand when it is used'}
+const VOCAB_EXAMPLES={
+ commence:'The meeting will commence at 9:00 a.m.',
+ hobby:'Reading is my favourite hobby.',
+ hometown:'Borama is my hometown.',
+ occupation:'Teaching is her occupation.',
+ married:'They have been married for five years.',
+ single:'He is single and lives with his brother.',
+ outgoing:'She is outgoing and enjoys meeting new people.',
+ colleague:'I asked my colleague to review the report.',
+ deadline:'The deadline for the report is Friday.',
+ 'apply for':'She plans to apply for the new position.',
+ shift:'My evening shift starts at 4:00 p.m.',
+ promotion:'He received a promotion after leading the project.',
+ currently:'I am currently working on a new course.',
+ luggage:'Please keep your luggage with you.',
+ 'book (a ticket)':'I need to book a ticket for Hargeisa.',
+ delay:'The flight left after a short delay.',
+ souvenir:'She bought a small souvenir for her family.',
+ accommodation:'We found affordable accommodation near the university.',
+ arrive:'Please arrive ten minutes before the class starts.',
+ app:'Open the app and choose your lesson.',
+ update:'The latest update fixed the problem.',
+ scroll:'Scroll down to see the next activity.',
+ notification:'I received a notification from the school app.',
+ connection:'The video stopped because the internet connection was weak.',
+ exhausted:'I was exhausted after the long journey.',
+ stressed:'She felt stressed before the interview.',
+ symptom:'A high fever can be a symptom of illness.',
+ rest:'You should rest after a busy day.',
+ diet:'A balanced diet includes different kinds of food.',
+ habit:'Reading every morning is a useful habit.',
+ flavour:'This soup has a rich flavour.',
+ ingredient:'Tomato is an important ingredient in the sauce.',
+ spicy:'The curry is too spicy for me.',
+ fresh:'We bought fresh fruit from the market.',
+ recipe:'I followed the recipe carefully.',
+ portion:'He ordered a small portion of rice.',
+ background:'Tell us briefly about your professional background.',
+ routine:'Exercise is part of my morning routine.',
+ interest:'She has a strong interest in technology.',
+ experience:'My work experience helped me answer the question.',
+ confident:'She felt confident during the presentation.',
+ achievement:'Finishing the course was an important achievement.',
+ drought:'The drought caused serious water shortages.',
+ 'renewable energy':'Solar power is a form of renewable energy.',
+ pollution:'Traffic can cause serious air pollution.',
+ sustainable:'The school is looking for a sustainable solution.',
+ deforestation:'Deforestation can destroy wildlife habitats.',
+ 'carbon footprint':'Using less fuel can reduce your carbon footprint.',
+ waste:'We should reduce food waste.',
+ resource:'Water is an important natural resource.',
+ conservation:'The project supports wildlife conservation.',
+ shortage:'The hospital faced a shortage of medicine.'
+};
 function withPeriod(text){const t=String(text||'').trim();return /[.!?]$/.test(t)?t:t+'.'}
+function lowerDefinitionStart(text){const t=String(text||'').trim();if(!t)return t;return /^[A-Z][a-z]/.test(t)?t.charAt(0).toLowerCase()+t.slice(1):t}
+function sentenceWithWord(text,word){
+ const source=String(text||'').replace(/\s+/g,' ').trim(),target=normalizeVocabWord(word);if(!source||!target)return '';
+ const parts=source.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[];
+ for(const part of parts){if(normalizeVocabWord(part).includes(target)){const sentence=part.trim();if(sentence.length>=8&&sentence.length<=180)return sentence}}
+ return '';
+}
+function lessonVocabExample(word,l,q={}){
+ const key=normalizeVocabWord(word);
+ if(q.example)return withPeriod(q.example);
+ const expression=(l.expressions||[]).find(x=>normalizeVocabWord(x.text)===key||normalizeVocabWord(x.answer)===key);
+ if(expression?.example)return withPeriod(expression.example);
+ if(VOCAB_EXAMPLES[key])return VOCAB_EXAMPLES[key];
+ const writingText=(l.writing?.tasks||[]).map(x=>x.prompt||'').join(' ');
+ const corpus=[l.listening?.readingText,l.listening?.audioScript,l.listening?.text,writingText,l.outcome].filter(Boolean).join(' ');
+ const found=sentenceWithWord(corpus,word);if(found)return withPeriod(found);
+ if(expression?.text){
+  const phrase=String(expression.text).replace(/[.…]+$/,'').trim();
+  if(phrase)return withPeriod(phrase+' I want to explain this clearly');
+ }
+ const meaning=lowerDefinitionStart(vocabMeaning(word));
+ if(/^to\s+/i.test(meaning)&&!/\s/.test(String(word).trim()))return withPeriod('We need to '+String(word).trim()+' this task today');
+ if(/^(very|friendly|sure|able|having|not\s|new\b)/i.test(meaning))return withPeriod('She felt '+String(word).trim()+' in that situation');
+ return withPeriod('The '+String(word).trim()+' was important in this situation');
+}
+function extractQuotedTarget(question){
+ const q=String(question||'');
+ const m=q.match(/(?:What does|Match)\s+[“"]?([^”“"?]+?)[”"]?\s+(?:mean|to its meaning)/i);
+ return m?m[1].replace(/\*\*/g,'').trim():'';
+}
+function vocabFeedbackMeta(l,q,index){
+ const question=String(q?.q||'').replace(/\*\*/g,'').trim(),answer=String(q?.answer||'').trim();
+ let word=String(q?.word||'').trim(),meaning=String(q?.meaning||'').trim();
+ const quoted=extractQuotedTarget(question);
+ if(!word&&quoted)word=quoted;
+ let m=question.match(/Which (?:target )?word (?:best )?means?\s+[“"]?(.+?)[”"]?\??$/i);
+ if(!m)m=question.match(/Which (?:target )?word best matches this idea:\s*(.+?)\??$/i);
+ if(m&&!word){word=answer;meaning=meaning||m[1].trim()}
+ m=question.match(/Which expression would you use to\s+(.+?)\??$/i);
+ if(m&&!word){word=answer;meaning=meaning||('to '+m[1].trim().replace(/^to\s+/i,''))}
+ if(word&&!meaning&&quoted&&answer)meaning=answer;
+ const expressions=l.expressions||[];
+ let expression=expressions.find(x=>normalizeVocabWord(x.text)===normalizeVocabWord(word||answer));
+ if(!expression&&/^Complete from memory:/i.test(question)){
+  expression=expressions.find(x=>normalizeVocabWord(x.answer)===normalizeVocabWord(answer)&&question.includes(String(x.cloze||'')));
+ }
+ if(expression){word=word||expression.text;meaning=meaning||('to '+String(expression.job||'').replace(/^to\s+/i,''))}
+ if(!word&&answer){
+  const known=vocabMeaning(answer);
+  if(!known.startsWith('a useful lesson word')){word=answer;meaning=meaning||known}
+ }
+ if(!meaning&&word)meaning=vocabMeaning(word);
+ if(!word||!meaning||meaning.startsWith('a useful lesson word'))return null;
+ return {word,meaning:lowerDefinitionStart(meaning),example:lessonVocabExample(word,l,q),index};
+}
+function vocabFeedbackHtml(meta,correct){
+ if(!meta)return '';
+ return '<div class="mcq-learning-feedback '+(correct?'is-correct':'is-incorrect')+'" role="status">'+
+   '<strong class="mcq-learning-status">'+(correct?'✓ Correct':'✗ Incorrect')+'</strong>'+
+   '<p><b>'+escapeHtml(meta.word)+' =</b> '+escapeHtml(withPeriod(lowerDefinitionStart(meta.meaning)))+'</p>'+
+   '<p class="mcq-learning-example"><b>Example:</b> '+escapeHtml(withPeriod(meta.example))+'</p>'+
+  '</div>';
+}
 function openVocabularyMeaning(word,example){showModal(`<div class="section-head"><div><span class="role-kicker">Vocabulary meaning</span><h3>${escapeHtml(word)}</h3></div><button class="icon-btn" data-close>×</button></div><div class="vocab-meaning-card"><small>Meaning</small><p>${escapeHtml(withPeriod(vocabMeaning(word)))}</p><small>Example</small><p>${escapeHtml(example)}</p></div>`);document.querySelector('[data-close]').onclick=closeModal}
 function wireLiveVocabulary(){document.querySelectorAll('[data-vocab-word]').forEach(b=>b.onclick=()=>openVocabularyMeaning(b.dataset.vocabWord,b.dataset.vocabExample))}
 function liveCheckKey(text){const role=session?.role||'guest',lesson=role==='teacher'?activeTeacherLessonNumber:activeStudentLiveLessonNumber;return 'eg-live-check:'+role+':'+lesson+':'+normalizeVocabWord(text)}
@@ -635,20 +752,31 @@ function spiralReview(l){const idx=COURSE.lessons.findIndex(x=>x.id===l.id);if(i
 function moduleChallengeHtml(){return `<div class="class-prep-challenge"><strong>Final module prep</strong><label><input type="checkbox" data-challenge> Choose 5 keywords for your talk.</label><label><input type="checkbox" data-challenge> Recall 6 useful expressions without looking.</label><label><input type="checkbox" data-challenge> Practise your 3-minute talk once.</label></div>`}
 
 function guidedChunks(chunks){const items=chunks.flatMap(c=>c.items.map(item=>({stage:c.label,item}))),total=items.length;return `<div class="activity-runner" data-activity-runner><div class="runner-meta"><span data-runner-stage>${escapeHtml(items[0]?.stage||'Practice')}</span><span><b data-runner-current>1</b> / ${total}</span></div><div class="runner-progress"><span data-runner-progress style="width:${total?100/total:100}%"></span></div><div class="runner-question-stack" data-runner-stack>${items.map((x,i)=>`<div class="runner-question" data-runner-question data-stage="${escapeAttr(x.stage)}" ${i?'hidden':''}>${x.item}</div>`).join('')}</div><div class="runner-actions"><button class="runner-back" type="button" data-runner-prev hidden>Back</button><button class="primary-btn runner-next" type="button" data-runner-next disabled>${total===1?'Finish':'Next'}</button></div></div>`}
-function wireMcqCards(root=document){root.querySelectorAll('.mcq-picker').forEach(picker=>{if(picker.dataset.wired==='1')return;picker.dataset.wired='1';const slot=picker.querySelector('[data-mcq-slot]'),slotText=picker.querySelector('[data-mcq-slot-text]'),cards=[...picker.querySelectorAll('[data-mcq-option]')],inputs=[...picker.querySelectorAll('[data-mcq-input]')];if(!slot||!slotText||!cards.length)return;const animateToSlot=card=>{const from=card.getBoundingClientRect(),to=slot.getBoundingClientRect(),ghost=document.createElement('div');ghost.className='mcq-fly-card';ghost.textContent=card.dataset.value||card.textContent.trim();ghost.style.left=from.left+'px';ghost.style.top=from.top+'px';ghost.style.width=from.width+'px';ghost.style.height=from.height+'px';document.body.appendChild(ghost);requestAnimationFrame(()=>{ghost.style.transform=`translate(${to.left+to.width/2-(from.left+from.width/2)}px,${to.top+to.height/2-(from.top+from.height/2)}px) scale(.78)`;ghost.style.opacity='.15'});setTimeout(()=>ghost.remove(),280)};const choose=(card,animate=true)=>{const i=Number(card.dataset.mcqOption),input=inputs.find(x=>Number(x.dataset.mcqInput)===i);if(!input)return;inputs.forEach(x=>x.checked=false);cards.forEach(x=>x.classList.remove('selected'));input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));card.classList.add('selected');slot.classList.add('filled');slotText.textContent=card.dataset.value||card.textContent.trim();if(animate)animateToSlot(card);if(slot.animate)slot.animate([{transform:'scale(.985)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:240,easing:'ease-out'})};cards.forEach(card=>{card.onclick=()=>choose(card,true);card.ondragstart=e=>{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',card.dataset.mcqOption);card.classList.add('dragging')};card.ondragend=()=>card.classList.remove('dragging')});slot.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='move';slot.classList.add('drag-over')};slot.ondragleave=()=>slot.classList.remove('drag-over');slot.ondrop=e=>{e.preventDefault();slot.classList.remove('drag-over');const i=Number(e.dataTransfer.getData('text/plain')),card=cards.find(x=>Number(x.dataset.mcqOption)===i);if(card)choose(card,false)};slot.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&cards.length){e.preventDefault();const selected=cards.findIndex(x=>x.classList.contains('selected')),next=cards[(selected+1)%cards.length];choose(next,true)}}})}
+function wireMcqCards(root=document){root.querySelectorAll('.mcq-picker').forEach(picker=>{if(picker.dataset.wired==='1')return;picker.dataset.wired='1';const slot=picker.querySelector('[data-mcq-slot]'),slotText=picker.querySelector('[data-mcq-slot-text]'),cards=[...picker.querySelectorAll('[data-mcq-option]')],inputs=[...picker.querySelectorAll('[data-mcq-input]')],learningFeedback=picker.querySelector('[data-vocab-feedback]');if(!slot||!slotText||!cards.length)return;const animateToSlot=card=>{const from=card.getBoundingClientRect(),to=slot.getBoundingClientRect(),ghost=document.createElement('div');ghost.className='mcq-fly-card';ghost.textContent=card.dataset.value||card.textContent.trim();ghost.style.left=from.left+'px';ghost.style.top=from.top+'px';ghost.style.width=from.width+'px';ghost.style.height=from.height+'px';document.body.appendChild(ghost);requestAnimationFrame(()=>{ghost.style.transform=`translate(${to.left+to.width/2-(from.left+from.width/2)}px,${to.top+to.height/2-(from.top+from.height/2)}px) scale(.78)`;ghost.style.opacity='.15'});setTimeout(()=>ghost.remove(),280)};const choose=(card,animate=true)=>{if(picker.dataset.vocabLocked==='1')return;const i=Number(card.dataset.mcqOption),input=inputs.find(x=>Number(x.dataset.mcqInput)===i);if(!input)return;inputs.forEach(x=>x.checked=false);cards.forEach(x=>x.classList.remove('selected'));input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));card.classList.add('selected');slot.classList.add('filled');slotText.textContent=card.dataset.value||card.textContent.trim();if(learningFeedback&&picker.dataset.vocabWord){const correct=input.value===input.dataset.answer,meta={word:picker.dataset.vocabWord,meaning:picker.dataset.vocabMeaning,example:picker.dataset.vocabExample};picker.dataset.vocabLocked='1';picker.dataset.firstCorrect=correct?'1':'0';card.classList.add(correct?'is-correct-choice':'is-incorrect-choice');cards.forEach(x=>{x.disabled=true;x.setAttribute('aria-disabled','true')});learningFeedback.innerHTML=vocabFeedbackHtml(meta,correct)}if(animate)animateToSlot(card);if(slot.animate)slot.animate([{transform:'scale(.985)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:240,easing:'ease-out'})};cards.forEach(card=>{card.onclick=()=>choose(card,true);card.ondragstart=e=>{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',card.dataset.mcqOption);card.classList.add('dragging')};card.ondragend=()=>card.classList.remove('dragging')});slot.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='move';slot.classList.add('drag-over')};slot.ondragleave=()=>slot.classList.remove('drag-over');slot.ondrop=e=>{e.preventDefault();slot.classList.remove('drag-over');const i=Number(e.dataTransfer.getData('text/plain')),card=cards.find(x=>Number(x.dataset.mcqOption)===i);if(card)choose(card,false)};slot.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&cards.length){e.preventDefault();const selected=cards.findIndex(x=>x.classList.contains('selected')),next=cards[(selected+1)%cards.length];choose(next,true)}}})}
 
 function wireGuidedActivity(){const runner=document.querySelector('[data-activity-runner]');if(!runner)return;const cards=[...runner.querySelectorAll('[data-runner-question]')],prev=runner.querySelector('[data-runner-prev]'),next=runner.querySelector('[data-runner-next]'),current=runner.querySelector('[data-runner-current]'),stage=runner.querySelector('[data-runner-stage]'),bar=runner.querySelector('[data-runner-progress]');if(!cards.length||!next)return;let index=0;const answered=card=>Boolean(card.querySelector('input[type="radio"]:checked')||[...card.querySelectorAll('textarea,input[type="text"]')].some(el=>el.value.trim().length>0));const sync=()=>{cards.forEach((card,i)=>card.hidden=i!==index);if(current)current.textContent=String(index+1);if(stage)stage.textContent=cards[index].dataset.stage||'Practice';if(bar)bar.style.width=`${((index+1)/cards.length)*100}%`;if(prev){prev.hidden=index===0;prev.disabled=index===0}next.textContent=index===cards.length-1?'Finish':'Next';next.disabled=!answered(cards[index]);setTimeout(()=>wireMcqCards(cards[index]),0)};const move=i=>{index=Math.max(0,Math.min(cards.length-1,i));sync();runner.scrollIntoView({behavior:'smooth',block:'start'})};runner.addEventListener('change',()=>sync());runner.addEventListener('input',()=>sync());if(prev)prev.onclick=()=>move(index-1);next.onclick=()=>{if(!answered(cards[index]))return;if(index<cards.length-1){move(index+1);return}const submit=$('checkActivity')||$('saveWriting');if(submit)submit.click()};sync()}
 function workbookVocabReferences(l){
  const seen=new Set(),items=[];
- const push=(word,meaning,example='')=>{word=String(word||'').trim();if(!word||seen.has(word.toLowerCase()))return;seen.add(word.toLowerCase());items.push({word,meaning:String(meaning||vocabMeaning(word)),example:String(example||'')})};
+ const push=(word,meaning,example='')=>{word=String(word||'').trim();if(!word||seen.has(word.toLowerCase()))return;seen.add(word.toLowerCase());items.push({word,meaning:String(meaning||vocabMeaning(word)),example:String(example||lessonVocabExample(word,l))})};
  (l.expressions||[]).forEach(x=>push(x.text,x.job,x.example||''));
  (Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).forEach(x=>push(x,vocabMeaning(x),''));
  const questions=l.vocabulary?.items||[];
- questions.forEach(q=>{if(items.length>=4)return;const a=String(q.answer||'').trim();if(a&&a.split(/\s+/).length<=5)push(a,vocabMeaning(a),'')});
+ questions.forEach((q,i)=>{if(items.length>=4)return;const meta=vocabFeedbackMeta(l,q,i);if(meta)push(meta.word,meta.meaning,meta.example)});
  return items.slice(0,4);
 }
+function vocabRecycleItems(l,qs){
+ const seen=new Set(),out=[];
+ qs.forEach((q,i)=>{const meta=vocabFeedbackMeta(l,q,i);if(!meta)return;const key=normalizeVocabWord(meta.word);if(seen.has(key))return;seen.add(key);out.push(meta)});
+ return out.slice(0,2);
+}
+function vocabRecycleHtml(items){
+ if(!items.length)return '';
+ return '<section class="eg-vocab-recycle"><div class="eg-vocab-recycle-head"><div><small>Retrieve it again</small><h3>Recall the word from its meaning</h3></div><span>Different direction · stronger memory</span></div>'+
+  '<div class="eg-vocab-recycle-grid">'+items.map((x,i)=>'<article class="eg-vocab-recycle-card"><span class="stage-badge">Recall '+(i+1)+'</span><p>'+escapeHtml(withPeriod(x.meaning))+'</p><div class="eg-vocab-recycle-entry"><input type="text" autocomplete="off" data-vocab-recycle data-answer="'+escapeAttr(x.word)+'" data-word="'+escapeAttr(x.word)+'" data-meaning="'+escapeAttr(x.meaning)+'" data-example="'+escapeAttr(x.example)+'" placeholder="Type the word or phrase"><button class="secondary-btn" type="button" data-vocab-recycle-check>Check recall</button></div><div data-vocab-recycle-feedback aria-live="polite"></div></article>').join('')+
+  '</div></section>';
+}
 function vocabActivity(l){
- const qs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),refs=workbookVocabReferences(l);
+ const qs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),refs=workbookVocabReferences(l),recycle=vocabRecycleItems(l,qs);
  return `<div class="eg-skill-page eg-vocabulary-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Vocabulary</span><h1>Words in context</h1><p>Explore useful language, then use it in real situations.</p></div><span class="eg-question-count">${qs.length} questions</span></header>
   <div class="eg-skill-layout">
@@ -659,9 +787,10 @@ function vocabActivity(l){
    </aside>
    <main class="eg-task-panel">
     <div class="eg-task-panel-head"><div><small>Practice</small><h2>Complete the activities</h2></div><span>Recognise → retrieve → apply</span></div>
-    <div class="activity-question-list">${qs.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>${q.stage||'Question'} · ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${q.type&&q.type!=='choice'?openEvidence('v'+i,q.q,q.min||1,q.tag,q.type==='exact'?q.answer:''):radio('v'+i,q.options,q.answer,q.tag)}</article>`).join('')}</div>
+    <div class="activity-question-list">${qs.map((q,i)=>{const meta=vocabFeedbackMeta(l,q,i);return `<article class="guided-question"><div class="question-stage"><span>${q.stage||'Question'} · ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${q.type&&q.type!=='choice'?openEvidence('v'+i,q.q,q.min||1,q.tag,q.type==='exact'?q.answer:''):radio('v'+i,q.options,q.answer,q.tag,meta)}</article>`}).join('')}</div>
    </main>
   </div>
+  ${vocabRecycleHtml(recycle)}
   <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check vocabulary</button>${activityDoneButton(l)}</div>
  </div>`;
 }
@@ -776,9 +905,10 @@ function balancedOptions(name,options,answer){
  for(let i=0;i<source.length;i++)out.push(i===target?answer:distractors[d++]);
  return out;
 }
-function radio(name,options,answer,tag=''){
+function radio(name,options,answer,tag='',learningMeta=null){
  const shown=balancedOptions(name,options,answer);
- return `<div class="mcq-picker" data-mcq="${escapeAttr(name)}"><div class="mcq-answer-slot" data-mcq-slot tabindex="0" aria-label="Selected answer"><span class="mcq-slot-label">Your answer</span><strong data-mcq-slot-text>Choose an answer</strong><small>Tap an option or drag it here</small></div><div class="mcq-option-cards">${shown.map((o,i)=>`<button class="mcq-option-card" type="button" draggable="true" data-mcq-option="${i}" data-value="${escapeAttr(o)}"><span class="mcq-option-index">${String.fromCharCode(65+i)}</span><span class="mcq-option-text">${escapeHtml(o)}</span></button><input class="mcq-native-input" type="radio" name="${name}" value="${escapeAttr(o)}" data-answer="${escapeAttr(answer)}" data-tag="${escapeAttr(tag)}" data-mcq-input="${i}" tabindex="-1" aria-hidden="true">`).join('')}</div></div>`;
+ const learningAttrs=learningMeta?` data-vocab-word="${escapeAttr(learningMeta.word)}" data-vocab-meaning="${escapeAttr(learningMeta.meaning)}" data-vocab-example="${escapeAttr(learningMeta.example)}"`:'';
+ return `<div class="mcq-picker" data-mcq="${escapeAttr(name)}"${learningAttrs}><div class="mcq-answer-slot" data-mcq-slot tabindex="0" aria-label="Selected answer"><span class="mcq-slot-label">Your answer</span><strong data-mcq-slot-text>Choose an answer</strong><small>Tap an option or drag it here</small></div><div class="mcq-option-cards">${shown.map((o,i)=>`<button class="mcq-option-card" type="button" draggable="true" data-mcq-option="${i}" data-value="${escapeAttr(o)}"><span class="mcq-option-index">${String.fromCharCode(65+i)}</span><span class="mcq-option-text">${escapeHtml(o)}</span></button><input class="mcq-native-input" type="radio" name="${name}" value="${escapeAttr(o)}" data-answer="${escapeAttr(answer)}" data-tag="${escapeAttr(tag)}" data-mcq-input="${i}" tabindex="-1" aria-hidden="true">`).join('')}</div>${learningMeta?'<div class="mcq-learning-feedback-slot" data-vocab-feedback aria-live="polite"></div>':''}</div>`;
 }
 function activityDoneButton(l){
  if(isWorkbookPreview())return '';
@@ -846,7 +976,10 @@ function wireAudioControls(l){
  if(seek)seek.oninput=async()=>{try{const audio=await ensureLessonAudio(l);if(Number.isFinite(audio.duration)&&audio.duration>0){audio.currentTime=(Number(seek.value)/100)*audio.duration;syncAudioUi()}}catch{}};
 }
 
-function wireActivity(l){wireMcqCards();
+function wireVocabRecycle(){
+ document.querySelectorAll('[data-vocab-recycle-check]').forEach(btn=>{btn.onclick=()=>{const card=btn.closest('.eg-vocab-recycle-card'),input=card?.querySelector('[data-vocab-recycle]'),feedback=card?.querySelector('[data-vocab-recycle-feedback]');if(!input||!feedback)return;const answer=String(input.dataset.answer||''),typed=input.value.trim(),correct=normalizeVocabWord(typed)===normalizeVocabWord(answer),meta={word:input.dataset.word,meaning:input.dataset.meaning,example:input.dataset.example};feedback.innerHTML=vocabFeedbackHtml(meta,correct);input.classList.toggle('is-correct',correct);input.classList.toggle('is-incorrect',!correct)}});
+}
+function wireActivity(l){wireMcqCards();if(currentStep==='vocabulary')wireVocabRecycle();
  if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
  if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:'Check purpose, reader and key information before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
  if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
