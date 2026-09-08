@@ -466,15 +466,30 @@ function lessonVocabExample(word,l,q={}){
   const phrase=String(expression.text).replace(/[.…]+$/,'').trim();
   if(phrase)return withPeriod(phrase+' I want to explain this clearly');
  }
- const meaning=lowerDefinitionStart(vocabMeaning(word));
- if(/^to\s+/i.test(meaning)&&!/\s/.test(String(word).trim()))return withPeriod('We need to '+String(word).trim()+' this task today');
- if(/^(very|friendly|sure|able|having|not\s|new\b)/i.test(meaning))return withPeriod('She felt '+String(word).trim()+' in that situation');
- return withPeriod('The '+String(word).trim()+' was important in this situation');
+ const rawWord=String(word||'').trim(),meaning=lowerDefinitionStart(vocabMeaning(word));
+ if(/[.!?]$/.test(rawWord)||/\b(?:I|you|we|they|he|she|my|your|our)\b/i.test(rawWord)){
+  return /\?$/.test(rawWord)?'“'+rawWord+'” she asked during the conversation.':'“'+rawWord+'” she said during the conversation.';
+ }
+ if(/^to\s+/i.test(meaning))return withPeriod('We need to '+rawWord+' today');
+ if(/^(very|friendly|sure|able|having|not\s|new\b)/i.test(meaning))return withPeriod('She felt '+rawWord+' in that situation');
+ return withPeriod('The '+rawWord+' was important in this situation');
 }
 function extractQuotedTarget(question){
  const q=String(question||'');
  const m=q.match(/(?:What does|Match)\s+[“"]?([^”“"?]+?)[”"]?\s+(?:mean|to its meaning)/i);
  return m?m[1].replace(/\*\*/g,'').trim():'';
+}
+function meaningFromVocabQuestion(question){
+ const q=String(question||'').replace(/\*\*/g,'').trim().replace(/\?$/,'');
+ let m=q.match(/Which word describes\s+(.+)$/i);if(m)return 'describes '+m[1].trim();
+ m=q.match(/Choose the best expression when\s+(.+)$/i);if(m)return 'used when '+m[1].trim();
+ m=q.match(/Choose the natural question to\s+(.+)$/i);if(m)return 'used to '+m[1].trim();
+ m=q.match(/Which response shows\s+(.+)$/i);if(m)return 'used to show '+m[1].trim();
+ m=q.match(/Choose the expression that\s+(.+)$/i);if(m)return 'used to '+m[1].trim();
+ m=q.match(/Choose the polite request for\s+(.+)$/i);if(m)return 'used to ask for '+m[1].trim()+' politely';
+ m=q.match(/Choose the (?:best|correct|clearest|most natural)\s+(?:word|phrase|expression|response)\s+(?:to|for|when)\s+(.+)$/i);if(m)return 'used to '+m[1].trim().replace(/^to\s+/i,'');
+ m=q.match(/Which (?:word|phrase|expression|response)\s+(?:best )?(?:fits|matches|shows)\s+(.+)$/i);if(m)return 'used for '+m[1].trim();
+ return '';
 }
 function vocabFeedbackMeta(l,q,index){
  const question=String(q?.q||'').replace(/\*\*/g,'').trim(),answer=String(q?.answer||'').trim();
@@ -493,12 +508,11 @@ function vocabFeedbackMeta(l,q,index){
   expression=expressions.find(x=>normalizeVocabWord(x.answer)===normalizeVocabWord(answer)&&question.includes(String(x.cloze||'')));
  }
  if(expression){word=word||expression.text;meaning=meaning||('to '+String(expression.job||'').replace(/^to\s+/i,''))}
- if(!word&&answer){
-  const known=vocabMeaning(answer);
-  if(!known.startsWith('a useful lesson word')){word=answer;meaning=meaning||known}
- }
- if(!meaning&&word)meaning=vocabMeaning(word);
- if(!word||!meaning||meaning.startsWith('a useful lesson word'))return null;
+ if(!word&&answer)word=answer;
+ if(!meaning&&word){const known=vocabMeaning(word);meaning=known.startsWith('a useful lesson word')?'':known}
+ if(!meaning)meaning=meaningFromVocabQuestion(question);
+ if(!meaning&&answer)meaning='the correct word or phrase for this situation';
+ if(!word||!meaning)return null;
  return {word,meaning:lowerDefinitionStart(meaning),example:lessonVocabExample(word,l,q),index};
 }
 function vocabFeedbackHtml(meta,correct){
