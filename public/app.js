@@ -1258,7 +1258,98 @@ function writingSubmission(sid,lid){
  }catch{return{builder:[],core:{},final:raw,score:null}}
 }
 function writingResponses(sid,lid){const submission=writingSubmission(sid,lid);return submission.legacy||[submission.final]}
-function writingNormalize(text){return String(text||'').toLowerCase().replace(/[“”"'’]/g,"'").replace(/[^a-z0-9'&]+/g,' ').replace(/\s+/g,' ').trim()}
+function writingNormalize(text){
+ let s=String(text||'').toLowerCase().replace(/[“”]/g,'"').replace(/[‘’]/g,"'").trim();
+ const contractions=[
+  [/\bwon't\b/g,'will not'],[/\bshan't\b/g,'shall not'],[/\bcan't\b/g,'cannot'],[/\bcan not\b/g,'cannot'],
+  [/\bdon't\b/g,'do not'],[/\bdoesn't\b/g,'does not'],[/\bdidn't\b/g,'did not'],
+  [/\bisn't\b/g,'is not'],[/\baren't\b/g,'are not'],[/\bwasn't\b/g,'was not'],[/\bweren't\b/g,'were not'],
+  [/\bhaven't\b/g,'have not'],[/\bhasn't\b/g,'has not'],[/\bhadn't\b/g,'had not'],
+  [/\bwouldn't\b/g,'would not'],[/\bshouldn't\b/g,'should not'],[/\bcouldn't\b/g,'could not'],
+  [/\bmustn't\b/g,'must not'],[/\bneedn't\b/g,'need not'],[/\bmightn't\b/g,'might not'],
+  [/\bi'm\b/g,'i am'],[/\byou're\b/g,'you are'],[/\bwe're\b/g,'we are'],[/\bthey're\b/g,'they are'],
+  [/\bi've\b/g,'i have'],[/\byou've\b/g,'you have'],[/\bwe've\b/g,'we have'],[/\bthey've\b/g,'they have']
+ ];
+ contractions.forEach(([pattern,value])=>{s=s.replace(pattern,value)});
+ return s.replace(/[^a-z0-9'&]+/g,' ').replace(/\s+/g,' ').trim()
+}
+function activityDraftKey(){
+ if(session?.role!=='student'||isWorkbookPreview()||!activeLessonId||!currentStep)return null;
+ return ['eg-workbook-draft-v1',session.id,activeBookId||'book',activeLessonId,currentStep].join(':')
+}
+function activityDraftFieldKey(el,index){
+ if(el.name)return 'name:'+el.name;
+ if(el.classList.contains('writing-final-response'))return 'writing-final';
+ if(el.hasAttribute('data-writing-core-input')){
+  const card=el.closest('[data-writing-core]'),cards=[...document.querySelectorAll('#activityPanel [data-writing-core]')];
+  return 'writing-core:'+Math.max(0,cards.indexOf(card))
+ }
+ if(el.hasAttribute('data-vocab-recycle'))return 'vocab-recycle:'+(el.dataset.word||index);
+ return 'field:'+index
+}
+function readActivityDraft(){
+ const key=activityDraftKey();if(!key)return null;
+ try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):null}catch{return null}
+}
+function saveActivityDraft(){
+ const key=activityDraftKey(),panel=$('activityPanel');if(!key||!panel)return;
+ try{
+  const textFields=[...panel.querySelectorAll('textarea,input[type="text"]')].map((el,i)=>({key:activityDraftFieldKey(el,i),value:el.value}));
+  const radios={};panel.querySelectorAll('input[type="radio"]:checked').forEach(el=>{if(el.name)radios[el.name]=el.value});
+  const checks=[...panel.querySelectorAll('input[type="checkbox"]')].map((el,i)=>({i,checked:el.checked}));
+  const arrangements=[...panel.querySelectorAll('[data-writing-core]')].map(card=>[...card.querySelectorAll('[data-writing-piece-answer] [data-writing-piece]')].map(piece=>piece.dataset.sourceIndex));
+  localStorage.setItem(key,JSON.stringify({savedAt:Date.now(),textFields,radios,checks,arrangements}))
+ }catch{}
+}
+function restoreActivityDraft(){
+ const draft=readActivityDraft(),panel=$('activityPanel');if(!draft||!panel)return false;
+ const textFields=[...panel.querySelectorAll('textarea,input[type="text"]')];
+ (draft.textFields||[]).forEach(saved=>{
+  const el=textFields.find((field,i)=>activityDraftFieldKey(field,i)===saved.key);
+  if(el)el.value=String(saved.value??'')
+ });
+ const radioInputs=[...panel.querySelectorAll('input[type="radio"]')];
+ Object.entries(draft.radios||{}).forEach(([name,value])=>radioInputs.filter(x=>x.name===name).forEach(x=>{x.checked=x.value===value}));
+ (draft.checks||[]).forEach(saved=>{const el=panel.querySelectorAll('input[type="checkbox"]')[saved.i];if(el)el.checked=Boolean(saved.checked)});
+ const cards=[...panel.querySelectorAll('[data-writing-core]')];
+ (draft.arrangements||[]).forEach((order,cardIndex)=>{
+  const card=cards[cardIndex],answer=card?.querySelector('[data-writing-piece-answer]');if(!card||!answer)return;
+  (order||[]).forEach(sourceIndex=>{const piece=[...card.querySelectorAll('[data-writing-piece]')].find(x=>x.dataset.sourceIndex===String(sourceIndex));if(piece)answer.appendChild(piece)});
+  syncWritingArrange(card)
+ });
+ panel.querySelectorAll('.mcq-picker').forEach(picker=>{
+  const checked=picker.querySelector('input[type="radio"]:checked');if(!checked)return;
+  const slot=picker.querySelector('[data-mcq-slot]'),slotText=picker.querySelector('[data-mcq-slot-text]'),cards=[...picker.querySelectorAll('[data-mcq-option]')];
+  const selected=cards.find(x=>Number(x.dataset.mcqOption)===Number(checked.dataset.mcqInput));
+  cards.forEach(x=>x.classList.toggle('selected',x===selected));
+  if(slot)slot.classList.add('filled');if(slotText)slotText.textContent=checked.value;
+  const learningFeedback=picker.querySelector('[data-vocab-feedback]');
+  if(learningFeedback&&picker.dataset.vocabWord&&selected){
+   const correct=checked.value===checked.dataset.answer,meta={word:picker.dataset.vocabWord,meaning:picker.dataset.vocabMeaning,example:picker.dataset.vocabExample};
+   picker.dataset.vocabLocked='1';picker.dataset.firstCorrect=correct?'1':'0';
+   selected.classList.add(correct?'is-correct-choice':'is-incorrect-choice');
+   cards.forEach(x=>{x.disabled=true;x.setAttribute('aria-disabled','true')});
+   learningFeedback.innerHTML=vocabFeedbackHtml(meta,correct)
+  }
+ });
+ document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>t.dispatchEvent(new Event('input',{bubbles:true})));
+ return true
+}
+function clearActivityDraft(){
+ const key=activityDraftKey();if(!key)return;
+ try{localStorage.removeItem(key)}catch{}
+}
+function wireActivityDrafting(){
+ if(session?.role!=='student'||isWorkbookPreview())return;
+ const panel=$('activityPanel');if(!panel)return;
+ let timer=null;const queue=()=>{clearTimeout(timer);timer=setTimeout(saveActivityDraft,120)};
+ panel.addEventListener('input',queue);panel.addEventListener('change',queue);panel.addEventListener('click',()=>setTimeout(queue,0));
+ if(!window.__egDraftLifecycle){
+  window.__egDraftLifecycle=true;
+  window.addEventListener('beforeunload',saveActivityDraft);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveActivityDraft()})
+ }
+}
 function writingShuffle(items,seed){
  const out=items.map((value,index)=>({value,index}));let hash=2166136261;const key=String(seed||'writing');
  for(let i=0;i<key.length;i++){hash^=key.charCodeAt(i);hash=Math.imul(hash,16777619)}
@@ -1541,7 +1632,7 @@ function wireWritingCore(){
   syncWritingArrange(card)
  })
 }
-function wireActivity(l){wireMcqCards();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();
+function wireActivity(l){wireMcqCards();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();if(!isWorkbookPreview()){restoreActivityDraft();wireActivityDrafting()}
  if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
  if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:'Build the sentence, connect the ideas, correct the error, then check paragraph order before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
  if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
@@ -1555,7 +1646,7 @@ async function saveWriting(l){
  try{
   await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(payload)})});
   if(!l.writing?.humanGraded)await recordAttempt(session.id,l.id,'writing',score,['writing:sentence-building','writing:sentence-combining','writing:error-correction','writing:paragraph-ordering']);
-  await refreshState();const done=$('doneActivity');if(done)done.disabled=false;
+  await refreshState();clearActivityDraft();const done=$('doneActivity');if(done)done.disabled=false;
   if(l.writing?.humanGraded){if(f)f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> The 12 practice questions were auto-graded and your real-life writing is saved for your teacher.</div>';return}
   const tone=score>=75?'good':'bad',label=score===100?'All 12 correct':score>=75?'Strong preparation':'Review the practice';
   if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> practice questions correct</span><span><b>${12-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. Review any practice item you missed, then press <strong>Done</strong>.</p></div>`
@@ -1576,7 +1667,7 @@ async function checkCurrent(){
  try{
   await recordAttempt(session.id,activeLessonId,currentStep,score,tags);
   await markDone(session.id,activeLessonId,currentStep);
-  await refreshState();
+  await refreshState();clearActivityDraft();
   const done=$('doneActivity');if(done)done.disabled=false;
   const band=score>=80?'Strong':score>=60?'Developing':'Needs practice',tone=score>=70?'good':'bad';
   const boost=currentStep==='grammar'&&grammarMissed.length?`<button class="ghost-btn" id="boostFromResult">Practise ${grammarMissed.length} missed grammar question${grammarMissed.length===1?'':'s'} with Boost</button>`:'';
