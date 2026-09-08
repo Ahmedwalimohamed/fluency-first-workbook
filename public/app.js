@@ -554,18 +554,62 @@ function openVocabularyMeaning(word,example){showModal(`<div class="section-head
 function wireLiveVocabulary(){document.querySelectorAll('[data-vocab-word]').forEach(b=>b.onclick=()=>openVocabularyMeaning(b.dataset.vocabWord,b.dataset.vocabExample))}
 function liveCheckKey(text){const role=session?.role||'guest',lesson=role==='teacher'?activeTeacherLessonNumber:activeStudentLiveLessonNumber;return 'eg-live-check:'+role+':'+lesson+':'+normalizeVocabWord(text)}
 function wireLiveChecks(){document.querySelectorAll('[data-live-check]').forEach(input=>{const key=liveCheckKey(input.dataset.liveCheck);input.checked=localStorage.getItem(key)==='1';input.onchange=()=>{if(input.checked)localStorage.setItem(key,'1');else localStorage.removeItem(key)}})}
+function cleanQuestionText(question){
+ return String(question||'').trim().replace(/[?]+$/,'').replace(/\s+/g,' ');
+}
+function firstPersonPhrase(text){
+ return String(text||'')
+  .replace(/\byour\b/gi,'my')
+  .replace(/\byou're\b/gi,"I'm")
+  .replace(/\byou are\b/gi,'I am')
+  .replace(/\byou've\b/gi,"I've")
+  .replace(/\byou have\b/gi,'I have')
+  .replace(/\byou\b/gi,'I');
+}
 function thinkTalkHint(question){
- const q=String(question||'').trim(),lower=q.toLowerCase();
- if(/\b(favourite|favorite|prefer|best|most important)\b/.test(lower))return 'Choose one answer, then explain why.';
- if(/^how many\b/.test(lower))return 'Give a number, then add one detail.';
- if(/^how\b/.test(lower))return 'Explain how, then give a real example.';
- if(/^who\b/.test(lower))return 'Think of one person. Say who they are and why.';
- if(/^where\b/.test(lower))return 'Name the place, then add one detail about it.';
- if(/^when\b/.test(lower))return 'Give the time or situation, then explain what happened.';
- if(/^why\b/.test(lower))return 'Give one reason, then add an example.';
- if(/^what\b/.test(lower))return 'Give one clear answer, then add a reason or example.';
- if(/^(do|did|are|is|can|could|would|have|has|will)\b/.test(lower))return 'Answer first, then add a reason or example.';
- return 'Give your answer, then add one detail or example.';
+ const q=cleanQuestionText(question),lower=q.toLowerCase();
+ let m;
+ if(/^how many hours do you use social media a day$/i.test(q))return 'Well, I use social media for about ___ hours a day.';
+ if((m=q.match(/^how many hours do you (.+?) a day$/i)))return 'Well, I '+m[1]+' for about ___ hours a day.';
+ if(/^how many people are in your family$/i.test(q))return 'Well, there are ___ people in my family.';
+ if((m=q.match(/^how many (.+?) do you have$/i)))return 'Well, I have ___ '+m[1]+'.';
+ if((m=q.match(/^how often do you (.+)$/i)))return 'Well, I '+m[1]+' ___.';
+ if(/^where are you from$/i.test(q))return "Well, I'm from ___.";
+ if(/^where do you live$/i.test(q))return 'Well, I live in ___.';
+ if(/^where did you last go on a trip$/i.test(q))return 'Well, the last place I visited was ___.';
+ if((m=q.match(/^where do you (.+)$/i)))return 'Well, I '+m[1]+' in/at ___.';
+ if((m=q.match(/^where did you (.+)$/i)))return 'Well, I '+m[1]+' ___.';
+ if(/^what do you do$/i.test(q))return 'Well, I work as ___ / I study ___.';
+ if(/^what do you enjoy doing$/i.test(q))return 'Well, I enjoy ___.';
+ if(/^what are you working on these days$/i.test(q))return "Well, these days I'm working on ___.";
+ if(/^what time do you usually start work$/i.test(q))return 'Well, I usually start work at ___.';
+ if((m=q.match(/^what time do you (.+)$/i)))return 'Well, I '+m[1]+' at ___.';
+ if((m=q.match(/^which (.+?) do you (.+?) the most$/i)))return 'Well, the '+m[1]+' I '+m[2]+' the most is ___.';
+ if((m=q.match(/^what(?:'s| is) your (.+)$/i)))return 'Well, my '+m[1]+' is ___.';
+ if((m=q.match(/^what(?:'s| is) one (.+)$/i)))return 'Well, one '+m[1]+' is ___.';
+ if((m=q.match(/^what(?:'s| is) the (.+)$/i)))return 'Well, the '+m[1]+' is ___.';
+ if((m=q.match(/^what(?:'s| is) a (.+?) you(?:'d| would) like to (.+)$/i)))return "Well, a "+m[1]+" I'd like to "+m[2]+" is ___.";
+ if((m=q.match(/^what(?:'s| is) a (.+?) you (.+)$/i)))return 'Well, a '+m[1]+' I '+m[2]+' is ___.';
+ if(/^who are you closest to in your family$/i.test(q))return "Well, I'm closest to ___ because ___.";
+ if(/^who do you look like the most$/i.test(q))return 'Well, I look like ___ the most.';
+ if((m=q.match(/^who (.+)$/i)))return 'Well, the person is ___ because ___.';
+ if((m=q.match(/^do you prefer (.+?) or (.+)$/i)))return 'Well, I prefer ___ because ___.';
+ if((m=q.match(/^would you like to (.+)$/i)))return "Well, yes, I'd like to ___ because ___.";
+ if((m=q.match(/^do you (.+)$/i)))return "Well, yes, I do. I ___ because ___.";
+ if((m=q.match(/^did you (.+)$/i)))return "Well, yes, I did. I ___ because ___.";
+ if((m=q.match(/^have you (.+)$/i)))return "Well, yes, I have. I ___.";
+ if((m=q.match(/^has your (.+)$/i)))return "Well, yes, it has. ___.";
+ if((m=q.match(/^can you (.+)$/i)))return "Well, yes, I can. I ___.";
+ if((m=q.match(/^could you (.+)$/i)))return "Well, yes, I could. I ___.";
+ if((m=q.match(/^is (.+?) more (.+?) or more (.+?) for you$/i)))return 'Well, '+m[1]+' is more ___ for me because ___.';
+ if((m=q.match(/^how did you (.+)$/i)))return 'Well, I '+m[1]+' by ___.';
+ if((m=q.match(/^how do you (.+)$/i)))return 'Well, I '+m[1]+' by ___.';
+ if((m=q.match(/^why (.+)$/i)))return 'Well, because ___.';
+ if((m=q.match(/^tell us one interesting fact about yourself$/i)))return 'Well, one interesting fact about me is ___.';
+ if(/^tell us (.+)$/i.test(q))return 'Well, ___.';
+ if(/^what\b/i.test(q))return 'Well, for me, ___.';
+ if(/^how\b/i.test(q))return 'Well, I ___.';
+ return 'Well, ___.';
 }
 function baseVerbFromThirdPerson(verb){
  const v=String(verb||'').toLowerCase();
@@ -599,12 +643,23 @@ function findSomeoneQuestion(statement){
  }
  return 'Is this true for you: '+s+'?';
 }
+function findSomeoneAnswerStarter(question){
+ const q=String(question||'').trim();
+ if(/^Are you\b/i.test(q))return "Well, yes, I am. ___.";
+ if(/^Have you\b/i.test(q))return "Well, yes, I have. ___.";
+ if(/^Did you\b/i.test(q))return "Well, yes, I did. ___.";
+ if(/^Can you\b/i.test(q))return "Well, yes, I can. ___.";
+ if(/^Could you\b/i.test(q))return "Well, yes, I could. ___.";
+ if(/^Do you\b/i.test(q))return "Well, yes, I do. ___.";
+ if(/^Is this true for you/i.test(q))return "Well, yes, that's true for me because ___.";
+ return 'Well, yes. ___.';
+}
 function discussionHintHtml(text,type){
  if(type==='find'){
-  const ask=findSomeoneQuestion(text);
-  return '<small class="discussion-hint find-someone-hint"><b>Ask:</b> “'+escapeHtml(ask)+'” <span>Then ask one follow-up.</span></small>';
+  const ask=findSomeoneQuestion(text),starter=findSomeoneAnswerStarter(ask);
+  return '<small class="discussion-hint find-someone-hint"><b>Ask:</b> “'+escapeHtml(ask)+'” <span><b>Hint:</b> “'+escapeHtml(starter)+'”</span></small>';
  }
- return '<small class="discussion-hint"><b>Hint:</b> '+escapeHtml(thinkTalkHint(text))+'</small>';
+ return '<small class="discussion-hint"><b>Hint:</b> “'+escapeHtml(thinkTalkHint(text))+'”</small>';
 }
 
 function liveLineHtml(line,mode='normal'){
