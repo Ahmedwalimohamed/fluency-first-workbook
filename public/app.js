@@ -567,49 +567,49 @@ function firstPersonPhrase(text){
   .replace(/\byou\b/gi,'I');
 }
 function thinkTalkHint(question){
- const q=cleanQuestionText(question),lower=q.toLowerCase();
+ const q=cleanQuestionText(question);
  let m;
- if(/^how many hours do you use social media a day$/i.test(q))return 'Well, I use social media for about ___ hours a day.';
- if((m=q.match(/^how many hours do you (.+?) a day$/i)))return 'Well, I '+m[1]+' for about ___ hours a day.';
- if(/^how many people are in your family$/i.test(q))return 'Well, there are ___ people in my family.';
- if((m=q.match(/^how many (.+?) do you have$/i)))return 'Well, I have ___ '+m[1]+'.';
- if((m=q.match(/^how often do you (.+)$/i)))return 'Well, I '+m[1]+' ___.';
- if(/^where are you from$/i.test(q))return "Well, I'm from ___.";
- if(/^where do you live$/i.test(q))return 'Well, I live in ___.';
- if(/^where did you last go on a trip$/i.test(q))return 'Well, the last place I visited was ___.';
- if((m=q.match(/^where do you (.+)$/i)))return 'Well, I '+m[1]+' in/at ___.';
- if((m=q.match(/^where did you (.+)$/i)))return 'Well, I '+m[1]+' ___.';
- if(/^what do you do$/i.test(q))return 'Well, I work as ___ / I study ___.';
- if(/^what do you enjoy doing$/i.test(q))return 'Well, I enjoy ___.';
- if(/^what are you working on these days$/i.test(q))return "Well, these days I'm working on ___.";
- if(/^what time do you usually start work$/i.test(q))return 'Well, I usually start work at ___.';
- if((m=q.match(/^what time do you (.+)$/i)))return 'Well, I '+m[1]+' at ___.';
- if((m=q.match(/^which (.+?) do you (.+?) the most$/i)))return 'Well, the '+m[1]+' I '+m[2]+' the most is ___.';
- if((m=q.match(/^what(?:'s| is) your (.+)$/i)))return 'Well, my '+m[1]+' is ___.';
- if((m=q.match(/^what(?:'s| is) one (.+)$/i)))return 'Well, one '+m[1]+' is ___.';
- if((m=q.match(/^what(?:'s| is) the (.+)$/i)))return 'Well, the '+m[1]+' is ___.';
- if((m=q.match(/^what(?:'s| is) a (.+?) you(?:'d| would) like to (.+)$/i)))return "Well, a "+m[1]+" I'd like to "+m[2]+" is ___.";
- if((m=q.match(/^what(?:'s| is) a (.+?) you (.+)$/i)))return 'Well, a '+m[1]+' I '+m[2]+' is ___.';
- if(/^who are you closest to in your family$/i.test(q))return "Well, I'm closest to ___ because ___.";
- if(/^who do you look like the most$/i.test(q))return 'Well, I look like ___ the most.';
- if((m=q.match(/^who (.+)$/i)))return 'Well, the person is ___ because ___.';
- if((m=q.match(/^do you prefer (.+?) or (.+)$/i)))return 'Well, I prefer ___ because ___.';
- if((m=q.match(/^would you like to (.+)$/i)))return "Well, yes, I'd like to ___ because ___.";
- if((m=q.match(/^do you (.+)$/i)))return "Well, yes, I do. I ___ because ___.";
- if((m=q.match(/^did you (.+)$/i)))return "Well, yes, I did. I ___ because ___.";
- if((m=q.match(/^have you (.+)$/i)))return "Well, yes, I have. I ___.";
- if((m=q.match(/^has your (.+)$/i)))return "Well, yes, it has. ___.";
- if((m=q.match(/^can you (.+)$/i)))return "Well, yes, I can. I ___.";
- if((m=q.match(/^could you (.+)$/i)))return "Well, yes, I could. I ___.";
- if((m=q.match(/^is (.+?) more (.+?) or more (.+?) for you$/i)))return 'Well, '+m[1]+' is more ___ for me because ___.';
- if((m=q.match(/^how did you (.+)$/i)))return 'Well, I '+m[1]+' by ___.';
- if((m=q.match(/^how do you (.+)$/i)))return 'Well, I '+m[1]+' by ___.';
- if((m=q.match(/^why (.+)$/i)))return 'Well, because ___.';
- if((m=q.match(/^tell us one interesting fact about yourself$/i)))return 'Well, one interesting fact about me is ___.';
- if(/^tell us (.+)$/i.test(q))return 'Well, ___.';
- if(/^what\b/i.test(q))return 'Well, for me, ___.';
- if(/^how\b/i.test(q))return 'Well, I ___.';
- return 'Well, ___.';
+ if(/^how many hours do you use social media a day$/i.test(q))return 'On average, I use social media for about ___ hours a day.';
+ if((m=q.match(/^how many hours do you (.+?) a day$/i)))return 'On average, I '+m[1]+' for about ___ hours a day.';
+ if(/^how many people are in your family$/i.test(q))return 'There are ___ people in my family.';
+ if((m=q.match(/^how many (.+?) do you have$/i)))return 'I have ___ '+m[1]+'.';
+ if((m=q.match(/^how often do you (.+)$/i)))return 'Usually, I '+m[1]+' ___.';
+ if(/^where are you from$/i.test(q))return "I'm from ___.";
+ if(/^where do you live$/i.test(q))return 'I live in ___.';
+ if(/^where did you last go on a trip$/i.test(q))return 'The last place I visited was ___.';
+ if((m=q.match(/^where do you (.+)$/i)))return 'I '+m[1]+' in/at ___.';
+ if((m=q.match(/^where did you (.+)$/i)))return 'I '+m[1]+' ___.';
+ if(/^what do you do$/i.test(q))return 'I work as ___ / I study ___.';
+ if(/^what do you enjoy doing$/i.test(q))return 'In my free time, I enjoy ___.';
+ if(/^what are you working on these days$/i.test(q))return "At the moment, I'm working on ___.";
+ if(/^what time do you usually start work$/i.test(q))return 'I usually start work at ___.';
+ if((m=q.match(/^what time do you (.+)$/i)))return 'I '+m[1]+' at ___.';
+ if((m=q.match(/^which (.+?) do you (.+?) the most$/i)))return 'The '+m[1]+' I '+m[2]+' the most is ___.';
+ if((m=q.match(/^what(?:'s| is) your (.+)$/i)))return 'My '+m[1]+' is ___.';
+ if((m=q.match(/^what(?:'s| is) one (.+)$/i)))return 'One '+m[1]+' is ___.';
+ if((m=q.match(/^what(?:'s| is) the (.+)$/i)))return 'For me, the '+m[1]+' is ___.';
+ if((m=q.match(/^what(?:'s| is) a (.+?) you(?:'d| would) like to (.+)$/i)))return "I'd like to "+m[2]+' ___ because ___.';
+ if((m=q.match(/^what(?:'s| is) a (.+?) you (.+)$/i)))return 'A '+m[1]+' I '+m[2]+' is ___.';
+ if(/^who are you closest to in your family$/i.test(q))return "I'm closest to ___ because ___.";
+ if(/^who do you look like the most$/i.test(q))return 'I look like ___ the most.';
+ if(/^who\b/i.test(q))return 'The person I would choose is ___ because ___.';
+ if((m=q.match(/^do you prefer (.+?) or (.+)$/i)))return 'Personally, I prefer ___ because ___.';
+ if((m=q.match(/^would you like to (.+)$/i)))return "I'd like to ___ because ___.";
+ if((m=q.match(/^do you (.+)$/i)))return 'Yes, I do. I ___ because ___.';
+ if((m=q.match(/^did you (.+)$/i)))return 'Yes, I did. I ___ because ___.';
+ if((m=q.match(/^have you (.+)$/i)))return "Actually, yes. I've ___.";
+ if((m=q.match(/^has your (.+)$/i)))return 'Yes, it has. ___.';
+ if((m=q.match(/^can you (.+)$/i)))return 'Yes, I can. I ___.';
+ if((m=q.match(/^could you (.+)$/i)))return 'Yes, I could. I ___.';
+ if((m=q.match(/^is (.+?) more (.+?) or more (.+?) for you$/i)))return 'For me, '+m[1]+' is more ___ because ___.';
+ if((m=q.match(/^how did you (.+)$/i)))return 'I '+m[1]+' by ___.';
+ if((m=q.match(/^how do you (.+)$/i)))return 'I usually '+m[1]+' by ___.';
+ if(/^why\b/i.test(q))return 'The main reason is ___.';
+ if(/^tell us one interesting fact about yourself$/i.test(q))return 'One interesting fact about me is ___.';
+ if(/^tell us\b/i.test(q))return 'One thing I can say is ___.';
+ if(/^what\b/i.test(q))return 'For me, ___.';
+ if(/^how\b/i.test(q))return 'I would say ___.';
+ return 'My answer is ___.';
 }
 function baseVerbFromThirdPerson(verb){
  const v=String(verb||'').toLowerCase();
@@ -624,7 +624,7 @@ function findSomeoneQuestion(statement){
  if((m=s.match(/^is\s+(.+)$/i)))return 'Are you '+m[1]+'?';
  if((m=s.match(/^are\s+(.+)$/i)))return 'Are you '+m[1]+'?';
  if((m=s.match(/^has\s+been\s+(.+)$/i)))return 'Have you been '+m[1]+'?';
- if((m=s.match(/^has\s+(travelled|traveled|visited|camped|deleted|planted|picked|competed|learned)\s+(.+)$/i)))return 'Have you '+m[1].toLowerCase()+' '+m[2]+'?';
+ if((m=s.match(/^has\s+(travelled|traveled|visited|camped|deleted|planted|picked|competed|learned|tried)\s+(.+)$/i)))return 'Have you '+m[1].toLowerCase()+' '+m[2]+'?';
  if((m=s.match(/^has\s+(.+)$/i)))return 'Do you have '+m[1]+'?';
  if((m=s.match(/^had\s+(.+)$/i)))return 'Did you have '+m[1]+'?';
  if((m=s.match(/^once\s+got\s+(.+)$/i)))return 'Did you ever get '+m[1]+'?';
@@ -645,19 +645,20 @@ function findSomeoneQuestion(statement){
 }
 function findSomeoneAnswerStarter(question){
  const q=String(question||'').trim();
- if(/^Are you\b/i.test(q))return "Well, yes, I am. ___.";
- if(/^Have you\b/i.test(q))return "Well, yes, I have. ___.";
- if(/^Did you\b/i.test(q))return "Well, yes, I did. ___.";
- if(/^Can you\b/i.test(q))return "Well, yes, I can. ___.";
- if(/^Could you\b/i.test(q))return "Well, yes, I could. ___.";
- if(/^Do you\b/i.test(q))return "Well, yes, I do. ___.";
- if(/^Is this true for you/i.test(q))return "Well, yes, that's true for me because ___.";
- return 'Well, yes. ___.';
+ if(/^Are you\b/i.test(q))return "Yes, I am. I'm ___.";
+ if(/^Have you\b/i.test(q))return "Actually, yes. I've ___.";
+ if(/^Did you\b/i.test(q))return 'Yes, I did. I ___.';
+ if(/^Can you\b/i.test(q))return 'Yes, I can. I ___.';
+ if(/^Could you\b/i.test(q))return 'Yes, I could. I ___.';
+ if(/^Do you have\b/i.test(q))return 'I do. I have ___.';
+ if(/^Do you\b/i.test(q))return 'Yes, I do. I ___.';
+ if(/^Is this true for you/i.test(q))return "That's true for me because ___.";
+ return 'Yes, that matches me. ___.';
 }
 function discussionHintHtml(text,type){
  if(type==='find'){
-  const ask=findSomeoneQuestion(text),starter=findSomeoneAnswerStarter(ask);
-  return '<small class="discussion-hint find-someone-hint"><b>Ask:</b> “'+escapeHtml(ask)+'” <span><b>Hint:</b> “'+escapeHtml(starter)+'”</span></small>';
+  const starter=findSomeoneAnswerStarter(findSomeoneQuestion(text));
+  return '<small class="discussion-hint find-someone-hint"><b>Hint:</b> “'+escapeHtml(starter)+'”</small>';
  }
  return '<small class="discussion-hint"><b>Hint:</b> “'+escapeHtml(thinkTalkHint(text))+'”</small>';
 }
@@ -1566,12 +1567,11 @@ function openTeacherReadingSpotlight(reading){
 function openTeacherFindSpotlight(cards,index){
  closeTeacherSpotlight();
  if(!cards.length)return;
- const safeIndex=Math.max(0,Math.min(index,cards.length-1)),card=cards[safeIndex],statement=card.dataset.findText||card.querySelector('strong')?.textContent?.trim()||'',ask=card.querySelector('.find-someone-hint')?.childNodes?.[1]?.textContent?.trim()||'',hint=card.querySelector('.find-someone-hint span')?.textContent?.replace(/^Hint:\s*/i,'').trim()||'';
- const askText=findSomeoneQuestion(statement),starter=findSomeoneAnswerStarter(askText);
+ const safeIndex=Math.max(0,Math.min(index,cards.length-1)),card=cards[safeIndex],statement=card.dataset.findText||card.querySelector('strong')?.textContent?.trim()||'',starter=findSomeoneAnswerStarter(findSomeoneQuestion(statement));
  const overlay=document.createElement('div');overlay.id='teacherSpotlightOverlay';overlay.className='teacher-spotlight-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Find Someone Who spotlight');
  overlay.innerHTML=`<div class="teacher-spotlight-card teacher-find-spotlight-card" data-tone="${safeIndex%3}">
   <header><span>Find someone who…</span><button type="button" class="teacher-spotlight-close" id="closeTeacherSpotlight">Show all cards ×</button></header>
-  <div class="teacher-find-spotlight-body"><div class="teacher-find-icon">◎</div><h2>${escapeHtml(statement)}</h2><div class="teacher-find-language"><div><b>Ask</b><p>“${escapeHtml(askText)}”</p></div><div><b>Answer hint</b><p>“${escapeHtml(starter)}”</p></div></div></div>
+  <div class="teacher-find-spotlight-body"><div class="teacher-find-icon">◎</div><h2>${escapeHtml(statement)}</h2><div class="teacher-find-language teacher-find-language-single"><div><b>Hint</b><p>“${escapeHtml(starter)}”</p></div></div></div>
   <footer><button type="button" class="ghost-btn" id="spotlightPrev" ${safeIndex===0?'disabled':''}>← Previous card</button><span>${safeIndex+1} of ${cards.length}</span><button type="button" class="primary-btn" id="spotlightNext" ${safeIndex===cards.length-1?'disabled':''}>Next card →</button></footer>
  </div>`;
  document.body.appendChild(overlay);
