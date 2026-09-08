@@ -618,48 +618,33 @@ function baseVerbFromThirdPerson(verb){
  if(v.endsWith('s')&&!v.endsWith('ss'))return v.slice(0,-1);
  return v;
 }
-function findSomeoneQuestion(statement){
+function findSomeoneHint(statement){
  const s=String(statement||'').trim().replace(/[.?!]+$/,'');
  let m;
- if((m=s.match(/^is\s+(.+)$/i)))return 'Are you '+m[1]+'?';
- if((m=s.match(/^are\s+(.+)$/i)))return 'Are you '+m[1]+'?';
- if((m=s.match(/^has\s+been\s+(.+)$/i)))return 'Have you been '+m[1]+'?';
- if((m=s.match(/^has\s+(travelled|traveled|visited|camped|deleted|planted|picked|competed|learned|tried)\s+(.+)$/i)))return 'Have you '+m[1].toLowerCase()+' '+m[2]+'?';
- if((m=s.match(/^has\s+(.+)$/i)))return 'Do you have '+m[1]+'?';
- if((m=s.match(/^had\s+(.+)$/i)))return 'Did you have '+m[1]+'?';
- if((m=s.match(/^once\s+got\s+(.+)$/i)))return 'Did you ever get '+m[1]+'?';
- if((m=s.match(/^got\s+(.+)$/i)))return 'Did you get '+m[1]+'?';
- if((m=s.match(/^studied\s+(.+)$/i)))return 'Did you study '+m[1]+'?';
- if((m=s.match(/^enjoyed\s+(.+)$/i)))return 'Did you enjoy '+m[1]+'?';
- if((m=s.match(/^learned\s+(.+)$/i)))return 'Did you learn '+m[1]+'?';
- if((m=s.match(/^can['’']?t\s+(.+)$/i)))return 'Can you '+m[1]+'?';
- if((m=s.match(/^can\s+(.+)$/i)))return 'Can you '+m[1]+'?';
- if((m=s.match(/^could\s+(.+)$/i)))return 'Could you '+m[1]+'?';
- if((m=s.match(/^doesn['’']?t\s+like\s+(.+)$/i)))return 'Do you like '+m[1]+'?';
- if((m=s.match(/^never\s+skips\s+breakfast$/i)))return 'Do you always eat breakfast?';
+ if((m=s.match(/^is\s+(.+)$/i)))return "I'm "+m[1]+'.';
+ if((m=s.match(/^are\s+(.+)$/i)))return "I'm "+m[1]+'.';
+ if((m=s.match(/^has\s+been\s+(.+)$/i)))return "I've been "+m[1]+' before.';
+ if((m=s.match(/^has\s+(travelled|traveled|visited|camped|deleted|planted|picked|competed|learned|tried)\s+(.+)$/i)))return "I've "+m[1].toLowerCase()+' '+m[2]+'.';
+ if((m=s.match(/^has\s+(.+)$/i)))return 'I have '+m[1]+'.';
+ if((m=s.match(/^had\s+(.+)$/i)))return 'I had '+m[1]+'.';
+ if((m=s.match(/^once\s+got\s+(.+)$/i)))return 'I once got '+m[1]+'.';
+ if((m=s.match(/^got\s+(.+)$/i)))return 'I got '+m[1]+'.';
+ if((m=s.match(/^studied\s+(.+)$/i)))return 'I studied '+m[1]+'.';
+ if((m=s.match(/^enjoyed\s+(.+)$/i)))return 'I enjoyed '+m[1]+'.';
+ if((m=s.match(/^learned\s+(.+)$/i)))return 'I learned '+m[1]+'.';
+ if((m=s.match(/^doesn['’']?t\s+like\s+(.+)$/i)))return "I don't like "+m[1]+' because ___.';
+ if((m=s.match(/^can['’']?t\s+(.+)$/i)))return "I can't "+m[1]+'.';
+ if((m=s.match(/^can\s+(.+)$/i)))return 'I can '+m[1]+'.';
+ if((m=s.match(/^could\s+(.+)$/i)))return 'I could '+m[1]+'.';
+ if(/^never\s+skips\s+breakfast$/i.test(s))return 'I never skip breakfast.';
  if((m=s.match(/^(.+?)\s+(.+)$/))){
   const verb=m[1],rest=m[2],base=baseVerbFromThirdPerson(verb);
-  if(/^[a-z]+$/i.test(verb)&&base!==verb.toLowerCase())return 'Do you '+base+' '+rest+'?';
+  if(/^[a-z]+$/i.test(verb)&&base!==verb.toLowerCase())return 'I '+base+' '+rest+'.';
  }
- return 'Is this true for you: '+s+'?';
-}
-function findSomeoneAnswerStarter(question){
- const q=String(question||'').trim();
- if(/^Are you\b/i.test(q))return "Yes, I am. I'm ___.";
- if(/^Have you\b/i.test(q))return "Actually, yes. I've ___.";
- if(/^Did you\b/i.test(q))return 'Yes, I did. I ___.';
- if(/^Can you\b/i.test(q))return 'Yes, I can. I ___.';
- if(/^Could you\b/i.test(q))return 'Yes, I could. I ___.';
- if(/^Do you have\b/i.test(q))return 'I do. I have ___.';
- if(/^Do you\b/i.test(q))return 'Yes, I do. I ___.';
- if(/^Is this true for you/i.test(q))return "That's true for me because ___.";
- return 'Yes, that matches me. ___.';
+ return 'This describes me because ___.';
 }
 function discussionHintHtml(text,type){
- if(type==='find'){
-  const starter=findSomeoneAnswerStarter(findSomeoneQuestion(text));
-  return '<small class="discussion-hint find-someone-hint"><b>Hint:</b> “'+escapeHtml(starter)+'”</small>';
- }
+ if(type==='find')return '<small class="discussion-hint find-someone-hint"><b>Hint:</b> “'+escapeHtml(findSomeoneHint(text))+'”</small>';
  return '<small class="discussion-hint"><b>Hint:</b> “'+escapeHtml(thinkTalkHint(text))+'”</small>';
 }
 function findSomeoneCardHtml(text){
@@ -1567,7 +1552,7 @@ function openTeacherReadingSpotlight(reading){
 function openTeacherFindSpotlight(cards,index){
  closeTeacherSpotlight();
  if(!cards.length)return;
- const safeIndex=Math.max(0,Math.min(index,cards.length-1)),card=cards[safeIndex],statement=card.dataset.findText||card.querySelector('strong')?.textContent?.trim()||'',starter=findSomeoneAnswerStarter(findSomeoneQuestion(statement));
+ const safeIndex=Math.max(0,Math.min(index,cards.length-1)),card=cards[safeIndex],statement=card.dataset.findText||card.querySelector('strong')?.textContent?.trim()||'',starter=findSomeoneHint(statement);
  const overlay=document.createElement('div');overlay.id='teacherSpotlightOverlay';overlay.className='teacher-spotlight-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Find Someone Who spotlight');
  overlay.innerHTML=`<div class="teacher-spotlight-card teacher-find-spotlight-card" data-tone="${safeIndex%3}">
   <header><span>Find someone who…</span><button type="button" class="teacher-spotlight-close" id="closeTeacherSpotlight">Show all cards ×</button></header>
