@@ -287,13 +287,21 @@ function getDB(){return apiDB||{version:7,assignments:[],books:[],users:[],class
 function saveDB(db){apiDB=db}
 function $(id){return document.getElementById(id)} function lesson(id=activeLessonId){return lessonById(id)||COURSE.lessons[0]} function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 async function api(path,options={}){const opts={credentials:'include',headers:{'Content-Type':'application/json',...(options.headers||{})},...options};const res=await fetch(path,opts);let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.error||'Request failed');return data}
-async function refreshState(){apiDB=await api('/api/state');syncActiveBook();if(session?.role==='student')updateStudentTicker();return apiDB}
+async function refreshState(){apiDB=await api('/api/state');syncActiveBook();if(session?.role==='student'){const p=getDB().profiles?.[session.id];session.hasProfilePhoto=Boolean(p?.hasPhoto||session.hasProfilePhoto);session.profilePhotoUrl=p?.photoUrl||session.profilePhotoUrl||null;updateStudentTicker()}return apiDB}
+function studentPhoto(id=session?.id){const p=getDB().profiles?.[id];if(p?.hasPhoto&&p.photoUrl)return p.photoUrl;return id===session?.id&&session?.hasProfilePhoto?session.profilePhotoUrl:null}
+function avatarInner(photo,name){return photo?'<img src="'+escapeAttr(photo)+'" alt="">':escapeHtml((name||'?').trim().charAt(0).toUpperCase()||'?')}
+function studentAvatarMarkup(photo,name,className=''){return '<span class="student-photo-avatar '+escapeAttr(className)+'">'+avatarInner(photo,name)+'</span>'}
+function applyStudentAvatar(){
+ if(!session||session.role!=='student')return;
+ const photo=studentPhoto(session.id),btn=$('studentProfileBtn');
+ if(btn){btn.innerHTML=avatarInner(photo,session.name);btn.classList.toggle('has-photo',Boolean(photo));btn.setAttribute('aria-label','Open profile for '+session.name)}
+}
 function init(){if('scrollRestoration' in history)history.scrollRestoration='manual';$('loginForm').addEventListener('submit',e=>{e.preventDefault();login($('username').value.trim(),$('password').value)});$('forgotPasswordBtn')?.addEventListener('click',openForgotPassword);$('logoutBtn').addEventListener('click',logout);$('menuBtn').addEventListener('click',()=>document.querySelector('.sidebar').classList.toggle('open'));hydratePersonalLogin()} document.addEventListener('DOMContentLoaded',init);
 async function hydratePersonalLogin(){if(!personalAccessToken)return;try{const r=await api('/api/auth/access?token='+encodeURIComponent(personalAccessToken));personalAccessStudent=r.student||null;if(personalAccessStudent?.username){$('username').value=personalAccessStudent.username;$('username').readOnly=true;$('username').setAttribute('aria-label','Your EnglishGate username')}}catch{personalAccessToken=null;personalAccessStudent=null;const u=new URL(window.location.href);u.searchParams.delete('access');history.replaceState({},'',u.pathname+(u.searchParams.toString()?'?'+u.searchParams.toString():'')+u.hash)}}
 async function login(username,password){$('loginError').textContent='';try{const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username,password})});session=r.user;await refreshState();if(session.role==='teacher'){await ensureLiveBooks();restoreTeacherContextFromState();}$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('app').classList.remove('student-mode','teacher-mode','admin-mode');$('app').classList.add(session.role+'-mode');$('sidebarName').textContent=session.name;$('sidebarRole').textContent=session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'Student';$('sidebarAvatar').textContent=session.name[0];currentPage=session.role==='admin'?'admin-home':session.role==='teacher'?'teacher-home':'home';if(session.role==='student'&&openAssignmentFromUrl()){renderNav();renderPage();return}renderNav();renderPage()}catch(e){$('loginError').textContent=e.message||'Username or password is incorrect.'}}
 function openForgotPassword(){if(!personalAccessToken){showModal(`<div class="section-head"><div><span class="role-kicker">Password help</span><h3>Use your personal login link</h3><p class="muted">Open the EnglishGate login link that was sent to your WhatsApp, then tap <strong>Forgot password?</strong> again. You do not need to enter a username or phone number.</p></div><button class="icon-btn" data-close>×</button></div><div class="feedback good">Your personal link tells EnglishGate which registered WhatsApp number should receive the new password.</div>`);document.querySelector('[data-close]').onclick=closeModal;return}const who=personalAccessStudent?.name?` for <strong>${escapeHtml(personalAccessStudent.name)}</strong>`:'';showModal(`<div class="section-head"><div><span class="role-kicker">Password help</span><h3>Get a new password</h3><p class="muted">EnglishGate will send a new password${who} to the WhatsApp number already registered on this account.</p></div><button class="icon-btn" data-close>×</button></div><form id="forgotPasswordForm" class="form-grid"><button class="primary-btn" type="submit">Send new password</button></form><div id="forgotPasswordResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('forgotPasswordForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter||$('forgotPasswordForm').querySelector('button[type="submit"]'),result=$('forgotPasswordResult');btn.disabled=true;btn.textContent='Sending…';try{await api('/api/auth/forgot-password',{method:'POST',body:JSON.stringify({accessToken:personalAccessToken})});$('forgotPasswordForm').classList.add('hidden');result.innerHTML='<div class="feedback good"><strong>New password sent.</strong><br>Check your registered WhatsApp number, then sign in with the password you received.</div>'}catch(err){btn.disabled=false;btn.textContent='Send new password';result.innerHTML=`<div class="feedback bad">${escapeHtml(err.message)}</div>`}}}
 async function logout(){try{await api('/api/auth/logout',{method:'POST'})}catch{}session=null;apiDB=null;$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value=''}
-function renderNav(){const items=NAV[session.role],html=items.map(([id,icon,label])=>`<button class="nav-btn ${currentPage===id?'active':''}" data-page="${id}"><span class="nav-icon">${icon}</span>${label}</button>`).join('');if(session.role==='student'){$('sideNav').innerHTML='';$('studentTopNav').innerHTML=html;$('bottomNav').innerHTML=html+`<button class="nav-btn ${currentPage==='profile'?'active':''}" data-page="profile"><span class="nav-icon">○</span>Profile</button>`;$('studentProfileBtn').classList.remove('hidden');$('studentProfileBtn').textContent=session.name[0]}else{$('sideNav').innerHTML=html;$('studentTopNav').innerHTML='';$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.add('hidden')}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{currentPage=b.dataset.page;document.querySelector('.sidebar').classList.remove('open');renderNav();renderPage()});$('studentProfileBtn').onclick=()=>{currentPage='profile';renderNav();renderPage()};resetAppScroll()}
+function renderNav(){const items=NAV[session.role],html=items.map(([id,icon,label])=>`<button class="nav-btn ${currentPage===id?'active':''}" data-page="${id}"><span class="nav-icon">${icon}</span>${label}</button>`).join('');if(session.role==='student'){$('sideNav').innerHTML='';$('studentTopNav').innerHTML=html;$('bottomNav').innerHTML=html+`<button class="nav-btn ${currentPage==='profile'?'active':''}" data-page="profile"><span class="nav-icon">○</span>Profile</button>`;$('studentProfileBtn').classList.remove('hidden');applyStudentAvatar()}else{$('sideNav').innerHTML=html;$('studentTopNav').innerHTML='';$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.add('hidden')}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{currentPage=b.dataset.page;document.querySelector('.sidebar').classList.remove('open');renderNav();renderPage()});$('studentProfileBtn').onclick=()=>{currentPage='profile';renderNav();renderPage()};resetAppScroll()}
 function englishGateLogo(){return ''} function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} 
 try{if('scrollRestoration' in history)history.scrollRestoration='manual'}catch{}
 function resetAppScroll(){
@@ -340,7 +348,7 @@ function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})
  await Promise.resolve(result);
  resetAppScroll();
 }
-function renderStudent(){return ({home:studentHome,workbook,course:studentCourse,'class-book':studentClassBook,'student-live-lesson':studentLiveLesson,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()}
+function renderStudent(){if(!studentPhoto(session.id)&&currentPage!=='profile'){currentPage='profile';renderNav()}return ({home:studentHome,workbook,course:studentCourse,'class-book':studentClassBook,'student-live-lesson':studentLiveLesson,progress:studentProgress,leaderboard:()=>leaderboard(false),profile}[currentPage]||studentHome)()}
 function renderTeacher(){return ({'teacher-home':teacherHome,teach:teacherTeach,'teacher-book':teacherBook,'teacher-live-lesson':teacherLiveLesson,'teacher-workbooks':teacherWorkbooks,'teacher-book-browse':teacherBookBrowse,'teacher-workbook-view':teacherWorkbookView,students,classes,leaderboard:()=>leaderboard(true),weaknesses,reports}[currentPage]||teacherHome)()}
 function renderAdmin(){return ({'admin-home':adminHome,'admin-books':adminBooks,'admin-live-book-browse':adminLiveBookBrowse,'admin-live-lesson':adminLiveLesson,'admin-book-browse':adminBookBrowse,'admin-workbook':adminBooks,'admin-workbook-view':adminWorkbookView,'admin-classes':adminClasses,'admin-reports':reports,'admin-admins':adminAdmins,'admin-teachers':adminTeachers,'admin-students':adminStudents}[currentPage]||adminHome)()}
 
@@ -984,7 +992,7 @@ function studentHome(){
   <div class="eg-premium-alert"><span class="eg-alert-icon" aria-hidden="true">★</span><div class="eg-alert-message">${studentTickerHtml(sid)}</div><span class="eg-alert-encourage">Keep going! <b>→</b></span></div>
 
   <header class="eg-premium-welcome">
-   <div class="eg-premium-greeting"><span class="eg-premium-level">${bookLevel}</span><h1>Hi, ${firstName}.</h1><p>Great to see you again. Let’s keep making progress.</p></div>
+   <div class="eg-premium-welcome-main">${studentAvatarMarkup(studentPhoto(sid),session.name,'eg-home-student-photo')}<div class="eg-premium-greeting"><span class="eg-premium-level">${bookLevel}</span><h1>Hi, ${firstName}.</h1><p>Great to see you again. Let’s keep making progress.</p></div></div>
    <div class="eg-premium-motto" aria-hidden="true"><span>Small steps.</span><strong>Big progress.</strong></div>
   </header>
 
@@ -1579,7 +1587,76 @@ async function recordAttempt(studentId,lessonId,skill,score,tags=[]){await api('
 async function markDone(studentId,lid,step){await api('/api/completion',{method:'POST',body:JSON.stringify({lessonId:lid,step})})}
 function studentProgress(){const sid=session.id,w=weakest(sid),ats=attempts(sid).slice(-5).reverse(),c=courseForStudent(sid),b=bookMeta(bookIdForStudent(sid))||{title:c.title||c.moduleTitle},scored=scoredActivityCount(sid),completed=completedActivityCount(sid);title('EnglishGate Workbook','Progress');$('content').innerHTML=`<section class="progress-shell"><div class="progress-hero-card"><div><span class="pill teal">${escapeHtml(b.title)}</span><h1>${completionPct(sid)}% complete</h1><p>${completed} of ${readyLessons(c).length*WORKBOOK_STEPS.length} available workbook activities completed.</p></div><button class="ghost-btn" id="progressCourseBtn">My book</button></div><div class="student-skill-grid">${['vocabulary','listening','grammar','writing'].map(k=>skillCard(skillLabel(k),mastery(sid,k),'Latest lesson scores')).join('')}</div><section class="section student-progress-grid"><div class="card"><span class="pill gold">Lowest recorded score average</span>${w?`<h3>${w.label} · ${w.score}%</h3><p>${w.tip}</p>${progress(w.score)}`:'<h3>No scored evidence yet</h3><p>Complete a scored activity to see a performance area.</p>'}</div><div class="card"><span class="pill">Evidence</span><h3>${scored} scored activities</h3><p>${completed} workbook activities completed.</p></div></section><section class="section card"><div class="section-head"><div><h3>Recent practice</h3><p>Exact scores from your latest five recorded workbook attempts.</p></div></div>${ats.length?ats.map(a=>`<div class="attempt-row"><div><strong>${escapeHtml(lessonById(a.lessonId)?.title||'Lesson')} · ${skillLabel(a.skill)}</strong><span>${new Date(a.at).toLocaleDateString()}</span></div><strong>${a.score}%</strong></div>`).join(''):'<p class="muted">Complete an activity to start your evidence history.</p>'}</section></section>`;$('progressCourseBtn').onclick=()=>{currentPage='course';renderNav();studentCourse()}}
 
-function profile(){const u=getDB().users.find(x=>x.id===session.id)||session,c=studentClass(session.id),b=bookMeta(bookIdForStudent(session.id)),teacher=getDB().users.find(x=>x.id===c?.teacher_id);title('EnglishGate Workbook','Profile');$('content').innerHTML=`<section class="profile-shell"><div class="card profile-card"><div class="profile-avatar-large">${escapeHtml(u.name[0])}</div><h2>${escapeHtml(u.name)}</h2><p class="muted">${escapeHtml(b?.title||'Workbook')}</p><div class="profile-row"><span>Class</span><strong>${escapeHtml(c?.name||'—')}</strong></div><div class="profile-row"><span>Teacher</span><strong>${escapeHtml(teacher?.name||'—')}</strong></div><div class="profile-row"><span>Username</span><strong>${escapeHtml(u.username)}</strong></div><button class="ghost-btn" id="resetHelp">Password help</button><button class="ghost-btn danger-action" id="studentLogout">Sign out</button></div></section>`;$('resetHelp').onclick=()=>alert('Ask your teacher to reset your password.');$('studentLogout').onclick=logout}
+function prepareProfilePhoto(file){
+ return new Promise((resolve,reject)=>{
+  if(!file||!/^image\//.test(file.type||''))return reject(new Error('Choose an image from your device.'));
+  if(file.size>10*1024*1024)return reject(new Error('Choose a photo smaller than 10 MB.'));
+  const reader=new FileReader();
+  reader.onerror=()=>reject(new Error('Could not read this photo.'));
+  reader.onload=()=>{
+   const img=new Image();
+   img.onerror=()=>reject(new Error('This image could not be opened.'));
+   img.onload=()=>{
+    const size=360,canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
+    canvas.width=size;canvas.height=size;
+    const source=Math.min(img.naturalWidth,img.naturalHeight),sx=(img.naturalWidth-source)/2,sy=(img.naturalHeight-source)/2;
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,size,size);ctx.drawImage(img,sx,sy,source,source,0,0,size,size);
+    let data=canvas.toDataURL('image/jpeg',.82);
+    if(data.length>210000)data=canvas.toDataURL('image/jpeg',.68);
+    if(data.length>230000)return reject(new Error('This photo is too detailed. Choose another image.'));
+    resolve(data);
+   };
+   img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
+}
+function profile(){
+ const u=getDB().users.find(x=>x.id===session.id)||session,c=studentClass(session.id),b=bookMeta(bookIdForStudent(session.id)),teacher=getDB().users.find(x=>x.id===c?.teacher_id),photo=studentPhoto(session.id),required=!photo;
+ title('EnglishGate Workbook','Profile');
+ $('content').innerHTML=`<section class="profile-shell student-photo-profile">
+  <div class="card profile-card student-profile-card">
+   <div class="profile-photo-setup ${required?'is-required':''}">
+    <div class="profile-photo-preview" id="profilePhotoPreview">${avatarInner(photo,u.name)}</div>
+    <div class="profile-photo-copy"><span class="role-kicker">${required?'One-time setup':'Your profile photo'}</span><h2>${required?'Add your profile picture':escapeHtml(u.name)}</h2><p>${required?'Add a clear photo before continuing to EnglishGate.':'Your photo appears when you sign in and on the EnglishGate leaderboard.'}</p></div>
+   </div>
+   <div class="profile-photo-actions">
+    <input class="hidden" type="file" id="profilePhotoInput" accept="image/jpeg,image/png,image/webp" />
+    <button class="primary-btn" id="chooseProfilePhoto" type="button">${required?'Choose profile picture':'Change picture'}</button>
+    <span class="profile-photo-status" id="profilePhotoStatus">${required?'Required to continue':''}</span>
+   </div>
+   <div class="profile-photo-privacy"><span aria-hidden="true">◉</span><p>Your profile picture is visible to signed-in EnglishGate students and teachers on the leaderboard.</p></div>
+   <div class="profile-details">
+    <div class="profile-row"><span>Name</span><strong>${escapeHtml(u.name)}</strong></div>
+    <div class="profile-row"><span>Class</span><strong>${escapeHtml(c?.name||'—')}</strong></div>
+    <div class="profile-row"><span>Teacher</span><strong>${escapeHtml(teacher?.name||'—')}</strong></div>
+    <div class="profile-row"><span>Username</span><strong>${escapeHtml(u.username)}</strong></div>
+   </div>
+   <button class="ghost-btn" id="resetHelp">Password help</button><button class="ghost-btn danger-action" id="studentLogout">Sign out</button>
+  </div>
+ </section>`;
+ const input=$('profilePhotoInput'),choose=$('chooseProfilePhoto'),status=$('profilePhotoStatus'),preview=$('profilePhotoPreview');
+ choose.onclick=()=>input.click();
+ input.onchange=async()=>{
+  const file=input.files?.[0];if(!file)return;
+  choose.disabled=true;choose.textContent='Preparing photo…';status.textContent='';
+  try{
+   const data=await prepareProfilePhoto(file);
+   preview.innerHTML='<img src="'+escapeAttr(data)+'" alt="Profile photo preview">';
+   choose.textContent='Saving…';
+   const r=await api('/api/student/profile-photo',{method:'PUT',body:JSON.stringify({photo:data})});
+   session.hasProfilePhoto=true;session.profilePhotoUrl=r.photoUrl;
+   getDB().profiles[session.id]??={points:0,base:{}};
+   getDB().profiles[session.id].hasPhoto=true;getDB().profiles[session.id].photoUrl=r.photoUrl;
+   applyStudentAvatar();
+   if(required){currentPage='home';renderNav();studentHome();return}
+   status.textContent='Profile picture updated.';
+   choose.disabled=false;choose.textContent='Change picture';
+  }catch(e){status.textContent=e.message||'Could not save this picture.';status.classList.add('error');choose.disabled=false;choose.textContent=required?'Choose profile picture':'Change picture'}
+ };
+ $('resetHelp').onclick=()=>alert('Ask your teacher to reset your password.');
+ $('studentLogout').onclick=logout
+}
 function teacherClassIds(){return getDB().classes.map(c=>c.id)}
 function classStudents(){const ids=teacherClassIds();return getDB().users.filter(u=>u.role==='student'&&u.classIds?.some(id=>ids.includes(id)))}
 
@@ -1986,11 +2063,11 @@ async function leaderboard(teacher=false){
     <div><span class="role-kicker">All active learners</span><h1>Learning leaderboard</h1><p>Professional progress view based on a balanced score: recorded performance, workbook completion, and consistent practice.</p></div>
     <div class="leaderboard-my-standing"><small>${teacher?'Learners ranked': 'Your standing'}</small><strong>${teacher?rows.length:escapeHtml(rankText)}</strong><span>${teacher?'Across EnglishGate':me?`${me.score}% performance score`:'Complete an activity to enter the ranking'}</span></div>
    </div>
-   ${top.length?`<div class="leaderboard-top-three">${top.map(st=>`<article class="leaderboard-top-card ${st.id===session.id?'is-me':''}"><span class="leaderboard-rank-label">#${st.rank}</span><div class="leaderboard-avatar">${escapeHtml((st.name||'?')[0])}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.className||st.level||'EnglishGate learner')}</small></div><div class="leaderboard-top-metrics"><span><b>${st.score}%</b> score</span><span><b>${st.completion}%</b> complete</span><span><b>${Number.isFinite(st.average)?st.average+'%':'—'}</b> average</span></div></article>`).join('')}</div>`:''}
+   ${top.length?`<div class="leaderboard-top-three">${top.map(st=>`<article class="leaderboard-top-card ${st.id===session.id?'is-me':''}"><span class="leaderboard-rank-label">#${st.rank}</span><div class="leaderboard-avatar">${avatarInner(st.photoUrl,st.name)}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.className||st.level||'EnglishGate learner')}</small></div><div class="leaderboard-top-metrics"><span><b>${st.score}%</b> score</span><span><b>${st.completion}%</b> complete</span><span><b>${Number.isFinite(st.average)?st.average+'%':'—'}</b> average</span></div></article>`).join('')}</div>`:''}
    <div class="leaderboard-table-card">
     <div class="leaderboard-table-head"><div><h2>All students</h2><p>Ranking updates when students complete workbook activities and submit scored work.</p></div><span>${rows.length} learners</span></div>
     <div class="leaderboard-table-wrap"><table class="professional-leaderboard-table"><thead><tr><th>Rank</th><th>Learner</th><th>Class</th><th>Score</th><th>Average</th><th>Completion</th><th>Practice</th></tr></thead><tbody>
-     ${rows.map(st=>`<tr class="${st.id===session.id?'is-me':''}"><td><span class="leaderboard-rank-number">#${st.rank}</span></td><td><div class="leaderboard-person"><span class="leaderboard-avatar small">${escapeHtml((st.name||'?')[0])}</span><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.bookTitle||st.level||'English learner')}</small></div></div></td><td>${escapeHtml(st.className||'—')}</td><td><strong>${st.score}%</strong></td><td><strong>${Number.isFinite(st.average)?st.average+'%':'—'}</strong></td><td>${st.completion}%</td><td>${st.completed} done · ${st.scored} scored</td></tr>`).join('')||'<tr><td colspan="7">No learner activity yet.</td></tr>'}
+     ${rows.map(st=>`<tr class="${st.id===session.id?'is-me':''}"><td><span class="leaderboard-rank-number">#${st.rank}</span></td><td><div class="leaderboard-person"><span class="leaderboard-avatar small">${avatarInner(st.photoUrl,st.name)}</span><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.bookTitle||st.level||'English learner')}</small></div></div></td><td>${escapeHtml(st.className||'—')}</td><td><strong>${st.score}%</strong></td><td><strong>${Number.isFinite(st.average)?st.average+'%':'—'}</strong></td><td>${st.completion}%</td><td>${st.completed} done · ${st.scored} scored</td></tr>`).join('')||'<tr><td colspan="7">No learner activity yet.</td></tr>'}
     </tbody></table></div>
    </div>
    <p class="leaderboard-method">Ranking method: 45% recorded activity average, 35% workbook completion, 20% practice consistency. No contact information is shown.</p>
