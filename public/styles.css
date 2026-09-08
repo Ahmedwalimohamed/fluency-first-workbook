@@ -3777,3 +3777,216 @@ html{scroll-behavior:auto!important}
  text-decoration-thickness:2px;
  text-decoration-color:#7fb5a3
 }
+
+
+/* Find Someone Who — student-controlled card game */
+.find-someone-grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:14px;
+ margin:12px 0 22px
+}
+.find-someone-card{
+ position:relative;
+ min-width:0;
+ min-height:138px;
+ display:grid;
+ grid-template-columns:auto minmax(0,1fr);
+ gap:14px;
+ align-items:start;
+ padding:18px;
+ border:1px solid #d7e2e6;
+ border-radius:18px;
+ background:#fff;
+ color:#183247;
+ text-align:left;
+ box-shadow:0 5px 16px rgba(15,23,42,.04)
+}
+.find-someone-content{
+ display:grid;
+ gap:7px;
+ min-width:0
+}
+.find-someone-content>strong{
+ font-size:1.04rem;
+ line-height:1.45
+}
+.find-someone-check{
+ width:34px;
+ height:34px;
+ display:grid;
+ place-items:center
+}
+.find-someone-check input{
+ position:absolute;
+ opacity:0;
+ pointer-events:none
+}
+.find-someone-check>span{
+ width:32px;
+ height:32px;
+ display:grid;
+ place-items:center;
+ border:2px solid #b9c8cf;
+ border-radius:9px;
+ background:#fff;
+ color:transparent;
+ font-weight:950;
+ transition:.15s ease
+}
+.find-someone-student-card{
+ cursor:pointer;
+ transition:transform .15s ease,border-color .15s ease,background .15s ease,box-shadow .15s ease
+}
+.find-someone-student-card:hover{
+ transform:translateY(-1px);
+ border-color:#9fc5b7;
+ box-shadow:0 10px 24px rgba(15,23,42,.07)
+}
+.find-someone-card.is-complete{
+ border-color:#8ec4b1;
+ background:#eef8f4
+}
+.find-someone-card.is-complete .find-someone-check>span{
+ border-color:#17644f;
+ background:#17644f;
+ color:#fff
+}
+.find-someone-teacher-card{
+ width:100%;
+ font:inherit;
+ cursor:zoom-in
+}
+.find-someone-teacher-card:hover,
+.find-someone-teacher-card:focus-visible{
+ border-color:#91b9aa;
+ background:#f7fbf9;
+ box-shadow:0 12px 28px rgba(15,23,42,.08)
+}
+.find-someone-teacher-card:focus-visible{
+ outline:3px solid rgba(23,100,79,.18);
+ outline-offset:2px
+}
+.find-someone-number{
+ width:34px;
+ height:34px;
+ display:grid;
+ place-items:center;
+ border-radius:50%;
+ background:#eaf6f1;
+ color:#17644f;
+ font-size:1rem;
+ font-weight:900
+}
+.find-someone-spotlight-label{
+ position:absolute;
+ right:12px;
+ top:11px;
+ padding:4px 8px;
+ border-radius:999px;
+ background:#f1f5f9;
+ color:#64748b;
+ font-size:.65rem;
+ font-weight:850;
+ opacity:.82
+}
+.teacher-presentation-mode .find-someone-grid{
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:18px;
+ margin:18px 0 28px
+}
+.teacher-presentation-mode .find-someone-card{
+ min-height:170px;
+ padding:24px;
+ gap:16px;
+ border-radius:20px
+}
+.teacher-presentation-mode .find-someone-content>strong{
+ font-size:1.3rem;
+ line-height:1.45
+}
+.teacher-presentation-mode .find-someone-number{
+ width:44px;
+ height:44px;
+ font-size:1.15rem
+}
+.teacher-presentation-mode .find-someone-spotlight-label{
+ font-size:.72rem;
+ padding:5px 9px
+}
+
+/* Spotlight for Find Someone Who */
+.teacher-find-spotlight-card{
+ background:#f7fbf9
+}
+.teacher-find-spotlight-body{
+ display:grid;
+ align-content:center;
+ justify-items:center;
+ gap:24px;
+ padding:46px clamp(30px,6vw,80px)
+}
+.teacher-find-icon{
+ width:72px;
+ height:72px;
+ display:grid;
+ place-items:center;
+ border-radius:50%;
+ background:#17644f;
+ color:#fff;
+ font-size:1.8rem;
+ font-weight:900
+}
+.teacher-find-spotlight-body h2{
+ max-width:900px;
+ margin:0;
+ color:#183247;
+ font-size:clamp(2rem,4vw,3.5rem);
+ line-height:1.2;
+ text-align:center;
+ letter-spacing:-.02em
+}
+.teacher-find-language{
+ width:min(900px,100%);
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:16px
+}
+.teacher-find-language>div{
+ padding:18px 20px;
+ border:1px solid #d6e4df;
+ border-radius:16px;
+ background:#fff
+}
+.teacher-find-language b{
+ display:block;
+ margin-bottom:7px;
+ color:#17644f;
+ font-size:.76rem;
+ text-transform:uppercase;
+ letter-spacing:.06em
+}
+.teacher-find-language p{
+ margin:0;
+ color:#334155;
+ font-size:clamp(1.05rem,1.7vw,1.4rem);
+ line-height:1.5;
+ font-weight:650
+}
+@media(max-width:760px){
+ .find-someone-grid,
+ .teacher-presentation-mode .find-someone-grid{
+  grid-template-columns:1fr
+ }
+ .find-someone-card,
+ .teacher-presentation-mode .find-someone-card{
+  min-height:0;
+  padding:16px
+ }
+ .teacher-find-language{
+  grid-template-columns:1fr
+ }
+ .teacher-find-spotlight-body{
+  padding:32px 22px
+ }
+}

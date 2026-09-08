@@ -552,8 +552,8 @@ function vocabFeedbackHtml(meta,correct){
 }
 function openVocabularyMeaning(word,example){showModal(`<div class="section-head"><div><span class="role-kicker">Vocabulary meaning</span><h3>${escapeHtml(word)}</h3></div><button class="icon-btn" data-close>×</button></div><div class="vocab-meaning-card"><small>Meaning</small><p>${escapeHtml(withPeriod(vocabMeaning(word)))}</p><small>Example</small><p>${escapeHtml(example)}</p></div>`);document.querySelector('[data-close]').onclick=closeModal}
 function wireLiveVocabulary(){document.querySelectorAll('[data-vocab-word]').forEach(b=>b.onclick=()=>openVocabularyMeaning(b.dataset.vocabWord,b.dataset.vocabExample))}
-function liveCheckKey(text){const role=session?.role||'guest',lesson=role==='teacher'?activeTeacherLessonNumber:activeStudentLiveLessonNumber;return 'eg-live-check:'+role+':'+lesson+':'+normalizeVocabWord(text)}
-function wireLiveChecks(){document.querySelectorAll('[data-live-check]').forEach(input=>{const key=liveCheckKey(input.dataset.liveCheck);input.checked=localStorage.getItem(key)==='1';input.onchange=()=>{if(input.checked)localStorage.setItem(key,'1');else localStorage.removeItem(key)}})}
+function liveCheckKey(text){const role=session?.role||'guest',actor=session?.id||session?.username||role,lesson=role==='teacher'?activeTeacherLessonNumber:activeStudentLiveLessonNumber;return 'eg-live-check:'+actor+':'+lesson+':'+normalizeVocabWord(text)}
+function wireLiveChecks(){if(session?.role!=='student')return;document.querySelectorAll('[data-live-check]').forEach(input=>{const key=liveCheckKey(input.dataset.liveCheck);input.checked=localStorage.getItem(key)==='1';input.closest('.find-someone-card')?.classList.toggle('is-complete',input.checked);input.onchange=()=>{if(input.checked)localStorage.setItem(key,'1');else localStorage.removeItem(key);input.closest('.find-someone-card')?.classList.toggle('is-complete',input.checked)}})}
 function cleanQuestionText(question){
  return String(question||'').trim().replace(/[?]+$/,'').replace(/\s+/g,' ');
 }
@@ -661,15 +661,20 @@ function discussionHintHtml(text,type){
  }
  return '<small class="discussion-hint"><b>Hint:</b> “'+escapeHtml(thinkTalkHint(text))+'”</small>';
 }
+function findSomeoneCardHtml(text){
+ const hint=discussionHintHtml(text,'find'),student=session?.role==='student';
+ if(student)return '<label class="find-someone-card find-someone-student-card"><span class="find-someone-check"><input type="checkbox" data-live-check="'+escapeAttr(text)+'"><span aria-hidden="true">✓</span></span><span class="find-someone-content"><strong>'+escapeHtml(text)+'</strong>'+hint+'</span></label>';
+ return '<button class="find-someone-card find-someone-teacher-card" type="button" data-find-spotlight data-find-text="'+escapeAttr(text)+'"><span class="find-someone-number" aria-hidden="true">◎</span><span class="find-someone-content"><strong>'+escapeHtml(text)+'</strong>'+hint+'</span><span class="find-someone-spotlight-label">Spotlight ⛶</span></button>';
+}
 
 function liveLineHtml(line,mode='normal'){
  const t=String(line||'').trim();if(!t)return '';
  if(/^LESSON\s+\d+/i.test(t)||/^WEEK\s+\d+.*LESSON\s+\d+/i.test(t))return '<div class="live-book-marker">'+escapeHtml(t)+'</div>';
  if(/^(PAGE\s+\d+\s*[—-]|\d+\s*[|•]\s*|CAN-DO GOAL:|TODAY.?S OUTCOME)/i.test(t))return '<h3 class="live-book-section">'+escapeHtml(t)+'</h3>';
- if(/^(Think & Talk|READ|Useful Expressions|Pronunciation|Examples|Complete the Sentences|Make It Personal|Challenge|Try to cover:|Write their names below:|Check Your Understanding|LANGUAGE BANK|USEFUL EXPRESSIONS|GRAMMAR FOR THE MISSION|HOMEWORK|INDEPENDENT MISSION|REFLECTION|SUCCESS CHECK|SPEAKING CHALLENGE|FLUENCY MISSION|PERFORMANCE MISSION|YOUR MISSION)$/i.test(t))return '<h4 class="live-book-subhead">'+escapeHtml(t)+'</h4>';
+ if(/^(Think & Talk|Find someone who\.{0,3}|READ|Useful Expressions|Pronunciation|Examples|Complete the Sentences|Make It Personal|Challenge|Try to cover:|Write their names below:|Check Your Understanding|LANGUAGE BANK|USEFUL EXPRESSIONS|GRAMMAR FOR THE MISSION|HOMEWORK|INDEPENDENT MISSION|REFLECTION|SUCCESS CHECK|SPEAKING CHALLENGE|FLUENCY MISSION|PERFORMANCE MISSION|YOUR MISSION)$/i.test(t))return '<h4 class="live-book-subhead">'+escapeHtml(t)+'</h4>';
  const numbered=t.match(/^(\d+)\.\s*(.+)$/);
  if(numbered){const hint=mode==='talk'?discussionHintHtml(numbered[2],'talk'):'';return '<div class="live-prompt-row"><span>'+escapeHtml(numbered[1])+'</span><div class="live-prompt-copy"><p>'+escapeHtml(numbered[2])+'</p>'+hint+'</div></div>'}
- if(/^☐/.test(t)){const text=t.replace(/^☐\s*/,'');const hint=mode==='find'?discussionHintHtml(text,'find'):'';return '<label class="live-check-row"><input type="checkbox" data-live-check="'+escapeAttr(text)+'"><span class="live-check-copy"><b>'+escapeHtml(text)+'</b>'+hint+'</span></label>'}
+ if(/^☐/.test(t)){const text=t.replace(/^☐\s*/,'');if(mode==='find')return findSomeoneCardHtml(text);return session?.role==='student'?'<label class="live-check-row"><input type="checkbox" data-live-check="'+escapeAttr(text)+'"><span class="live-check-copy"><b>'+escapeHtml(text)+'</b></span></label>':'<div class="live-check-row is-readonly"><span class="live-check-copy"><b>'+escapeHtml(text)+'</b></span></div>'}
  if(/^•/.test(t))return '<div class="live-book-bullet">'+escapeHtml(t.replace(/^•\s*/,''))+'</div>';
  if(mode==='vocabulary'){
   const row=vocabularyRow(t);
@@ -680,27 +685,31 @@ function liveLineHtml(line,mode='normal'){
 }
 function renderLiveContent(text){
  const lines=String(text||'').split('\n'),out=[];
- let mode='normal',vocabOpen=false,promptOpen=false;
+ let mode='normal',vocabOpen=false,promptOpen=false,findOpen=false;
  const closeVocab=()=>{if(vocabOpen){out.push('</div>');vocabOpen=false}};
  const closePrompts=()=>{if(promptOpen){out.push('</div>');promptOpen=false}};
+ const closeFind=()=>{if(findOpen){out.push('</div>');findOpen=false}};
  for(const raw of lines){
   const t=raw.trim();if(!t)continue;
   if(/^WORD\s+EXAMPLE$/i.test(t)){
-   closePrompts();closeVocab();mode='vocabulary';vocabOpen=true;
+   closePrompts();closeFind();closeVocab();mode='vocabulary';vocabOpen=true;
    out.push('<div class="live-vocab-table"><div class="live-vocab-head"><span>Target word</span><span>Example in context</span></div>');
    continue;
   }
-  if(/^Think & Talk$/i.test(t)){closePrompts();closeVocab();mode='talk'}
-  else if(/^Find someone who\.{0,3}$/i.test(t)){closePrompts();closeVocab();mode='find'}
-  else if(/^Write their names below:$/i.test(t)){closePrompts();closeVocab();mode='normal'}
+  if(/^Think & Talk$/i.test(t)){closePrompts();closeFind();closeVocab();mode='talk'}
+  else if(/^Find someone who\.{0,3}$/i.test(t)){closePrompts();closeFind();closeVocab();mode='find'}
+  else if(/^Write their names below:$/i.test(t)){closePrompts();closeFind();closeVocab();mode='normal'}
   else if(/^(Useful Expressions|Pronunciation|READ|Examples|Complete the Sentences|Make It Personal|Challenge|Check Your Understanding|SPEAKING CHALLENGE|FLUENCY MISSION|HOMEWORK|REFLECTION)$/i.test(t)){
-   closePrompts();closeVocab();mode='normal';
+   closePrompts();closeFind();closeVocab();mode='normal';
   }
   const html=liveLineHtml(t,mode);
-  if(html){if(html.startsWith('<div class="live-prompt-row"')){if(!promptOpen){out.push('<div class="live-prompt-grid">');promptOpen=true}out.push(html)}else{closePrompts();out.push(html)}}
+  if(html){
+   if(html.startsWith('<div class="live-prompt-row"')){closeFind();if(!promptOpen){out.push('<div class="live-prompt-grid">');promptOpen=true}out.push(html)}
+   else if(html.includes('class="find-someone-card')){closePrompts();if(!findOpen){out.push('<div class="find-someone-grid">');findOpen=true}out.push(html)}
+   else{closePrompts();closeFind();out.push(html)}
+  }
  }
- closePrompts();
- closeVocab();
+ closePrompts();closeFind();closeVocab();
  return out.join('');
 }
 
@@ -1554,6 +1563,24 @@ function openTeacherReadingSpotlight(reading){
  overlay.onclick=e=>{if(e.target===overlay)closeTeacherSpotlight()};
  $('closeTeacherSpotlight').focus();
 }
+function openTeacherFindSpotlight(cards,index){
+ closeTeacherSpotlight();
+ if(!cards.length)return;
+ const safeIndex=Math.max(0,Math.min(index,cards.length-1)),card=cards[safeIndex],statement=card.dataset.findText||card.querySelector('strong')?.textContent?.trim()||'',ask=card.querySelector('.find-someone-hint')?.childNodes?.[1]?.textContent?.trim()||'',hint=card.querySelector('.find-someone-hint span')?.textContent?.replace(/^Hint:\s*/i,'').trim()||'';
+ const askText=findSomeoneQuestion(statement),starter=findSomeoneAnswerStarter(askText);
+ const overlay=document.createElement('div');overlay.id='teacherSpotlightOverlay';overlay.className='teacher-spotlight-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Find Someone Who spotlight');
+ overlay.innerHTML=`<div class="teacher-spotlight-card teacher-find-spotlight-card" data-tone="${safeIndex%3}">
+  <header><span>Find someone who…</span><button type="button" class="teacher-spotlight-close" id="closeTeacherSpotlight">Show all cards ×</button></header>
+  <div class="teacher-find-spotlight-body"><div class="teacher-find-icon">◎</div><h2>${escapeHtml(statement)}</h2><div class="teacher-find-language"><div><b>Ask</b><p>“${escapeHtml(askText)}”</p></div><div><b>Answer hint</b><p>“${escapeHtml(starter)}”</p></div></div></div>
+  <footer><button type="button" class="ghost-btn" id="spotlightPrev" ${safeIndex===0?'disabled':''}>← Previous card</button><span>${safeIndex+1} of ${cards.length}</span><button type="button" class="primary-btn" id="spotlightNext" ${safeIndex===cards.length-1?'disabled':''}>Next card →</button></footer>
+ </div>`;
+ document.body.appendChild(overlay);
+ $('closeTeacherSpotlight').onclick=closeTeacherSpotlight;
+ $('spotlightPrev').onclick=()=>openTeacherFindSpotlight(cards,safeIndex-1);
+ $('spotlightNext').onclick=()=>openTeacherFindSpotlight(cards,safeIndex+1);
+ overlay.onclick=e=>{if(e.target===overlay)closeTeacherSpotlight()};
+ $('closeTeacherSpotlight').focus();
+}
 function wireTeacherSpotlight(){
  const rows=[...document.querySelectorAll('#teacherAnnotationStage .live-prompt-grid .live-prompt-row')];
  rows.forEach((row,index)=>{
@@ -1562,6 +1589,8 @@ function wireTeacherSpotlight(){
   row.onclick=open;
   row.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&teacherLiveTool==='interact'){e.preventDefault();open()}};
  });
+ const findCards=[...document.querySelectorAll('#teacherAnnotationStage [data-find-spotlight]')];
+ findCards.forEach((card,index)=>{const open=()=>{if(teacherLiveTool==='interact')openTeacherFindSpotlight(findCards,index)};card.onclick=open;card.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&teacherLiveTool==='interact'){e.preventDefault();open()}}});
  const reading=readingSpotlightNodes();
  if(reading){
   const target=reading.anchor||document.querySelector('#teacherAnnotationStage .eg-stage-content');
