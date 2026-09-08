@@ -2290,3 +2290,49 @@ html{scroll-behavior:auto!important}
 .student-report-head .eyebrow{
  margin-bottom:4px
 }
+
+
+
+/* Student password help v1 */
+.password-help-card{
+ display:grid;
+ gap:18px;
+ padding:6px 0 2px
+}
+.password-help-card label{
+ display:grid;
+ gap:8px;
+ color:#183247;
+ font-weight:750
+}
+.password-help-card label small{
+ color:#647782;
+ font-weight:500;
+ line-height:1.45
+}
+.password-edit-row{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) auto;
+ gap:8px
+}
+.password-edit-row input{
+ min-height:44px
+}
+.password-help-actions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px
+}
+.password-result-card{
+ margin-top:4px
+}
+.password-result-card code{
+ display:block;
+ margin:8px 0;
+ font-size:1.15rem;
+ letter-spacing:.08em
+}
+@media(max-width:560px){
+ .password-edit-row{grid-template-columns:1fr}
+ .password-help-actions>*{width:100%}
+}
