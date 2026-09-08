@@ -58,6 +58,13 @@ for(let i=0;i<22;i++){
   if(!Array.isArray(l.vocabulary) || l.vocabulary.length < 6) fail(`Lesson ${n}: needs at least 6 core vocabulary items.`);
   if(!Array.isArray(l.chunks) || l.chunks.length < 4) fail(`Lesson ${n}: needs at least 4 usable chunks/collocations.`);
   if(!Array.isArray(l.interactionExpressions) || l.interactionExpressions.length < 3) fail(`Lesson ${n}: needs at least 3 interaction expressions.`);
+  const grammarItems = Array.isArray(l.grammarItems) ? l.grammarItems : [];
+  if(grammarItems.length < 6) fail(`Lesson ${n}: needs at least 6 B2-specific grammar questions.`);
+  for(const [gi,g] of grammarItems.entries()){
+    if(!g.q || !Array.isArray(g.options) || g.options.length !== 3 || !g.options.includes(g.answer)) fail(`Lesson ${n}, grammar ${gi+1}: invalid question/options/answer.`);
+    if(new Set((g.options||[]).map(normalized)).size !== 3) fail(`Lesson ${n}, grammar ${gi+1}: duplicate options.`);
+  }
+
 
   const rw=words(l.readingText), lw=words(l.audioScript);
   if(rw < phaseMinReading(n)) fail(`Lesson ${n}: reading is ${rw} words; minimum for this phase is ${phaseMinReading(n)}.`);
@@ -68,6 +75,11 @@ for(let i=0;i<22;i++){
   const lqs=qs.filter(q=>String(q.tag||'').startsWith('listening:'));
   if(rqs.length < 4) fail(`Lesson ${n}: needs at least 4 reading questions.`);
   if(lqs.length < 4) fail(`Lesson ${n}: needs at least 4 listening questions.`);
+  const higherReading = rqs.some(q=>/(inference|stance|main-idea|purpose|reason|development|strategy|evaluation|scientific|self-assessment)/i.test(String(q.tag||'')));
+  const higherListening = lqs.some(q=>/(synthesis|evaluation|inference|reason|reasoning|decision|mediation|interpretation|pragmatics|planning|stance|interaction|media-literacy|goal-setting|evidence|recommendation|scientific|intercultural)/i.test(String(q.tag||'')));
+  if(!higherReading) fail(`Lesson ${n}: needs at least one higher-order reading item.`);
+  if(!higherListening) fail(`Lesson ${n}: needs at least one higher-order listening item.`);
+
   for(const [qi,q] of qs.entries()){
     if(!q.q || q.answer===undefined || !Array.isArray(q.options) || q.options.length<3) fail(`Lesson ${n}, question ${qi+1}: incomplete auto-graded question.`);
     if(Array.isArray(q.options) && !q.options.includes(q.answer)) fail(`Lesson ${n}, question ${qi+1}: answer is not one of the options.`);
