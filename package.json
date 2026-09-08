@@ -6,8 +6,9 @@
   "main": "server.js",
   "scripts": {
     "qa:b2": "node scripts/qa-b2.mjs",
-    "prestart": "npm run qa:b2",
-    "start": "node server.js"
+    "prestart": "npm run qa:b2 && npm run qa:community",
+    "start": "node server.js",
+    "qa:community": "node scripts/qa-community.mjs"
   },
   "engines": {
     "node": ">=20"
