@@ -54,6 +54,12 @@ const manageSegment=manageStart>=0&&manageEnd>manageStart?serverCode.slice(manag
 if(!manageSegment.includes("You can only move students to your own classes."))fail('Teacher class-transfer ownership restriction is missing.');
 if(/delete from attempts|delete from completion|delete from writing_samples/i.test(manageSegment))fail('Student management must preserve learning history.');
 
+if(!appCode.includes("body:JSON.stringify({content:response})"))fail('Writing publication must save only the authentic final response.');
+if(appCode.includes("body:JSON.stringify({content:JSON.stringify(payload)})"))fail('Writing publication still stores practice JSON.');
+if(!serverCode.includes('function authenticWritingText(raw)'))fail('Legacy writing JSON extraction is missing.');
+if(!serverCode.includes('function isAuthenticWritingText(text)'))fail('Authentic-writing publication filter is missing.');
+if(!serverCode.includes('published_content:authenticWritingText(r.content)'))fail('Writing feed is not extracting authentic prose from legacy records.');
+if(!serverCode.includes("Write your real-life response before publishing."))fail('Writing API does not reject machine-format publication content.');
 if(!appCode.includes('const WRITINGS_PAGE_SIZE=10;'))fail('My Writings must show no more than 10 cards per page.');
 if(!appCode.includes('function openWritingContributor(studentId)'))fail('Contributor profile view is missing.');
 if(!appCode.includes('data-writing-profile'))fail('Writing cards must link to the contributor profile.');
