@@ -138,6 +138,54 @@ app.get('/api/state',auth,async(req,res)=>{
  const bookRows=(await pool.query('select id,title,level,audience,status,total_lessons,activity_model from books order by case status when \'pilot\' then 1 when \'ready\' then 2 else 3 end,title')).rows; const assignmentRows=classIds.length?(await pool.query('select id,class_id,book_id,lesson_id,lesson_number,lesson_title,skills,created_at from assignments where class_id=any($1::text[]) order by created_at desc',[classIds])).rows:[]; res.json({version:8,assignments:assignmentRows.map(a=>({id:a.id,classId:a.class_id,bookId:a.book_id,lessonId:a.lesson_id,lessonNumber:a.lesson_number,lessonTitle:a.lesson_title,skills:a.skills,createdAt:a.created_at})),books:bookRows.map(b=>({id:b.id,title:b.title,level:b.level,audience:b.audience,status:b.status,totalLessons:b.total_lessons,activityModel:b.activity_model})),users,classes:classes.map(c=>({...c,bookId:c.course_id})),profiles,attempts:atRows.map(a=>({id:String(a.id),studentId:a.student_id,lessonId:a.lesson_id,skill:a.skill,score:a.score,tags:a.tags,at:a.at})),completion,writing,writingScores,listeningLocks});
 });
 
+app.get('/api/leaderboard',auth,async(req,res)=>{
+ const rows=(await pool.query(`
+  select u.id,u.name,
+         coalesce(cls.name,'') as class_name,
+         coalesce(cls.level,'') as level,
+         coalesce(comp.completed,0)::int as completed,
+         perf.average,
+         perf.last_active
+  from users u
+  left join lateral (
+    select c.name,c.level
+    from enrollments e
+    join classes c on c.id=e.class_id
+    where e.user_id=u.id
+    order by c.created_at desc nulls last,c.name
+    limit 1
+  ) cls on true
+  left join lateral (
+    select count(*)::int as completed
+    from completion c
+    where c.student_id=u.id and c.step in ('vocabulary','listening','grammar','writing')
+  ) comp on true
+  left join lateral (
+    select round(avg(latest.score)::numeric,0)::int as average,max(latest.at) as last_active
+    from (
+      select distinct on (a.lesson_id,a.skill) a.lesson_id,a.skill,a.score,a.at
+      from attempts a
+      where a.student_id=u.id
+      order by a.lesson_id,a.skill,a.at desc
+    ) latest
+  ) perf on true
+  where u.role='student'
+  order by coalesce(comp.completed,0) desc,perf.average desc nulls last,perf.last_active desc nulls last,u.name asc
+ `)).rows;
+ const students=rows.map((r,i)=>({
+  id:r.id,
+  name:r.name,
+  className:r.class_name||'',
+  level:r.level||'',
+  completed:Number(r.completed||0),
+  average:r.average===null||r.average===undefined?null:Number(r.average),
+  lastActive:r.last_active||null,
+  rank:i+1
+ }));
+ res.set('Cache-Control','no-store');
+ res.json({students,rankingMethod:'completed activities, then average recorded score, then recent activity'});
+});
+
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{const {lessonId,skill,score,tags=[]}=req.body;if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,lessonId,skill,score,Array.isArray(tags)?tags.slice(0,10):[]]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);res.json({ok:true})});
 app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);res.json({ok:true})});
 app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim();if(content.length<20)return res.status(400).json({error:'Invalid writing sample.'});await pool.query(`insert into writing_samples(student_id,lesson_id,content,score) values($1,$2,$3,null) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,updated_at=now()`,[req.user.id,req.params.lessonId,content]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,req.params.lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,req.params.lessonId,'writing']);res.json({ok:true,completed:Boolean(done.rowCount)})});
