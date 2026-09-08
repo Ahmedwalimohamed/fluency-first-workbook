@@ -54,20 +54,30 @@ const manageSegment=manageStart>=0&&manageEnd>manageStart?serverCode.slice(manag
 if(!manageSegment.includes("You can only move students to your own classes."))fail('Teacher class-transfer ownership restriction is missing.');
 if(/delete from attempts|delete from completion|delete from writing_samples/i.test(manageSegment))fail('Student management must preserve learning history.');
 
-if(!appCode.includes("body:JSON.stringify({content:response})"))fail('Writing publication must save only the authentic final response.');
+if(!appCode.includes("body:JSON.stringify({content:response,publishToCommunity})"))fail('Writing save must send only authentic final response plus the publication choice.');
 if(appCode.includes("body:JSON.stringify({content:JSON.stringify(payload)})"))fail('Writing publication still stores practice JSON.');
 if(!serverCode.includes('function authenticWritingText(raw)'))fail('Legacy writing JSON extraction is missing.');
 if(!serverCode.includes('function isAuthenticWritingText(text)'))fail('Authentic-writing publication filter is missing.');
 if(!serverCode.includes('published_content:authenticWritingText(r.content)'))fail('Writing feed is not extracting authentic prose from legacy records.');
-if(!serverCode.includes("Write your real-life response before publishing."))fail('Writing API does not reject machine-format publication content.');
+if(!serverCode.includes("Write your real-life response before saving."))fail('Writing API does not reject machine-format writing content.');
 if(!appCode.includes('const WRITINGS_PAGE_SIZE=10;'))fail('My Writings must show no more than 10 cards per page.');
 if(!appCode.includes('function openWritingContributor(studentId)'))fail('Contributor profile view is missing.');
 if(!appCode.includes('data-writing-profile'))fail('Writing cards must link to the contributor profile.');
 if(!appCode.includes('writingPage=1'))fail('My Writings pagination state is missing.');
 if(!appCode.includes('writing-review-card'))fail('Review-style writing card design is missing.');
+if(!appCode.includes('function wireWritingIntegrity()'))fail('Authentic-writing clipboard protection is missing.');
+for(const blocked of ["'copy'","'cut'","'paste'","'drop'","'dragstart'"])if(!appCode.includes(blocked))fail('Authentic-writing protection is missing blocked event '+blocked+'.');
+if(!appCode.includes("['insertFromPaste','insertFromDrop']"))fail('Authentic-writing beforeinput protection is missing.');
+if(!appCode.includes('Would you like to share your writing to My Writings?'))fail('My Writings publication question is missing.');
+if(!appCode.includes('name="writing-community-share" value="yes"')||!appCode.includes('name="writing-community-share" value="no"'))fail('My Writings Yes/No publication choices are missing.');
+if(!appCode.includes("const publishToCommunity=shareChoice.value==='yes';"))fail('Writing publication choice is not enforced before save.');
+if(!serverCode.includes('published_to_community boolean not null default true'))fail('Existing writing publication migration is missing.');
+if(!serverCode.includes('publishToCommunity=req.body.publishToCommunity===true'))fail('Writing API does not persist explicit publication choice.');
+if(!writingsSegment.includes('w.published_to_community=true'))fail('My Writings feed includes private writing.');
+if(!likeSegment.includes('w.published_to_community=true'))fail('Students can like writing that is not published.');
 if(!appCode.includes("Only you can share your writing outside EnglishGate."))fail('Student-facing external-sharing privacy message is missing.');
 if(!appCode.includes("Thumbs up encourage learners; they never change academic grades or leaderboard scores."))fail('Non-academic likes message is missing.');
-if(!indexCode.includes('my-writings-authentic-only-v1'))fail('Community asset cache-bust version is missing.');
+if(!indexCode.includes('writing-integrity-share-optin-v1'))fail('Community asset cache-bust version is missing.');
 
 if(packageJson.scripts?.['qa:b2']!=='node scripts/qa-b2.mjs')fail('Existing B2 QA script changed unexpectedly.');
 if(packageJson.scripts?.['qa:community']!=='node scripts/qa-community.mjs')fail('Community QA script is not registered.');
