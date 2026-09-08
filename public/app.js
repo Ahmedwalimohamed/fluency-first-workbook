@@ -1107,13 +1107,80 @@ function wireAudioControls(l){
 function wireVocabRecycle(){
  document.querySelectorAll('[data-vocab-recycle-check]').forEach(btn=>{btn.onclick=()=>{const card=btn.closest('.eg-vocab-recycle-card'),input=card?.querySelector('[data-vocab-recycle]'),feedback=card?.querySelector('[data-vocab-recycle-feedback]');if(!input||!feedback)return;const answer=String(input.dataset.answer||''),typed=input.value.trim(),correct=normalizeVocabWord(typed)===normalizeVocabWord(answer),meta={word:input.dataset.word,meaning:input.dataset.meaning,example:input.dataset.example};feedback.innerHTML=vocabFeedbackHtml(meta,correct);input.classList.toggle('is-correct',correct);input.classList.toggle('is-incorrect',!correct)}});
 }
-function wireActivity(l){wireMcqCards();wireVocabRecycle();
+function writingCoreResponse(card){
+ const type=card.dataset.writingCore||'';
+ if(type==='build'||type==='organize'){
+  const values=[...card.querySelectorAll('[data-writing-piece-answer] [data-writing-piece]')].map(x=>x.dataset.value||'');
+  return type==='organize'?values:values.join(' ')
+ }
+ return card.querySelector('[data-writing-core-input]')?.value.trim()||''
+}
+function writingCoreFeedback(card,correct,complete){
+ const box=card.querySelector('[data-writing-core-feedback]');if(!box)return;
+ if(!complete){box.innerHTML='<div class="writing-core-feedback is-incomplete">Finish this activity first.</div>';return}
+ const type=card.dataset.writingCore||'',answer=String(card.dataset.answer||'');
+ if(correct){box.innerHTML='<div class="writing-core-feedback is-correct"><strong>✓ Correct</strong></div>';return}
+ if(type==='organize'){
+  const order=answer.split('||');
+  box.innerHTML='<div class="writing-core-feedback is-incorrect"><strong>✗ Not quite</strong><span>Correct order:</span><ol>'+order.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ol></div>';return
+ }
+ const label=type==='combine'?'Best combined sentence:':'Correct sentence:';
+ box.innerHTML='<div class="writing-core-feedback is-incorrect"><strong>✗ Not quite</strong><span>'+label+' <b>'+escapeHtml(withPeriod(answer))+'</b></span></div>'
+}
+function checkWritingCoreCard(card,show=true){
+ const type=card.dataset.writingCore||'',answer=String(card.dataset.answer||''),response=writingCoreResponse(card);let complete=false,correct=false;
+ if(type==='build'){
+  const total=card.querySelectorAll('[data-writing-piece]').length,used=card.querySelectorAll('[data-writing-piece-answer] [data-writing-piece]').length;
+  complete=total>0&&used===total;correct=complete&&writingNormalize(response)===writingNormalize(answer)
+ }else if(type==='organize'){
+  const expected=answer.split('||'),actual=Array.isArray(response)?response:[];complete=actual.length===expected.length&&expected.length>0;correct=complete&&expected.every((x,i)=>writingNormalize(x)===writingNormalize(actual[i]))
+ }else{
+  complete=Boolean(String(response||'').trim());correct=complete&&writingNormalize(response)===writingNormalize(answer)
+ }
+ card.dataset.coreComplete=complete?'1':'0';card.dataset.coreCorrect=correct?'1':'0';
+ if(show)writingCoreFeedback(card,correct,complete);
+ return{type,complete,correct,response}
+}
+function syncWritingArrange(card){
+ const answer=card.querySelector('[data-writing-piece-answer]'),placeholder=answer?.querySelector('.writing-arrange-placeholder');
+ if(placeholder)placeholder.hidden=Boolean(answer.querySelector('[data-writing-piece]'));
+ card.dataset.coreComplete='0';card.dataset.coreCorrect='0';
+ const feedback=card.querySelector('[data-writing-core-feedback]');if(feedback)feedback.innerHTML=''
+}
+function wireWritingCore(){
+ document.querySelectorAll('[data-writing-core]').forEach(card=>{
+  const bank=card.querySelector('[data-writing-bank]'),answer=card.querySelector('[data-writing-piece-answer]');
+  card.querySelectorAll('[data-writing-piece]').forEach(piece=>{piece.onclick=()=>{
+   if(!bank||!answer)return;
+   if(piece.parentElement===bank)answer.appendChild(piece);else{bank.appendChild(piece);[...bank.querySelectorAll('[data-writing-piece]')].sort((a,b)=>Number(a.dataset.shuffleIndex)-Number(b.dataset.shuffleIndex)).forEach(x=>bank.appendChild(x))}
+   syncWritingArrange(card)
+  }});
+  const reset=card.querySelector('[data-writing-reset]');if(reset)reset.onclick=()=>{if(!bank)return;[...card.querySelectorAll('[data-writing-piece]')].sort((a,b)=>Number(a.dataset.shuffleIndex)-Number(b.dataset.shuffleIndex)).forEach(x=>bank.appendChild(x));syncWritingArrange(card)};
+  const input=card.querySelector('[data-writing-core-input]');if(input)input.oninput=()=>{card.dataset.coreComplete='0';card.dataset.coreCorrect='0';const feedback=card.querySelector('[data-writing-core-feedback]');if(feedback)feedback.innerHTML=''};
+  const check=card.querySelector('[data-writing-core-check]');if(check)check.onclick=()=>checkWritingCoreCard(card,true);
+  syncWritingArrange(card)
+ })
+}
+function wireActivity(l){wireMcqCards();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();
  if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
- if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:'Check purpose, reader and key information before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
+ if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:'Build the sentence, connect the ideas, correct the error, then check paragraph order before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
  if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
-function formativeWritingChecks(l,text){const words=text.trim()?text.trim().split(/\s+/):[],sentences=text.split(/[.!?]+/).filter(x=>x.trim()),targets=(Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).filter(w=>new RegExp(`\\b${String(w).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`,'i').test(text));return{words:words.length,length:words.length>=l.writing.minWords&&words.length<=l.writing.maxWords,organisation:sentences.length>=3||text.includes('\n'),vocabulary:targets}}
-async function saveWriting(l){const f=$('activityFeedback');if(l.writing?.builder){const groups=l.writing.builder.map((_,i)=>'wb'+i),selected=groups.map(g=>document.querySelector(`input[name="${g}"]:checked`)),box=document.querySelector('.writing-final-response'),response=box?.value.trim()||'',checks=formativeWritingChecks(l,response);if(selected.some(x=>!x)){f.innerHTML=`<div class="feedback bad">Finish all ${groups.length} builder checks before submitting.</div>`;return}if(!checks.length){f.innerHTML=`<div class="feedback bad">Your final response has ${checks.words} words. Write ${l.writing.minWords}–${l.writing.maxWords} words.</div>`;return}const correct=selected.filter(x=>x.value===x.dataset.answer).length,score=Math.round(correct/groups.length*100),payload={builder:selected.map(x=>x.value),final:response,submittedAt:new Date().toISOString()};try{await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(payload)})});if(!l.writing.humanGraded)await recordAttempt(session.id,l.id,'writing',score,['writing:builder',...selected.map(x=>x.dataset.tag).filter(Boolean)].slice(0,10));await refreshState();const done=$('doneActivity');if(done)done.disabled=false;if(l.writing.humanGraded){f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> Your response is saved and no automatic correction has been shown.</div>';return}const checksPassed=[checks.length?'✓ Word range':'Review word range',checks.vocabulary.length?`✓ Target vocabulary (${checks.vocabulary.join(', ')})`:'Review target vocabulary',checks.organisation?'✓ Clear organisation':'Review paragraph organisation'];f.innerHTML=`<div class="performance-result ${score>=80?'good':'bad'}"><div class="performance-score"><strong>${score}%</strong><span>Writing builder</span></div><div class="writing-checklist">${checksPassed.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div><p>${score>=80?'Strong preparation.':'Review the builder choices before your next draft.'} Check grammar and spelling once more before you press Done.</p></div>`}catch(e){f.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}return}
- const boxes=[...document.querySelectorAll('.writing-response')],responses=boxes.map(t=>t.value.trim());let met=0;boxes.forEach(t=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0;if(n>=Number(t.dataset.min))met++});if(met<boxes.length){f.innerHTML=`<div class="feedback bad">Finish all ${boxes.length} writing tasks first. You have completed ${met}/${boxes.length}.</div>`;return}try{await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(responses)})});await refreshState();f.innerHTML='<div class="feedback good"><strong>Writing complete.</strong> Press Done to continue.</div>';const done=$('doneActivity');if(done)done.disabled=false}catch(e){f.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
+function formativeWritingChecks(l,text,spec=writingFinalSpec(l)){const words=text.trim()?text.trim().split(/\s+/):[],sentences=text.split(/[.!?]+/).filter(x=>x.trim()),targets=(Array.isArray(l.targetVocabulary)?l.targetVocabulary:[]).filter(w=>text.toLowerCase().includes(String(w).toLowerCase()));return{words:words.length,length:words.length>=spec.min&&words.length<=spec.max,organisation:sentences.length>=2||text.includes('\n'),vocabulary:targets}}
+async function saveWriting(l){
+ const f=$('activityFeedback'),cards=[...document.querySelectorAll('[data-writing-core]')],results=cards.map(card=>checkWritingCoreCard(card,true)),firstIncomplete=results.findIndex(x=>!x.complete);
+ if(firstIncomplete>=0){if(f)f.innerHTML='<div class="feedback bad">Complete all four writing practice activities before saving your final response.</div>';cards[firstIncomplete]?.scrollIntoView({behavior:'smooth',block:'center'});return}
+ const box=document.querySelector('.writing-final-response'),response=box?.value.trim()||'',spec=writingFinalSpec(l),checks=formativeWritingChecks(l,response,spec);
+ if(!checks.length){if(f)f.innerHTML=`<div class="feedback bad">Your final response has ${checks.words} words. Write ${spec.min}–${spec.max} words.</div>`;box?.focus();return}
+ const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100),core=Object.fromEntries(results.map(x=>[x.type,x.response])),payload={core,final:response,score,submittedAt:new Date().toISOString()};
+ try{
+  await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:JSON.stringify(payload)})});
+  if(!l.writing?.humanGraded)await recordAttempt(session.id,l.id,'writing',score,['writing:sentence-building','writing:sentence-combining','writing:error-correction','writing:paragraph-ordering']);
+  await refreshState();const done=$('doneActivity');if(done)done.disabled=false;
+  if(l.writing?.humanGraded){if(f)f.innerHTML='<div class="feedback good"><strong>Submitted for teacher grading.</strong> The four practice activities were auto-graded and your real-life writing is saved for your teacher.</div>';return}
+  const tone=score>=75?'good':'bad',label=score===100?'All four correct':score>=75?'Strong preparation':'Review the practice';
+  if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> core skills correct</span><span><b>${4-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. Review any practice item you missed, then press <strong>Done</strong>.</p></div>`
+ }catch(e){if(f)f.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}
+}
 async function checkCurrent(){
  const open=[...document.querySelectorAll('[data-open="1"]')];
  const groups=[...new Set([...document.querySelectorAll('input[type=radio]')].map(x=>x.name))];
