@@ -119,4 +119,16 @@ if(failures.length){
   console.error(`\n${failures.length} blocking issue(s). Production start is blocked until they are fixed.\n`);
   process.exit(1);
 }
+
+const appCode = fs.readFileSync(new URL('public/app.js', ROOT), 'utf8');
+const serverCode = fs.readFileSync(new URL('server.js', ROOT), 'utf8');
+if(!appCode.includes("B2_UPGRADE_VERSION='b2-living-standard-v1'")) fail('Student migration: B2 upgrade version constant is missing.');
+if(!appCode.includes("B2_UPGRADE_RELEASE_AT='2026-09-08T21:47:25.822Z'")) fail('Student migration: release boundary is missing.');
+if(!appCode.includes('Your progress and previous scores are still saved.')) fail('Student migration: preservation message is missing.');
+if(!appCode.includes('Review earlier lessons')) fail('Student migration: review option is missing.');
+if(!appCode.includes('Retry upgraded lesson')) fail('Student migration: upgraded lesson retry action is missing.');
+if(!appCode.includes('eg-workbook-draft-b2-living-standard-v1')) fail('Student migration: B2 draft version isolation is missing.');
+if(!serverCode.includes('b2_upgrade_notice_version')) fail('Student migration: persistent notice acknowledgement is missing.');
+if(!serverCode.includes('curriculum:b2-living-standard-v1')) fail('Student migration: new B2 attempts are not version-tagged.');
+
 console.log(`B2 QA PASSED: 22 lessons validated, ${warnings.length} warning(s).\n`);
