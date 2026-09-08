@@ -1019,6 +1019,7 @@ function renderWritingFeed(){
  document.querySelectorAll('[data-writing-share]').forEach(btn=>btn.onclick=()=>shareWritingPoster(Number(btn.dataset.writingShare),btn));
 }
 async function myWritings(){
+ writingFeedFilter='all';
  const label=session.role==='student'?'Community':'Student writing';title(session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'EnglishGate',session.role==='student'?'My Writings':'Writings');
  $('content').innerHTML=`<section class="writing-community-page"><header class="writing-community-hero"><div><span class="role-kicker">${label}</span><h1>${session.role==='student'?'My Writings':'Student Writings'}</h1><p>${session.role==='student'?'Read what other learners are writing, encourage good work with a thumbs up, and share your own writing as a branded poster.':'See authentic writing students have submitted across EnglishGate.'}</p></div><div class="writing-community-brand"><strong>${IOU_PUBLIC_NAME}</strong><span>${IOU_PUBLIC_CONTACT}</span></div></header>
  <div class="writing-community-toolbar"><button class="ghost-btn is-active" data-writing-filter="all">Newest</button><button class="ghost-btn" data-writing-filter="popular">Most liked</button>${session.role==='student'?'<button class="ghost-btn" data-writing-filter="mine">My writing</button>':''}<span>Likes encourage learners; they do not change academic grades or leaderboard scores.</span></div>
@@ -1040,7 +1041,7 @@ async function createWritingPoster(w){
  ctx.fillStyle='rgba(255,255,255,.13)';for(let i=0;i<7;i++){ctx.beginPath();ctx.arc(120+i*165,170+(i%2)*90,54,0,Math.PI*2);ctx.fill()}
  ctx.fillStyle='#fff';ctx.font='700 38px Arial, sans-serif';ctx.fillText('MY ENGLISH WRITING',80,105);
  ctx.font='700 31px Arial, sans-serif';ctx.fillText(IOU_PUBLIC_NAME,80,158);ctx.font='500 27px Arial, sans-serif';ctx.fillText(IOU_PUBLIC_CONTACT+'  ·  '+IOU_PUBLIC_SITE,80,200);
- ctx.fillStyle='#fff';ctx.beginPath();ctx.roundRect(55,285,970,1375,38);ctx.fill();
+ ctx.fillStyle='#fff';if(typeof ctx.roundRect==='function'){ctx.beginPath();ctx.roundRect(55,285,970,1375,38);ctx.fill()}else ctx.fillRect(55,285,970,1375);
  const avatar=await posterAvatarBitmap(w.photoUrl);ctx.save();ctx.beginPath();ctx.arc(170,415,74,0,Math.PI*2);ctx.clip();
  if(avatar)ctx.drawImage(avatar,96,341,148,148);else{ctx.fillStyle='#E2E8F0';ctx.fillRect(96,341,148,148);ctx.fillStyle='#102465';ctx.font='700 64px Arial';ctx.textAlign='center';ctx.fillText(String(w.studentName||'?').charAt(0).toUpperCase(),170,438);ctx.textAlign='left'}ctx.restore();
  ctx.fillStyle='#0F172A';ctx.font='700 42px Arial, sans-serif';ctx.fillText(String(w.studentName||'EnglishGate Student'),280,402);
