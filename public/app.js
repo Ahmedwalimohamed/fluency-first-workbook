@@ -790,7 +790,7 @@ function vocabRecycleHtml(items){
   '</div></section>';
 }
 function vocabActivity(l){
- const qs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),refs=workbookVocabReferences(l),recycle=vocabRecycleItems(l,qs);
+ const qs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),refs=workbookVocabReferences(l);
  return `<div class="eg-skill-page eg-vocabulary-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Vocabulary</span><h1>Words in context</h1><p>Explore useful language, then use it in real situations.</p></div><span class="eg-question-count">${qs.length} questions</span></header>
   <div class="eg-skill-layout">
@@ -804,7 +804,6 @@ function vocabActivity(l){
     <div class="activity-question-list">${qs.map((q,i)=>{const meta=vocabFeedbackMeta(l,q,i);return `<article class="guided-question"><div class="question-stage"><span>${q.stage||'Question'} · ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${q.type&&q.type!=='choice'?openEvidence('v'+i,q.q,q.min||1,q.tag,q.type==='exact'?q.answer:''):radio('v'+i,q.options,q.answer,q.tag,meta)}</article>`}).join('')}</div>
    </main>
   </div>
-  ${vocabRecycleHtml(recycle)}
   <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check vocabulary</button>${activityDoneButton(l)}</div>
  </div>`;
 }
@@ -863,9 +862,10 @@ function listeningActivity(l){
 }
 function listeningTranscript(l){return `<details class="transcript-card"><summary>View listening transcript</summary><p>${escapeHtml(l.listening.audioScript)}</p></details>`}
 function grammarActivity(l){
- const qs=(l.grammar?.items||[]).slice(0,10),sample=qs[0];
+ const qs=(l.grammar?.items||[]).slice(0,10),sample=qs[0],vocabQs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),recycle=vocabRecycleItems(l,vocabQs);
  return `<div class="eg-skill-page eg-grammar-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Grammar</span><h1>Build accurate English</h1><p>Notice the pattern, manipulate it, then apply it in context.</p></div><span class="eg-question-count">${qs.length} questions</span></header>
+  ${vocabRecycleHtml(recycle)}
   <div class="eg-skill-layout eg-grammar-layout">
    <aside class="eg-editorial-panel eg-grammar-coach"><div class="eg-panel-heading"><small>Grammar coach</small><h2>${escapeHtml(l.grammar?.focus||l.title)}</h2></div>${l.grammar?.rule?`<section class="grammar-rule-card"><small>Mini rule</small><p>${escapeHtml(l.grammar.rule)}</p></section>`:''}${sample?`<div class="eg-sentence-lab"><small>Sentence lab</small><p>${escapeHtml(sample.q)}</p><div>${(sample.options||[]).slice(0,3).map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div></div>`:''}<div class="eg-tip-card"><b>Strategy</b><span>Read the whole sentence. Decide the meaning before choosing the form.</span></div></aside>
    <main class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Practice</small><h2>Use the pattern</h2></div></div><div class="activity-question-list">${qs.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>Question ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${radio('g'+i,q.options,q.answer,q.tag)}</article>`).join('')}</div></main>
@@ -993,7 +993,7 @@ function wireAudioControls(l){
 function wireVocabRecycle(){
  document.querySelectorAll('[data-vocab-recycle-check]').forEach(btn=>{btn.onclick=()=>{const card=btn.closest('.eg-vocab-recycle-card'),input=card?.querySelector('[data-vocab-recycle]'),feedback=card?.querySelector('[data-vocab-recycle-feedback]');if(!input||!feedback)return;const answer=String(input.dataset.answer||''),typed=input.value.trim(),correct=normalizeVocabWord(typed)===normalizeVocabWord(answer),meta={word:input.dataset.word,meaning:input.dataset.meaning,example:input.dataset.example};feedback.innerHTML=vocabFeedbackHtml(meta,correct);input.classList.toggle('is-correct',correct);input.classList.toggle('is-incorrect',!correct)}});
 }
-function wireActivity(l){wireMcqCards();if(currentStep==='vocabulary')wireVocabRecycle();
+function wireActivity(l){wireMcqCards();wireVocabRecycle();
  if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
  if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:'Check purpose, reader and key information before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
  if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
