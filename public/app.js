@@ -1385,8 +1385,9 @@ function setTeacherPresentationMode(on){
 async function toggleTeacherPresentation(){
  const next=!teacherPresentationMode;
  setTeacherPresentationMode(next);
- if(next&&document.documentElement.requestFullscreen){try{await document.documentElement.requestFullscreen()}catch{}}
- else if(!next&&document.fullscreenElement&&document.exitFullscreen){try{await document.exitFullscreen()}catch{}}
+ // Presentation is intentionally an in-app classroom canvas, not browser fullscreen.
+ // Browser fullscreen changes the viewport size and can make the lesson feel visually zoomed out.
+ if(!next&&document.fullscreenElement&&document.exitFullscreen){try{await document.exitFullscreen()}catch{}}
 }
 function closeTeacherSpotlight(){document.getElementById('teacherSpotlightOverlay')?.remove()}
 function openTeacherSpotlight(rows,index){
