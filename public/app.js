@@ -279,7 +279,7 @@ function lessonById(id){for(const c of Object.values(BOOK_PACKS)){const hit=c.le
 function skillLabel(k){return k==='listening'?'Listening & Reading':cap(k)}
 
 
-const NAV={student:[['home','⌂','Home'],['course','▣','My book'],['progress','◔','Progress'],['leaderboard','▥','Leaderboard']],teacher:[['teacher-home','⌂','Today'],['teach','▣','Teach'],['teacher-workbooks','▤','Workbooks'],['students','◎','Students'],['classes','▤','Classes'],['leaderboard','▥','Leaderboard'],['weaknesses','△','Needs review'],['reports','▦','Reports']],admin:[['admin-home','⌂','Overview'],['admin-books','▣','Books'],['admin-classes','▤','Classes'],['admin-reports','▦','Reports'],['admin-admins','◇','Admins'],['admin-teachers','◎','Teachers'],['admin-students','○','Students']]};
+const NAV={student:[['home','⌂','Home'],['course','▣','My book'],['progress','◔','Progress'],['leaderboard','▥','Leaderboard']],teacher:[['teacher-home','⌂','Overview'],['teach','▣','Teach'],['teacher-workbooks','▤','Workbooks'],['students','◎','Students'],['classes','▤','Classes'],['leaderboard','▥','Leaderboard'],['weaknesses','△','Needs review'],['reports','▦','Reports']],admin:[['admin-home','⌂','Overview'],['admin-books','▣','Books'],['admin-classes','▤','Classes'],['admin-reports','▦','Reports'],['admin-admins','◇','Admins'],['admin-teachers','◎','Teachers'],['admin-students','○','Students']]};
 let session=null,currentPage='home',activeLessonId='w1l1',currentStep='vocabulary',apiDB=null,activeTeacherClassId=null,activeTeacherLessonNumber=1,activeTeacherSectionIndex=0,activeStudentLiveLessonNumber=1,activeStudentSectionIndex=0;
 let personalAccessToken=new URLSearchParams(window.location.search).get('access')||null,personalAccessStudent=null;
 function getDB(){return apiDB||{version:7,assignments:[],books:[],users:[],classes:[],profiles:{},attempts:[],completion:{},writing:{},listeningLocks:{}}}
@@ -1315,20 +1315,27 @@ function teacherHome(){
  }else{
   hero=`<section class="teacher-assist-hero is-empty"><div class="teacher-assist-badge">Teacher Assist</div><div class="teacher-assist-main"><div><span class="role-kicker">Ready when you are</span><h1>Start your next class</h1><p>Once you open a lesson, EnglishGate will remember the exact class, lesson and stage for your next login.</p></div><button class="primary-btn" id="openTeachNow">Open live book</button></div></section>`;
  }
- title('Teacher','Today');
- $('content').innerHTML=`${hero}
- <section class="teacher-assist-grid">
-  <article class="teacher-assist-card ${attention.unfinishedStudents?'needs-attention':''}"><span>Workbook follow-up</span><strong>${attention.unfinishedStudents}</strong><p>${attention.unfinishedStudents?'students still have assigned work to complete':'No unfinished assigned work needs attention'}</p><button class="text-link" id="openFollowUpStudents">Review students</button></article>
-  <article class="teacher-assist-card ${attention.writingToGrade?'needs-attention':''}"><span>Writing to review</span><strong>${attention.writingToGrade}</strong><p>${attention.writingToGrade?'submitted writing pieces are waiting for a teacher grade':'No writing submissions are waiting for a grade'}</p><button class="text-link" id="openWritingReview">Open students</button></article>
-  <article class="teacher-assist-card"><span>Teaching context</span><strong>${cls.length}</strong><p>${cls.length===1?'class assigned to you':cls.length+' classes assigned to you'} · ${sts.length} students</p><button class="text-link" id="openTeachNowCard">Open classes</button></article>
+ const classSummary=cls.map(c=>{
+  const studentsInClass=sts.filter(st=>st.classIds?.includes(c.id)),book=bookMeta(c.bookId||c.course_id);
+  return `<article class="management-card"><div class="management-card-head"><span class="pill teal">${escapeHtml(c.level)}</span><span>${studentsInClass.length} student${studentsInClass.length===1?'':'s'}</span></div><h3>${escapeHtml(c.name)}</h3><p class="book-line">Book: <strong>${escapeHtml(book?.title||c.course_id)}</strong></p><button class="text-link" data-overview-class="${escapeAttr(c.id)}">Open class →</button></article>`;
+ }).join('');
+ title('Teacher','Overview');
+ $('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Your teaching account</span><h1>Your teaching overview</h1><p>See your assigned classes and students immediately, then continue with the work that needs your attention.</p></div><div class="student-cta-row"><button class="ghost-btn" id="overviewStudents">View students</button><button class="primary-btn" id="overviewClasses">View classes</button></div></div>
+ <section class="admin-metrics">
+  ${metric('Classes',cls.length,cls.length===1?'Assigned class':'Assigned classes')}
+  ${metric('Students',sts.length,sts.length===1?'Enrolled student':'Enrolled students')}
+  ${metric('Need follow-up',attention.unfinishedStudents,'Workbook')}
+  ${metric('Writing to review',attention.writingToGrade,'Teacher review')}
  </section>
+ ${hero}
+ <section class="section"><div class="section-head"><div><h3>My classes</h3><p>Student numbers are calculated only from the classes assigned to you.</p></div></div><div class="class-card-grid">${classSummary||'<div class="empty-state"><h3>No classes assigned</h3><p>Ask the System Admin to assign a class to your account.</p></div>'}</div></section>
  ${last?`<section class="section card teacher-latest-action"><span class="role-kicker">Latest assignment</span><h3>Lesson ${last.lessonNumber} · ${escapeHtml(last.lessonTitle)}</h3><p class="muted">${escapeHtml(getDB().classes.find(c=>c.id===last.classId)?.name||'Class')} · ${new Date(last.createdAt).toLocaleString()}</p><button class="secondary-btn" id="openLatestClass">Open class book</button></section>`:''}`;
  if($('continueTeaching'))$('continueTeaching').onclick=()=>{const r=teacherResumeContext();if(!r)return;activeTeacherClassId=r.c.id;activeTeacherLessonNumber=r.lesson.number;activeTeacherSectionIndex=r.sectionIndex;currentPage='teacher-live-lesson';renderNav();teacherLiveLesson()};
  const openTeach=()=>{currentPage='teach';renderNav();teacherTeach()};
  if($('openTeachNow'))$('openTeachNow').onclick=openTeach;
- $('openTeachNowCard').onclick=openTeach;
- $('openFollowUpStudents').onclick=()=>{currentPage='students';renderNav();students()};
- $('openWritingReview').onclick=()=>{currentPage='students';renderNav();students()};
+ $('overviewStudents').onclick=()=>{currentPage='students';renderNav();students()};
+ $('overviewClasses').onclick=()=>{currentPage='classes';renderNav();classes()};
+ document.querySelectorAll('[data-overview-class]').forEach(b=>b.onclick=()=>{activeTeacherClassId=b.dataset.overviewClass;currentPage='teacher-book';renderNav();teacherBook()});
  if($('openLatestClass'))$('openLatestClass').onclick=()=>{activeTeacherClassId=last.classId;currentPage='teacher-book';renderNav();teacherBook()};
 }
 async function teacherTeach(){await ensureLiveBooks();const cls=getDB().classes;title('Teacher','Teach');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Live class</span><h1>Choose your class</h1><p>Your class book opens directly inside EnglishGate.</p></div></div><div class="class-card-grid">${cls.map(c=>{const b=bookMeta(c.bookId||c.course_id),live=liveBookForClass(c),wb=workbookForClass(c),last=assignmentsForClass(c.id)[0],canOpen=Boolean(live||wb);return `<article class="management-card teacher-book-card"><div class="management-card-head"><span class="pill teal">${escapeHtml(c.level)}</span><span>${classStudents().filter(st=>st.classIds?.includes(c.id)).length} students</span></div><h3>${escapeHtml(c.name)}</h3><p class="book-line">Book: <strong>${escapeHtml(b?.title||c.course_id)}</strong></p>${last?`<p class="muted">Last assigned: Lesson ${last.lessonNumber} · ${escapeHtml(last.lessonTitle)}</p>`:''}<button class="primary-btn" data-teach-class="${c.id}" ${canOpen?'':'disabled'}>${canOpen?'Open live book':'Live book unavailable'}</button></article>`}).join('')||'<div class="empty-state"><h3>No classes assigned</h3><p>Ask the System Admin to assign a class and book.</p></div>'}</div>`;document.querySelectorAll('[data-teach-class]').forEach(b=>b.onclick=()=>{const saved=teacherResumeContext();activeTeacherClassId=b.dataset.teachClass;if(saved?.c.id===activeTeacherClassId){activeTeacherLessonNumber=saved.lesson.number;activeTeacherSectionIndex=saved.sectionIndex}else{activeTeacherLessonNumber=1;activeTeacherSectionIndex=0}currentPage='teacher-book';renderNav();teacherBook()})}
