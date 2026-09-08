@@ -49,6 +49,7 @@ async function initDb(){
  create table if not exists attempts(id bigserial primary key,student_id text references users(id) on delete cascade,lesson_id text not null,skill text not null,score int not null check(score between 0 and 100),tags text[] not null default '{}',at timestamptz default now());
  create table if not exists completion(student_id text references users(id) on delete cascade,lesson_id text not null,step text not null,completed_at timestamptz default now(),primary key(student_id,lesson_id,step));
  create table if not exists writing_samples(student_id text references users(id) on delete cascade,lesson_id text not null,content text not null,score int check(score between 0 and 100),updated_at timestamptz default now(),primary key(student_id,lesson_id));
+ create table if not exists writing_likes(liker_student_id text references users(id) on delete cascade,author_student_id text not null,lesson_id text not null,created_at timestamptz default now(),primary key(liker_student_id,author_student_id,lesson_id),foreign key(author_student_id,lesson_id) references writing_samples(student_id,lesson_id) on delete cascade);
  create table if not exists listening_locks(student_id text references users(id) on delete cascade,lesson_id text not null,locked_at timestamptz default now(),primary key(student_id,lesson_id));
   create table if not exists teacher_contexts(teacher_id text primary key references users(id) on delete cascade,class_id text references classes(id) on delete set null,lesson_number int not null default 1,section_index int not null default 0,updated_at timestamptz default now());\n create table if not exists assignments(id text primary key,class_id text references classes(id) on delete cascade,book_id text not null,lesson_id text not null,lesson_number int not null,lesson_title text not null,skills text[] not null default '{vocabulary,listening,grammar,writing}',created_by text references users(id),created_at timestamptz default now());\n create table if not exists deleted_seed_accounts(username text primary key,deleted_at timestamptz default now());\n create table if not exists deleted_seed_classes(id text primary key,deleted_at timestamptz default now());\n create table if not exists deleted_seed_books(id text primary key,deleted_at timestamptz default now());`);
  await pool.query("alter table users add column if not exists whatsapp_number text");
@@ -296,6 +297,56 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{const {lessonId,skill,score,tags=[]}=req.body;if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});const safeTags=Array.isArray(tags)?tags.slice(0,9):[];if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,lessonId,skill,score,safeTags]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);res.json({ok:true})});
 app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);res.json({ok:true})});
 app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim();if(content.length<20)return res.status(400).json({error:'Invalid writing sample.'});await pool.query(`insert into writing_samples(student_id,lesson_id,content,score) values($1,$2,$3,null) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,updated_at=now()`,[req.user.id,req.params.lessonId,content]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,req.params.lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,req.params.lessonId,'writing']);res.json({ok:true,completed:Boolean(done.rowCount)})});
+app.get('/api/writings',auth,async(req,res)=>{
+ const rows=(await pool.query(`
+  select w.student_id,w.lesson_id,w.content,w.updated_at,u.name,
+         (p.profile_photo is not null) as has_photo,
+         coalesce(cls.class_name,'') as class_name,
+         coalesce(lc.like_count,0)::int as like_count,
+         exists(select 1 from writing_likes mine where mine.liker_student_id=$1 and mine.author_student_id=w.student_id and mine.lesson_id=w.lesson_id) as liked_by_me
+  from writing_samples w
+  join users u on u.id=w.student_id and u.role='student'
+  left join profiles p on p.user_id=w.student_id
+  left join lateral (
+    select c.name as class_name
+    from enrollments e join classes c on c.id=e.class_id
+    where e.user_id=w.student_id
+    order by c.created_at desc nulls last,c.name
+    limit 1
+  ) cls on true
+  left join lateral (
+    select count(*)::int as like_count
+    from writing_likes wl
+    where wl.author_student_id=w.student_id and wl.lesson_id=w.lesson_id
+  ) lc on true
+  where length(trim(w.content))>=20
+  order by coalesce(lc.like_count,0) desc,w.updated_at desc
+  limit 250
+ `,[req.user.id])).rows;
+ res.set('Cache-Control','no-store');
+ res.json({writings:rows.map(r=>({
+  studentId:r.student_id,lessonId:r.lesson_id,content:r.content,updatedAt:r.updated_at,
+  studentName:r.name,className:r.class_name||'',photoUrl:r.has_photo?'/api/profile-photo/'+encodeURIComponent(r.student_id):null,
+  likeCount:Number(r.like_count||0),likedByMe:Boolean(r.liked_by_me),
+  canLike:req.user.role==='student'&&r.student_id!==req.user.id,
+  canShare:req.user.role==='student'&&r.student_id===req.user.id
+ }))});
+});
+app.post('/api/writings/:studentId/:lessonId/like',auth,studentOnly,async(req,res)=>{
+ const authorId=String(req.params.studentId||''),lessonId=String(req.params.lessonId||'');
+ if(authorId===req.user.id)return res.status(400).json({error:'You cannot like your own writing.'});
+ const exists=await pool.query(`select 1 from writing_samples w join users u on u.id=w.student_id where w.student_id=$1 and w.lesson_id=$2 and u.role='student'`,[authorId,lessonId]);
+ if(!exists.rowCount)return res.status(404).json({error:'Writing not found.'});
+ await pool.query('insert into writing_likes(liker_student_id,author_student_id,lesson_id) values($1,$2,$3) on conflict do nothing',[req.user.id,authorId,lessonId]);
+ const count=await pool.query('select count(*)::int as count from writing_likes where author_student_id=$1 and lesson_id=$2',[authorId,lessonId]);
+ res.json({ok:true,liked:true,likeCount:Number(count.rows[0]?.count||0)});
+});
+app.delete('/api/writings/:studentId/:lessonId/like',auth,studentOnly,async(req,res)=>{
+ const authorId=String(req.params.studentId||''),lessonId=String(req.params.lessonId||'');
+ await pool.query('delete from writing_likes where liker_student_id=$1 and author_student_id=$2 and lesson_id=$3',[req.user.id,authorId,lessonId]);
+ const count=await pool.query('select count(*)::int as count from writing_likes where author_student_id=$1 and lesson_id=$2',[authorId,lessonId]);
+ res.json({ok:true,liked:false,likeCount:Number(count.rows[0]?.count||0)});
+});
 app.post('/api/teacher/writing/:studentId/:lessonId/grade',auth,teacherOnly,async(req,res)=>{const rawScore=req.body.score,score=Number(rawScore),studentId=String(req.params.studentId||''),lessonId=String(req.params.lessonId||'');if(rawScore===''||rawScore===null||rawScore===undefined||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Enter a whole-number grade from 0 to 100.'});const owns=await pool.query(`select 1 from enrollments es join classes c on c.id=es.class_id where es.user_id=$1 and c.teacher_id=$2`,[studentId,req.user.id]);if(!owns.rowCount)return res.status(404).json({error:'Student not found in your classes.'});const sample=await pool.query('select 1 from writing_samples where student_id=$1 and lesson_id=$2',[studentId,lessonId]);if(!sample.rowCount)return res.status(404).json({error:'Writing submission not found.'});const client=await pool.connect();try{await client.query('begin');await client.query('update writing_samples set score=$1,updated_at=now() where student_id=$2 and lesson_id=$3',[score,studentId,lessonId]);await client.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[studentId,lessonId]);const gradeTags=/^su-b2-l\d+$/.test(lessonId)?['teacher:graded','writing:final-assessment','curriculum:b2-living-standard-v1']:['teacher:graded','writing:final-assessment'];await client.query(`insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,'writing',$3,$4)`,[studentId,lessonId,score,gradeTags]);await client.query('commit');res.json({ok:true,score})}catch(e){await client.query('rollback');throw e}finally{client.release()}});
 
 app.post('/api/admin/teachers',auth,adminOnly,async(req,res)=>{
@@ -389,6 +440,37 @@ async function transferStudent(req,res,isAdmin){
  const client=await pool.connect();try{await client.query('begin');if(isAdmin){await client.query('delete from enrollments where user_id=$1',[studentId]);}else{await client.query('delete from enrollments where user_id=$1 and class_id in (select id from classes where teacher_id=$2)',[studentId,req.user.id]);}await client.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',[classId,studentId]);await client.query('commit');res.json({ok:true,studentId,classId,className:target.rows[0].name});}catch(e){await client.query('rollback');throw e}finally{client.release()}
 }
 app.patch('/api/admin/students/:id/class',auth,adminOnly,(req,res)=>transferStudent(req,res,true));
+async function manageStudent(req,res,isAdmin){
+ const studentId=String(req.params.id||'').trim(),name=String(req.body.name||'').trim().replace(/\s+/g,' '),username=String(req.body.username||'').trim().toLowerCase(),whatsappNumber=normalizeWhatsapp(req.body.whatsappNumber),classId=String(req.body.classId||'').trim();
+ if(name.length<2||name.length>100)return res.status(400).json({error:'Enter a valid student name.'});
+ if(!/^[a-z0-9._-]{3,32}$/.test(username))return res.status(400).json({error:'Use a 3–32 character username with letters, numbers, dots, dashes, or underscores.'});
+ if(!whatsappNumber)return res.status(400).json({error:'Enter a WhatsApp number with country code, for example +252 63 1234567.'});
+ if(!classId)return res.status(400).json({error:'Choose a class.'});
+ const client=await pool.connect();
+ try{
+  await client.query('begin');
+  const student=await client.query("select id from users where id=$1 and role='student' for update",[studentId]);
+  if(!student.rowCount){await client.query('rollback');return res.status(404).json({error:'Student not found.'});}
+  if(!isAdmin){
+   const owns=await client.query(`select 1 from enrollments e join classes c on c.id=e.class_id where e.user_id=$1 and c.teacher_id=$2`,[studentId,req.user.id]);
+   if(!owns.rowCount){await client.query('rollback');return res.status(404).json({error:'Student not found in your classes.'});}
+  }
+  const target=isAdmin
+   ?await client.query('select id,name from classes where id=$1',[classId])
+   :await client.query('select id,name from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);
+  if(!target.rowCount){await client.query('rollback');return res.status(isAdmin?400:403).json({error:isAdmin?'Choose a valid class.':'You can only move students to your own classes.'});}
+  const duplicate=await client.query('select 1 from users where lower(username)=lower($1) and id<>$2',[username,studentId]);
+  if(duplicate.rowCount){await client.query('rollback');return res.status(409).json({error:'That username already exists.'});}
+  await client.query('update users set name=$1,username=$2,whatsapp_number=$3 where id=$4',[name,username,whatsappNumber,studentId]);
+  if(isAdmin)await client.query('delete from enrollments where user_id=$1',[studentId]);
+  else await client.query('delete from enrollments where user_id=$1 and class_id in (select id from classes where teacher_id=$2)',[studentId,req.user.id]);
+  await client.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',[classId,studentId]);
+  await client.query('commit');
+  res.json({ok:true,student:{id:studentId,name,username,whatsappNumber,classId,className:target.rows[0].name}});
+ }catch(e){try{await client.query('rollback')}catch{}throw e}finally{client.release()}
+}
+app.patch('/api/admin/students/:id/manage',auth,adminOnly,(req,res)=>manageStudent(req,res,true));
+app.patch('/api/teacher/students/:id/manage',auth,teacherOnly,(req,res)=>manageStudent(req,res,false));
 app.post('/api/admin/users/:id/reset-password',auth,adminOnly,async(req,res)=>{
  const q=await pool.query("select id,username,role,name,whatsapp_number,login_token from users where id=$1 and role in ('teacher','student')",[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'User not found.'});
  const pw=chosenPassword(req.body?.password);if(!pw)return res.status(400).json({error:'Password must contain 8–20 digits.'});
