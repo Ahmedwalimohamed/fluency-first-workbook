@@ -2,8 +2,8 @@
   var visuals = {
     w1l1: {
       src: '/assets/lesson-visuals/w1l1.svg',
-      alt: 'Two adult learners discussing English goals together at a table with a laptop and notebooks.',
-      prompt: 'Where might these learners use English in real life?'
+      alt: 'Three learners meet on the first day of an international English course and talk together around a table.',
+      prompt: 'What can you tell about these three learners before you listen?'
     },
     w1l2: {
       src: '/assets/lesson-visuals/w1l2.svg',
