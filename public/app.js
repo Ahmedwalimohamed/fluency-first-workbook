@@ -287,8 +287,8 @@ function getDB(){return apiDB||{version:7,assignments:[],books:[],users:[],class
 function saveDB(db){apiDB=db}
 function $(id){return document.getElementById(id)} function lesson(id=activeLessonId){return lessonById(id)||COURSE.lessons[0]} function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 async function api(path,options={}){const opts={credentials:'include',headers:{'Content-Type':'application/json',...(options.headers||{})},...options};const res=await fetch(path,opts);let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.error||'Request failed');return data}
-async function refreshState(){apiDB=await api('/api/state');syncActiveBook();if(session?.role==='student'){session.profilePhoto=studentPhoto(session.id)||session.profilePhoto||null;updateStudentTicker()}return apiDB}
-function studentPhoto(id=session?.id){return getDB().profiles?.[id]?.photo||(id===session?.id?session?.profilePhoto:null)||null}
+async function refreshState(){apiDB=await api('/api/state');syncActiveBook();if(session?.role==='student'){const p=getDB().profiles?.[session.id];session.hasProfilePhoto=Boolean(p?.hasPhoto||session.hasProfilePhoto);session.profilePhotoUrl=p?.photoUrl||session.profilePhotoUrl||null;updateStudentTicker()}return apiDB}
+function studentPhoto(id=session?.id){const p=getDB().profiles?.[id];if(p?.hasPhoto&&p.photoUrl)return p.photoUrl;return id===session?.id&&session?.hasProfilePhoto?session.profilePhotoUrl:null}
 function avatarInner(photo,name){return photo?'<img src="'+escapeAttr(photo)+'" alt="">':escapeHtml((name||'?').trim().charAt(0).toUpperCase()||'?')}
 function studentAvatarMarkup(photo,name,className=''){return '<span class="student-photo-avatar '+escapeAttr(className)+'">'+avatarInner(photo,name)+'</span>'}
 function applyStudentAvatar(){
@@ -1645,9 +1645,9 @@ function profile(){
    preview.innerHTML='<img src="'+escapeAttr(data)+'" alt="Profile photo preview">';
    choose.textContent='Saving…';
    const r=await api('/api/student/profile-photo',{method:'PUT',body:JSON.stringify({photo:data})});
-   session.profilePhoto=r.photo;
+   session.hasProfilePhoto=true;session.profilePhotoUrl=r.photoUrl;
    getDB().profiles[session.id]??={points:0,base:{}};
-   getDB().profiles[session.id].photo=r.photo;
+   getDB().profiles[session.id].hasPhoto=true;getDB().profiles[session.id].photoUrl=r.photoUrl;
    applyStudentAvatar();
    if(required){currentPage='home';renderNav();studentHome();return}
    status.textContent='Profile picture updated.';
@@ -2063,11 +2063,11 @@ async function leaderboard(teacher=false){
     <div><span class="role-kicker">All active learners</span><h1>Learning leaderboard</h1><p>Professional progress view based on a balanced score: recorded performance, workbook completion, and consistent practice.</p></div>
     <div class="leaderboard-my-standing"><small>${teacher?'Learners ranked': 'Your standing'}</small><strong>${teacher?rows.length:escapeHtml(rankText)}</strong><span>${teacher?'Across EnglishGate':me?`${me.score}% performance score`:'Complete an activity to enter the ranking'}</span></div>
    </div>
-   ${top.length?`<div class="leaderboard-top-three">${top.map(st=>`<article class="leaderboard-top-card ${st.id===session.id?'is-me':''}"><span class="leaderboard-rank-label">#${st.rank}</span><div class="leaderboard-avatar">${avatarInner(st.photo,st.name)}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.className||st.level||'EnglishGate learner')}</small></div><div class="leaderboard-top-metrics"><span><b>${st.score}%</b> score</span><span><b>${st.completion}%</b> complete</span><span><b>${Number.isFinite(st.average)?st.average+'%':'—'}</b> average</span></div></article>`).join('')}</div>`:''}
+   ${top.length?`<div class="leaderboard-top-three">${top.map(st=>`<article class="leaderboard-top-card ${st.id===session.id?'is-me':''}"><span class="leaderboard-rank-label">#${st.rank}</span><div class="leaderboard-avatar">${avatarInner(st.photoUrl,st.name)}</div><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.className||st.level||'EnglishGate learner')}</small></div><div class="leaderboard-top-metrics"><span><b>${st.score}%</b> score</span><span><b>${st.completion}%</b> complete</span><span><b>${Number.isFinite(st.average)?st.average+'%':'—'}</b> average</span></div></article>`).join('')}</div>`:''}
    <div class="leaderboard-table-card">
     <div class="leaderboard-table-head"><div><h2>All students</h2><p>Ranking updates when students complete workbook activities and submit scored work.</p></div><span>${rows.length} learners</span></div>
     <div class="leaderboard-table-wrap"><table class="professional-leaderboard-table"><thead><tr><th>Rank</th><th>Learner</th><th>Class</th><th>Score</th><th>Average</th><th>Completion</th><th>Practice</th></tr></thead><tbody>
-     ${rows.map(st=>`<tr class="${st.id===session.id?'is-me':''}"><td><span class="leaderboard-rank-number">#${st.rank}</span></td><td><div class="leaderboard-person"><span class="leaderboard-avatar small">${avatarInner(st.photo,st.name)}</span><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.bookTitle||st.level||'English learner')}</small></div></div></td><td>${escapeHtml(st.className||'—')}</td><td><strong>${st.score}%</strong></td><td><strong>${Number.isFinite(st.average)?st.average+'%':'—'}</strong></td><td>${st.completion}%</td><td>${st.completed} done · ${st.scored} scored</td></tr>`).join('')||'<tr><td colspan="7">No learner activity yet.</td></tr>'}
+     ${rows.map(st=>`<tr class="${st.id===session.id?'is-me':''}"><td><span class="leaderboard-rank-number">#${st.rank}</span></td><td><div class="leaderboard-person"><span class="leaderboard-avatar small">${avatarInner(st.photoUrl,st.name)}</span><div><strong>${escapeHtml(st.name)}${st.id===session.id?' · You':''}</strong><small>${escapeHtml(st.bookTitle||st.level||'English learner')}</small></div></div></td><td>${escapeHtml(st.className||'—')}</td><td><strong>${st.score}%</strong></td><td><strong>${Number.isFinite(st.average)?st.average+'%':'—'}</strong></td><td>${st.completion}%</td><td>${st.completed} done · ${st.scored} scored</td></tr>`).join('')||'<tr><td colspan="7">No learner activity yet.</td></tr>'}
     </tbody></table></div>
    </div>
    <p class="leaderboard-method">Ranking method: 45% recorded activity average, 35% workbook completion, 20% practice consistency. No contact information is shown.</p>
