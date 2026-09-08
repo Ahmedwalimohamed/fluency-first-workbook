@@ -436,14 +436,15 @@ app.post('/api/teacher/students/:id/reset-password',auth,teacherOnly,async(req,r
 });
 
 app.use('/assets',express.static(path.join(__dirname,'public','assets')));
-app.get('/lesson-visuals.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','lesson-visuals.js')));
-app.get('/core-activities.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','core-activities.js')));
-app.get('/styles.css',(req,res)=>res.sendFile(path.join(__dirname,'public','styles.css')));
-app.get('/app.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','app.js')));
-app.get('/live-books.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','live-books.js')));
-app.get('/speakup-b2-blueprint.js',(req,res)=>res.type('application/javascript').sendFile(path.join(__dirname,'public','speakup-b2-blueprint.js')));
-app.get('/live-books.json',(req,res)=>res.type('application/json').sendFile(path.join(__dirname,'public','live-books.json')));
-app.get('/',(req,res)=>res.sendFile(path.join(__dirname,'public','index.html')));
+const sendFreshFile=(res,file,type)=>{res.set('Cache-Control','no-store, no-cache, must-revalidate');if(type)res.type(type);return res.sendFile(path.join(__dirname,'public',file))};
+app.get('/lesson-visuals.js',(req,res)=>sendFreshFile(res,'lesson-visuals.js','application/javascript'));
+app.get('/core-activities.js',(req,res)=>sendFreshFile(res,'core-activities.js','application/javascript'));
+app.get('/styles.css',(req,res)=>sendFreshFile(res,'styles.css'));
+app.get('/app.js',(req,res)=>sendFreshFile(res,'app.js','application/javascript'));
+app.get('/live-books.js',(req,res)=>sendFreshFile(res,'live-books.js','application/javascript'));
+app.get('/speakup-b2-blueprint.js',(req,res)=>sendFreshFile(res,'speakup-b2-blueprint.js','application/javascript'));
+app.get('/live-books.json',(req,res)=>sendFreshFile(res,'live-books.json','application/json'));
+app.get('/',(req,res)=>sendFreshFile(res,'index.html'));
 app.use((req,res)=>{if(req.path.startsWith('/api/'))return res.status(404).json({error:'Not found'});res.sendFile(path.join(__dirname,'public','index.html'))});
 app.use((err,req,res,next)=>{console.error('request error',err);if(res.headersSent)return next(err);res.status(500).json({error:'Server error'})});
 

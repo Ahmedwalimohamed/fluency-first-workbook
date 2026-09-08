@@ -359,7 +359,7 @@ let LIVE_BOOK_CACHE=window.LIVE_BOOKS||null;
 async function ensureLiveBooks(){
  if(LIVE_BOOK_CACHE&&Object.keys(LIVE_BOOK_CACHE).length)return LIVE_BOOK_CACHE;
  try{
-  const r=await fetch('/live-books.json?v=teacher-books-v2',{cache:'no-store'});
+  const r=await fetch('/live-books.json?v=reading-source-v1',{cache:'no-store'});
   if(r.ok){LIVE_BOOK_CACHE=await r.json();window.LIVE_BOOKS=LIVE_BOOK_CACHE}
  }catch(e){console.warn('Live book fallback failed',e)}
  return LIVE_BOOK_CACHE||{};
@@ -2269,7 +2269,7 @@ async function adminLiveLesson(){
   <header class="eg-lesson-header"><button class="ghost-btn" id="backAdminLiveBook">← Lessons</button><div><p>Admin preview · ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div>${w&&w.ready!==false?'<button class="ghost-btn" id="openAdminWorkbookTop">Workbook</button>':''}</header>
   <div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside>
   <div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeTeacherSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header>
-  <article class="live-book-content eg-stage-content" aria-labelledby="liveStageTitle">${activeTeacherSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no teaching content yet.</p>'}</article>
+  <article class="live-book-content eg-stage-content ${/reading/i.test(stageName)?'is-reading-stage':''}" aria-labelledby="liveStageTitle">${activeTeacherSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no teaching content yet.</p>'}</article>
   ${isLast?`<div class="eg-workbook-note">${w?`<strong>Matching workbook</strong><span>Workbook ${w.number} · ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}
   <footer class="eg-lesson-footer"><button class="ghost-btn" id="prevAdminLiveSection" ${activeTeacherSectionIndex===0?'disabled':''}>← Previous</button>${nextAction}</footer></div></div>
  </section>`;
