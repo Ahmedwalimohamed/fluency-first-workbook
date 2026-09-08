@@ -67,7 +67,7 @@ if(!appCode.includes('writingPage=1'))fail('My Writings pagination state is miss
 if(!appCode.includes('writing-review-card'))fail('Review-style writing card design is missing.');
 if(!appCode.includes("Only you can share your writing outside EnglishGate."))fail('Student-facing external-sharing privacy message is missing.');
 if(!appCode.includes("Thumbs up encourage learners; they never change academic grades or leaderboard scores."))fail('Non-academic likes message is missing.');
-if(!indexCode.includes('my-writings-reviews-v2'))fail('Community asset cache-bust version is missing.');
+if(!indexCode.includes('my-writings-authentic-only-v1'))fail('Community asset cache-bust version is missing.');
 
 if(packageJson.scripts?.['qa:b2']!=='node scripts/qa-b2.mjs')fail('Existing B2 QA script changed unexpectedly.');
 if(packageJson.scripts?.['qa:community']!=='node scripts/qa-community.mjs')fail('Community QA script is not registered.');
