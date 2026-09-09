@@ -126,6 +126,148 @@ function someAny(){return[
  g('Repair: We do not have some bread.','We do not have any bread.','We do not have some bread.','We not have any breads.','grammar:repair'),
  g('Which sentence sounds natural in a shop?','I would like some rice, please.','I would like any rice please.','I like some rice to.','grammar:perform')
 ]}
+function presentSimpleQs(){return[
+ g('Complete: I ___ English every day.','study','studies','am studying'),g('Complete: She ___ work at eight.','starts','start','starting'),
+ g('Choose the negative.','He does not work on Friday.','He does not works on Friday.','He not work on Friday.'),
+ g('Choose the question.','Where do you live?','Where you live?','Where does you live?','grammar:question'),
+ g('Complete: My brother ___ football.','plays','play','is play'),g('Complete: We ___ breakfast at seven.','have','has','having'),
+ g('Repair: She walk to class every day.','She walks to class every day.','She walking to class every day.','She walk class every day.','grammar:repair'),
+ g('Which sentence describes a routine?','I usually study in the evening.','I am studying right now yesterday.','I studied every tomorrow.','grammar:perform')
+]}
+function timeQs(){return[
+ g('Complete: Class starts ___ eight o’clock.','at','on','in'),g('7:30 is ___.','half past seven','quarter past seven','quarter to seven'),
+ g('9:15 is ___.','quarter past nine','half past nine','quarter to nine'),g('9:45 is ___.','quarter to ten','quarter past ten','half past nine'),
+ g('Choose the correct question.','What time does class start?','What time class does start?','What time do class starts?','grammar:question'),
+ g('Choose the correct answer.','It starts at ten o’clock.','It start in ten.','It starts on ten o’clock.'),
+ g('Repair: Lunch is in twelve thirty.','Lunch is at twelve thirty.','Lunch is on twelve thirty.','Lunch at is twelve thirty.','grammar:repair'),
+ g('Which sentence gives a clear schedule time?','The break is at half past nine.','The break are half past nine.','The break at nine past half.','grammar:perform')
+]}
+function dayQs(){return[
+ g('Complete: I study English ___ Monday.','on','at','in'),g('Complete: We are free ___ Saturday.','on','at','to'),
+ g('Choose the correct sentence.','Speaking practice is on Thursday.','Speaking practice is at Thursday.','Speaking practice on is Thursday.'),
+ g('Choose the question.','What do you do on Friday?','What you do Friday?','What does you do on Friday?','grammar:question'),
+ g('Complete: ___ the weekend, I visit family.','At','On Monday','At Monday'),g('Choose the correct routine.','I work from Sunday to Thursday.','I works Sunday to Thursday.','I am work every Thursday.'),
+ g('Repair: I have class at Wednesday.','I have class on Wednesday.','I have class in Wednesday.','I has class on Wednesday.','grammar:repair'),
+ g('Which sentence talks clearly about a weekly plan?','On Tuesday, I study at home.','Tuesday I studying yesterday.','At Tuesday I studies home.','grammar:perform')
+]}
+function adjectiveQs(){return[
+ g('Choose the natural order.','a blue shirt','a shirt blue','blue a shirt'),g('Choose the natural order.','black trousers','trousers black','black a trousers'),
+ g('Complete: She has ___ shoes.','new black','black are','shoes new'),g('Choose the correct question.','What colour is the dress?','What colour the dress is?','What is colour dress?','grammar:question'),
+ g('Choose the correct plural sentence.','These trousers are black.','This trousers is black.','These trouser is black.'),
+ g('Choose the correct singular sentence.','The shirt is white.','The shirt are white.','The shirt white are.'),
+ g('Repair: She has a dress green.','She has a green dress.','She has green a dress.','She have a dress green.','grammar:repair'),
+ g('Which description is clear?','He is wearing a white shirt and dark trousers.','He wearing white a shirt and trousers dark.','He wear shirt white trousers.','grammar:perform')
+]}
+function canQs(){return[
+ g('Complete: I ___ swim.','can','am can','can to'),g('Choose the negative.','She cannot swim.','She does not can swim.','She cannot to swim.'),
+ g('Choose the question.','Can you cook?','Do can you cook?','Can you to cook?','grammar:question'),g('Choose the short answer.','Yes, I can.','Yes, I do can.','Yes, I am can.'),
+ g('Choose the correct sentence.','Bilal can play football.','Bilal can plays football.','Bilal can to play football.'),
+ g('Choose a possible activity.','We can walk in the park.','We can walking in the park.','We can to walk in park.'),
+ g('Repair: She can sings.','She can sing.','She can sings.','She can singing.','grammar:repair'),
+ g('Which sentence clearly states ability?','I can cook simple meals.','I am cook can meals.','I can cooking meals.','grammar:perform')
+]}
+function contrastQs(){return[
+ g('Routine: Maryan ___ at home every evening.','studies','is studying','study now'),g('Now: Maryan ___ in the library today.','is studying','studies every day','study'),
+ g('Choose the routine sentence.','I usually read after dinner.','I am usually reading right now every day.','I read now at this moment every day.'),
+ g('Choose the action happening now.','They are doing practice questions now.','They do practice questions yesterday now.','They are do practice questions.'),
+ g('Choose the correct question about now.','What are you doing today?','What do you doing today?','What are you do today?','grammar:question'),
+ g('Choose the correct question about routine.','Where do you usually study?','Where are you usually study?','Where you do study usually?','grammar:question'),
+ g('Repair: She studies in the library right now.','She is studying in the library right now.','She studying in library now.','She is study in library now.','grammar:repair'),
+ g('Which pair shows routine versus now?','I study at home, but today I am studying at the library.','I am study home but today I study now.','I studied every day but now I studies.','grammar:perform')
+]}
+function shouldQs(){return[
+ g('Complete: You ___ get more rest.','should','should to','shoulds'),g('Choose the negative advice.','You should not stay up very late.','You do not should stay up late.','You should not to stay late.'),
+ g('Choose the question.','What should I do?','What I should do?','What should I to do?','grammar:question'),
+ g('Choose the useful advice.','You should drink more water.','You should drinking more water.','You should to drink more water.'),
+ g('Choose the correct form.','He should take a short walk.','He should takes a walk.','He should taking a walk.'),
+ g('Choose the response to advice.','That is good advice.','That advice is good do.','I good advice am.'),
+ g('Repair: You should to sleep earlier.','You should sleep earlier.','You should sleeping earlier.','You should sleeps earlier.','grammar:repair'),
+ g('Which sentence gives a practical solution?','You can try the printed worksheet.','You can trying the worksheet.','You can to try worksheet.','grammar:perform')
+]}
+function appointmentQs(){return[
+ g('Choose the correct question.','Are you available on Tuesday?','You are available Tuesday?','Do you available on Tuesday?','grammar:question'),
+ g('Choose the correct time question.','What time is available?','What time available is?','What time does available?','grammar:question'),
+ g('Choose the date question.','What date is the appointment?','What date the appointment is?','What does date appointment?','grammar:question'),
+ g('Choose the correct reply.','Tuesday at ten thirty is fine.','Tuesday ten thirty are fine.','At Tuesday is fine ten thirty.'),
+ g('Choose the confirmation question.','Does ten thirty work for you?','Ten thirty does work you?','Do ten thirty works you?','grammar:question'),
+ g('Choose the polite request.','I would like an appointment, please.','I like appointment to please.','I would appointment like.'),
+ g('Repair: What time you are available?','What time are you available?','What time you available are?','What time do available you?','grammar:repair'),
+ g('Which exchange is clear?','Are you free Tuesday? Yes, I am.','Are free you Tuesday? Yes I do.','You free Tuesday? Yes are.','grammar:perform')
+]}
+function wouldLikeQs(){return[
+ g('Complete: I ___ the soup, please.','would like','would liking','like to can'),g('Complete: Can I ___ some water?','have','having','to have'),
+ g('Choose the polite order.','I would like rice and chicken, please.','I would like to rice chicken.','I like would rice.'),
+ g('Choose the question.','Would you like a drink?','Would you like drink a?','Do would you like a drink?','grammar:question'),
+ g('Choose the short reply.','Yes, please.','Yes, I please do would.','Yes, like please.'),
+ g('Choose the bill request.','Can we have the bill, please?','Can we having bill?','Can the bill have we?'),
+ g('Repair: I would like order soup.','I would like to order soup.','I would liking order soup.','I would like ordering to soup.','grammar:repair'),
+ g('Which sentence is a polite restaurant request?','Can I have a bottle of water?','Can I having bottle water?','I can bottle water have?','grammar:perform')
+]}
+function transportQs(){return[
+ g('Complete: I go to work ___ bus.','by','on a','with'),g('Choose the natural sentence.','I take the bus to university.','I take by bus to university.','I am take bus university.'),
+ g('Choose the walking sentence.','I walk to school.','I go by walk to school.','I take walk school.'),
+ g('Choose the question.','How do you go to university?','How you go university?','How does you go to university?','grammar:question'),
+ g('Choose the route question.','Where do I get off?','Where I get off do?','Where does I get off?','grammar:question'),
+ g('Complete: The fare ___ one dollar.','is','are','do'),g('Repair: I go by the foot.','I walk there.','I go by foots.','I taking foot there.','grammar:repair'),
+ g('Which sentence clearly describes transport?','I take Bus 4 and get off at University Gate.','I takes Bus 4 and gets I off.','I am take bus and off get.','grammar:perform')
+]}
+function pastSimpleQs(){return[
+ g('Complete: Yesterday I ___ my uncle.','visited','visit','visiting'),g('Complete: We ___ to the market.','went','goed','go'),
+ g('Complete: They ___ lunch at one.','had','have','haved'),g('Choose the regular past form.','watched','watch','watcht'),
+ g('Choose the question.','What did you do last weekend?','What did you did last weekend?','What you did do weekend?','grammar:question'),
+ g('Choose the negative.','I did not work on Saturday.','I did not worked Saturday.','I not did work Saturday.'),
+ g('Repair: We goed to the beach.','We went to the beach.','We go to the beach yesterday.','We wented to beach.','grammar:repair'),
+ g('Which sentence tells a finished past event?','I returned home on Sunday.','I return home tomorrow yesterday.','I am return Sunday.','grammar:perform')
+]}
+function goingToQs(){return[
+ g('Complete: I ___ visit my aunt on Saturday.','am going to','going to','am go to'),g('Complete: She ___ study tonight.','is going to','are going to','is go'),
+ g('Complete: They ___ meet on Sunday.','are going to','is going to','are go to'),g('Choose the question.','What are you going to do?','What you are going to do?','What do you going to do?','grammar:question'),
+ g('Choose the negative.','I am not going to work.','I do not going to work.','I am going not work.'),
+ g('Choose the clear plan.','We are going to practise speaking.','We going practise speaking.','We are practise going.'),
+ g('Repair: He is going visit family.','He is going to visit family.','He going to visiting family.','He is go visit family.','grammar:repair'),
+ g('Which sentence expresses a future plan?','I am going to prepare for class tonight.','I prepared for class tomorrow yesterday.','I am prepare class every now.','grammar:perform')
+]}
+function invitationQs(){return[
+ g('Choose the invitation.','Would you like to come for tea?','Do you would like come tea?','Would like you to tea come?','grammar:question'),
+ g('Choose the acceptance.','Yes, I would love to.','Yes, I love would.','Yes, I would to love.'),
+ g('Choose the polite refusal.','Sorry, I cannot come at five.','No I not come five.','Sorry, I cannot to come.'),
+ g('Choose another invitation.','Would you like to practise English?','Would you practise to like English?','Do would like practising?','grammar:question'),
+ g('Choose the time question.','What time should I come?','What time I should come?','What time should come I?','grammar:question'),
+ g('Choose the alternative.','Maybe another time.','Maybe time another is.','Another maybe time do.'),
+ g('Repair: Would you like come?','Would you like to come?','Would you like coming to?','Do you would like come?','grammar:repair'),
+ g('Which exchange is polite?','Would you like to join us? Yes, I would love to.','You join us? Yes love.','Would join? I do love to.','grammar:perform')
+]}
+function messageQs(){return[
+ g('Choose the question asking for confirmation.','Is class in Room 5 tomorrow?','Class Room 5 tomorrow is?','Do class is Room 5?','grammar:question'),
+ g('Choose the useful request.','Can you tell Bilal?','Can tell you Bilal?','You can telling Bilal?'),
+ g('Choose the correct reply.','Yes, I saw your message.','Yes, I see yesterday your message now.','Yes message I saws.'),
+ g('Choose the future response.','I will tell Bilal.','I will telling Bilal.','I tell will Bilal.'),
+ g('Choose the correct detail question.','Do I need the worksheet?','I need do the worksheet?','Does I need worksheet?','grammar:question'),
+ g('Choose the thank-you response.','Thanks for letting me know.','Thanks letting know me for.','Thank you let I know.'),
+ g('Repair: Can you tells him?','Can you tell him?','Can you tells him?','Do can you tell him?','grammar:repair'),
+ g('Which reply clearly confirms the message?','Got it. I will be in Room 5 at eight.','Got it room five being eight I.','I got room five yesterday tomorrow.','grammar:perform')
+]}
+function comparativeQs(){return[
+ g('Complete: Phone A is ___ than Phone B.','bigger','biggest','more big'),g('Complete: Phone B is ___ than Phone A.','cheaper','cheapest','more cheap'),
+ g('Choose the correct sentence.','The bus is faster than walking.','The bus is fastest than walking.','The bus more fast than walking.'),
+ g('Choose the irregular comparative.','better','gooder','best than'),g('Complete: This room is ___ than that room.','smaller','smallest','most small'),
+ g('Choose the question.','Which phone is cheaper?','Which phone cheaper is than?','Which is cheap phone more?','grammar:question'),
+ g('Repair: This bag is more cheap than that one.','This bag is cheaper than that one.','This bag is cheapest than that one.','This bag cheaper that one.','grammar:repair'),
+ g('Which comparison is accurate?','Phone B is lighter and cheaper than Phone A.','Phone B is lightest than Phone A.','Phone B lighter more Phone A.','grammar:perform')
+]}
+function superlativeQs(){return[
+ g('Complete: Café Green is ___ café.','the closest','closer','most close'),g('Complete: Café Star is ___.','the cheapest','cheaper','the more cheap'),
+ g('Choose the correct form.','Café City has the biggest seating area.','Café City has bigger seating area of all.','Café City has the most big seating.'),
+ g('Choose the irregular superlative.','the best','the goodest','the better'),g('Choose the question.','Which is the best choice?','Which the best choice is?','Which is better all choice?','grammar:question'),
+ g('Complete: This is ___ convenient option.','the most','the more','most than'),g('Repair: It is cheapest café.','It is the cheapest café.','It is the cheaper café of all than.','It the cheapest is café.','grammar:repair'),
+ g('Which sentence clearly gives one top choice?','For me, Café Green is the best choice today.','For me, Café Green better all today.','Café Green is best than every café.','grammar:perform')
+]}
+function integratedQs(){return[
+ g('Present routine: I ___ English every evening.','study','studied','am study'),g('Now: I ___ English right now.','am studying','study yesterday','studied'),
+ g('Past: Yesterday I ___ at the library.','was','am','were I'),g('Past action: Last weekend we ___ football.','played','play','are playing yesterday'),
+ g('Future plan: I ___ practise tomorrow.','am going to','am practised','going'),g('Ability: I ___ ask simple questions now.','can','am can','can to'),
+ g('Advice: You ___ keep practising.','should','should to','shoulds'),g('Which sentence connects past, present and future clearly?','Before I was nervous; now I am more confident; next I am going to practise every day.','Before I am nervous yesterday; now I went confident; next I practised tomorrow.','Before nervous now confident tomorrow practised.','grammar:perform')
+]}
 function spellingQs(){return[
  g('Choose the correct question.','How do you spell your name?','How you spell your name?','How does you spell name?','grammar:question'),
  g('Choose the correct response.','It is H-O-D-A-N.','It H-O-D-A-N is.','I am spell H-O-D-A-N.'),
@@ -137,6 +279,8 @@ function spellingQs(){return[
 ]}
 function a1GrammarItems(focus){
  const f=String(focus||'').toLowerCase();
+ if(f.includes('integrated'))return integratedQs();
+ if(f.includes('present simple vs'))return contrastQs();
  if(f.includes('demonstrative'))return demonstratives();
  if(f.includes('possessive'))return possessives();
  if(f.includes('imperative'))return imperatives();
@@ -146,10 +290,27 @@ function a1GrammarItems(focus){
  if(f.includes('countable'))return countable();
  if(f.includes('some / any'))return someAny();
  if(f.includes('was / were')||f.includes('past simple of be'))return pastBe();
+ if(f.includes('past simple'))return pastSimpleQs();
  if(f.includes('have / has'))return haveHas();
  if(f.includes('spell'))return spellingQs();
+ if(f.includes('time expression'))return timeQs();
+ if(f.includes('days of the week'))return dayQs();
+ if(f.includes('adjective + noun'))return adjectiveQs();
+ if(f.includes('question forms'))return appointmentQs();
+ if(f.includes('would like / can i have'))return wouldLikeQs();
+ if(f.includes('by + transport'))return transportQs();
+ if(f.includes('weather language'))return canQs();
+ if(f.includes('can / cannot'))return canQs();
+ if(f.includes('going to'))return goingToQs();
+ if(f.includes('would you like'))return invitationQs();
+ if(f.includes('question and reply'))return messageQs();
+ if(f.includes('comparative'))return comparativeQs();
+ if(f.includes('superlative'))return superlativeQs();
+ if(f.includes('should'))return shouldQs();
+ if(f.includes('frequency'))return presentSimpleQs();
+ if(f.includes('present simple'))return presentSimpleQs();
  if(f.includes('be:')||f.includes('be questions')||f.includes('be +'))return basicBe();
- return typeof grammarQuestions==='function'?grammarQuestions(focus).slice(0,8):basicBe();
+ return basicBe();
 }
 function vocabItems(spec){
  const words=spec.v.map(x=>x[0]),defs=spec.v.map(x=>x[1]);
