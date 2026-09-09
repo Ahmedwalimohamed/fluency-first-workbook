@@ -126,6 +126,29 @@ function someAny(){return[
  g('Repair: We do not have some bread.','We do not have any bread.','We do not have some bread.','We not have any breads.','grammar:repair'),
  g('Which sentence sounds natural in a shop?','I would like some rice, please.','I would like any rice please.','I like some rice to.','grammar:perform')
 ]}
+function beQuestionQs(){return[
+ g('Choose the age question.','How old are you?','How old you are?','How do old you?','grammar:question'),
+ g('Choose the place question.','Where are you from?','Where you are from?','Where do you from?','grammar:question'),
+ g('Choose the name question.','What is your name?','What your name is?','What does your name?','grammar:question'),
+ g('Complete: I ___ twenty years old.','am','is','are'),g('Complete: She ___ from Hargeisa.','is','am','are'),
+ g('Choose the correct answer.','I am from Borama.','I is from Borama.','I from Borama am are.'),
+ g('Repair: Where you are from?','Where are you from?','Where is you from?','Where do you are from?','grammar:repair'),
+ g('Which exchange is correct?','Where are you from? I am from Hargeisa.','Where you from? I is Hargeisa.','Where does you from? I are Hargeisa.','grammar:perform')
+]}
+function pronounBeQs(){return[
+ g('Amina is friendly. ___ is friendly.','She','He','They'),g('Yusuf is quiet. ___ is quiet.','He','She','We'),
+ g('Amina and Yusuf are students. ___ are students.','They','She','He'),g('The teacher and I are here. ___ are here.','We','They is','He'),
+ g('Complete: She ___ helpful.','is','are','am'),g('Complete: They ___ busy.','are','is','am'),
+ g('Repair: He are tall.','He is tall.','He am tall.','He be tall.','grammar:repair'),
+ g('Which description is correct?','They are friendly classmates.','They is friendly classmates.','Them are friendly.','grammar:perform')
+]}
+function jobsQs(){return[
+ g('Complete: She ___ a doctor.','is','are','am'),g('Complete: I am ___ teacher.','a','an','the two'),
+ g('Complete: He is ___ office worker.','an','a','two'),g('Choose the correct question.','What do you do?','What you do?','What does you do?','grammar:question'),
+ g('Choose the correct answer.','I am a driver.','I am driver a.','I is a driver.'),g('Choose the correct sentence.','She is a teacher.','She are teacher.','She is an teacher.'),
+ g('Repair: He is doctor.','He is a doctor.','He a doctor is are.','He is an doctor.','grammar:repair'),
+ g('Which sentence clearly describes work?','Omar is a doctor at a health centre.','Omar are doctor health centre.','Omar is an driver.','grammar:perform')
+]}
 function presentSimpleQs(){return[
  g('Complete: I ___ English every day.','study','studies','am studying'),g('Complete: She ___ work at eight.','starts','start','starting'),
  g('Choose the negative.','He does not work on Friday.','He does not works on Friday.','He not work on Friday.'),
@@ -283,6 +306,7 @@ function a1GrammarItems(focus){
  if(f.includes('present simple vs'))return contrastQs();
  if(f.includes('demonstrative'))return demonstratives();
  if(f.includes('possessive'))return possessives();
+ if(f.includes('should'))return shouldQs();
  if(f.includes('imperative'))return imperatives();
  if(f.includes('there is'))return thereIsAre();
  if(f.includes('preposition'))return placePreps();
@@ -293,6 +317,9 @@ function a1GrammarItems(focus){
  if(f.includes('past simple'))return pastSimpleQs();
  if(f.includes('have / has'))return haveHas();
  if(f.includes('spell'))return spellingQs();
+ if(f.includes('subject pronouns'))return pronounBeQs();
+ if(f.includes('jobs + a/an'))return jobsQs();
+ if(f.includes('be questions'))return beQuestionQs();
  if(f.includes('time expression'))return timeQs();
  if(f.includes('days of the week'))return dayQs();
  if(f.includes('adjective + noun'))return adjectiveQs();
@@ -306,7 +333,6 @@ function a1GrammarItems(focus){
  if(f.includes('question and reply'))return messageQs();
  if(f.includes('comparative'))return comparativeQs();
  if(f.includes('superlative'))return superlativeQs();
- if(f.includes('should'))return shouldQs();
  if(f.includes('frequency'))return presentSimpleQs();
  if(f.includes('present simple'))return presentSimpleQs();
  if(f.includes('be:')||f.includes('be questions')||f.includes('be +'))return basicBe();
