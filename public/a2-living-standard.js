@@ -682,13 +682,14 @@ function listeningScene(title){
 }
 function audioScript(number,title,data,meta){return listeningScene(title).script}
 
+function shortReading(qText,answer,tag){return{type:'short',q:qText,answer,min:1,tag}}
 function questions(title,data){
  const [person,place,goal,challenge,action,result]=data.s;
  return[
-  q('What is '+person+' trying to do?',[goal,'leave the activity immediately','avoid making any decision'],goal,'reading:main-idea'),
-  q('What problem appears?',[challenge,'there is no difficulty','the activity finishes before it starts'],challenge,'reading:detail'),
-  q('What action does '+person+' take?',[action,'ignore the situation','cancel every plan'],action,'reading:sequence'),
-  q('What is the main lesson from the reading?',['A clear action and explanation can improve a difficult situation.','The safest choice is always to do nothing.','One solution works in every situation.'],'A clear action and explanation can improve a difficult situation.','reading:inference'),
+  shortReading('What is '+person+' trying to do?',goal,'reading:main-idea'),
+  shortReading('What problem does '+person+' face?',challenge,'reading:detail'),
+  shortReading('What action does '+person+' take?',action,'reading:sequence'),
+  shortReading('What lesson can we learn from '+person+'’s experience?','A clear action and explanation can improve a difficult situation.','reading:inference'),
   q('Where does the situation happen?',[place,'at a sports stadium','at an airport every time'],place,'listening:detail'),
   q('Why does '+person+' need to make a change?',[challenge,'everything is already perfect','the goal is no longer important'],challenge,'listening:reason'),
   q('What response does '+person+' choose?',[action,'wait without deciding','change to an unrelated topic'],action,'listening:decision'),
