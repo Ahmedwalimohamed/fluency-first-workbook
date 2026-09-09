@@ -5268,3 +5268,15 @@ html{scroll-behavior:auto!important}
 .eg-dialogue-transcript.is-compact .eg-dialogue-turn{width:min(94%,700px)}
 .is-listening-stage>p:first-child{font-weight:700}
 @media(max-width:560px){.live-audio-heading{align-items:flex-start;flex-direction:column;gap:8px}.eg-dialogue-turn{width:96%;gap:8px}.eg-dialogue-avatar{flex-basis:32px;width:32px;height:32px;font-size:.66rem}.eg-dialogue-bubble{padding:9px 11px}.eg-dialogue-bubble p,.eg-workbook .transcript-card .eg-dialogue-bubble p{font-size:.9rem}}
+
+
+/* Teacher Give example tool */
+.teacher-example-mode .teacher-example-word{cursor:pointer;border-radius:4px;transition:background .12s ease,box-shadow .12s ease}
+.teacher-example-mode .teacher-example-word:hover,.teacher-example-mode .teacher-example-word:active{background:#fff3bf;box-shadow:0 0 0 2px #fde68a}
+.teacher-example-mode [data-vocab-word].teacher-example-word{outline:2px dashed #f59e0b;outline-offset:2px}
+.teacher-example-bubble{position:fixed;z-index:10050;width:max-content;max-width:min(360px,calc(100vw - 24px));padding:10px 12px;background:#0f172a;color:#fff;border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,.28);pointer-events:none}
+.teacher-example-bubble:after{content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid #0f172a}
+.teacher-example-bubble.is-below:after{top:-7px;bottom:auto;border-top:0;border-bottom:7px solid #0f172a}
+.teacher-example-bubble small{display:block;margin-bottom:4px;color:#bfdbfe;font-weight:800;letter-spacing:.02em}
+.teacher-example-bubble p{margin:0;color:#fff;line-height:1.45;font-size:.95rem}
+@media(max-width:640px){.teacher-example-bubble{max-width:calc(100vw - 20px);font-size:.94rem}}
