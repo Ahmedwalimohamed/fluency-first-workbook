@@ -1535,7 +1535,7 @@ function shortAnswerMatches(value,expected){
  if(!input||!target)return false;
  const trimArticles=x=>x.replace(/^(?:a|an|the)\s+/,'').trim(),a=trimArticles(input),b=trimArticles(target);
  if(a===b||a.includes(b)||b.includes(a)&&a.length>=3)return true;
- const stop=new Set(['a','an','the','is','are','was','were','be','been','being','he','she','it','they','his','her','their','and','or','to','of','in','on','at','for','from','with','does','do','did','has','have','had']);
+ const stop=new Set(['a','an','the','is','are','was','were','be','been','being','he','she','it','its','they','his','her','their','and','or','to','of','in','on','at','for','from','with','does','do','did','has','have','had']);
  const toks=x=>[...new Set(x.split(/\s+/).filter(t=>t&&!stop.has(t)))],bt=toks(b),at=new Set(toks(a));
  if(!bt.length)return a===b;
  const overlap=bt.filter(t=>at.has(t)).length;
