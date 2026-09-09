@@ -316,6 +316,7 @@ function ladderStageIndex(index,total){
  return Math.min(LEARNING_LADDER.length-1,Math.floor(Math.max(0,index)*LEARNING_LADDER.length/count));
 }
 function ladderQuestionStage(index,total){
+ if(!isWorkbookPreview())return `Question ${Number(index)+1}`;
  const i=ladderStageIndex(index,total),stage=LEARNING_LADDER[i];
  return `Level ${i+1} · ${stage.label}`;
 }
@@ -328,9 +329,11 @@ function latestLadderLevel(sid,lid,skill){
  return 0;
 }
 function learningLadderHtml(l,skill,totalItems=10){
- const key=ladderSkillKey(skill),preview=isWorkbookPreview(),highest=preview?0:latestLadderLevel(session?.id,l.id,key),goals=LADDER_SKILL_GOALS[key]||LEARNING_LADDER.map(x=>x.goal);
- const standing=preview?'Five-step student progression':highest>=5?'Level 5 reached — independent performance':`You are building toward Level ${highest+1} · ${LEARNING_LADDER[highest].label}`;
- return `<section class="eg-learning-ladder" aria-label="Five-step learning ladder">
+ const preview=isWorkbookPreview();
+ if(!preview)return '';
+ const key=ladderSkillKey(skill),highest=0,goals=LADDER_SKILL_GOALS[key]||LEARNING_LADDER.map(x=>x.goal);
+ const standing='Five-step student progression';
+ return `<section class="eg-learning-ladder teacher-only-learning-ladder" aria-label="Five-step learning ladder">
   <div class="eg-ladder-head"><div><span class="eg-skill-kicker">Learning ladder</span><h2>From understanding to independent use</h2></div><strong>${escapeHtml(standing)}</strong></div>
   <div class="eg-ladder-track">${LEARNING_LADDER.map((stage,i)=>{
    const done=!preview&&i<highest,current=!preview&&highest<5&&i===highest;
@@ -354,6 +357,7 @@ function writingLadderResult(results,performReady){
  return{highest,stages};
 }
 function ladderResultHtml(result){
+ if(!isWorkbookPreview())return '';
  const highest=Math.max(0,Math.min(5,Number(result?.highest)||0)),next=highest<5?LEARNING_LADDER[highest]:null;
  return `<div class="eg-ladder-result"><div><span class="eg-skill-kicker">Your learning ladder</span><strong>${highest>=5?'Level 5 · Perform reached':highest?`Level ${highest} · ${LEARNING_LADDER[highest-1].label} reached`:'Start with Level 1 · Recognize'}</strong><p>${highest>=5?'You completed the full progression from recognition to independent use.':`Next goal: Level ${highest+1} · ${next.label}. ${next.goal}`}</p></div><div class="eg-ladder-mini">${LEARNING_LADDER.map((stage,i)=>`<span class="${i<highest?'done':i===highest&&highest<5?'current':''}">${i<highest?'✓':i+1}</span>`).join('')}</div></div>`;
 }
@@ -2097,7 +2101,7 @@ function writingCoreHtml(l){
  let last='';
  return writingCoreExercises(l).map(ex=>{
   const g=groups[ex.type]||{level:1,label:'Recognize'};
-  const heading=ex.type!==last?`<div class="writing-core-group-head"><span>Level ${g.level} · ${escapeHtml(g.label)}</span><strong>3 questions</strong></div>`:'';
+  const heading=ex.type!==last?`<div class="writing-core-group-head"><span>${isWorkbookPreview()?`Level ${g.level} · ${escapeHtml(g.label)}`:escapeHtml(g.label)}</span><strong>3 questions</strong></div>`:'';
   last=ex.type;
   return heading+(ex.type==='build'||ex.type==='organize'?writingArrangeHtml(ex):writingTextCoreHtml(ex))
  }).join('')
@@ -2116,7 +2120,7 @@ function writingActivity(l){
     <article class="guided-question writing-guided-question final-writing-card eg-message-composer">
      <div class="eg-message-bar"><div class="eg-message-avatar">Y</div><div><strong>You</strong><small>Real-life writing</small></div></div>
      <div class="writing-integrity-note"><span class="writing-integrity-badge">Typing only</span><div><strong>Write this response yourself.</strong><small>Copy, cut, paste and drag-drop are disabled in the actual writing box.</small></div></div>
-     <div class="writing-task-head"><div><span class="stage-badge">${teacherView?'Level 5 · Perform':'Level 5 · Perform independently'}</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}–${spec.max} words</span></div>
+     <div class="writing-task-head"><div><span class="stage-badge">${teacherView?'Level 5 · Perform':'Final writing'}</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}–${spec.max} words</span></div>
      <textarea class="writing-final-response" data-count-key="final" data-min="${spec.min}" data-max="${spec.max}" autocomplete="off" autocapitalize="sentences" spellcheck="true" placeholder="Type your response here…">${escapeHtml(saved.final)}</textarea><div class="word-count" data-count="final">0 words</div><div class="writing-integrity-status" id="writingIntegrityStatus" role="status" aria-live="polite"></div>
      <fieldset class="writing-share-choice">
       <legend>Would you like to share your writing to My Writings?</legend>
