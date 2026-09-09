@@ -588,7 +588,7 @@ function a2Speaker(name){
 const A2_LISTENING_SCENES={
  'Getting Acquainted':{
   speakers:[a2Speaker('Amina'),a2Speaker('Yusuf')],
-  script:"Amina: Hi, is this seat free? I am Amina. It is my first day at this training course. Yusuf: Yes, sit here. I am Yusuf. Nice to meet you. What do you do? Amina: I work in a shop, and I am from Borama. I wanted to meet new classmates, but I did not know how to start. Yusuf: Simple questions help. You can ask about work, hometowns, or hobbies. Amina: Good idea. What do you do in your free time? Yusuf: I enjoy photography. Amina: Really? I like taking photos too. Yusuf: Then we already have something in common. Amina: Yes. Now the conversation feels much easier."
+  script:"Amina: Hi, is this seat free? I am Amina. It is my first day at this training course. Yusuf: Yes, sit here. I am Yusuf. Nice to meet you. What do you do? Amina: I work in a shop, and I am from Borama. I wanted to meet new classmates, but I did not know how to start. Yusuf: Simple questions help. You can ask about work, hometowns, or hobbies. Amina: Good idea. What do you do in your free time? Yusuf: I am from Borama too. I enjoy photography and football. Amina: Really? I enjoy both of those too. Yusuf: Then we have found two shared interests already. Amina: Yes. Now the conversation feels much easier."
  },
  'Work & Careers':{
   speakers:[a2Speaker('Hodan'),a2Speaker('Abdi')],
@@ -616,7 +616,7 @@ const A2_LISTENING_SCENES={
  },
  'Money & Business':{
   speakers:[a2Speaker('Khalid'),a2Speaker('Omar')],
-  script:"Omar: Khalid, have you finished the budget for next month? Khalid: Yes. I needed a clear plan because expenses rose when sales increased. Omar: What did you put first? Khalid: I listed the essential costs: rent, salaries, stock, and delivery. Then I separated them from optional spending. Omar: Are you going to buy the new equipment? Khalid: Not this month. I can afford a small advertising campaign, but I am going to wait before I invest in new equipment. Omar: Why wait? Khalid: I want to keep enough cash for daily operations. After making the budget, I know the business can cover its important costs."
+  script:"Omar: Khalid, have you finished next month's budget for your small business? Khalid: Yes. I needed a clear plan because expenses rose when sales increased. Omar: What did you put first? Khalid: I listed the essential costs: rent, salaries, stock, and delivery. Then I separated them from optional spending. Omar: Are you going to buy the new equipment? Khalid: Not this month. I can afford a small advertising campaign, but I am going to wait before I invest in new equipment. Omar: Why wait? Khalid: I want to keep enough cash for daily operations. After making the budget, I know the business can cover its important costs."
  },
  'Environment & Climate':{
   speakers:[a2Speaker('Nimo'),a2Speaker('Asha')],
@@ -632,7 +632,7 @@ const A2_LISTENING_SCENES={
  },
  'Sports & Fitness':{
   speakers:[a2Speaker('Anisa'),a2Speaker('Yusuf')],
-  script:"Yusuf: Anisa, your five-kilometre training looks easier now. What changed? Anisa: At first I trained too quickly and became exhausted. I thought every session had to be fast. Yusuf: What did you do instead? Anisa: I reduced my pace and started following a consistent routine at the sports club. I run slowly three days a week, stretch afterwards, and keep one full rest day. Yusuf: Are you building more stamina? Anisa: Yes. After a few weeks, I could complete longer sessions without feeling completely tired. Yusuf: So slower training helped you improve. Anisa: It did. Now I can recover better and keep the routine going."
+  script:"Yusuf: Anisa, your five-kilometre training looks easier now. What changed? Anisa: At first I trained too quickly and became exhausted. I thought every session had to be fast. Yusuf: What did you do instead? Anisa: I reduced my pace and started following a consistent routine at the sports club. I run slowly three days a week, stretch afterwards, and keep one full rest day. Yusuf: Are you building more stamina? Anisa: Yes. After a few weeks, I could complete longer sessions comfortably. Yusuf: So slower training helped you improve. Anisa: It did. Now I can recover better and keep the routine going."
  },
  'City vs Countryside':{
   speakers:[a2Speaker('Hassan'),a2Speaker('Khalid')],
@@ -660,19 +660,19 @@ const A2_LISTENING_SCENES={
  },
  'Free Time & Hobbies':{
   speakers:[a2Speaker('Bilal'),a2Speaker('Hassan')],
-  script:"Hassan: Bilal, did you finally choose a hobby at the community centre? Bilal: Yes. I joined the weekly photography club. I wanted something relaxing and social. Hassan: What do you do at the meetings? Bilal: We choose a simple theme, walk around the neighbourhood taking photos, and then show two pictures to the group. Hassan: Do you need an expensive camera? Bilal: No. Most people use their phones. I use mine too. Hassan: What do you enjoy most about the club? Bilal: I am learning a creative skill, but I also like meeting new people. It gives me a good way to spend my leisure time."
+  script:"Hassan: Bilal, did you finally choose a hobby at the community centre? Bilal: Yes. I joined the weekly photography club. I wanted something relaxing and social. Hassan: What do you do at the meetings? Bilal: We choose a simple theme, walk around the neighbourhood taking photos, and then show two pictures to the group. Hassan: Do you need an expensive camera? Bilal: No. Most people use their phones. I use mine too. Hassan: What do you enjoy most about the club? Bilal: I have learned a new creative skill and met new people. It gives me a good way to spend my leisure time."
  },
  'Cultural Identity':{
   speakers:[a2Speaker('Zahra'),a2Speaker('Fadumo')],
-  script:"Fadumo: Zahra, how is your family-story project going at the cultural centre? Zahra: Really well. I started it because some younger relatives knew the names of old traditions but not the stories behind them. Fadumo: Who have you interviewed so far? Zahra: My grandmother and one of my uncles. I ask them the same questions about family customs and important memories. Fadumo: Do they always remember things in the same way? Zahra: No, and that makes the conversations interesting. Their different memories help us talk about our heritage more carefully. Fadumo: So the project is connecting generations. Zahra: Yes. It is preserving stories and helping younger family members understand them."
+  script:"Fadumo: Zahra, how is your family-story project going at the cultural centre? Zahra: Really well. I started it because some younger relatives knew the names of old traditions but not the stories behind them. Fadumo: Who have you interviewed so far? Zahra: My grandmother and one of my uncles. I ask them the same questions about family customs and important memories. Fadumo: Do they always remember things in the same way? Zahra: No, and that makes the conversations interesting. Their different memories help us talk about our heritage more carefully. Fadumo: So the project is connecting generations. Zahra: Yes. It has created new conversations across generations while preserving family stories."
  },
  'Making Decisions':{
   speakers:[a2Speaker('Farah'),a2Speaker('Khalid')],
-  script:"Khalid: Farah, did your team choose a training provider in the end? Farah: Yes, but the decision took time. One option was cheaper, another had better support, and a third had a difficult schedule. Khalid: How did you compare them? Farah: We listed three priorities: cost, quality, and schedule. Then we looked at each provider again instead of arguing about only one feature. Khalid: Which priority mattered most? Farah: Staff had to be able to attend the training, so schedule and support were more important than the lowest price. Khalid: And that made the decision clearer? Farah: Yes. We chose the provider that matched the team's priorities best."
+  script:"Khalid: Farah, how did the project meeting go? Did your team choose a training provider in the end? Farah: Yes, but the decision took time. One option was cheaper, another had better support, and a third had a difficult schedule. Khalid: How did you compare them? Farah: We listed three priorities: cost, quality, and schedule. Then we looked at each provider again instead of arguing about only one feature. Khalid: Which priority mattered most? Farah: Staff had to be able to attend the training, so schedule and support were more important than the lowest price. Khalid: And that made the decision clearer? Farah: Yes. We chose the provider that matched the team's priorities best."
  },
  'Looking Back, Looking Forward':{
   speakers:[a2Speaker('Samira'),a2Speaker('Rahma')],
-  script:"Rahma: Samira, how did your end-of-course review go? Samira: Better than I expected. Before the meeting, I was only thinking about my mistakes. Rahma: What helped you notice your progress? Samira: My teacher asked me to compare an old speaking recording with a recent one. When I listened to both, the difference was clear. Rahma: What can you do better now? Samira: I can speak for longer and continue more easily when I forget a word. Rahma: What is your next goal? Samira: I want to improve my accuracy without losing fluency. For the next month, I am going to review my common grammar mistakes and keep practising speaking."
+  script:"Rahma: Samira, how did your end-of-course review go? Samira: Better than I expected. Before the meeting, I was only thinking about my mistakes. Rahma: What helped you notice your progress? Samira: My teacher asked me to compare an old speaking recording with a recent one. When I listened to both, the difference was clear. Rahma: What can you do better now? Samira: I can speak for longer and continue more easily when I forget a word. Rahma: What is your next goal? Samira: I could finally see my progress, so I chose one realistic next step. For the next month, I am going to review my common grammar mistakes and keep practising speaking."
  }
 };
 function listeningScene(title){
