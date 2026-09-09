@@ -82,7 +82,15 @@ if(!indexCode.includes('writing-integrity-share-optin-v1'))fail('Community asset
 if(packageJson.scripts?.['qa:b2']!=='node scripts/qa-b2.mjs')fail('Existing B2 QA script changed unexpectedly.');
 if(packageJson.scripts?.['qa:community']!=='node scripts/qa-community.mjs')fail('Community QA script is not registered.');
 if(packageJson.scripts?.['qa:cefr']!=='node scripts/qa-cefr.mjs')fail('CEFR QA script is not registered.');
-if(packageJson.scripts?.prestart!=='npm run qa:b2 && npm run qa:cefr && npm run qa:community')fail('B2, CEFR and Community QA must all run before production start.');
+const prestart=String(packageJson.scripts?.prestart||'');
+const requiredPrestart=['npm run qa:b2','npm run qa:cefr','npm run qa:community'];
+let lastIndex=-1;
+for(const cmd of requiredPrestart){
+ const index=prestart.indexOf(cmd);
+ if(index<0)fail('B2, CEFR and Community QA must all run before production start.');
+ else if(index<lastIndex)fail('B2, CEFR and Community QA must run in the expected order before production start.');
+ lastIndex=index;
+}
 
 if(failures.length){
  console.error('\nCOMMUNITY QA FAILED:');
