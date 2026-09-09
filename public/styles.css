@@ -5246,5 +5246,25 @@ html{scroll-behavior:auto!important}
 .live-audio-transcript{margin-top:8px;border-top:1px solid var(--border);padding-top:10px}
 .live-audio-transcript summary{cursor:pointer;font-weight:800;color:var(--navy)}
 .live-audio-transcript p{margin:10px 0 0;line-height:1.7;color:var(--text)}
+.live-audio-transcript-body,.transcript-dialogue-wrap{margin-top:12px}
+.eg-dialogue-transcript{display:grid;gap:12px;padding:4px 0}
+.eg-dialogue-turn{display:flex;align-items:flex-start;gap:10px;width:min(88%,760px)}
+.eg-dialogue-turn.is-opposite{margin-left:auto;flex-direction:row-reverse}
+.eg-dialogue-avatar{flex:0 0 36px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:900;letter-spacing:.02em}
+.eg-dialogue-bubble{min-width:0;padding:10px 13px 11px;border:1px solid #dbe5ef;border-radius:4px 14px 14px 14px;background:#f8fbff;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+.eg-dialogue-turn.is-opposite .eg-dialogue-bubble{border-radius:14px 4px 14px 14px}
+.eg-dialogue-bubble strong{display:block;margin-bottom:3px;color:#2563EB;font-size:.78rem;letter-spacing:.01em}
+.eg-dialogue-bubble p,.eg-workbook .transcript-card .eg-dialogue-bubble p{margin:0!important;color:#1e293b!important;font-size:.94rem;line-height:1.55!important}
+.eg-dialogue-turn.speaker-1 .eg-dialogue-avatar{background:#dbeafe;color:#1d4ed8}
+.eg-dialogue-turn.speaker-2 .eg-dialogue-avatar{background:#ede9fe;color:#6d28d9}
+.eg-dialogue-turn.speaker-2 .eg-dialogue-bubble{background:#faf8ff;border-color:#e5def7}
+.eg-dialogue-turn.speaker-2 .eg-dialogue-bubble strong{color:#6d28d9}
+.eg-dialogue-turn.speaker-3 .eg-dialogue-avatar{background:#dcfce7;color:#15803d}
+.eg-dialogue-turn.speaker-3 .eg-dialogue-bubble strong{color:#15803d}
+.eg-dialogue-turn.speaker-4 .eg-dialogue-avatar{background:#ffedd5;color:#c2410c}
+.eg-dialogue-turn.speaker-4 .eg-dialogue-bubble strong{color:#c2410c}
+.eg-dialogue-narration{margin:10px 0 0;line-height:1.7;color:var(--text)}
+.eg-dialogue-transcript.is-compact{margin-top:12px;padding:12px;border:1px solid #e2e8f0;border-radius:14px;background:#fff}
+.eg-dialogue-transcript.is-compact .eg-dialogue-turn{width:min(94%,700px)}
 .is-listening-stage>p:first-child{font-weight:700}
-@media(max-width:560px){.live-audio-heading{align-items:flex-start;flex-direction:column;gap:8px}}
+@media(max-width:560px){.live-audio-heading{align-items:flex-start;flex-direction:column;gap:8px}.eg-dialogue-turn{width:96%;gap:8px}.eg-dialogue-avatar{flex-basis:32px;width:32px;height:32px;font-size:.66rem}.eg-dialogue-bubble{padding:9px 11px}.eg-dialogue-bubble p,.eg-workbook .transcript-card .eg-dialogue-bubble p{font-size:.9rem}}

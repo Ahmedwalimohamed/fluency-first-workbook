@@ -976,6 +976,34 @@ function liveAudioKey(text){
  for(let i=0;i<value.length;i++){hash^=value.charCodeAt(i);hash=Math.imul(hash,16777619)}
  return 'live-listening-'+(hash>>>0).toString(16)
 }
+function dialogueTranscriptTurns(text){
+ const source=String(text||'').replace(/\s+/g,' ').trim(),re=/(?:^|(?<=[.!?])\s+)([A-Z][A-Za-z'’-]{1,24}(?:\s+[A-Z][A-Za-z'’-]{1,24})?):\s*/g,matches=[...source.matchAll(re)];
+ if(matches.length<2)return[];
+ const turns=[];
+ for(let i=0;i<matches.length;i++){
+  const speaker=matches[i][1].trim(),start=(matches[i].index||0)+matches[i][0].length,end=i+1<matches.length?(matches[i+1].index||source.length):source.length,utterance=source.slice(start,end).trim();
+  if(utterance)turns.push({speaker,text:utterance})
+ }
+ return new Set(turns.map(turn=>turn.speaker.toLowerCase())).size>=2?turns:[]
+}
+function dialogueSpeakerInitials(name){
+ const parts=String(name||'').trim().split(/\s+/).filter(Boolean);
+ return (parts.length>1?parts[0][0]+parts[parts.length-1][0]:(parts[0]||'?').slice(0,2)).toUpperCase()
+}
+function dialogueTranscriptHtml(text,variant=''){
+ const source=String(text||'').replace(/\s+/g,' ').trim();
+ if(!source)return '';
+ const turns=dialogueTranscriptTurns(source);
+ if(!turns.length)return '<p class="eg-dialogue-narration">'+escapeHtml(source)+'</p>';
+ const speakers=[...new Set(turns.map(turn=>turn.speaker))],slots=new Map(speakers.map((speaker,index)=>[speaker,index%4]));
+ return '<div class="eg-dialogue-transcript '+escapeAttr(variant)+'" role="list" aria-label="Listening dialogue">'+turns.map(turn=>{
+  const slot=slots.get(turn.speaker)||0,opposite=slot%2===1?' is-opposite':'';
+  return '<div class="eg-dialogue-turn speaker-'+(slot+1)+opposite+'" role="listitem">'+
+   '<span class="eg-dialogue-avatar" aria-hidden="true">'+escapeHtml(dialogueSpeakerInitials(turn.speaker))+'</span>'+
+   '<div class="eg-dialogue-bubble"><strong>'+escapeHtml(turn.speaker)+'</strong><p>'+escapeHtml(turn.text)+'</p></div>'+
+  '</div>'
+ }).join('')+'</div>'
+}
 function liveAudioPlayerHtml(script){
  const text=String(script||'').replace(/\s+/g,' ').trim();
  if(!text)return '<div class="feedback bad">Listening audio is unavailable because this lesson has no audio script.</div>';
@@ -987,7 +1015,7 @@ function liveAudioPlayerHtml(script){
    '<div class="audio-timeline"><input type="range" min="0" max="100" value="0" step="0.1" data-live-audio-seek aria-label="Listening audio progress"><div class="audio-time"><span data-live-audio-current>0:00</span><span data-live-audio-duration>0:00</span></div></div>'+
    '<select class="audio-speed" data-live-audio-speed aria-label="Playback speed"><option value=".85">0.85×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option></select>'+
   '</div>'+
-  '<details class="live-audio-transcript"><summary>Transcript · open after listening</summary><p>'+escapeHtml(text)+'</p></details>'+
+  '<details class="live-audio-transcript"><summary>Transcript · open after listening</summary><div class="live-audio-transcript-body">'+dialogueTranscriptHtml(text,'is-live')+'</div></details>'+
  '</section>'
 }
 function renderLiveListeningContent(lines){
@@ -1415,7 +1443,7 @@ function studentCourse(){
 async function studentClassBook(){await ensureLiveBooks();const sid=session.id,c=studentClass(sid),live=liveBookForClass(c),wb=workbookForClass(c);if(!c||!live){title('EnglishGate','Class book');$('content').innerHTML='<section class="course-shell"><button class="back-link" id="classBookHome">← Home</button><div class="empty-state"><h3>No class book yet</h3><p>Your teacher or admin must assign a class book first.</p></div></section>';$('classBookHome').onclick=()=>{currentPage='home';renderNav();studentHome()};return}title('EnglishGate','Class book');$('content').innerHTML=`<section class="course-shell"><button class="back-link" id="classBookHome">← Home</button><div class="course-intro"><div><span class="pill teal">${escapeHtml(c.name)}</span><h1>${escapeHtml(live.title)}</h1><p>Revise the lesson your teacher uses in class. Tap vocabulary words to see the meaning and example.</p></div></div><div class="course-path student-course-list">${live.lessons.map(l=>{const w=wb?.lessons?.find(x=>x.number===l.number),pct=w?lessonProgress(sid,w.id):0;return `<div class="course-topic current"><span class="topic-state">${l.number}</span><span class="topic-copy"><small>Class lesson</small><strong>${escapeHtml(l.title)}</strong><span>${w?pct+'% workbook complete':'Workbook match unavailable'}</span></span><span class="topic-actions"><button class="primary-btn" data-open-live-lesson="${l.number}">Open lesson</button>${w?`<button class="ghost-btn" data-topic="${w.id}">Start workbook</button>`:''}</span></div>`}).join('')}</div></section>`;$('classBookHome').onclick=()=>{currentPage='home';renderNav();studentHome()};document.querySelectorAll('[data-open-live-lesson]').forEach(btn=>btn.onclick=()=>{activeStudentLiveLessonNumber=Number(btn.dataset.openLiveLesson);activeStudentSectionIndex=0;currentPage='student-live-lesson';renderNav();studentLiveLesson()});document.querySelectorAll('[data-topic]').forEach(btn=>btn.onclick=()=>{activeLessonId=btn.dataset.topic;currentStep=firstOpenStep(sid,activeLessonId);currentPage='workbook';renderNav();workbook()})}
 async function studentLiveLesson(){await ensureLiveBooks();const sid=session.id,c=studentClass(sid),live=liveBookForClass(c),wb=workbookForClass(c);if(!live){currentPage='class-book';studentClassBook();return}const l=live.lessons.find(x=>x.number===activeStudentLiveLessonNumber)||live.lessons[0],w=wb?.lessons?.find(x=>x.number===l.number);activeStudentLiveLessonNumber=l.number;const sections=liveSections(l.content),total=sections.length;activeStudentSectionIndex=Math.max(0,Math.min(activeStudentSectionIndex,Math.max(0,total-1)));const section=sections[activeStudentSectionIndex],isLast=activeStudentSectionIndex===total-1,goal=lessonCanDoGoal(l),stageName=section?sectionLabel(section.title,activeStudentSectionIndex,total):'Lesson unavailable';title('Class book','Lesson '+l.number);const stages=sections.map((x,i)=>`<button class="eg-stage ${i===activeStudentSectionIndex?'is-current':''}" data-student-live-section="${i}" ${i===activeStudentSectionIndex?'aria-current="step"':''}><span>${i+1}</span><strong>${escapeHtml(sectionLabel(x.title,i,total).toLowerCase())}</strong></button>`).join('');const nextAction=!total?'':!isLast?'<button class="primary-btn" id="nextStudentLiveSection">Next stage →</button>':w&&w.ready!==false?'<button class="primary-btn" id="openStudentWorkbookFooter">Start workbook →</button>':'<span class="eg-unavailable">Matching workbook is not available yet.</span>';$('content').innerHTML=`<section class="eg-lesson student-live-book"><header class="eg-lesson-header"><button class="ghost-btn" id="backStudentBook">← Lessons</button>${englishGateLogo('englishgate-logo-lesson')}<div><p>${escapeHtml(c?.name||'Class')} · ${escapeHtml(live.title)}</p><h1>Lesson ${l.number} · ${escapeHtml(l.title)}</h1></div>${w&&w.ready!==false?'<button class="ghost-btn" id="openStudentWorkbook">Workbook</button>':''}</header><div class="eg-lesson-layout"><aside class="eg-stage-list"><p class="eg-label">Lesson stages</p><nav aria-label="Lesson stages">${stages}</nav>${goal?`<details class="eg-goal"><summary>Lesson goal</summary><p>${escapeHtml(goal)}</p></details>`:''}</aside><div class="eg-teaching-surface"><header class="eg-stage-heading"><p class="eg-label">${total?'Stage '+(activeStudentSectionIndex+1)+' of '+total:'No stages'}</p><h2 id="liveStageTitle" tabindex="-1">${escapeHtml(stageName.toLowerCase())}</h2></header><article class="live-book-content eg-stage-content ${/reading/i.test(stageName)?'is-reading-stage':''} ${/listening/i.test(stageName)?'is-listening-stage':''} ${/language focus/i.test(stageName)?'is-language-focus-stage':''}" aria-labelledby="liveStageTitle">${activeStudentSectionIndex===0?lessonVisualHtml(l):''}${section?renderLiveContent(liveSectionContent(section).split('\n').filter(line=>!/^LESSON\s+\d+|^WEEK\s+\d+.*LESSON\s+\d+/i.test(line.trim())).join('\n')):'<p>This lesson has no learning content yet. Return to the book and choose another lesson.</p>'}</article>${isLast?`<div class="eg-workbook-note">${w?`<strong>After revision</strong><span>Workbook ${w.number} · ${escapeHtml(w.title)}</span>`:'<span>No matching workbook for this lesson.</span>'}</div>`:''}<footer class="eg-lesson-footer"><button class="ghost-btn" id="prevStudentLiveSection" ${activeStudentSectionIndex===0?'disabled':''}>← Previous</button>${nextAction}</footer></div></div></section>`;$('backStudentBook').onclick=()=>{currentPage='class-book';renderNav();studentClassBook()};const openWorkbook=()=>{activeLessonId=w.id;currentStep=firstOpenStep(sid,w.id);currentPage='workbook';renderNav();workbook()};if($('openStudentWorkbook'))$('openStudentWorkbook').onclick=openWorkbook;if($('openStudentWorkbookFooter'))$('openStudentWorkbookFooter').onclick=openWorkbook;const goToStage=async index=>{activeStudentSectionIndex=index;await studentLiveLesson();focusWithoutScroll($('liveStageTitle'));resetAppScroll()};document.querySelectorAll('[data-student-live-section]').forEach(b=>b.onclick=()=>goToStage(Number(b.dataset.studentLiveSection)));$('prevStudentLiveSection').onclick=()=>{if(activeStudentSectionIndex>0)goToStage(activeStudentSectionIndex-1)};if($('nextStudentLiveSection'))$('nextStudentLiveSection').onclick=()=>goToStage(activeStudentSectionIndex+1);wireLiveVocabulary();wireLiveChecks();wireLiveAudioPlayers()}
 function listeningLocked(lid){return Boolean(getDB().listeningLocks?.[session.id]?.includes(lid))||completionFor(session.id,lid).includes('listening')}
-async function loadListeningPrep(l){const box=$('listeningTranscript');if(!box)return;try{const r=await api(`/api/listening/${l.id}/prep`);if(r.locked){await refreshState();renderActivity();return}box.innerHTML=`<p>${escapeHtml(r.script)}</p>`}catch(e){box.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
+async function loadListeningPrep(l){const box=$('listeningTranscript');if(!box)return;try{const r=await api(`/api/listening/${l.id}/prep`);if(r.locked){await refreshState();renderActivity();return}box.innerHTML=dialogueTranscriptHtml(r.script,'is-workbook')}catch(e){box.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
 async function lockListeningScript(l){const btn=$('readyForQuestions'),msg=$('listeningGateMessage');if(!btn)return;btn.disabled=true;btn.textContent='Locking script…';try{await api(`/api/listening/${l.id}/lock`,{method:'POST'});await refreshState();renderActivity()}catch(e){btn.disabled=false;btn.textContent='Done reading & listening — start questions';if(msg)msg.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
 function isWorkbookPreview(){return (session?.role==='admin'&&currentPage==='admin-workbook-view')||(session?.role==='teacher'&&currentPage==='teacher-workbook-view')}
 function firstOpenStep(sid,lid){return WORKBOOK_STEPS.find(step=>!skillCompletionFor(sid,lid).includes(step))||WORKBOOK_STEPS[WORKBOOK_STEPS.length-1]}
@@ -1582,7 +1610,7 @@ function listeningActivity(l){
   ${learningLadderHtml(l,'listening',all.length)}
   <div class="eg-skill-layout eg-listening-layout">
    <section class="eg-source-column">
-    ${sourceText?`<article class="eg-reading-article"><span class="eg-skill-kicker">${reading?'Reading text':'Listening situation'}</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2><p>${escapeHtml(sourceText)}</p></article>`:''}
+    ${sourceText?`<article class="eg-reading-article"><span class="eg-skill-kicker">${reading?'Reading text':'Listening situation'}</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2>${reading?'<p>'+escapeHtml(sourceText)+'</p>':dialogueTranscriptHtml(sourceText,'is-compact')}</article>`:''}
     <div class="eg-audio-card"><small>Audio</small><h3>${escapeHtml(l.listening?.title||l.title)}</h3>${player}</div>
    </section>
    <main class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Comprehension</small><h2>Show what you understood</h2></div></div><div class="activity-question-list">${questionSetHtml(all,'l','Question')}</div></main>
@@ -1590,7 +1618,7 @@ function listeningActivity(l){
   ${completed&&l.listening?.audioScript?listeningTranscript(l):''}<div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check answers</button>${activityDoneButton(l)}</div>
  </div>`;
 }
-function listeningTranscript(l){return `<details class="transcript-card"><summary>View listening transcript</summary><p>${escapeHtml(l.listening.audioScript)}</p></details>`}
+function listeningTranscript(l){return `<details class="transcript-card"><summary>View listening transcript</summary><div class="transcript-dialogue-wrap">${dialogueTranscriptHtml(l.listening.audioScript,'is-workbook')}</div></details>`}
 function grammarActivity(l){
  const qs=(l.grammar?.items||[]).slice(0,10),sample=qs[0],vocabQs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),recycle=vocabRecycleItems(l,vocabQs);
  return `<div class="eg-skill-page eg-grammar-page">
