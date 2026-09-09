@@ -442,4 +442,11 @@ LEVELS.forEach(function(level){
   })
  };
 });
+const legacyA2=BOOK_PACKS['speakup-a2-b1'];
+if(legacyA2?.standardVersion==='a2-living-standard-v1'){
+ window.LIVE_BOOKS['speakup-a2-b1']={
+  title:legacyA2.title,
+  lessons:legacyA2.lessons.map(lesson=>({number:lesson.number,title:lesson.title,content:a2LessonContent(lesson)}))
+ };
+}
 })();
