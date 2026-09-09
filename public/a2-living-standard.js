@@ -555,18 +555,104 @@ function readingText(number,title,data,meta){
  if(number>14)text+=' The class then compares this response with another possible option. They agree that a useful answer should match the situation, be easy to explain, and lead to a clear result. '+person+' ends by saying what could be done next time.';
  return text;
 }
-function audioScript(number,title,data,meta){
- const [person,place,goal,challenge,action,result]=data.s,partner=['Amina','Yusuf','Hodan','Maryan'][(number+1)%4];
- const variants=[
-  partner+': What are you trying to do? '+person+': I want to '+goal+'. '+partner+': What is making it difficult? '+person+': '+capFirst(challenge)+'. '+partner+': So what are you going to do? '+person+': I am going to '+action+'. '+partner+': Did it help? '+person+': Yes. '+capFirst(result)+'. '+partner+': That sounds like a useful lesson.',
-  person+': I had a problem during an activity at '+place+'. I wanted to '+goal+', but '+challenge+'. '+partner+': What did you do? '+person+': I decided to '+action+'. '+partner+': And what happened after that? '+person+': '+result+'. '+partner+': Would you use the same idea again? '+person+': Yes, but I would explain the plan earlier next time.',
-  partner+': Tell me about your '+title.toLowerCase()+' task. '+person+': The goal was to '+goal+'. The difficult part was that '+challenge+'. '+partner+': How did you respond? '+person+': I chose to '+action+'. That helped because '+result+'. '+partner+': What did you learn? '+person+': A clear plan and a clear explanation can make the situation easier.'
- ];
- let text=variants[(number-1)%3];
- if(number>7)text+=' '+partner+': What is the most important point? '+person+': I need a clear plan and one practical next step.';
- if(number>14)text+=' '+partner+': Can you summarise the main point in one sentence? '+person+': Yes. I should identify the problem, choose a realistic action, and check the result.';
- return text;
+
+const A2_LISTENING_SCENES={
+ 'Getting Acquainted':{
+  speakers:[{name:'Amina',gender:'female'},{name:'Yusuf',gender:'male'}],
+  script:"Amina: Hi, is this seat free? I am Amina. It is my first day at this new training course. Yusuf: Yes, please sit here. I am Yusuf. What brings you to the course? Amina: I want to meet new classmates, but at first I did not know how to start a conversation. Yusuf: Start with something simple. You can ask about work, hometowns, or hobbies. Amina: Good idea. Where are you from? Yusuf: I am from Borama, and photography is one of my hobbies. Amina: Really? I enjoy taking photos too. Yusuf: Then you already found a shared interest. Amina: Yes, and now this feels much easier.",
+ },
+ 'Work & Careers':{
+  speakers:[{name:'Hodan',gender:'female'},{name:'Abdi',gender:'male'}],
+  script:"Hodan: Abdi, can I check something with you before lunch? We are in a busy office, and I need to finish a client report today. Abdi: Of course. You look rushed. Hodan: Two deadlines arrived together, so I was trying to do everything at once. Abdi: Which task is the priority? Hodan: The client report. I decided to set priorities and ask a colleague for support with the smaller task. Abdi: I can take that one. What part of the report is still unfinished? Hodan: Only the final figures. If you handle the other deadline, I can focus on those. Abdi: Deal. Hodan: Thanks. With that change, the team finished on time.",
+ },
+ 'Travel & Adventure':{
+  speakers:[{name:'Yusuf',gender:'male'},{name:'Hassan',gender:'male'}],
+  script:"Yusuf: Hassan, our weekend trip has changed already. We wanted to reach Berbera before sunset, but the bus left late. Hassan: How late are we? Yusuf: About an hour. I called the hotel to confirm the reservation, then I changed the plan for the afternoon. Hassan: So we are not cancelling the journey? Yusuf: No. We can check in first and explore the town after dinner instead. Hassan: That sounds better than worrying all the way there. Yusuf: Exactly. The delay was annoying, but it did not ruin the destination. Hassan: And tomorrow morning we can walk by the beach. Yusuf: Yes. In the end, I still had time to explore the town.",
+ },
+ 'Technology & Social Media':{
+  speakers:[{name:'Rahma',gender:'female'},{name:'Nasra',gender:'female'}],
+  script:"Rahma: Nasra, I came to the university library to finish my assignment, but my phone kept lighting up every minute. Nasra: Notifications? Rahma: Yes. I wanted to study without distraction, but the alerts kept interrupting me. Nasra: What did you change? Rahma: I turned off alerts and decided to check only reliable sources when I needed information. Nasra: Did you put the phone away too? Rahma: I left it face down beside my laptop and checked it only during a break. Nasra: That probably reduced your screen time. Rahma: It did. I stopped jumping between apps, protected my attention, and I completed my assignment more quickly.",
+ },
+ 'Health & Wellbeing':{
+  speakers:[{name:'Abdi',gender:'male'},{name:'Maryan',gender:'female'}],
+  script:"Maryan: Abdi, you seem more energetic today. Last week you looked exhausted. Abdi: I was. I went to a health centre because I wanted to improve my energy. I had been tired after several stressful weeks. Maryan: What advice did you get? Abdi: Nothing complicated. I chose to change two habits and get more rest. I started going to bed earlier and taking a short walk after work instead of staying on my phone. Maryan: Did the small changes make a difference? Abdi: Yes. I am not perfect every day, but I feel more balanced now. Maryan: And your work? Abdi: My concentration improved, which was the result I noticed first.",
+ },
+ 'Food & Culture':{
+  speakers:[{name:'Sahra',gender:'female'},{name:'Hodan',gender:'female'}],
+  script:"Sahra: Hodan, taste this sauce before the guests arrive. I am preparing a traditional meal in our family kitchen. Hodan: It smells good. Did you follow your usual recipe? Sahra: Mostly, but one ingredient was unavailable at the market. I had to adapt the recipe without changing the main flavour. Hodan: What did you use instead? Sahra: A similar spice in a smaller amount. I tested it before making the full portion. Hodan: Clever. The flavour is still familiar. Sahra: That was what I wanted. I did not want the meal to lose its identity. Hodan: I think the hospitality matters too. Sahra: True, and thankfully the guests enjoyed the meal.",
+ },
+ 'Education & Learning':{
+  speakers:[{name:'Maryan',gender:'female'},{name:'Amina',gender:'female'}],
+  script:"Maryan: Amina, I changed my revision strategy this month. I used to sit in the college study room for hours before an exam. Amina: Was that helping? Maryan: Not really. I studied for hours but forgot details when I tried practice questions. Amina: So what did you do differently? Maryan: I began using shorter revision sessions and feedback. After twenty minutes, I closed my notes, answered a few questions, and checked my mistakes. Amina: That sounds more active. Maryan: It is. I can concentrate better because every session has a clear purpose. Amina: Have you seen progress yet? Maryan: Yes. My practice scores improved, and I can explain more answers without looking at the book.",
+ },
+ 'Money & Business':{
+  speakers:[{name:'Khalid',gender:'male'},{name:'Omar',gender:'male'}],
+  script:"Omar: Khalid, are you ready to plan next month's spending for the business? Khalid: I need to be. Sales went up, but expenses rose with sales, so the cash balance feels tighter than I expected. Omar: What will you put in the budget first? Khalid: Rent, salaries, stock, and delivery costs. I am separating essential costs from optional ones before I think about any new equipment. Omar: What about advertising? Khalid: I can afford a small campaign, but I will not invest in the larger one this month. Omar: That sounds cautious. Khalid: It is. I want growth, but I also need daily operations to continue. After making the budget, the business kept enough cash for operations.",
+ },
+ 'Environment & Climate':{
+  speakers:[{name:'Nimo',gender:'female'},{name:'Asha',gender:'female'}],
+  script:"Nimo: Asha, the community meeting was useful today. We were talking about how to reduce plastic waste. Asha: What was the biggest problem? Nimo: Many homes used single-use plastic daily, especially for shopping and water. People wanted to recycle, but they did not know where to take anything. Asha: Did the group agree on a plan? Nimo: Yes. We decided to create recycling points and share simple guidance about separating waste at home. Asha: Who will explain it to families? Nimo: Volunteers from each street. We will also talk about pollution and why plastic should not be burned. Asha: Has anything changed yet? Nimo: Yes. More families separated their waste after the first week.",
+ },
+ 'Relationships & Family':{
+  speakers:[{name:'Fadumo',gender:'female'},{name:'Hassan',gender:'male'}],
+  script:"Fadumo: Hassan, our family gathering became tense yesterday. Everyone cared about the same issue, but people kept interrupting each other. Hassan: That happens when several generations have strong opinions. What did you do? Fadumo: I asked everyone to pause. I wanted to understand different views, so I suggested that each person explain one reason before anyone replied. Hassan: Did they accept that? Fadumo: At first they laughed, but then my uncle spoke, my younger cousin listened, and the next person responded more respectfully. Hassan: So the rule changed the relationship in the room. Fadumo: Exactly. Nobody had to agree, but the discussion became calmer and people felt heard.",
+ },
+ 'Media & News':{
+  speakers:[{name:'Omar',gender:'male'},{name:'Rahma',gender:'female'}],
+  script:"Omar: Rahma, look at these three headlines from the media workshop. They are all describing the same event differently. Rahma: Which one do you trust? Omar: I am not sure yet. Several headlines gave conflicting information, so I do not want to share the story before I verify it. Rahma: What will you check first? Omar: The original source, then the full report, not just screenshots. I am also separating facts from claims. Rahma: What did you find? Omar: One viral post had removed context from a longer statement. The sentence was real, but the post made it sound like something else. Rahma: So checking the source changed the story. Omar: Completely.",
+ },
+ 'Sports & Fitness':{
+  speakers:[{name:'Anisa',gender:'female'},{name:'Yusuf',gender:'male'}],
+  script:"Yusuf: Anisa, how is your training for the five-kilometre run going? Anisa: Better now. At the sports club I made the mistake of starting too fast. I trained too quickly and became exhausted after every session. Yusuf: Did you stop training? Anisa: No. I reduced my pace and started following a consistent routine. I run slowly three days a week, stretch afterwards, and keep one full rest day. Yusuf: Are the sessions getting longer? Anisa: Yes, without feeling terrible at the end. I am building stamina instead of racing every practice. Yusuf: That sounds much safer. Anisa: It is. After a few weeks, I completed longer sessions comfortably.",
+ },
+ 'City vs Countryside':{
+  speakers:[{name:'Hassan',gender:'male'},{name:'Khalid',gender:'male'}],
+  script:"Hassan: Khalid, I spent the morning at a housing office because I am trying to choose where to live. Khalid: City centre or outside town? Hassan: That is the problem. The city has more services, but it also has heavier traffic. The quieter area is more peaceful, but my commute would be longer. Khalid: How are you comparing them? Hassan: I made four columns: cost, commute, facilities, and quiet. I am scoring each place based on what matters to me, not what other people prefer. Khalid: Which one is winning? Hassan: The smaller neighbourhood near my work. It has fewer shops, but enough useful facilities. The comparison helped me identify the option that matched my priorities.",
+ },
+ 'Dreams & Ambitions':{
+  speakers:[{name:'Leyla',gender:'female'},{name:'Hodan',gender:'female'}],
+  script:"Leyla: Hodan, the career workshop made me realise that my ambition was too vague. I keep saying I want to move into management, but I never say how. Hodan: So your goal was clear, but your plan was too general? Leyla: Exactly. Today I broke the goal into skills and deadlines. First, I need better budgeting skills. Then I need experience leading a small team. Hodan: What opportunities did you find? Leyla: Two short courses and a mentor in my organisation. I put dates next to both courses so I actually apply. Hodan: That sounds much more practical. Leyla: It feels that way. Instead of only having motivation, I now know my next actions.",
+ },
+ 'Crime & Justice':{
+  speakers:[{name:'Ismail',gender:'male'},{name:'Omar',gender:'male'}],
+  script:"Ismail: Omar, our civic education class discussed a legal decision today, and the first ten minutes were confusing. Omar: Why? Ismail: Students were repeating rumours as if they were evidence. One person said, 'Everyone knows what happened,' but nobody could say where the information came from. Omar: How did the teacher handle it? Ismail: She put witness statements in one column and opinions in another. Then we looked at what the court could actually verify. Omar: Did that change your conclusion? Ismail: Yes. We stopped trying to guess and focused on the facts that an investigation could support. The class reached a more careful conclusion because we separated evidence from assumption.",
+ },
+ 'Science & Innovation':{
+  speakers:[{name:'Nasra',gender:'female'},{name:'Amina',gender:'female'}],
+  script:"Amina: Nasra, is that the water-filter project from the university lab? Nasra: Yes. We are testing a low-cost filter that could be made with materials people can find locally. Amina: Did the first experiment work? Nasra: It cleaned the water, but the first design worked too slowly. Amina: What did your group change? Nasra: We changed the material in one layer and repeated the experiment with the same amount of water. We measured the time again instead of just saying it looked faster. Amina: And the evidence? Nasra: The second version worked faster while still filtering well. Amina: So the innovation came from a small change. Nasra: Exactly. Research often means improving, testing, comparing, and testing again.",
+ },
+ 'Arts & Entertainment':{
+  speakers:[{name:'Hamza',gender:'male'},{name:'Yusuf',gender:'male'}],
+  script:"Yusuf: Hamza, you were taking notes all evening at the arts festival. Were you working? Hamza: In a way. I wanted to write a useful review, but the festival had several performances with completely different styles. Yusuf: Which one did you choose? Hamza: A drama. I watched the whole performance and wrote short notes about the plot, the main character, and how the audience reacted. Yusuf: Did you enjoy it? Hamza: Mostly, but a review should not only say, 'I liked it.' I explained one strong scene and one part that felt too slow. Yusuf: That gives readers something specific. Hamza: Exactly. My final review explained both strengths and weaknesses instead of giving a simple score.",
+ },
+ 'Global Issues':{
+  speakers:[{name:'Asha',gender:'female'},{name:'Maryan',gender:'female'}],
+  script:"Maryan: Asha, what did your development seminar say about the water shortage? Asha: We compared two responses. Emergency deliveries were necessary, but short-term aid did not solve the long-term problem. Maryan: What was missing? Asha: Reliable local infrastructure. The community needed help immediately, but it also needed storage, repairs, and better access to water over time. Maryan: So it was not a choice between aid and development. Asha: Right. The stronger plan was to combine emergency help with local infrastructure. Maryan: Was it sustainable? Asha: More than repeated deliveries alone. Once the storage system and local supply improved, the community reduced dependence on deliveries and could manage future shortages better.",
+ },
+ 'Free Time & Hobbies':{
+  speakers:[{name:'Bilal',gender:'male'},{name:'Hassan',gender:'male'}],
+  script:"Bilal: Hassan, I finally joined an activity at the community centre. Hassan: Which one? You were looking for a hobby for weeks. Bilal: A photography club. I wanted something relaxing and social, not another activity that felt like work. Hassan: What happens at the meetings? Bilal: We choose one simple theme, walk around the neighbourhood taking photos, then show two pictures to the group. Hassan: Do you need an expensive camera? Bilal: No. Most of us use our phones. The point is to practise a creative skill and notice details. Hassan: Sounds like good leisure time. Bilal: It is. I learned a skill and met new people, which is exactly what I hoped for.",
+ },
+ 'Cultural Identity':{
+  speakers:[{name:'Zahra',gender:'female'},{name:'Fadumo',gender:'female'}],
+  script:"Zahra: Fadumo, I started recording family stories at the cultural centre this week. Fadumo: What made you begin that project? Zahra: I noticed that younger relatives knew very little about some older traditions. They recognised the names, but they did not know why our grandparents followed those customs. Fadumo: Who are you interviewing first? Zahra: My grandmother and two older uncles. I ask the same questions and compare their memories. Fadumo: Do they remember everything the same way? Zahra: Not at all, and that is interesting. The differences make us talk about identity and heritage more carefully. Fadumo: So the project is doing more than preserving stories. Zahra: Yes. It created conversations across generations.",
+ },
+ 'Making Decisions':{
+  speakers:[{name:'Farah',gender:'male'},{name:'Khalid',gender:'male'}],
+  script:"Farah: Khalid, our project meeting took longer than expected because we had to choose a training provider. Khalid: Were the options very different? Farah: Yes. One option was cheaper, while another had better support after the course. A third one had a good trainer but a difficult schedule. Khalid: How did you decide? Farah: We stopped arguing about one feature at a time and compared cost, quality, and schedule together. Then we ranked our priorities before looking at the providers again. Khalid: Which consequence mattered most? Farah: Staff must be able to attend, so schedule and support mattered more than the lowest price. In the end, the team chose the option matching its priorities.",
+ },
+ 'Looking Back, Looking Forward':{
+  speakers:[{name:'Samira',gender:'female'},{name:'Rahma',gender:'female'}],
+  script:"Rahma: Samira, you look happier after the end-of-course review. Samira: I am. Before the meeting, I was focusing only on mistakes. Every weak answer felt bigger than everything I had improved. Rahma: What changed your mind? Samira: My teacher asked me to compare my first work with my recent work. I listened to an old recording and then a new one. The difference was obvious. Rahma: What strength did you notice? Samira: I speak longer now and recover more easily when I forget a word. Rahma: So what is your next step? Samira: I want to improve accuracy without losing fluency. Seeing the progress helped me choose one realistic next step instead of trying to fix everything at once.",
+ }
+};
+function listeningScene(title){
+ const scene=A2_LISTENING_SCENES[title];
+ if(!scene)throw new Error('Missing distinct A2 listening scene for '+title);
+ return scene
 }
+function audioScript(number,title,data,meta){return listeningScene(title).script}
+
 function questions(title,data){
  const [person,place,goal,challenge,action,result]=data.s;
  return[
@@ -591,7 +677,7 @@ function makeLesson(number,title,focus){
   functions:meta.functions,discourse:meta.discourse,chunks:meta.chunks,interactionExpressions:meta.interaction,
   expressions:[...meta.chunks,...meta.interaction].slice(0,6).map(text=>({text})),
   vocabulary:{items:vocabItems(title,data)},
-  listening:{title:title+' · Reading & Listening',readingText:readingText(number,title,data,meta),audioScript:audioScript(number,title,data,meta),text:audioScript(number,title,data,meta),questions:questions(title,data)},
+  listening:{title:title+' · Reading & Listening',readingText:readingText(number,title,data,meta),audioScript:audioScript(number,title,data,meta),text:audioScript(number,title,data,meta),speakers:listeningScene(title).speakers.map(x=>({...x})),questions:questions(title,data)},
   grammar:{focus,rule:ruleFor(focus),items:grammarItems(focus)},
   writing:{task:cleanTask(meta.task),minWords:range[0],maxWords:range[1],humanGraded:false,checkpoint:false},
   review:{keywords:data.v.map(v=>v[0]).join(' · '),mission:meta.performance}

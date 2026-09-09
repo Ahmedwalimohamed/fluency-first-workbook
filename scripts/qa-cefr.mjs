@@ -65,9 +65,7 @@ try{
   const oldLessonOne=['hobby','hometown','occupation','outgoing','married','single'];
   const lessonOneWords=book.lessons[0]?.targetVocabulary||[];
   if(oldLessonOne.some(word=>!lessonOneWords.includes(word)))errors.push('A2 Living Standard: original Lesson 1 vocabulary was not preserved');
-  const femaleNamesMatch=server.match(/const FEMALE_SPEAKER_NAMES=new Set\((\[[^\]]+\])\)/),maleNamesMatch=server.match(/const MALE_SPEAKER_NAMES=new Set\((\[[^\]]+\])\)/);
-  const femaleNames=femaleNamesMatch?new Set(new Function('return '+femaleNamesMatch[1])()):new Set(),maleNames=maleNamesMatch?new Set(new Function('return '+maleNamesMatch[1])()):new Set();
-  if(femaleNames.size<2||maleNames.size<2)errors.push('A2 multi-speaker QA: male/female speaker registries are missing');
+  const listeningScripts=[];
   book.lessons.forEach((lesson,i)=>{
    const n=i+1;
    if(lesson.id!=='su-a2-l'+n)errors.push('A2 lesson '+n+': stable ID must remain su-a2-l'+n);
@@ -85,9 +83,13 @@ try{
    if(!lqs.some(q=>/(reason|decision|result|inference)/i.test(String(q.tag||''))))errors.push('A2 lesson '+n+': needs higher-order listening');
    if(wordCount(lesson.listening?.readingText)<minReading(n))errors.push('A2 lesson '+n+': reading is below phase minimum');
    if(wordCount(lesson.listening?.audioScript)<minListening(n))errors.push('A2 lesson '+n+': listening is below phase minimum');
-   const speakerLabels=[...String(lesson.listening?.audioScript||'').matchAll(/(?:^|\s)([A-Z][A-Za-z'’.-]{1,24}(?:\s+[A-Z][A-Za-z'’.-]{1,24})?):\s*/g)].map(m=>m[1].trim()),uniqueSpeakers=[...new Set(speakerLabels)];
+   const script=String(lesson.listening?.audioScript||''),speakerLabels=[...script.matchAll(/(?:^|(?<=[.!?])\s+)([A-Z][A-Za-z'’-]{1,24}(?:\s+[A-Z][A-Za-z'’-]{1,24})?):\s*/g)].map(m=>m[1].trim()),uniqueSpeakers=[...new Set(speakerLabels)],profiles=lesson.listening?.speakers||[];
+   listeningScripts.push(script);
    if(uniqueSpeakers.length<2)errors.push('A2 lesson '+n+': listening conversation must contain at least two named speakers');
-   uniqueSpeakers.forEach(name=>{const key=String(name).toLowerCase().replace(/[^a-z ]+/g,' ').replace(/\s+/g,' ').trim().split(' ').pop();if(!femaleNames.has(key)&&!maleNames.has(key))errors.push('A2 lesson '+n+': speaker gender/voice mapping missing for '+name)});
+   if(!Array.isArray(profiles)||profiles.length!==uniqueSpeakers.length)errors.push('A2 lesson '+n+': every listening speaker needs explicit voice metadata');
+   const profileMap=new Map((profiles||[]).map(x=>[String(x?.name||'').toLowerCase(),String(x?.gender||'').toLowerCase()]));
+   uniqueSpeakers.forEach(name=>{const gender=profileMap.get(name.toLowerCase());if(!['female','male'].includes(gender))errors.push('A2 lesson '+n+': explicit gender metadata missing for '+name)});
+   (profiles||[]).forEach(profile=>{if(!uniqueSpeakers.some(name=>name.toLowerCase()===String(profile?.name||'').toLowerCase()))errors.push('A2 lesson '+n+': speaker metadata contains unused name '+String(profile?.name||''))});
    const grammar=lesson.grammar?.items||[];
    if(grammar.length<6)errors.push('A2 lesson '+n+': needs at least 6 contextual grammar questions');
    [...(lesson.vocabulary?.items||[]),...qs,...grammar].forEach((item,idx)=>{
@@ -100,6 +102,12 @@ try{
    if(writing.humanGraded)errors.push('A2 lesson '+n+': A2 writing remains formative/auto-supported, not a teacher checkpoint');
    if(/placeholder|lorem ipsum|todo\b|tbd\b|being prepared|coming soon/i.test(JSON.stringify(lesson)))errors.push('A2 lesson '+n+': placeholder content detected');
   });
+  if(new Set(listeningScripts).size!==22)errors.push('A2 listening: every lesson must have a distinct audio script');
+  const oldTemplateFragments=['What are you trying to do?','What is making it difficult?','So what are you going to do?','And what happened after that?','What did you learn?','A clear plan and a clear explanation can make the situation easier.'];
+  oldTemplateFragments.forEach(fragment=>{const count=listeningScripts.filter(script=>script.includes(fragment)).length;if(count>1)errors.push('A2 listening: repeated template line still appears across '+count+' lessons: '+fragment)});
+  const shingleSet=text=>{const words=String(text||'').toLowerCase().replace(/[^a-z0-9' ]+/g,' ').split(/\s+/).filter(Boolean),set=new Set();for(let i=0;i<=words.length-8;i++)set.add(words.slice(i,i+8).join(' '));return set};
+  const shingles=listeningScripts.map(shingleSet);
+  for(let i=0;i<shingles.length;i++)for(let j=i+1;j<shingles.length;j++){let shared=0;for(const x of shingles[i])if(shingles[j].has(x))shared++;const base=Math.max(1,Math.min(shingles[i].size,shingles[j].size));if(shared/base>.18)errors.push('A2 listening: lessons '+(i+1)+' and '+(j+1)+' are still too structurally similar')}
  }
  const legacy=context.BOOK_PACKS['speakup-a2-b1'];
  if(!legacy||legacy.standardVersion!=='a2-living-standard-v1'||legacy.lessons.length!==22)errors.push('A2 Living Standard: legacy A2 pathway was not upgraded');
@@ -143,7 +151,10 @@ try{
  const parsed=wavParts(Buffer.concat([head,fmtHead,fmt,dataHead,pcm]));
  if(!parsed?.data||parsed.data.length!==pcm.length)errors.push('Listening WAV parser does not support streaming-size WAV data');
 }catch(e){errors.push('Listening WAV parser QA failed: '+e.message)}
-if(!a2.includes("partner+': ")||!a2.includes("person+': "))errors.push('A2 listening conversations must preserve explicit speaker labels for multi-speaker audio');
+if(!a2.includes('const A2_LISTENING_SCENES=')||!a2.includes('speakers:listeningScene(title).speakers'))errors.push('A2 listening must use lesson-specific scenes with explicit speaker metadata');
+if(!server.includes('normalizeSpeakerProfiles')||!server.includes('speakerVoicePlan(turns,speakerProfiles')||!server.includes('generateListeningAudio(input,speakerProfiles'))errors.push('Listening audio server must prefer explicit speaker metadata over name guessing');
+if(!app.includes('data-audio-speakers')||!app.includes('speakers:l.listening?.speakers||[]')||!app.includes('parseLiveAudioSpeakers'))errors.push('Listening clients must pass explicit speaker metadata for workbook and live audio');
+if(!live.includes("speakerMarker=(lesson.listening?.speakers||[])")||!live.includes("'AUDIO SPEAKERS: '+speakerMarker"))errors.push('A2 live lessons must carry explicit speaker metadata into the audio player');
 if(!app.includes('function isVocabularyHeader')||!app.includes('data-vocab-meaning')||!app.includes("modern=t.match(/^(.+?)\\s+[—–-]"))errors.push('CEFR vocabulary must render as clickable EnglishGate word + example cards with hidden definitions');
 if(!live.includes("meaningItems=(lesson.vocabulary?.items||[]).filter")||!live.includes("item?.tag==='vocabulary:meaning'"))errors.push('A2 live vocabulary must use the original source definitions, not placeholder meanings');
 if(/\bHOMEWORK\b/i.test(live))errors.push('Homework must not appear in standalone CEFR live lessons');

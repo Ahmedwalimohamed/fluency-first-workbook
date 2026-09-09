@@ -1004,10 +1004,10 @@ function dialogueTranscriptHtml(text,variant=''){
   '</div>'
  }).join('')+'</div>'
 }
-function liveAudioPlayerHtml(script){
- const text=String(script||'').replace(/\s+/g,' ').trim();
+function liveAudioPlayerHtml(script,speakers=[]){
+ const text=String(script||'').replace(/\s+/g,' ').trim(),speakerData=Array.isArray(speakers)?speakers:[];
  if(!text)return '<div class="feedback bad">Listening audio is unavailable because this lesson has no audio script.</div>';
- return '<section class="audio-player live-audio-player" data-live-audio-player data-audio-text="'+escapeAttr(text)+'">'+
+ return '<section class="audio-player live-audio-player" data-live-audio-player data-audio-text="'+escapeAttr(text)+'" data-audio-speakers="'+escapeAttr(JSON.stringify(speakerData))+'">'+
   '<div class="live-audio-heading"><div><span class="stage-badge">Listening audio</span><strong>Listen first — do not read the transcript yet.</strong></div><span data-live-audio-status>Ready</span></div>'+
   '<div class="audio-player-main">'+
    '<button class="play-btn" type="button" data-live-audio-play aria-label="Play listening audio">▶</button>'+
@@ -1018,25 +1018,33 @@ function liveAudioPlayerHtml(script){
   '<details class="live-audio-transcript"><summary>Transcript · open after listening</summary><div class="live-audio-transcript-body">'+dialogueTranscriptHtml(text,'is-live')+'</div></details>'+
  '</section>'
 }
+function parseLiveAudioSpeakers(lines,audioAt){
+ const markerIndex=lines.findIndex((line,i)=>i<audioAt&&/^AUDIO SPEAKERS:/i.test(String(line||'').trim()));
+ if(markerIndex<0)return{speakers:[],markerIndex:-1};
+ const raw=String(lines[markerIndex]||'').replace(/^AUDIO SPEAKERS:\s*/i,'').trim();
+ const speakers=raw.split('|').map(part=>{const bits=part.split('='),name=String(bits[0]||'').trim(),gender=String(bits[1]||'').trim().toLowerCase();return{name,gender}}).filter(x=>x.name&&['female','male'].includes(x.gender));
+ return{speakers,markerIndex}
+}
 function renderLiveListeningContent(lines){
  const audioAt=lines.findIndex(line=>/^AUDIO SCRIPT$/i.test(String(line||'').trim()));
  if(audioAt<0)return null;
- const boundary=/^(After listening|After you listen|Pair check|Mediation move|Interaction performance|Respond|Questions?)\b/i;
+ const speakerMeta=parseLiveAudioSpeakers(lines,audioAt),boundary=/^(After listening|After you listen|Pair check|Mediation move|Interaction performance|Respond|Questions?)\b/i;
  let end=lines.findIndex((line,i)=>i>audioAt&&boundary.test(String(line||'').trim()));
  if(end<0)end=lines.length;
  const script=lines.slice(audioAt+1,end).map(x=>String(x||'').trim()).filter(Boolean).join(' ');
- const before=lines.slice(0,audioAt).join('\n');
+ const before=lines.slice(0,audioAt).filter((_,i)=>i!==speakerMeta.markerIndex).join('\n');
  const after=lines.slice(end).join('\n');
- return renderLiveContent(before)+liveAudioPlayerHtml(script)+(after?renderLiveContent(after):'')
+ return renderLiveContent(before)+liveAudioPlayerHtml(script,speakerMeta.speakers)+(after?renderLiveContent(after):'')
 }
 async function ensureLiveLessonAudio(player){
- const text=String(player?.dataset?.audioText||'').trim();
+ const text=String(player?.dataset?.audioText||'').trim();let speakers=[];
+ try{speakers=JSON.parse(player?.dataset?.audioSpeakers||'[]')}catch{}
  if(!text)throw new Error('Listening audio is unavailable.');
- const key=liveAudioKey(text);
+ const key=liveAudioKey(text+'|'+JSON.stringify(speakers));
  if(player._liveAudio)return player._liveAudio;
  let url=liveAudioUrls[key];
  if(!url){
-  const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text})});
+  const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text,speakers})});
   if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const body=await res.json();if(body?.error)message=body.error}catch{}throw new Error(message)}
   const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
   url=URL.createObjectURL(blob);liveAudioUrls[key]=url
@@ -1967,7 +1975,7 @@ async function ensureLessonAudio(l){
  if(activeAudio){activeAudio.pause();activeAudio=null;activeAudioLessonKey=null}
  let url=audioCache[key];
  if(!url){
-  const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text})});
+  const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text,speakers:l.listening?.speakers||[]})});
   if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const e=await res.json();if(e?.error)message=e.error}catch{}throw new Error(message)}
   const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
   url=URL.createObjectURL(blob);audioCache[key]=url;

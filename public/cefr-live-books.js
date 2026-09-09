@@ -257,7 +257,7 @@ function a2GrammarModel(item){
  return prompt+' → '+answer;
 }
 function a2LessonContent(lesson){
- const topic=lesson.title,w=warm('A2',topic),reading=(lesson.listening?.readingText||''),audio=(lesson.listening?.audioScript||lesson.listening?.text||'');
+ const topic=lesson.title,w=warm('A2',topic),reading=(lesson.listening?.readingText||''),audio=(lesson.listening?.audioScript||lesson.listening?.text||''),speakerMarker=(lesson.listening?.speakers||[]).map(x=>x.name+'='+x.gender).join('|');
  const rqs=(lesson.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith('reading:')).slice(0,4);
  const lqs=(lesson.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith('listening:')).slice(0,4);
  const grammarExamples=(lesson.grammar?.items||[]).slice(0,3).map(q=>'• '+a2GrammarModel(q));
@@ -300,6 +300,7 @@ function a2LessonContent(lesson){
   '',
   'PAGE 5 — LISTENING',
   'Listen without reading first.',
+  speakerMarker?'AUDIO SPEAKERS: '+speakerMarker:'',
   'AUDIO SCRIPT',
   audio,
   'After listening',

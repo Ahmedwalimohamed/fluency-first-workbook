@@ -47,11 +47,25 @@ function splitTtsText(input,max=3800){
  if(current)chunks.push(current);
  return chunks.flatMap(chunk=>chunk.length<=max?[chunk]:Array.from({length:Math.ceil(chunk.length/max)},(_,i)=>chunk.slice(i*max,(i+1)*max)));
 }
-function speakerVoicePlan(turns){
- const speakers=[...new Set(turns.map(x=>x.speaker))],plan={},counts={female:0,male:0,unknown:0};
+function normalizeSpeakerProfiles(value){
+ if(!Array.isArray(value))return[];
+ const seen=new Set(),out=[];
+ for(const raw of value){
+  const name=String(raw?.name||raw?.speaker||'').trim(),gender=String(raw?.gender||'').toLowerCase().trim();
+  if(!name||seen.has(name.toLowerCase())||!['female','male'].includes(gender))continue;
+  seen.add(name.toLowerCase());out.push({name,gender})
+ }
+ return out.slice(0,6)
+}
+function speakerVoicePlan(turns,speakerProfiles=[]){
+ const speakers=[...new Set(turns.map(x=>x.speaker))],explicit=normalizeSpeakerProfiles(speakerProfiles),byName=new Map(explicit.map(x=>[x.name.toLowerCase(),x.gender])),plan={},counts={female:0,male:0,unknown:0};
  for(const speaker of speakers){
-  let gender=speakerGender(speaker);
-  if(gender==='unknown'){gender=counts.unknown++%2===0?'female':'male'}
+  let gender=byName.get(speaker.toLowerCase());
+  if(explicit.length&&!gender)throw new Error('Speaker profile missing for '+speaker);
+  if(!gender){
+   gender=speakerGender(speaker);
+   if(gender==='unknown')gender=counts.unknown++%2===0?'female':'male'
+  }
   const pool=gender==='female'?OPENAI_TTS_FEMALE_VOICES:OPENAI_TTS_MALE_VOICES,index=counts[gender]++,voice=pool[index%Math.max(1,pool.length)]||OPENAI_TTS_VOICE;
   plan[speaker]={gender,voice,index};
  }
@@ -96,10 +110,10 @@ async function mapLimit(items,limit,fn){
  const worker=async()=>{while(true){const i=next++;if(i>=items.length)return;out[i]=await fn(items[i],i)}};
  await Promise.all(Array.from({length:Math.min(limit,items.length)},worker));return out;
 }
-async function generateListeningAudio(input){
+async function generateListeningAudio(input,speakerProfiles=[]){
  const turns=dialogueTurns(input);
  if(turns.length){
-  const plan=speakerVoicePlan(turns),segments=[];
+  const plan=speakerVoicePlan(turns,speakerProfiles),segments=[];
   for(const turn of turns)for(const chunk of splitTtsText(turn.text))segments.push({...turn,text:chunk,...plan[turn.speaker]});
   const buffers=await mapLimit(segments,3,seg=>requestSpeechWav(seg.text,seg.voice,`Speak as ${seg.speaker}, an adult ${seg.gender==='female'?'woman':'man'}, in a natural English conversation for language learners. Use a distinct, realistic conversational voice, clear pronunciation, warm tone, and natural pacing. Do not say the speaker name.`));
   return{buffer:mergeWav(buffers,135),contentType:'audio/wav',mode:'dialogue',speakers:Object.entries(plan).map(([speaker,x])=>({speaker,gender:x.gender,voice:x.voice}))};
@@ -300,13 +314,13 @@ app.post('/api/listening/:lessonId/lock',auth,studentOnly,async(req,res)=>{const
 
 app.post('/api/audio',auth,async(req,res)=>{
  const lessonId=String(req.body.lessonId||'').trim();
- const input=String(req.body.text||'').trim();
+ const input=String(req.body.text||'').trim(),speakers=normalizeSpeakerProfiles(req.body.speakers);
  if(!lessonId||input.length<5||input.length>12000)return res.status(400).json({error:'Invalid listening audio request.'});
  if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'Natural listening audio is unavailable.'});
- const key=crypto.createHash('sha256').update('v2|'+lessonId+'|'+input).digest('hex');
+ const key=crypto.createHash('sha256').update('v3|'+lessonId+'|'+input+'|'+JSON.stringify(speakers)).digest('hex');
  try{
   if(audioCache.has(key))return sendGeneratedAudio(res,audioCache.get(key));
-  const audio=await generateListeningAudio(input);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
+  const audio=await generateListeningAudio(input,speakers);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
  }catch(e){console.error('TTS request error',e);return res.status(502).json({error:'Natural listening audio could not be generated.'})}
 });
 
