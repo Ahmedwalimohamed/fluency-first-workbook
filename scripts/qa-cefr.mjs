@@ -107,6 +107,10 @@ if(!live.includes("window.LIVE_BOOKS['speakup-a2-b1']"))errors.push('Legacy A2 l
 
 const requiredStages=['PAGE 1 — WARM UP','PAGE 2 — VOCABULARY','PAGE 3 — READING','PAGE 4 — LANGUAGE FOCUS','PAGE 5 — LISTENING','PAGE 6 — FLUENCY MISSION','PAGE 7 — CLASSROOM CHALLENGE','PAGE 8 — REFLECTION'];
 requiredStages.forEach(stage=>{if(!live.includes(stage))errors.push('Live lesson generator missing '+stage)});
+if(!app.includes("LANGUAGE FOCUS|LISTENING|FLUENCY MISSION|CLASSROOM CHALLENGE"))errors.push('Listening must be a standalone live lesson stage and Classroom Challenge must not be merged into adjacent stages');
+if(!app.includes('data-live-audio-player')||!app.includes('wireLiveAudioPlayers'))errors.push('Live lesson listening audio player is missing');
+if(!app.includes('Transcript · open after listening'))errors.push('Live lesson transcript must be hidden until the learner chooses to open it');
+if(!server.includes("app.post('/api/audio'"))errors.push('Live lesson audio requires the authenticated natural-audio endpoint');
 if(/\bHOMEWORK\b/i.test(live))errors.push('Homework must not appear in standalone CEFR live lessons');
 if(!live.includes('Complete Questions 1–5 together in class.'))errors.push('Classroom grammar relay is missing');
 if(!live.includes('explains why that answer matches the intended meaning'))errors.push('Grammar justification rule is missing');
