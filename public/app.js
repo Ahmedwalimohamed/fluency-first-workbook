@@ -1554,6 +1554,7 @@ function workbook(){
  resetAppScroll();
 }
 function renderActivity(){
+ document.body.classList.remove('student-question-focus-mode');
  const p=$('activityPanel'),l=lesson();
  if(currentStep==='vocabulary')p.innerHTML=vocabActivity(l);
  if(currentStep==='listening')p.innerHTML=listeningActivity(l);
@@ -2358,56 +2359,111 @@ function wireWritingCore(){
 
 function wireStudentQuestionFlow(){
  if(session?.role!=='student'||isWorkbookPreview())return;
- const list=document.querySelector('#activityPanel .activity-question-list');
- if(!list||list.dataset.studentQuestionFlow==='1')return;
- const questions=[...list.querySelectorAll(':scope > .guided-question')];
+ const root=$('activityPanel'),lists=[...root.querySelectorAll('.activity-question-list')];
+ const questions=lists.flatMap(list=>[...list.querySelectorAll(':scope > .guided-question')]);
  if(questions.length<2)return;
- list.dataset.studentQuestionFlow='1';
- let index=0,advanceTimer=0;
- const panel=list.closest('.eg-task-panel')||list.parentElement;
+ document.body.classList.add('student-question-focus-mode');
+ lists.forEach(list=>list.dataset.studentQuestionFlow='1');
+ let index=0,advanceTimer=0,activeReadingSource=null;
  const progress=document.createElement('div');
  progress.className='student-question-flow-head';
- progress.innerHTML='<div><span data-question-flow-label>Question 1 of '+questions.length+'</span><strong data-question-flow-stage></strong></div><div class="student-question-flow-track" aria-hidden="true"><span data-question-flow-bar></span></div>';
- list.before(progress);
- const back=document.createElement('button');
- back.type='button';
- back.className='ghost-btn student-question-back';
- back.textContent='← Back';
- list.after(back);
- const label=progress.querySelector('[data-question-flow-label]'),stage=progress.querySelector('[data-question-flow-stage]'),bar=progress.querySelector('[data-question-flow-bar]');
+ progress.innerHTML='<div class="student-question-flow-top"><button class="student-question-flow-back" type="button" data-question-flow-back aria-label="Previous question">←</button><div class="student-question-flow-copy"><span data-question-flow-label>Question 1 of '+questions.length+'</span><strong data-question-flow-stage></strong></div><div class="student-question-flow-actions"><button class="student-question-source-btn" type="button" data-question-flow-source hidden>Text</button><button class="student-question-audio-btn" type="button" data-question-flow-audio hidden>▶ Audio</button></div></div><div class="student-question-flow-track" aria-hidden="true"><span data-question-flow-bar></span></div>';
+ lists[0].before(progress);
+ const continueBtn=document.createElement('button');
+ continueBtn.type='button';
+ continueBtn.className='primary-btn student-question-continue';
+ continueBtn.hidden=true;
+ lists[lists.length-1].after(continueBtn);
+ const back=progress.querySelector('[data-question-flow-back]'),label=progress.querySelector('[data-question-flow-label]'),stage=progress.querySelector('[data-question-flow-stage]'),bar=progress.querySelector('[data-question-flow-bar]'),sourceBtn=progress.querySelector('[data-question-flow-source]'),audioBtn=progress.querySelector('[data-question-flow-audio]');
+ const submit=$('checkActivity')||$('saveWriting');
+ const isChoice=q=>Boolean(q.querySelector('input[type="radio"]'));
+ const answered=q=>Boolean(q.querySelector('input[type="radio"]:checked')||[...q.querySelectorAll('textarea,input[type="text"]')].some(el=>el.value.trim().length>0));
+ const restoreSections=()=>root.querySelectorAll('.eg-source-task-section,.eg-shared-comprehension').forEach(sec=>sec.hidden=false);
+ const fitQuestion=()=>{
+  const q=questions[index],list=q.closest('.activity-question-list');
+  if(!q||!list)return;
+  q.classList.remove('is-tight','is-ultra-tight','can-grid-options');
+  const optionTexts=[...q.querySelectorAll('.mcq-option-text')].map(x=>x.textContent.trim());
+  if(optionTexts.length>=4&&optionTexts.every(x=>x.length<=34))q.classList.add('can-grid-options');
+  const viewport=window.visualViewport?.height||window.innerHeight||720;
+  const topbar=document.querySelector('.student-mode .topbar')?.getBoundingClientRect().height||52;
+  const bottom=document.querySelector('.student-mode .bottom-nav')?.getBoundingClientRect().height||66;
+  const head=progress.getBoundingClientRect().height||58;
+  const action=continueBtn.hidden?0:(continueBtn.getBoundingClientRect().height||46)+8;
+  const available=Math.max(250,viewport-topbar-bottom-head-action-24);
+  list.style.setProperty('--question-space',available+'px');
+  q.style.setProperty('--question-fit-height',available+'px');
+  requestAnimationFrame(()=>{
+   if(q.scrollHeight>available)q.classList.add('is-tight');
+   requestAnimationFrame(()=>{if(q.scrollHeight>available)q.classList.add('is-ultra-tight')});
+  });
+ };
  const sync=({focus=false}={})=>{
-  questions.forEach((q,i)=>q.hidden=i!==index);
+  const q=questions[index],currentList=q.closest('.activity-question-list');
+  questions.forEach((card,i)=>card.hidden=i!==index);
+  lists.forEach(list=>list.dataset.flowActiveList=list===currentList?'1':'0');
+  root.querySelectorAll('.eg-source-task-section,.eg-shared-comprehension').forEach(sec=>{sec.hidden=!sec.contains(currentList)});
   if(label)label.textContent='Question '+(index+1)+' of '+questions.length;
-  if(stage){const s=questions[index].querySelector('.question-stage span');stage.textContent=s?s.textContent.trim():''}
+  const stageNode=q.querySelector('.question-stage span');
+  if(stage)stage.textContent=stageNode?stageNode.textContent.trim():'';
   if(bar)bar.style.width=(((index+1)/questions.length)*100)+'%';
-  back.hidden=index===0;
-  const submit=$('checkActivity')||$('saveWriting');
-  if(submit)submit.classList.toggle('student-question-submit-ready',index===questions.length-1);
+  if(back){back.hidden=index===0;back.disabled=index===0}
+  const last=index===questions.length-1,choice=isChoice(q);
+  continueBtn.hidden=choice&&!last;
+  continueBtn.textContent=last?'Check answers':'Continue';
+  continueBtn.disabled=!answered(q);
+  activeReadingSource=null;
+  const section=currentList.closest('.eg-source-task-section');
+  const reading=(section||root).querySelector?.('.eg-reading-article')||root.querySelector('.eg-reading-article');
+  const kicker=reading?.querySelector('.eg-skill-kicker')?.textContent||'';
+  if(reading&&/reading/i.test(kicker))activeReadingSource=reading;
+  if(sourceBtn)sourceBtn.hidden=!activeReadingSource;
+  if(audioBtn)audioBtn.hidden=!$('playAudio');
   if(focus){
-   const q=questions[index];
    q.setAttribute('tabindex','-1');
    try{q.focus({preventScroll:true})}catch{}
   }
+  fitQuestion();
  };
  const move=nextIndex=>{
   clearTimeout(advanceTimer);
   index=Math.max(0,Math.min(questions.length-1,nextIndex));
   sync({focus:true});
-  const top=progress.getBoundingClientRect().top+window.scrollY-72;
-  window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
  };
  back.onclick=()=>move(index-1);
- list.addEventListener('change',e=>{
-  const radio=e.target.closest?.('input[type="radio"]');
-  if(!radio||!questions[index].contains(radio))return;
-  sync();
-  if(index>=questions.length-1)return;
-  clearTimeout(advanceTimer);
-  advanceTimer=setTimeout(()=>move(index+1),320);
+ sourceBtn.onclick=()=>{
+  if(!activeReadingSource)return;
+  showModal('<div class="student-source-modal"><div class="section-head"><div><span class="role-kicker">Reading reference</span><h3>Read the text</h3></div><button class="icon-btn" data-close>×</button></div><div class="student-source-modal-body">'+activeReadingSource.innerHTML+'</div></div>');
+  document.querySelector('[data-close]').onclick=closeModal;
+ };
+ audioBtn.onclick=()=>{const play=$('playAudio');if(play)play.click()};
+ continueBtn.onclick=()=>{
+  const q=questions[index];if(!answered(q))return;
+  if(index<questions.length-1){move(index+1);return}
+  document.body.classList.remove('student-question-focus-mode');
+  restoreSections();
+  if(submit)submit.click();
+ };
+ lists.forEach(list=>{
+  list.addEventListener('change',e=>{
+   const radio=e.target.closest?.('input[type="radio"]');
+   if(!radio||!questions[index].contains(radio))return;
+   sync();
+   setTimeout(fitQuestion,0);
+   if(index>=questions.length-1)return;
+   clearTimeout(advanceTimer);
+   const hasLearningFeedback=Boolean(questions[index].querySelector('[data-vocab-feedback]'));
+   advanceTimer=setTimeout(()=>move(index+1),hasLearningFeedback?480:260);
+  });
+  list.addEventListener('input',e=>{
+   if(!questions[index].contains(e.target))return;
+   continueBtn.disabled=!answered(questions[index]);
+   fitQuestion();
+  });
  });
+ if(submit)submit.addEventListener('click',()=>{document.body.classList.remove('student-question-focus-mode');restoreSections()},{capture:true,once:true});
  sync();
 }
-
 function wireActivity(l){wireMcqCards();wireStudentQuestionFlow();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();if(!isWorkbookPreview()){restoreActivityDraft();wireActivityDrafting()}
  if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
  if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:isA1EarlyWriting(l)?'Build one short sentence, join two simple ideas, fix one small mistake, then put two sentences in order.':'Build the sentence, connect the ideas, correct the error, then check paragraph order before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
