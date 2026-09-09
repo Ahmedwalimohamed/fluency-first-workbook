@@ -18,7 +18,84 @@ const BOOK_SEEDS=[{"id":"career-fluency","title":"English Communication & Career
 LISTENING_SCRIPTS["su-a2b1-l1"]="On the first day of a new training course, Amina sits next to Yusuf. Amina lives in Borama and works in a small office. Her hometown is Hargeisa. She enjoys reading and walking in the evening. Yusuf is a university student. He likes football and photography. They ask each other simple questions about work, hometowns, and hobbies. Before the lesson starts, Amina introduces Yusuf to another student and says that he is friendly and outgoing.";
 const OPENAI_TTS_MODEL=process.env.OPENAI_TTS_MODEL||'gpt-4o-mini-tts';
 const OPENAI_TTS_VOICE=process.env.OPENAI_TTS_VOICE||'coral';
+const OPENAI_TTS_FEMALE_VOICES=String(process.env.OPENAI_TTS_FEMALE_VOICES||'coral,nova,shimmer').split(',').map(x=>x.trim()).filter(Boolean);
+const OPENAI_TTS_MALE_VOICES=String(process.env.OPENAI_TTS_MALE_VOICES||'onyx,echo,ash').split(',').map(x=>x.trim()).filter(Boolean);
 const audioCache=new Map();
+
+const FEMALE_SPEAKER_NAMES=new Set(['amina','hodan','maryan','rahma','sahra','muna','fatima','fadumo','asha','hawa','nura','noor','layla','leyla','zainab','zahra','halima','khadra','deqa','ifrah','yasmin','samira','najma','ubax','amran','saado','suad','ikram','farhia','ilhan','asma','hibo','iqra','raqiya','hinda','nimco','nimo','sagal','anisa','nasra']);
+const MALE_SPEAKER_NAMES=new Set(['yusuf','abdi','khalid','hassan','ahmed','mohamed','ali','omar','abdisalan','abdishakur','mahad','mustafe','ibrahim','ismail','abdirahman','hamza','bashir','jama','said','abdirizak','faisal','farhan','nasir','zakaria','abdullahi','bilal','farah']);
+function speakerGender(name){
+ const n=String(name||'').toLowerCase().replace(/[^a-z ]+/g,' ').replace(/\s+/g,' ').trim(),first=n.split(' ').pop()||n;
+ if(/\b(woman|girl|mother|sister|wife|female)\b/.test(n)||FEMALE_SPEAKER_NAMES.has(first))return'female';
+ if(/\b(man|boy|father|brother|husband|male)\b/.test(n)||MALE_SPEAKER_NAMES.has(first))return'male';
+ return'unknown';
+}
+function dialogueTurns(input){
+ const text=String(input||'').trim(),re=/(?:^|\s)([A-Z][A-Za-z'’.-]{1,24}(?:\s+[A-Z][A-Za-z'’.-]{1,24})?):\s*/g,matches=[...text.matchAll(re)];
+ if(matches.length<2)return[];
+ const turns=[];
+ for(let i=0;i<matches.length;i++){
+  const speaker=matches[i][1].trim(),start=(matches[i].index||0)+matches[i][0].length,end=i+1<matches.length?(matches[i+1].index||text.length):text.length,body=text.slice(start,end).trim();
+  if(body)turns.push({speaker,text:body});
+ }
+ return new Set(turns.map(x=>x.speaker.toLowerCase())).size>=2?turns:[];
+}
+function splitTtsText(input,max=3800){
+ const text=String(input||'').trim();if(text.length<=max)return text?[text]:[];
+ const sentences=text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[text],chunks=[];let current='';
+ for(const sentence of sentences){const next=(current+' '+sentence.trim()).trim();if(next.length>max&&current){chunks.push(current);current=sentence.trim()}else current=next}
+ if(current)chunks.push(current);
+ return chunks.flatMap(chunk=>chunk.length<=max?[chunk]:Array.from({length:Math.ceil(chunk.length/max)},(_,i)=>chunk.slice(i*max,(i+1)*max)));
+}
+function speakerVoicePlan(turns){
+ const speakers=[...new Set(turns.map(x=>x.speaker))],plan={},counts={female:0,male:0,unknown:0};
+ for(const speaker of speakers){
+  let gender=speakerGender(speaker);
+  if(gender==='unknown'){gender=counts.unknown++%2===0?'female':'male'}
+  const pool=gender==='female'?OPENAI_TTS_FEMALE_VOICES:OPENAI_TTS_MALE_VOICES,index=counts[gender]++,voice=pool[index%Math.max(1,pool.length)]||OPENAI_TTS_VOICE;
+  plan[speaker]={gender,voice,index};
+ }
+ return plan;
+}
+async function requestSpeechWav(input,voice,instructions){
+ const body={model:OPENAI_TTS_MODEL,voice,input,response_format:'wav'};
+ if(String(OPENAI_TTS_MODEL).startsWith('gpt-4o-mini-tts'))body.instructions=instructions;
+ const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+ if(!r.ok){const detail=await r.text();const e=new Error('OpenAI TTS '+r.status+': '+detail.slice(0,500));e.status=r.status;throw e}
+ return Buffer.from(await r.arrayBuffer());
+}
+function wavParts(buf){
+ if(!Buffer.isBuffer(buf)||buf.length<44||buf.toString('ascii',0,4)!=='RIFF'||buf.toString('ascii',8,12)!=='WAVE')throw new Error('Invalid WAV response');
+ let offset=12,fmt=null,data=null;
+ while(offset+8<=buf.length){const id=buf.toString('ascii',offset,offset+4),size=buf.readUInt32LE(offset+4),start=offset+8,end=start+size;if(end>buf.length)break;if(id==='fmt ')fmt=buf.subarray(start,end);if(id==='data')data=buf.subarray(start,end);offset=end+(size%2)}
+ if(!fmt||!data)throw new Error('Incomplete WAV response');
+ return{fmt,data};
+}
+function wavChunk(id,payload){const pad=payload.length%2,head=Buffer.alloc(8);head.write(id,0,4,'ascii');head.writeUInt32LE(payload.length,4);return Buffer.concat([head,payload,pad?Buffer.alloc(1):Buffer.alloc(0)])}
+function mergeWav(buffers,gapMs=120){
+ if(buffers.length===1)return buffers[0];
+ const parts=buffers.map(wavParts),fmt=parts[0].fmt,byteRate=fmt.length>=12?fmt.readUInt32LE(8):48000,blockAlign=fmt.length>=14?Math.max(1,fmt.readUInt16LE(12)):2,rawGap=Math.round(byteRate*gapMs/1000),gapBytes=Math.ceil(rawGap/blockAlign)*blockAlign,gap=Buffer.alloc(gapBytes);
+ const audio=[];parts.forEach((p,i)=>{if(i)audio.push(gap);audio.push(p.data)});
+ const fmtChunk=wavChunk('fmt ',fmt),dataChunk=wavChunk('data',Buffer.concat(audio)),riffSize=4+fmtChunk.length+dataChunk.length,head=Buffer.alloc(12);head.write('RIFF',0,4,'ascii');head.writeUInt32LE(riffSize,4);head.write('WAVE',8,4,'ascii');
+ return Buffer.concat([head,fmtChunk,dataChunk]);
+}
+async function mapLimit(items,limit,fn){
+ const out=new Array(items.length);let next=0;
+ const worker=async()=>{while(true){const i=next++;if(i>=items.length)return;out[i]=await fn(items[i],i)}};
+ await Promise.all(Array.from({length:Math.min(limit,items.length)},worker));return out;
+}
+async function generateListeningAudio(input){
+ const turns=dialogueTurns(input);
+ if(turns.length){
+  const plan=speakerVoicePlan(turns),segments=[];
+  for(const turn of turns)for(const chunk of splitTtsText(turn.text))segments.push({...turn,text:chunk,...plan[turn.speaker]});
+  const buffers=await mapLimit(segments,3,seg=>requestSpeechWav(seg.text,seg.voice,`Speak as ${seg.speaker}, an adult ${seg.gender==='female'?'woman':'man'}, in a natural English conversation for language learners. Use a distinct, realistic conversational voice, clear pronunciation, warm tone, and natural pacing. Do not say the speaker name.`));
+  return{buffer:mergeWav(buffers,135),contentType:'audio/wav',mode:'dialogue',speakers:Object.entries(plan).map(([speaker,x])=>({speaker,gender:x.gender,voice:x.voice}))};
+ }
+ const chunks=splitTtsText(input),buffers=await mapLimit(chunks,2,chunk=>requestSpeechWav(chunk,OPENAI_TTS_VOICE,'Speak in clear, warm, natural conversational English for an English learner. Use realistic pacing, meaningful pauses, and natural emphasis. Do not sound like an announcement or a robot.'));
+ return{buffer:mergeWav(buffers,80),contentType:'audio/wav',mode:'single',speakers:[]};
+}
+function sendGeneratedAudio(res,audio){res.set('Content-Type',audio.contentType);res.set('Cache-Control','private, max-age=3600');res.set('X-EnglishGate-Audio-Mode',audio.mode);return res.send(audio.buffer)}
 
 app.set('trust proxy',1);
 app.use(helmet({contentSecurityPolicy:false}));
@@ -212,14 +289,12 @@ app.post('/api/listening/:lessonId/lock',auth,studentOnly,async(req,res)=>{const
 app.post('/api/audio',auth,async(req,res)=>{
  const lessonId=String(req.body.lessonId||'').trim();
  const input=String(req.body.text||'').trim();
- if(!lessonId||input.length<5||input.length>5000)return res.status(400).json({error:'Invalid listening audio request.'});
+ if(!lessonId||input.length<5||input.length>12000)return res.status(400).json({error:'Invalid listening audio request.'});
  if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'Natural listening audio is unavailable.'});
- const key=crypto.createHash('sha256').update(lessonId+'|'+input).digest('hex');
+ const key=crypto.createHash('sha256').update('v2|'+lessonId+'|'+input).digest('hex');
  try{
-  if(audioCache.has(key)){res.set('Content-Type','audio/mpeg');res.set('Cache-Control','private, max-age=3600');return res.send(audioCache.get(key))}
-  const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({model:OPENAI_TTS_MODEL,voice:OPENAI_TTS_VOICE,input,instructions:'Speak in clear, warm, natural conversational English for an English learner. Use realistic pacing, meaningful pauses, and natural emphasis. Do not sound like an announcement or a robot.',response_format:'mp3'})});
-  if(!r.ok){const detail=await r.text();console.error('OpenAI TTS error',r.status,detail.slice(0,500));return res.status(502).json({error:'Natural listening audio could not be generated.'})}
-  const buf=Buffer.from(await r.arrayBuffer());audioCache.set(key,buf);res.set('Content-Type','audio/mpeg');res.set('Cache-Control','private, max-age=3600');return res.send(buf)
+  if(audioCache.has(key))return sendGeneratedAudio(res,audioCache.get(key));
+  const audio=await generateListeningAudio(input);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
  }catch(e){console.error('TTS request error',e);return res.status(502).json({error:'Natural listening audio could not be generated.'})}
 });
 
@@ -228,12 +303,11 @@ app.get('/api/audio/:lessonId',auth,async(req,res)=>{
  const input=LISTENING_SCRIPTS[lessonId];
  if(!input)return res.status(404).json({error:'Listening topic not found.'});
  if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'Natural listening audio is ready, but OPENAI_API_KEY has not yet been added to Railway.'});
+ const key='legacy-v2:'+lessonId;
  try{
-  if(audioCache.has(lessonId)){res.set('Content-Type','audio/mpeg');res.set('Cache-Control','private, max-age=3600');return res.send(audioCache.get(lessonId))}
-  const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({model:OPENAI_TTS_MODEL,voice:OPENAI_TTS_VOICE,input,instructions:'Speak in clear, warm, natural conversational English for an A2+ to B1 adult learner. Use realistic pacing, meaningful pauses between ideas, and natural emphasis. Do not sound like an announcement or a robot.',response_format:'mp3'})});
-  if(!r.ok){const detail=await r.text();console.error('OpenAI TTS error',r.status,detail.slice(0,500));return res.status(502).json({error:'Natural listening audio could not be generated.'})}
-  const buf=Buffer.from(await r.arrayBuffer());audioCache.set(lessonId,buf);res.set('Content-Type','audio/mpeg');res.set('Cache-Control','private, max-age=3600');res.send(buf)
- }catch(e){console.error('TTS request error',e);res.status(502).json({error:'Natural listening audio could not be generated.'})}
+  if(audioCache.has(key))return sendGeneratedAudio(res,audioCache.get(key));
+  const audio=await generateListeningAudio(input);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
+ }catch(e){console.error('TTS request error',e);return res.status(502).json({error:'Natural listening audio could not be generated.'})}
 });
 
 app.get('/api/state',auth,async(req,res)=>{

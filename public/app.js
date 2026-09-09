@@ -493,12 +493,18 @@ function openAssignmentFromUrl(){
 
 function vocabularyRow(line){
  const t=String(line||'').trim();
+ const modern=t.match(/^(.+?)\s+[—–-]\s+(.+?)\.\s*Example:\s*(.+)$/i);
+ if(modern){
+  const word=modern[1].trim(),meaning=modern[2].trim(),example=modern[3].trim();
+  if(word&&meaning&&example&&word.length<=60)return{word,meaning,example:withPeriod(example)}
+ }
  const m=t.match(/^(.+?)\s+((?:I|I'm|I've|I'd|My|We|We're|We've|They|They're|He|He's|She|She's|It|It's|Our|The|A|An|This|That|These|Those|You|Your|His|Her|[A-Z][a-z]+)\b.*)$/);
  if(!m)return null;
  const word=m[1].trim(),example=m[2].trim();
  if(!word||!example||word.length>45||/[.!?;:]$/.test(word)||example.split(/\s+/).length<2||!/[.!?]$/.test(example))return null;
- return {word,example};
+ return {word,meaning:'',example};
 }
+function isVocabularyHeader(text){return /^WORD(?:\s+[—–-]\s+MEANING\s+[—–-]\s+EXAMPLE|\s+EXAMPLE)$/i.test(String(text||'').trim())}
 const VOCAB_MEANINGS={hobby:'an activity you enjoy doing in your free time',hometown:'the town or city where you were born or grew up',occupation:'your job or main type of work',married:'having a husband or wife',single:'not married',outgoing:'friendly and comfortable talking to people',colleague:'a person you work with',deadline:'the latest time or date when work must be finished','apply for':'to ask officially for a job, course or opportunity',shift:'a period of work time, such as morning or evening work',promotion:'a move to a higher job or position',currently:'at the present time',luggage:'bags and suitcases used for travel','book (a ticket)':'to reserve or buy a ticket before travelling',delay:'a time when something happens later than planned',souvenir:'something you buy or keep to remember a place',accommodation:'a place where you stay during travel',arrive:'to reach a place',app:'a program on a phone or computer',update:'a new version or improvement',scroll:'to move through content on a screen',notification:'a message or alert from an app',connection:'the link that lets a phone or computer use the internet',exhausted:'very tired',stressed:'worried or under pressure',symptom:'a sign that something may be wrong with your health',rest:'to stop working or moving so your body can recover',diet:'the food and drink someone usually has',habit:'something you do regularly',flavour:'the taste of food or drink',ingredient:'one of the foods used to make a dish',spicy:'having a hot, strong taste',fresh:'new, clean, or recently made',recipe:'instructions for preparing food',portion:'the amount of food given to one person',background:'your past education, experience, or situation',routine:'the usual way you do things',interest:'something you want to know more about or enjoy',experience:'knowledge gained by doing or seeing something',confident:'sure that you can do something well',achievement:'something important you have successfully done',drought:'a long period with little or no rain','renewable energy':'energy from natural sources that can be replaced, such as sunlight or wind',pollution:'harmful substances or waste that damage air, water, land, or living things',sustainable:'able to continue for a long time without serious harm to people or the environment',deforestation:'the cutting down or clearing of many trees in an area','carbon footprint':'the amount of carbon pollution caused by a person, activity, or product',waste:'unwanted material that is thrown away',resource:'something useful that people can use',conservation:'the protection of nature and natural resources',shortage:'a situation where there is not enough of something'};
 
 Object.assign(VOCAB_MEANINGS,{
@@ -826,8 +832,8 @@ function vocabFeedbackHtml(meta,correct){
    '<p class="mcq-learning-example"><b>Example:</b> '+escapeHtml(withPeriod(meta.example))+'</p>'+
   '</div>';
 }
-function openVocabularyMeaning(word,example){showModal(`<div class="section-head"><div><span class="role-kicker">Vocabulary meaning</span><h3>${escapeHtml(word)}</h3></div><button class="icon-btn" data-close>×</button></div><div class="vocab-meaning-card"><small>Meaning</small><p>${escapeHtml(withPeriod(vocabMeaning(word)))}</p><small>Example</small><p>${escapeHtml(example)}</p></div>`);document.querySelector('[data-close]').onclick=closeModal}
-function wireLiveVocabulary(){document.querySelectorAll('[data-vocab-word]').forEach(b=>b.onclick=()=>openVocabularyMeaning(b.dataset.vocabWord,b.dataset.vocabExample))}
+function openVocabularyMeaning(word,example,meaning=''){const definition=String(meaning||'').trim()||vocabMeaning(word);showModal(`<div class="section-head"><div><span class="role-kicker">Vocabulary meaning</span><h3>${escapeHtml(word)}</h3></div><button class="icon-btn" data-close>×</button></div><div class="vocab-meaning-card"><small>Meaning</small><p>${escapeHtml(withPeriod(definition))}</p><small>Example</small><p>${escapeHtml(example)}</p></div>`);document.querySelector('[data-close]').onclick=closeModal}
+function wireLiveVocabulary(){document.querySelectorAll('[data-vocab-word]').forEach(b=>b.onclick=()=>openVocabularyMeaning(b.dataset.vocabWord,b.dataset.vocabExample,b.dataset.vocabMeaning))}
 function liveCheckKey(text){const role=session?.role||'guest',actor=session?.id||session?.username||role,lesson=role==='teacher'?activeTeacherLessonNumber:activeStudentLiveLessonNumber;return 'eg-live-check:'+actor+':'+lesson+':'+normalizeVocabWord(text)}
 function wireLiveChecks(){if(session?.role!=='student')return;document.querySelectorAll('[data-live-check]').forEach(input=>{const key=liveCheckKey(input.dataset.liveCheck);input.checked=localStorage.getItem(key)==='1';input.closest('.find-someone-card')?.classList.toggle('is-complete',input.checked);input.onchange=()=>{if(input.checked)localStorage.setItem(key,'1');else localStorage.removeItem(key);input.closest('.find-someone-card')?.classList.toggle('is-complete',input.checked)}})}
 function cleanQuestionText(question){
@@ -940,7 +946,7 @@ function liveLineHtml(line,mode='normal'){
  if(/^•/.test(t))return '<div class="live-book-bullet">'+escapeHtml(t.replace(/^•\s*/,''))+'</div>';
  if(mode==='vocabulary'){
   const row=vocabularyRow(t);
-  if(row)return '<button class="live-vocab-row live-vocab-click" type="button" data-vocab-word="'+escapeAttr(row.word)+'" data-vocab-example="'+escapeAttr(row.example)+'"><div class="live-vocab-word"><small>Tap for meaning</small><strong>'+escapeHtml(row.word)+'</strong></div><div class="live-vocab-example"><small>Example</small><span>'+escapeHtml(row.example)+'</span></div></button>';
+  if(row)return '<button class="live-vocab-row live-vocab-click" type="button" data-vocab-word="'+escapeAttr(row.word)+'" data-vocab-meaning="'+escapeAttr(row.meaning||'')+'" data-vocab-example="'+escapeAttr(row.example)+'"><div class="live-vocab-word"><small>Tap for meaning</small><strong>'+escapeHtml(row.word)+'</strong></div><div class="live-vocab-example"><small>Example</small><span>'+escapeHtml(row.example)+'</span></div></button>';
  }
  if(/^_{3,}/.test(t))return '';
  return '<p>'+escapeHtml(t)+'</p>';
@@ -1040,7 +1046,7 @@ function renderLiveContent(text){
    continue;
   }
   if(mode==='reading')closeReading();
-  if(/^WORD\s+EXAMPLE$/i.test(t)){
+  if(isVocabularyHeader(t)){
    closePrompts();closeFind();closeVocab();mode='vocabulary';vocabOpen=true;
    out.push('<div class="live-vocab-table"><div class="live-vocab-head"><span>Target word</span><span>Example in context</span></div>');
    continue;

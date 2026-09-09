@@ -243,9 +243,10 @@ function vocabularyRows(topic,data){
 }
 
 function a2VocabularyRows(lesson){
- return (lesson.targetVocabulary||[]).map(function(word){
-  const meaning=typeof vocabMeaning==='function'?vocabMeaning(word):word;
-  const example=typeof lessonVocabExample==='function'?lessonVocabExample(word,lesson):'Use this word in a sentence about '+lesson.title.toLowerCase()+'.';
+ const meaningItems=(lesson.vocabulary?.items||[]).filter(item=>item?.tag==='vocabulary:meaning');
+ return (lesson.targetVocabulary||[]).map(function(word,index){
+  const source=meaningItems[index],meaning=String(source?.answer||'').trim()||(typeof vocabMeaning==='function'?vocabMeaning(word):word);
+  const example=String(source?.example||'').trim()||(typeof lessonVocabExample==='function'?lessonVocabExample(word,lesson):'Use this word in a sentence about '+lesson.title.toLowerCase()+'.');
   return word+' — '+meaning+'. Example: '+example;
  }).join('\n');
 }

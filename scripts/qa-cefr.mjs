@@ -65,6 +65,9 @@ try{
   const oldLessonOne=['hobby','hometown','occupation','outgoing','married','single'];
   const lessonOneWords=book.lessons[0]?.targetVocabulary||[];
   if(oldLessonOne.some(word=>!lessonOneWords.includes(word)))errors.push('A2 Living Standard: original Lesson 1 vocabulary was not preserved');
+  const femaleNamesMatch=server.match(/const FEMALE_SPEAKER_NAMES=new Set\((\[[^\]]+\])\)/),maleNamesMatch=server.match(/const MALE_SPEAKER_NAMES=new Set\((\[[^\]]+\])\)/);
+  const femaleNames=femaleNamesMatch?new Set(new Function('return '+femaleNamesMatch[1])()):new Set(),maleNames=maleNamesMatch?new Set(new Function('return '+maleNamesMatch[1])()):new Set();
+  if(femaleNames.size<2||maleNames.size<2)errors.push('A2 multi-speaker QA: male/female speaker registries are missing');
   book.lessons.forEach((lesson,i)=>{
    const n=i+1;
    if(lesson.id!=='su-a2-l'+n)errors.push('A2 lesson '+n+': stable ID must remain su-a2-l'+n);
@@ -82,6 +85,9 @@ try{
    if(!lqs.some(q=>/(reason|decision|result|inference)/i.test(String(q.tag||''))))errors.push('A2 lesson '+n+': needs higher-order listening');
    if(wordCount(lesson.listening?.readingText)<minReading(n))errors.push('A2 lesson '+n+': reading is below phase minimum');
    if(wordCount(lesson.listening?.audioScript)<minListening(n))errors.push('A2 lesson '+n+': listening is below phase minimum');
+   const speakerLabels=[...String(lesson.listening?.audioScript||'').matchAll(/(?:^|\s)([A-Z][A-Za-z'’.-]{1,24}(?:\s+[A-Z][A-Za-z'’.-]{1,24})?):\s*/g)].map(m=>m[1].trim()),uniqueSpeakers=[...new Set(speakerLabels)];
+   if(uniqueSpeakers.length<2)errors.push('A2 lesson '+n+': listening conversation must contain at least two named speakers');
+   uniqueSpeakers.forEach(name=>{const key=String(name).toLowerCase().replace(/[^a-z ]+/g,' ').replace(/\s+/g,' ').trim().split(' ').pop();if(!femaleNames.has(key)&&!maleNames.has(key))errors.push('A2 lesson '+n+': speaker gender/voice mapping missing for '+name)});
    const grammar=lesson.grammar?.items||[];
    if(grammar.length<6)errors.push('A2 lesson '+n+': needs at least 6 contextual grammar questions');
    [...(lesson.vocabulary?.items||[]),...qs,...grammar].forEach((item,idx)=>{
@@ -112,6 +118,10 @@ if(!app.includes('data-live-audio-player')||!app.includes('wireLiveAudioPlayers'
 if(!app.includes('Transcript · open after listening'))errors.push('Live lesson transcript must be hidden until the learner chooses to open it');
 if(!app.includes('Preparing audio…')||!app.includes('browserSpeechAvailable')||!app.includes('playBrowserSpeech'))errors.push('Listening audio must preload and provide a browser-voice fallback when natural audio cannot play');
 if(!server.includes("app.post('/api/audio'"))errors.push('Live lesson audio requires the authenticated natural-audio endpoint');
+if(!server.includes('OPENAI_TTS_FEMALE_VOICES')||!server.includes('OPENAI_TTS_MALE_VOICES')||!server.includes('dialogueTurns')||!server.includes('speakerVoicePlan')||!server.includes("response_format:'wav'"))errors.push('Conversation listening must support distinct male/female multi-speaker voices');
+if(!a2.includes("partner+':'")||!a2.includes("person+':'"))errors.push('A2 listening conversations must preserve explicit speaker labels for multi-speaker audio');
+if(!app.includes('function isVocabularyHeader')||!app.includes('data-vocab-meaning')||!app.includes("modern=t.match(/^(.+?)\\s+[—–-]"))errors.push('CEFR vocabulary must render as clickable EnglishGate word + example cards with hidden definitions');
+if(!live.includes("meaningItems=(lesson.vocabulary?.items||[]).filter")||!live.includes("item?.tag==='vocabulary:meaning'"))errors.push('A2 live vocabulary must use the original source definitions, not placeholder meanings');
 if(/\bHOMEWORK\b/i.test(live))errors.push('Homework must not appear in standalone CEFR live lessons');
 if(!live.includes('Complete Questions 1–5 together in class.'))errors.push('Classroom grammar relay is missing');
 if(!live.includes('explains why that answer matches the intended meaning'))errors.push('Grammar justification rule is missing');
