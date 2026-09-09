@@ -603,5 +603,15 @@ BOOK_PACKS['speakup-a2']={
  moduleGoal:'Build confident everyday English through the original A2 topic spine, upgraded to the EnglishGate Living Standard.',
  totalLessons:22,lessons,standardVersion:A2_VERSION
 };
+const legacyA2=BOOK_PACKS['speakup-a2-b1'];
+if(legacyA2){
+ BOOK_PACKS['speakup-a2-b1']={
+  ...legacyA2,
+  moduleGoal:'Original SpeakUp A2 pathway upgraded to the EnglishGate A2 Living Standard while preserving existing learner evidence.',
+  totalLessons:22,
+  lessons:lessons.map(lesson=>({...lesson,id:'su-a2b1-l'+lesson.number})),
+  standardVersion:A2_VERSION
+ };
+}
 window.A2_LIVING_STANDARD_VERSION=A2_VERSION;
 })();
