@@ -513,15 +513,9 @@ function listeningTurns(script){
  return turns;
 }
 function firstSentenceBeforeQuestion(text){
- const clean=String(text||'').trim();
- const q=clean.indexOf('?');
- if(q>=0){
-  const before=clean.slice(0,q).trim();
-  const lastStop=Math.max(before.lastIndexOf('.'),before.lastIndexOf('!'));
-  return (lastStop>=0?before.slice(lastStop+1):before).trim();
- }
- const m=clean.match(/^(.+?[.!])(?:\s|$)/);
- return (m?m[1]:clean).replace(/[.!]$/,'').trim();
+ const clean=String(text||'').trim(),q=clean.indexOf('?'),before=(q>=0?clean.slice(0,q):clean).trim();
+ const m=before.match(/^(.+?[.!])(?:\s|$)/);
+ return (m?m[1]:before).replace(/[.!]$/,'').trim();
 }
 function questionSentence(text){
  const clean=String(text||'').trim(),q=clean.indexOf('?');
