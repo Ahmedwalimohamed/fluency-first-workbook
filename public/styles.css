@@ -5294,3 +5294,14 @@ html{scroll-behavior:auto!important}
 .teacher-pronunciation-bubble em{margin-top:3px;color:#cbd5e1;font-size:.72rem;font-style:normal}
 .teacher-pronunciation-bubble:after{content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid #0f172a}
 .teacher-pronunciation-bubble.is-below:after{top:-7px;bottom:auto;border-top:0;border-bottom:7px solid #0f172a}
+
+
+/* Student pronunciation access */
+.student-live-stage-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.student-live-stage-heading>div{min-width:0}
+.student-pronunciation-toggle{flex:0 0 auto;white-space:nowrap}
+.student-pronunciation-toggle.active{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8}
+.student-pronunciation-mode .student-pronunciation-word{cursor:pointer;border-radius:4px;transition:background .12s ease,box-shadow .12s ease}
+.student-pronunciation-mode .student-pronunciation-word:hover,.student-pronunciation-mode .student-pronunciation-word:active{background:#dbeafe;box-shadow:0 0 0 2px #93c5fd}
+.student-pronunciation-mode [data-vocab-word].student-pronunciation-word{outline:2px dashed #2563eb;outline-offset:2px}
+@media(max-width:640px){.student-live-stage-heading{align-items:flex-start;flex-direction:column}.student-pronunciation-toggle{align-self:flex-start}}

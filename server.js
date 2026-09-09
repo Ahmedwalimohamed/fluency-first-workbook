@@ -174,6 +174,7 @@ function setSession(res,u){res.cookie('ff_session',tokenFor(u),{httpOnly:true,se
 function auth(req,res,next){try{req.user=jwt.verify(req.cookies.ff_session||'',JWT_SECRET);next()}catch{return res.status(401).json({error:'Please sign in again.'})}}
 function adminOnly(req,res,next){if(req.user.role!=='admin')return res.status(403).json({error:'System Admin access required.'});next()}
 function teacherOnly(req,res,next){if(req.user.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});next()}
+function teacherOrStudent(req,res,next){if(!['teacher','student'].includes(req.user.role))return res.status(403).json({error:'Teacher or student access required.'});next()}
 function studentOnly(req,res,next){if(req.user.role!=='student')return res.status(403).json({error:'Student access required.'});next()}
 function tempPassword(){return String(crypto.randomInt(0,100000000)).padStart(8,'0')}
 function newLoginToken(){return crypto.randomBytes(24).toString('base64url')}
@@ -351,7 +352,7 @@ async function isListeningLocked(studentId,lessonId){const q=await pool.query(`s
 app.get('/api/listening/:lessonId/prep',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');const script=LISTENING_SCRIPTS[lessonId];if(!script)return res.status(404).json({error:'Listening topic not found.'});if(await isListeningLocked(req.user.id,lessonId))return res.json({locked:true});res.set('Cache-Control','no-store');res.json({locked:false,script})});
 app.post('/api/listening/:lessonId/lock',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');if(!LISTENING_SCRIPTS[lessonId])return res.status(404).json({error:'Listening topic not found.'});await pool.query('insert into listening_locks(student_id,lesson_id) values($1,$2) on conflict do nothing',[req.user.id,lessonId]);res.json({ok:true,locked:true})});
 
-app.post('/api/teacher/pronunciation',auth,teacherOnly,teacherPronunciationLimiter,async(req,res)=>{
+async function pronunciationWordHandler(req,res){
  const word=String(req.body?.word||'').trim();
  if(!word||word.length>60||!/^[\p{L}\p{M}'’\-]+$/u.test(word))return res.status(400).json({error:'Choose one English word from the lesson.'});
  try{
@@ -359,10 +360,12 @@ app.post('/api/teacher/pronunciation',auth,teacherOnly,teacherPronunciationLimit
   res.set('X-EnglishGate-Pronunciation','en-US');
   return sendGeneratedAudio(res,audio)
  }catch(e){
-  console.error('Teacher pronunciation error:',e.message);
+  console.error('Pronunciation error:',e.message);
   return res.status(e.status||502).json({error:'American pronunciation is temporarily unavailable.'})
  }
-});
+}
+app.post('/api/pronunciation',auth,teacherOrStudent,teacherPronunciationLimiter,pronunciationWordHandler);
+app.post('/api/teacher/pronunciation',auth,teacherOnly,teacherPronunciationLimiter,pronunciationWordHandler);
 
 app.post('/api/teacher/example-sentence',auth,teacherOnly,teacherExampleLimiter,async(req,res)=>{
  const word=String(req.body?.word||'').trim(),level=String(req.body?.level||'').trim(),lessonTitle=String(req.body?.lessonTitle||'').trim();
