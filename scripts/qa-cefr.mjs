@@ -4,11 +4,11 @@ const app=fs.readFileSync('public/app.js','utf8');
 const cefr=fs.readFileSync('public/cefr-levels.js','utf8');
 const live=fs.readFileSync('public/cefr-live-books.js','utf8');
 const server=fs.readFileSync('server.js','utf8');
-if(!server.includes("app.get('/cefr-levels.js'"))errors.push('CEFR asset routes: /cefr-levels.js is not served');
-if(!server.includes("app.get('/cefr-live-books.js'"))errors.push('CEFR asset routes: /cefr-live-books.js is not served');
 const index=fs.readFileSync('public/index.html','utf8');
 const levels=['A1','A2','B1','C1'];
 let errors=[];
+if(!server.includes("app.get('/cefr-levels.js'"))errors.push('CEFR asset routes: /cefr-levels.js is not served');
+if(!server.includes("app.get('/cefr-live-books.js'"))errors.push('CEFR asset routes: /cefr-live-books.js is not served');
 
 try{new Function(cefr)}catch(e){errors.push('cefr-levels.js syntax: '+e.message)}
 try{new Function(live)}catch(e){errors.push('cefr-live-books.js syntax: '+e.message)}
@@ -49,6 +49,17 @@ if(!live.includes('Complete Questions 1–5 together in class.'))errors.push('Cl
 if(!live.includes('explains why that answer matches the intended meaning'))errors.push('Grammar justification rule is missing');
 if(!cefr.includes('[5,10,15,18,22]'))errors.push('B1/C1 writing checkpoint schedule missing');
 if(!cefr.includes('minWords:min,maxWords:max'))errors.push('Level-specific authentic writing ranges missing');
+if(!server.includes('CLASS_BOOK_LOCKED'))errors.push('Class workflow must lock one book to one class');
+if(!server.includes('Create a new class when the teacher starts a different book.'))errors.push('Class-book change guard is missing');
+if(!app.includes('One class = one teacher + one book.'))errors.push('Admin class workflow explanation is missing');
+if(app.includes('data-admin-class-book='))errors.push('Admin UI still exposes book reassignment on an existing class');
+if(!app.includes('data-add-student-class='))errors.push('Teacher class cards must allow adding students to that class');
+if(!server.includes('create table if not exists level_certificates'))errors.push('Level certificate persistence is missing');
+if(!server.includes("app.post('/api/certificates/claim'"))errors.push('Student certificate claim endpoint is missing');
+if(!server.includes("app.get('/api/certificates/verify/:number'"))errors.push('Certificate verification endpoint is missing');
+if(!server.includes("'speakup-a1':'su-a1-l'" )||!server.includes("'speakup-c1':'su-c1-l'"))errors.push('Standalone CEFR certificate lesson mapping is incomplete');
+if(!app.includes('Level Completion Certificate'))errors.push('Student certificate experience is missing');
+if(!app.includes('Print / Save as PDF'))errors.push('Certificate print/save action is missing');
 
 if(errors.length){console.error('CEFR population QA failed:\n- '+errors.join('\n- '));process.exit(1)}
 console.log('CEFR population QA passed: A1, A2, B1 and C1 modules are complete and wired to the 22-topic EnglishGate spine.');
