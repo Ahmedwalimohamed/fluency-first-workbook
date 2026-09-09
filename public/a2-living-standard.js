@@ -562,6 +562,7 @@ function audioScript(number,title,data,meta){
   partner+': Tell me about your '+title.toLowerCase()+' task. '+person+': The goal was to '+goal+'. The difficult part was that '+challenge+'. '+partner+': How did you respond? '+person+': I chose to '+action+'. That helped because '+result+'. '+partner+': What did you learn? '+person+': A clear plan and a clear explanation can make the situation easier.'
  ];
  let text=variants[(number-1)%3];
+ if(number>7)text+=' '+partner+': What is the most important point? '+person+': I need a clear plan and one practical next step.';
  if(number>14)text+=' '+partner+': Can you summarise the main point in one sentence? '+person+': Yes. I should identify the problem, choose a realistic action, and check the result.';
  return text;
 }
