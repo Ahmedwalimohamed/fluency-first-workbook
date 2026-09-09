@@ -686,11 +686,13 @@ function shortReading(qText,answer,tag){return{type:'short',q:qText,answer,min:1
 function questions(title,data){
  const [person,place,goal,challenge,action,result]=data.s;
  return[
-  shortReading('What is '+person+' trying to do?',goal,'reading:main-idea'),
+  shortReading('Who is the reading about?',person,'reading:detail'),
+  shortReading('Where does the reading take place?',place,'reading:detail'),
+  shortReading('What is '+person+' trying to do?',goal,'reading:detail'),
   shortReading('What problem does '+person+' face?',challenge,'reading:detail'),
-  shortReading('What action does '+person+' take?',action,'reading:sequence'),
-  shortReading('What lesson can we learn from '+person+'’s experience?','A clear action and explanation can improve a difficult situation.','reading:inference'),
-  q('Where does the situation happen?',[place,'at a sports stadium','at an airport every time'],place,'listening:detail'),
+  shortReading('What action does '+person+' take?',action,'reading:detail'),
+  shortReading('What happens after '+person+' takes that action?',result,'reading:detail'),
+  q('Where does the listening situation happen?',[place,'at a sports stadium','at an airport every time'],place,'listening:detail'),
   q('Why does '+person+' need to make a change?',[challenge,'everything is already perfect','the goal is no longer important'],challenge,'listening:reason'),
   q('What response does '+person+' choose?',[action,'wait without deciding','change to an unrelated topic'],action,'listening:decision'),
   q('What happens after the response?',[result,'nothing changes at all','the original goal disappears'],result,'listening:result')
