@@ -2,6 +2,16 @@
 'use strict';
 
 const A2_VERSION='a2-living-standard-v1';
+const ORIGINAL_SOURCE_OVERRIDES={
+ 'Getting Acquainted':{
+  v:[['hobby','an activity you enjoy in your free time'],['hometown','the town or city you come from'],['occupation','your job or type of work'],['outgoing','friendly and comfortable meeting people'],['married','having a husband or wife'],['single','not married']]
+ }
+};
+function sourceData(title){
+ const base=TOPIC_LIBRARY[title],override=ORIGINAL_SOURCE_OVERRIDES[title];
+ return override?{...base,...override}:base;
+}
+function capFirst(value){const x=String(value||'').trim();return x?x.charAt(0).toUpperCase()+x.slice(1):x}
 const META={
 'Getting Acquainted':{
  outcome:'Introduce yourself, give key personal information, and keep a short conversation going with simple follow-up questions.',
@@ -528,7 +538,7 @@ function vocabItems(title,data){
   {type:'choice',q:'Which word means “'+meanings[1]+'”?',options:wordOptions(1),answer:words[1],tag:'vocabulary:retrieval',example:example(words[1])},
   {type:'choice',q:'Which word best matches this idea: '+meanings[4]+'?',options:wordOptions(4),answer:words[4],tag:'vocabulary:context',example:example(words[4])},
   {type:'exact',q:'Type the target word meaning “'+meanings[0]+'”.',answer:words[0],min:1,tag:'vocabulary:recall',example:example(words[0])},
-  {type:'choice',q:'Which target word best completes a useful sentence about '+title.toLowerCase()+'?',options:wordOptions(5),answer:words[5],tag:'vocabulary:application',example:example(words[5])}
+  {type:'choice',q:'Which target word is used in this example: “'+example(words[5])+'”?',options:wordOptions(5),answer:words[5],tag:'vocabulary:application',example:example(words[5])}
  ];
 }
 function readingText(number,title,data,meta){
@@ -547,7 +557,7 @@ function readingText(number,title,data,meta){
 function audioScript(number,title,data,meta){
  const [person,place,goal,challenge,action,result]=data.s,partner=['Amina','Yusuf','Hodan','Maryan'][(number+1)%4];
  const variants=[
-  partner+': What are you trying to do? '+person+': I want to '+goal+'. '+partner+': What is making it difficult? '+person+': '+challenge+'. '+partner+': So what are you going to do? '+person+': I am going to '+action+'. '+partner+': Did it help? '+person+': Yes. '+result+'. '+partner+': That sounds like a useful lesson.',
+  partner+': What are you trying to do? '+person+': I want to '+goal+'. '+partner+': What is making it difficult? '+person+': '+capFirst(challenge)+'. '+partner+': So what are you going to do? '+person+': I am going to '+action+'. '+partner+': Did it help? '+person+': Yes. '+capFirst(result)+'. '+partner+': That sounds like a useful lesson.',
   person+': I had a problem during an activity at '+place+'. I wanted to '+goal+', but '+challenge+'. '+partner+': What did you do? '+person+': I decided to '+action+'. '+partner+': And what happened after that? '+person+': '+result+'. '+partner+': Would you use the same idea again? '+person+': Yes, but I would explain the plan earlier next time.',
   partner+': Tell me about your '+title.toLowerCase()+' task. '+person+': The goal was to '+goal+'. The difficult part was that '+challenge+'. '+partner+': How did you respond? '+person+': I chose to '+action+'. That helped because '+result+'. '+partner+': What did you learn? '+person+': A clear plan and a clear explanation can make the situation easier.'
  ];
@@ -570,7 +580,7 @@ function questions(title,data){
 }
 function ranges(number){return number<=7?[50,70]:number<=14?[60,80]:[65,90]}
 function makeLesson(number,title,focus){
- const data=TOPIC_LIBRARY[title],meta=META[title],range=ranges(number);
+ const data=sourceData(title),meta=META[title],range=ranges(number);
  if(!data||!meta)throw new Error('Missing A2 source data for '+title);
  return{
   id:'su-a2-l'+number,number,title,outcome:meta.outcome,ready:true,targetVocabulary:data.v.map(v=>v[0]),
