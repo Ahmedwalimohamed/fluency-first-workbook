@@ -120,7 +120,7 @@ if(!app.includes('Preparing audio…')||!app.includes('browserSpeechAvailable')|
 if(!server.includes("app.post('/api/audio'"))errors.push('Live lesson audio requires the authenticated natural-audio endpoint');
 if(!server.includes('OPENAI_TTS_FEMALE_VOICES')||!server.includes('OPENAI_TTS_MALE_VOICES')||!server.includes('dialogueTurns')||!server.includes('speakerVoicePlan')||!server.includes("response_format:'wav'"))errors.push('Conversation listening must support distinct male/female multi-speaker voices');
 if(!a2.includes("partner+':'")||!a2.includes("person+':'"))errors.push('A2 listening conversations must preserve explicit speaker labels for multi-speaker audio');
-if(!app.includes('function isVocabularyHeader')||!app.includes('data-vocab-meaning')||!app.includes("modern=t.match(/^(.+?)\\s*[—–-]"))errors.push('CEFR vocabulary must render as clickable EnglishGate word + example cards with hidden definitions');
+if(!app.includes('function isVocabularyHeader')||!app.includes('data-vocab-meaning')||!app.includes("modern=t.match(/^(.+?)\\s+[—–-]"))errors.push('CEFR vocabulary must render as clickable EnglishGate word + example cards with hidden definitions');
 if(!live.includes("meaningItems=(lesson.vocabulary?.items||[]).filter")||!live.includes("item?.tag==='vocabulary:meaning'"))errors.push('A2 live vocabulary must use the original source definitions, not placeholder meanings');
 if(/\bHOMEWORK\b/i.test(live))errors.push('Homework must not appear in standalone CEFR live lessons');
 if(!live.includes('Complete Questions 1–5 together in class.'))errors.push('Classroom grammar relay is missing');
