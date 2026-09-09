@@ -2409,9 +2409,10 @@ function wireStudentQuestionFlow(){
   if(bar)bar.style.width=(((index+1)/questions.length)*100)+'%';
   if(back){back.hidden=index===0;back.disabled=index===0}
   const last=index===questions.length-1,choice=isChoice(q);
-  continueBtn.hidden=choice&&!last;
-  continueBtn.textContent=last?'Check answers':'Continue';
+  continueBtn.hidden=false;
+  continueBtn.textContent=last?'Check answers':'Next';
   continueBtn.disabled=!answered(q);
+  continueBtn.dataset.autoAdvance=choice&&!last?'1':'0';
   activeReadingSource=null;
   const section=currentList.closest('.eg-source-task-section');
   const reading=(section||root).querySelector?.('.eg-reading-article')||root.querySelector('.eg-reading-article');
