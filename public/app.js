@@ -1605,8 +1605,12 @@ function lessonVisualThumbHtml(l){
  if(!v)return '';
  return `<div class="eg-lesson-visual-thumb" title="Lesson visual"><img src="${escapeAttr(v.src)}" alt="" aria-hidden="true"></div>`;
 }
+function readingQuestionAsShort(q){
+ const tag=String(q?.tag||'');
+ return tag.startsWith('reading:')||tag.startsWith('listening-reading:')?{...q,type:'short',min:1}:q
+}
 function listeningActivity(l){
- const all=(l.listening?.questions||[]).slice(0,12),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');
+ const all=(l.listening?.questions||[]).slice(0,12).map(readingQuestionAsShort),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');
  const readingQs=all.filter(q=>String(q.tag||'').startsWith('reading:'));
  const listeningQs=all.filter(q=>String(q.tag||'').startsWith('listening:'));
  const sharedQs=all.filter(q=>!String(q.tag||'').startsWith('reading:')&&!String(q.tag||'').startsWith('listening:'));
@@ -1614,11 +1618,11 @@ function listeningActivity(l){
  const player=`<div class="audio-player eg-audio-console" data-audio-player><button id="playAudio" class="play-btn" title="Play or pause audio" aria-label="Play or pause audio">▶</button><div class="eg-audio-body"><div class="eg-waveform" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="audio-timeline"><input id="audioSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Audio progress"><div class="audio-time"><span id="audioCurrent">0:00</span><span id="audioDuration">0:00</span></div></div></div><button id="restartAudio" class="audio-icon-btn" title="Restart audio" aria-label="Restart audio">↺</button><select id="audioSpeed" class="audio-speed" aria-label="Playback speed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select><span id="audioStatus" class="muted">Listen twice before answering the listening questions.</span></div>`;
  if(split){
   return `<div class="eg-skill-page eg-reading-listening-page">
-   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Reading & Listening</span><h1>Read, listen and respond</h1><p>The reading questions use only the article. The listening questions use only the audio.</p></div><span class="eg-question-count">${all.length} questions</span></header>${lessonVisualHtml(l,{compact:true})}
+   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Reading & Listening</span><h1>Read, listen and respond</h1><p>Answer the reading questions in your own words. The listening questions use only the audio.</p></div><span class="eg-question-count">${all.length} questions</span></header>${lessonVisualHtml(l,{compact:true})}
    ${learningLadderHtml(l,'listening',all.length)}
    <section class="eg-source-task-section eg-reading-section">
     <div class="eg-reading-article"><span class="eg-skill-kicker">Part 1 · Reading</span><h2>${escapeHtml(l.title)}</h2><p>${escapeHtml(reading)}</p></div>
-    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Reading tasks</small><h2>Answer from the article</h2></div><span>${readingQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(readingQs,'lr','Reading',0,all.length)}</div></div>
+    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Reading tasks</small><h2>Answer in your own words</h2></div><span>${readingQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(readingQs,'lr','Reading',0,all.length)}</div></div>
    </section>
    <section class="eg-source-task-section eg-listening-section">
     <div class="eg-listening-scene"><span class="eg-skill-kicker">Part 2 · Listening</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2><p>Now listen. These questions are based only on what you hear.</p><div class="eg-listening-quote">Listen for the overall message first. Replay for detail.</div><div class="eg-audio-card">${player}</div></div>
