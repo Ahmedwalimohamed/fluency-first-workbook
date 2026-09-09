@@ -619,7 +619,7 @@ const A2_LISTENING_SCENES={
  },
  'Science & Innovation':{
   speakers:[{name:'Nasra',gender:'female'},{name:'Amina',gender:'female'}],
-  script:"Amina: Nasra, is that the water-filter project from the university lab? Nasra: Yes. We are testing a low-cost filter that could be made with materials people can find locally. Amina: Did the first experiment work? Nasra: It cleaned the water, but the first design worked too slowly. Amina: What did your group change? Nasra: We changed the material in one layer and repeated the experiment with the same amount of water. We measured the time again instead of just saying it looked faster. Amina: And the evidence? Nasra: The second version worked faster while still filtering well. Amina: So the innovation came from a small change. Nasra: Exactly. Research is often improve, test, compare, and test again.",
+  script:"Amina: Nasra, is that the water-filter project from the university lab? Nasra: Yes. We are testing a low-cost filter that could be made with materials people can find locally. Amina: Did the first experiment work? Nasra: It cleaned the water, but the first design worked too slowly. Amina: What did your group change? Nasra: We changed the material in one layer and repeated the experiment with the same amount of water. We measured the time again instead of just saying it looked faster. Amina: And the evidence? Nasra: The second version worked faster while still filtering well. Amina: So the innovation came from a small change. Nasra: Exactly. Research often means improving, testing, comparing, and testing again.",
  },
  'Arts & Entertainment':{
   speakers:[{name:'Hamza',gender:'male'},{name:'Yusuf',gender:'male'}],
