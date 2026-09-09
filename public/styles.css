@@ -4963,15 +4963,15 @@ html{scroll-behavior:auto!important}
 }
 
 
-/* Language Focus — one aligned grammar column */
-.eg-stage-content.is-language-focus-stage{
+/* Grammar — one aligned grammar column */
+.eg-stage-content.is-grammar-stage{
  text-align:left;
 }
-.eg-stage-content.is-language-focus-stage>p,
-.eg-stage-content.is-language-focus-stage>.live-book-subhead,
-.eg-stage-content.is-language-focus-stage>.live-book-section,
-.eg-stage-content.is-language-focus-stage>.live-book-bullet,
-.eg-stage-content.is-language-focus-stage>.live-prompt-grid{
+.eg-stage-content.is-grammar-stage>p,
+.eg-stage-content.is-grammar-stage>.live-book-subhead,
+.eg-stage-content.is-grammar-stage>.live-book-section,
+.eg-stage-content.is-grammar-stage>.live-book-bullet,
+.eg-stage-content.is-grammar-stage>.live-prompt-grid{
  width:min(100%,72ch);
  max-width:72ch;
  margin-left:auto;
@@ -4980,39 +4980,39 @@ html{scroll-behavior:auto!important}
  text-indent:0;
  box-sizing:border-box;
 }
-.eg-stage-content.is-language-focus-stage>p{
+.eg-stage-content.is-grammar-stage>p{
  margin-top:0;
  margin-bottom:1em;
 }
-.eg-stage-content.is-language-focus-stage>p:first-of-type{
+.eg-stage-content.is-grammar-stage>p:first-of-type{
  margin-bottom:.55em;
  color:#173b67;
  font-size:1.08em;
  line-height:1.45;
  font-weight:800;
 }
-.eg-stage-content.is-language-focus-stage>.live-book-subhead,
-.eg-stage-content.is-language-focus-stage>.live-book-section{
+.eg-stage-content.is-grammar-stage>.live-book-subhead,
+.eg-stage-content.is-grammar-stage>.live-book-section{
  margin-top:1.45em;
  margin-bottom:.7em;
 }
-.eg-stage-content.is-language-focus-stage>.live-book-bullet{
+.eg-stage-content.is-grammar-stage>.live-book-bullet{
  margin-top:.35em;
  margin-bottom:.35em;
 }
-.teacher-presentation-mode .eg-stage-content.is-language-focus-stage>p,
-.teacher-presentation-mode .eg-stage-content.is-language-focus-stage>.live-book-subhead,
-.teacher-presentation-mode .eg-stage-content.is-language-focus-stage>.live-book-section,
-.teacher-presentation-mode .eg-stage-content.is-language-focus-stage>.live-book-bullet,
-.teacher-presentation-mode .eg-stage-content.is-language-focus-stage>.live-prompt-grid{
+.teacher-presentation-mode .eg-stage-content.is-grammar-stage>p,
+.teacher-presentation-mode .eg-stage-content.is-grammar-stage>.live-book-subhead,
+.teacher-presentation-mode .eg-stage-content.is-grammar-stage>.live-book-section,
+.teacher-presentation-mode .eg-stage-content.is-grammar-stage>.live-book-bullet,
+.teacher-presentation-mode .eg-stage-content.is-grammar-stage>.live-prompt-grid{
  max-width:68ch;
 }
 @media(max-width:760px){
- .eg-stage-content.is-language-focus-stage>p,
- .eg-stage-content.is-language-focus-stage>.live-book-subhead,
- .eg-stage-content.is-language-focus-stage>.live-book-section,
- .eg-stage-content.is-language-focus-stage>.live-book-bullet,
- .eg-stage-content.is-language-focus-stage>.live-prompt-grid{
+ .eg-stage-content.is-grammar-stage>p,
+ .eg-stage-content.is-grammar-stage>.live-book-subhead,
+ .eg-stage-content.is-grammar-stage>.live-book-section,
+ .eg-stage-content.is-grammar-stage>.live-book-bullet,
+ .eg-stage-content.is-grammar-stage>.live-prompt-grid{
   width:100%;
   max-width:100%;
  }
