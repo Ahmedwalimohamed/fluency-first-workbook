@@ -80,8 +80,9 @@ Reflection is last. There is no Homework stage.
 
 ## Existing learners
 This is a content upgrade, not a reset:
-- course ID remains `speakup-a2`
-- lesson IDs remain `su-a2-l1`–`su-a2-l22`
+- standalone course ID remains `speakup-a2` with lesson IDs `su-a2-l1`–`su-a2-l22`
+- the original/legacy A2 pathway remains `speakup-a2-b1` with lesson IDs `su-a2b1-l1`–`su-a2b1-l22`
+- both pathways use the rebuilt A2 Living Standard content without renumbering their existing lesson identities
 - existing completion, scores, attempts, writings, enrollments, and student records remain attached to the same identities
 
 ## QA
