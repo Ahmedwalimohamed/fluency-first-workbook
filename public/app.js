@@ -1777,9 +1777,22 @@ function writingShuffle(items,seed){
  if(out.length>1&&out.every((x,i)=>x.index===i))[out[0],out[1]]=[out[1],out[0]];
  return out;
 }
+function cleanA1WritingTask(task){
+ const original=String(task||'').trim(),m=original.match(/^Write\s+\d+[–-]\d+\s+words\s+(.+)$/i);
+ if(!m)return original;
+ const rest=m[1].trim();
+ if(/^about\s+/i.test(rest))return'Write '+rest;
+ if(/^describing\s+/i.test(rest))return'Describe '+rest.replace(/^describing\s+/i,'');
+ if(/^giving\s+/i.test(rest))return'Give '+rest.replace(/^giving\s+/i,'');
+ if(/^explaining\s+/i.test(rest))return'Explain '+rest.replace(/^explaining\s+/i,'');
+ if(/^comparing\s+/i.test(rest))return'Compare '+rest.replace(/^comparing\s+/i,'');
+ if(/^requesting\s+or\s+confirming/i.test(rest))return'Write a short message '+rest;
+ if(/^as\s+/i.test(rest))return'Write '+rest;
+ return'Write '+rest
+}
 function writingFinalSpec(l){
  const w=l.writing||{};
- if(w.task)return{task:String(w.task),min:Number(w.minWords||40),max:Number(w.maxWords||80),genre:writingGenre(w.task,l.number)};
+ if(w.task){const rawTask=String(w.task),task=l?.standardVersion==='a1-foundation-44-v1'?cleanA1WritingTask(rawTask):rawTask;return{task,min:Number(w.minWords||40),max:Number(w.maxWords||80),genre:writingGenre(rawTask,l.number)}}
  const tasks=Array.isArray(w.tasks)?w.tasks:[],last=tasks.at(-1),topic=String(l.title||'this topic').toLowerCase();
  const variants=[
   {genre:'message',task:`Write a short WhatsApp message to a classmate about ${topic}. Explain your main point and include one useful detail.`},
