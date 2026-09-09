@@ -31,7 +31,7 @@ function speakerGender(name){
  return'unknown';
 }
 function dialogueTurns(input){
- const text=String(input||'').trim(),re=/(?:^|\s)([A-Z][A-Za-z'’.-]{1,24}(?:\s+[A-Z][A-Za-z'’.-]{1,24})?):\s*/g,matches=[...text.matchAll(re)];
+ const text=String(input||'').replace(/\s+/g,' ').trim(),re=/(?:^|(?<=[.!?])\s+)([A-Z][A-Za-z'’-]{1,24}(?:\s+[A-Z][A-Za-z'’-]{1,24})?):\s*/g,matches=[...text.matchAll(re)];
  if(matches.length<2)return[];
  const turns=[];
  for(let i=0;i<matches.length;i++){
