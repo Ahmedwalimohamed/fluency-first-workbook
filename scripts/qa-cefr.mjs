@@ -119,6 +119,15 @@ const adminLiveStart=app.indexOf('function adminLiveLesson('),adminLiveEnd=app.i
 const adminLiveBlock=adminLiveStart>=0&&adminLiveEnd>adminLiveStart?app.slice(adminLiveStart,adminLiveEnd):'';
 if(!adminLiveBlock.includes('wireLiveAudioPlayers()'))errors.push('Admin live lesson preview must wire listening audio playback');
 if(!app.includes('Transcript · open after listening'))errors.push('Live lesson transcript must be hidden until the learner chooses to open it');
+if(!app.includes('function dialogueTranscriptTurns')||!app.includes('function dialogueTranscriptHtml')||!app.includes('eg-dialogue-turn')||!app.includes("dialogueTranscriptHtml(l.listening.audioScript,'is-workbook')"))errors.push('Listening transcripts must render as speaker-by-speaker dialogue cards in live lessons and workbooks');
+try{
+ const start=app.indexOf('function dialogueTranscriptTurns'),end=app.indexOf('function liveAudioPlayerHtml',start),block=app.slice(start,end);
+ const context={escapeHtml:x=>String(x),escapeAttr:x=>String(x)};const fn=new Function('escapeHtml','escapeAttr',block+';return {dialogueTranscriptTurns,dialogueTranscriptHtml};')(context.escapeHtml,context.escapeAttr);
+ const turns=fn.dialogueTranscriptTurns('Amina: Hello Yusuf. Yusuf: Hi Amina. Amina: How are you?');
+ if(turns.length!==3||turns[0].speaker!=='Amina'||turns[1].speaker!=='Yusuf')errors.push('Dialogue transcript parser does not preserve speaker turns');
+ const html=fn.dialogueTranscriptHtml('Amina: Hello Yusuf. Yusuf: Hi Amina.');
+ if(!html.includes('speaker-1')||!html.includes('speaker-2')||!html.includes('Amina')||!html.includes('Yusuf'))errors.push('Dialogue transcript renderer does not visually separate speakers');
+}catch(e){errors.push('Dialogue transcript QA failed: '+e.message)}
 if(!app.includes('Preparing audio…')||!app.includes('browserSpeechAvailable')||!app.includes('playBrowserSpeech'))errors.push('Listening audio must preload and provide a browser-voice fallback when natural audio cannot play');
 if(!server.includes("app.post('/api/audio'"))errors.push('Live lesson audio requires the authenticated natural-audio endpoint');
 if(!server.includes('OPENAI_TTS_FEMALE_VOICES')||!server.includes('OPENAI_TTS_MALE_VOICES')||!server.includes('dialogueTurns')||!server.includes('speakerVoicePlan')||!server.includes("response_format:'wav'"))errors.push('Conversation listening must support distinct male/female multi-speaker voices');
