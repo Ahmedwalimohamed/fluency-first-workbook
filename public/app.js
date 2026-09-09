@@ -2553,6 +2553,7 @@ function teacherLiveToolsHtml(){
    ${teacherToolButton('highlight','Highlighter','▰')}
    ${teacherToolButton('text','Text','T')}
    ${teacherToolButton('example','Give example','✦')}
+   ${teacherToolButton('pronunciation','Pronunciation','🔊')}
   </div>
   <div class="live-tool-actions">
    <button class="live-tool-btn" type="button" id="undoLiveAnnotation" title="Undo last annotation">↶ <span>Undo</span></button>
@@ -2801,6 +2802,69 @@ function wireTeacherExampleTool(){
  },true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&activeTeacherExampleBubble)closeTeacherExampleBubble()},{once:false})
 }
+
+const teacherPronunciationUrls=new Map();
+let activeTeacherPronunciationAudio=null,activeTeacherPronunciationBubble=null;
+function closeTeacherPronunciationBubble(){
+ if(activeTeacherPronunciationBubble?.isConnected)activeTeacherPronunciationBubble.remove();
+ activeTeacherPronunciationBubble=null;
+}
+function stopTeacherPronunciation(){
+ if(activeTeacherPronunciationAudio){try{activeTeacherPronunciationAudio.pause();activeTeacherPronunciationAudio.currentTime=0}catch{}}
+ activeTeacherPronunciationAudio=null;closeTeacherPronunciationBubble()
+}
+function teacherPronunciationBubble(target,word,status='Playing'){
+ closeTeacherPronunciationBubble();
+ const bubble=document.createElement('div');bubble.className='teacher-pronunciation-bubble';bubble.setAttribute('role','status');
+ bubble.innerHTML='<span aria-hidden="true">🔊</span><div><small>American pronunciation</small><strong>'+escapeHtml(word)+'</strong><em>'+escapeHtml(status)+'</em></div>';
+ document.body.appendChild(bubble);activeTeacherPronunciationBubble=bubble;positionTeacherExampleBubble(bubble,target);return bubble
+}
+function browserAmericanPronunciation(word,target){
+ if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')return false;
+ try{
+  window.speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(String(word||'').trim());
+  utterance.lang='en-US';utterance.rate=.82;utterance.pitch=1;utterance.volume=1;
+  const bubble=teacherPronunciationBubble(target,word,'Browser voice');
+  utterance.onend=()=>{if(activeTeacherPronunciationBubble===bubble)setTimeout(()=>closeTeacherPronunciationBubble(),550)};
+  utterance.onerror=()=>{if(activeTeacherPronunciationBubble===bubble){bubble.querySelector('em').textContent='Pronunciation unavailable';setTimeout(()=>closeTeacherPronunciationBubble(),1200)}};
+  window.speechSynthesis.speak(utterance);return true
+ }catch{return false}
+}
+async function playTeacherPronunciation(target,word){
+ const clean=String(word||'').trim();if(!clean)return;
+ if(activeTeacherPronunciationAudio){try{activeTeacherPronunciationAudio.pause();activeTeacherPronunciationAudio.currentTime=0}catch{}}
+ const key=normalizeVocabWord(clean),loading=teacherPronunciationBubble(target,clean,'Preparing…');
+ try{
+  let url=teacherPronunciationUrls.get(key);
+  if(!url){
+   const res=await fetch('/api/teacher/pronunciation',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({word:clean})});
+   if(!res.ok){let message='Pronunciation unavailable';try{message=(await res.json())?.error||message}catch{}throw new Error(message)}
+   const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Pronunciation unavailable');
+   url=URL.createObjectURL(blob);teacherPronunciationUrls.set(key,url)
+  }
+  if(activeTeacherPronunciationBubble!==loading||!loading.isConnected)return;
+  loading.querySelector('em').textContent='Playing';
+  const audio=new Audio(url);audio.preload='auto';activeTeacherPronunciationAudio=audio;
+  audio.onended=()=>{if(activeTeacherPronunciationAudio===audio)activeTeacherPronunciationAudio=null;if(activeTeacherPronunciationBubble===loading)setTimeout(()=>closeTeacherPronunciationBubble(),650)};
+  audio.onerror=()=>{if(activeTeacherPronunciationAudio===audio)activeTeacherPronunciationAudio=null;if(!browserAmericanPronunciation(clean,target)&&activeTeacherPronunciationBubble===loading){loading.querySelector('em').textContent='Pronunciation unavailable';setTimeout(()=>closeTeacherPronunciationBubble(),1200)}};
+  await audio.play()
+ }catch(e){
+  if(activeTeacherPronunciationBubble===loading)loading.remove();
+  activeTeacherPronunciationBubble=null;
+  browserAmericanPronunciation(clean,target)
+ }
+}
+function wireTeacherPronunciationTool(){
+ const stage=$('teacherAnnotationStage');if(!stage)return;
+ prepareTeacherExampleWords();
+ stage.addEventListener('click',e=>{
+  if(teacherLiveTool!=='pronunciation')return;
+  const target=e.target.closest?.('[data-teacher-example-word]');
+  if(!target||!stage.contains(target))return;
+  e.preventDefault();e.stopPropagation();playTeacherPronunciation(target,target.dataset.teacherExampleWord||target.textContent.trim())
+ },true)
+}
 function wireTeacherLiveTools(){
  const stage=$('teacherAnnotationStage'),canvas=$('teacherAnnotationCanvas'),textLayer=$('teacherAnnotationTextLayer'),laser=$('teacherLaserPointer');
  if(!stage||!canvas||!textLayer||!laser)return;
@@ -2809,9 +2873,9 @@ function wireTeacherLiveTools(){
  const setMode=mode=>{
   teacherLiveTool=mode;
   document.querySelectorAll('[data-live-tool]').forEach(b=>{const on=b.dataset.liveTool===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on?'true':'false')});
-  canvas.style.pointerEvents=(mode==='interact'||mode==='example')?'none':'auto';
+  canvas.style.pointerEvents=(mode==='interact'||mode==='example'||mode==='pronunciation')?'none':'auto';
   canvas.style.touchAction=mode==='highlight'?'none':'auto';
-  stage.dataset.annotationMode=mode;stage.classList.toggle('teacher-example-mode',mode==='example');if(mode!=='example')closeTeacherExampleBubble();
+  stage.dataset.annotationMode=mode;stage.classList.toggle('teacher-example-mode',mode==='example');stage.classList.toggle('teacher-pronunciation-mode',mode==='pronunciation');if(mode!=='example')closeTeacherExampleBubble();if(mode!=='pronunciation')stopTeacherPronunciation();
   laser.classList.toggle('is-enabled',mode==='pointer');
   if(mode!=='pointer')laser.classList.remove('is-visible');
  };
@@ -2925,7 +2989,7 @@ function teacherLiveLesson(){
  $('prevLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0)goToStage(activeTeacherSectionIndex-1)};
  if($('nextLiveSection'))$('nextLiveSection').onclick=()=>goToStage(activeTeacherSectionIndex+1);
  if($('finishAndAssign'))$('finishAndAssign').onclick=()=>openAssignWorkbook(c,l,w);
- wireLiveVocabulary();wireLiveChecks();wireLiveAudioPlayers();wireTeacherLiveTools();wireTeacherExampleTool();wireTeacherSpotlight();wireTeacherPresentation();
+ wireLiveVocabulary();wireLiveChecks();wireLiveAudioPlayers();wireTeacherLiveTools();wireTeacherExampleTool();wireTeacherPronunciationTool();wireTeacherSpotlight();wireTeacherPresentation();
 }
 function openAssignWorkbook(c,liveLesson,workbookLesson){showModal(`<div class="section-head"><div><span class="role-kicker">Post-class action</span><h3>Assign matching workbook</h3><p class="muted">${escapeHtml(c.name)}</p></div><button class="icon-btn" data-close>×</button></div><div class="assignment-match-card"><span>Live lesson</span><strong>Lesson ${liveLesson.number} · ${escapeHtml(liveLesson.title)}</strong><span>↓ automatically matched</span><strong>Workbook Lesson ${workbookLesson.number} · ${escapeHtml(workbookLesson.title)}</strong></div><div class="assignment-skill-row"><span>Vocabulary</span><span>Listening & Reading</span><span>Grammar</span><span>Writing</span></div><button class="primary-btn" id="confirmAssignment">Assign to class</button><div id="assignResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('confirmAssignment').onclick=async()=>{const btn=$('confirmAssignment');btn.disabled=true;btn.textContent='Assigning…';try{const a=await api('/api/teacher/assignments',{method:'POST',body:JSON.stringify({classId:c.id,bookId:c.bookId||c.course_id,lessonId:workbookLesson.id,lessonNumber:workbookLesson.number,lessonTitle:workbookLesson.title,skills:WORKBOOK_STEPS})});await refreshState();const link=window.location.origin+'/?assignment='+encodeURIComponent(a.id),message=`${c.name}: Lesson ${workbookLesson.number} · ${workbookLesson.title} workbook is ready. Complete Vocabulary, Listening & Reading, Grammar and Writing: ${link}`;$('assignResult').innerHTML=`<div class="assignment-success"><strong>Assigned to ${escapeHtml(c.name)}</strong><p>Share this WhatsApp message with the class. The link opens the exact workbook lesson.</p><textarea id="whatsappMessage" readonly>${escapeHtml(message)}</textarea><div class="student-cta-row"><button class="secondary-btn" id="copyWhatsApp">Copy WhatsApp message</button><button class="primary-btn" id="openWhatsApp">Open WhatsApp</button></div></div>`;btn.classList.add('hidden');$('copyWhatsApp').onclick=async()=>{await navigator.clipboard.writeText(message);$('copyWhatsApp').textContent='Copied ✓'};$('openWhatsApp').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank')}catch(e){btn.disabled=false;btn.textContent='Assign to class';$('assignResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
 function students(){const sts=classStudents();title('Teacher','Students');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Roster</span><h1>Your students</h1><p>Students in classes assigned to you.</p></div><button class="primary-btn" id="addStudent">+ Add student</button></div><div class="card table-wrap clean-table"><table class="data-table"><thead><tr><th>Student</th><th>Class</th><th>Progress</th><th>Focus</th><th></th></tr></thead><tbody>${sts.map(s=>studentRow(s)).join('')}</tbody></table></div>`;$('addStudent').onclick=openAddStudent;bindStudentActions()}
