@@ -203,9 +203,9 @@ if(!live.includes('MEDIATION MOVE'))errors.push('A2 live book must include media
 if(!live.includes("standardVersion==='a2-living-standard-v1'"))errors.push('A2 live book is not gated to the living-standard source');
 if(!live.includes("window.LIVE_BOOKS['speakup-a2-b1']"))errors.push('Legacy A2 live book is not rebuilt from the A2 Living Standard');
 
-const requiredStages=['PAGE 1 — WARM UP','PAGE 2 — VOCABULARY','PAGE 3 — READING','PAGE 4 — LANGUAGE FOCUS','PAGE 5 — LISTENING','PAGE 6 — FLUENCY MISSION','PAGE 7 — CLASSROOM CHALLENGE','PAGE 8 — REFLECTION'];
+const requiredStages=['PAGE 1 — WARM UP','PAGE 2 — VOCABULARY','PAGE 3 — READING','PAGE 4 — GRAMMAR','PAGE 5 — LISTENING','PAGE 6 — FLUENCY MISSION','PAGE 7 — CLASSROOM CHALLENGE','PAGE 8 — REFLECTION'];
 requiredStages.forEach(stage=>{if(!live.includes(stage))errors.push('Live lesson generator missing '+stage)});
-if(!app.includes("LANGUAGE FOCUS|LISTENING|FLUENCY MISSION|CLASSROOM CHALLENGE"))errors.push('Listening must be a standalone live lesson stage and Classroom Challenge must not be merged into adjacent stages');
+if(!app.includes("GRAMMAR|LISTENING|FLUENCY MISSION|CLASSROOM CHALLENGE"))errors.push('Listening must be a standalone live lesson stage and Classroom Challenge must not be merged into adjacent stages');
 if(!app.includes('data-live-audio-player')||!app.includes('wireLiveAudioPlayers'))errors.push('Live lesson listening audio player is missing');
 const adminLiveStart=app.indexOf('function adminLiveLesson('),adminLiveEnd=app.indexOf('function adminBookBrowse(',adminLiveStart);
 const adminLiveBlock=adminLiveStart>=0&&adminLiveEnd>adminLiveStart?app.slice(adminLiveStart,adminLiveEnd):'';
