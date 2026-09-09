@@ -4,6 +4,8 @@ const app=fs.readFileSync('public/app.js','utf8');
 const cefr=fs.readFileSync('public/cefr-levels.js','utf8');
 const live=fs.readFileSync('public/cefr-live-books.js','utf8');
 const server=fs.readFileSync('server.js','utf8');
+if(!server.includes("app.get('/cefr-levels.js'"))errors.push('CEFR asset routes: /cefr-levels.js is not served');
+if(!server.includes("app.get('/cefr-live-books.js'"))errors.push('CEFR asset routes: /cefr-live-books.js is not served');
 const index=fs.readFileSync('public/index.html','utf8');
 const levels=['A1','A2','B1','C1'];
 let errors=[];
