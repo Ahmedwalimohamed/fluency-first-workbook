@@ -115,6 +115,9 @@ const requiredStages=['PAGE 1 — WARM UP','PAGE 2 — VOCABULARY','PAGE 3 — R
 requiredStages.forEach(stage=>{if(!live.includes(stage))errors.push('Live lesson generator missing '+stage)});
 if(!app.includes("LANGUAGE FOCUS|LISTENING|FLUENCY MISSION|CLASSROOM CHALLENGE"))errors.push('Listening must be a standalone live lesson stage and Classroom Challenge must not be merged into adjacent stages');
 if(!app.includes('data-live-audio-player')||!app.includes('wireLiveAudioPlayers'))errors.push('Live lesson listening audio player is missing');
+const adminLiveStart=app.indexOf('function adminLiveLesson('),adminLiveEnd=app.indexOf('function adminBookBrowse(',adminLiveStart);
+const adminLiveBlock=adminLiveStart>=0&&adminLiveEnd>adminLiveStart?app.slice(adminLiveStart,adminLiveEnd):'';
+if(!adminLiveBlock.includes('wireLiveAudioPlayers()'))errors.push('Admin live lesson preview must wire listening audio playback');
 if(!app.includes('Transcript · open after listening'))errors.push('Live lesson transcript must be hidden until the learner chooses to open it');
 if(!app.includes('Preparing audio…')||!app.includes('browserSpeechAvailable')||!app.includes('playBrowserSpeech'))errors.push('Listening audio must preload and provide a browser-voice fallback when natural audio cannot play');
 if(!server.includes("app.post('/api/audio'"))errors.push('Live lesson audio requires the authenticated natural-audio endpoint');
