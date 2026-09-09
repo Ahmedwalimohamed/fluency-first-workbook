@@ -498,13 +498,13 @@ const A1_READING_DIRECT={
   ['What could Samira do when she started A1?','say only a few short sentences'],['What can Samira read now?','messages, schedules, menus, directions, and simple stories'],['What can she do in conversation now?','ask questions and keep a short conversation going'],['What is still difficult for Samira?','fast listening'],['How much listening does she plan to do each day?','ten minutes'],['What level does Samira want to enter next?','A2']
  ],
  44:[
-  ['What does Amina read in the morning?','class messages and the timetable'],['What did Amina help a new learner find yesterday?','the library'],['What did Amina order at lunch without help?','food from a café menu'],['What is Amina going to do this weekend?','meet two classmates for speaking practice'],['What does Amina do when people speak too quickly?','asks them to repeat'],['What is Amina’s next goal?','read longer texts and speak for several minutes without stopping']
+  ['What does Amina read in the morning?','class messages and the timetable'],['What did Amina help a new learner find yesterday?','the library'],['What did Amina do at lunch without help?','read a café menu and ordered'],['What is Amina going to do this weekend?','meet two classmates for speaking practice'],['What does Amina do when people speak too quickly?','asks them to repeat'],['What is Amina’s next goal?','read longer texts and speak for several minutes without stopping']
  ]
 };
 function readingQs(spec,n){
  const rows=A1_READING_DIRECT[n];
  if(!Array.isArray(rows))throw new Error('Missing direct A1 reading questions for lesson '+n);
- return rows.map((row,i)=>shortReading(row[0],row[1],i===rows.length-1&&n>22?'reading:main-idea':'reading:detail'))
+ return rows.map(row=>shortReading(row[0],row[1],'reading:detail'))
 }
 function listeningQs(spec){
  const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name);
