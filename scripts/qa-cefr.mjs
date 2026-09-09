@@ -239,6 +239,13 @@ if(!app.includes("mode==='interact'||mode==='example'||mode==='pronunciation'"))
 if(!server.includes("app.post('/api/teacher/pronunciation'")||!server.includes('teacherOnly,teacherPronunciationLimiter'))errors.push('Teacher pronunciation endpoint must be teacher-only and rate-limited');
 if(!server.includes('General American English'))errors.push('Teacher pronunciation must request General American English');
 if(!app.includes("utterance.lang='en-US'"))errors.push('Teacher pronunciation browser fallback must use en-US');
+/* Student Pronunciation access */
+if(!app.includes('id="studentPronunciationToggle"')||!app.includes('wireStudentPronunciationTool'))errors.push('Student Class Book is missing Pronunciation access');
+if(!app.includes('data-student-pronunciation-word')||!app.includes('student-pronunciation-mode'))errors.push('Student lesson words are not pronunciation-enabled');
+if(!app.includes("fetch('/api/pronunciation'"))errors.push('Teacher/student pronunciation clients must use the shared pronunciation endpoint');
+if(!server.includes("app.post('/api/pronunciation',auth,teacherOrStudent,teacherPronunciationLimiter"))errors.push('Shared pronunciation endpoint must allow authenticated teachers and students only');
+if(!server.includes('function teacherOrStudent'))errors.push('Shared pronunciation role guard is missing');
+
 
 
 if(!server.includes('OPENAI_TTS_FEMALE_VOICES')||!server.includes('OPENAI_TTS_MALE_VOICES')||!server.includes('dialogueTurns')||!server.includes('speakerVoicePlan')||!server.includes("response_format:'wav'"))errors.push('Conversation listening must support distinct male/female multi-speaker voices');
