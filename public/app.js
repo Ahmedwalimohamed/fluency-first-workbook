@@ -2552,6 +2552,7 @@ function teacherLiveToolsHtml(){
    ${teacherToolButton('pointer','Pointer','●')}
    ${teacherToolButton('highlight','Highlighter','▰')}
    ${teacherToolButton('text','Text','T')}
+   ${teacherToolButton('example','Give example','✦')}
   </div>
   <div class="live-tool-actions">
    <button class="live-tool-btn" type="button" id="undoLiveAnnotation" title="Undo last annotation">↶ <span>Undo</span></button>
@@ -2671,6 +2672,135 @@ function wireTeacherPresentation(){
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('teacherSpotlightOverlay'))closeTeacherSpotlight();else if(teacherPresentationMode&&!document.fullscreenElement)setTeacherPresentationMode(false)}});
  }
 }
+
+const teacherExampleSentenceCache=new Map();
+let activeTeacherExampleBubble=null;
+function closeTeacherExampleBubble(){
+ if(activeTeacherExampleBubble?.isConnected)activeTeacherExampleBubble.remove();
+ activeTeacherExampleBubble=null;
+}
+function teacherExampleContext(){
+ const c=teacherClass(),wb=workbookForClass(c),live=liveBookForClass(c);
+ const lesson=wb?.lessons?.find(x=>x.number===activeTeacherLessonNumber)||null;
+ const liveLesson=live?.lessons?.find(x=>x.number===activeTeacherLessonNumber)||null;
+ return{level:String(c?.level||wb?.level||'').trim(),lessonTitle:String(lesson?.title||liveLesson?.title||'').trim(),lesson};
+}
+function teacherLocalExample(word,lesson){
+ const clean=String(word||'').trim();
+ if(!clean)return '';
+ const key=normalizeVocabWord(clean);
+ if(VOCAB_EXAMPLES[key])return withPeriod(VOCAB_EXAMPLES[key]);
+ if(lesson){
+  const generated=lessonVocabExample(clean,lesson);
+  if(generated&&!/The .* was important in this situation/i.test(generated))return withPeriod(generated)
+ }
+ const common={
+  the:'The teacher opened the book.',
+  a:'A student asked a useful question.',
+  an:'She gave an example to the class.',
+  is:'This lesson is very useful.',
+  are:'The students are ready to begin.',
+  am:'I am ready for the lesson.',
+  was:'The class was interesting yesterday.',
+  were:'They were happy with their progress.',
+  have:'I have a question about this word.',
+  has:'She has a new English book.',
+  had:'He had a meeting yesterday.',
+  do:'I do my English practice every evening.',
+  does:'She does her work carefully.',
+  did:'We did the activity together.',
+  can:'I can explain the answer clearly.',
+  could:'Could you give me another example?',
+  will:'I will practise again tomorrow.',
+  would:'I would like to improve my English.',
+  should:'You should check the meaning in context.',
+  to:'I want to speak English confidently.',
+  in:'The students are in the classroom.',
+  on:'The book is on the table.',
+  at:'The class starts at eight o’clock.',
+  for:'This activity is useful for speaking practice.',
+  with:'I practise English with my classmates.',
+  and:'Amina reads and writes every day.',
+  but:'The task was difficult, but we finished it.',
+  because:'I practise every day because I want to improve.'
+ };
+ return common[key]||withPeriod('We used the word “'+clean+'” during today’s lesson')
+}
+function prepareTeacherExampleWords(){
+ const stage=$('teacherAnnotationStage'),content=stage?.querySelector('.eg-stage-content');
+ if(!stage||!content||stage.dataset.exampleWordsReady==='1')return;
+ stage.dataset.exampleWordsReady='1';
+ content.querySelectorAll('[data-vocab-word]').forEach(el=>{el.dataset.teacherExampleWord=el.dataset.vocabWord||el.textContent.trim();el.classList.add('teacher-example-word')});
+ const skip='button,input,select,textarea,option,summary,a,canvas,svg,script,style,[data-vocab-word],[data-live-audio-player]';
+ const walker=document.createTreeWalker(content,NodeFilter.SHOW_TEXT,{acceptNode(node){
+  const text=String(node.nodeValue||'');
+  if(!/[\p{L}]/u.test(text))return NodeFilter.FILTER_REJECT;
+  const parent=node.parentElement;
+  if(!parent||parent.closest(skip))return NodeFilter.FILTER_REJECT;
+  return NodeFilter.FILTER_ACCEPT
+ }});
+ const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+ const pattern=/([\p{L}][\p{L}\p{M}'’\-]*)/gu;
+ nodes.forEach(node=>{
+  const text=node.nodeValue||'',parts=text.split(pattern);
+  if(parts.length<2)return;
+  const frag=document.createDocumentFragment();
+  parts.forEach(part=>{
+   if(/^[\p{L}][\p{L}\p{M}'’\-]*$/u.test(part)){
+    const span=document.createElement('span');span.className='teacher-example-word';span.dataset.teacherExampleWord=part;span.textContent=part;frag.appendChild(span)
+   }else frag.appendChild(document.createTextNode(part))
+  });
+  node.replaceWith(frag)
+ });
+}
+function positionTeacherExampleBubble(bubble,target){
+ const rect=target.getBoundingClientRect(),margin=12;
+ bubble.classList.remove('is-below');
+ bubble.style.left=Math.max(margin,Math.min(window.innerWidth-margin,rect.left+rect.width/2))+'px';
+ bubble.style.top=Math.max(margin,rect.top-8)+'px';
+ bubble.style.transform='translate(-50%,-100%)';
+ requestAnimationFrame(()=>{
+  const b=bubble.getBoundingClientRect();
+  let center=rect.left+rect.width/2;
+  const half=b.width/2;
+  center=Math.max(margin+half,Math.min(window.innerWidth-margin-half,center));
+  bubble.style.left=center+'px';
+  if(b.top<margin){
+   bubble.classList.add('is-below');bubble.style.top=(rect.bottom+8)+'px';bubble.style.transform='translate(-50%,0)'
+  }
+ })
+}
+async function showTeacherExampleForWord(target,word){
+ closeTeacherExampleBubble();
+ const clean=String(word||'').trim();if(!clean)return;
+ const bubble=document.createElement('div');bubble.className='teacher-example-bubble';bubble.setAttribute('role','status');
+ bubble.innerHTML='<small>Example · '+escapeHtml(clean)+'</small><p>Creating example…</p>';
+ document.body.appendChild(bubble);activeTeacherExampleBubble=bubble;positionTeacherExampleBubble(bubble,target);
+ const ctx=teacherExampleContext(),cacheKey=[ctx.level,ctx.lessonTitle,normalizeVocabWord(clean)].join('|');
+ let sentence=teacherExampleSentenceCache.get(cacheKey);
+ if(!sentence){
+  try{
+   const result=await api('/api/teacher/example-sentence',{method:'POST',body:JSON.stringify({word:clean,level:ctx.level,lessonTitle:ctx.lessonTitle})});
+   sentence=String(result?.sentence||'').trim()
+  }catch{}
+  if(!sentence)sentence=teacherLocalExample(clean,ctx.lesson);
+  teacherExampleSentenceCache.set(cacheKey,sentence)
+ }
+ if(activeTeacherExampleBubble!==bubble||!bubble.isConnected)return;
+ bubble.innerHTML='<small>Example · '+escapeHtml(clean)+'</small><p>'+escapeHtml(sentence)+'</p>';
+ positionTeacherExampleBubble(bubble,target)
+}
+function wireTeacherExampleTool(){
+ const stage=$('teacherAnnotationStage');if(!stage)return;
+ prepareTeacherExampleWords();
+ stage.addEventListener('click',e=>{
+  if(teacherLiveTool!=='example')return;
+  const target=e.target.closest?.('[data-teacher-example-word]');
+  if(!target||!stage.contains(target))return;
+  e.preventDefault();e.stopPropagation();showTeacherExampleForWord(target,target.dataset.teacherExampleWord||target.textContent.trim())
+ },true);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&activeTeacherExampleBubble)closeTeacherExampleBubble()},{once:false})
+}
 function wireTeacherLiveTools(){
  const stage=$('teacherAnnotationStage'),canvas=$('teacherAnnotationCanvas'),textLayer=$('teacherAnnotationTextLayer'),laser=$('teacherLaserPointer');
  if(!stage||!canvas||!textLayer||!laser)return;
@@ -2679,9 +2809,9 @@ function wireTeacherLiveTools(){
  const setMode=mode=>{
   teacherLiveTool=mode;
   document.querySelectorAll('[data-live-tool]').forEach(b=>{const on=b.dataset.liveTool===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on?'true':'false')});
-  canvas.style.pointerEvents=mode==='interact'?'none':'auto';
+  canvas.style.pointerEvents=(mode==='interact'||mode==='example')?'none':'auto';
   canvas.style.touchAction=mode==='highlight'?'none':'auto';
-  stage.dataset.annotationMode=mode;
+  stage.dataset.annotationMode=mode;stage.classList.toggle('teacher-example-mode',mode==='example');if(mode!=='example')closeTeacherExampleBubble();
   laser.classList.toggle('is-enabled',mode==='pointer');
   if(mode!=='pointer')laser.classList.remove('is-visible');
  };
@@ -2795,7 +2925,7 @@ function teacherLiveLesson(){
  $('prevLiveSection').onclick=()=>{if(activeTeacherSectionIndex>0)goToStage(activeTeacherSectionIndex-1)};
  if($('nextLiveSection'))$('nextLiveSection').onclick=()=>goToStage(activeTeacherSectionIndex+1);
  if($('finishAndAssign'))$('finishAndAssign').onclick=()=>openAssignWorkbook(c,l,w);
- wireLiveVocabulary();wireLiveChecks();wireLiveAudioPlayers();wireTeacherLiveTools();wireTeacherSpotlight();wireTeacherPresentation();
+ wireLiveVocabulary();wireLiveChecks();wireLiveAudioPlayers();wireTeacherLiveTools();wireTeacherExampleTool();wireTeacherSpotlight();wireTeacherPresentation();
 }
 function openAssignWorkbook(c,liveLesson,workbookLesson){showModal(`<div class="section-head"><div><span class="role-kicker">Post-class action</span><h3>Assign matching workbook</h3><p class="muted">${escapeHtml(c.name)}</p></div><button class="icon-btn" data-close>×</button></div><div class="assignment-match-card"><span>Live lesson</span><strong>Lesson ${liveLesson.number} · ${escapeHtml(liveLesson.title)}</strong><span>↓ automatically matched</span><strong>Workbook Lesson ${workbookLesson.number} · ${escapeHtml(workbookLesson.title)}</strong></div><div class="assignment-skill-row"><span>Vocabulary</span><span>Listening & Reading</span><span>Grammar</span><span>Writing</span></div><button class="primary-btn" id="confirmAssignment">Assign to class</button><div id="assignResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('confirmAssignment').onclick=async()=>{const btn=$('confirmAssignment');btn.disabled=true;btn.textContent='Assigning…';try{const a=await api('/api/teacher/assignments',{method:'POST',body:JSON.stringify({classId:c.id,bookId:c.bookId||c.course_id,lessonId:workbookLesson.id,lessonNumber:workbookLesson.number,lessonTitle:workbookLesson.title,skills:WORKBOOK_STEPS})});await refreshState();const link=window.location.origin+'/?assignment='+encodeURIComponent(a.id),message=`${c.name}: Lesson ${workbookLesson.number} · ${workbookLesson.title} workbook is ready. Complete Vocabulary, Listening & Reading, Grammar and Writing: ${link}`;$('assignResult').innerHTML=`<div class="assignment-success"><strong>Assigned to ${escapeHtml(c.name)}</strong><p>Share this WhatsApp message with the class. The link opens the exact workbook lesson.</p><textarea id="whatsappMessage" readonly>${escapeHtml(message)}</textarea><div class="student-cta-row"><button class="secondary-btn" id="copyWhatsApp">Copy WhatsApp message</button><button class="primary-btn" id="openWhatsApp">Open WhatsApp</button></div></div>`;btn.classList.add('hidden');$('copyWhatsApp').onclick=async()=>{await navigator.clipboard.writeText(message);$('copyWhatsApp').textContent='Copied ✓'};$('openWhatsApp').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank')}catch(e){btn.disabled=false;btn.textContent='Assign to class';$('assignResult').innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}}
 function students(){const sts=classStudents();title('Teacher','Students');$('content').innerHTML=`<div class="role-page-head"><div><span class="role-kicker">Roster</span><h1>Your students</h1><p>Students in classes assigned to you.</p></div><button class="primary-btn" id="addStudent">+ Add student</button></div><div class="card table-wrap clean-table"><table class="data-table"><thead><tr><th>Student</th><th>Class</th><th>Progress</th><th>Focus</th><th></th></tr></thead><tbody>${sts.map(s=>studentRow(s)).join('')}</tbody></table></div>`;$('addStudent').onclick=openAddStudent;bindStudentActions()}
