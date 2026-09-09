@@ -78,8 +78,10 @@ try{
    if(!lesson.title||!lesson.outcome||!lesson.readingSkill||!lesson.performance)errors.push('A1 lesson '+n+': core lesson metadata is incomplete');
    if((lesson.vocabularyEntries||[]).length!==6)errors.push('A1 lesson '+n+': needs exactly 6 vocabulary entries');
    if((lesson.vocabulary?.items||[]).length!==10)errors.push('A1 lesson '+n+': needs exactly 10 vocabulary questions');
-   const questions=lesson.listening?.questions||[],rqs=questions.filter(q=>String(q.tag||'').startsWith('reading:')),lqs=questions.filter(q=>String(q.tag||'').startsWith('listening:'));
-   if(rqs.length!==6||lqs.length!==6)errors.push('A1 lesson '+n+': needs 6 reading and 6 listening checks');
+   const questions=lesson.listening?.questions||[],rqs=questions.filter(q=>String(q.tag||'').startsWith('reading:')),lqs=questions.filter(q=>String(q.tag||'').startsWith('listening:')),expectedReading=n<=10?4:n<=22?5:6;
+   if(rqs.length!==expectedReading||lqs.length!==6)errors.push('A1 lesson '+n+': needs '+expectedReading+' direct reading questions and 6 listening checks');
+   rqs.forEach((item,idx)=>{if(item.type!=='short'||!String(item.q||'').trim()||!String(item.answer||'').trim()||Array.isArray(item.options))errors.push('A1 lesson '+n+': reading question '+(idx+1)+' must be a direct short-answer question')});
+   if(rqs.some(item=>/which detail is correct|which other detail is correct|which statement is true/i.test(String(item.q||''))))errors.push('A1 lesson '+n+': generic multiple-choice reading prompt returned');
    const [minReading,maxReading]=readingBand(n),readingWords=wordCount(lesson.listening?.readingText);
    if(readingWords<minReading||readingWords>maxReading)errors.push('A1 lesson '+n+': reading length '+readingWords+' is outside '+minReading+'–'+maxReading+' words');
    if((lesson.grammar?.items||[]).length!==8)errors.push('A1 lesson '+n+': needs exactly 8 focused grammar questions');
@@ -112,7 +114,8 @@ try{
  }
 }catch(e){errors.push('A1 Foundation validation failed: '+e.message)}
 if(!server.includes('{"id":"speakup-a1","title":"A1 Beginner","level":"A1","audience":"Beginner","status":"ready","total_lessons":44'))errors.push('A1 Foundation: backend book seed must expose 44 lessons');
-if(!app.includes("const all=(l.listening?.questions||[]).slice(0,12)"))errors.push('A1 Foundation: workbook listening must expose all 12 reading/listening checks');
+if(!app.includes("slice(0,12).map(readingQuestionAsShort)"))errors.push('Reading workbook must preserve up to 12 comprehension checks while converting reading items to short answer');
+if(!app.includes('function shortAnswerEvidence')||!app.includes('function shortAnswerMatches')||!app.includes("tag.startsWith('reading:')||tag.startsWith('listening-reading:')"))errors.push('Reading workbook must render every reading comprehension question as a typed short answer');
 if(!app.includes('const A1_EARLY_WRITING_MODELS=')||!app.includes("early?'Sentence Order':'Paragraph Ordering'")||!app.includes("early?'Tap the two sentences in the natural order.'"))errors.push('A1 Foundation: Lessons 1–10 must use the simplified writing progression instead of paragraph ordering');
 if(!app.includes("build:{level:1,label:'Build a sentence'}")||!app.includes("organize:{level:4,label:'Put two sentences in order'}"))errors.push('A1 Foundation: early writing ladder labels must stay beginner-friendly');
 if(!app.includes('function cleanA1WritingTask(task)'))errors.push('A1 Foundation: task copy must not carry stale hard-coded word counts');
@@ -150,6 +153,7 @@ try{
    if((lesson.vocabulary?.items||[]).length!==10)errors.push('A2 lesson '+n+': needs 10 vocabulary questions');
    const qs=lesson.listening?.questions||[],rqs=qs.filter(q=>String(q.tag||'').startsWith('reading:')),lqs=qs.filter(q=>String(q.tag||'').startsWith('listening:'));
    if(rqs.length<4||lqs.length<4)errors.push('A2 lesson '+n+': needs at least 4 reading and 4 listening questions');
+   rqs.forEach((item,idx)=>{if(item.type!=='short'||!String(item.q||'').trim()||!String(item.answer||'').trim()||Array.isArray(item.options))errors.push('A2 lesson '+n+': reading question '+(idx+1)+' must be a direct short-answer question')});
    if(!rqs.some(q=>/(inference|main-idea|reason|purpose)/i.test(String(q.tag||''))))errors.push('A2 lesson '+n+': needs higher-order reading');
    if(!lqs.some(q=>/(reason|decision|result|inference)/i.test(String(q.tag||''))))errors.push('A2 lesson '+n+': needs higher-order listening');
    if(wordCount(lesson.listening?.readingText)<minReading(n))errors.push('A2 lesson '+n+': reading is below phase minimum');
@@ -177,7 +181,7 @@ try{
    const grammar=lesson.grammar?.items||[];
    if(grammar.length<6)errors.push('A2 lesson '+n+': needs at least 6 contextual grammar questions');
    [...(lesson.vocabulary?.items||[]),...qs,...grammar].forEach((item,idx)=>{
-    if(item.type==='exact')return;
+    if(item.type==='exact'||item.type==='short')return;
     if(!Array.isArray(item.options)||item.options.length<3||!item.options.includes(item.answer))errors.push('A2 lesson '+n+': invalid auto-graded item '+(idx+1));
     else if(new Set(item.options.map(x=>String(x).toLowerCase().trim())).size!==item.options.length)errors.push('A2 lesson '+n+': duplicate options in item '+(idx+1));
    });
