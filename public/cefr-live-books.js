@@ -338,7 +338,7 @@ function a2LessonContent(lesson){
 }
 
 function lessonContent(level,lesson){
- if(level==='A2'&&lesson.standardVersion!=='legacy')return a2LessonContent(lesson);
+ if(level==='A2'&&lesson.standardVersion==='a2-living-standard-v1')return a2LessonContent(lesson);
  const topic=lesson.title,data=TOPIC_LIBRARY[topic],focus=lesson.grammar.focus;
  const w=warm(level,topic),u=useful(level),tx=texts(level,topic,data),r=reflection(level);
  return[
