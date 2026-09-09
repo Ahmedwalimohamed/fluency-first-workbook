@@ -366,16 +366,45 @@ function vocabItems(spec){
   {type:'open',q:'Write one simple sentence using “'+words[5]+'”.',answer:'',min:5,tag:'vocabulary:production'}
  ]};
 }
-function readingQs(spec){
- const x=spec.r;
- return[
-  q('Who is the reading mainly about?',[x.who,'A visitor who is not mentioned','A bus driver'],x.who,'reading:detail'),
-  q('Where does the reading happen or focus on?',[x.where,'an airport','a sports stadium'],x.where,'reading:detail'),
-  q('What is the main idea?',[x.main,'The text gives unrelated words.','Nothing happens in the text.'],x.main,'reading:main-idea'),
-  q('Which detail is correct?',[x.detail1,'The opposite is true.','This detail is not in the reading.'],x.detail1,'reading:detail'),
-  q('Which other detail is correct?',[x.detail2,'The text says the opposite.','This never appears in the reading.'],x.detail2,'reading:detail'),
-  x.skillQ
+function shortReading(qText,answer,tag='reading:detail'){return{type:'short',q:qText,answer,min:1,tag}}
+function readingFactQuestion(statement,fallbackSubject='the person'){
+ const text=String(statement||'').trim().replace(/[.!?]+$/,'');
+ let m;
+ if((m=text.match(/^(.+?) is from (.+)$/i)))return shortReading('Where is '+m[1]+' from?',m[2]);
+ if((m=text.match(/^(.+?) is (.+?)[’']s (brother|sister|mother|father)$/i)))return shortReading('Who is '+m[2]+'’s '+m[3]+'?',m[1]);
+ if((m=text.match(/^(.+?) is the (teacher|doctor|driver|student)$/i)))return shortReading('Who is the '+m[2]+'?',m[1]);
+ if((m=text.match(/^(.+?) is a (teacher|doctor|driver|student|college student)$/i)))return shortReading(m[2].includes('student')?'Who is a '+m[2]+'?':'What is '+m[1]+'’s job?',m[2]);
+ if((m=text.match(/^(.+?) is (friendly|quiet and helpful|quiet|tall|helpful|busy)$/i)))return shortReading('How is '+m[1]+' described?',m[2]);
+ if((m=text.match(/^(.+?) sits next to (.+)$/i)))return shortReading('Who sits next to '+m[2]+'?',m[1]);
+ if((m=text.match(/^(.+?) repeats the letter (.+)$/i)))return shortReading('Which letter does '+m[1].toLowerCase()+' repeat?',m[2]);
+ if((m=text.match(/^(.+?) first name has (.+?) letters$/i)))return shortReading('How many letters does '+m[1].toLowerCase()+' first name have?',m[2]);
+ if((m=text.match(/^(.+?) is (\d+) years old$/i)))return shortReading('How old is '+m[1].toLowerCase()+'?',m[2]);
+ if((m=text.match(/^(.+?) phone number ends in (.+)$/i)))return shortReading('What are the last digits of '+m[1].toLowerCase()+' phone number?',m[2]);
+ if((m=text.match(/^(.+?) has (\w+) (.+)$/i)))return shortReading('How many '+m[3]+' does '+m[1]+' have?',m[2]);
+ if((m=text.match(/^(.+?) does not have (.+)$/i)))return shortReading('What does '+m[1]+' not have?',m[2]);
+ if((m=text.match(/^(.+?) starts (.+?) at (.+)$/i)))return shortReading('What time does '+m[1].toLowerCase()+' start '+m[2]+'?',m[3]);
+ if((m=text.match(/^(.+?) studies (.+?) in the (morning|afternoon|evening)$/i)))return shortReading('When does '+m[1].toLowerCase()+' study '+m[2]+'?',m[3]);
+ if((m=text.match(/^(.+?) costs (.+)$/i)))return shortReading('How much does '+m[1]+' cost?',m[2]);
+ if((m=text.match(/^(.+?) wears (.+)$/i)))return shortReading('What does '+m[1]+' wear?',m[2]);
+ if((m=text.match(/^(.+?) can (.+)$/i)))return shortReading('What can '+m[1]+' do?',m[2]);
+ if((m=text.match(/^(.+?) should (.+)$/i)))return shortReading('What should '+m[1]+' do?',m[2]);
+ if((m=text.match(/^(.+?) is at (.+)$/i)))return shortReading('Where is '+m[1]+'?',m[2]);
+ if((m=text.match(/^(.+?) is (on|in) (.+)$/i)))return shortReading('When or where is '+m[1]+'?',m[2]+' '+m[3]);
+ if((m=text.match(/^There are (.+)$/i)))return shortReading('What does the reading say there are?',m[1]);
+ if((m=text.match(/^(.+?) are for (.+)$/i)))return shortReading('What are '+m[1]+' for?',m[2]);
+ return shortReading('What does the reading say about '+fallbackSubject+'?',text)
+}
+function readingQs(spec,n){
+ const x=spec.r,specific={type:'short',q:x.skillQ.q,answer:x.skillQ.answer,min:1,tag:x.skillQ.tag||'reading:detail'};
+ const items=[
+  shortReading('Who is the reading mainly about?',x.who),
+  readingFactQuestion(x.detail1,x.who),
+  readingFactQuestion(x.detail2,x.who),
+  specific
  ];
+ if(n>10)items.splice(1,0,shortReading('Where does the reading take place or focus on?',x.where));
+ if(n>22)items.push(shortReading('What is the reading mainly about?',x.main,'reading:main-idea'));
+ return items
 }
 function listeningQs(spec){
  const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name);
@@ -395,7 +424,7 @@ function makeLesson(spec,i){
   targetVocabulary:spec.v.map(x=>x[0]),vocabularyEntries:spec.v.map(x=>({word:x[0],meaning:x[1],example:x[2]})),expressions:spec.u.map(text=>({text})),chunks:spec.u.slice(),interactionExpressions:spec.u.slice(0,3),
   functions:['understand familiar language','give simple information','respond to a partner'],discourse:['short complete sentences','clear turn taking','recycle earlier A1 language'],
   vocabulary:vocabItems(spec),
-  listening:{title:spec.title+' · Reading & Listening',readingText:spec.r.text,audioScript:spec.l.script,text:spec.l.script,speakers:lessonSpeakers(spec),questions:[...readingQs(spec),...listeningQs(spec)]},
+  listening:{title:spec.title+' · Reading & Listening',readingText:spec.r.text,audioScript:spec.l.script,text:spec.l.script,speakers:lessonSpeakers(spec),questions:[...readingQs(spec,n),...listeningQs(spec)]},
   grammar:{focus:spec.focus,rule:grammarRule(spec.focus),items:a1GrammarItems(spec.focus)},
   writing:{task:spec.writing,minWords:range[0],maxWords:range[1],humanGraded:false,checkpoint:false},
   foundation:n<=11?'Core A1 foundation: recognise, locate and build simple accurate English.':n<=22?'Everyday A1: scan, understand and communicate about daily life.':n<=33?'Independent A1: connect information, sequence events and solve familiar tasks.':'A1 mastery: interpret short connected texts and prepare for A2.',
