@@ -538,11 +538,12 @@ function vocabItems(title,data){
   {type:'choice',q:'Which word means “'+meanings[1]+'”?',options:wordOptions(1),answer:words[1],tag:'vocabulary:retrieval',example:example(words[1])},
   {type:'choice',q:'Which word best matches this idea: '+meanings[4]+'?',options:wordOptions(4),answer:words[4],tag:'vocabulary:context',example:example(words[4])},
   {type:'exact',q:'Type the target word meaning “'+meanings[0]+'”.',answer:words[0],min:1,tag:'vocabulary:recall',example:example(words[0])},
-  {type:'choice',q:'Which target word is used in this example: “'+example(words[5])+'”?',options:wordOptions(5),answer:words[5],tag:'vocabulary:application',example:example(words[5])}
+  {type:'choice',q:'Complete the example: “'+example(words[5]).replace(new RegExp(words[5],'i'),'___')+'”',options:wordOptions(5),answer:words[5],tag:'vocabulary:application',example:example(words[5])}
  ];
 }
 function readingText(number,title,data,meta){
  const [person,place,goal,challenge,action,result]=data.s;
+ if(number===1)return 'On the first day of a new training course, Amina sits next to Yusuf. Amina lives in Borama and works in a small office. Her hometown is Hargeisa. She enjoys reading and walking in the evening. Yusuf is a university student who likes football and photography. They ask each other simple questions about work, hometowns, and hobbies. Before the lesson starts, Amina introduces Yusuf to another student and says that he is friendly and outgoing. The conversation becomes easier because they react to each other and ask short follow-up questions.';
  const start=[
   person+' is taking part in an activity about '+title.toLowerCase()+' at '+place+'. The main goal is to '+goal+'.',
   'During a practical lesson on '+title.toLowerCase()+', '+person+' has a clear goal: '+goal+'. The activity takes place at '+place+'.',
@@ -580,6 +581,7 @@ function questions(title,data){
  ];
 }
 function ranges(number){return number<=7?[50,70]:number<=14?[60,80]:[65,90]}
+function cleanTask(task){return String(task||'').replace(/\b\d+\s*[–-]\s*\d+\s*words?\b/gi,'').replace(/\s+/g,' ').trim()}
 function makeLesson(number,title,focus){
  const data=sourceData(title),meta=META[title],range=ranges(number);
  if(!data||!meta)throw new Error('Missing A2 source data for '+title);
@@ -591,7 +593,7 @@ function makeLesson(number,title,focus){
   vocabulary:{items:vocabItems(title,data)},
   listening:{title:title+' · Reading & Listening',readingText:readingText(number,title,data,meta),audioScript:audioScript(number,title,data,meta),text:audioScript(number,title,data,meta),questions:questions(title,data)},
   grammar:{focus,rule:ruleFor(focus),items:grammarItems(focus)},
-  writing:{task:meta.task,minWords:range[0],maxWords:range[1],humanGraded:false,checkpoint:false},
+  writing:{task:cleanTask(meta.task),minWords:range[0],maxWords:range[1],humanGraded:false,checkpoint:false},
   review:{keywords:data.v.map(v=>v[0]).join(' · '),mission:meta.performance}
  };
 }
