@@ -20,7 +20,14 @@ function wordRange(n){
  if(n<=3)return[10,20];
  if(n<=6)return[15,25];
  if(n<=10)return[20,30];
- return n<=11?[25,60]:n<=22?[45,80]:n<=33?[60,100]:[70,110]
+ if(n<=14)return[25,35];
+ if(n<=18)return[30,40];
+ if(n<=22)return[35,50];
+ if(n<=27)return[40,55];
+ if(n<=33)return[45,65];
+ if(n<=38)return[55,75];
+ if(n<=43)return[65,90];
+ return[80,100]
 }
 function grammarRule(focus){
  const f=String(focus||'').toLowerCase();
