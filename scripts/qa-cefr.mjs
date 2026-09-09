@@ -4,6 +4,11 @@ import vm from 'node:vm';
 const app=fs.readFileSync('public/app.js','utf8');
 const cefr=fs.readFileSync('public/cefr-levels.js','utf8');
 const live=fs.readFileSync('public/cefr-live-books.js','utf8');
+const a1p1=fs.readFileSync('public/a1-foundation-phase1.js','utf8');
+const a1p2=fs.readFileSync('public/a1-foundation-phase2.js','utf8');
+const a1p3=fs.readFileSync('public/a1-foundation-phase3.js','utf8');
+const a1p4=fs.readFileSync('public/a1-foundation-phase4.js','utf8');
+const a1=fs.readFileSync('public/a1-foundation-standard.js','utf8');
 const a2=fs.readFileSync('public/a2-living-standard.js','utf8');
 const server=fs.readFileSync('server.js','utf8');
 const index=fs.readFileSync('public/index.html','utf8');
@@ -11,10 +16,12 @@ const levels=['A1','A2','B1','C1'];
 let errors=[];
 if(!server.includes("app.get('/cefr-levels.js'"))errors.push('CEFR asset routes: /cefr-levels.js is not served');
 if(!server.includes("app.get('/cefr-live-books.js'"))errors.push('CEFR asset routes: /cefr-live-books.js is not served');
+['a1-foundation-phase1.js','a1-foundation-phase2.js','a1-foundation-phase3.js','a1-foundation-phase4.js','a1-foundation-standard.js'].forEach(file=>{if(!server.includes("app.get('/"+file+"'"))errors.push('A1 Foundation: /'+file+' is not served')});
 if(!server.includes("app.get('/a2-living-standard.js'"))errors.push('A2 Living Standard: /a2-living-standard.js is not served');
 
 try{new Function(cefr)}catch(e){errors.push('cefr-levels.js syntax: '+e.message)}
 try{new Function(live)}catch(e){errors.push('cefr-live-books.js syntax: '+e.message)}
+[[a1p1,'a1-foundation-phase1.js'],[a1p2,'a1-foundation-phase2.js'],[a1p3,'a1-foundation-phase3.js'],[a1p4,'a1-foundation-phase4.js'],[a1,'a1-foundation-standard.js']].forEach(([code,name])=>{try{new Function(code)}catch(e){errors.push(name+' syntax: '+e.message)}});
 try{new Function(a2)}catch(e){errors.push('a2-living-standard.js syntax: '+e.message)}
 
 const syllabusMatch=app.match(/const SPEAKUP_A2_B1_SYLLABUS=(\[[\s\S]*?\]);\nconst SPEAKUP_B2_SYLLABUS/);
@@ -25,8 +32,8 @@ else{
 }
 
 if(!index.includes('cefr-levels.js')||!index.includes('cefr-live-books.js'))errors.push('CEFR modules are not loaded by index.html');
-const a2Index=index.indexOf('a2-living-standard.js'),cefrIndex=index.indexOf('cefr-levels.js'),liveIndex=index.indexOf('cefr-live-books.js');
-if(a2Index<0||!(cefrIndex<a2Index&&a2Index<liveIndex))errors.push('A2 living standard modules are not loaded in the required order');
+const a1p1Index=index.indexOf('a1-foundation-phase1.js'),a1p2Index=index.indexOf('a1-foundation-phase2.js'),a1p3Index=index.indexOf('a1-foundation-phase3.js'),a1p4Index=index.indexOf('a1-foundation-phase4.js'),a1Index=index.indexOf('a1-foundation-standard.js'),a2Index=index.indexOf('a2-living-standard.js'),cefrIndex=index.indexOf('cefr-levels.js'),liveIndex=index.indexOf('cefr-live-books.js');
+if([a1p1Index,a1p2Index,a1p3Index,a1p4Index,a1Index,a2Index,cefrIndex,liveIndex].some(x=>x<0)||!(cefrIndex<a1p1Index&&a1p1Index<a1p2Index&&a1p2Index<a1p3Index&&a1p3Index<a1p4Index&&a1p4Index<a1Index&&a1Index<a2Index&&a2Index<liveIndex))errors.push('A1/A2 standard modules are not loaded in the required order');
 if(!cefr.includes('BOOK_PACKS[book.id]=book'))errors.push('Standalone workbooks are not registered in BOOK_PACKS');
 if(!live.includes("const LEVELS=['A1','A2','B1','C1']"))errors.push('Live CEFR level registry is incomplete');
 const topicMatch=app.match(/const TOPIC_LIBRARY=(\{[\s\S]*?\});\nconst CAREER_LESSON_SPECS/);
@@ -47,6 +54,66 @@ for(const level of levels){
  if(!cefr.includes(level+':{'))errors.push(id+': workbook configuration missing');
  if(!server.includes('"id":"'+id+'"'))errors.push(id+': backend book seed missing');
 }
+
+/* A1 Foundation 44 validation */
+try{
+ const context={window:{A1_FOUNDATION_SPECS:[]},BOOK_PACKS:{}};
+ vm.createContext(context);
+ vm.runInContext(a1p1,context,{filename:'public/a1-foundation-phase1.js'});
+ vm.runInContext(a1p2,context,{filename:'public/a1-foundation-phase2.js'});
+ vm.runInContext(a1p3,context,{filename:'public/a1-foundation-phase3.js'});
+ vm.runInContext(a1p4,context,{filename:'public/a1-foundation-phase4.js'});
+ vm.runInContext(a1,context,{filename:'public/a1-foundation-standard.js'});
+ const book=context.BOOK_PACKS['speakup-a1'],wordCount=value=>String(value||'').trim().split(/\s+/).filter(Boolean).length;
+ const readingBand=n=>n<=11?[30,60]:n<=22?[50,80]:n<=33?[70,110]:[100,140];
+ const femaleVoices=new Set(['coral','nova','shimmer']),maleVoices=new Set(['echo','onyx','ash']),speakerProfiles=new Map(),scripts=[];
+ if(!book||book.standardVersion!=='a1-foundation-44-v1')errors.push('A1 Foundation: 44-lesson standard did not replace the generic A1 book');
+ else{
+  if(book.totalLessons!==44||book.lessons.length!==44)errors.push('A1 Foundation: expected exactly 44 lessons');
+  const phases=[0,0,0,0];
+  book.lessons.forEach((lesson,i)=>{
+   const n=i+1;phases[(lesson.phase||1)-1]=(phases[(lesson.phase||1)-1]||0)+1;
+   if(lesson.id!=='su-a1-l'+n)errors.push('A1 lesson '+n+': stable ID must remain su-a1-l'+n);
+   if(lesson.number!==n)errors.push('A1 lesson '+n+': lesson number mismatch');
+   if(!lesson.title||!lesson.outcome||!lesson.readingSkill||!lesson.performance)errors.push('A1 lesson '+n+': core lesson metadata is incomplete');
+   if((lesson.vocabularyEntries||[]).length!==6)errors.push('A1 lesson '+n+': needs exactly 6 vocabulary entries');
+   if((lesson.vocabulary?.items||[]).length!==10)errors.push('A1 lesson '+n+': needs exactly 10 vocabulary questions');
+   const questions=lesson.listening?.questions||[],rqs=questions.filter(q=>String(q.tag||'').startsWith('reading:')),lqs=questions.filter(q=>String(q.tag||'').startsWith('listening:'));
+   if(rqs.length!==6||lqs.length!==6)errors.push('A1 lesson '+n+': needs 6 reading and 6 listening checks');
+   const [minReading,maxReading]=readingBand(n),readingWords=wordCount(lesson.listening?.readingText);
+   if(readingWords<minReading||readingWords>maxReading)errors.push('A1 lesson '+n+': reading length '+readingWords+' is outside '+minReading+'–'+maxReading+' words');
+   if((lesson.grammar?.items||[]).length!==8)errors.push('A1 lesson '+n+': needs exactly 8 focused grammar questions');
+   (lesson.grammar?.items||[]).forEach((item,idx)=>{if(!Array.isArray(item.options)||item.options.length!==3||!item.options.includes(item.answer))errors.push('A1 lesson '+n+': invalid grammar item '+(idx+1))});
+   if(!lesson.writing?.task||Number(lesson.writing.minWords)<25||Number(lesson.writing.maxWords)>110)errors.push('A1 lesson '+n+': writing task/range is invalid');
+   const script=String(lesson.listening?.audioScript||''),matches=[...script.matchAll(/(?:^|(?<=[.!?])\s+)([A-Z][A-Za-z'’-]{1,24}(?:\s+[A-Z][A-Za-z'’-]{1,24})?):\s*/g)],labels=matches.map(m=>m[1].trim()),unique=[...new Set(labels)],profiles=lesson.listening?.speakers||[];
+   scripts.push(script);
+   if(unique.length!==2)errors.push('A1 lesson '+n+': listening must contain exactly two named speakers');
+   if(labels.length<6||labels.length>12)errors.push('A1 lesson '+n+': listening dialogue should contain 6–12 turns');
+   if(profiles.length!==2)errors.push('A1 lesson '+n+': each dialogue needs exactly two speaker profiles');
+   const profileMap=new Map(profiles.map(p=>[String(p?.name||'').toLowerCase(),p]));
+   unique.forEach(name=>{
+    const p=profileMap.get(name.toLowerCase()),gender=String(p?.gender||''),voice=String(p?.voice||'');
+    if(!p||!['female','male'].includes(gender))errors.push('A1 lesson '+n+': explicit gender metadata missing for '+name);
+    else{
+     const allowed=gender==='female'?femaleVoices:maleVoices;
+     if(!allowed.has(voice))errors.push('A1 lesson '+n+': stable voice metadata missing or invalid for '+name);
+     const prior=speakerProfiles.get(name.toLowerCase());
+     if(prior&&(prior.gender!==gender||prior.voice!==voice))errors.push('A1 speaker '+name+': gender or voice changes between lessons');
+     speakerProfiles.set(name.toLowerCase(),{gender,voice})
+    }
+   });
+   profiles.forEach(p=>{if(!unique.some(name=>name.toLowerCase()===String(p?.name||'').toLowerCase()))errors.push('A1 lesson '+n+': unused speaker profile '+String(p?.name||''))});
+   if(profiles.length===2&&profiles[0]?.gender===profiles[1]?.gender&&profiles[0]?.voice===profiles[1]?.voice)errors.push('A1 lesson '+n+': same-gender speakers must use different voices');
+   if(/placeholder|lorem ipsum|todo\b|tbd\b|being prepared|coming soon/i.test(JSON.stringify(lesson)))errors.push('A1 lesson '+n+': placeholder content detected');
+  });
+  if(phases.some(x=>x!==11))errors.push('A1 Foundation: each of the four phases must contain exactly 11 lessons');
+  if(new Set(scripts).size!==44)errors.push('A1 Foundation: all 44 listening scripts must be distinct');
+ }
+}catch(e){errors.push('A1 Foundation validation failed: '+e.message)}
+if(!server.includes('{"id":"speakup-a1","title":"A1 Beginner","level":"A1","audience":"Beginner","status":"ready","total_lessons":44'))errors.push('A1 Foundation: backend book seed must expose 44 lessons');
+if(!app.includes("const all=(l.listening?.questions||[]).slice(0,12)"))errors.push('A1 Foundation: workbook listening must expose all 12 reading/listening checks');
+if(!live.includes("level==='A1'&&lesson.standardVersion==='a1-foundation-44-v1'")||!live.includes('function a1LessonContent')||!live.includes("expected=level==='A1'?44:22"))errors.push('A1 Foundation: 44-lesson live-book renderer is not wired');
+if(!live.includes('READING SKILL')||!live.includes('a1VocabularyRows'))errors.push('A1 Foundation: live lessons must expose explicit reading-skill progression and real vocabulary entries');
 
 /* A2 Living Standard validation */
 try{
@@ -188,4 +255,4 @@ if(!app.includes('Level Completion Certificate'))errors.push('Student certificat
 if(!app.includes('Print / Save as PDF'))errors.push('Certificate print/save action is missing');
 
 if(errors.length){console.error('CEFR population QA failed:\n- '+errors.join('\n- '));process.exit(1)}
-console.log('CEFR population QA passed: A1, A2, B1 and C1 modules are complete and wired to the 22-topic EnglishGate spine.');
+console.log('CEFR population QA passed: A1 has 44 foundation lessons; A2, B1 and C1 remain complete on the EnglishGate spine.');
