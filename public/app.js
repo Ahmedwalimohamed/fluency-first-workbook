@@ -1022,7 +1022,7 @@ function parseLiveAudioSpeakers(lines,audioAt){
  const markerIndex=lines.findIndex((line,i)=>i<audioAt&&/^AUDIO SPEAKERS:/i.test(String(line||'').trim()));
  if(markerIndex<0)return{speakers:[],markerIndex:-1};
  const raw=String(lines[markerIndex]||'').replace(/^AUDIO SPEAKERS:\s*/i,'').trim();
- const speakers=raw.split('|').map(part=>{const bits=part.split('='),name=String(bits[0]||'').trim(),gender=String(bits[1]||'').trim().toLowerCase();return{name,gender}}).filter(x=>x.name&&['female','male'].includes(x.gender));
+ const speakers=raw.split('|').map(part=>{const bits=part.split('='),name=String(bits[0]||'').trim(),gender=String(bits[1]||'').trim().toLowerCase(),voice=String(bits[2]||'').trim();return{name,gender,...(voice?{voice}:{})}}).filter(x=>x.name&&['female','male'].includes(x.gender));
  return{speakers,markerIndex}
 }
 function renderLiveListeningContent(lines){
