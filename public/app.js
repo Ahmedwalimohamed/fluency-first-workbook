@@ -37,17 +37,13 @@ function makeReading(topic,level,data){
   const text=level==="B2"
     ? person+" took part in a focused discussion about "+topic.toLowerCase()+" at "+place+". The aim was to "+goal+". The situation was more complicated than expected because "+challenge+". Instead of reacting immediately, "+person+" decided to "+action+". This produced a useful result: "+result+". Looking back, "+person+" concluded that practical decisions improve when people identify the real problem, act deliberately, and then evaluate what changed."
     : person+" is learning about "+topic.toLowerCase()+" at "+place+". The main goal is to "+goal+". At first, "+challenge+". To improve the situation, "+person+" decided to "+action+". After that, "+result+". The experience shows that a clear action can make a difficult situation easier.";
-  return {title:topic+" · Reading & Listening",text,questions:[
-    {q:"Who is the text mainly about?",options:[person,"A teacher","A visitor"],answer:person,tag:"listening-reading:detail"},
-    {q:"Where does the situation happen?",options:[place,"a sports stadium","a hotel"],answer:place,tag:"listening-reading:detail"},
-    {q:"What is the main goal?",options:[goal,"avoid making any plan","leave immediately"],answer:goal,tag:"listening-reading:main-idea"},
-    {q:"What challenge appears first?",options:[challenge,"everything was already perfect","there was no problem"],answer:challenge,tag:"listening-reading:detail"},
-    {q:"What action does the person take?",options:[action,"ignore the situation","cancel every activity"],answer:action,tag:"listening-reading:sequence"},
-    {q:"What happens after that action?",options:[result,"nothing useful happens","the task is abandoned"],answer:result,tag:"listening-reading:detail"},
-    {q:"Which happened first?",options:[challenge,action,result],answer:challenge,tag:"listening-reading:sequence"},
-    {q:"Which happened after the action?",options:[result,challenge,goal],answer:result,tag:"listening-reading:sequence"},
-    {q:"What does the experience suggest?",options:["A clear action can improve a difficult situation.","Planning never helps.","The best choice is to do nothing."],answer:"A clear action can improve a difficult situation.",tag:"listening-reading:inference"},
-    {q:"What is the main idea?",options:["A person faces a topic-related challenge and responds to it.","The person avoids the topic completely.","The text is only a list of vocabulary."],answer:"A person faces a topic-related challenge and responds to it.",tag:"listening-reading:main-idea"}
+  return {title:topic+" · Reading & Listening",text,readingText:text,questions:[
+    {type:"short",q:"Who is the reading about?",answer:person,min:1,tag:"reading:detail"},
+    {type:"short",q:"Where does the reading take place?",answer:place,min:1,tag:"reading:detail"},
+    {type:"short",q:"What is "+person+" trying to do?",answer:goal,min:1,tag:"reading:detail"},
+    {type:"short",q:"What problem does "+person+" face?",answer:challenge,min:1,tag:"reading:detail"},
+    {type:"short",q:"What action does "+person+" take?",answer:action,min:1,tag:"reading:detail"},
+    {type:"short",q:"What happens after "+person+" takes that action?",answer:result,min:1,tag:"reading:detail"}
   ]};
 }
 function qg(q,options,answer){return {q,options,answer,tag:"grammar:accuracy"}}
