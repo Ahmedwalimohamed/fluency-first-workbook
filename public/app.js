@@ -2368,12 +2368,12 @@ function wireStudentQuestionFlow(){
  const progress=document.createElement('div');
  progress.className='student-question-flow-head';
  progress.innerHTML='<div class="student-question-flow-top"><button class="student-question-flow-back" type="button" data-question-flow-back aria-label="Previous question">←</button><div class="student-question-flow-copy"><span data-question-flow-label>Question 1 of '+questions.length+'</span><strong data-question-flow-stage></strong></div><div class="student-question-flow-actions"><button class="student-question-source-btn" type="button" data-question-flow-source hidden>Text</button><button class="student-question-audio-btn" type="button" data-question-flow-audio hidden>▶ Audio</button></div></div><div class="student-question-flow-track" aria-hidden="true"><span data-question-flow-bar></span></div>';
- lists[0].before(progress);
+ root.prepend(progress);
  const continueBtn=document.createElement('button');
  continueBtn.type='button';
  continueBtn.className='primary-btn student-question-continue';
  continueBtn.hidden=true;
- lists[lists.length-1].after(continueBtn);
+ root.append(continueBtn);
  const back=progress.querySelector('[data-question-flow-back]'),label=progress.querySelector('[data-question-flow-label]'),stage=progress.querySelector('[data-question-flow-stage]'),bar=progress.querySelector('[data-question-flow-bar]'),sourceBtn=progress.querySelector('[data-question-flow-source]'),audioBtn=progress.querySelector('[data-question-flow-audio]');
  const submit=$('checkActivity')||$('saveWriting');
  const isChoice=q=>Boolean(q.querySelector('input[type="radio"]'));
