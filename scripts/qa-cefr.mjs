@@ -65,7 +65,7 @@ try{
  vm.runInContext(a1p4,context,{filename:'public/a1-foundation-phase4.js'});
  vm.runInContext(a1,context,{filename:'public/a1-foundation-standard.js'});
  const book=context.BOOK_PACKS['speakup-a1'],wordCount=value=>String(value||'').trim().split(/\s+/).filter(Boolean).length;
- const readingBand=n=>n<=11?[30,60]:n<=22?[50,80]:n<=33?[70,110]:[100,140];
+ const readingBand=n=>n<=11?[30,60]:n<=22?[50,80]:n<=33?[70,110]:[100,140],writingBand=n=>n<=3?[10,20]:n<=6?[15,25]:n<=10?[20,30]:n<=11?[25,60]:n<=22?[45,80]:n<=33?[60,100]:[70,110];
  const femaleVoices=new Set(['coral','nova','shimmer']),maleVoices=new Set(['echo','onyx','ash']),speakerProfiles=new Map(),scripts=[];
  if(!book||book.standardVersion!=='a1-foundation-44-v1')errors.push('A1 Foundation: 44-lesson standard did not replace the generic A1 book');
  else{
@@ -84,7 +84,8 @@ try{
    if(readingWords<minReading||readingWords>maxReading)errors.push('A1 lesson '+n+': reading length '+readingWords+' is outside '+minReading+'–'+maxReading+' words');
    if((lesson.grammar?.items||[]).length!==8)errors.push('A1 lesson '+n+': needs exactly 8 focused grammar questions');
    (lesson.grammar?.items||[]).forEach((item,idx)=>{if(!Array.isArray(item.options)||item.options.length!==3||!item.options.includes(item.answer))errors.push('A1 lesson '+n+': invalid grammar item '+(idx+1))});
-   if(!lesson.writing?.task||Number(lesson.writing.minWords)<25||Number(lesson.writing.maxWords)>110)errors.push('A1 lesson '+n+': writing task/range is invalid');
+   const [minWriting,maxWriting]=writingBand(n);
+   if(!lesson.writing?.task||Number(lesson.writing.minWords)!==minWriting||Number(lesson.writing.maxWords)!==maxWriting)errors.push('A1 lesson '+n+': writing range must progress to '+minWriting+'–'+maxWriting+' words');
    const script=String(lesson.listening?.audioScript||''),matches=[...script.matchAll(/(?:^|(?<=[.!?])\s+)([A-Z][A-Za-z'’-]{1,24}(?:\s+[A-Z][A-Za-z'’-]{1,24})?):\s*/g)],labels=matches.map(m=>m[1].trim()),unique=[...new Set(labels)],profiles=lesson.listening?.speakers||[];
    scripts.push(script);
    if(unique.length!==2)errors.push('A1 lesson '+n+': listening must contain exactly two named speakers');
@@ -112,6 +113,8 @@ try{
 }catch(e){errors.push('A1 Foundation validation failed: '+e.message)}
 if(!server.includes('{"id":"speakup-a1","title":"A1 Beginner","level":"A1","audience":"Beginner","status":"ready","total_lessons":44'))errors.push('A1 Foundation: backend book seed must expose 44 lessons');
 if(!app.includes("const all=(l.listening?.questions||[]).slice(0,12)"))errors.push('A1 Foundation: workbook listening must expose all 12 reading/listening checks');
+if(!app.includes('const A1_EARLY_WRITING_MODELS=')||!app.includes("early?'Sentence Order':'Paragraph Ordering'")||!app.includes("early?'Tap the two sentences in the natural order.'"))errors.push('A1 Foundation: Lessons 1–10 must use the simplified writing progression instead of paragraph ordering');
+if(!app.includes("build:{level:1,label:'Build a sentence'}")||!app.includes("organize:{level:4,label:'Put two sentences in order'}"))errors.push('A1 Foundation: early writing ladder labels must stay beginner-friendly');
 if(!live.includes("level==='A1'&&lesson.standardVersion==='a1-foundation-44-v1'")||!live.includes('function a1LessonContent')||!live.includes("expected=level==='A1'?44:22"))errors.push('A1 Foundation: 44-lesson live-book renderer is not wired');
 if(!live.includes('READING SKILL')||!live.includes('a1VocabularyRows'))errors.push('A1 Foundation: live lessons must expose explicit reading-skill progression and real vocabulary entries');
 
