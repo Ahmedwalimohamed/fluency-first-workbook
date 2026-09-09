@@ -353,179 +353,179 @@ function grammarItems(focus){
  const f=focus.toLowerCase();
  if(f.includes('present simple vs present continuous'))return[
   q('Muna usually works in the office, but today she ___ from home.',['works','is working','worked'],'is working','grammar:contrast'),
-  q('Which sentence describes a regular routine?',['I check my email every morning.','I am checking my email every morning this minute.','I checked my email right now.'],'I check my email every morning.','grammar:routine'),
-  q('Which sentence describes something happening now?',['The team is meeting a client now.','The team meets a client now every day.','The team met a client now.'],'The team is meeting a client now.','grammar:now'),
-  q('Complete: He ___ a report this week, so he is very busy.',['prepares','is preparing','prepared last year'],'is preparing','grammar:temporary'),
-  q('Choose the best contrast.',['I usually teach in the morning, but this week I am teaching in the evening.','I am usually teaching in the morning, but this week I teach yesterday.','I taught usually in the morning, but this week I am teach.'],'I usually teach in the morning, but this week I am teaching in the evening.','grammar:contrast'),
-  q('What ___ you usually do after class?',['do','are','did'],'do','grammar:question')
+  q('Which sentence describes a regular work routine?',['I check my email every morning.','I am checking my email right now.','I checked my email before breakfast yesterday.'],'I check my email every morning.','grammar:routine'),
+  q('Which sentence describes something happening now?',['The team is meeting a client now.','The team meets this client every Monday.','The team met the client yesterday.'],'The team is meeting a client now.','grammar:now'),
+  q('This week is different from normal. Which sentence fits?',['He is preparing a special report this week.','He prepares the monthly report on the first Monday.','He prepared a similar report last month.'],'He is preparing a special report this week.','grammar:temporary'),
+  q('Which sentence clearly contrasts a routine with a temporary change?',['I usually teach in the morning, but this week I am teaching in the evening.','I teach in the morning and my colleague teaches in the evening.','I taught in the morning last term, but now I work in an office.'],'I usually teach in the morning, but this week I am teaching in the evening.','grammar:contrast'),
+  q('Which question asks about a regular routine after class?',['What do you usually do after class?','What are you doing right now?','What did you do after class yesterday?'],'What do you usually do after class?','grammar:question')
  ];
  if(f==='past simple')return[
-  q('Yesterday Yusuf ___ the bus to Berbera.',['takes','took','has taken'],'took','grammar:past'),
-  q('Choose the correct negative.',['We did not miss the reservation.','We did not missed the reservation.','We have not miss the reservation yesterday.'],'We did not miss the reservation.','grammar:negative'),
-  q('___ you enjoy the trip last weekend?',['Did','Have','Do'],'Did','grammar:question'),
-  q('The bus ___ late, so we changed our plan.',['left','leaves','has left'],'left','grammar:sequence'),
-  q('Choose the sentence with a finished past time.',['I visited Hargeisa last month.','I have visited Hargeisa last month.','I visit Hargeisa last month.'],'I visited Hargeisa last month.','grammar:time'),
-  q('What happened after you ___ at the hotel?',['arrived','arrive','have arrive'],'arrived','grammar:sequence')
+  q('The trip happened yesterday. Which sentence is correct?',['Yusuf took the bus to Berbera.','Yusuf takes the bus to Berbera every Friday.','Yusuf has taken that bus many times.'],'Yusuf took the bus to Berbera.','grammar:past'),
+  q('The reservation was for yesterday. Which negative sentence fits that finished time?',['We did not miss the reservation.','We have not missed any reservations this year.','We do not usually miss reservations.'],'We did not miss the reservation.','grammar:negative'),
+  q('Which question asks about a finished trip last weekend?',['Did you enjoy the trip last weekend?','Have you ever enjoyed a trip like that?','Do you enjoy weekend trips?'],'Did you enjoy the trip last weekend?','grammar:question'),
+  q('The bus was late on Saturday. Which sentence reports that event?',['The bus left late, so we changed our plan.','The bus usually leaves at seven.','The bus has already left today.'],'The bus left late, so we changed our plan.','grammar:sequence'),
+  q('Which sentence uses a clearly finished past time?',['I visited Hargeisa last month.','I have visited Hargeisa several times.','I visit Hargeisa when I have time.'],'I visited Hargeisa last month.','grammar:time'),
+  q('You are telling the next event in a past story. Which sentence fits?',['After we arrived at the hotel, we called our family.','After we arrive at the hotel, we usually call our family.','We have arrived at the hotel, so you can call us now.'],'After we arrived at the hotel, we called our family.','grammar:sequence')
  ];
  if(f.includes('frequency'))return[
-  q('Rahma ___ turns off notifications when she studies.',['usually','right now','yesterday'],'usually','grammar:frequency'),
-  q('Choose the correct word order.',['I often use my phone for study.','I use often my phone for study.','Often I am use my phone for study.'],'I often use my phone for study.','grammar:word-order'),
-  q('She is ___ late for the online class; she arrives on time almost every day.',['rarely','always','now'],'rarely','grammar:meaning'),
-  q('How often ___ you check social media?',['do','are','did yesterday'],'do','grammar:question'),
-  q('Choose the best sentence with be.',['He is usually careful with privacy settings.','He usually is careful with privacy settings always.','He does usually careful with privacy settings.'],'He is usually careful with privacy settings.','grammar:be'),
-  q('Which sentence means 100% of the time?',['I always check the source.','I sometimes check the source.','I rarely check the source.'],'I always check the source.','grammar:meaning')
+  q('Rahma does this on most study days. Which sentence fits?',['Rahma usually turns off notifications when she studies.','Rahma is turning off notifications right now.','Rahma turned off notifications yesterday.'],'Rahma usually turns off notifications when she studies.','grammar:frequency'),
+  q('Which sentence uses often to describe a regular habit?',['I often use my phone for study.','I am using my phone for study at the moment.','I used my phone for study last night.'],'I often use my phone for study.','grammar:word-order'),
+  q('She arrives on time almost every day. Which statement matches that frequency?',['She is rarely late for the online class.','She is always late for the online class.','She is sometimes late, about half the time.'],'She is rarely late for the online class.','grammar:meaning'),
+  q('Which question asks about frequency?',['How often do you check social media?','Are you checking social media now?','When did you check social media yesterday?'],'How often do you check social media?','grammar:question'),
+  q('Which sentence places a frequency adverb naturally with be?',['He is usually careful with privacy settings.','He is careful with privacy settings at this moment.','He was careful with privacy settings yesterday.'],'He is usually careful with privacy settings.','grammar:be'),
+  q('Which sentence means the action happens every time?',['I always check the source.','I sometimes check the source.','I rarely check the source.'],'I always check the source.','grammar:meaning')
  ];
  if(f.includes('should'))return[
-  q('You feel very tired. You ___ get some rest.',['should','should to','must not'],'should','grammar:advice'),
-  q('Choose the best advice.',['You should drink more water during a hot day.','You should drinking more water during a hot day.','You should to drink more water during a hot day.'],'You should drink more water during a hot day.','grammar:form'),
-  q('A friend is stressed. What is the best negative advice?',['You should not work all night.','You do not should work all night.','You should not to work all night.'],'You should not work all night.','grammar:negative'),
-  q('___ I talk to my teacher about the problem?',['Should','Do should','Am should'],'Should','grammar:question'),
-  q('Which sentence gives advice, not a rule?',['You should take a short break.','You have to show your passport at the border.','You must wear a seat belt.'],'You should take a short break.','grammar:function'),
-  q('Complete: He should ___ a more balanced routine.',['try','tries','trying'],'try','grammar:base-verb')
+  q('A friend feels very tired after several busy days. Which sentence gives advice?',['You should get some rest.','You have to show your ID at reception.','You could run five kilometres yesterday.'],'You should get some rest.','grammar:advice'),
+  q('Which sentence gives practical advice for a hot day?',['You should drink more water.','You must submit the form before noon.','You do not have to bring a notebook.'],'You should drink more water.','grammar:function'),
+  q('A friend is stressed because they work all night. Which advice tells them what not to do?',['You should not work all night.','You should take a short walk after work.','You should speak to someone you trust.'],'You should not work all night.','grammar:negative'),
+  q('You want advice from your teacher. Which question is best?',['Should I talk to my teacher about the problem?','Do I have to submit the task today?','Could I use your phone for a minute?'],'Should I talk to my teacher about the problem?','grammar:question'),
+  q('Which sentence is advice rather than a compulsory rule?',['You should take a short break.','Passengers must wear a seat belt.','Visitors have to show their passport.'],'You should take a short break.','grammar:function'),
+  q('Which sentence uses should + base verb correctly?',['He should try a more balanced routine.','He tries a more balanced routine every week.','He is trying a more balanced routine this month.'],'He should try a more balanced routine.','grammar:form')
  ];
  if(f.includes('comparatives and superlatives'))return[
-  q('This dish is ___ than the other one.',['spicier','spiciest','more spicy than all'],'spicier','grammar:comparative'),
-  q('Which sentence compares two dishes correctly?',['Rice is cheaper than grilled fish here.','Rice is cheapest than grilled fish here.','Rice is more cheaper than grilled fish here.'],'Rice is cheaper than grilled fish here.','grammar:comparative'),
-  q('This is the ___ dish on the menu.',['most popular','more popular','popularer'],'most popular','grammar:superlative'),
-  q('Which form is correct?',['This portion is bigger than mine.','This portion is more big than mine.','This portion is biggest than mine.'],'This portion is bigger than mine.','grammar:comparative'),
-  q('Of the three restaurants, this one is ___.',['the cheapest','cheaper','more cheap'],'the cheapest','grammar:superlative'),
-  q('Traditional tea is ___ sweet than this juice.',['less','least','fewer'],'less','grammar:comparison')
+  q('You are comparing two dishes. Which sentence makes that comparison?',['This dish is spicier than the other one.','This is the spiciest dish on the menu.','This dish is very spicy.'],'This dish is spicier than the other one.','grammar:comparative'),
+  q('Which sentence correctly compares the price of two foods?',['Rice is cheaper than grilled fish here.','Rice is the cheapest item on the whole menu.','Rice is cheap at this restaurant.'],'Rice is cheaper than grilled fish here.','grammar:comparative'),
+  q('You are talking about every dish on the menu. Which sentence identifies number one for popularity?',['This is the most popular dish on the menu.','This dish is more popular than the soup.','This dish is quite popular.'],'This is the most popular dish on the menu.','grammar:superlative'),
+  q('Which sentence compares the size of two portions?',['This portion is bigger than mine.','This is the biggest portion in the restaurant.','This portion is very big.'],'This portion is bigger than mine.','grammar:comparative'),
+  q('You compare three restaurants. Which sentence identifies the lowest price?',['This one is the cheapest.','This one is cheaper than the café next door.','This one is quite cheap.'],'This one is the cheapest.','grammar:superlative'),
+  q('Which sentence means the tea has a smaller amount of sweetness than the juice?',['Traditional tea is less sweet than this juice.','Traditional tea is sweeter than this juice.','Traditional tea is the sweetest drink here.'],'Traditional tea is less sweet than this juice.','grammar:comparison')
  ];
  if(f.includes('past simple vs past continuous'))return[
-  q('Maryan ___ when her phone rang.',['was studying','studied every day','has studied'],'was studying','grammar:background'),
-  q('While I was revising, my friend ___ me.',['called','was call','has called yesterday'],'called','grammar:interruption'),
-  q('Choose the best story sentence.',['We were working when the internet stopped.','We worked when the internet was stop.','We have worked when the internet stopped yesterday.'],'We were working when the internet stopped.','grammar:contrast'),
-  q('What ___ you doing when the teacher arrived?',['were','did','have'],'were','grammar:question'),
-  q('The students ___ quietly when the fire alarm started.',['were reading','read usually','have read'],'were reading','grammar:background'),
-  q('Which action was shorter? “I was writing when the lights went out.”',['The lights went out.','I was writing.','Both actions were regular habits.'],'The lights went out.','grammar:meaning')
+  q('Her phone rang in the middle of a longer study action. Which sentence fits?',['Maryan was studying when her phone rang.','Maryan studied every evening last term.','Maryan has studied the chapter already.'],'Maryan was studying when her phone rang.','grammar:background'),
+  q('Which sentence shows a short event interrupting a longer action?',['While I was revising, my friend called me.','I revised with my friend every weekend.','I have revised the chapter with my friend.'],'While I was revising, my friend called me.','grammar:interruption'),
+  q('Which sentence clearly shows background action + interruption?',['We were working when the internet stopped.','We worked online every Tuesday last year.','We have worked online since January.'],'We were working when the internet stopped.','grammar:contrast'),
+  q('Which question asks about an action in progress when the teacher arrived?',['What were you doing when the teacher arrived?','What did you do after the teacher arrived?','What have you done since the teacher arrived?'],'What were you doing when the teacher arrived?','grammar:question'),
+  q('The fire alarm started during a longer action. Which sentence fits?',['The students were reading quietly when the fire alarm started.','The students read quietly every morning.','The students have read the safety notice.'],'The students were reading quietly when the fire alarm started.','grammar:background'),
+  q('In “I was writing when the lights went out,” which event is the shorter interruption?',['The lights went out.','I was writing.','Both actions were regular habits.'],'The lights went out.','grammar:meaning')
  ];
  if(f.includes('going to'))return[
-  q('Khalid ___ make a new budget next month.',['is going to','goes to','is going'],'is going to','grammar:plan'),
-  q('We ___ save more money this year.',['are going to','are go to','going to'],'are going to','grammar:plan'),
-  q('What are you going to ___ first?',['buy','bought','buying'],'buy','grammar:base-verb'),
-  q('Choose the correct negative plan.',['I am not going to buy a new phone this month.','I do not going to buy a new phone this month.','I am going not buy a new phone this month.'],'I am not going to buy a new phone this month.','grammar:negative'),
-  q('___ she going to invest in new equipment?',['Is','Does','Has'],'Is','grammar:question'),
-  q('Which sentence is a planned action?',['We are going to review our expenses on Friday.','We reviewed our expenses last Friday.','We usually review expenses every Friday.'],'We are going to review our expenses on Friday.','grammar:function')
+  q('Khalid has already decided his plan for next month. Which sentence fits?',['Khalid is going to make a new budget next month.','Khalid makes a budget at the start of every month.','Khalid made a budget last month.'],'Khalid is going to make a new budget next month.','grammar:plan'),
+  q('Which sentence describes a future intention to save money?',['We are going to save more money this year.','We save a little money every month.','We saved more money last year.'],'We are going to save more money this year.','grammar:plan'),
+  q('Which question asks about the first action in someone’s future plan?',['What are you going to buy first?','What do you usually buy first?','What did you buy first yesterday?'],'What are you going to buy first?','grammar:question'),
+  q('Which sentence describes a decision NOT to buy a phone this month?',['I am not going to buy a new phone this month.','I do not usually buy expensive phones.','I did not buy a phone last month.'],'I am not going to buy a new phone this month.','grammar:negative'),
+  q('Which question asks whether she has a future investment plan?',['Is she going to invest in new equipment?','Does she invest in new equipment every year?','Did she invest in new equipment last year?'],'Is she going to invest in new equipment?','grammar:question'),
+  q('Which sentence is a planned future action?',['We are going to review our expenses on Friday.','We reviewed our expenses last Friday.','We usually review expenses every Friday.'],'We are going to review our expenses on Friday.','grammar:function')
  ];
  if(f.includes('have to'))return[
-  q('At this recycling centre, visitors ___ separate plastic and paper.',['have to','would like to','could yesterday'],'have to','grammar:obligation'),
-  q('You ___ bring your own bag; the centre provides one.',['do not have to','must not','should not to'],'do not have to','grammar:no-obligation'),
-  q('Which sentence means “it is necessary”?',['We have to conserve water.','We do not have to conserve water.','We might conserve water yesterday.'],'We have to conserve water.','grammar:meaning'),
-  q('Does she ___ wear gloves here?',['have to','has to','having to'],'have to','grammar:question'),
-  q('Students ___ leave waste on the floor; it is against the rules.',['must not','do not have to','could not yesterday'],'must not','grammar:prohibition'),
-  q('Which sentence means the action is optional?',['You do not have to attend the extra meeting.','You must attend the extra meeting.','You have to attend the extra meeting.'],'You do not have to attend the extra meeting.','grammar:meaning')
+  q('The recycling centre says separating plastic and paper is required. Which sentence fits?',['Visitors have to separate plastic and paper.','Visitors would like to separate plastic and paper.','Visitors sometimes separate plastic and paper.'],'Visitors have to separate plastic and paper.','grammar:obligation'),
+  q('The centre provides bags, so bringing your own is optional. Which sentence says that?',['You do not have to bring your own bag.','You must not bring your own bag.','You have to bring your own bag.'],'You do not have to bring your own bag.','grammar:no-obligation'),
+  q('Which sentence means conserving water is necessary?',['We have to conserve water.','We do not have to conserve water.','We would like to conserve water.'],'We have to conserve water.','grammar:meaning'),
+  q('Which question asks whether gloves are required?',['Does she have to wear gloves here?','Would she like to wear gloves here?','Could she wear gloves here?'],'Does she have to wear gloves here?','grammar:question'),
+  q('The rules forbid leaving waste on the floor. Which sentence fits?',['Students must not leave waste on the floor.','Students do not have to leave waste on the floor.','Students would not like to leave waste on the floor.'],'Students must not leave waste on the floor.','grammar:prohibition'),
+  q('Which sentence means attendance is optional?',['You do not have to attend the extra meeting.','You must attend the extra meeting.','You have to attend the extra meeting.'],'You do not have to attend the extra meeting.','grammar:meaning')
  ];
  if(f.includes('relative'))return[
-  q('A dependable relative is someone ___ you can trust.',['who','where','which place'],'who','grammar:people'),
-  q('This is the house ___ my grandparents live.',['where','who','which person'],'where','grammar:place'),
-  q('The gift ___ she gave me is very special.',['that','who','where'],'that','grammar:thing'),
-  q('Choose the correct sentence.',['I have an aunt who works at a hospital.','I have an aunt which works at a hospital.','I have an aunt where works at a hospital.'],'I have an aunt who works at a hospital.','grammar:people'),
-  q('A family tradition is something ___ people repeat over many years.',['that','who','where'],'that','grammar:thing'),
-  q('Borama is the town ___ many of my relatives live.',['where','who','that person'],'where','grammar:place')
+  q('Which sentence identifies a dependable relative with extra information?',['A dependable relative is someone who you can trust.','A dependable relative is someone I call every week.','My relative is dependable and friendly.'],'A dependable relative is someone who you can trust.','grammar:people'),
+  q('Which sentence uses where to identify a place?',['This is the house where my grandparents live.','This is my grandparents’ old house.','My grandparents live in this house.'],'This is the house where my grandparents live.','grammar:place'),
+  q('Which sentence uses a relative clause to identify a thing?',['The gift that she gave me is very special.','She gave me a very special gift.','The gift is special because it came from her.'],'The gift that she gave me is very special.','grammar:thing'),
+  q('Which sentence uses who correctly for a person?',['I have an aunt who works at a hospital.','I have an aunt and she works at a hospital.','My aunt works at a hospital near here.'],'I have an aunt who works at a hospital.','grammar:people'),
+  q('Which sentence defines a family tradition with a relative clause?',['A family tradition is something that people repeat over many years.','Families repeat traditions over many years.','This tradition is important to our family.'],'A family tradition is something that people repeat over many years.','grammar:thing'),
+  q('Which sentence uses where to add information about Borama?',['Borama is the town where many of my relatives live.','Many of my relatives live in Borama.','Borama is my relatives’ hometown.'],'Borama is the town where many of my relatives live.','grammar:place')
  ];
  if(f.includes('can / could'))return[
-  q('I ___ check several news sources now.',['can','could when I was younger only','am can'],'can','grammar:present-ability'),
-  q('When I first used the internet, I ___ not identify unreliable sources easily.',['could','can','will can'],'could','grammar:past-ability'),
-  q('___ you show me the original source, please?',['Could','Did could','Are can'],'Could','grammar:request'),
-  q('This headline ___ be misleading, so let us verify it.',['could','did','has to yesterday'],'could','grammar:possibility'),
-  q('Choose the present ability sentence.',['She can compare two reports quickly.','She could compare two reports when she is doing it now.','She can to compare two reports quickly.'],'She can compare two reports quickly.','grammar:ability'),
-  q('Which is the most polite request?',['Could you send me the link?','Send me the link.','You can send link now?'],'Could you send me the link?','grammar:politeness')
+  q('You are describing an ability you have now. Which sentence fits?',['I can check several news sources now.','I could check several news sources when I was at school.','I checked several news sources yesterday.'],'I can check several news sources now.','grammar:present-ability'),
+  q('You are describing a past difficulty. Which sentence fits?',['When I first used the internet, I could not identify unreliable sources easily.','Now I can identify unreliable sources more easily.','I am checking an unreliable source right now.'],'When I first used the internet, I could not identify unreliable sources easily.','grammar:past-ability'),
+  q('Which sentence is a polite request?',['Could you show me the original source, please?','You can show me the original source.','I could find the original source yesterday.'],'Could you show me the original source, please?','grammar:request'),
+  q('You are not certain the headline is misleading. Which sentence shows possibility?',['This headline could be misleading.','This headline is definitely misleading.','This headline was misleading yesterday.'],'This headline could be misleading.','grammar:possibility'),
+  q('Which sentence describes present ability?',['She can compare two reports quickly.','She could compare two reports when she was a student.','She compared two reports yesterday.'],'She can compare two reports quickly.','grammar:ability'),
+  q('Which request sounds most polite?',['Could you send me the link?','Send me the link, please.','I want the link now.'],'Could you send me the link?','grammar:politeness')
  ];
  if(f.includes('as...as'))return[
-  q('Walking is not ___ running for building stamina.',['as intense as','more intense as','as intense than'],'as intense as','grammar:equality'),
-  q('Anisa runs ___.',['slowly','slow','slowness'],'slowly','grammar:adverb'),
-  q('This routine is ___ the other one.',['as consistent as','as consistent than','more consistent as'],'as consistent as','grammar:equality'),
-  q('Choose the sentence that describes how she exercises.',['She stretches carefully.','She stretches careful.','She carefully is stretch.'],'She stretches carefully.','grammar:adverb'),
-  q('My new pace is not as fast ___ my old pace.',['as','than','like'],'as','grammar:structure'),
-  q('Which sentence compares two people equally?',['Ali trains as regularly as Omar.','Ali trains regular as Omar.','Ali trains more regularly as Omar.'],'Ali trains as regularly as Omar.','grammar:equality')
+  q('You want to say walking is less intense than running. Which sentence does that?',['Walking is not as intense as running.','Walking is more intense than running.','Walking is as intense as running.'],'Walking is not as intense as running.','grammar:equality'),
+  q('Which sentence describes HOW Anisa runs?',['Anisa runs slowly.','Anisa is a slow runner.','Anisa runs every morning.'],'Anisa runs slowly.','grammar:adverb'),
+  q('Two routines have the same level of consistency. Which sentence fits?',['This routine is as consistent as the other one.','This routine is more consistent than the other one.','This is the most consistent routine.'],'This routine is as consistent as the other one.','grammar:equality'),
+  q('Which sentence describes how she stretches?',['She stretches carefully.','She is careful before she stretches.','She does a careful stretch before running.'],'She stretches carefully.','grammar:adverb'),
+  q('Which sentence shows your new pace is slower than your old pace?',['My new pace is not as fast as my old pace.','My new pace is faster than my old pace.','My new pace is as fast as my old pace.'],'My new pace is not as fast as my old pace.','grammar:structure'),
+  q('Which sentence says Ali and Omar train with equal regularity?',['Ali trains as regularly as Omar.','Ali trains more regularly than Omar.','Omar trains less regularly than Ali.'],'Ali trains as regularly as Omar.','grammar:equality')
  ];
  if(f.includes('quantifier'))return[
-  q('There are ___ buses in the city centre.',['many','much','a little'],'many','grammar:countable'),
-  q('There is ___ traffic early in the morning.',['less','fewer','many'],'less','grammar:uncountable'),
-  q('The village has ___ large facilities, but it has the basic services.',['a few','a little','much'],'a few','grammar:countable'),
-  q('I have ___ time before work, so my commute matters.',['a little','a few','many'],'a little','grammar:uncountable'),
-  q('There are ___ cars in the countryside than in the city.',['fewer','less','little'],'fewer','grammar:comparison'),
-  q('Which sentence is correct?',['There is not much noise at night.','There are not much noise at night.','There is not many noise at night.'],'There is not much noise at night.','grammar:uncountable')
+  q('Which sentence is correct with a countable noun?',['There are many buses in the city centre.','There is much traffic in the city centre.','There is a little noise in the city centre.'],'There are many buses in the city centre.','grammar:countable'),
+  q('Which sentence says the countryside has a smaller amount of traffic?',['There is less traffic in the countryside.','There are fewer buses in the countryside.','There is a little traffic near my house.'],'There is less traffic in the countryside.','grammar:uncountable'),
+  q('The village has a small number of large facilities. Which phrase fits?',['a few large facilities','a little traffic','much noise'],'a few large facilities','grammar:countable'),
+  q('You have a small amount of time before work. Which phrase fits?',['a little time','a few minutes','many tasks'],'a little time','grammar:uncountable'),
+  q('Which sentence compares the number of cars?',['There are fewer cars in the countryside than in the city.','There is less traffic in the countryside than in the city.','There are a few cars outside the office.'],'There are fewer cars in the countryside than in the city.','grammar:comparison'),
+  q('Which sentence uses much correctly?',['There is not much noise at night.','There are not many buses at night.','There are only a few shops open at night.'],'There is not much noise at night.','grammar:uncountable')
  ];
  if(f.includes('would like'))return[
-  q('I ___ to improve my English this year.',['would like','would like improving','am like to'],'would like','grammar:wish'),
-  q('She wants ___ university next year.',['to start','starting after wants','start to'],'to start','grammar:infinitive'),
-  q('What would you like ___ next?',['to learn','learning','learned'],'to learn','grammar:infinitive'),
-  q('Choose the polite wish.',['I would like to ask a question.','I want ask a question now.','I would like asking a question.'],'I would like to ask a question.','grammar:function'),
-  q('My goal is clear: I want ___ more confidently.',['to speak','speaking after want','speak to'],'to speak','grammar:infinitive'),
-  q('Which sentence describes a direct personal goal?',['I want to finish the course this year.','I would finished the course this year.','I want finishing the course this year.'],'I want to finish the course this year.','grammar:goal')
+  q('Which sentence expresses a polite wish to improve English?',['I would like to improve my English this year.','I want to improve my English this year.','I am improving my English this year.'],'I would like to improve my English this year.','grammar:wish'),
+  q('Which sentence states a direct goal for next year?',['She wants to start university next year.','She would like to visit a university next week.','She started university last year.'],'She wants to start university next year.','grammar:infinitive'),
+  q('Which question politely asks about a future wish?',['What would you like to learn next?','What do you usually learn in class?','What did you learn yesterday?'],'What would you like to learn next?','grammar:infinitive'),
+  q('Which sentence is the most polite way to introduce a request?',['I would like to ask a question.','I want an answer now.','I asked a question yesterday.'],'I would like to ask a question.','grammar:function'),
+  q('Which sentence states a direct personal goal?',['I want to speak more confidently.','I would like some tea, please.','I spoke confidently yesterday.'],'I want to speak more confidently.','grammar:goal'),
+  q('Which sentence describes a goal rather than a past achievement?',['I want to finish the course this year.','I finished the course last year.','I have already finished the course.'],'I want to finish the course this year.','grammar:goal')
  ];
  if(f==='present perfect')return[
-  q('The police ___ collected the evidence.',['have','did','are'],'have','grammar:form'),
-  q('She has already ___ to the witness.',['spoken','spoke','speak'],'spoken','grammar:participle'),
-  q('Have they found the missing document ___?',['yet','last night','ago'],'yet','grammar:yet'),
-  q('Choose the recent-result sentence.',['The investigators have finished the first report.','The investigators finished the first report in 2020.','The investigators finish the first report yesterday.'],'The investigators have finished the first report.','grammar:result'),
-  q('I have never ___ a court case.',['seen','saw','see'],'seen','grammar:experience'),
-  q('___ you ever spoken to a witness?',['Have','Did ever','Are'],'Have','grammar:question')
+  q('The investigation is still relevant now. Which update fits?',['The police have collected the evidence.','The police collected the evidence in 2020.','The police collect evidence every day.'],'The police have collected the evidence.','grammar:form'),
+  q('Which sentence reports a recent action with already?',['She has already spoken to the witness.','She spoke to the witness last Tuesday.','She speaks to witnesses every week.'],'She has already spoken to the witness.','grammar:participle'),
+  q('Which question asks whether the document has been found up to now?',['Have they found the missing document yet?','Did they find the document yesterday?','Do they usually find missing documents quickly?'],'Have they found the missing document yet?','grammar:yet'),
+  q('Which sentence focuses on a recent result, with no finished past time?',['The investigators have finished the first report.','The investigators finished the first report in 2020.','The investigators finish a report every month.'],'The investigators have finished the first report.','grammar:result'),
+  q('Which sentence describes life experience up to now?',['I have never seen a court case.','I did not see the court case yesterday.','I do not see court cases at work.'],'I have never seen a court case.','grammar:experience'),
+  q('Which question asks about experience at any time before now?',['Have you ever spoken to a witness?','Did you speak to the witness on Monday?','Do you speak to witnesses at work?'],'Have you ever spoken to a witness?','grammar:question')
  ];
  if(f.includes('present perfect vs past simple'))return[
-  q('I ___ this experiment twice. No finished time is given.',['have done','did','do yesterday'],'have done','grammar:present-perfect'),
-  q('We ___ the experiment yesterday.',['did','have done','do'],'did','grammar:past-simple'),
-  q('She ___ three research projects since January.',['has completed','completed last January only','completes yesterday'],'has completed','grammar:since'),
-  q('When ___ they develop the first version?',['did','have','do since'],'did','grammar:finished-time'),
-  q('Choose the correct pair.',['I have visited the science centre before, but I went there again last Saturday.','I visited the science centre before, but I have went there last Saturday.','I have visit the science centre before, but I go there last Saturday.'],'I have visited the science centre before, but I went there again last Saturday.','grammar:contrast'),
-  q('Which time expression normally goes with the past simple?',['last year','ever','since 2024'],'last year','grammar:time-marker')
+  q('No finished time is given. Which sentence fits?',['I have done this experiment twice.','I did this experiment yesterday.','I do this experiment every term.'],'I have done this experiment twice.','grammar:present-perfect'),
+  q('The time “yesterday” is finished. Which sentence fits?',['We did the experiment yesterday.','We have done the experiment twice.','We do the experiment every month.'],'We did the experiment yesterday.','grammar:past-simple'),
+  q('Which sentence connects January to the present?',['She has completed three research projects since January.','She completed a research project last January.','She completes one research project every January.'],'She has completed three research projects since January.','grammar:since'),
+  q('Which question asks about a finished past event?',['When did they develop the first version?','Have they developed a new version yet?','Do they develop new versions every year?'],'When did they develop the first version?','grammar:finished-time'),
+  q('Which pair correctly contrasts experience with a finished past visit?',['I have visited the science centre before, but I went there again last Saturday.','I visit the science centre often, and I am going there next Saturday.','I visited the science centre last Saturday, and I usually go there with my class.'],'I have visited the science centre before, but I went there again last Saturday.','grammar:contrast'),
+  q('Which time expression normally points to the past simple?',['last year','ever','since 2024'],'last year','grammar:time-marker')
  ];
  if(f.includes('first conditional'))return[
-  q('If the audience is large, we ___ more chairs.',['will need','would need','needed yesterday'],'will need','grammar:first-conditional'),
-  q('If the weather changes, the performance ___ indoors.',['will move','moves yesterday','would moved'],'will move','grammar:result'),
-  q('Choose the correct first conditional.',['If I get a ticket, I will go to the show.','If I will get a ticket, I go to the show.','If I got a ticket, I will went to the show.'],'If I get a ticket, I will go to the show.','grammar:form'),
-  q('What will you do if the film ___ late?',['starts','will start','started yesterday'],'starts','grammar:if-clause'),
-  q('If they receive a good review, more people ___ the event.',['will attend','would attended','attend yesterday'],'will attend','grammar:result'),
-  q('Which sentence describes a realistic future possibility?',['If we finish early, we will meet the actors.','If we finished early yesterday, we will meet the actors.','If we will finish early, we met the actors.'],'If we finish early, we will meet the actors.','grammar:meaning')
+  q('You think a large audience is a real possibility. Which sentence fits?',['If the audience is large, we will need more chairs.','If the audience were larger, we would need more chairs.','The audience was large, so we needed more chairs.'],'If the audience is large, we will need more chairs.','grammar:first-conditional'),
+  q('Which sentence gives a likely future result if the weather changes?',['If the weather changes, the performance will move indoors.','If the weather changed yesterday, the performance moved indoors.','If the weather were different, the performance would move indoors.'],'If the weather changes, the performance will move indoors.','grammar:result'),
+  q('Which sentence is a first conditional about getting a ticket?',['If I get a ticket, I will go to the show.','If I got a ticket, I would go to the show.','I got a ticket, so I went to the show.'],'If I get a ticket, I will go to the show.','grammar:form'),
+  q('Which question asks about a realistic future possibility?',['What will you do if the film starts late?','What would you do if the cinema closed forever?','What did you do when the film started late yesterday?'],'What will you do if the film starts late?','grammar:if-clause'),
+  q('Which sentence connects a possible good review to a future result?',['If they receive a good review, more people will attend the event.','They received a good review, so more people attended the event.','If they received reviews every week, people usually attended.'],'If they receive a good review, more people will attend the event.','grammar:result'),
+  q('Which sentence describes a realistic future possibility?',['If we finish early, we will meet the actors.','If we finished early yesterday, we met the actors.','If we lived near the theatre, we would go more often.'],'If we finish early, we will meet the actors.','grammar:meaning')
  ];
  if(f.includes('present simple passive'))return[
-  q('Emergency aid ___ to families after the assessment.',['is delivered','delivers','is deliver'],'is delivered','grammar:passive'),
-  q('Choose the passive sentence.',['Information is shared through local centres.','Local centres share information.','Information shares local centres.'],'Information is shared through local centres.','grammar:passive'),
-  q('Many community programmes ___ by volunteers.',['are supported','support','are support'],'are supported','grammar:plural'),
-  q('Where ___ the food distributed?',['is','does','has'],'is','grammar:question'),
-  q('The service ___ every weekday.',['is provided','provides itself','is provide'],'is provided','grammar:passive'),
-  q('Which sentence focuses on the process, not the actor?',['The applications are checked every morning.','The staff check the applications every morning.','The applications check the staff.'],'The applications are checked every morning.','grammar:function')
+  q('You want to focus on the aid, not the organisation delivering it. Which sentence fits?',['Emergency aid is delivered to families after the assessment.','Local teams deliver emergency aid after the assessment.','Emergency aid arrived yesterday.'],'Emergency aid is delivered to families after the assessment.','grammar:passive'),
+  q('Which sentence is passive?',['Information is shared through local centres.','Local centres share information.','People can find information at local centres.'],'Information is shared through local centres.','grammar:passive'),
+  q('Which sentence focuses on programmes receiving support?',['Many community programmes are supported by volunteers.','Volunteers support many community programmes.','Many volunteers join community programmes.'],'Many community programmes are supported by volunteers.','grammar:plural'),
+  q('Which question asks about where a process happens?',['Where is the food distributed?','Where do volunteers distribute the food?','Where did the food arrive yesterday?'],'Where is the food distributed?','grammar:question'),
+  q('Which sentence describes a regular service in the passive?',['The service is provided every weekday.','Staff provide the service every weekday.','The service started last year.'],'The service is provided every weekday.','grammar:passive'),
+  q('Which sentence focuses on the process rather than the actor?',['The applications are checked every morning.','The staff check the applications every morning.','The staff start work at eight every morning.'],'The applications are checked every morning.','grammar:function')
  ];
  if(f.includes('gerunds'))return[
-  q('I enjoy ___ in my free time.',['reading','to read after enjoy','read to'],'reading','grammar:gerund'),
-  q('She wants ___ a photography course.',['to join','joining after wants','join to'],'to join','grammar:infinitive'),
-  q('They decided ___ a new hobby.',['to try','trying after decided','try to a hobby'],'to try','grammar:infinitive'),
-  q('He avoids ___ too much time online.',['spending','to spend after avoids','spend to'],'spending','grammar:gerund'),
-  q('We plan ___ the club next month.',['to visit','visiting after plan','visit to'],'to visit','grammar:infinitive'),
-  q('Choose the correct sentence.',['She keeps practising the guitar.','She keeps to practise the guitar.','She keeps practise the guitar.'],'She keeps practising the guitar.','grammar:gerund')
+  q('Which sentence correctly follows enjoy with an -ing form?',['I enjoy reading in my free time.','I want to read a new book this weekend.','I read for an hour yesterday.'],'I enjoy reading in my free time.','grammar:gerund'),
+  q('Which sentence correctly follows want with to + infinitive?',['She wants to join a photography course.','She enjoys joining photography groups.','She joined a photography course last year.'],'She wants to join a photography course.','grammar:infinitive'),
+  q('Which sentence correctly follows decide with to + infinitive?',['They decided to try a new hobby.','They enjoy trying new hobbies.','They tried a new hobby yesterday.'],'They decided to try a new hobby.','grammar:infinitive'),
+  q('Which sentence correctly follows avoid with an -ing form?',['He avoids spending too much time online.','He wants to spend less time online.','He spent less time online yesterday.'],'He avoids spending too much time online.','grammar:gerund'),
+  q('Which sentence correctly follows plan with to + infinitive?',['We plan to visit the club next month.','We enjoy visiting the club every week.','We visited the club last month.'],'We plan to visit the club next month.','grammar:infinitive'),
+  q('Which sentence correctly follows keep with an -ing form?',['She keeps practising the guitar.','She wants to practise the guitar.','She practised the guitar yesterday.'],'She keeps practising the guitar.','grammar:gerund')
  ];
  if(f.includes('reported'))return[
-  q('Amina said, “I enjoy this tradition.” → Amina said that she ___ the tradition.',['enjoyed','enjoy','is enjoy'],'enjoyed','grammar:reported'),
-  q('He said, “I am busy.” → He said that he ___ busy.',['was','is yesterday','were'],'was','grammar:backshift'),
-  q('She told me, “We can help.” → She told me that they ___ help.',['could','can yesterday','were can'],'could','grammar:modal'),
-  q('Choose the correct sentence.',['Hodan said that the custom was important to her family.','Hodan said me that the custom important.','Hodan told that the custom was important.'],'Hodan said that the custom was important to her family.','grammar:reported'),
-  q('“I will call tomorrow.” → He said that he ___ call the next day.',['would','will yesterday','was'],'would','grammar:future'),
-  q('Which reporting verb needs an object?',['told','said','explained that'],'told','grammar:verb-pattern')
+  q('Amina said, “I enjoy this tradition.” Which sentence reports her words later?',['Amina said that she enjoyed the tradition.','Amina says that she enjoys the tradition every year.','Amina enjoyed the tradition at the festival.'],'Amina said that she enjoyed the tradition.','grammar:reported'),
+  q('He said, “I am busy.” Which sentence reports that statement later?',['He said that he was busy.','He says that he is busy every Monday.','He was busy yesterday afternoon.'],'He said that he was busy.','grammar:backshift'),
+  q('She told me, “We can help.” Which sentence reports the message?',['She told me that they could help.','She says that they can help today.','They helped us yesterday.'],'She told me that they could help.','grammar:modal'),
+  q('Which sentence reports Hodan’s statement with said?',['Hodan said that the custom was important to her family.','Hodan told me that the custom was important to her family.','Hodan explained the custom to her family.'],'Hodan said that the custom was important to her family.','grammar:reported'),
+  q('“I will call tomorrow.” Which sentence reports that promise later?',['He said that he would call the next day.','He says that he will call tomorrow.','He called the next day.'],'He said that he would call the next day.','grammar:future'),
+  q('Which sentence uses told with the required object?',['She told me that the tradition was important.','She said that the tradition was important.','She explained that the tradition was important.'],'She told me that the tradition was important.','grammar:verb-pattern')
  ];
  if(f.includes('second conditional'))return[
-  q('If I had more time, I ___ another course.',['would take','will take','took yesterday'],'would take','grammar:second-conditional'),
-  q('What ___ you do if you could choose any job?',['would','will','did yesterday'],'would','grammar:question'),
-  q('If I were you, I ___ the two options carefully.',['would compare','will compare','compare yesterday'],'would compare','grammar:advice'),
-  q('Choose the imaginary situation.',['If I lived near the sea, I would swim every morning.','If I live near the sea now, I swim every morning as a fact.','I lived near the sea last year, so I swam every morning.'],'If I lived near the sea, I would swim every morning.','grammar:meaning'),
-  q('If she knew the answer, she ___ us.',['would tell','will told','told every day'],'would tell','grammar:result'),
-  q('Which clause uses the past form in a second conditional?',['If I had two choices, ...','If I will have two choices, ...','If I have two choices yesterday, ...'],'If I had two choices, ...','grammar:if-clause')
+  q('You are imagining having more free time. Which sentence fits?',['If I had more time, I would take another course.','If I have time tonight, I will review the lesson.','I had more time last year, so I took another course.'],'If I had more time, I would take another course.','grammar:second-conditional'),
+  q('Which question asks about an imaginary job choice?',['What would you do if you could choose any job?','What will you do when you start your new job?','What did you do at work yesterday?'],'What would you do if you could choose any job?','grammar:question'),
+  q('Which sentence gives hypothetical advice?',['If I were you, I would compare the two options carefully.','If I have time, I will compare the two options tonight.','I compared the two options yesterday.'],'If I were you, I would compare the two options carefully.','grammar:advice'),
+  q('Which sentence describes an imaginary present situation?',['If I lived near the sea, I would swim every morning.','I live near the sea, so I swim every morning.','I lived near the sea last year and swam every morning.'],'If I lived near the sea, I would swim every morning.','grammar:meaning'),
+  q('She does not know the answer. Which imagined result fits?',['If she knew the answer, she would tell us.','If she learns the answer tonight, she will tell us.','She knew the answer yesterday and told us.'],'If she knew the answer, she would tell us.','grammar:result'),
+  q('Which if-clause uses the past form for an imaginary choice?',['If I had two choices, ...','If I have two choices tomorrow, ...','When I had two choices yesterday, ...'],'If I had two choices, ...','grammar:if-clause')
  ];
  if(f.includes('mixed review'))return[
-  q('Choose the routine sentence.',['I practise English every evening.','I practised English right now.','I am practise English every evening.'],'I practise English every evening.','grammar:review'),
-  q('Choose the finished past event.',['I completed the lesson yesterday.','I have completed the lesson yesterday.','I complete the lesson yesterday.'],'I completed the lesson yesterday.','grammar:review'),
-  q('Choose the experience sentence.',['I have spoken to new people in English.','I spoke to new people since January.','I have spoke to new people.'],'I have spoken to new people in English.','grammar:review'),
-  q('Choose the future plan.',['I am going to practise listening next month.','I am practise listening next month.','I practised listening next month.'],'I am going to practise listening next month.','grammar:review'),
-  q('Choose the advice.',['You should practise a little every day.','You should to practise a little every day.','You should practising a little every day.'],'You should practise a little every day.','grammar:review'),
-  q('Choose the first conditional.',['If I have time tonight, I will review the lesson.','If I will have time tonight, I review the lesson.','If I had time tonight yesterday, I will review.'],'If I have time tonight, I will review the lesson.','grammar:review')
+  q('Which sentence describes a regular routine?',['I practise English every evening.','I am practising English right now.','I practised English yesterday evening.'],'I practise English every evening.','grammar:review'),
+  q('Which sentence describes a finished past event?',['I completed the lesson yesterday.','I have completed three lessons this week.','I complete one lesson every day.'],'I completed the lesson yesterday.','grammar:review'),
+  q('Which sentence describes experience up to now?',['I have spoken to new people in English.','I spoke to a new classmate yesterday.','I speak to classmates every lesson.'],'I have spoken to new people in English.','grammar:review'),
+  q('Which sentence describes a future plan?',['I am going to practise listening next month.','I practise listening every morning.','I practised listening last month.'],'I am going to practise listening next month.','grammar:review'),
+  q('Which sentence gives advice?',['You should practise a little every day.','You have to show your ID at reception.','You practised for an hour yesterday.'],'You should practise a little every day.','grammar:review'),
+  q('Which sentence is a first conditional about tonight?',['If I have time tonight, I will review the lesson.','If I had more free time, I would study another language.','I had time last night, so I reviewed the lesson.'],'If I have time tonight, I will review the lesson.','grammar:review')
  ];
  return[
-  q('I ___ a student.',['am','is','are'],'am','grammar:be'),
-  q('She ___ two sisters.',['has','have','is having every day'],'has','grammar:have'),
-  q('We ___ learning English.',['like','likes','are like'],'like','grammar:preference'),
-  q('Where ___ you live?',['do','does','are live'],'do','grammar:question'),
-  q('He ___ from Borama.',['is','are','am'],'is','grammar:be'),
-  q('My friends ___ football.',['like','likes','is liking'],'like','grammar:preference')
+  q('Which sentence gives a personal fact about identity?',['I am a student.','I have two sisters.','I like football.'],'I am a student.','grammar:be'),
+  q('Which sentence expresses possession?',['She has two sisters.','She is from Hargeisa.','She likes reading.'],'She has two sisters.','grammar:have'),
+  q('Which sentence expresses a preference?',['We like learning English.','We are in an English class.','We have two English books.'],'We like learning English.','grammar:preference'),
+  q('Which question asks about someone’s usual home as a general fact?',['Where do you live?','Where are you staying this week?','Where did you live in 2024?'],'Where do you live?','grammar:question'),
+  q('Which sentence gives a personal fact about origin?',['He is from Borama.','He has family in Borama.','He likes visiting Borama.'],'He is from Borama.','grammar:be'),
+  q('Your friends enjoy football. Which sentence says that?',['My friends like football.','My friends play football every Friday.','My friends watched football yesterday.'],'My friends like football.','grammar:preference')
  ];
 }
 function vocabItems(title,data){
