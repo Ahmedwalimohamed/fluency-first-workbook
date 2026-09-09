@@ -5737,3 +5737,33 @@ img,video,canvas,svg{max-width:100%}
  .student-question-source-btn,.student-question-audio-btn{padding:5px 6px;font-size:.68rem}
  body.student-question-focus-mode .guided-question{padding:11px!important}
 }
+
+
+/* Always-visible mobile Next action v1 */
+@media(max-width:760px){
+ body.student-question-focus-mode .student-question-continue{
+  position:fixed;
+  left:10px;
+  right:10px;
+  bottom:calc(70px + env(safe-area-inset-bottom));
+  z-index:12;
+  width:auto;
+  min-height:48px;
+  margin:0;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(23,54,159,.20)
+ }
+ body.student-question-focus-mode .student-question-continue:disabled{
+  opacity:.45;
+  box-shadow:none
+ }
+ body.student-question-focus-mode .activity-question-list[data-flow-active-list="1"]{
+  padding-bottom:56px
+ }
+}
+@media(max-width:380px){
+ body.student-question-focus-mode .student-question-continue{
+  left:7px;
+  right:7px
+ }
+}
