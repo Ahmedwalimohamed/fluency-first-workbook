@@ -616,6 +616,7 @@ app.get('/core-activities.js',(req,res)=>sendFreshFile(res,'core-activities.js',
 app.get('/styles.css',(req,res)=>sendFreshFile(res,'styles.css'));
 app.get('/app.js',(req,res)=>sendFreshFile(res,'app.js','application/javascript'));
 app.get('/cefr-levels.js',(req,res)=>sendFreshFile(res,'cefr-levels.js','application/javascript'));
+app.get('/a2-living-standard.js',(req,res)=>sendFreshFile(res,'a2-living-standard.js','application/javascript'));
 app.get('/cefr-live-books.js',(req,res)=>sendFreshFile(res,'cefr-live-books.js','application/javascript'));
 app.get('/live-books.js',(req,res)=>sendFreshFile(res,'live-books.js','application/javascript'));
 app.get('/speakup-b2-blueprint.js',(req,res)=>sendFreshFile(res,'speakup-b2-blueprint.js','application/javascript'));

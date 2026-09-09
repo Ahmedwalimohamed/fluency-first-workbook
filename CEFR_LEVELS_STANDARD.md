@@ -36,7 +36,7 @@ The shared EnglishGate activity engine remains the interaction source of truth:
 
 **A1** — short supported exchanges, high-frequency language, simple reading/listening and short practical messages.
 
-**A2** — familiar everyday situations, connected sentences, clarification and simple reasons/examples.
+**A2** — governed by `A2_LIVING_STANDARD.md`: the original A2 content spine rebuilt with Foundation → A2 Lift → A2 Performance, stronger receptive input, contextual grammar, pronunciation, mediation, and authentic writing.
 
 **B1** — independent communication, connected discourse, reasons, examples, follow-up questions and basic mediation.
 
