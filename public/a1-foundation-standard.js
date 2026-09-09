@@ -435,10 +435,10 @@ const A1_READING_DIRECT={
   ['What time does Yusuf wake up on weekdays?','6:30'],['What does he eat for breakfast?','bread and eggs'],['What does he sometimes do after class?','play football'],['When does Yusuf study English?','in the evening'],['What does Yusuf do at the weekend?','visits family and has more free time']
  ],
  23:[
-  ['What is Amina doing at seven o’clock?','sitting at her desk'],['What is Amina reading?','an English text'],['What is her brother doing?','helping their mother in the kitchen'],['What is their father doing?','talking on the phone outside'],['Who is sleeping?','their younger sister'],['What is the reading mainly about?','what Amina and her family are doing now']
+  ['What is Amina doing at seven o’clock?','sitting at her desk'],['What is Amina reading?','an English text'],['What is her brother doing?','helping their mother in the kitchen'],['What is their father doing?','talking on the phone outside'],['Who is sleeping?','their younger sister'],['What time is it in the reading?','seven o’clock in the evening']
  ],
  24:[
-  ['What does Maryan study at college?','business'],['When does she usually review her notes?','every evening'],['Why is this week different?','She has an exam on Thursday'],['Where is Maryan studying today?','in the library'],['What is she working on?','practice questions'],['What is the reading mainly about?','Maryan preparing for an exam']
+  ['What does Maryan study at college?','business'],['When does she usually review her notes?','every evening'],['Why is this week different?','She has an exam on Thursday'],['Where is Maryan studying today?','in the library'],['What is she working on?','practice questions'],['What is Maryan’s teacher giving the class?','extra revision materials']
  ],
  25:[
   ['Who has a headache?','Abdi'],['Who has back pain?','Hodan'],['Why does Hodan have back pain?','She carried a heavy bag'],['Whose stomach hurts after lunch?','Yusuf’s'],['What does the nurse write on the form?','where each person hurts'],['Where are the three people waiting?','at a health centre']
