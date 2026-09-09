@@ -1449,8 +1449,8 @@ function vocabActivity(l){
   <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check vocabulary</button>${activityDoneButton(l)}</div>
  </div>`;
 }
-function questionSetHtml(qs,prefix,label){
- return qs.map((q,i)=>`<article class="guided-question" data-ladder-level="${ladderStageIndex(i,qs.length)+1}"><div class="question-stage"><span>${ladderQuestionStage(i,qs.length)} · ${label}</span></div><p>${escapeHtml(q.q)}</p>${radio(prefix+i,q.options,q.answer,q.tag)}</article>`).join('');
+function questionSetHtml(qs,prefix,label,offset=0,total=qs.length){
+ return qs.map((q,i)=>{const globalIndex=offset+i;return `<article class="guided-question" data-ladder-level="${ladderStageIndex(globalIndex,total)+1}"><div class="question-stage"><span>${ladderQuestionStage(globalIndex,total)} · ${label}</span></div><p>${escapeHtml(q.q)}</p>${radio(prefix+i,q.options,q.answer,q.tag)}</article>`}).join('');
 }
 const LESSON_VISUALS={
  w1l1:{src:'/assets/lesson-visuals/w1l1.svg',alt:'Two adult learners discussing English goals together at a table with a laptop and notebooks.',prompt:'Where might these learners use English in real life?'},
@@ -1480,13 +1480,13 @@ function listeningActivity(l){
    ${learningLadderHtml(l,'listening',all.length)}
    <section class="eg-source-task-section eg-reading-section">
     <div class="eg-reading-article"><span class="eg-skill-kicker">Part 1 · Reading</span><h2>${escapeHtml(l.title)}</h2><p>${escapeHtml(reading)}</p></div>
-    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Reading tasks</small><h2>Answer from the article</h2></div><span>${readingQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(readingQs,'lr','Reading')}</div></div>
+    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Reading tasks</small><h2>Answer from the article</h2></div><span>${readingQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(readingQs,'lr','Reading',0,all.length)}</div></div>
    </section>
    <section class="eg-source-task-section eg-listening-section">
     <div class="eg-listening-scene"><span class="eg-skill-kicker">Part 2 · Listening</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2><p>Now listen. These questions are based only on what you hear.</p><div class="eg-listening-quote">Listen for the overall message first. Replay for detail.</div><div class="eg-audio-card">${player}</div></div>
-    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Listening tasks</small><h2>Answer from the audio</h2></div><span>${listeningQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(listeningQs,'ll','Listening')}</div></div>
+    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Listening tasks</small><h2>Answer from the audio</h2></div><span>${listeningQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(listeningQs,'ll','Listening',readingQs.length,all.length)}</div></div>
    </section>
-   ${sharedQs.length?`<section class="eg-shared-comprehension"><div class="eg-task-panel-head"><div><small>Combined understanding</small><h2>Use both sources</h2></div></div><div class="activity-question-list">${questionSetHtml(sharedQs,'ls','Combined')}</div></section>`:''}
+   ${sharedQs.length?`<section class="eg-shared-comprehension"><div class="eg-task-panel-head"><div><small>Combined understanding</small><h2>Use both sources</h2></div></div><div class="activity-question-list">${questionSetHtml(sharedQs,'ls','Combined',readingQs.length+listeningQs.length,all.length)}</div></section>`:''}
    ${completed&&l.listening?.audioScript?listeningTranscript(l):''}<div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check answers</button>${activityDoneButton(l)}</div>
   </div>`;
  }
@@ -1987,7 +1987,7 @@ async function checkCurrent(){
  const totalItems=open.length+groups.length,answered=openDone+mcqDone,feedback=$('activityFeedback');
  if(answered<totalItems){if(feedback)feedback.innerHTML=`<div class="feedback bad">Finish all ${totalItems} questions before checking. You have answered ${answered}/${totalItems}.</div>`;return}
  let correct=0,tags=[],grammarMissed=[];
- open.forEach(el=>{const value=el.value.trim(),exact=el.dataset.exact||'',min=Number(el.dataset.min||1);let ok=false;if(exact)ok=writingNormalize(value)===writingNormalize(exact);else ok=(value?value.split(/\s+/).length:0)>=min;if(ok)correct++;if(el.dataset.tag)tags.push(el.dataset.tag)});
+ open.forEach(el=>{const value=el.value.trim(),exact=el.dataset.exact||'',min=Number(el.dataset.min||1);let ok=false;if(exact)ok=writingNormalize(value)===writingNormalize(exact);else ok=(value?value.split(/\s+/).length:0)>=min;if(ok)correct++;else if(currentStep==='grammar'&&/^g[0-9]+$/.test(el.name||''))grammarMissed.push(Number(String(el.name).slice(1)));if(el.dataset.tag)tags.push(el.dataset.tag)});
  groups.forEach(g=>{const c=document.querySelector(`input[name="${g}"]:checked`),isGrammarAuto=currentStep==='grammar'&&/^g[0-9]$/.test(g);if(c&&c.value===c.dataset.answer)correct++;else if(isGrammarAuto)grammarMissed.push(Number(g.slice(1)));if(c&&c.dataset.tag)tags.push(c.dataset.tag)});
  if(currentStep==='grammar')tags=grammarMissed.length?grammarMissed.map(i=>`missq:${i}`):['diagnostic:no-misses'];
  const score=Math.round(correct/Math.max(1,totalItems)*100),missed=totalItems-correct,ladder=ladderResultFromAnswers(currentQuestionResults()),ladderTag=`ladder:highest:${ladder.highest}`;
