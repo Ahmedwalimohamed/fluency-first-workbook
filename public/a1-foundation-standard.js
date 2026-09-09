@@ -193,7 +193,7 @@ function makeLesson(spec,i){
  const n=i+1,range=wordRange(n);
  return{
   id:'su-a1-l'+n,number:n,title:spec.title,outcome:spec.outcome,ready:true,standardVersion:A1_VERSION,phase:phaseFor(n),readingSkill:spec.skill,
-  targetVocabulary:spec.v.map(x=>x[0]),expressions:spec.u.map(text=>({text})),chunks:spec.u.slice(),interactionExpressions:spec.u.slice(0,3),
+  targetVocabulary:spec.v.map(x=>x[0]),vocabularyEntries:spec.v.map(x=>({word:x[0],meaning:x[1],example:x[2]})),expressions:spec.u.map(text=>({text})),chunks:spec.u.slice(),interactionExpressions:spec.u.slice(0,3),
   functions:['understand familiar language','give simple information','respond to a partner'],discourse:['short complete sentences','clear turn taking','recycle earlier A1 language'],
   vocabulary:vocabItems(spec),
   listening:{title:spec.title+' · Reading & Listening',readingText:spec.r.text,audioScript:spec.l.script,text:spec.l.script,speakers:lessonSpeakers(spec),questions:[...readingQs(spec),...listeningQs(spec)]},
