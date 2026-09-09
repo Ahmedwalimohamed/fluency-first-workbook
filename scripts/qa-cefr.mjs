@@ -119,6 +119,18 @@ if(!app.includes('Transcript · open after listening'))errors.push('Live lesson 
 if(!app.includes('Preparing audio…')||!app.includes('browserSpeechAvailable')||!app.includes('playBrowserSpeech'))errors.push('Listening audio must preload and provide a browser-voice fallback when natural audio cannot play');
 if(!server.includes("app.post('/api/audio'"))errors.push('Live lesson audio requires the authenticated natural-audio endpoint');
 if(!server.includes('OPENAI_TTS_FEMALE_VOICES')||!server.includes('OPENAI_TTS_MALE_VOICES')||!server.includes('dialogueTurns')||!server.includes('speakerVoicePlan')||!server.includes("response_format:'wav'"))errors.push('Conversation listening must support distinct male/female multi-speaker voices');
+try{
+ const start=server.indexOf('function wavParts(buf){'),end=server.indexOf('function wavChunk',start);
+ if(start<0||end<0)throw new Error('wavParts not found');
+ const wavParts=new Function('Buffer',server.slice(start,end)+';return wavParts;')(Buffer);
+ const fmt=Buffer.alloc(16);fmt.writeUInt16LE(1,0);fmt.writeUInt16LE(1,2);fmt.writeUInt32LE(24000,4);fmt.writeUInt32LE(48000,8);fmt.writeUInt16LE(2,12);fmt.writeUInt16LE(16,14);
+ const pcm=Buffer.from([0,0,1,0,2,0,3,0]),fmtHead=Buffer.alloc(8),dataHead=Buffer.alloc(8),head=Buffer.alloc(12);
+ head.write('RIFF',0,4,'ascii');head.writeUInt32LE(0xffffffff,4);head.write('WAVE',8,4,'ascii');
+ fmtHead.write('fmt ',0,4,'ascii');fmtHead.writeUInt32LE(fmt.length,4);
+ dataHead.write('data',0,4,'ascii');dataHead.writeUInt32LE(0xffffffff,4);
+ const parsed=wavParts(Buffer.concat([head,fmtHead,fmt,dataHead,pcm]));
+ if(!parsed?.data||parsed.data.length!==pcm.length)errors.push('Listening WAV parser does not support streaming-size WAV data');
+}catch(e){errors.push('Listening WAV parser QA failed: '+e.message)}
 if(!a2.includes("partner+': ")||!a2.includes("person+': "))errors.push('A2 listening conversations must preserve explicit speaker labels for multi-speaker audio');
 if(!app.includes('function isVocabularyHeader')||!app.includes('data-vocab-meaning')||!app.includes("modern=t.match(/^(.+?)\\s+[—–-]"))errors.push('CEFR vocabulary must render as clickable EnglishGate word + example cards with hidden definitions');
 if(!live.includes("meaningItems=(lesson.vocabulary?.items||[]).filter")||!live.includes("item?.tag==='vocabulary:meaning'"))errors.push('A2 live vocabulary must use the original source definitions, not placeholder meanings');
