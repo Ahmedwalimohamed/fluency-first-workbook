@@ -364,7 +364,7 @@ function ladderResultHtml(result){
 function currentQuestionResults(){
  return [...document.querySelectorAll('#activityPanel .guided-question')].map(card=>{
   const open=card.querySelector('[data-open="1"]');
-  if(open){const value=open.value.trim(),exact=open.dataset.exact||'',min=Number(open.dataset.min||1);return exact?writingNormalize(value)===writingNormalize(exact):(value?value.split(/\s+/).length:0)>=min}
+  if(open){const value=open.value.trim(),exact=open.dataset.exact||'',min=Number(open.dataset.min||1),short=open.dataset.shortAnswer==='1';return short?shortAnswerMatches(value,exact):exact?writingNormalize(value)===writingNormalize(exact):(value?value.split(/\s+/).length:0)>=min}
   const radios=[...card.querySelectorAll('input[type="radio"]')];
   if(radios.length){const selected=radios.find(x=>x.checked);return Boolean(selected&&selected.value===selected.dataset.answer)}
   return null
@@ -1529,6 +1529,18 @@ function buildVocabQuestions(l){const e=l.expressions,all=e.map(x=>x.text);retur
 {type:'open',stage:'Produce',q:`Without looking back, write three useful expressions from this topic that you could use in this live mission: ${l.review.mission}`,min:10,tag:'vocabulary:independent-retrieval'}]}
 function stageBadge(label){return `<span class="stage-badge">${label}</span>`}
 function openEvidence(name,q,min,tag,exact=''){return `<div class="open-evidence"><textarea name="${name}" data-open="1" data-min="${min}" data-tag="${escapeAttr(tag||'')}" ${exact?`data-exact="${escapeAttr(exact)}"`:''} placeholder="Type your answer…"></textarea><small class="muted">${exact?'Type the missing/corrected language.':`Write at least ${min} words.`}</small></div>`}
+function shortAnswerEvidence(name,answer,tag){return `<div class="open-evidence short-answer-evidence"><input type="text" name="${name}" data-open="1" data-short-answer="1" data-exact="${escapeAttr(answer||'')}" data-min="1" data-tag="${escapeAttr(tag||'')}" autocomplete="off" placeholder="Type a short answer…"><small class="muted">Answer in a word, phrase, or short sentence.</small></div>`}
+function shortAnswerMatches(value,expected){
+ const input=writingNormalize(value),target=writingNormalize(expected);
+ if(!input||!target)return false;
+ const trimArticles=x=>x.replace(/^(?:a|an|the)\s+/,'').trim(),a=trimArticles(input),b=trimArticles(target);
+ if(a===b||a.includes(b)||b.includes(a)&&a.length>=3)return true;
+ const stop=new Set(['a','an','the','is','are','was','were','be','been','being','he','she','it','its','they','his','her','their','and','or','to','of','in','on','at','for','from','with','does','do','did','has','have','had']);
+ const toks=x=>[...new Set(x.split(/\s+/).filter(t=>t&&!stop.has(t)))],bt=toks(b),at=new Set(toks(a));
+ if(!bt.length)return a===b;
+ const overlap=bt.filter(t=>at.has(t)).length;
+ return bt.length<=2?overlap===bt.length:overlap>=Math.ceil(bt.length*.6)
+}
 function spiralReview(l){const idx=COURSE.lessons.findIndex(x=>x.id===l.id);if(idx===0)return `<div class="spiral-card"><strong>First-topic retrieval</strong><p>Close the language bank. Recall three expressions from today, then say one true sentence with each.</p></div>`;const prev=COURSE.lessons[idx-1],older=COURSE.lessons[Math.max(0,idx-3)];const pExp=prev.expressions[0],oExp=older.expressions[1];return `<div class="spiral-grid"><div class="spiral-card"><span class="stage-badge">20% · Previous topic</span><strong>${prev.title}</strong><p>Recall the expression used to ${pExp.job}. Then use it in one new sentence.</p><details><summary>Check expression</summary><p>${pExp.text}</p></details></div><div class="spiral-card"><span class="stage-badge">10% · Older topic</span><strong>${older.title}</strong><p>Recall one expression for this communication job: ${oExp.job}.</p><details><summary>Check expression</summary><p>${oExp.text}</p></details></div><div class="spiral-card"><span class="stage-badge">Transfer</span><strong>Combine old + new</strong><p>Use one expression from an earlier topic and one from today in a two-sentence response.</p></div></div>`}
 function moduleChallengeHtml(){return `<div class="class-prep-challenge"><strong>Final module prep</strong><label><input type="checkbox" data-challenge> Choose 5 keywords for your talk.</label><label><input type="checkbox" data-challenge> Recall 6 useful expressions without looking.</label><label><input type="checkbox" data-challenge> Practise your 3-minute talk once.</label></div>`}
 
@@ -1576,7 +1588,7 @@ function vocabActivity(l){
  </div>`;
 }
 function questionSetHtml(qs,prefix,label,offset=0,total=qs.length){
- return qs.map((q,i)=>{const globalIndex=offset+i;return `<article class="guided-question" data-ladder-level="${ladderStageIndex(globalIndex,total)+1}"><div class="question-stage"><span>${ladderQuestionStage(globalIndex,total)} · ${label}</span></div><p>${escapeHtml(q.q)}</p>${radio(prefix+i,q.options,q.answer,q.tag)}</article>`}).join('');
+ return qs.map((q,i)=>{const globalIndex=offset+i,field=q.type==='short'?shortAnswerEvidence(prefix+i,q.answer,q.tag):q.type&&q.type!=='choice'?openEvidence(prefix+i,q.q,q.min||1,q.tag,q.type==='exact'?q.answer:''):radio(prefix+i,q.options,q.answer,q.tag);return `<article class="guided-question" data-ladder-level="${ladderStageIndex(globalIndex,total)+1}"><div class="question-stage"><span>${ladderQuestionStage(globalIndex,total)} · ${label}</span></div><p>${escapeHtml(q.q)}</p>${field}</article>`}).join('');
 }
 const LESSON_VISUALS={
  w1l1:{src:'/assets/lesson-visuals/w1l1.svg',alt:'Two adult learners discussing English goals together at a table with a laptop and notebooks.',prompt:'Where might these learners use English in real life?'},
@@ -1593,8 +1605,12 @@ function lessonVisualThumbHtml(l){
  if(!v)return '';
  return `<div class="eg-lesson-visual-thumb" title="Lesson visual"><img src="${escapeAttr(v.src)}" alt="" aria-hidden="true"></div>`;
 }
+function readingQuestionAsShort(q){
+ const tag=String(q?.tag||'');
+ return tag.startsWith('reading:')||tag.startsWith('listening-reading:')?{...q,type:'short',min:1}:q
+}
 function listeningActivity(l){
- const all=(l.listening?.questions||[]).slice(0,12),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');
+ const all=(l.listening?.questions||[]).slice(0,12).map(readingQuestionAsShort),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');
  const readingQs=all.filter(q=>String(q.tag||'').startsWith('reading:'));
  const listeningQs=all.filter(q=>String(q.tag||'').startsWith('listening:'));
  const sharedQs=all.filter(q=>!String(q.tag||'').startsWith('reading:')&&!String(q.tag||'').startsWith('listening:'));
@@ -1602,11 +1618,11 @@ function listeningActivity(l){
  const player=`<div class="audio-player eg-audio-console" data-audio-player><button id="playAudio" class="play-btn" title="Play or pause audio" aria-label="Play or pause audio">▶</button><div class="eg-audio-body"><div class="eg-waveform" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="audio-timeline"><input id="audioSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Audio progress"><div class="audio-time"><span id="audioCurrent">0:00</span><span id="audioDuration">0:00</span></div></div></div><button id="restartAudio" class="audio-icon-btn" title="Restart audio" aria-label="Restart audio">↺</button><select id="audioSpeed" class="audio-speed" aria-label="Playback speed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select><span id="audioStatus" class="muted">Listen twice before answering the listening questions.</span></div>`;
  if(split){
   return `<div class="eg-skill-page eg-reading-listening-page">
-   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Reading & Listening</span><h1>Read, listen and respond</h1><p>The reading questions use only the article. The listening questions use only the audio.</p></div><span class="eg-question-count">${all.length} questions</span></header>${lessonVisualHtml(l,{compact:true})}
+   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Reading & Listening</span><h1>Read, listen and respond</h1><p>Answer the reading questions in your own words. The listening questions use only the audio.</p></div><span class="eg-question-count">${all.length} questions</span></header>${lessonVisualHtml(l,{compact:true})}
    ${learningLadderHtml(l,'listening',all.length)}
    <section class="eg-source-task-section eg-reading-section">
     <div class="eg-reading-article"><span class="eg-skill-kicker">Part 1 · Reading</span><h2>${escapeHtml(l.title)}</h2><p>${escapeHtml(reading)}</p></div>
-    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Reading tasks</small><h2>Answer from the article</h2></div><span>${readingQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(readingQs,'lr','Reading',0,all.length)}</div></div>
+    <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Reading tasks</small><h2>Answer in your own words</h2></div><span>${readingQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(readingQs,'lr','Reading',0,all.length)}</div></div>
    </section>
    <section class="eg-source-task-section eg-listening-section">
     <div class="eg-listening-scene"><span class="eg-skill-kicker">Part 2 · Listening</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2><p>Now listen. These questions are based only on what you hear.</p><div class="eg-listening-quote">Listen for the overall message first. Replay for detail.</div><div class="eg-audio-card">${player}</div></div>
@@ -2327,7 +2343,7 @@ async function checkCurrent(){
  const totalItems=open.length+groups.length,answered=openDone+mcqDone,feedback=$('activityFeedback');
  if(answered<totalItems){if(feedback)feedback.innerHTML=`<div class="feedback bad">Finish all ${totalItems} questions before checking. You have answered ${answered}/${totalItems}.</div>`;return}
  let correct=0,tags=[],grammarMissed=[];
- open.forEach(el=>{const value=el.value.trim(),exact=el.dataset.exact||'',min=Number(el.dataset.min||1);let ok=false;if(exact)ok=writingNormalize(value)===writingNormalize(exact);else ok=(value?value.split(/\s+/).length:0)>=min;if(ok)correct++;else if(currentStep==='grammar'&&/^g[0-9]+$/.test(el.name||''))grammarMissed.push(Number(String(el.name).slice(1)));if(el.dataset.tag)tags.push(el.dataset.tag)});
+ open.forEach(el=>{const value=el.value.trim(),exact=el.dataset.exact||'',min=Number(el.dataset.min||1),short=el.dataset.shortAnswer==='1';let ok=false;if(short)ok=shortAnswerMatches(value,exact);else if(exact)ok=writingNormalize(value)===writingNormalize(exact);else ok=(value?value.split(/\s+/).length:0)>=min;if(ok)correct++;else if(currentStep==='grammar'&&/^g[0-9]+$/.test(el.name||''))grammarMissed.push(Number(String(el.name).slice(1)));if(el.dataset.tag)tags.push(el.dataset.tag)});
  groups.forEach(g=>{const c=document.querySelector(`input[name="${g}"]:checked`),isGrammarAuto=currentStep==='grammar'&&/^g[0-9]$/.test(g);if(c&&c.value===c.dataset.answer)correct++;else if(isGrammarAuto)grammarMissed.push(Number(g.slice(1)));if(c&&c.dataset.tag)tags.push(c.dataset.tag)});
  if(currentStep==='grammar')tags=grammarMissed.length?grammarMissed.map(i=>`missq:${i}`):['diagnostic:no-misses'];
  const score=Math.round(correct/Math.max(1,totalItems)*100),missed=totalItems-correct,ladder=ladderResultFromAnswers(currentQuestionResults()),ladderTag=`ladder:highest:${ladder.highest}`;

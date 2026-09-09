@@ -366,16 +366,145 @@ function vocabItems(spec){
   {type:'open',q:'Write one simple sentence using “'+words[5]+'”.',answer:'',min:5,tag:'vocabulary:production'}
  ]};
 }
-function readingQs(spec){
- const x=spec.r;
- return[
-  q('Who is the reading mainly about?',[x.who,'A visitor who is not mentioned','A bus driver'],x.who,'reading:detail'),
-  q('Where does the reading happen or focus on?',[x.where,'an airport','a sports stadium'],x.where,'reading:detail'),
-  q('What is the main idea?',[x.main,'The text gives unrelated words.','Nothing happens in the text.'],x.main,'reading:main-idea'),
-  q('Which detail is correct?',[x.detail1,'The opposite is true.','This detail is not in the reading.'],x.detail1,'reading:detail'),
-  q('Which other detail is correct?',[x.detail2,'The text says the opposite.','This never appears in the reading.'],x.detail2,'reading:detail'),
-  x.skillQ
- ];
+function shortReading(qText,answer,tag='reading:detail'){return{type:'short',q:qText,answer,min:1,tag}}
+const A1_READING_DIRECT={
+ 1:[
+  ['Who is the new student?','Amina'],['Who is Amina’s teacher?','Mr Ali'],['Who sits next to Amina?','Yusuf'],['What does Yusuf say when he meets Amina?','Nice to meet you']
+ ],
+ 2:[
+  ['Who is registering for the English course?','Hodan'],['How do you spell Hodan’s first name?','H-O-D-A-N'],['Which letter does Hodan repeat?','D'],['What is Hodan’s last name?','Ahmed']
+ ],
+ 3:[
+  ['How old is Yusuf?','20'],['Where does Yusuf live?','Borama'],['What are the last four digits of Yusuf’s phone number?','7850'],['What information does Yusuf put on the form?','name, age, city, and phone number']
+ ],
+ 4:[
+  ['Which page do the students open their books to?','page six'],['What do the students do after they read?','They listen to the teacher'],['What do they do after they listen?','They repeat the sentence'],['How many words do they write in their notebooks?','two']
+ ],
+ 5:[
+  ['Where is Rahma from?','Hargeisa'],['Where does Rahma live now?','Borama'],['Where is Hassan from?','Burao'],['What do Rahma and Hassan talk about before class?','their hometowns']
+ ],
+ 6:[
+  ['Who is Maryan’s mother?','Sahra'],['Who is Maryan’s father?','Abdi'],['Who is Maryan’s brother?','Bilal'],['Who is Maryan’s sister?','Amina']
+ ],
+ 7:[
+  ['How is Hodan described?','friendly'],['How is Yusuf described?','quiet and helpful'],['Who is tall?','Hassan'],['Where does Hassan usually sit?','at the back']
+ ],
+ 8:[
+  ['What is Abdi’s job?','driver'],['What is Sahra’s job?','teacher'],['Who is a college student?','Maryan'],['What is Omar’s job?','doctor']
+ ],
+ 9:[
+  ['What colour is Yusuf’s school bag?','black'],['How many notebooks does Yusuf have?','two'],['How many pens does Yusuf have?','three'],['What does Amina not have today?','her English book']
+ ],
+ 10:[
+  ['What is on Amina’s desk?','a notebook and a pen'],['What is near the door?','an empty chair'],['How many bags are across the room?','three'],['Which word refers to the bags across the room?','those']
+ ],
+ 11:[
+  ['How old is Amina?','19'],['Where is Amina from?','Borama'],['What is Amina’s father’s job?','driver'],['What is Amina’s mother’s job?','teacher'],['What is in Amina’s school bag?','two notebooks, a phone, and three pens']
+ ],
+ 12:[
+  ['What time does Hodan wake up?','six'],['What time does she leave home?','seven'],['What time does she start work?','eight'],['What does Hodan do after work?','She studies English'],['When does she study English?','in the evening']
+ ],
+ 13:[
+  ['What time does English class start?','8:00'],['What time is the first break?','9:30'],['What time does reading practice start?','10:00'],['What time is lunch?','12:30'],['What time does speaking class begin?','2:00']
+ ],
+ 14:[
+  ['Which days does Maryan attend English class?','Monday and Wednesday'],['What does Maryan do on Tuesday?','She studies at home'],['When is speaking practice?','Thursday'],['When does Maryan visit her family?','Friday'],['Which day is Maryan free?','Saturday']
+ ],
+ 15:[
+  ['When does Yusuf usually study English?','after dinner'],['What does he often listen to?','short English videos'],['Who does he sometimes practise with?','a friend'],['What does Yusuf never do?','study very late at night'],['When does he usually review vocabulary?','Friday morning']
+ ],
+ 16:[
+  ['How many bedrooms are in Amina’s house?','two'],['What is in the kitchen?','a table with four chairs'],['What is in the living room?','a sofa and a small table'],['Where are the books?','near the window'],['How many chairs are in the kitchen?','four']
+ ],
+ 17:[
+  ['What is next to Hassan’s apartment building?','the pharmacy'],['What is opposite the pharmacy?','a café'],['Where is the bank?','between the café and the clothing shop'],['Where is the bus stop?','on the corner'],['Where is the car park?','behind the bank']
+ ],
+ 18:[
+  ['What does Sahra eat for breakfast?','bread and one egg'],['What does she drink with tea?','a little milk'],['What does she often eat for lunch?','rice with vegetables'],['What fruit does she keep at home?','apples'],['What does she drink during the day?','water']
+ ],
+ 19:[
+  ['How much is one kilo of rice?','$2'],['How much is one bottle of water?','$0.50'],['How much is one kilo of apples?','$1.50'],['How much is one bread?','$0.70'],['What three things does Amina buy?','rice, water, and bread']
+ ],
+ 20:[
+  ['What is Hodan wearing?','a long blue dress and black shoes'],['What colour is Yusuf’s shirt?','white'],['What colour is Amina’s shirt?','green'],['Who is called first?','Hodan'],['What is Yusuf waiting near?','the shirts']
+ ],
+ 21:[
+  ['What sport can Bilal play?','football'],['Can Bilal swim?','yes'],['What can Zahra do?','sing and draw'],['Can Zahra swim?','no'],['What activity do Bilal and Zahra decide to do together?','cook lunch']
+ ],
+ 22:[
+  ['What time does Yusuf wake up on weekdays?','6:30'],['What does he eat for breakfast?','bread and eggs'],['What does he sometimes do after class?','play football'],['When does Yusuf study English?','in the evening'],['What does Yusuf do at the weekend?','visits family and has more free time']
+ ],
+ 23:[
+  ['What is Amina doing at seven o’clock?','sitting at her desk'],['What is Amina reading?','an English text'],['What is her brother doing?','helping their mother in the kitchen'],['What is their father doing?','talking on the phone outside'],['Who is sleeping?','their younger sister'],['What is the reading mainly about?','what Amina and her family are doing now']
+ ],
+ 24:[
+  ['What does Maryan study at college?','business'],['When does she usually review her notes?','every evening'],['Why is this week different?','She has an exam on Thursday'],['Where is Maryan studying today?','in the library'],['What is she working on?','practice questions'],['What is the reading mainly about?','Maryan preparing for an exam']
+ ],
+ 25:[
+  ['Who has a headache?','Abdi'],['Who has back pain?','Hodan'],['Why does Hodan have back pain?','She carried a heavy bag'],['Whose stomach hurts after lunch?','Yusuf’s'],['What does the nurse write on the form?','where each person hurts'],['Where are the three people waiting?','at a health centre']
+ ],
+ 26:[
+  ['Why is Hassan tired every morning?','He goes to bed after midnight'],['What does Hassan drink very little of?','water'],['What does Amina say Hassan should do about sleep?','sleep earlier'],['What should Hassan drink more of?','water'],['What should he stop doing for a long time in bed?','using his phone'],['How long does Hassan decide to try the advice?','one week']
+ ],
+ 27:[
+  ['What is Rahma’s appointment date?','Tuesday 14 March'],['What time is the appointment?','10:30 a.m.'],['Where is the appointment?','City Health Centre, Room 3'],['How early should Rahma arrive?','ten minutes early'],['What should Rahma bring?','her identification card'],['Which room is the appointment in?','Room 3']
+ ],
+ 28:[
+  ['What does Amina order?','vegetable soup and water'],['How much is Amina’s order?','$3.50'],['What does Yusuf order?','rice and chicken'],['How much is rice and chicken?','$5'],['Why do they ask for separate bills?','They are paying for their own meals'],['Where are Amina and Yusuf eating?','at a café']
+ ],
+ 29:[
+  ['Where does the route start?','the bus station'],['What do you pass on your right?','the bank'],['Where do you turn left?','at the traffic lights'],['What is opposite the library?','the school'],['How long does the walk take?','about seven minutes'],['What do you pass before the traffic lights?','the bank']
+ ],
+ 30:[
+  ['Where does Bus 4 start?','Central Market'],['What is the second stop?','City Hospital'],['Where does Yusuf get off?','University Gate'],['How much is the bus fare?','$1'],['What time does Yusuf get on the bus?','7:10'],['How long does the journey usually take?','about twenty-five minutes']
+ ],
+ 31:[
+  ['Why was Hassan at home in the morning?','His office was closed'],['Where was Hassan at noon?','at a café'],['Where was he in the afternoon?','at the library'],['What was the library like?','quiet'],['Where was Hassan in the evening?','at home with his family'],['Where is Hassan today?','at work']
+ ],
+ 32:[
+  ['Who did Bilal visit last Saturday?','his uncle'],['Where did Bilal and his uncle go?','the market'],['What did they do at one o’clock?','had lunch at home'],['What did Bilal do after lunch?','played football with his cousins'],['What did everyone do in the evening?','watched a film'],['When did Bilal come home?','Sunday morning']
+ ],
+ 33:[
+  ['Where did Maryan go first yesterday?','college'],['Who did Maryan meet after class?','Amina'],['Why did Maryan go to the library?','to finish an assignment'],['How long did she work in the library?','two hours'],['What did she do in the evening?','helped her sister with homework'],['What is Maryan doing today?','resting at home and preparing for class']
+ ],
+ 34:[
+  ['What event did Amina attend?','her first English speaking event'],['How did Amina feel when she arrived?','nervous'],['Who helped Amina relax?','another beginner'],['How long did they practise together?','one hour'],['What did Amina do at the end?','introduced her partner to the group'],['Why does Amina remember the day?','It was her first time speaking English in front of many people']
+ ],
+ 35:[
+  ['Where did Yusuf go in July?','Berbera'],['Who did Yusuf travel with?','his brother'],['How did they travel?','by bus'],['Where did they stay?','a small hotel near the beach'],['What did they do on Friday?','swam, visited the old market, and ate fish'],['Why did Yusuf return on Saturday evening?','He had class on Sunday']
+ ],
+ 36:[
+  ['What will the weather be like on Saturday morning?','sunny and warm'],['What may the afternoon be like?','windy'],['When is rain expected?','after six o’clock'],['Where do Rahma and Nasra plan to go in the morning?','the park'],['Why do they not plan an evening picnic?','because of the rain'],['What will they do after dinner?','watch a film at Nasra’s house']
+ ],
+ 37:[
+  ['Who is Samira going to visit on Saturday morning?','her aunt'],['What are Samira and her aunt going to do after lunch?','shop for food'],['What is Samira going to do in the evening?','prepare for English class'],['Who is Samira going to meet on Sunday?','a friend'],['What will they practise?','speaking'],['Why is Samira not going to work?','the office is closed']
+ ],
+ 38:[
+  ['Who sends the invitation?','Amina'],['Who is Amina inviting?','Maryan'],['What day is the invitation for?','Friday'],['What time does the meeting start?','5 p.m.'],['What should Maryan bring?','her English notebook'],['When should Maryan reply?','by Thursday']
+ ],
+ 39:[
+  ['Who sends the class message?','Yusuf'],['Which room is the class in tomorrow?','Room 5'],['What time does the class start?','8:00'],['What should Hassan bring?','the reading worksheet'],['Who should Hassan tell about the room change?','Bilal'],['What does Hassan reply?','Got it']
+ ],
+ 40:[
+  ['How much does Phone A cost?','$120'],['How much does Phone B cost?','$90'],['Which phone has the larger screen?','Phone A'],['Which phone has the longer battery life?','Phone B'],['Which phone is cheaper and lighter?','Phone B'],['Why does Amina choose Phone B?','It is cheaper, lighter, and its battery lasts longer']
+ ],
+ 41:[
+  ['Which café is closest to Maryan’s college?','Café Green'],['Which café is cheapest?','Café Star'],['Which café has the biggest seating area?','Café City'],['How far is Café Green?','two minutes away'],['Why does Maryan choose Café Green today?','She only has twenty minutes before class'],['Which café might Maryan choose when she has more time?','Café City']
+ ],
+ 42:[
+  ['What is not working in the classroom?','the projector'],['What does the teacher check first?','the power cable'],['What solution does Amina suggest?','using the printed worksheets'],['What does Yusuf offer to do?','give one worksheet to each pair'],['What does the teacher do after class?','messages the technician'],['How does the class continue the lesson?','by using printed worksheets']
+ ],
+ 43:[
+  ['What could Samira do when she started A1?','say only a few short sentences'],['What can Samira read now?','messages, schedules, menus, directions, and simple stories'],['What can she do in conversation now?','ask questions and keep a short conversation going'],['What is still difficult for Samira?','fast listening'],['How much listening does she plan to do each day?','ten minutes'],['What level does Samira want to enter next?','A2']
+ ],
+ 44:[
+  ['What does Amina read in the morning?','class messages and the timetable'],['What did Amina help a new learner find yesterday?','the library'],['What did Amina do at lunch without help?','read a café menu and ordered'],['What is Amina going to do this weekend?','meet two classmates for speaking practice'],['What does Amina do when people speak too quickly?','asks them to repeat'],['What is Amina’s next goal?','read longer texts and speak for several minutes without stopping']
+ ]
+};
+function readingQs(spec,n){
+ const rows=A1_READING_DIRECT[n];
+ if(!Array.isArray(rows))throw new Error('Missing direct A1 reading questions for lesson '+n);
+ return rows.map(row=>shortReading(row[0],row[1],'reading:detail'))
 }
 function listeningQs(spec){
  const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name);
@@ -395,7 +524,7 @@ function makeLesson(spec,i){
   targetVocabulary:spec.v.map(x=>x[0]),vocabularyEntries:spec.v.map(x=>({word:x[0],meaning:x[1],example:x[2]})),expressions:spec.u.map(text=>({text})),chunks:spec.u.slice(),interactionExpressions:spec.u.slice(0,3),
   functions:['understand familiar language','give simple information','respond to a partner'],discourse:['short complete sentences','clear turn taking','recycle earlier A1 language'],
   vocabulary:vocabItems(spec),
-  listening:{title:spec.title+' · Reading & Listening',readingText:spec.r.text,audioScript:spec.l.script,text:spec.l.script,speakers:lessonSpeakers(spec),questions:[...readingQs(spec),...listeningQs(spec)]},
+  listening:{title:spec.title+' · Reading & Listening',readingText:spec.r.text,audioScript:spec.l.script,text:spec.l.script,speakers:lessonSpeakers(spec),questions:[...readingQs(spec,n),...listeningQs(spec)]},
   grammar:{focus:spec.focus,rule:grammarRule(spec.focus),items:a1GrammarItems(spec.focus)},
   writing:{task:spec.writing,minWords:range[0],maxWords:range[1],humanGraded:false,checkpoint:false},
   foundation:n<=11?'Core A1 foundation: recognise, locate and build simple accurate English.':n<=22?'Everyday A1: scan, understand and communicate about daily life.':n<=33?'Independent A1: connect information, sequence events and solve familiar tasks.':'A1 mastery: interpret short connected texts and prepare for A2.',
