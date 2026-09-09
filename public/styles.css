@@ -5305,3 +5305,244 @@ html{scroll-behavior:auto!important}
 .student-pronunciation-mode .student-pronunciation-word:hover,.student-pronunciation-mode .student-pronunciation-word:active{background:#dbeafe;box-shadow:0 0 0 2px #93c5fd}
 .student-pronunciation-mode [data-vocab-word].student-pronunciation-word{outline:2px dashed #2563eb;outline-offset:2px}
 @media(max-width:640px){.student-live-stage-heading{align-items:flex-start;flex-direction:column}.student-pronunciation-toggle{align-self:flex-start}}
+
+
+
+/* EnglishGate mobile-first student experience v1 */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden}
+body{min-width:0;overflow-x:hidden}
+button,a,input,select,textarea{touch-action:manipulation}
+img,video,canvas,svg{max-width:100%}
+
+@media(max-width:760px){
+  body{background:#f5f7fb;-webkit-tap-highlight-color:rgba(23,54,159,.10)}
+  .student-mode .main{width:100%;min-width:0}
+  .student-mode .topbar{
+    height:58px;min-height:58px;
+    padding:0 12px;
+    gap:10px;
+    border-bottom:1px solid #dfe6ee;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(12px);
+  }
+  .student-mode .page-identity{min-width:0;overflow:hidden}
+  .student-mode .page-identity h2{
+    max-width:58vw;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font-size:1rem;line-height:1.2
+  }
+  .student-mode .top-actions{margin-left:auto}
+  .student-mode .student-profile-btn{width:38px;height:38px;min-width:38px;min-height:38px}
+  .student-mode .content{
+    width:100%;max-width:none;
+    padding:12px 12px calc(78px + env(safe-area-inset-bottom));
+  }
+
+  /* One-thumb navigation: five core destinations in one row. */
+  .student-mode .bottom-nav{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:2px;
+    left:0;right:0;bottom:0;
+    padding:5px 4px calc(5px + env(safe-area-inset-bottom));
+    min-height:66px;
+    background:rgba(255,255,255,.98);
+    border-top:1px solid #dfe6ee;
+    box-shadow:0 -8px 24px rgba(15,23,42,.08);
+    overflow:visible;
+  }
+  .student-mode .bottom-nav .nav-btn{
+    min-width:0;min-height:54px;
+    padding:5px 2px;
+    border-radius:10px;
+    display:grid;place-items:center;align-content:center;gap:2px;
+    font-size:.64rem;line-height:1.05;
+    white-space:normal;text-align:center;
+  }
+  .student-mode .bottom-nav .nav-icon{width:auto;font-size:1.08rem;line-height:1}
+  .student-mode .bottom-nav .nav-btn.active{
+    background:#eef4ff;color:#17369F;
+    box-shadow:inset 0 2px 0 #17369F;
+  }
+
+  /* Login is an app screen, not a desktop landing page. */
+  .login-screen{min-height:100dvh;padding:0;background:#fff}
+  .login-shell{
+    width:100%;min-height:100dvh;
+    grid-template-columns:1fr;
+    border:0;border-radius:0;box-shadow:none;
+  }
+  .login-brand{display:none}
+  .login-card{
+    min-height:100dvh;
+    justify-content:center;
+    gap:22px;
+    padding:calc(30px + env(safe-area-inset-top)) 22px calc(28px + env(safe-area-inset-bottom));
+  }
+  .login-card:before{
+    content:"E";
+    width:58px;height:58px;
+    display:grid;place-items:center;
+    margin:0 0 2px;
+    border-radius:16px;
+    background:#1769ff;color:#fff;
+    font-size:2rem;font-weight:900;line-height:1;
+    box-shadow:0 8px 20px rgba(23,105,255,.22);
+  }
+  .login-card h2{font-size:1.8rem}
+  .login-card>small{line-height:1.45}
+  input,select,textarea{font-size:16px!important;min-height:48px}
+  textarea{min-height:120px}
+  .primary-btn,.secondary-btn,.ghost-btn,.demo-login{min-height:44px}
+  .primary-btn,.secondary-btn,.ghost-btn{padding:11px 14px}
+
+  /* Student home: one clear next action before secondary information. */
+  .student-home,.eg-student-home{gap:14px}
+  .next-action-card{
+    padding:18px;
+    gap:16px;
+    border-radius:18px;
+    box-shadow:0 5px 16px rgba(15,23,42,.06)
+  }
+  .next-action-card h1{font-size:1.75rem;line-height:1.16}
+  .next-action-card h2{font-size:1.15rem}
+  .next-action-card p{font-size:.92rem;line-height:1.5}
+  .next-progress{margin:18px 0 14px}
+  .student-cta-row{display:grid;grid-template-columns:1fr;gap:8px}
+  .student-cta-row>*{width:100%;min-width:0}
+  .student-primary-cta{min-width:0}
+  .student-glance{gap:10px}
+  .glance-card{padding:14px;border-radius:14px;gap:11px}
+  .eg-student-welcome{align-items:flex-start;gap:10px}
+  .eg-student-welcome h1{font-size:1.55rem}
+  .eg-home-layout{grid-template-columns:1fr;gap:12px}
+  .eg-next-practice,.eg-home-progress,.eg-recent-practice{padding:17px;border-radius:14px}
+
+  /* Book browsing: cards become compact, readable mobile rows. */
+  .course-shell,.learning-shell,.progress-shell,.profile-shell{width:100%;max-width:none}
+  .course-intro{
+    margin:8px 0 14px;padding:17px;
+    gap:14px;border-radius:17px;
+    grid-template-columns:1fr
+  }
+  .course-intro h1{font-size:1.45rem;line-height:1.2}
+  .course-path{gap:9px}
+  .course-topic{padding:13px;gap:10px;border-radius:14px}
+  .student-course-list{gap:10px}
+  .student-course-list .course-topic{padding:14px;gap:11px;border-radius:14px}
+  .student-course-list .topic-state{width:36px;height:36px}
+  .student-course-list .topic-copy strong{font-size:1rem}
+  .student-course-list .topic-copy small,.student-course-list .topic-copy span{font-size:.78rem}
+  .student-course-list .topic-actions{grid-template-columns:1fr}
+  .student-course-list .topic-actions .primary-btn,
+  .student-course-list .topic-actions .ghost-btn{min-height:46px}
+
+  /* Live class book: stages scroll horizontally, content fills the phone. */
+  .eg-lesson{width:100%;max-width:none;font-size:1rem}
+  .eg-lesson-header{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    align-items:center;
+    gap:9px;
+    margin-bottom:10px
+  }
+  .eg-lesson-header>div{min-width:0}
+  .eg-lesson-header p{font-size:.72rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .eg-lesson-header h1{font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .eg-lesson-header .ghost-btn{min-height:40px;padding:8px 10px;font-size:.78rem}
+  .eg-lesson-layout{display:block}
+  .eg-stage-list{position:static;margin:0 -12px 10px;padding:0 12px}
+  .eg-stage-list nav{
+    display:flex;gap:6px;
+    overflow-x:auto;overscroll-behavior-x:contain;
+    scroll-snap-type:x proximity;
+    scrollbar-width:none;
+    padding:3px 0 8px
+  }
+  .eg-stage-list nav::-webkit-scrollbar{display:none}
+  .eg-stage{flex:0 0 auto;max-width:190px;min-height:44px;padding:8px 10px;scroll-snap-align:start}
+  .eg-stage>span{width:26px;height:26px;flex-basis:26px}
+  .eg-stage strong{font-size:.78rem}
+  .eg-goal{margin:3px 0 8px;padding:0}
+  .eg-teaching-surface{border-radius:14px;box-shadow:none}
+  .eg-stage-heading{padding:15px}
+  .eg-stage-heading h2{font-size:1.25rem}
+  .student-live-stage-heading{gap:10px}
+  .student-pronunciation-toggle{width:100%;min-height:44px}
+  .eg-stage-content{
+    min-height:0;padding:15px;
+    font-size:1rem;line-height:1.62
+  }
+  .eg-stage-content>p{font-size:1rem;line-height:1.62;margin-bottom:14px}
+  .eg-stage-content .live-book-section,.eg-stage-content .live-book-subhead{font-size:1.02rem;margin:18px 0 9px}
+  .eg-stage-content .live-prompt-row p,.eg-stage-content .live-book-bullet{font-size:1rem;line-height:1.55}
+  .eg-stage-content .live-vocab-row{padding:13px;gap:10px}
+  .eg-stage-content .live-vocab-word strong,.eg-stage-content .live-vocab-example span{font-size:1rem}
+  .eg-workbook-note{padding:12px 15px}
+  .eg-lesson-footer{
+    position:sticky;bottom:calc(66px + env(safe-area-inset-bottom));
+    z-index:6;
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:8px;
+    padding:10px;
+    background:rgba(255,255,255,.98);
+    backdrop-filter:blur(10px)
+  }
+  .eg-lesson-footer>*{width:100%;min-width:0}
+
+  /* Workbook: one question at a time, thumb-friendly controls. */
+  .eg-workbook{width:100%!important;max-width:none!important;padding-bottom:12px}
+  .eg-workbook-top{grid-template-columns:1fr!important;gap:9px;padding:6px 0 12px}
+  .eg-workbook-identity strong{font-size:1.08rem}
+  .learning-heading{padding:16px;border-radius:16px}
+  .learning-heading h1{font-size:1.35rem}
+  .focused-activity{padding:0!important;max-width:none}
+  .activity-card,.jtbd-activity-panel{padding:15px;border-radius:15px}
+  .jtbd-workbook-head{grid-template-columns:auto minmax(0,1fr);gap:10px}
+  .jtbd-head-actions{grid-column:1/-1;justify-content:space-between}
+  .runner-question-stack{min-height:0}
+  .runner-question .guided-question>p{font-size:1rem;line-height:1.5;margin-bottom:14px}
+  .runner-actions{
+    position:sticky;bottom:calc(66px + env(safe-area-inset-bottom));
+    z-index:5;
+    margin:0 -15px -15px;
+    padding:10px 15px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.98);
+    border-top:1px solid #e5eaf0;
+    backdrop-filter:blur(10px)
+  }
+  .runner-actions button{min-height:46px}
+  .choice{min-height:48px;padding:12px}
+  .mcq-option-cards{grid-template-columns:1fr!important;gap:8px}
+  .mcq-option-card{min-height:48px;padding:11px 12px}
+  .mcq-answer-slot{min-height:68px}
+  .guided-question{min-height:0;padding:14px 1px}
+  .guided-nav button{min-height:46px}
+  .guided-submit{min-height:48px}
+  .writing-response,.writing-guided-question .writing-response{min-height:150px}
+
+  /* Progress, community, tables and dialogs must never force horizontal zoom. */
+  .progress-hero-card{padding:18px;border-radius:17px;align-items:flex-start;flex-direction:column}
+  .progress-hero-card h1{font-size:1.7rem}
+  .student-skill-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .card{padding:15px;border-radius:15px}
+  .table-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .modal-backdrop{align-items:end;padding:0}
+  .modal-card{
+    width:100%;max-width:none;max-height:92dvh;
+    border-radius:22px 22px 0 0;
+    padding:18px 14px calc(18px + env(safe-area-inset-bottom))
+  }
+  .writing-review-grid{grid-template-columns:1fr}
+  .writing-review-card{border-radius:14px}
+}
+
+@media(max-width:390px){
+  .student-mode .content{padding-left:10px;padding-right:10px}
+  .student-mode .bottom-nav .nav-btn{font-size:.6rem}
+  .student-mode .bottom-nav .nav-icon{font-size:1rem}
+  .next-action-card h1{font-size:1.6rem}
+  .student-skill-grid{grid-template-columns:1fr}
+  .eg-lesson-header{grid-template-columns:auto minmax(0,1fr)}
+  .eg-lesson-header>button:last-child{grid-column:1/-1;width:100%}
+}
