@@ -103,22 +103,21 @@ function textPair(level,title,data){
  };
 }
 
-function comprehension(title,data){
+function comprehension(level,title,data){
  const s=data.s,person=s[0],place=s[1],goal=s[2],challenge=s[3],action=s[4],result=s[5];
  return[
-  {q:'Who is the main person in the text?',options:[person,'A visitor','The teacher'],answer:person,tag:'listening-reading:detail'},
-  {q:'Where does the situation happen?',options:[place,'a hotel lobby','a sports stadium'],answer:place,tag:'listening-reading:detail'},
-  {q:'What is the main goal?',options:[goal,'avoid the topic completely','cancel the activity'],answer:goal,tag:'listening-reading:main-idea'},
-  {q:'What complication appears?',options:[challenge,'there is no difficulty','everyone immediately agrees'],answer:challenge,tag:'listening-reading:detail'},
-  {q:'What action does the person take?',options:[action,'ignore the situation','leave without deciding'],answer:action,tag:'listening-reading:sequence'},
-  {q:'What result follows?',options:[result,'the situation becomes unrelated','nothing changes at all'],answer:result,tag:'listening-reading:detail'},
-  {q:'Which happened first?',options:[challenge,action,result],answer:challenge,tag:'listening-reading:sequence'},
-  {q:'Which best describes the response?',options:['The person identifies a problem and takes a purposeful action.','The person avoids making any decision.','The text only lists vocabulary.'],answer:'The person identifies a problem and takes a purposeful action.',tag:'listening-reading:inference'},
-  {q:'What broader lesson is most useful?',options:['A useful response should connect evidence, purpose and action.','The fastest response is always the best response.','One solution works in every context.'],answer:'A useful response should connect evidence, purpose and action.',tag:'listening-reading:evaluation'},
-  {q:'What is the main purpose of the text?',options:['To explain a challenge, response and lesson.','To advertise a product.','To give unrelated facts.'],answer:'To explain a challenge, response and lesson.',tag:'listening-reading:purpose'}
+  {type:'short',q:'Who is the reading about?',answer:person,min:1,tag:'reading:detail'},
+  {type:'short',q:'Where does the reading take place?',answer:place,min:1,tag:'reading:detail'},
+  {type:'short',q:'What is '+person+' trying to do?',answer:goal,min:1,tag:'reading:detail'},
+  {type:'short',q:'What problem does '+person+' face?',answer:challenge,min:1,tag:'reading:detail'},
+  {type:'short',q:'What action does '+person+' take?',answer:action,min:1,tag:'reading:detail'},
+  {type:'short',q:'What happens after '+person+' takes that action?',answer:result,min:1,tag:'reading:detail'},
+  {q:'Where does the listening situation happen?',options:[place,'a hotel lobby','a sports stadium'],answer:place,tag:'listening:detail'},
+  {q:'What is the speaker trying to do?',options:[goal,'avoid the topic completely','cancel the activity'],answer:goal,tag:'listening:detail'},
+  {q:'What problem does the speaker describe?',options:[challenge,'there is no difficulty','everyone immediately agrees'],answer:challenge,tag:'listening:detail'},
+  {q:'What action does the speaker describe?',options:[action,'ignore the situation','leave without deciding'],answer:action,tag:'listening:detail'}
  ];
 }
-
 function finalWriting(level,title,number){
  const c=CONFIG[level],min=c.range[0],max=c.range[1],topic=title.toLowerCase(),slot=(number-1)%5;
  const common=[
@@ -159,7 +158,7 @@ function lesson(level,number,title,focus){
   'Discuss '+title.toLowerCase()+' precisely, qualify a viewpoint, synthesise information and adapt the message to audience and purpose.';
  x.targetVocabulary=data.v.map(function(v){return v[0]});
  x.expressions=expressions(level);
- x.listening={title:title+' · Reading & Listening',readingText:pair.reading,audioScript:pair.audio,text:pair.audio,questions:comprehension(title,data)};
+ x.listening={title:title+' · Reading & Listening',readingText:pair.reading,audioScript:pair.audio,text:pair.audio,questions:comprehension(level,title,data)};
  x.grammar={focus:focus,rule:grammarRule(focus),items:grammarQuestions(focus)};
  x.writing=finalWriting(level,title,number);
  x.foundation=level==='A1'?'Short supported phrases and model sentences.':level==='A2'?'Familiar language with sentence-level support.':level==='B1'?'Accessible B1 input with clear task structure.':'Accessible B2+/C1 bridge input before more demanding analysis.';
