@@ -5235,3 +5235,16 @@ html{scroll-behavior:auto!important}
 .guided-question[data-ladder-level="5"] .question-stage span{color:var(--navy);font-weight:900}
 @media(max-width:1100px){.eg-ladder-track{grid-template-columns:repeat(5,minmax(180px,1fr));overflow-x:auto;padding-bottom:5px;scroll-snap-type:x proximity}.eg-ladder-step{scroll-snap-align:start}}
 @media(max-width:700px){.eg-learning-ladder{padding:16px}.eg-ladder-head{display:grid;gap:8px}.eg-ladder-head>strong{text-align:left}.eg-ladder-track{grid-template-columns:repeat(5,78vw)}.eg-ladder-result{align-items:flex-start;flex-direction:column}.eg-ladder-mini{width:100%;justify-content:space-between}}
+
+
+/* Live lesson listening audio */
+.live-audio-player{margin:16px 0 20px;padding:16px;background:#f8fbff;border-color:#dbe7f3}
+.live-audio-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px}
+.live-audio-heading>div{display:grid;gap:5px}
+.live-audio-heading strong{font-size:.95rem;color:var(--navy)}
+.live-audio-heading>[data-live-audio-status]{font-size:.76rem;font-weight:800;color:var(--muted);white-space:nowrap}
+.live-audio-transcript{margin-top:8px;border-top:1px solid var(--border);padding-top:10px}
+.live-audio-transcript summary{cursor:pointer;font-weight:800;color:var(--navy)}
+.live-audio-transcript p{margin:10px 0 0;line-height:1.7;color:var(--text)}
+.is-listening-stage>p:first-child{font-weight:700}
+@media(max-width:560px){.live-audio-heading{align-items:flex-start;flex-direction:column;gap:8px}}
