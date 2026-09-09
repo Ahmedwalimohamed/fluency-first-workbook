@@ -1590,7 +1590,7 @@ function lessonVisualThumbHtml(l){
  return `<div class="eg-lesson-visual-thumb" title="Lesson visual"><img src="${escapeAttr(v.src)}" alt="" aria-hidden="true"></div>`;
 }
 function listeningActivity(l){
- const all=(l.listening?.questions||[]).slice(0,10),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');
+ const all=(l.listening?.questions||[]).slice(0,12),reading=l.listening?.readingText,script=String(l.listening?.audioScript||l.listening?.text||'').trim(),completed=!isWorkbookPreview()&&skillCompletionFor(session.id,l.id).includes('listening');
  const readingQs=all.filter(q=>String(q.tag||'').startsWith('reading:'));
  const listeningQs=all.filter(q=>String(q.tag||'').startsWith('listening:'));
  const sharedQs=all.filter(q=>!String(q.tag||'').startsWith('reading:')&&!String(q.tag||'').startsWith('listening:'));
