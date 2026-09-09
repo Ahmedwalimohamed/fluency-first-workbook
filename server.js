@@ -125,6 +125,18 @@ async function generateListeningAudio(input,speakerProfiles=[]){
 }
 function sendGeneratedAudio(res,audio){res.set('Content-Type',audio.contentType);res.set('Cache-Control','private, max-age=3600');res.set('X-EnglishGate-Audio-Mode',audio.mode);return res.send(audio.buffer)}
 
+const teacherPronunciationServerCache=new Map();
+async function generateTeacherPronunciation(word){
+ const clean=String(word||'').trim(),key=clean.toLowerCase();
+ if(teacherPronunciationServerCache.has(key))return teacherPronunciationServerCache.get(key);
+ if(!process.env.OPENAI_API_KEY){const e=new Error('Pronunciation service is unavailable.');e.status=503;throw e}
+ const voice=process.env.OPENAI_PRONUNCIATION_VOICE||OPENAI_TTS_VOICE;
+ const buffer=await requestSpeechWav(clean,voice,'Pronounce exactly this single English word one time in clear, neutral General American English. Use careful dictionary-style pronunciation, natural stress, and a slightly slower pace for an English learner. Do not add any other words, letters, definitions, explanations, or sounds.');
+ const audio={buffer,contentType:'audio/wav',mode:'teacher-pronunciation',speakers:[]};
+ teacherPronunciationServerCache.set(key,audio);
+ if(teacherPronunciationServerCache.size>1200)teacherPronunciationServerCache.delete(teacherPronunciationServerCache.keys().next().value);
+ return audio
+}
 const teacherExampleServerCache=new Map();
 async function generateTeacherExampleSentence(word,level,lessonTitle){
  const cleanWord=String(word||'').trim(),cleanLevel=String(level||'').trim().slice(0,24),cleanTitle=String(lessonTitle||'').trim().slice(0,120);
@@ -156,6 +168,7 @@ app.use(cookieParser());
 const loginLimiter=rateLimit({windowMs:10*60*1000,max:20,standardHeaders:true,legacyHeaders:false});
 const passwordResetLimiter=rateLimit({windowMs:10*60*1000,max:5,standardHeaders:true,legacyHeaders:false});
 const teacherExampleLimiter=rateLimit({windowMs:60*1000,max:60,standardHeaders:true,legacyHeaders:false});
+const teacherPronunciationLimiter=rateLimit({windowMs:60*1000,max:90,standardHeaders:true,legacyHeaders:false});
 function tokenFor(u){return jwt.sign({id:u.id,role:u.role,username:u.username,name:u.name},JWT_SECRET,{expiresIn:'12h'})}
 function setSession(res,u){res.cookie('ff_session',tokenFor(u),{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',maxAge:12*60*60*1000,path:'/'})}
 function auth(req,res,next){try{req.user=jwt.verify(req.cookies.ff_session||'',JWT_SECRET);next()}catch{return res.status(401).json({error:'Please sign in again.'})}}
@@ -337,6 +350,19 @@ async function maybeIssueLevelCertificate(studentId,bookId=null){
 async function isListeningLocked(studentId,lessonId){const q=await pool.query(`select 1 from listening_locks where student_id=$1 and lesson_id=$2 union select 1 from completion where student_id=$1 and lesson_id=$2 and step='listening' limit 1`,[studentId,lessonId]);return q.rowCount>0}
 app.get('/api/listening/:lessonId/prep',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');const script=LISTENING_SCRIPTS[lessonId];if(!script)return res.status(404).json({error:'Listening topic not found.'});if(await isListeningLocked(req.user.id,lessonId))return res.json({locked:true});res.set('Cache-Control','no-store');res.json({locked:false,script})});
 app.post('/api/listening/:lessonId/lock',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');if(!LISTENING_SCRIPTS[lessonId])return res.status(404).json({error:'Listening topic not found.'});await pool.query('insert into listening_locks(student_id,lesson_id) values($1,$2) on conflict do nothing',[req.user.id,lessonId]);res.json({ok:true,locked:true})});
+
+app.post('/api/teacher/pronunciation',auth,teacherOnly,teacherPronunciationLimiter,async(req,res)=>{
+ const word=String(req.body?.word||'').trim();
+ if(!word||word.length>60||!/^[\p{L}\p{M}'’\-]+$/u.test(word))return res.status(400).json({error:'Choose one English word from the lesson.'});
+ try{
+  const audio=await generateTeacherPronunciation(word);
+  res.set('X-EnglishGate-Pronunciation','en-US');
+  return sendGeneratedAudio(res,audio)
+ }catch(e){
+  console.error('Teacher pronunciation error:',e.message);
+  return res.status(e.status||502).json({error:'American pronunciation is temporarily unavailable.'})
+ }
+});
 
 app.post('/api/teacher/example-sentence',auth,teacherOnly,teacherExampleLimiter,async(req,res)=>{
  const word=String(req.body?.word||'').trim(),level=String(req.body?.level||'').trim(),lessonTitle=String(req.body?.lessonTitle||'').trim();

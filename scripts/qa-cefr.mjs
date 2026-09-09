@@ -232,6 +232,14 @@ if(!app.includes('data-teacher-example-word')||!app.includes('showTeacherExample
 if(!app.includes("mode==='interact'||mode==='example'"))errors.push('Give example mode must allow clicks through the annotation canvas');
 if(!server.includes("app.post('/api/teacher/example-sentence'")||!server.includes('teacherOnly,teacherExampleLimiter'))errors.push('Teacher Give example endpoint must be teacher-only and rate-limited');
 if(!app.includes('teacher-example-bubble'))errors.push('Teacher Give example bubble is missing');
+/* Teacher Pronunciation tool */
+if(!app.includes("teacherToolButton('pronunciation','Pronunciation','🔊')"))errors.push('Teacher Teach toolbar is missing Pronunciation');
+if(!app.includes('playTeacherPronunciation')||!app.includes('wireTeacherPronunciationTool'))errors.push('Teacher pronunciation interaction is missing');
+if(!app.includes("mode==='interact'||mode==='example'||mode==='pronunciation'"))errors.push('Pronunciation mode must allow word taps through the annotation canvas');
+if(!server.includes("app.post('/api/teacher/pronunciation'")||!server.includes('teacherOnly,teacherPronunciationLimiter'))errors.push('Teacher pronunciation endpoint must be teacher-only and rate-limited');
+if(!server.includes('General American English'))errors.push('Teacher pronunciation must request General American English');
+if(!app.includes("utterance.lang='en-US'"))errors.push('Teacher pronunciation browser fallback must use en-US');
+
 
 if(!server.includes('OPENAI_TTS_FEMALE_VOICES')||!server.includes('OPENAI_TTS_MALE_VOICES')||!server.includes('dialogueTurns')||!server.includes('speakerVoicePlan')||!server.includes("response_format:'wav'"))errors.push('Conversation listening must support distinct male/female multi-speaker voices');
 try{
