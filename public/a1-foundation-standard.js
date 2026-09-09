@@ -506,16 +506,55 @@ function readingQs(spec,n){
  if(!Array.isArray(rows))throw new Error('Missing direct A1 reading questions for lesson '+n);
  return rows.map(row=>shortReading(row[0],row[1],'reading:detail'))
 }
+function listeningTurns(script){
+ const turns=[],rx=/(?:^|\s)([A-Z][A-Za-z'’-]*):\s*(.*?)(?=\s+[A-Z][A-Za-z'’-]*:\s|$)/g;
+ let m;
+ while((m=rx.exec(String(script||''))))turns.push({speaker:m[1],text:m[2].trim()});
+ return turns;
+}
+function firstSentenceBeforeQuestion(text){
+ const clean=String(text||'').trim();
+ const q=clean.indexOf('?');
+ if(q>=0){
+  const before=clean.slice(0,q).trim();
+  const lastStop=Math.max(before.lastIndexOf('.'),before.lastIndexOf('!'));
+  return (lastStop>=0?before.slice(lastStop+1):before).trim();
+ }
+ const m=clean.match(/^(.+?[.!])(?:\s|$)/);
+ return (m?m[1]:clean).replace(/[.!]$/,'').trim();
+}
+function questionSentence(text){
+ const clean=String(text||'').trim(),q=clean.indexOf('?');
+ if(q<0)return '';
+ const start=Math.max(clean.lastIndexOf('.',q),clean.lastIndexOf('!',q))+1;
+ return clean.slice(start,q+1).trim();
+}
+function shortListening(qText,answer,tag='listening:detail'){return{type:'short',q:qText,answer,min:1,tag}}
 function listeningQs(spec){
- const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name);
- return[
-  q('Where does the listening situation happen?',[x.setting,'at an airport','in a stadium'],x.setting,'listening:detail'),
-  q('What are the speakers mainly trying to do?',[x.purpose,'avoid speaking to each other','talk about an unrelated problem'],x.purpose,'listening:main-idea'),
-  q('Which detail do you hear?',[x.detail,'The opposite detail is stated.','This is never mentioned.'],x.detail,'listening:detail'),
-  q('What is the result of the conversation?',[x.result,'They end without any useful result.','They change to a completely different topic.'],x.result,'listening:result'),
-  q('Who are the speakers?',[names.join(' and '),names[0]+' and an unnamed visitor','Two unnamed people'],names.join(' and '),'listening:speakers'),
-  q('Which statement best describes the conversation?',['The speakers exchange clear everyday information and reach a useful understanding.','The speakers do not understand any words.','The conversation is only a vocabulary list.'],'The speakers exchange clear everyday information and reach a useful understanding.','listening:inference')
- ];
+ const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name),turns=listeningTurns(x.script),items=[];
+ items.push(shortListening('Who are the speakers?',names.join(' and '),'listening:speakers'));
+ items.push(shortListening('Where does the conversation happen?',x.setting,'listening:detail'));
+ for(let i=0;i<turns.length-1&&items.length<6;i++){
+  const asked=questionSentence(turns[i].text);
+  if(!asked)continue;
+  const reply=firstSentenceBeforeQuestion(turns[i+1].text);
+  if(!reply)continue;
+  items.push(shortListening(turns[i].speaker+' asks, “'+asked+'” What does '+turns[i+1].speaker+' answer?',reply,'listening:detail'));
+ }
+ if(items.length<6&&turns.length){
+  const first=turns[0],asked=questionSentence(first.text);
+  if(asked)items.push(shortListening('What does '+first.speaker+' ask at the beginning?',asked.replace(/\?$/,''),'listening:detail'));
+ }
+ if(items.length<6&&turns.length){
+  const last=turns[turns.length-1];
+  items.push(shortListening('What does '+last.speaker+' say at the end?',firstSentenceBeforeQuestion(last.text),'listening:detail'));
+ }
+ while(items.length<6){
+  const fallbackIndex=items.length===2?0:Math.min(turns.length-1,items.length-2),turn=turns[fallbackIndex];
+  if(turn)items.push(shortListening('What does '+turn.speaker+' say in the conversation?',firstSentenceBeforeQuestion(turn.text),'listening:detail'));
+  else break;
+ }
+ return items.slice(0,6);
 }
 function makeLesson(spec,i){
  const n=i+1,range=wordRange(n);
