@@ -5767,3 +5767,39 @@ img,video,canvas,svg{max-width:100%}
   right:7px
  }
 }
+
+
+/* Prevent mobile lesson footer from covering content v1 */
+@media(max-width:760px){
+  /* Live lesson pages keep the navigation bar sticky, but reserve its full height
+     inside the reading area so the last lines can never sit underneath it. */
+  .student-mode .live-book-content.eg-stage-content{
+    padding-bottom:calc(118px + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(118px + env(safe-area-inset-bottom));
+  }
+
+  .student-mode .eg-teaching-surface:not(.eg-workbook-teaching-surface) .eg-lesson-footer{
+    position:sticky;
+    bottom:calc(66px + env(safe-area-inset-bottom));
+    margin-top:-92px;
+    min-height:82px;
+    padding:10px 12px;
+    border-top:1px solid #e2e8f0;
+    box-shadow:0 -8px 22px rgba(15,23,42,.07);
+  }
+
+  /* Ensure anchors / focused vocabulary near the end of a stage are revealed
+     above the sticky controls rather than underneath them. */
+  .student-mode .live-book-content.eg-stage-content :is(
+    p, .live-book-section, .live-book-subhead, .live-book-bullet,
+    .live-vocab-row, .live-prompt-row, [data-vocab-word]
+  ){
+    scroll-margin-bottom:120px;
+  }
+}
+
+@media(max-width:390px){
+  .student-mode .live-book-content.eg-stage-content{
+    padding-bottom:calc(124px + env(safe-area-inset-bottom))!important;
+  }
+}
