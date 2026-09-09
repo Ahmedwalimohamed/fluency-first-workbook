@@ -977,7 +977,7 @@ function liveAudioKey(text){
  return 'live-listening-'+(hash>>>0).toString(16)
 }
 function dialogueTranscriptTurns(text){
- const source=String(text||'').replace(/\s+/g,' ').trim(),re=/(?:^|\s)([A-Z][A-Za-z'’.-]{1,24}(?:\s+[A-Z][A-Za-z'’.-]{1,24})?):\s*/g,matches=[...source.matchAll(re)];
+ const source=String(text||'').replace(/\s+/g,' ').trim(),re=/(?:^|(?<=[.!?])\s+)([A-Z][A-Za-z'’-]{1,24}(?:\s+[A-Z][A-Za-z'’-]{1,24})?):\s*/g,matches=[...source.matchAll(re)];
  if(matches.length<2)return[];
  const turns=[];
  for(let i=0;i<matches.length;i++){
