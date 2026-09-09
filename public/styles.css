@@ -5280,3 +5280,17 @@ html{scroll-behavior:auto!important}
 .teacher-example-bubble small{display:block;margin-bottom:4px;color:#bfdbfe;font-weight:800;letter-spacing:.02em}
 .teacher-example-bubble p{margin:0;color:#fff;line-height:1.45;font-size:.95rem}
 @media(max-width:640px){.teacher-example-bubble{max-width:calc(100vw - 20px);font-size:.94rem}}
+
+
+/* Teacher Pronunciation tool */
+.teacher-pronunciation-mode .teacher-example-word{cursor:pointer;border-radius:4px;transition:background .12s ease,box-shadow .12s ease}
+.teacher-pronunciation-mode .teacher-example-word:hover,.teacher-pronunciation-mode .teacher-example-word:active{background:#dbeafe;box-shadow:0 0 0 2px #93c5fd}
+.teacher-pronunciation-mode [data-vocab-word].teacher-example-word{outline:2px dashed #2563eb;outline-offset:2px}
+.teacher-pronunciation-bubble{position:fixed;z-index:10050;display:flex;align-items:center;gap:10px;width:max-content;max-width:min(320px,calc(100vw - 24px));padding:10px 12px;background:#0f172a;color:#fff;border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,.28);pointer-events:none}
+.teacher-pronunciation-bubble>span{display:grid;place-items:center;width:34px;height:34px;border-radius:999px;background:#1d4ed8;font-size:1rem}
+.teacher-pronunciation-bubble>div{display:grid;line-height:1.15}
+.teacher-pronunciation-bubble small{color:#bfdbfe;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.teacher-pronunciation-bubble strong{margin-top:2px;font-size:1rem}
+.teacher-pronunciation-bubble em{margin-top:3px;color:#cbd5e1;font-size:.72rem;font-style:normal}
+.teacher-pronunciation-bubble:after{content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid #0f172a}
+.teacher-pronunciation-bubble.is-below:after{top:-7px;bottom:auto;border-top:0;border-bottom:7px solid #0f172a}
