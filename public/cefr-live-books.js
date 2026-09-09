@@ -242,7 +242,103 @@ function vocabularyRows(topic,data){
  }).join('\n');
 }
 
+function a2VocabularyRows(lesson){
+ return (lesson.targetVocabulary||[]).map(function(word){
+  const meaning=typeof vocabMeaning==='function'?vocabMeaning(word):word;
+  const example=typeof lessonVocabExample==='function'?lessonVocabExample(word,lesson):'Use this word in a sentence about '+lesson.title.toLowerCase()+'.';
+  return word+' — '+meaning+'. Example: '+example;
+ }).join('\n');
+}
+function a2LessonContent(lesson){
+ const topic=lesson.title,w=warm('A2',topic),reading=(lesson.listening?.readingText||''),audio=(lesson.listening?.audioScript||lesson.listening?.text||'');
+ const rqs=(lesson.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith('reading:')).slice(0,4);
+ const lqs=(lesson.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith('listening:')).slice(0,4);
+ const grammarExamples=(lesson.grammar?.items||[]).slice(0,3).map(q=>'• '+q.answer);
+ const useful=[...(lesson.chunks||[]),...(lesson.interactionExpressions||[])].slice(0,6);
+ return[
+  'LESSON '+lesson.number+' '+topic,
+  'CAN-DO GOAL: '+lesson.outcome,
+  'PAGE 1 — WARM UP',
+  'FOUNDATION',
+  lesson.foundation,
+  'Think & Talk',
+  w.map(function(q,i){return(i+1)+'. '+q}).join('\n'),
+  'SPEAKING STARTER',
+  'Work with a partner. Use keywords only. Give a short answer, react, then ask one follow-up question.',
+  '',
+  'PAGE 2 — VOCABULARY',
+  'Talking About '+topic,
+  'WORD — MEANING — EXAMPLE',
+  a2VocabularyRows(lesson),
+  'Useful Expressions',
+  useful.map(x=>'• '+x).join('\n'),
+  'PRONUNCIATION FOCUS',
+  lesson.pronunciation,
+  '',
+  'PAGE 3 — READING',
+  'READ',
+  reading,
+  'Check Your Understanding',
+  rqs.map(function(q,i){return(i+1)+'. '+q.q}).join('\n'),
+  'A2 LIFT',
+  lesson.a2Lift,
+  '',
+  'PAGE 4 — LANGUAGE FOCUS',
+  lesson.grammar.focus,
+  lesson.grammar.rule,
+  'Examples from today’s grammar practice',
+  grammarExamples.join('\n'),
+  'Make it personal',
+  'Say two true sentences connected to '+topic.toLowerCase()+'. Then explain why your grammar form matches your meaning.',
+  '',
+  'PAGE 5 — LISTENING',
+  'Listen without reading first.',
+  'AUDIO SCRIPT',
+  audio,
+  'After listening',
+  lqs.map(function(q,i){return(i+1)+'. '+q.q}).join('\n'),
+  'MEDIATION MOVE',
+  lesson.mediation,
+  '',
+  'PAGE 6 — FLUENCY MISSION',
+  'YOUR MISSION',
+  lesson.performance,
+  'Communication jobs',
+  (lesson.functions||[]).map(x=>'• '+x).join('\n'),
+  'Success means',
+  '• I communicate the main message without reading a full script.',
+  '• I use at least two useful words or expressions from the lesson.',
+  '• I react to my partner and ask a follow-up question.',
+  '• I repair one unclear sentence and try it again.',
+  '',
+  'PAGE 7 — CLASSROOM CHALLENGE',
+  'GRAMMAR RELAY',
+  'Open the matching Grammar workbook activity.',
+  'Complete Questions 1–5 together in class.',
+  'For every answer:',
+  '1. Choose the answer.',
+  '2. Check it with EnglishGate.',
+  '3. One student explains why the answer matches the intended meaning.',
+  '4. If it is wrong, repair the sentence and explain the reason again.',
+  'Finish this challenge before Reflection.',
+  '',
+  'PAGE 8 — REFLECTION',
+  'Today I can...',
+  '☐ '+lesson.outcome,
+  '☐ I can use today’s grammar to express the intended meaning.',
+  '☐ I can use at least two target words or expressions.',
+  '☐ I can explain one idea from a partner in my own words.',
+  'One sentence I used well:',
+  '____________________________',
+  'One correction I will retry:',
+  '____________________________',
+  'One useful expression I want to remember:',
+  '____________________________'
+ ].join('\n');
+}
+
 function lessonContent(level,lesson){
+ if(level==='A2'&&lesson.standardVersion!=='legacy')return a2LessonContent(lesson);
  const topic=lesson.title,data=TOPIC_LIBRARY[topic],focus=lesson.grammar.focus;
  const w=warm(level,topic),u=useful(level),tx=texts(level,topic,data),r=reflection(level);
  return[
@@ -336,7 +432,7 @@ LEVELS.forEach(function(level){
  window.LIVE_BOOKS[id]={
   title:book.title,
   lessons:book.lessons.map(function(lesson){
-   return{number:lesson.number,title:lesson.title,content:lessonContent(level,lesson)};
+   return{number:lesson.number,title:lesson.title,content:lessonContent(level,{...lesson,standardVersion:book.standardVersion||lesson.standardVersion})};
   })
  };
 });
