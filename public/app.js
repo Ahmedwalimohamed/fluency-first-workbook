@@ -2355,7 +2355,60 @@ function wireWritingCore(){
   syncWritingArrange(card)
  })
 }
-function wireActivity(l){wireMcqCards();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();if(!isWorkbookPreview()){restoreActivityDraft();wireActivityDrafting()}
+
+function wireStudentQuestionFlow(){
+ if(session?.role!=='student'||isWorkbookPreview())return;
+ const list=document.querySelector('#activityPanel .activity-question-list');
+ if(!list||list.dataset.studentQuestionFlow==='1')return;
+ const questions=[...list.querySelectorAll(':scope > .guided-question')];
+ if(questions.length<2)return;
+ list.dataset.studentQuestionFlow='1';
+ let index=0,advanceTimer=0;
+ const panel=list.closest('.eg-task-panel')||list.parentElement;
+ const progress=document.createElement('div');
+ progress.className='student-question-flow-head';
+ progress.innerHTML='<div><span data-question-flow-label>Question 1 of '+questions.length+'</span><strong data-question-flow-stage></strong></div><div class="student-question-flow-track" aria-hidden="true"><span data-question-flow-bar></span></div>';
+ list.before(progress);
+ const back=document.createElement('button');
+ back.type='button';
+ back.className='ghost-btn student-question-back';
+ back.textContent='← Back';
+ list.after(back);
+ const label=progress.querySelector('[data-question-flow-label]'),stage=progress.querySelector('[data-question-flow-stage]'),bar=progress.querySelector('[data-question-flow-bar]');
+ const sync=({focus=false}={})=>{
+  questions.forEach((q,i)=>q.hidden=i!==index);
+  if(label)label.textContent='Question '+(index+1)+' of '+questions.length;
+  if(stage){const s=questions[index].querySelector('.question-stage span');stage.textContent=s?s.textContent.trim():''}
+  if(bar)bar.style.width=(((index+1)/questions.length)*100)+'%';
+  back.hidden=index===0;
+  const submit=$('checkActivity')||$('saveWriting');
+  if(submit)submit.classList.toggle('student-question-submit-ready',index===questions.length-1);
+  if(focus){
+   const q=questions[index];
+   q.setAttribute('tabindex','-1');
+   try{q.focus({preventScroll:true})}catch{}
+  }
+ };
+ const move=nextIndex=>{
+  clearTimeout(advanceTimer);
+  index=Math.max(0,Math.min(questions.length-1,nextIndex));
+  sync({focus:true});
+  const top=progress.getBoundingClientRect().top+window.scrollY-72;
+  window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+ };
+ back.onclick=()=>move(index-1);
+ list.addEventListener('change',e=>{
+  const radio=e.target.closest?.('input[type="radio"]');
+  if(!radio||!questions[index].contains(radio))return;
+  sync();
+  if(index>=questions.length-1)return;
+  clearTimeout(advanceTimer);
+  advanceTimer=setTimeout(()=>move(index+1),320);
+ });
+ sync();
+}
+
+function wireActivity(l){wireMcqCards();wireStudentQuestionFlow();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();if(!isWorkbookPreview()){restoreActivityDraft();wireActivityDrafting()}
  if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
  if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:isA1EarlyWriting(l)?'Build one short sentence, join two simple ideas, fix one small mistake, then put two sentences in order.':'Build the sentence, connect the ideas, correct the error, then check paragraph order before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
  if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});wireWritingIntegrity();if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
