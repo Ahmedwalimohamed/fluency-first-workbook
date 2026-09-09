@@ -60,6 +60,9 @@ try{
  const minReading=n=>n<=7?75:n<=14?100:130;
  const minListening=n=>n<=7?60:n<=14?65:85;
  if(!book||book.standardVersion!=='a2-living-standard-v1')errors.push('A2 Living Standard: standalone A2 was not replaced by the living-standard book');
+ const legacy=context.BOOK_PACKS['speakup-a2-b1'];
+ if(!legacy||legacy.standardVersion!=='a2-living-standard-v1'||legacy.lessons.length!==22)errors.push('A2 Living Standard: legacy A2 pathway was not upgraded');
+ else legacy.lessons.forEach((lesson,i)=>{if(lesson.id!=='su-a2b1-l'+(i+1))errors.push('A2 legacy lesson '+(i+1)+': stable ID must remain su-a2b1-l'+(i+1))});
  else{
   if(book.lessons.length!==22)errors.push('A2 Living Standard: expected 22 lessons');
   const oldLessonOne=['hobby','hometown','occupation','outgoing','married','single'];
@@ -100,6 +103,7 @@ if(!live.includes('A2 LIFT'))errors.push('A2 live book must include explicit A2 
 if(!live.includes('PRONUNCIATION FOCUS'))errors.push('A2 live book must include pronunciation focus');
 if(!live.includes('MEDIATION MOVE'))errors.push('A2 live book must include mediation move');
 if(!live.includes("standardVersion==='a2-living-standard-v1'"))errors.push('A2 live book is not gated to the living-standard source');
+if(!live.includes("window.LIVE_BOOKS['speakup-a2-b1']"))errors.push('Legacy A2 live book is not rebuilt from the A2 Living Standard');
 
 const requiredStages=['PAGE 1 — WARM UP','PAGE 2 — VOCABULARY','PAGE 3 — READING','PAGE 4 — LANGUAGE FOCUS','PAGE 5 — LISTENING','PAGE 6 — FLUENCY MISSION','PAGE 7 — CLASSROOM CHALLENGE','PAGE 8 — REFLECTION'];
 requiredStages.forEach(stage=>{if(!live.includes(stage))errors.push('Live lesson generator missing '+stage)});
