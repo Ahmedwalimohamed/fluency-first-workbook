@@ -644,7 +644,7 @@ const A2_LISTENING_SCENES={
  },
  'Crime & Justice':{
   speakers:[a2Speaker('Ismail'),a2Speaker('Omar')],
-  script:"Omar: Ismail, what did your civic education class discuss today? Ismail: A legal decision. At first, students mixed rumours with evidence, so the discussion became confusing. Omar: How did the teacher help? Ismail: She asked us to separate witness statements from opinions. Then we looked at the facts that could actually be checked. Omar: Did that change the class's conclusion? Ismail: Yes. We stopped saying, 'Everyone knows what happened,' and started asking, 'What evidence do we have?' Omar: That sounds fairer. Ismail: It was. Once we focused on evidence instead of rumours, the class reached a more careful conclusion."
+  script:"Omar: Ismail, what did your civic education class discuss today? Ismail: A legal decision. At first, students mixed rumours with evidence, so the discussion became confusing. Omar: How did the teacher help? Ismail: She asked us to separate witness statements from opinions. Then we looked at the facts that could actually be checked. Omar: Did that change the class's conclusion? Ismail: Yes. We stopped repeating rumours and started asking what evidence we actually had. Omar: That sounds fairer. Ismail: It was. Once we focused on evidence instead of rumours, the class reached a more careful conclusion."
  },
  'Science & Innovation':{
   speakers:[a2Speaker('Nasra'),a2Speaker('Amina')],
@@ -652,7 +652,7 @@ const A2_LISTENING_SCENES={
  },
  'Arts & Entertainment':{
   speakers:[a2Speaker('Hamza'),a2Speaker('Yusuf')],
-  script:"Yusuf: Hamza, I saw you taking notes at the arts festival. Were you writing a review? Hamza: Yes. I chose one drama because the festival had too many different performances to review properly. Yusuf: What did you write down? Hamza: I noted the main parts of the plot, one interesting character, and how the audience reacted. Yusuf: Did you like the performance? Hamza: Mostly, but I wanted the review to be balanced. I described one strong scene and one part that felt too slow. Yusuf: That is more useful than only saying, 'It was good.' Hamza: Exactly. My final review explained both the strengths and the weaknesses."
+  script:"Yusuf: Hamza, I saw you taking notes at the arts festival. Were you writing a review? Hamza: Yes. I chose one drama because the festival had too many different performances to review properly. Yusuf: What did you write down? Hamza: I noted the main parts of the plot, one interesting character, and how the audience reacted. Yusuf: Did you like the performance? Hamza: Mostly, but I wanted the review to be balanced. I described one strong scene and one part that felt too slow. Yusuf: That is more useful than simply saying the performance was good. Hamza: Exactly. My final review explained both the strengths and the weaknesses."
  },
  'Global Issues':{
   speakers:[a2Speaker('Asha'),a2Speaker('Maryan')],
