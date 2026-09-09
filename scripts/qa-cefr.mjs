@@ -52,7 +52,7 @@ for(const level of levels){
 try{
  const syllabus=JSON.parse(syllabusMatch[1]);
  const topicLibrary=JSON.parse(topicMatch[1]);
- const context={window:{},BOOK_PACKS:{},SPEAKUP_A2_B1_SYLLABUS:syllabus,TOPIC_LIBRARY:topicLibrary,lessonVocabExample:(word,lesson)=>'Natural example using '+word+' for '+lesson.title+'.'};
+ const context={window:{},BOOK_PACKS:{'speakup-a2-b1':{id:'speakup-a2-b1',title:'SpeakUp English A2 → B1',level:'A2 → B1',moduleTitle:'SpeakUp English A2 → B1',moduleGoal:'Legacy A2 pathway',totalLessons:22,lessons:[]}},SPEAKUP_A2_B1_SYLLABUS:syllabus,TOPIC_LIBRARY:topicLibrary,lessonVocabExample:(word,lesson)=>'Natural example using '+word+' for '+lesson.title+'.'};
  vm.createContext(context);
  vm.runInContext(a2,context,{filename:'public/a2-living-standard.js'});
  const book=context.BOOK_PACKS['speakup-a2'];
