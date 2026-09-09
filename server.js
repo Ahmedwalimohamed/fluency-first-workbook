@@ -67,6 +67,17 @@ async function initDb(){
  await pool.query("alter table users add constraint users_role_check check(role in ('admin','teacher','student'))");
  await pool.query("create table if not exists books(id text primary key,title text not null,level text not null,audience text not null default '',status text not null default 'queued',total_lessons int not null default 0,activity_model text not null default '',created_at timestamptz default now())");
  for(const b of BOOK_SEEDS){if((await pool.query('select 1 from deleted_seed_books where id=$1',[b.id])).rowCount)continue;await pool.query("insert into books(id,title,level,audience,status,total_lessons,activity_model) values($1,$2,$3,$4,$5,$6,$7) on conflict(id) do update set title=excluded.title,level=excluded.level,audience=excluded.audience,status=excluded.status,total_lessons=excluded.total_lessons,activity_model=excluded.activity_model",[b.id,b.title,b.level,b.audience,b.status,b.total_lessons,b.activity_model]);}
+
+ // LEGACY_SPEAKUP_B2_CLASS_REPAIR: restore the existing SpeakUp B2 class to its original B2 book.
+ // This intentionally updates only the classes row. It does not alter users, enrollments, assignments, attempts, completion, writing, profiles, or teacher context.
+ const legacyB2=await pool.query("select id,name,level,course_id from classes where lower(trim(name))=lower($1) and course_id=$2",['SpeakUp B2','speakup-a1']);
+ if(legacyB2.rowCount===1){
+  const row=legacyB2.rows[0];
+  await pool.query("update classes set course_id=$1,level=$2 where id=$3 and course_id=$4",['speakup-b2','B2',row.id,'speakup-a1']);
+  console.log('Legacy SpeakUp B2 class restored to B2 book; student data untouched:',row.id);
+ }else if(legacyB2.rowCount>1){
+  console.warn('Legacy SpeakUp B2 repair skipped because more than one matching class was found. No data changed.');
+ }
  const aUser=(process.env.SYSTEM_ADMIN_USERNAME||'admin').trim().toLowerCase(),aPass=process.env.SYSTEM_ADMIN_PASSWORD;
  const adminWasDeleted=(await pool.query('select 1 from deleted_seed_accounts where lower(username)=lower($1)',[aUser])).rowCount>0;
  if(aPass&&!adminWasDeleted){let a=await pool.query('select id,role from users where lower(username)=lower($1)',[aUser]);if(!a.rowCount){await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',['a_'+crypto.randomUUID(),aUser,await bcrypt.hash(aPass,12),'admin',process.env.SYSTEM_ADMIN_NAME||'System Admin']);}else if(a.rows[0].role!=='admin'){throw new Error('SYSTEM_ADMIN_USERNAME is already used by a non-admin account');}else{await pool.query('update users set password_hash=$1,name=$2 where id=$3',[await bcrypt.hash(aPass,12),process.env.SYSTEM_ADMIN_NAME||'System Admin',a.rows[0].id]);}}
