@@ -273,6 +273,99 @@ const BOOK_PACKS={'career-fluency':CAREER_FLUENCY_BOOK,'speakup-a2-b1':SPEAKUP_A
 let COURSE=CAREER_FLUENCY_BOOK,activeBookId='career-fluency';
 const WORKBOOK_STEPS=['vocabulary','listening','grammar','writing'];
 const WORKBOOK_LABELS={vocabulary:'Vocabulary',listening:'Listening & Reading',grammar:'Grammar',writing:'Writing'};
+const LEARNING_LADDER=[
+ {key:'recognize',label:'Recognize',goal:'I can recognize the target language or idea.'},
+ {key:'build',label:'Build',goal:'I can build a correct response with support.'},
+ {key:'correct',label:'Correct',goal:'I can notice and fix mistakes.'},
+ {key:'apply',label:'Apply',goal:'I can use the skill in a realistic context.'},
+ {key:'perform',label:'Perform',goal:'I can use the skill independently.'}
+];
+const LADDER_SKILL_GOALS={
+ vocabulary:[
+  'I can recognize the meaning of today’s key words and expressions.',
+  'I can retrieve and build useful phrases with the target vocabulary.',
+  'I can notice and repair an inaccurate word or expression.',
+  'I can choose and use the vocabulary in a realistic situation.',
+  'I can retrieve and use the vocabulary independently.'
+ ],
+ listening:[
+  'I can recognize the topic, purpose and main message.',
+  'I can collect important details and connect them correctly.',
+  'I can separate accurate information from a misleading interpretation.',
+  'I can use clues to infer meaning and connect ideas.',
+  'I can respond independently using evidence from what I read or hear.'
+ ],
+ grammar:[
+  'I can recognize the target grammar pattern.',
+  'I can build accurate examples of the pattern.',
+  'I can notice and repair grammar mistakes.',
+  'I can choose the correct form for a realistic context.',
+  'I can produce the correct form with less support.'
+ ],
+ writing:[
+  'I can recognize a complete sentence and put its parts in a clear order.',
+  'I can build and combine ideas into stronger sentences.',
+  'I can find and correct errors in a sentence.',
+  'I can organize sentences into a clear message or paragraph.',
+  'I can write a complete real-life response independently.'
+ ]
+};
+function ladderSkillKey(skill){return skill==='listening'?'listening':skill}
+function ladderStageIndex(index,total){
+ const count=Math.max(1,Number(total)||1);
+ return Math.min(LEARNING_LADDER.length-1,Math.floor(Math.max(0,index)*LEARNING_LADDER.length/count));
+}
+function ladderQuestionStage(index,total){
+ const i=ladderStageIndex(index,total),stage=LEARNING_LADDER[i];
+ return `Level ${i+1} · ${stage.label}`;
+}
+function latestLadderLevel(sid,lid,skill){
+ const rows=attempts(sid,skill,lid).slice().sort((a,b)=>new Date(b.at)-new Date(a.at));
+ for(const row of rows){
+  const tag=(row.tags||[]).find(t=>/^ladder:highest:[0-5]$/.test(String(t)));
+  if(tag)return Number(String(tag).split(':').pop())||0;
+ }
+ return 0;
+}
+function learningLadderHtml(l,skill,totalItems=10){
+ const key=ladderSkillKey(skill),preview=isWorkbookPreview(),highest=preview?0:latestLadderLevel(session?.id,l.id,key),goals=LADDER_SKILL_GOALS[key]||LEARNING_LADDER.map(x=>x.goal);
+ const standing=preview?'Five-step student progression':highest>=5?'Level 5 reached — independent performance':`You are building toward Level ${highest+1} · ${LEARNING_LADDER[highest].label}`;
+ return `<section class="eg-learning-ladder" aria-label="Five-step learning ladder">
+  <div class="eg-ladder-head"><div><span class="eg-skill-kicker">Learning ladder</span><h2>From understanding to independent use</h2></div><strong>${escapeHtml(standing)}</strong></div>
+  <div class="eg-ladder-track">${LEARNING_LADDER.map((stage,i)=>{
+   const done=!preview&&i<highest,current=!preview&&highest<5&&i===highest;
+   return `<article class="eg-ladder-step ${done?'is-reached':''} ${current?'is-current':''}"><span class="eg-ladder-number">${done?'✓':i+1}</span><div><small>Level ${i+1}</small><strong>${stage.label}</strong><p>${escapeHtml(goals[i]||stage.goal)}</p></div><b>${done?'Reached':current?'Next':'Later'}</b></article>`
+  }).join('')}</div>
+  <p class="eg-ladder-note">${preview?'The learner moves through all five levels inside this skill.':highest>=5?'Practise again when you want to strengthen speed and accuracy.':'Complete the questions in order. Each part becomes less supported and more independent.'}</p>
+ </section>`;
+}
+function ladderResultFromAnswers(results){
+ const values=(results||[]).map(Boolean),buckets=Array.from({length:LEARNING_LADDER.length},()=>[]);
+ values.forEach((ok,i)=>buckets[ladderStageIndex(i,values.length)].push(ok));
+ const stages=buckets.map(items=>{const correct=items.filter(Boolean).length,total=items.length,passed=total>0&&(correct/total)>=.7;return{correct,total,passed}});
+ let highest=0;for(let i=0;i<stages.length;i++){if(stages[i].passed&&i===highest)highest=i+1;else if(i===highest)break}
+ return{highest,stages};
+}
+function writingLadderResult(results,performReady){
+ const values=(results||[]).map(x=>Boolean(x?.correct)),stages=[];
+ for(let i=0;i<4;i++){const part=values.slice(i*3,i*3+3),correct=part.filter(Boolean).length,total=part.length;stages.push({correct,total,passed:total===3&&correct>=2})}
+ stages.push({correct:performReady?1:0,total:1,passed:Boolean(performReady)});
+ let highest=0;for(let i=0;i<stages.length;i++){if(stages[i].passed&&i===highest)highest=i+1;else if(i===highest)break}
+ return{highest,stages};
+}
+function ladderResultHtml(result){
+ const highest=Math.max(0,Math.min(5,Number(result?.highest)||0)),next=highest<5?LEARNING_LADDER[highest]:null;
+ return `<div class="eg-ladder-result"><div><span class="eg-skill-kicker">Your learning ladder</span><strong>${highest>=5?'Level 5 · Perform reached':highest?`Level ${highest} · ${LEARNING_LADDER[highest-1].label} reached`:'Start with Level 1 · Recognize'}</strong><p>${highest>=5?'You completed the full progression from recognition to independent use.':`Next goal: Level ${highest+1} · ${next.label}. ${next.goal}`}</p></div><div class="eg-ladder-mini">${LEARNING_LADDER.map((stage,i)=>`<span class="${i<highest?'done':i===highest&&highest<5?'current':''}">${i<highest?'✓':i+1}</span>`).join('')}</div></div>`;
+}
+function currentQuestionResults(){
+ return [...document.querySelectorAll('#activityPanel .guided-question')].map(card=>{
+  const open=card.querySelector('[data-open="1"]');
+  if(open){const value=open.value.trim(),exact=open.dataset.exact||'',min=Number(open.dataset.min||1);return exact?writingNormalize(value)===writingNormalize(exact):(value?value.split(/\s+/).length:0)>=min}
+  const radios=[...card.querySelectorAll('input[type="radio"]')];
+  if(radios.length){const selected=radios.find(x=>x.checked);return Boolean(selected&&selected.value===selected.dataset.answer)}
+  return null
+ }).filter(x=>x!==null);
+}
 function bookMeta(id){return getDB().books?.find(b=>b.id===id)||null}
 function studentClass(sid){const u=getDB().users.find(x=>x.id===sid);return getDB().classes.find(c=>u?.classIds?.includes(c.id))||null}
 function bookIdForStudent(sid){const c=studentClass(sid);return c?.bookId||c?.course_id||'career-fluency'}
@@ -1341,6 +1434,7 @@ function vocabActivity(l){
  const qs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),refs=workbookVocabReferences(l);
  return `<div class="eg-skill-page eg-vocabulary-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Vocabulary</span><h1>Words in context</h1><p>Explore useful language, then use it in real situations.</p></div><span class="eg-question-count">${qs.length} questions</span></header>
+  ${learningLadderHtml(l,'vocabulary',qs.length)}
   <div class="eg-skill-layout">
    <aside class="eg-editorial-panel eg-vocab-reference">
     <div class="eg-panel-heading"><small>Language bank</small><h2>${escapeHtml(l.title)}</h2><p>Meaning first. Then notice how the word or expression works in context.</p></div>
@@ -1349,14 +1443,14 @@ function vocabActivity(l){
    </aside>
    <main class="eg-task-panel">
     <div class="eg-task-panel-head"><div><small>Practice</small><h2>Complete the activities</h2></div><span>Recognise → retrieve → apply</span></div>
-    <div class="activity-question-list">${qs.map((q,i)=>{const meta=vocabFeedbackMeta(l,q,i);return `<article class="guided-question"><div class="question-stage"><span>${q.stage||'Question'} · ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${q.type&&q.type!=='choice'?openEvidence('v'+i,q.q,q.min||1,q.tag,q.type==='exact'?q.answer:''):radio('v'+i,q.options,q.answer,q.tag,meta)}</article>`}).join('')}</div>
+    <div class="activity-question-list">${qs.map((q,i)=>{const meta=vocabFeedbackMeta(l,q,i);return `<article class="guided-question" data-ladder-level="${ladderStageIndex(i,qs.length)+1}"><div class="question-stage"><span>${ladderQuestionStage(i,qs.length)}</span></div><p>${escapeHtml(q.q)}</p>${q.type&&q.type!=='choice'?openEvidence('v'+i,q.q,q.min||1,q.tag,q.type==='exact'?q.answer:''):radio('v'+i,q.options,q.answer,q.tag,meta)}</article>`}).join('')}</div>
    </main>
   </div>
   <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check vocabulary</button>${activityDoneButton(l)}</div>
  </div>`;
 }
 function questionSetHtml(qs,prefix,label){
- return qs.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>${label} · ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${radio(prefix+i,q.options,q.answer,q.tag)}</article>`).join('');
+ return qs.map((q,i)=>`<article class="guided-question" data-ladder-level="${ladderStageIndex(i,qs.length)+1}"><div class="question-stage"><span>${ladderQuestionStage(i,qs.length)} · ${label}</span></div><p>${escapeHtml(q.q)}</p>${radio(prefix+i,q.options,q.answer,q.tag)}</article>`).join('');
 }
 const LESSON_VISUALS={
  w1l1:{src:'/assets/lesson-visuals/w1l1.svg',alt:'Two adult learners discussing English goals together at a table with a laptop and notebooks.',prompt:'Where might these learners use English in real life?'},
@@ -1383,6 +1477,7 @@ function listeningActivity(l){
  if(split){
   return `<div class="eg-skill-page eg-reading-listening-page">
    <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Reading & Listening</span><h1>Read, listen and respond</h1><p>The reading questions use only the article. The listening questions use only the audio.</p></div><span class="eg-question-count">${all.length} questions</span></header>${lessonVisualHtml(l,{compact:true})}
+   ${learningLadderHtml(l,'listening',all.length)}
    <section class="eg-source-task-section eg-reading-section">
     <div class="eg-reading-article"><span class="eg-skill-kicker">Part 1 · Reading</span><h2>${escapeHtml(l.title)}</h2><p>${escapeHtml(reading)}</p></div>
     <div class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Reading tasks</small><h2>Answer from the article</h2></div><span>${readingQs.length} questions</span></div><div class="activity-question-list">${questionSetHtml(readingQs,'lr','Reading')}</div></div>
@@ -1398,6 +1493,7 @@ function listeningActivity(l){
  const sourceText=reading||script;
  return `<div class="eg-skill-page eg-listening-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${reading?'Reading & Listening':'Listening'}</span><h1>${reading?'Read, listen and do':'Listen and do'}</h1><p>${reading?'Read the source, then use the matching audio to confirm meaning and detail.':'Listen to the conversation and complete the tasks.'}</p></div><span class="eg-question-count">${all.length} questions</span></header>${lessonVisualHtml(l,{compact:true})}
+  ${learningLadderHtml(l,'listening',all.length)}
   <div class="eg-skill-layout eg-listening-layout">
    <section class="eg-source-column">
     ${sourceText?`<article class="eg-reading-article"><span class="eg-skill-kicker">${reading?'Reading text':'Listening situation'}</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2><p>${escapeHtml(sourceText)}</p></article>`:''}
@@ -1413,10 +1509,11 @@ function grammarActivity(l){
  const qs=(l.grammar?.items||[]).slice(0,10),sample=qs[0],vocabQs=(l.vocabulary?.items||buildVocabQuestions(l)).slice(0,10),recycle=vocabRecycleItems(l,vocabQs);
  return `<div class="eg-skill-page eg-grammar-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Grammar</span><h1>Build accurate English</h1><p>Notice the pattern, manipulate it, then apply it in context.</p></div><span class="eg-question-count">${qs.length} questions</span></header>
+  ${learningLadderHtml(l,'grammar',qs.length)}
   ${vocabRecycleHtml(recycle)}
   <div class="eg-skill-layout eg-grammar-layout">
    <aside class="eg-editorial-panel eg-grammar-coach"><div class="eg-panel-heading"><small>Grammar coach</small><h2>${escapeHtml(l.grammar?.focus||l.title)}</h2></div>${l.grammar?.rule?`<section class="grammar-rule-card"><small>Mini rule</small><p>${escapeHtml(l.grammar.rule)}</p></section>`:''}${l.b2Lift?`<section class="grammar-rule-card b2-lift-card"><small>B2 lift</small><p>${escapeHtml(l.b2Lift)}</p></section>`:''}${sample?`<div class="eg-sentence-lab"><small>Sentence lab</small><p>${escapeHtml(sample.q)}</p><div>${(sample.options||[]).slice(0,3).map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div></div>`:''}<div class="eg-tip-card"><b>Strategy</b><span>Read the whole sentence. Decide the meaning before choosing the form.</span></div></aside>
-   <main class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Practice</small><h2>Use the pattern</h2></div></div><div class="activity-question-list">${qs.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>Question ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${radio('g'+i,q.options,q.answer,q.tag)}</article>`).join('')}</div></main>
+   <main class="eg-task-panel"><div class="eg-task-panel-head"><div><small>Practice</small><h2>Use the pattern</h2></div></div><div class="activity-question-list">${qs.map((q,i)=>`<article class="guided-question" data-ladder-level="${ladderStageIndex(i,qs.length)+1}"><div class="question-stage"><span>${ladderQuestionStage(i,qs.length)}</span></div><p>${escapeHtml(q.q)}</p>${i>=Math.max(0,qs.length-2)?openEvidence('g'+i,q.q,1,q.tag,q.answer):radio('g'+i,q.options,q.answer,q.tag)}</article>`).join('')}</div></main>
   </div>
   <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="checkActivity">Check grammar</button>${!isWorkbookPreview()&&boostRecovery(l).ready?'<button class="ghost-btn" id="boostActivity">Practise missed questions with Boost</button>':''}${activityDoneButton(l)}</div>
  </div>`;
@@ -1663,10 +1760,16 @@ function writingTextCoreHtml(ex){
  </article>`
 }
 function writingCoreHtml(l){
- const groups={build:'Sentence Building',combine:'Sentence Combining',correct:'Error Correction',organize:'Paragraph Ordering'};
+ const groups={
+  build:{level:1,label:'Recognize'},
+  combine:{level:2,label:'Build'},
+  correct:{level:3,label:'Correct'},
+  organize:{level:4,label:'Apply'}
+ };
  let last='';
  return writingCoreExercises(l).map(ex=>{
-  const heading=ex.type!==last?`<div class="writing-core-group-head"><span>${escapeHtml(groups[ex.type])}</span><strong>3 questions</strong></div>`:'';
+  const g=groups[ex.type]||{level:1,label:'Recognize'};
+  const heading=ex.type!==last?`<div class="writing-core-group-head"><span>Level ${g.level} · ${escapeHtml(g.label)}</span><strong>3 questions</strong></div>`:'';
   last=ex.type;
   return heading+(ex.type==='build'||ex.type==='organize'?writingArrangeHtml(ex):writingTextCoreHtml(ex))
  }).join('')
@@ -1676,6 +1779,7 @@ function writingActivity(l){
  const teacherGuide=teacherView?`<div class="teacher-only-writing-guide"><span class="role-kicker">Teacher view</span><strong>Activity design</strong><p>12 auto-graded preparation questions: Build → Combine → Correct → Organize, followed by one real-life writing task.</p></div>`:'';
  return `<div class="eg-skill-page eg-writing-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${finalAssessment?'Final assessment':checkpoint?'Writing checkpoint':'Writing'}</span><h1>${teacherView?'Writing activity structure':'Writing practice'}</h1><p>${teacherView?'Preview the student practice sequence and final writing task.':'Complete the practice, then write your real-life response.'}</p></div><span class="eg-question-count">${teacherView?'12 auto-graded + 1 real writing':'13 activities'}</span></header>
+  ${learningLadderHtml(l,'writing',13)}
   ${teacherGuide}
   ${assessment?`<div class="assessment-notice"><strong>${finalAssessment?'Independent final writing':'Teacher writing checkpoint'}</strong><p>${teacherGrade===null||teacherGrade===undefined?(teacherView?`${finalAssessment?'The final response':'This checkpoint response'} is teacher-graded; the 12 preparation questions remain auto-graded.`:`${finalAssessment?'Your final response':'This checkpoint response'} will be reviewed by your teacher.`):`Your teacher awarded ${teacherGrade}% for this response. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}
   <div class="eg-writing-layout eg-writing-layout-designed">
@@ -1684,7 +1788,7 @@ function writingActivity(l){
     <article class="guided-question writing-guided-question final-writing-card eg-message-composer">
      <div class="eg-message-bar"><div class="eg-message-avatar">Y</div><div><strong>You</strong><small>Real-life writing</small></div></div>
      <div class="writing-integrity-note"><span class="writing-integrity-badge">Typing only</span><div><strong>Write this response yourself.</strong><small>Copy, cut, paste and drag-drop are disabled in the actual writing box.</small></div></div>
-     <div class="writing-task-head"><div><span class="stage-badge">${teacherView?'Part 2 · Write it yourself':'Your writing task'}</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}–${spec.max} words</span></div>
+     <div class="writing-task-head"><div><span class="stage-badge">${teacherView?'Level 5 · Perform':'Level 5 · Perform independently'}</span><strong>${escapeHtml(spec.task)}</strong></div><span>${spec.min}–${spec.max} words</span></div>
      <textarea class="writing-final-response" data-count-key="final" data-min="${spec.min}" data-max="${spec.max}" autocomplete="off" autocapitalize="sentences" spellcheck="true" placeholder="Type your response here…">${escapeHtml(saved.final)}</textarea><div class="word-count" data-count="final">0 words</div><div class="writing-integrity-status" id="writingIntegrityStatus" role="status" aria-live="polite"></div>
      <fieldset class="writing-share-choice">
       <legend>Would you like to share your writing to My Writings?</legend>
@@ -1865,14 +1969,14 @@ async function saveWriting(l){
  const shareChoice=document.querySelector('input[name="writing-community-share"]:checked');
  if(!shareChoice){if(f)f.innerHTML='<div class="feedback bad">Choose whether you would like to share this writing to My Writings.</div>';document.querySelector('.writing-share-choice')?.scrollIntoView({behavior:'smooth',block:'center'});return}
  const publishToCommunity=shareChoice.value==='yes';
- const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100);
+ const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100),ladder=writingLadderResult(results,checks.length);
  try{
   await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:response,publishToCommunity})});
-  if(!l.writing?.humanGraded)await recordAttempt(session.id,l.id,'writing',score,['writing:sentence-building','writing:sentence-combining','writing:error-correction','writing:paragraph-ordering']);
+  if(!l.writing?.humanGraded)await recordAttempt(session.id,l.id,'writing',score,[`ladder:highest:${ladder.highest}`,'writing:sentence-building','writing:sentence-combining','writing:error-correction','writing:paragraph-ordering']);
   await refreshState();clearActivityDraft();const done=$('doneActivity');if(done)done.disabled=false;
-  if(l.writing?.humanGraded){if(f)f.innerHTML=`<div class="feedback good"><strong>Submitted for teacher grading.</strong> The 12 practice questions were auto-graded and your real-life writing is saved for your teacher. ${publishToCommunity?'It was also shared to My Writings.':'It was not published to My Writings.'}</div>`;return}
+  if(l.writing?.humanGraded){if(f)f.innerHTML=`<div class="feedback good"><strong>Submitted for teacher grading.</strong> The 12 practice questions were auto-graded and your real-life writing is saved for your teacher. ${publishToCommunity?'It was also shared to My Writings.':'It was not published to My Writings.'}</div>${ladderResultHtml(ladder)}`;return}
   const tone=score>=75?'good':'bad',label=score===100?'All 12 correct':score>=75?'Strong preparation':'Review the practice';
-  if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> practice questions correct</span><span><b>${12-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. ${publishToCommunity?'It is now shared to <strong>My Writings</strong>.':'It remains private from <strong>My Writings</strong>.'} Review any practice item you missed, then press <strong>Done</strong>.</p></div>`
+  if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> practice questions correct</span><span><b>${12-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. ${publishToCommunity?'It is now shared to <strong>My Writings</strong>.':'It remains private from <strong>My Writings</strong>.'} Review any practice item you missed, then press <strong>Done</strong>.</p></div>${ladderResultHtml(ladder)}`
  }catch(e){saveActivityDraft();if(f)f.innerHTML=`<div class="feedback bad">${navigator.onLine?escapeHtml(e.message):'<strong>You are offline.</strong> Your answers are saved on this device. Reconnect and press save again.'}</div>`}
 }
 async function checkCurrent(){
@@ -1886,7 +1990,8 @@ async function checkCurrent(){
  open.forEach(el=>{const value=el.value.trim(),exact=el.dataset.exact||'',min=Number(el.dataset.min||1);let ok=false;if(exact)ok=writingNormalize(value)===writingNormalize(exact);else ok=(value?value.split(/\s+/).length:0)>=min;if(ok)correct++;if(el.dataset.tag)tags.push(el.dataset.tag)});
  groups.forEach(g=>{const c=document.querySelector(`input[name="${g}"]:checked`),isGrammarAuto=currentStep==='grammar'&&/^g[0-9]$/.test(g);if(c&&c.value===c.dataset.answer)correct++;else if(isGrammarAuto)grammarMissed.push(Number(g.slice(1)));if(c&&c.dataset.tag)tags.push(c.dataset.tag)});
  if(currentStep==='grammar')tags=grammarMissed.length?grammarMissed.map(i=>`missq:${i}`):['diagnostic:no-misses'];
- const score=Math.round(correct/Math.max(1,totalItems)*100),missed=totalItems-correct;
+ const score=Math.round(correct/Math.max(1,totalItems)*100),missed=totalItems-correct,ladder=ladderResultFromAnswers(currentQuestionResults()),ladderTag=`ladder:highest:${ladder.highest}`;
+ if(currentStep==='grammar')tags=[ladderTag,...tags];else tags=[ladderTag,...tags].slice(0,9);
  try{
   await recordAttempt(session.id,activeLessonId,currentStep,score,tags);
   await markDone(session.id,activeLessonId,currentStep);
@@ -1895,7 +2000,7 @@ async function checkCurrent(){
   const band=score>=80?'Strong':score>=60?'Developing':'Needs practice',tone=score>=70?'good':'bad';
   const boost=currentStep==='grammar'&&grammarMissed.length?`<button class="ghost-btn" id="boostFromResult">Practise ${grammarMissed.length} missed grammar question${grammarMissed.length===1?'':'s'} with Boost</button>`:'';
   const transcript=currentStep==='listening'&&lesson().listening?.audioScript?listeningTranscript(lesson()):'';
-  if(feedback)feedback.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${band}</span></div><div class="performance-breakdown"><span><b>${correct}</b> correct</span><span><b>${missed}</b> to review</span><span><b>${totalItems}</b> total</span></div><p>Your activity is complete. Press <strong>Done</strong> to continue, or review your mistakes first.</p>${boost}</div>${transcript}`;
+  if(feedback)feedback.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${band}</span></div><div class="performance-breakdown"><span><b>${correct}</b> correct</span><span><b>${missed}</b> to review</span><span><b>${totalItems}</b> total</span></div><p>Your activity is complete. Press <strong>Done</strong> to continue, or review your mistakes first.</p>${boost}</div>${ladderResultHtml(ladder)}${transcript}`;
   if($('boostFromResult'))$('boostFromResult').onclick=()=>startBoost(lesson());
  }catch(e){saveActivityDraft();if(feedback)feedback.innerHTML=`<div class="feedback bad">${navigator.onLine?'Could not save progress: '+escapeHtml(e.message):'<strong>You are offline.</strong> Your answers are saved on this device. Reconnect and press Check again.'}</div>`}
 }
