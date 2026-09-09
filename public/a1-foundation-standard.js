@@ -16,7 +16,16 @@ function speakerProfile(value){
 }
 function lessonSpeakers(spec){return (spec?.l?.speakers||[]).map(speakerProfile)}
 function phaseFor(n){return n<=11?1:n<=22?2:n<=33?3:4}
-function wordRange(n){return n<=11?[25,60]:n<=22?[45,80]:n<=33?[60,100]:[70,110]}
+function wordRange(n){
+ if(n<=3)return[10,20];
+ if(n<=6)return[15,25];
+ if(n<=10)return[20,30];
+ if(n===11)return[25,40];
+ if(n<=22)return[30,50];
+ if(n<=33)return[40,65];
+ if(n<44)return[60,90];
+ return[80,100]
+}
 function grammarRule(focus){
  const f=String(focus||'').toLowerCase();
  if(f.includes('demonstrative'))return'Use this/these for things near you and that/those for things farther away. This/that are singular; these/those are plural.';
