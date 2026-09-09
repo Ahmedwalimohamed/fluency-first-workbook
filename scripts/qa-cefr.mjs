@@ -226,6 +226,13 @@ try{
 }catch(e){errors.push('Dialogue transcript QA failed: '+e.message)}
 if(!app.includes('Preparing audio…')||!app.includes('browserSpeechAvailable')||!app.includes('playBrowserSpeech'))errors.push('Listening audio must preload and provide a browser-voice fallback when natural audio cannot play');
 if(!server.includes("app.post('/api/audio'"))errors.push('Live lesson audio requires the authenticated natural-audio endpoint');
+/* Teacher Give example tool */
+if(!app.includes("teacherToolButton('example','Give example','✦')"))errors.push('Teacher Teach toolbar is missing Give example');
+if(!app.includes('data-teacher-example-word')||!app.includes('showTeacherExampleForWord'))errors.push('Teacher Give example word interaction is missing');
+if(!app.includes("mode==='interact'||mode==='example'"))errors.push('Give example mode must allow clicks through the annotation canvas');
+if(!server.includes("app.post('/api/teacher/example-sentence'")||!server.includes('teacherOnly,teacherExampleLimiter'))errors.push('Teacher Give example endpoint must be teacher-only and rate-limited');
+if(!app.includes('teacher-example-bubble'))errors.push('Teacher Give example bubble is missing');
+
 if(!server.includes('OPENAI_TTS_FEMALE_VOICES')||!server.includes('OPENAI_TTS_MALE_VOICES')||!server.includes('dialogueTurns')||!server.includes('speakerVoicePlan')||!server.includes("response_format:'wav'"))errors.push('Conversation listening must support distinct male/female multi-speaker voices');
 try{
  const start=server.indexOf('function wavParts(buf){'),end=server.indexOf('function wavChunk',start);

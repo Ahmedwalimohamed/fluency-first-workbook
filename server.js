@@ -125,6 +125,29 @@ async function generateListeningAudio(input,speakerProfiles=[]){
 }
 function sendGeneratedAudio(res,audio){res.set('Content-Type',audio.contentType);res.set('Cache-Control','private, max-age=3600');res.set('X-EnglishGate-Audio-Mode',audio.mode);return res.send(audio.buffer)}
 
+const teacherExampleServerCache=new Map();
+async function generateTeacherExampleSentence(word,level,lessonTitle){
+ const cleanWord=String(word||'').trim(),cleanLevel=String(level||'').trim().slice(0,24),cleanTitle=String(lessonTitle||'').trim().slice(0,120);
+ const key=[cleanLevel.toLowerCase(),cleanTitle.toLowerCase(),cleanWord.toLowerCase()].join('|');
+ if(teacherExampleServerCache.has(key))return teacherExampleServerCache.get(key);
+ if(!process.env.OPENAI_API_KEY){const e=new Error('Example service is unavailable.');e.status=503;throw e}
+ const model=process.env.OPENAI_EXAMPLE_MODEL||'gpt-4o-mini';
+ const messages=[
+  {role:'system',content:'You write one short, natural English example sentence for an ESL teacher. Return only the sentence. Use the requested word exactly as written, naturally and grammatically. Keep the sentence appropriate for the requested CEFR level. Do not give a definition, explanation, quotation marks, labels, or multiple sentences.'},
+  {role:'user',content:'Word: '+cleanWord+'\nCEFR level: '+(cleanLevel||'A2-B2')+'\nLesson topic: '+(cleanTitle||'general English')}
+ ];
+ const response=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model,messages,temperature:.2,max_tokens:60})});
+ if(!response.ok){const detail=await response.text();const e=new Error('Example service failed: '+response.status+' '+detail.slice(0,180));e.status=502;throw e}
+ const json=await response.json();let sentence=String(json?.choices?.[0]?.message?.content||'').trim().replace(/^["“]|["”]$/g,'');
+ if(!sentence){const e=new Error('No example sentence was generated.');e.status=502;throw e}
+ sentence=sentence.split(/\n+/)[0].trim().slice(0,240);
+ if(!/[.!?]$/.test(sentence))sentence+='.';
+ teacherExampleServerCache.set(key,sentence);
+ if(teacherExampleServerCache.size>1500)teacherExampleServerCache.delete(teacherExampleServerCache.keys().next().value);
+ return sentence
+}
+
+
 app.set('trust proxy',1);
 app.use(helmet({contentSecurityPolicy:false}));
 app.use(express.json({limit:'256kb'}));
@@ -132,6 +155,7 @@ app.use(cookieParser());
 
 const loginLimiter=rateLimit({windowMs:10*60*1000,max:20,standardHeaders:true,legacyHeaders:false});
 const passwordResetLimiter=rateLimit({windowMs:10*60*1000,max:5,standardHeaders:true,legacyHeaders:false});
+const teacherExampleLimiter=rateLimit({windowMs:60*1000,max:60,standardHeaders:true,legacyHeaders:false});
 function tokenFor(u){return jwt.sign({id:u.id,role:u.role,username:u.username,name:u.name},JWT_SECRET,{expiresIn:'12h'})}
 function setSession(res,u){res.cookie('ff_session',tokenFor(u),{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',maxAge:12*60*60*1000,path:'/'})}
 function auth(req,res,next){try{req.user=jwt.verify(req.cookies.ff_session||'',JWT_SECRET);next()}catch{return res.status(401).json({error:'Please sign in again.'})}}
@@ -313,6 +337,13 @@ async function maybeIssueLevelCertificate(studentId,bookId=null){
 async function isListeningLocked(studentId,lessonId){const q=await pool.query(`select 1 from listening_locks where student_id=$1 and lesson_id=$2 union select 1 from completion where student_id=$1 and lesson_id=$2 and step='listening' limit 1`,[studentId,lessonId]);return q.rowCount>0}
 app.get('/api/listening/:lessonId/prep',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');const script=LISTENING_SCRIPTS[lessonId];if(!script)return res.status(404).json({error:'Listening topic not found.'});if(await isListeningLocked(req.user.id,lessonId))return res.json({locked:true});res.set('Cache-Control','no-store');res.json({locked:false,script})});
 app.post('/api/listening/:lessonId/lock',auth,studentOnly,async(req,res)=>{const lessonId=String(req.params.lessonId||'');if(!LISTENING_SCRIPTS[lessonId])return res.status(404).json({error:'Listening topic not found.'});await pool.query('insert into listening_locks(student_id,lesson_id) values($1,$2) on conflict do nothing',[req.user.id,lessonId]);res.json({ok:true,locked:true})});
+
+app.post('/api/teacher/example-sentence',auth,teacherOnly,teacherExampleLimiter,async(req,res)=>{
+ const word=String(req.body?.word||'').trim(),level=String(req.body?.level||'').trim(),lessonTitle=String(req.body?.lessonTitle||'').trim();
+ if(!word||word.length>60||!/^[\p{L}\p{M}'’\-]+$/u.test(word))return res.status(400).json({error:'Choose one word from the lesson.'});
+ try{const sentence=await generateTeacherExampleSentence(word,level,lessonTitle);res.set('Cache-Control','private, max-age=3600');return res.json({sentence})}
+ catch(e){console.error('Teacher example sentence error:',e.message);return res.status(e.status||502).json({error:'Could not create an example right now.'})}
+});
 
 app.post('/api/audio',auth,async(req,res)=>{
  const lessonId=String(req.body.lessonId||'').trim();
