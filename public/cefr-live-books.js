@@ -249,11 +249,17 @@ function a2VocabularyRows(lesson){
   return word+' — '+meaning+'. Example: '+example;
  }).join('\n');
 }
+function a2GrammarModel(item){
+ const prompt=String(item?.q||''),answer=String(item?.answer||'');
+ if(prompt.includes('___'))return prompt.replace('___',answer);
+ if(answer.split(/\s+/).length>=3)return answer;
+ return prompt+' → '+answer;
+}
 function a2LessonContent(lesson){
  const topic=lesson.title,w=warm('A2',topic),reading=(lesson.listening?.readingText||''),audio=(lesson.listening?.audioScript||lesson.listening?.text||'');
  const rqs=(lesson.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith('reading:')).slice(0,4);
  const lqs=(lesson.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith('listening:')).slice(0,4);
- const grammarExamples=(lesson.grammar?.items||[]).slice(0,3).map(q=>'• '+q.answer);
+ const grammarExamples=(lesson.grammar?.items||[]).slice(0,3).map(q=>'• '+a2GrammarModel(q));
  const useful=[...(lesson.chunks||[]),...(lesson.interactionExpressions||[])].slice(0,6);
  return[
   'LESSON '+lesson.number+' '+topic,
