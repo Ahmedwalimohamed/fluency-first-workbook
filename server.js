@@ -53,20 +53,22 @@ function normalizeSpeakerProfiles(value){
  for(const raw of value){
   const name=String(raw?.name||raw?.speaker||'').trim(),gender=String(raw?.gender||'').toLowerCase().trim();
   if(!name||seen.has(name.toLowerCase())||!['female','male'].includes(gender))continue;
-  seen.add(name.toLowerCase());out.push({name,gender})
+  const pool=gender==='female'?OPENAI_TTS_FEMALE_VOICES:OPENAI_TTS_MALE_VOICES,requestedVoice=String(raw?.voice||'').trim();
+  const voice=requestedVoice&&pool.includes(requestedVoice)?requestedVoice:'';
+  seen.add(name.toLowerCase());out.push({name,gender,...(voice?{voice}:{})})
  }
  return out.slice(0,6)
 }
 function speakerVoicePlan(turns,speakerProfiles=[]){
- const speakers=[...new Set(turns.map(x=>x.speaker))],explicit=normalizeSpeakerProfiles(speakerProfiles),byName=new Map(explicit.map(x=>[x.name.toLowerCase(),x.gender])),plan={},counts={female:0,male:0,unknown:0};
+ const speakers=[...new Set(turns.map(x=>x.speaker))],explicit=normalizeSpeakerProfiles(speakerProfiles),byName=new Map(explicit.map(x=>[x.name.toLowerCase(),x])),plan={},counts={female:0,male:0,unknown:0};
  for(const speaker of speakers){
-  let gender=byName.get(speaker.toLowerCase());
-  if(explicit.length&&!gender)throw new Error('Speaker profile missing for '+speaker);
+  const profile=byName.get(speaker.toLowerCase());let gender=profile?.gender;
+  if(explicit.length&&!profile)throw new Error('Speaker profile missing for '+speaker);
   if(!gender){
    gender=speakerGender(speaker);
    if(gender==='unknown')gender=counts.unknown++%2===0?'female':'male'
   }
-  const pool=gender==='female'?OPENAI_TTS_FEMALE_VOICES:OPENAI_TTS_MALE_VOICES,index=counts[gender]++,voice=pool[index%Math.max(1,pool.length)]||OPENAI_TTS_VOICE;
+  const pool=gender==='female'?OPENAI_TTS_FEMALE_VOICES:OPENAI_TTS_MALE_VOICES,index=counts[gender]++,voice=profile?.voice||pool[index%Math.max(1,pool.length)]||OPENAI_TTS_VOICE;
   plan[speaker]={gender,voice,index};
  }
  return plan;
