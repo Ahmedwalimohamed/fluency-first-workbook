@@ -67,8 +67,20 @@ async function requestSpeechWav(input,voice,instructions){
 function wavParts(buf){
  if(!Buffer.isBuffer(buf)||buf.length<44||buf.toString('ascii',0,4)!=='RIFF'||buf.toString('ascii',8,12)!=='WAVE')throw new Error('Invalid WAV response');
  let offset=12,fmt=null,data=null;
- while(offset+8<=buf.length){const id=buf.toString('ascii',offset,offset+4),size=buf.readUInt32LE(offset+4),start=offset+8,end=start+size;if(end>buf.length)break;if(id==='fmt ')fmt=buf.subarray(start,end);if(id==='data')data=buf.subarray(start,end);offset=end+(size%2)}
- if(!fmt||!data)throw new Error('Incomplete WAV response');
+ while(offset+8<=buf.length){
+  const id=buf.toString('ascii',offset,offset+4),size=buf.readUInt32LE(offset+4),start=offset+8,declaredEnd=start+size;
+  if(id==='fmt '){
+   const end=Math.min(declaredEnd,buf.length);
+   if(end>start)fmt=buf.subarray(start,end)
+  }else if(id==='data'){
+   const end=size===0xffffffff||declaredEnd>buf.length?buf.length:declaredEnd;
+   if(end>start)data=buf.subarray(start,end)
+  }
+  const end=size===0xffffffff||declaredEnd>buf.length?buf.length:declaredEnd;
+  if(end<=offset)break;
+  offset=end+((size!==0xffffffff&&size%2)?1:0)
+ }
+ if(!fmt||!data||!data.length)throw new Error('Incomplete WAV response');
  return{fmt,data};
 }
 function wavChunk(id,payload){const pad=payload.length%2,head=Buffer.alloc(8);head.write(id,0,4,'ascii');head.writeUInt32LE(payload.length,4);return Buffer.concat([head,payload,pad?Buffer.alloc(1):Buffer.alloc(0)])}
