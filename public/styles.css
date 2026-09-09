@@ -5574,3 +5574,166 @@ img,video,canvas,svg{max-width:100%}
  .student-mode .activity-question-list[data-student-question-flow="1"]>.guided-question{padding:16px!important}
  .student-question-back{width:100%}
 }
+
+
+/* Full-screen student question fit v2 */
+@media(max-width:760px){
+ body.student-question-focus-mode{overflow:hidden}
+ body.student-question-focus-mode .student-mode .topbar{
+  height:52px;min-height:52px;padding:0 10px
+ }
+ body.student-question-focus-mode .student-mode .content{
+  height:calc(100dvh - 52px);
+  overflow:hidden;
+  padding:0 10px calc(66px + env(safe-area-inset-bottom))
+ }
+ body.student-question-focus-mode .lesson-book-workbook>.eg-lesson-header,
+ body.student-question-focus-mode .lesson-book-workbook .eg-stage-list,
+ body.student-question-focus-mode .lesson-book-workbook .eg-stage-heading,
+ body.student-question-focus-mode .lesson-book-workbook .eg-workbook-footer,
+ body.student-question-focus-mode .eg-skill-hero,
+ body.student-question-focus-mode .eg-learning-ladder,
+ body.student-question-focus-mode .eg-lesson-visual,
+ body.student-question-focus-mode .eg-vocab-recycle,
+ body.student-question-focus-mode .eg-editorial-panel,
+ body.student-question-focus-mode .eg-source-column,
+ body.student-question-focus-mode .eg-reading-article,
+ body.student-question-focus-mode .eg-listening-scene,
+ body.student-question-focus-mode .eg-task-panel-head,
+ body.student-question-focus-mode .transcript-card,
+ body.student-question-focus-mode #activityFeedback{
+  display:none!important
+ }
+ body.student-question-focus-mode .lesson-book-workbook,
+ body.student-question-focus-mode .lesson-book-workbook .eg-lesson-layout,
+ body.student-question-focus-mode .lesson-book-workbook .eg-workbook-teaching-surface{
+  width:100%;max-width:none;margin:0;
+  display:block!important;
+  border:0!important;border-radius:0!important;
+  box-shadow:none!important;background:transparent!important
+ }
+ body.student-question-focus-mode .lesson-book-workbook .eg-workbook-stage-content{
+  min-height:0!important;padding:4px 0 0!important;overflow:hidden!important
+ }
+ body.student-question-focus-mode .eg-skill-page{padding:0!important;background:transparent!important}
+ body.student-question-focus-mode .eg-skill-layout,
+ body.student-question-focus-mode .eg-source-task-section,
+ body.student-question-focus-mode .eg-shared-comprehension{
+  display:block!important;width:100%;padding:0!important;margin:0!important;border:0!important
+ }
+ body.student-question-focus-mode .eg-source-task-section[hidden],
+ body.student-question-focus-mode .eg-shared-comprehension[hidden]{display:none!important}
+ body.student-question-focus-mode .eg-task-panel{width:100%;min-width:0}
+ body.student-question-focus-mode .activity-question-list[data-flow-active-list="0"]{display:none!important}
+ body.student-question-focus-mode .activity-question-list[data-flow-active-list="1"]{
+  display:grid!important;min-height:var(--question-space,360px);align-items:center;gap:0!important
+ }
+ body.student-question-focus-mode .activity-question-list[data-flow-active-list="1"]>.guided-question{
+  width:100%;margin:0!important;padding:16px!important;border-radius:15px!important;
+  box-shadow:0 6px 20px rgba(15,23,42,.06)!important
+ }
+ body.student-question-focus-mode .guided-question .question-stage{display:none!important}
+ body.student-question-focus-mode .guided-question>p{
+  margin:0 0 12px!important;font-size:clamp(.98rem,4.25vw,1.08rem)!important;line-height:1.42!important
+ }
+ body.student-question-focus-mode .mcq-answer-slot{display:none!important}
+ body.student-question-focus-mode .mcq-option-cards{
+  display:grid!important;grid-template-columns:1fr!important;gap:7px!important;margin:0!important
+ }
+ body.student-question-focus-mode .mcq-option-card{
+  width:100%!important;max-width:none!important;min-height:44px!important;
+  padding:9px 11px!important;border-radius:10px!important
+ }
+ body.student-question-focus-mode .mcq-option-text{font-size:.92rem!important;line-height:1.25!important}
+ body.student-question-focus-mode .mcq-option-index{
+  width:24px;height:24px;flex:0 0 24px;font-size:.7rem!important
+ }
+ body.student-question-focus-mode .open-evidence textarea{
+  min-height:92px!important;max-height:120px!important;padding:11px!important;line-height:1.4!important
+ }
+ body.student-question-focus-mode .short-answer-evidence input{min-height:46px!important;padding:10px 12px!important}
+ body.student-question-focus-mode .open-evidence small{font-size:.72rem!important}
+ body.student-question-focus-mode .mcq-learning-feedback{
+  gap:2px;margin-top:7px;padding:9px 10px;font-size:.78rem;line-height:1.3
+ }
+ body.student-question-focus-mode .mcq-learning-status{font-size:.72rem}
+ body.student-question-focus-mode .mcq-learning-feedback p{line-height:1.3}
+
+ .student-question-flow-head{
+  position:relative!important;top:auto!important;z-index:6;
+  margin:4px 0 2px!important;padding:8px 9px!important;border-radius:12px!important;
+  background:rgba(255,255,255,.98)!important;box-shadow:0 3px 14px rgba(15,23,42,.05)
+ }
+ .student-question-flow-top{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px
+ }
+ .student-question-flow-copy{display:grid;gap:1px;min-width:0}
+ .student-question-flow-copy span{font-size:.76rem;font-weight:900;color:#334155}
+ .student-question-flow-copy strong{
+  min-width:0;max-width:none!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:.66rem;color:#64748b;text-align:left
+ }
+ .student-question-flow-back,
+ .student-question-source-btn,
+ .student-question-audio-btn{
+  appearance:none;border:1px solid #d7e0ea;background:#fff;color:#17369F;
+  min-height:34px;border-radius:9px;padding:5px 8px;
+  font:inherit;font-size:.72rem;font-weight:850;cursor:pointer
+ }
+ .student-question-flow-back{width:34px;padding:0;font-size:1rem}
+ .student-question-flow-back[hidden],
+ .student-question-source-btn[hidden],
+ .student-question-audio-btn[hidden]{display:none!important}
+ .student-question-flow-actions{display:flex;align-items:center;gap:5px}
+ .student-question-flow-track{height:4px;margin-top:6px}
+ .student-question-continue{width:100%;min-height:44px;margin:5px 0 0;padding:9px 12px}
+ .student-question-continue[hidden]{display:none!important}
+
+ body.student-question-focus-mode .guided-question.is-tight{padding:12px!important}
+ body.student-question-focus-mode .guided-question.is-tight>p{
+  margin-bottom:9px!important;font-size:.94rem!important;line-height:1.34!important
+ }
+ body.student-question-focus-mode .guided-question.is-tight .mcq-option-cards{gap:5px!important}
+ body.student-question-focus-mode .guided-question.is-tight .mcq-option-card{min-height:40px!important;padding:7px 9px!important}
+ body.student-question-focus-mode .guided-question.is-tight .mcq-option-text{font-size:.86rem!important}
+ body.student-question-focus-mode .guided-question.is-tight .mcq-learning-feedback{
+  margin-top:5px;padding:7px 8px;font-size:.74rem
+ }
+ body.student-question-focus-mode .guided-question.is-tight .mcq-learning-example{display:none!important}
+ body.student-question-focus-mode .guided-question.is-tight .open-evidence textarea{
+  min-height:78px!important;max-height:90px!important
+ }
+
+ body.student-question-focus-mode .guided-question.is-ultra-tight{padding:10px!important}
+ body.student-question-focus-mode .guided-question.is-ultra-tight>p{
+  margin-bottom:7px!important;font-size:.9rem!important;line-height:1.28!important
+ }
+ body.student-question-focus-mode .guided-question.is-ultra-tight .mcq-option-card{
+  min-height:38px!important;padding:6px 8px!important
+ }
+ body.student-question-focus-mode .guided-question.is-ultra-tight .mcq-option-text{font-size:.82rem!important}
+ body.student-question-focus-mode .guided-question.is-ultra-tight .mcq-option-index{
+  width:21px;height:21px;flex-basis:21px;font-size:.64rem!important
+ }
+ body.student-question-focus-mode .guided-question.is-ultra-tight.can-grid-options .mcq-option-cards{
+  grid-template-columns:1fr 1fr!important
+ }
+ body.student-question-focus-mode .guided-question.is-ultra-tight .mcq-learning-example,
+ body.student-question-focus-mode .guided-question.is-ultra-tight .open-evidence small{display:none!important}
+ body.student-question-focus-mode .guided-question.is-ultra-tight .open-evidence textarea{
+  min-height:68px!important;max-height:74px!important
+ }
+
+ .student-source-modal{display:grid;gap:14px}
+ .student-source-modal-body{
+  color:#1e293b;font-family:Georgia,"Times New Roman",serif;font-size:1rem;line-height:1.7;white-space:normal
+ }
+ .student-source-modal-body>p{white-space:pre-line}
+}
+
+@media(max-width:380px){
+ body.student-question-focus-mode .student-mode .content{padding-left:7px;padding-right:7px}
+ .student-question-flow-head{padding:7px!important}
+ .student-question-source-btn,.student-question-audio-btn{padding:5px 6px;font-size:.68rem}
+ body.student-question-focus-mode .guided-question{padding:11px!important}
+}
