@@ -579,25 +579,35 @@ function naturalListeningQuestion(source,responder,previousSource=''){
 }
 function shortListening(qText,answer,tag='listening:detail'){return{type:'short',q:qText,answer,min:1,tag}}
 function listeningQs(spec){
- const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name),turns=listeningTurns(x.script),items=[];
+ const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name),turns=listeningTurns(x.script),items=[],usedTurns=new Set();
  items.push(shortListening('Who are the speakers?',names.join(' and '),'listening:speakers'));
  items.push(shortListening('Where does the conversation happen?',x.setting,'listening:detail'));
- let previousSource='';
  for(let i=0;i<turns.length-1&&items.length<6;i++){
   const asked=questionSentence(turns[i].text);
   if(!asked)continue;
-  const direct=naturalListeningQuestion(asked,turns[i+1].speaker,previousSource);
   const reply=firstSentenceBeforeQuestion(turns[i+1].text);
-  if(direct&&reply)items.push(shortListening(direct,reply,'listening:detail'));
-  if(!/^(?:how|what) about you\??$/i.test(asked)&&!/^and you\??$/i.test(asked))previousSource=asked;
+  if(!reply)continue;
+  items.push(shortListening('What does '+turns[i+1].speaker+' answer when '+turns[i].speaker+' asks, “'+asked+'”',reply,'listening:detail'));
+  usedTurns.add(i);usedTurns.add(i+1);
  }
  if(items.length<6&&turns.length){
-  const last=turns[turns.length-1];
-  items.push(shortListening('What does '+last.speaker+' say at the end?',lastStatement(last.text),'listening:detail'));
+  const lastIndex=turns.length-1,last=turns[lastIndex],answer=lastStatement(last.text);
+  if(answer){
+   items.push(shortListening('What does '+last.speaker+' say at the end?',answer,'listening:detail'));
+   usedTurns.add(lastIndex);
+  }
  }
- for(let i=0;i<turns.length&&items.length<6;i++){
-  const turn=turns[i],fact=firstSentenceBeforeQuestion(turn.text);
-  if(fact&&!questionSentence(turn.text))items.push(shortListening('What does '+turn.speaker+' say?',fact,'listening:detail'));
+ if(items.length<6){
+  const spokenCount={};
+  for(let i=0;i<turns.length&&items.length<6;i++){
+   const turn=turns[i];
+   spokenCount[turn.speaker]=(spokenCount[turn.speaker]||0)+1;
+   if(usedTurns.has(i))continue;
+   const answer=lastStatement(turn.text)||firstSentenceBeforeQuestion(turn.text);
+   if(!answer)continue;
+   const n=spokenCount[turn.speaker],ord=n===1?'first':n===2?'second':n===3?'third':n+'th';
+   items.push(shortListening('What does '+turn.speaker+' say the '+ord+' time '+turn.speaker+' speaks?',answer,'listening:detail'));
+  }
  }
  return items.slice(0,6);
 }
