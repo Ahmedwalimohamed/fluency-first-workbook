@@ -1800,7 +1800,192 @@ function writingGenre(task,number=1){
  if(/request|ask for/.test(t))return'request';
  return['message','email','post','form','request'][Math.abs(Number(number||1)-1)%5]
 }
+function isA1EarlyWriting(l){return l?.standardVersion==='a1-foundation-44-v1'&&Number(l?.number||0)>=1&&Number(l?.number||0)<=10}
+const A1_EARLY_WRITING_MODELS={
+ 1:{
+  build:['Hello, I am Amina','My name is Yusuf','Nice to meet you'],
+  combine:[
+   {a:'I am Amina.',b:'I am a student.',connector:'and',answer:'I am Amina and I am a student.'},
+   {a:'I am Yusuf.',b:'I am new here.',connector:'and',answer:'I am Yusuf and I am new here.'},
+   {a:'She is Amina.',b:'She is my classmate.',connector:'and',answer:'She is Amina and she is my classmate.'}
+  ],
+  correct:[
+   {wrong:'I is Amina.',answer:'I am Amina.'},
+   {wrong:'She are new.',answer:'She is new.'},
+   {wrong:'They is students.',answer:'They are students.'}
+  ],
+  organize:[
+   ['Hello.','My name is Amina.'],
+   ['Hi.','I am Yusuf.'],
+   ['Hello, I am Amina.','Nice to meet you.']
+  ]
+ },
+ 2:{
+  build:['My name is Hodan','How do you spell it','Can you repeat that'],
+  combine:[
+   {a:'My first name is Hodan.',b:'My last name is Ahmed.',connector:'and',answer:'My first name is Hodan and my last name is Ahmed.'},
+   {a:'Please say the name.',b:'Please spell the name.',connector:'and',answer:'Please say the name and spell the name.'},
+   {a:'I can spell my name.',b:'I can repeat the letters.',connector:'and',answer:'I can spell my name and repeat the letters.'}
+  ],
+  correct:[
+   {wrong:'How you spell your name?',answer:'How do you spell your name?'},
+   {wrong:'My first name are Hodan.',answer:'My first name is Hodan.'},
+   {wrong:'Can you repeats that?',answer:'Can you repeat that?'}
+  ],
+  organize:[
+   ['What is your name?','My name is Hodan.'],
+   ['How do you spell it?','H-O-D-A-N.'],
+   ['Sorry, can you repeat that?','Yes. D for desk.']
+  ]
+ },
+ 3:{
+  build:['I am twenty years old','My phone number is 634127850','I live in Borama'],
+  combine:[
+   {a:'I am twenty years old.',b:'I live in Borama.',connector:'and',answer:'I am twenty years old and I live in Borama.'},
+   {a:'My name is Yusuf.',b:'My phone number is 634127850.',connector:'and',answer:'My name is Yusuf and my phone number is 634127850.'},
+   {a:'I write my age.',b:'I write my phone number.',connector:'and',answer:'I write my age and my phone number.'}
+  ],
+  correct:[
+   {wrong:'I is twenty years old.',answer:'I am twenty years old.'},
+   {wrong:'What is you phone number?',answer:'What is your phone number?'},
+   {wrong:'My phone number are 634127850.',answer:'My phone number is 634127850.'}
+  ],
+  organize:[
+   ['What is your name?','My name is Yusuf.'],
+   ['How old are you?','I am twenty.'],
+   ['What is your phone number?','It is 634127850.']
+  ]
+ },
+ 4:{
+  build:['Open your book','Listen to the teacher','Write your answer'],
+  combine:[
+   {a:'Open your book.',b:'Read the sentence.',connector:'and',answer:'Open your book and read the sentence.'},
+   {a:'Listen carefully.',b:'Repeat the sentence.',connector:'and',answer:'Listen carefully and repeat the sentence.'},
+   {a:'Write the words.',b:'Close your book.',connector:'and',answer:'Write the words and close your book.'}
+  ],
+  correct:[
+   {wrong:'Opens your book.',answer:'Open your book.'},
+   {wrong:'Listens carefully.',answer:'Listen carefully.'},
+   {wrong:'Writes your answer.',answer:'Write your answer.'}
+  ],
+  organize:[
+   ['Open your book.','Read the sentence.'],
+   ['Listen to the teacher.','Repeat the sentence.'],
+   ['Write your answer.','Close your book.']
+  ]
+ },
+ 5:{
+  build:['I am from Hargeisa','I live in Borama','Where are you from'],
+  combine:[
+   {a:'I am from Hargeisa.',b:'I live in Borama.',connector:'but',answer:'I am from Hargeisa, but I live in Borama.'},
+   {a:'Hassan is from Burao.',b:'He lives in Borama.',connector:'but',answer:'Hassan is from Burao, but he lives in Borama.'},
+   {a:'I am Somali.',b:'I am from Borama.',connector:'and',answer:'I am Somali and I am from Borama.'}
+  ],
+  correct:[
+   {wrong:'Where you are from?',answer:'Where are you from?'},
+   {wrong:'I is from Hargeisa.',answer:'I am from Hargeisa.'},
+   {wrong:'She are Somali.',answer:'She is Somali.'}
+  ],
+  organize:[
+   ['Where are you from?','I am from Hargeisa.'],
+   ['Where do you live?','I live in Borama.'],
+   ['I am Somali.','I am from Borama.']
+  ]
+ },
+ 6:{
+  build:['This is my mother','Her name is Sahra','I have one brother'],
+  combine:[
+   {a:'Sahra is my mother.',b:'Abdi is my father.',connector:'and',answer:'Sahra is my mother and Abdi is my father.'},
+   {a:'I have one brother.',b:'I have one sister.',connector:'and',answer:'I have one brother and one sister.'},
+   {a:'Bilal is my brother.',b:'Amina is my sister.',connector:'and',answer:'Bilal is my brother and Amina is my sister.'}
+  ],
+  correct:[
+   {wrong:'She brother is Bilal.',answer:'Her brother is Bilal.'},
+   {wrong:'His mother are Sahra.',answer:'His mother is Sahra.'},
+   {wrong:'I has one sister.',answer:'I have one sister.'}
+  ],
+  organize:[
+   ['This is my mother.','Her name is Sahra.'],
+   ['This is my father.','His name is Abdi.'],
+   ['I have one brother.','His name is Bilal.']
+  ]
+ },
+ 7:{
+  build:['Hodan is friendly','Yusuf is quiet','Hassan is tall'],
+  combine:[
+   {a:'Yusuf is quiet.',b:'He is helpful.',connector:'but',answer:'Yusuf is quiet, but he is helpful.'},
+   {a:'Hodan is friendly.',b:'She is helpful.',connector:'and',answer:'Hodan is friendly and she is helpful.'},
+   {a:'Hassan is tall.',b:'He is friendly.',connector:'and',answer:'Hassan is tall and he is friendly.'}
+  ],
+  correct:[
+   {wrong:'He are tall.',answer:'He is tall.'},
+   {wrong:'She are friendly.',answer:'She is friendly.'},
+   {wrong:'They is classmates.',answer:'They are classmates.'}
+  ],
+  organize:[
+   ['This is Yusuf.','He is quiet and helpful.'],
+   ['This is Hodan.','She is friendly.'],
+   ['This is Hassan.','He is tall.']
+  ]
+ },
+ 8:{
+  build:['Abdi is a driver','Sahra is a teacher','Omar is a doctor'],
+  combine:[
+   {a:'Abdi is a driver.',b:'Sahra is a teacher.',connector:'and',answer:'Abdi is a driver and Sahra is a teacher.'},
+   {a:'Omar is a doctor.',b:'He works at a health centre.',connector:'and',answer:'Omar is a doctor and he works at a health centre.'},
+   {a:'Maryan is a student.',b:'She studies at college.',connector:'and',answer:'Maryan is a student and she studies at college.'}
+  ],
+  correct:[
+   {wrong:'He is doctor.',answer:'He is a doctor.'},
+   {wrong:'She are a teacher.',answer:'She is a teacher.'},
+   {wrong:'I am an driver.',answer:'I am a driver.'}
+  ],
+  organize:[
+   ['What do you do?','I am a driver.'],
+   ['What does she do?','She is a teacher.'],
+   ['Omar is a doctor.','He works at a health centre.']
+  ]
+ },
+ 9:{
+  build:['I have a blue bag','She has a new phone','Do you have a pen'],
+  combine:[
+   {a:'I have a notebook.',b:'I have a pen.',connector:'and',answer:'I have a notebook and a pen.'},
+   {a:'Yusuf has a book.',b:'He has three pens.',connector:'and',answer:'Yusuf has a book and he has three pens.'},
+   {a:'Amina has a bag.',b:'She does not have her book.',connector:'but',answer:'Amina has a bag, but she does not have her book.'}
+  ],
+  correct:[
+   {wrong:'She have a phone.',answer:'She has a phone.'},
+   {wrong:'They has two books.',answer:'They have two books.'},
+   {wrong:'Do you has a pen?',answer:'Do you have a pen?'}
+  ],
+  organize:[
+   ['Do you have a pen?','Yes, I do.'],
+   ['I have a notebook.','I do not have a pen.'],
+   ['Yusuf has a book.','Amina can look at it with him.']
+  ]
+ },
+ 10:{
+  build:['This book is mine','These pens are blue','Those bags are new'],
+  combine:[
+   {a:'This is my notebook.',b:'These are my pens.',connector:'and',answer:'This is my notebook and these are my pens.'},
+   {a:'That is a chair.',b:'Those are bags.',connector:'and',answer:'That is a chair and those are bags.'},
+   {a:'These books are near me.',b:'Those bags are far away.',connector:'but',answer:'These books are near me, but those bags are far away.'}
+  ],
+  correct:[
+   {wrong:'This are my books.',answer:'These are my books.'},
+   {wrong:'Those is my bags.',answer:'Those are my bags.'},
+   {wrong:'These is a pen.',answer:'This is a pen.'}
+  ],
+  organize:[
+   ['What is this?','This is my notebook.'],
+   ['What are these?','These are my pens.'],
+   ['What are those?','Those are the other students’ bags.']
+  ]
+ }
+};
+function a1EarlyWritingModel(l){return isA1EarlyWriting(l)?A1_EARLY_WRITING_MODELS[Number(l.number||0)]||null:null}
 function writingBuildModels(l){
+ const early=a1EarlyWritingModel(l);if(early)return early.build.slice();
  const topic=String(l.title||'this topic').toLowerCase(),seen=new Set(),out=[];
  const add=value=>{const clean=String(value||'').trim().replace(/[.!?]+$/,'');const n=clean.split(/\s+/).length,key=writingNormalize(clean);if(n>=4&&n<=16&&key&&!seen.has(key)){seen.add(key);out.push(clean)}};
  (l.grammar?.items||[]).forEach(q=>add(q.answer));
@@ -1813,6 +1998,7 @@ function writingBuildModels(l){
  return out.slice(0,3)
 }
 function writingCombineModels(l){
+ const early=a1EarlyWritingModel(l);if(early)return early.combine.map(x=>({...x}));
  const topic=String(l.title||'this topic').toLowerCase();
  return[
   {a:`I want to communicate clearly about ${topic}.`,b:'It is important for my work or studies.',connector:'because',answer:`I want to communicate clearly about ${topic} because it is important for my work or studies.`},
@@ -1821,6 +2007,7 @@ function writingCombineModels(l){
  ]
 }
 function writingCorrectionModels(l){
+ const early=a1EarlyWritingModel(l);if(early)return early.correct.map(x=>({...x}));
  const topic=String(l.title||'this topic').toLowerCase(),seen=new Set(),out=[];
  const add=(wrong,answer)=>{wrong=withPeriod(wrong);answer=withPeriod(answer);const key=writingNormalize(answer);if(wrong&&answer&&key&&!seen.has(key)&&writingNormalize(wrong)!==key){seen.add(key);out.push({wrong,answer})}};
  (l.grammar?.items||[]).forEach(q=>{
@@ -1836,6 +2023,7 @@ function writingCorrectionModels(l){
  return out.slice(0,3)
 }
 function writingParagraphModels(l,spec){
+ const early=a1EarlyWritingModel(l);if(early)return early.organize.map(x=>x.slice());
  const topic=String(l.title||'this topic').toLowerCase(),genre=spec.genre;
  const taskParagraph=genre==='email'
   ?['Dear colleague,',`I am writing about ${topic}.`,'One important detail is that clear information helps the reader understand the purpose.','Kind regards,']
@@ -1853,11 +2041,11 @@ function writingParagraphModels(l,spec){
  ]
 }
 function writingCoreExercises(l){
- const spec=writingFinalSpec(l),builds=writingBuildModels(l),combines=writingCombineModels(l),corrections=writingCorrectionModels(l),paragraphs=writingParagraphModels(l,spec),out=[];
+ const spec=writingFinalSpec(l),early=isA1EarlyWriting(l),builds=writingBuildModels(l),combines=writingCombineModels(l),corrections=writingCorrectionModels(l),paragraphs=writingParagraphModels(l,spec),out=[];
  builds.forEach((answer,i)=>out.push({type:'build',label:`${i+1} · Sentence Building`,instruction:'Tap the words in the correct order to build the sentence.',answer,pieces:writingShuffle(answer.split(/\s+/),l.id+`|build|${i}`)}));
- combines.forEach((x,i)=>out.push({type:'combine',label:`${i+4} · Sentence Combining`,instruction:`Combine the two sentences using “${x.connector}”.`,...x}));
- corrections.forEach((x,i)=>out.push({type:'correct',label:`${i+7} · Error Correction`,instruction:'Rewrite the sentence correctly.',...x}));
- paragraphs.forEach((answer,i)=>out.push({type:'organize',label:`${i+10} · Paragraph Ordering`,instruction:'Tap the sentences in the most logical paragraph order.',answer,pieces:writingShuffle(answer,l.id+`|organize|${i}`)}));
+ combines.forEach((x,i)=>out.push({type:'combine',label:`${i+4} · ${early?'Join with '+x.connector:'Sentence Combining'}`,instruction:early?`Write one simple sentence using “${x.connector}”.`:`Combine the two sentences using “${x.connector}”.`,...x}));
+ corrections.forEach((x,i)=>out.push({type:'correct',label:`${i+7} · ${early?'Fix the Sentence':'Error Correction'}`,instruction:early?'Write the simple sentence correctly.':'Rewrite the sentence correctly.',...x}));
+ paragraphs.forEach((answer,i)=>out.push({type:'organize',label:`${i+10} · ${early?'Sentence Order':'Paragraph Ordering'}`,instruction:early?'Tap the two sentences in the natural order.':'Tap the sentences in the most logical paragraph order.',answer,pieces:writingShuffle(answer,l.id+`|organize|${i}`)}));
  return out
 }
 function writingArrangeHtml(ex){
@@ -1882,7 +2070,12 @@ function writingTextCoreHtml(ex){
  </article>`
 }
 function writingCoreHtml(l){
- const groups={
+ const early=isA1EarlyWriting(l),groups=early?{
+  build:{level:1,label:'Build a sentence'},
+  combine:{level:2,label:'Join two ideas'},
+  correct:{level:3,label:'Fix a sentence'},
+  organize:{level:4,label:'Put two sentences in order'}
+ }:{
   build:{level:1,label:'Recognize'},
   combine:{level:2,label:'Build'},
   correct:{level:3,label:'Correct'},
@@ -1898,7 +2091,7 @@ function writingCoreHtml(l){
 }
 function writingActivity(l){
  const saved=writingSubmission(session.id,l.id),spec=writingFinalSpec(l),assessment=Boolean(l.writing?.humanGraded),finalAssessment=assessment&&l.number===22,checkpoint=assessment&&!finalAssessment,teacherGrade=getDB().writingScores?.[session.id]?.[l.id],phrases=(l.expressions||[]).slice(0,5).map(x=>x.text),teacherView=isWorkbookPreview();
- const teacherGuide=teacherView?`<div class="teacher-only-writing-guide"><span class="role-kicker">Teacher view</span><strong>Activity design</strong><p>12 auto-graded preparation questions: Build → Combine → Correct → Organize, followed by one real-life writing task.</p></div>`:'';
+ const earlyWriting=isA1EarlyWriting(l),teacherGuide=teacherView?`<div class="teacher-only-writing-guide"><span class="role-kicker">Teacher view</span><strong>Activity design</strong><p>${earlyWriting?'A1 Lessons 1–10 use very short, highly supported writing: build a sentence → join two ideas → fix a sentence → order two sentences.':'12 auto-graded preparation questions: Build → Combine → Correct → Organize, followed by one real-life writing task.'}</p></div>`:'';
  return `<div class="eg-skill-page eg-writing-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${finalAssessment?'Final assessment':checkpoint?'Writing checkpoint':'Writing'}</span><h1>${teacherView?'Writing activity structure':'Writing practice'}</h1><p>${teacherView?'Preview the student practice sequence and final writing task.':'Complete the practice, then write your real-life response.'}</p></div><span class="eg-question-count">${teacherView?'12 auto-graded + 1 real writing':'13 activities'}</span></header>
   ${learningLadderHtml(l,'writing',13)}
@@ -1906,7 +2099,7 @@ function writingActivity(l){
   ${assessment?`<div class="assessment-notice"><strong>${finalAssessment?'Independent final writing':'Teacher writing checkpoint'}</strong><p>${teacherGrade===null||teacherGrade===undefined?(teacherView?`${finalAssessment?'The final response':'This checkpoint response'} is teacher-graded; the 12 preparation questions remain auto-graded.`:`${finalAssessment?'Your final response':'This checkpoint response'} will be reviewed by your teacher.`):`Your teacher awarded ${teacherGrade}% for this response. Edit and resubmit only if your teacher asks you to.`}</p></div>`:''}
   <div class="eg-writing-layout eg-writing-layout-designed">
    <main class="eg-writing-workspace">
-    <section class="writing-builder writing-core-sequence">${teacherView?'<div class="eg-task-panel-head"><div><small>Part 1 · Auto-graded practice</small><h2>Build → Combine → Correct → Organize</h2><p>Three questions for each exercise type before the final task.</p></div></div>':''}${writingCoreHtml(l)}</section>
+    <section class="writing-builder writing-core-sequence">${teacherView?`<div class="eg-task-panel-head"><div><small>Part 1 · Auto-graded practice</small><h2>${earlyWriting?'Build → Join → Fix → Order':'Build → Combine → Correct → Organize'}</h2><p>${earlyWriting?'Super-simple A1 writing for Lessons 1–10. No paragraph ordering yet.':'Three questions for each exercise type before the final task.'}</p></div></div>`:''}${writingCoreHtml(l)}</section>
     <article class="guided-question writing-guided-question final-writing-card eg-message-composer">
      <div class="eg-message-bar"><div class="eg-message-avatar">Y</div><div><strong>You</strong><small>Real-life writing</small></div></div>
      <div class="writing-integrity-note"><span class="writing-integrity-badge">Typing only</span><div><strong>Write this response yourself.</strong><small>Copy, cut, paste and drag-drop are disabled in the actual writing box.</small></div></div>
@@ -2078,7 +2271,7 @@ function wireWritingCore(){
 }
 function wireActivity(l){wireMcqCards();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();if(!isWorkbookPreview()){restoreActivityDraft();wireActivityDrafting()}
  if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
- if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:'Build the sentence, connect the ideas, correct the error, then check paragraph order before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
+ if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:isA1EarlyWriting(l)?'Build one short sentence, join two simple ideas, fix one small mistake, then put two sentences in order.':'Build the sentence, connect the ideas, correct the error, then check paragraph order before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
  if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});wireWritingIntegrity();if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
 function wireWritingIntegrity(){
  if(session?.role!=='student'||isWorkbookPreview())return;
