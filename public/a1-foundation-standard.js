@@ -523,6 +523,11 @@ function questionSentence(text){
  const start=Math.max(clean.lastIndexOf('.',q),clean.lastIndexOf('!',q))+1;
  return clean.slice(start,q+1).trim();
 }
+function lastStatement(text){
+ const clean=String(text||'').trim(),parts=clean.split(/(?<=[.!?])\s+/).map(x=>x.trim()).filter(Boolean);
+ for(let i=parts.length-1;i>=0;i--){if(!parts[i].endsWith('?'))return parts[i].replace(/[.!]$/,'').trim()}
+ return firstSentenceBeforeQuestion(clean);
+}
 function possessiveName(name){return /s$/i.test(name)?name+'’':name+'’s'}
 function naturalListeningQuestion(source,responder,previousSource=''){
  let raw=String(source||'').trim().replace(/\?+$/,'').trim();
@@ -530,8 +535,7 @@ function naturalListeningQuestion(source,responder,previousSource=''){
   raw=String(previousSource||'').trim().replace(/\?+$/,'').trim();
  }
  if(!raw)return'';
- const suffix=', '+String(responder||'');
- if(raw.toLowerCase().endsWith(suffix.toLowerCase()))raw=raw.slice(0,-suffix.length).trim();
+ raw=raw.replace(/,\s*[A-Z][A-Za-z'’-]*$/,'').trim();
  raw=raw.replace(/\byour\b/gi,possessiveName(responder));
  raw=raw.replace(/\bhow old are you\b/i,'How old is '+responder);
  raw=raw.replace(/\bwhere are you\b/i,'Where is '+responder);
@@ -570,7 +574,7 @@ function listeningQs(spec){
  }
  if(items.length<6&&turns.length){
   const last=turns[turns.length-1];
-  items.push(shortListening('What does '+last.speaker+' say at the end?',firstSentenceBeforeQuestion(last.text),'listening:detail'));
+  items.push(shortListening('What does '+last.speaker+' say at the end?',lastStatement(last.text),'listening:detail'));
  }
  for(let i=0;i<turns.length&&items.length<6;i++){
   const turn=turns[i],fact=firstSentenceBeforeQuestion(turn.text);
