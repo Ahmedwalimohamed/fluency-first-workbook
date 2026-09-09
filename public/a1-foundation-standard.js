@@ -9,6 +9,12 @@ const A1_SPEAKERS={
  Omar:{gender:'male',voice:'onyx'},Bilal:{gender:'male',voice:'echo'},Farah:{gender:'male',voice:'onyx'},Hamza:{gender:'male',voice:'onyx'},Ismail:{gender:'male',voice:'echo'}
 };
 function q(text,options,answer,tag){return{q:text,options,answer,tag}}
+function speakerProfile(value){
+ const name=typeof value==='string'?value:String(value?.name||''),base=A1_SPEAKERS[name];
+ if(!base)throw new Error('Missing A1 speaker profile for '+name);
+ return{name,gender:base.gender,voice:base.voice}
+}
+function lessonSpeakers(spec){return (spec?.l?.speakers||[]).map(speakerProfile)}
 function phaseFor(n){return n<=11?1:n<=22?2:n<=33?3:4}
 function wordRange(n){return n<=11?[25,60]:n<=22?[45,80]:n<=33?[60,100]:[70,110]}
 function grammarRule(focus){
@@ -173,7 +179,7 @@ function readingQs(spec){
  ];
 }
 function listeningQs(spec){
- const x=spec.l,names=x.speakers.map(s=>s.name);
+ const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name);
  return[
   q('Where does the listening situation happen?',[x.setting,'at an airport','in a stadium'],x.setting,'listening:detail'),
   q('What are the speakers mainly trying to do?',[x.purpose,'avoid speaking to each other','talk about an unrelated problem'],x.purpose,'listening:main-idea'),
@@ -190,7 +196,7 @@ function makeLesson(spec,i){
   targetVocabulary:spec.v.map(x=>x[0]),expressions:spec.u.map(text=>({text})),chunks:spec.u.slice(),interactionExpressions:spec.u.slice(0,3),
   functions:['understand familiar language','give simple information','respond to a partner'],discourse:['short complete sentences','clear turn taking','recycle earlier A1 language'],
   vocabulary:vocabItems(spec),
-  listening:{title:spec.title+' · Reading & Listening',readingText:spec.r.text,audioScript:spec.l.script,text:spec.l.script,speakers:spec.l.speakers,questions:[...readingQs(spec),...listeningQs(spec)]},
+  listening:{title:spec.title+' · Reading & Listening',readingText:spec.r.text,audioScript:spec.l.script,text:spec.l.script,speakers:lessonSpeakers(spec),questions:[...readingQs(spec),...listeningQs(spec)]},
   grammar:{focus:spec.focus,rule:grammarRule(spec.focus),items:a1GrammarItems(spec.focus)},
   writing:{task:spec.writing,minWords:range[0],maxWords:range[1],humanGraded:false,checkpoint:false},
   foundation:n<=11?'Core A1 foundation: recognise, locate and build simple accurate English.':n<=22?'Everyday A1: scan, understand and communicate about daily life.':n<=33?'Independent A1: connect information, sequence events and solve familiar tasks.':'A1 mastery: interpret short connected texts and prepare for A2.',
