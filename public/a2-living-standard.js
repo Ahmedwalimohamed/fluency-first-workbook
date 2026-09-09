@@ -636,7 +636,7 @@ const A2_LISTENING_SCENES={
  },
  'City vs Countryside':{
   speakers:[a2Speaker('Hassan'),a2Speaker('Khalid')],
-  script:"Khalid: Hassan, did the housing office help you decide where to live? Hassan: Yes. I was choosing between a flat in the city centre and a quieter area outside it. Khalid: What made the choice difficult? Hassan: The city had more facilities, but it also had heavier traffic. The quieter area was more peaceful, but the commute was longer. Khalid: How did you compare them? Hassan: I wrote down four things: cost, commute, facilities, and noise. Khalid: Which place matched your priorities? Hassan: A smaller neighbourhood near my work. It has enough services, less traffic, and a shorter commute than the other quiet area."
+  script:"Khalid: Hassan, did the housing office help you decide where to live? Hassan: Yes. I was choosing between a flat in the city centre and a quieter area outside it. Khalid: What made the choice difficult? Hassan: The city had more facilities, but it also had heavier traffic. The quieter area was more peaceful, but the commute was longer. Khalid: How did you compare them? Hassan: I wrote down four things: cost, commute, facilities, and quiet. Khalid: Which place matched your priorities? Hassan: A smaller neighbourhood near my work. It has enough services, less traffic, and a shorter commute than the other quiet area."
  },
  'Dreams & Ambitions':{
   speakers:[a2Speaker('Leyla'),a2Speaker('Hodan')],
@@ -664,7 +664,7 @@ const A2_LISTENING_SCENES={
  },
  'Cultural Identity':{
   speakers:[a2Speaker('Zahra'),a2Speaker('Fadumo')],
-  script:"Fadumo: Zahra, how is your family-story project going at the cultural centre? Zahra: Really well. I started it because some younger relatives knew the names of old traditions but not the stories behind them. Fadumo: Who have you interviewed so far? Zahra: My grandmother and one of my uncles. I ask them the same questions about family customs and important memories. Fadumo: Do they always remember things in the same way? Zahra: No, and that makes the conversations interesting. Their different memories help us talk about our heritage more carefully. Fadumo: So the project is connecting generations. Zahra: Yes. It has created new conversations across generations while preserving family stories."
+  script:"Fadumo: Zahra, how is your family-story project going at the cultural centre? Zahra: Really well. I started it because some younger relatives knew the names of old traditions but not the stories behind them. Fadumo: Who have you interviewed so far? Zahra: My grandmother and grandfather. I ask them the same questions about family customs and important memories. Fadumo: Do they always remember things in the same way? Zahra: No, and that makes the conversations interesting. Their different memories help us talk about our heritage more carefully. Fadumo: So the project is connecting generations. Zahra: Yes. It has created new conversations across generations while preserving family stories."
  },
  'Making Decisions':{
   speakers:[a2Speaker('Farah'),a2Speaker('Khalid')],
