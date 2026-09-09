@@ -22,8 +22,8 @@ const OPENAI_TTS_FEMALE_VOICES=String(process.env.OPENAI_TTS_FEMALE_VOICES||'cor
 const OPENAI_TTS_MALE_VOICES=String(process.env.OPENAI_TTS_MALE_VOICES||'onyx,echo,ash').split(',').map(x=>x.trim()).filter(Boolean);
 const audioCache=new Map();
 
-const FEMALE_SPEAKER_NAMES=new Set(['amina','hodan','maryan','rahma','sahra','muna','fatima','fadumo','asha','hawa','nura','noor','layla','zainab','halima','khadra','deqa','ifrah','yasmin','samira','najma','ubax','amran','saado','suad','ikram','farhia','ilhan','asma','hibo','iqra','raqiya','hinda','nimco','sagal']);
-const MALE_SPEAKER_NAMES=new Set(['yusuf','abdi','khalid','hassan','ahmed','mohamed','ali','omar','abdisalan','abdishakur','mahad','mustafe','ibrahim','ismail','abdirahman','hamza','bashir','jama','said','abdirizak','faisal','farhan','nasir','zakaria','abdullahi']);
+const FEMALE_SPEAKER_NAMES=new Set(['amina','hodan','maryan','rahma','sahra','muna','fatima','fadumo','asha','hawa','nura','noor','layla','leyla','zainab','zahra','halima','khadra','deqa','ifrah','yasmin','samira','najma','ubax','amran','saado','suad','ikram','farhia','ilhan','asma','hibo','iqra','raqiya','hinda','nimco','nimo','sagal','anisa','nasra']);
+const MALE_SPEAKER_NAMES=new Set(['yusuf','abdi','khalid','hassan','ahmed','mohamed','ali','omar','abdisalan','abdishakur','mahad','mustafe','ibrahim','ismail','abdirahman','hamza','bashir','jama','said','abdirizak','faisal','farhan','nasir','zakaria','abdullahi','bilal','farah']);
 function speakerGender(name){
  const n=String(name||'').toLowerCase().replace(/[^a-z ]+/g,' ').replace(/\s+/g,' ').trim(),first=n.split(' ').pop()||n;
  if(/\b(woman|girl|mother|sister|wife|female)\b/.test(n)||FEMALE_SPEAKER_NAMES.has(first))return'female';
