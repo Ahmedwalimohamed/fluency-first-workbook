@@ -523,30 +523,58 @@ function questionSentence(text){
  const start=Math.max(clean.lastIndexOf('.',q),clean.lastIndexOf('!',q))+1;
  return clean.slice(start,q+1).trim();
 }
+function possessiveName(name){return /s$/i.test(name)?name+'’':name+'’s'}
+function naturalListeningQuestion(source,responder,previousSource=''){
+ let raw=String(source||'').trim().replace(/\?+$/,'').trim();
+ if(/^(?:how|what) about you$/i.test(raw)||/^and you$/i.test(raw)){
+  raw=String(previousSource||'').trim().replace(/\?+$/,'').trim();
+ }
+ if(!raw)return'';
+ const suffix=', '+String(responder||'');
+ if(raw.toLowerCase().endsWith(suffix.toLowerCase()))raw=raw.slice(0,-suffix.length).trim();
+ raw=raw.replace(/\byour\b/gi,possessiveName(responder));
+ raw=raw.replace(/\bhow old are you\b/i,'How old is '+responder);
+ raw=raw.replace(/\bwhere are you\b/i,'Where is '+responder);
+ raw=raw.replace(/\bwhat are you doing\b/i,'What is '+responder+' doing');
+ raw=raw.replace(/\bwhat are you\b/i,'What is '+responder);
+ raw=raw.replace(/\bwhy are you\b/i,'Why is '+responder);
+ raw=raw.replace(/\bare you\b/i,'Is '+responder);
+ raw=raw.replace(/\bwhat do you\b/i,'What does '+responder);
+ raw=raw.replace(/\bwhere do you\b/i,'Where does '+responder);
+ raw=raw.replace(/\bwhen do you\b/i,'When does '+responder);
+ raw=raw.replace(/\bwhy do you\b/i,'Why does '+responder);
+ raw=raw.replace(/\bhow do you\b/i,'How does '+responder);
+ raw=raw.replace(/\bdo you\b/i,'Does '+responder);
+ raw=raw.replace(/\bdid you\b/i,'Did '+responder);
+ raw=raw.replace(/\bcan you\b/i,'Can '+responder);
+ raw=raw.replace(/\bcould you\b/i,'Could '+responder);
+ raw=raw.replace(/\bwould you\b/i,'Would '+responder);
+ raw=raw.replace(/\bhave you\b/i,'Has '+responder);
+ raw=raw.replace(/\byou\b/gi,responder);
+ raw=raw.charAt(0).toUpperCase()+raw.slice(1);
+ return raw+'?';
+}
 function shortListening(qText,answer,tag='listening:detail'){return{type:'short',q:qText,answer,min:1,tag}}
 function listeningQs(spec){
  const x=spec.l,names=lessonSpeakers(spec).map(s=>s.name),turns=listeningTurns(x.script),items=[];
  items.push(shortListening('Who are the speakers?',names.join(' and '),'listening:speakers'));
  items.push(shortListening('Where does the conversation happen?',x.setting,'listening:detail'));
+ let previousSource='';
  for(let i=0;i<turns.length-1&&items.length<6;i++){
   const asked=questionSentence(turns[i].text);
   if(!asked)continue;
+  const direct=naturalListeningQuestion(asked,turns[i+1].speaker,previousSource);
   const reply=firstSentenceBeforeQuestion(turns[i+1].text);
-  if(!reply)continue;
-  items.push(shortListening(turns[i].speaker+' asks, “'+asked+'” What does '+turns[i+1].speaker+' answer?',reply,'listening:detail'));
- }
- if(items.length<6&&turns.length){
-  const first=turns[0],asked=questionSentence(first.text);
-  if(asked)items.push(shortListening('What does '+first.speaker+' ask at the beginning?',asked.replace(/\?$/,''),'listening:detail'));
+  if(direct&&reply)items.push(shortListening(direct,reply,'listening:detail'));
+  if(!/^(?:how|what) about you\??$/i.test(asked)&&!/^and you\??$/i.test(asked))previousSource=asked;
  }
  if(items.length<6&&turns.length){
   const last=turns[turns.length-1];
   items.push(shortListening('What does '+last.speaker+' say at the end?',firstSentenceBeforeQuestion(last.text),'listening:detail'));
  }
- while(items.length<6){
-  const fallbackIndex=items.length===2?0:Math.min(turns.length-1,items.length-2),turn=turns[fallbackIndex];
-  if(turn)items.push(shortListening('What does '+turn.speaker+' say in the conversation?',firstSentenceBeforeQuestion(turn.text),'listening:detail'));
-  else break;
+ for(let i=0;i<turns.length&&items.length<6;i++){
+  const turn=turns[i],fact=firstSentenceBeforeQuestion(turn.text);
+  if(fact&&!questionSentence(turn.text))items.push(shortListening('What does '+turn.speaker+' say?',fact,'listening:detail'));
  }
  return items.slice(0,6);
 }
