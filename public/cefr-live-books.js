@@ -242,6 +242,110 @@ function vocabularyRows(topic,data){
  }).join('\n');
 }
 
+function a1VocabularyRows(lesson){
+ const entries=lesson.vocabularyEntries||[];
+ return entries.map(function(x){return x.word+' — '+x.meaning+'. Example: '+x.example}).join('\n');
+}
+function a1WarmUp(lesson){
+ const topic=lesson.title.toLowerCase(),review=/review|final performance/i.test(lesson.title);
+ if(review)return[
+  'Recall three useful words or expressions from earlier lessons.',
+  'Tell a partner one thing you can do more confidently now.',
+  'Ask your partner one question using language from an earlier lesson.'
+ ];
+ return[
+  'What words do you already know about '+topic+'?',
+  'Tell a partner one simple true thing connected to '+topic+'.',
+  'Ask your partner one simple question about '+topic+'.'
+ ];
+}
+function a1LessonContent(lesson){
+ const topic=lesson.title,reading=String(lesson.listening?.readingText||''),audio=String(lesson.listening?.audioScript||lesson.listening?.text||''),speakerMarker=(lesson.listening?.speakers||[]).map(x=>x.name+'='+x.gender+(x.voice?'='+x.voice:'')).join('|');
+ const rqs=(lesson.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith('reading:')).slice(0,6);
+ const lqs=(lesson.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith('listening:')).slice(0,6);
+ const grammarExamples=(lesson.grammar?.items||[]).slice(0,3).map(q=>'• '+a2GrammarModel(q));
+ const useful=[...(lesson.chunks||[])].slice(0,4),warmup=a1WarmUp(lesson);
+ return[
+  'LESSON '+lesson.number+' '+topic,
+  'CAN-DO GOAL: '+lesson.outcome,
+  'PAGE 1 — WARM UP',
+  'FOUNDATION',
+  lesson.foundation,
+  'Think & Talk',
+  warmup.map(function(q,i){return(i+1)+'. '+q}).join('\n'),
+  'SPEAKING STARTER',
+  'Work with a partner. Use short complete sentences. Listen, respond, then ask one simple follow-up question.',
+  '',
+  'PAGE 2 — VOCABULARY',
+  'Talking About '+topic,
+  'WORD — MEANING — EXAMPLE',
+  a1VocabularyRows(lesson),
+  'Useful Expressions',
+  useful.map(x=>'• '+x).join('\n'),
+  'PRONUNCIATION FOCUS',
+  lesson.pronunciation,
+  '',
+  'PAGE 3 — READING',
+  'READING SKILL',
+  lesson.readingSkill,
+  'READ',
+  reading,
+  'Check Your Understanding',
+  rqs.map(function(q,i){return(i+1)+'. '+q.q}).join('\n'),
+  '',
+  'PAGE 4 — LANGUAGE FOCUS',
+  lesson.grammar.focus,
+  lesson.grammar.rule,
+  'Examples from today’s grammar practice',
+  grammarExamples.join('\n'),
+  'Make it personal',
+  'Say two short true sentences using today’s language. Check the meaning first, then the form.',
+  '',
+  'PAGE 5 — LISTENING',
+  'Listen without reading first.',
+  speakerMarker?'AUDIO SPEAKERS: '+speakerMarker:'',
+  'AUDIO SCRIPT',
+  audio,
+  'After listening',
+  lqs.map(function(q,i){return(i+1)+'. '+q.q}).join('\n'),
+  'MEDIATION MOVE',
+  lesson.mediation,
+  '',
+  'PAGE 6 — FLUENCY MISSION',
+  'YOUR MISSION',
+  lesson.performance,
+  'Success means',
+  '• I use short complete sentences.',
+  '• I use at least two useful words or expressions from the lesson.',
+  '• I listen and respond to my partner.',
+  '• I ask for repetition or clarification when I need it.',
+  '',
+  'PAGE 7 — CLASSROOM CHALLENGE',
+  'GRAMMAR RELAY',
+  'Open the matching Grammar workbook activity.',
+  'Complete Questions 1–5 together in class.',
+  'For every answer:',
+  '1. Choose the answer.',
+  '2. Check it with EnglishGate.',
+  '3. One student explains the meaning in simple words.',
+  '4. If it is wrong, repair the sentence and say it again.',
+  'Finish this challenge before Reflection.',
+  '',
+  'PAGE 8 — REFLECTION',
+  'Today I can...',
+  '☐ '+lesson.outcome,
+  '☐ I can use today’s grammar in a simple sentence.',
+  '☐ I can understand the main idea and important details in today’s reading.',
+  '☐ I can use at least two target words or expressions.',
+  'One sentence I used well:',
+  '____________________________',
+  'One reading skill I practised:',
+  '____________________________',
+  'One thing I will practise again:',
+  '____________________________'
+ ].join('\n');
+}
+
 function a2VocabularyRows(lesson){
  const meaningItems=(lesson.vocabulary?.items||[]).filter(item=>item?.tag==='vocabulary:meaning');
  return (lesson.targetVocabulary||[]).map(function(word,index){
@@ -346,6 +450,7 @@ function a2LessonContent(lesson){
 }
 
 function lessonContent(level,lesson){
+ if(level==='A1'&&lesson.standardVersion==='a1-foundation-44-v1')return a1LessonContent(lesson);
  if(level==='A2'&&lesson.standardVersion==='a2-living-standard-v1')return a2LessonContent(lesson);
  const topic=lesson.title,data=TOPIC_LIBRARY[topic],focus=lesson.grammar.focus;
  const w=warm(level,topic),u=useful(level),tx=texts(level,topic,data),r=reflection(level);
@@ -435,8 +540,8 @@ function lessonContent(level,lesson){
 
 window.LIVE_BOOKS=window.LIVE_BOOKS||{};
 LEVELS.forEach(function(level){
- const id='speakup-'+level.toLowerCase(),book=BOOK_PACKS[id];
- if(!book||book.lessons.length!==22)throw new Error('EnglishGate CEFR live book cannot load: '+id);
+ const id='speakup-'+level.toLowerCase(),book=BOOK_PACKS[id],expected=level==='A1'?44:22;
+ if(!book||book.lessons.length!==expected)throw new Error('EnglishGate CEFR live book cannot load: '+id+' · expected '+expected+' lessons');
  window.LIVE_BOOKS[id]={
   title:book.title,
   lessons:book.lessons.map(function(lesson){
