@@ -688,7 +688,7 @@ function questions(title,data){
  return[
   shortReading('Who is the reading about?',person,'reading:detail'),
   shortReading('Where does the reading take place?',place,'reading:detail'),
-  shortReading('What is '+person+' trying to do?',goal,'reading:detail'),
+  shortReading('What is '+person+' trying to do?',goal,'reading:main-idea'),
   shortReading('What problem does '+person+' face?',challenge,'reading:detail'),
   shortReading('What action does '+person+' take?',action,'reading:detail'),
   shortReading('What happens after '+person+' takes that action?',result,'reading:detail'),
