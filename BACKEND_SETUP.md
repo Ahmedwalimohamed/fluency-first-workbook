@@ -33,3 +33,34 @@ Role flow:
 4. After setup, each teacher can create and manage students only inside classes assigned to that teacher.
 
 Temporary passwords are generated for newly created teachers/students and are shown only at creation/reset time.
+
+## Build failure: "failed to solve: secret admin not found"
+
+If a Railway build fails with `failed to solve: secret admin not found`, this is a
+Docker BuildKit error that occurs when a build step references
+`--mount=type=secret,id=admin` but no secret named `admin` was supplied to the
+build. This repository does not contain a `Dockerfile`, `docker-compose.yml`,
+`railpack.toml`/`railpack.json`, or any build script under `scripts/` that
+references a secret called `admin` — the app is built with Railway's Railpack
+builder using the standard Node.js detection from `package.json` (`npm install`
+then `npm start`), with no custom secret mounts defined anywhere in this repo.
+
+This means the error is not caused by application code (including CSS-only
+commits) and cannot be fixed by changing files in this repository. It points to
+a stale or misconfigured **build-time secret** set at the Railway service level
+(Service → Settings → Build → Secrets, or an inherited variable group) that is
+no longer valid. To resolve it:
+
+1. Open the Railway service's build settings and check for any build secret
+   named `admin`. Remove it if it is not intentionally used, since Railpack
+   builds for this service do not require any build-time secrets.
+2. If a secret is genuinely required (for example, to authenticate a private
+   registry or package source during the build), recreate it under Railway's
+   "Secrets" panel so the builder can resolve `id=admin` successfully.
+3. Confirm the runtime environment variables this app actually needs
+   (`DATABASE_URL`, `JWT_SECRET`, `SYSTEM_ADMIN_USERNAME`,
+   `SYSTEM_ADMIN_PASSWORD`, `SYSTEM_ADMIN_NAME`, `TEACHER_USERNAME`,
+   `TEACHER_PASSWORD`) are set as regular **deploy** variables, not build
+   secrets — none of them are needed at build time.
+4. Trigger a fresh build after clearing Railway's build cache, since a cached
+   build plan can keep referencing a secret ID that has since been removed.
