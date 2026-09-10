@@ -1,11 +1,11 @@
 (function(){
 'use strict';
-const pack=window.BOOK_PACKS&&window.BOOK_PACKS['speakup-a1'];
+const pack=(typeof BOOK_PACKS!=='undefined'&&BOOK_PACKS&&BOOK_PACKS['speakup-a1'])||(window.BOOK_PACKS&&window.BOOK_PACKS['speakup-a1']);
 if(!pack||!Array.isArray(pack.lessons))return;
 
 const meanings={
   hello:'what you say when you meet someone',name:'what people call you',student:'a person who learns at a school or class',teacher:'a person who helps students learn',new:'here for the first time',meet:'see and speak to someone for the first time',
-  spell:'say or write the letters in a word',letter:'one sign in the alphabet', 'first name':'your personal name','last name':'your family name',alphabet:'all the letters from A to Z',repeat:'say it again',
+  spell:'say or write the letters in a word',letter:'one sign in the alphabet','first name':'your personal name','last name':'your family name',alphabet:'all the letters from A to Z',repeat:'say it again',
   age:'how old a person is','phone number':'the numbers people use to call you',address:'where you live',form:'a page where you write information',number:'a sign such as 1, 2, or 3',information:'facts about a person or thing',
   open:'make something not closed',close:'make something shut',listen:'pay attention to sound',read:'look at words and understand them',write:'make words with a pen, pencil, or keyboard',
   country:'a place such as Somalia or Kenya',city:'a large town',hometown:'the town or city you come from',nationality:'the country you are a citizen of',from:'used to say where someone comes from',live:'have your home in a place',
@@ -27,10 +27,9 @@ function contextualVocab(lesson){
     const re=new RegExp(escRe(e.word),'i');
     let prompt,answer=e.word;
     if(re.test(example)) prompt=example.replace(re,'_____');
-    else prompt='Choose the best word: '+example;
+    else prompt='Choose the best word for this situation: '+example;
     items.push({q:prompt,options:options(answer,words.slice(i+1).concat(words.slice(0,i))),answer,tag:'vocabulary:context-use'});
   });
-  // Four additional use-based checks. No dictionary-definition questions.
   const scenarios=entries.slice(0,4).map((e,i)=>({
     q:'Which word best completes this real situation? '+String(e.example||'').replace(new RegExp(escRe(e.word),'i'),'_____'),
     options:options(e.word,words.slice(i+2).concat(words.slice(0,i+2))),answer:e.word,tag:'vocabulary:situation-use'
@@ -44,13 +43,11 @@ for(let i=0;i<10;i++){
   l.vocabulary=contextualVocab(l);
 }
 
-// Early-A1 reading should use only language needed for the lesson target.
 const l2=pack.lessons[1];
 if(l2&&l2.listening){
   l2.listening.readingText='Hodan is in English class. Her first name is H-O-D-A-N. Her last name is Ahmed. Omar asks, “How do you spell your first name?” Hodan says the letters slowly. Omar asks, “B or D?” Hodan says, “D.”';
 }
 
-// Writing progression: recognition/building first; short guided production only after learners have enough language.
 const writing=[
  ['Complete these models: “Hello, I am ___.” and “My name is ___.”',3,10],
  ['Write your first name, last name, and spell your first name.',3,12],
@@ -65,7 +62,6 @@ const writing=[
 ];
 writing.forEach((x,i)=>{const l=pack.lessons[i];if(l&&l.writing){l.writing.task=x[0];l.writing.minWords=x[1];l.writing.maxWords=x[2]}});
 
-// Keep speaking practical and manageable in the first ten lessons.
 const performance=[
  'Greet a partner, say your name, and respond to the greeting.',
  'Spell your first name and ask a partner to spell theirs.',
@@ -80,5 +76,5 @@ const performance=[
 ];
 performance.forEach((x,i)=>{if(pack.lessons[i]){pack.lessons[i].performance=x;if(pack.lessons[i].review)pack.lessons[i].review.mission=x}});
 
-window.A1_EARLY_QUALITY_FIX_VERSION='cefr-esl-v1';
+window.A1_EARLY_QUALITY_FIX_VERSION='cefr-esl-v2';
 })();
