@@ -5769,37 +5769,44 @@ img,video,canvas,svg{max-width:100%}
 }
 
 
-/* Prevent mobile lesson footer from covering content v1 */
+/* Prevent mobile lesson footer from covering content v2 */
 @media(max-width:760px){
-  /* Live lesson pages keep the navigation bar sticky, but reserve its full height
-     inside the reading area so the last lines can never sit underneath it. */
-  .student-mode .live-book-content.eg-stage-content{
-    padding-bottom:calc(118px + env(safe-area-inset-bottom))!important;
-    scroll-padding-bottom:calc(118px + env(safe-area-inset-bottom));
+  /* Live lesson content must stay in normal document flow. The footer may stick,
+     but it must never be pulled upward over the lesson text. */
+  .student-mode .student-live-book .eg-teaching-surface{
+    overflow:visible!important;
   }
 
-  .student-mode .eg-teaching-surface:not(.eg-workbook-teaching-surface) .eg-lesson-footer{
+  .student-mode .student-live-book .live-book-content.eg-stage-content{
+    height:auto!important;
+    max-height:none!important;
+    min-height:0!important;
+    overflow:visible!important;
+    padding-bottom:28px!important;
+  }
+
+  .student-mode .student-live-book .eg-lesson-footer{
     position:sticky;
     bottom:calc(66px + env(safe-area-inset-bottom));
-    margin-top:-92px;
-    min-height:82px;
+    margin-top:0!important;
+    min-height:72px;
     padding:10px 12px;
     border-top:1px solid #e2e8f0;
-    box-shadow:0 -8px 22px rgba(15,23,42,.07);
+    background:rgba(255,255,255,.98);
+    box-shadow:0 -6px 18px rgba(15,23,42,.06);
+    z-index:8;
   }
 
-  /* Ensure anchors / focused vocabulary near the end of a stage are revealed
-     above the sticky controls rather than underneath them. */
-  .student-mode .live-book-content.eg-stage-content :is(
+  .student-mode .student-live-book .live-book-content.eg-stage-content :is(
     p, .live-book-section, .live-book-subhead, .live-book-bullet,
     .live-vocab-row, .live-prompt-row, [data-vocab-word]
   ){
-    scroll-margin-bottom:120px;
+    scroll-margin-bottom:96px;
   }
 }
 
 @media(max-width:390px){
-  .student-mode .live-book-content.eg-stage-content{
-    padding-bottom:calc(124px + env(safe-area-inset-bottom))!important;
+  .student-mode .student-live-book .live-book-content.eg-stage-content{
+    padding-bottom:24px!important;
   }
 }
