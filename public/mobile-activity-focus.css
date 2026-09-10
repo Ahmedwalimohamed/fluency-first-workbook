@@ -1,6 +1,5 @@
-/* EnglishGate mobile activity focus v3
-   Mobile-first rule: one screen = one student job.
-   During an activity, show only tiny progress + current question + the controls needed to answer it. */
+/* EnglishGate mobile activity focus v4
+   Current question stays prominent; answered questions remain above for backward review and editing. */
 
 @media (max-width: 760px) {
   body.student-question-focus-mode {
@@ -172,7 +171,7 @@
     display: none !important;
   }
 
-  /* Tiny progress only: “3 / 10” + a 3px line. */
+  /* Tiny progress only: â3 / 10â + a 3px line. */
   body.student-question-focus-mode .student-question-flow-head {
     position: fixed !important;
     top: calc(7px + env(safe-area-inset-top)) !important;
@@ -291,5 +290,89 @@
     margin-top: 5px !important;
     padding: 6px 8px !important;
     font-size: .72rem !important;
+  }
+}
+
+
+/* v4: preserve answered questions above the current question so students can scroll back. */
+@media (max-width: 760px) {
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-y: contain !important;
+    scroll-behavior: smooth !important;
+    scroll-padding-top: calc(46px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .eg-skill-page,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .eg-skill-layout,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .eg-source-task-section,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .eg-shared-comprehension,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .eg-task-panel,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .eg-writing-layout,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .eg-writing-workspace {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .activity-question-list[data-student-question-flow="1"],
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .writing-core-sequence[data-student-question-flow="1"] {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question[hidden] {
+    display: none !important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-current,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-previous {
+    display: block !important;
+    width: 100% !important;
+    max-width: 520px !important;
+    max-height: none !important;
+    overflow: visible !important;
+    scroll-margin-top: calc(46px + env(safe-area-inset-top)) !important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-current {
+    min-height: min(var(--question-fit-height, 420px), calc(100dvh - 92px - env(safe-area-inset-top) - env(safe-area-inset-bottom))) !important;
+    margin: 0 auto 14px !important;
+    padding: 0 0 8px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-previous {
+    margin: 0 auto 12px !important;
+    padding: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-previous::before {
+    content: "Answered · tap to review or edit";
+    display: block;
+    margin: 0 0 8px;
+    font-size: .72rem;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .writing-core-group-head,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .eg-writing-brief,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .teacher-only-writing-guide,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .skill-action-row {
+    display: none !important;
   }
 }

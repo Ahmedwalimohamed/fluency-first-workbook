@@ -1,5 +1,5 @@
-/* EnglishGate mobile activity focus trigger v2
-   Activates one-question mobile mode for any student workbook activity. */
+/* EnglishGate mobile activity focus trigger v3
+   Keeps the current question prominent while preserving unlocked questions for backward review. */
 (function(){
   const isMobile=()=>window.matchMedia('(max-width: 760px)').matches;
   const isStudent=()=>typeof session!=='undefined'&&session?.role==='student';
@@ -13,22 +13,22 @@
   function normalizeFlow(){
     const panel=activityPanel();
     if(!panel)return;
-    const lists=[...panel.querySelectorAll('.activity-question-list')];
-    const activeQuestion=panel.querySelector('.guided-question:not([hidden])');
+    const lists=[...panel.querySelectorAll('.activity-question-list,.writing-core-sequence')];
+    const activeQuestion=panel.querySelector('.guided-question.is-flow-current')||panel.querySelector('.guided-question:not([hidden])');
     lists.forEach(list=>{
-      const active=list===activeQuestion?.closest('.activity-question-list')||list.querySelector('.guided-question:not([hidden])');
-      list.dataset.flowActiveList=active?'1':'0';
+      const visible=Boolean(list.querySelector('.guided-question:not([hidden])'));
+      list.dataset.flowActiveList=visible?'1':'0';
     });
 
-    /* Keep the final/manual button available, but remove it visually for auto-advance MCQs. */
     const continueBtn=panel.querySelector('.student-question-continue');
     if(continueBtn){
       const question=activeQuestion;
       const isChoice=Boolean(question?.querySelector('input[type="radio"],.mcq-option-card'));
-      const allQuestions=[...panel.querySelectorAll('.guided-question')];
+      const hasInlineCheck=Boolean(question?.querySelector('[data-writing-core-check]'));
+      const allQuestions=[...panel.querySelectorAll('.guided-question[data-flow-index]')];
       const index=question?allQuestions.indexOf(question):-1;
       const last=index>=0&&index===allQuestions.length-1;
-      continueBtn.dataset.autoAdvance=isChoice&&!last?'1':'0';
+      continueBtn.dataset.autoAdvance=(isChoice||hasInlineCheck)&&!last?'1':'0';
     }
   }
 
