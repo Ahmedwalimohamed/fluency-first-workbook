@@ -9,6 +9,7 @@ const PORT = Number(process.env.PORT || 3000);
 const SESSION_PATH = process.env.SESSION_PATH || '/data/.wwebjs_auth';
 const EXPECTED_SENDER = String(process.env.WHATSAPP_SENDER_NUMBER || '').trim();
 const SEND_API_KEY = String(process.env.SEND_API_KEY || '');
+const SELF_TEST_ID = String(process.env.SELF_TEST_ID || '').trim();
 const expectedDigits = EXPECTED_SENDER.replace(/\D/g, '');
 const digits = value => String(value || '').replace(/\D/g, '');
 
@@ -66,7 +67,7 @@ client.on('authenticated', () => {
   console.log('EnglishGate WhatsApp authenticated');
 });
 
-client.on('ready', () => {
+client.on('ready', async () => {
   state.qrDataUrl = null;
   state.authenticated = true;
   state.linkedNumber = client.info?.wid?.user || null;
@@ -79,6 +80,20 @@ client.on('ready', () => {
   state.ready = true;
   state.lastError = null;
   console.log(`EnglishGate WhatsApp ready as +${state.linkedNumber}`);
+
+  if (SELF_TEST_ID && state.linkedNumber) {
+    const markerName = '.self-test-' + crypto.createHash('sha256').update(SELF_TEST_ID).digest('hex').slice(0,16);
+    const markerPath = path.join(path.dirname(SESSION_PATH), markerName);
+    if (!fs.existsSync(markerPath)) {
+      try {
+        await sendTextMessage(state.linkedNumber, 'EnglishGate WhatsApp test: the dedicated sender is connected and can send messages.');
+        fs.writeFileSync(markerPath, new Date().toISOString());
+        console.log('EnglishGate WhatsApp self-test sent successfully');
+      } catch (error) {
+        console.error('EnglishGate WhatsApp self-test failed:', String(error?.message || error).slice(0,500));
+      }
+    }
+  }
 });
 
 client.on('auth_failure', msg => {
