@@ -5810,3 +5810,179 @@ img,video,canvas,svg{max-width:100%}
     padding-bottom:24px!important;
   }
 }
+
+
+/* Student JTBD focus mode v1 */
+@media(max-width:760px){
+  /* Inside a lesson, remove global navigation and duplicate choices.
+     The current learning job becomes the interface. */
+  body.student-live-focus .student-mode .topbar,
+  body.student-live-focus .student-mode .bottom-nav{
+    display:none!important;
+  }
+  body.student-live-focus .student-mode .main{
+    min-height:100dvh;
+  }
+  body.student-live-focus .student-mode .content{
+    width:100%;
+    max-width:none;
+    min-height:100dvh;
+    padding:10px 10px calc(12px + env(safe-area-inset-bottom))!important;
+  }
+  body.student-live-focus .student-live-book{
+    width:100%;
+    max-width:none;
+    margin:0;
+  }
+  body.student-live-focus .student-live-book .eg-stage-list{
+    display:none!important;
+  }
+  body.student-live-focus .student-live-book .eg-lesson-header{
+    display:grid!important;
+    grid-template-columns:44px minmax(0,1fr)!important;
+    align-items:center;
+    gap:10px;
+    margin:0 0 8px!important;
+    padding:0 2px;
+  }
+  body.student-live-focus .student-live-book .eg-lesson-header>.englishgate-logo-lesson,
+  body.student-live-focus .student-live-book #openStudentWorkbook{
+    display:none!important;
+  }
+  body.student-live-focus .student-live-book .eg-lesson-header>div{
+    min-width:0;
+  }
+  body.student-live-focus .student-live-book .eg-lesson-header p{
+    display:none!important;
+  }
+  body.student-live-focus .student-live-book .eg-lesson-header h1{
+    margin:0!important;
+    max-width:100%;
+    font-size:1rem!important;
+    line-height:1.25!important;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  body.student-live-focus #backStudentBook{
+    width:44px!important;
+    min-width:44px!important;
+    height:44px!important;
+    min-height:44px!important;
+    padding:0!important;
+    border-radius:12px!important;
+    font-size:0!important;
+  }
+  body.student-live-focus #backStudentBook::before{
+    content:"←";
+    font-size:1.25rem;
+    line-height:1;
+  }
+
+  body.student-live-focus .student-live-book .eg-teaching-surface{
+    border-radius:16px!important;
+    overflow:visible!important;
+  }
+  body.student-live-focus .student-live-book .student-live-stage-heading{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 44px!important;
+    align-items:center!important;
+    gap:10px!important;
+    padding:12px 14px!important;
+  }
+  body.student-live-focus .student-live-stage-heading .eg-label{
+    margin:0 0 2px!important;
+    font-size:.7rem!important;
+  }
+  body.student-live-focus .student-live-stage-heading h2{
+    margin:0!important;
+    font-size:1.18rem!important;
+  }
+  body.student-live-focus .student-pronunciation-toggle{
+    width:44px!important;
+    min-width:44px!important;
+    height:44px!important;
+    min-height:44px!important;
+    padding:0!important;
+    border-radius:12px!important;
+    display:grid!important;
+    place-items:center!important;
+  }
+  body.student-live-focus .student-pronunciation-toggle .pronunciation-icon{
+    font-size:1.08rem;
+    line-height:1;
+  }
+  body.student-live-focus .student-pronunciation-toggle .pronunciation-label{
+    position:absolute!important;
+    width:1px!important;
+    height:1px!important;
+    overflow:hidden!important;
+    clip:rect(0 0 0 0)!important;
+    white-space:nowrap!important;
+  }
+  body.student-live-focus .student-pronunciation-toggle.active{
+    background:#eef4ff!important;
+    border-color:#8cbcff!important;
+    color:#17369F!important;
+  }
+
+  body.student-live-focus .student-live-book .live-book-content.eg-stage-content{
+    padding:18px 16px 24px!important;
+  }
+
+  /* Only the next job is visually dominant. Previous becomes a small escape. */
+  body.student-live-focus .student-live-book .eg-lesson-footer{
+    position:sticky!important;
+    bottom:env(safe-area-inset-bottom)!important;
+    display:grid!important;
+    grid-template-columns:44px minmax(0,1fr)!important;
+    gap:8px!important;
+    min-height:64px!important;
+    margin-top:0!important;
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom))!important;
+    background:rgba(255,255,255,.98)!important;
+    border-top:1px solid #e2e8f0!important;
+    z-index:10!important;
+  }
+  body.student-live-focus #prevStudentLiveSection{
+    width:44px!important;
+    min-width:44px!important;
+    height:44px!important;
+    min-height:44px!important;
+    padding:0!important;
+    font-size:0!important;
+    border-radius:11px!important;
+  }
+  body.student-live-focus #prevStudentLiveSection::before{
+    content:"←";
+    font-size:1.15rem;
+  }
+  body.student-live-focus #prevStudentLiveSection:disabled{
+    visibility:hidden!important;
+  }
+  body.student-live-focus .student-live-book .eg-lesson-footer .primary-btn{
+    width:100%!important;
+    min-height:48px!important;
+    justify-content:center!important;
+  }
+
+  /* Activity focus: no global destinations while a learner is answering. */
+  body.student-question-focus-mode .student-mode .topbar,
+  body.student-question-focus-mode .student-mode .bottom-nav{
+    display:none!important;
+  }
+  body.student-question-focus-mode .student-mode .main{
+    min-height:100dvh;
+  }
+  body.student-question-focus-mode .student-mode .content{
+    height:100dvh!important;
+    min-height:100dvh!important;
+    padding:0 10px calc(62px + env(safe-area-inset-bottom))!important;
+  }
+  body.student-question-focus-mode .student-question-continue{
+    bottom:calc(8px + env(safe-area-inset-bottom))!important;
+  }
+  body.student-question-focus-mode .activity-question-list[data-flow-active-list="1"]{
+    padding-bottom:58px!important;
+  }
+}
