@@ -171,7 +171,7 @@
     display: none !important;
   }
 
-  /* Tiny progress only: â3 / 10â + a 3px line. */
+  /* Tiny progress only: “3 / 10” + a 3px line. */
   body.student-question-focus-mode .student-question-flow-head {
     position: fixed !important;
     top: calc(7px + env(safe-area-inset-top)) !important;
