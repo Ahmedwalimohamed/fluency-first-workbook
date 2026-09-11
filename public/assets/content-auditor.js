@@ -73,27 +73,37 @@ async function generateProposal(r){
 }
 async function applyProposal(r){
  const saved=PROPOSALS[r.lesson],gate=$id('caGate'),approve=$id('caApprove');if(!saved?.check?.pass)return;
- approve.disabled=true;approve.textContent='Applying…';gate.textContent='Saving the approved patch and reloading the active content version…';
+ approve.disabled=true;approve.textContent='Applying…';gate.textContent='Saving approved patch. Standards re-audit will run automatically after apply…';
  try{
    const resp=await fetch('/api/content-patches/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({courseId:'speakup-a1',lessonNumber:r.lesson,component:saved.component,replacement:saved.proposal.replacement,summary:saved.proposal.summary,selfAudit:saved.proposal.selfAudit})});
    const data=await resp.json();if(!resp.ok)throw new Error(data?.problems?.join(' ')||data?.error||'Patch apply failed');
    await window.EnglishGateContentPatches?.reload?.();
    APPROVALS[r.lesson]={at:new Date().toISOString(),score:Number(saved.proposal?.selfAudit?.overall||0),status:'PUBLISHED_PATCH',component:saved.component,patchId:data.patchId};
-   const latest=audit()[r.lesson-1];
-   gate.textContent=`Patch ${data.patchId} applied. Source audit now reads ${latest.status} (${latest.score}/100). The learner renderer will use this approved ${saved.component} patch.`;
-   approve.textContent='Patch applied';setTimeout(()=>render(),1200);
+   gate.textContent=`Patch ${data.patchId} applied. Running CEFR + ESL standards re-audit…`;
+   if(typeof window.runStandardsAuditForLesson==='function'){
+     await window.runStandardsAuditForLesson(r.lesson,null,{silent:true});
+     approve.textContent='Applied & re-audited';
+     setTimeout(()=>{document.getElementById('caModal')?.remove();window.contentStandardsAuditor?.()},700);
+   } else {
+     approve.textContent='Patch applied';
+     setTimeout(()=>render(),1000);
+   }
  }catch(e){gate.textContent='Patch was not applied: '+e.message;approve.disabled=false;approve.textContent='Approve & apply patch'}
 }
 function openRepair(r){
  const p=fixPlan(r); window.__caRepair=p;
  const modal=document.createElement('div');modal.className='ca-modal';modal.id='caModal';
- modal.innerHTML=`<div class="ca-modal-card"><div class="ca-modal-head"><div><span class="ca-kicker">Controlled repair</span><h2>Lesson ${r.lesson}: ${esc(r.title)}</h2><p>${esc(p.summary)}</p></div><button class="icon-btn" id="caClose">×</button></div><div class="ca-repair-flow"><div class="active"><b>1</b><span>Diagnose</span></div><div><b>2</b><span>Generate fix</span></div><div><b>3</b><span>Pre-check</span></div><div><b>4</b><span>Apply</span></div></div><div class="ca-repair-list">${p.fixes.map((x,i)=>`<article><span>${i+1}</span><div><code>${esc(x.code)}</code><p>${esc(x.action)}</p></div></article>`).join('')||'<p class="ca-clear">No configured issues remain.</p>'}</div><div class="ca-modal-actions"><button class="ghost-btn" id="caGenerate" ${p.fixes.length?'':'disabled'}>Generate AI correction</button><button class="ghost-btn" id="caReaudit">Re-audit source</button><button class="primary-btn" id="caApprove" disabled>Approve & apply patch</button></div><div class="ca-proposal hidden" id="caProposal"></div><p class="ca-gate" id="caGate">${p.fixes.length?'Generate a correction first. The source lesson is not changed automatically.':'No repair is required.'}</p></div>`;
+ modal.innerHTML=`<div class="ca-modal-card"><div class="ca-modal-head"><div><span class="ca-kicker">Controlled repair</span><h2>Lesson ${r.lesson}: ${esc(r.title)}</h2><p>${esc(p.summary)}</p></div><button class="icon-btn" id="caClose">×</button></div><div class="ca-repair-flow"><div class="active"><b>1</b><span>Diagnose</span></div><div><b>2</b><span>Generate fix</span></div><div><b>3</b><span>Pre-check</span></div><div><b>4</b><span>Apply + re-audit</span></div></div><div class="ca-repair-list">${p.fixes.map((x,i)=>`<article><span>${i+1}</span><div><code>${esc(x.code)}</code><p>${esc(x.action)}</p></div></article>`).join('')||'<p class="ca-clear">No configured issues remain.</p>'}</div><div class="ca-modal-actions"><button class="ghost-btn" id="caGenerate" ${p.fixes.length?'':'disabled'}>Generate AI correction</button><button class="primary-btn" id="caApprove" disabled>Approve & apply patch</button></div><div class="ca-proposal hidden" id="caProposal"></div><p class="ca-gate" id="caGate">${p.fixes.length?'Generate a correction first. After apply, CEFR + ESL re-audit runs automatically.':'No repair is required.'}</p></div>`;
  document.body.appendChild(modal);
  $id('caClose').onclick=()=>modal.remove();
  $id('caGenerate').onclick=()=>generateProposal(r);
- $id('caReaudit').onclick=()=>{const latest=audit()[r.lesson-1];$id('caGate').textContent=`Current source audit: ${latest.status} (${latest.score}/100).`};
  $id('caApprove').onclick=()=>applyProposal(r);
 }
+window.contentAuditorOpenRepair=function(standardsResult,lessonNumber){
+ const s=specs()[lessonNumber-1]||{};
+ const issues=(standardsResult?.issues||[]).map(x=>issue(String(x.code||'STANDARDS_ISSUE'),String(x.severity||'MODERATE').toUpperCase(),String(x.message||''),String(x.fix||'Repair the flagged component.')));
+ openRepair({lesson:lessonNumber,title:s.title||`Lesson ${lessonNumber}`,issues,score:standardsResult?.overall,status:standardsResult?.status,counts:{}});
+};
 function render(){
  const rows=audit(),avg=Math.round(rows.reduce((a,b)=>a+b.score,0)/Math.max(1,rows.length)),flagged=rows.filter(r=>!r.status.startsWith('PASS')).length,approved=Object.keys(APPROVALS).length;
  title('Content quality','Lesson & Activity Checker');
