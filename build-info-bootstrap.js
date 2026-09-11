@@ -1,9 +1,11 @@
 const express=require('express');
 const jwt=require('jsonwebtoken');
+const {Pool}=require('pg');
 
 const nativeGet=express.application.get;
 const nativePost=express.application.post;
 const installedApps=new WeakSet();
+const pool=new Pool({connectionString:process.env.DATABASE_URL});
 
 const SENSITIVE_PATH=/(^|\/)(?:\.env(?:\..*)?|\.git(?:\/|$)|\.svn(?:\/|$)|\.ssh(?:\/|$)|\.vscode(?:\/|$)|wp-admin(?:\/|$)|wp-config\.php$|phpinfo\.php$|storage\/logs(?:\/|$)|actuator(?:\/|$)|_vti_pvt(?:\/|$)|server\.key$|secrets?\.json$|user_secrets\.ya?ml$|docker-compose\.ya?ml$|\.npmrc$|\.bash_history$|(?:backup|database|database_backup|dump)(?:\.[a-z0-9._-]+)?$)/i;
 const SENSITIVE_EXTENSION=/\.(?:sql|bak|old|orig|save|zip|tar|tgz|gz|7z|key|pem|log|sqlite|sqlite3|db|php|conf|ini|ya?ml)$/i;
@@ -36,6 +38,45 @@ function extractJson(text){
   const match=raw.match(/\{[\s\S]*\}/);
   if(match){try{return JSON.parse(match[0])}catch{}}
   throw new Error('AI returned invalid JSON');
+}
+function validateVocabularyReplacement(replacement){
+  const items=replacement?.items;
+  const problems=[];
+  if(!Array.isArray(items)||items.length<6||items.length>12)problems.push('Vocabulary patch must contain 6–12 items.');
+  (items||[]).forEach((q,i)=>{
+    if(!q||typeof q.q!=='string'||q.q.trim().length<4)problems.push(`Item ${i+1} needs a question.`);
+    if(!Array.isArray(q?.options)||q.options.length<3||q.options.length>4)problems.push(`Item ${i+1} needs 3–4 options.`);
+    if(!q?.answer||!q?.options?.includes(q.answer))problems.push(`Item ${i+1} answer must match one option exactly.`);
+    if(new Set(q?.options||[]).size!==(q?.options||[]).length)problems.push(`Item ${i+1} has duplicate options.`);
+    if(/what does|which word means|means:/i.test(String(q?.q||'')))problems.push(`Item ${i+1} still tests a dictionary definition.`);
+  });
+  return problems;
+}
+function validatePatch(component,replacement){
+  if(component==='vocabulary')return validateVocabularyReplacement(replacement);
+  return ['Only vocabulary publishing is enabled in this first safe-publish pilot.'];
+}
+async function ensurePatchSchema(){
+  await pool.query(`create table if not exists content_patches(
+    id bigserial primary key,
+    course_id text not null default 'speakup-a1',
+    lesson_number integer not null,
+    component text not null,
+    replacement jsonb not null,
+    summary text not null default '',
+    self_audit jsonb,
+    created_by text,
+    created_at timestamptz not null default now(),
+    is_active boolean not null default true,
+    rolled_back_at timestamptz
+  )`);
+  await pool.query('create index if not exists content_patches_active_idx on content_patches(course_id,lesson_number,component,is_active)');
+}
+async function activePatches(){
+  await ensurePatchSchema();
+  const q=await pool.query(`select distinct on(course_id,lesson_number,component) id,course_id,lesson_number,component,replacement,summary,self_audit,created_at
+    from content_patches where is_active=true order by course_id,lesson_number,component,created_at desc,id desc`);
+  return q.rows;
 }
 async function generateRepair(body){
   if(!process.env.OPENAI_API_KEY)throw new Error('OPENAI_API_KEY is not configured');
@@ -72,6 +113,13 @@ function installBuildRoute(app){
       project:process.env.RAILWAY_PROJECT_NAME||''
     });
   });
+  nativeGet.call(app,'/api/content-patches',async(req,res)=>{
+    try{
+      const patches=await activePatches();
+      res.set('Cache-Control','no-store');
+      res.json({ok:true,patches});
+    }catch(e){res.status(500).json({error:'Could not load content patches.'})}
+  });
   nativePost.call(app,'/api/content-repair',async(req,res)=>{
     if(!adminSession(req))return res.status(403).json({error:'Admin access required.'});
     try{
@@ -82,6 +130,27 @@ function installBuildRoute(app){
       console.error('content repair error',e.message);
       res.status(502).json({error:'AI correction could not be generated.',detail:String(e.message||'').slice(0,300)});
     }
+  });
+  nativePost.call(app,'/api/content-patches/apply',async(req,res)=>{
+    const admin=adminSession(req);if(!admin)return res.status(403).json({error:'Admin access required.'});
+    try{
+      await ensurePatchSchema();
+      const courseId=String(req.body?.courseId||'speakup-a1').slice(0,80),lessonNumber=Number(req.body?.lessonNumber),component=String(req.body?.component||'');
+      const replacement=req.body?.replacement,summary=String(req.body?.summary||'').slice(0,500),selfAudit=req.body?.selfAudit||null;
+      if(!Number.isInteger(lessonNumber)||lessonNumber<1||lessonNumber>44)return res.status(400).json({error:'Invalid lesson number.'});
+      const problems=validatePatch(component,replacement);if(problems.length)return res.status(400).json({error:'Patch failed validation.',problems});
+      await pool.query('update content_patches set is_active=false,rolled_back_at=now() where course_id=$1 and lesson_number=$2 and component=$3 and is_active=true',[courseId,lessonNumber,component]);
+      const q=await pool.query(`insert into content_patches(course_id,lesson_number,component,replacement,summary,self_audit,created_by) values($1,$2,$3,$4::jsonb,$5,$6::jsonb,$7) returning id,created_at`,[courseId,lessonNumber,component,JSON.stringify(replacement),summary,JSON.stringify(selfAudit),String(admin.id||admin.username||'admin')]);
+      res.set('Cache-Control','no-store');res.json({ok:true,patchId:q.rows[0].id,createdAt:q.rows[0].created_at});
+    }catch(e){console.error('content patch apply error',e.message);res.status(500).json({error:'Approved patch could not be applied.'})}
+  });
+  nativePost.call(app,'/api/content-patches/rollback',async(req,res)=>{
+    const admin=adminSession(req);if(!admin)return res.status(403).json({error:'Admin access required.'});
+    try{
+      await ensurePatchSchema();const id=Number(req.body?.patchId);if(!Number.isInteger(id))return res.status(400).json({error:'Invalid patch id.'});
+      const q=await pool.query('update content_patches set is_active=false,rolled_back_at=now() where id=$1 and is_active=true returning id',[id]);
+      if(!q.rowCount)return res.status(404).json({error:'Active patch not found.'});res.json({ok:true,patchId:id});
+    }catch(e){res.status(500).json({error:'Patch rollback failed.'})}
   });
 }
 
