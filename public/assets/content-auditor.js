@@ -7,7 +7,7 @@ const APPROVALS=window.__contentAuditorApprovals=window.__contentAuditorApproval
 const PROPOSALS=window.__contentAuditorProposals=window.__contentAuditorProposals||{};
 function specs(){return (window.A1_FOUNDATION_SPECS||[]).slice(0,10)}
 function issue(code,severity,message,fix){return{code,severity,message,fix}}
-function lessonUsesContextVocab(n){return n>=1&&n<=10&&window.A1_EARLY_VOCAB_RENDERER_VERSION==='context-v2-live-runner'}
+function lessonUsesContextVocab(n){return n>=1&&n<=10&&/^context-v(2|3)-/.test(String(window.A1_EARLY_VOCAB_RENDERER_VERSION||''))}
 function auditLesson(s,i){
  const issues=[]; const n=i+1;
  const reading=String(s?.r?.text||''),listening=String(s?.l?.script||''),writing=String(s?.writing||''),performance=String(s?.performance||'');
@@ -51,12 +51,12 @@ function validateProposal(p,component){
    const items=p?.replacement?.items;
    if(!Array.isArray(items)||items.length<6)problems.push('Vocabulary proposal needs at least 6 usable items.');
    (items||[]).forEach((q,i)=>{if(!q?.q||!Array.isArray(q?.options)||q.options.length<3||!q?.answer||!q.options.includes(q.answer))problems.push(`Vocabulary item ${i+1} is not safely auto-gradable.`);if(/what does|which word means|means:/i.test(String(q?.q||'')))problems.push(`Vocabulary item ${i+1} still uses definition testing.`)});
- }
+ } else problems.push('Safe publishing is currently enabled for vocabulary only.');
  const score=Number(p?.selfAudit?.overall||0);
  if(score&&score<80)problems.push(`AI self-audit is only ${score}/100.`);
  return{pass:problems.length===0,problems};
 }
-async function generateProposal(r,modal){
+async function generateProposal(r){
  const b=$id('caGenerate'),gate=$id('caGate'),preview=$id('caProposal'),approve=$id('caApprove');
  const component=repairComponent(r),lesson=specs()[r.lesson-1];
  b.disabled=true;b.textContent='Generating…';gate.textContent='AI is preparing a surgical correction. Nothing will be published automatically.';
@@ -66,25 +66,38 @@ async function generateProposal(r,modal){
    if(!resp.ok)throw new Error(data?.detail||data?.error||'Generation failed');
    const proposal=data.proposal,check=validateProposal(proposal,component);PROPOSALS[r.lesson]={proposal,check,component,generatedAt:new Date().toISOString()};
    preview.classList.remove('hidden');preview.innerHTML=`<div class="ca-proposal-head"><div><span class="ca-kicker">AI proposed correction</span><h3>${esc(proposal.summary||'Surgical correction')}</h3></div>${check.pass?'<span class="ca-proposal-pass">Pre-check passed</span>':'<span class="ca-proposal-fail">Needs review</span>'}</div><div class="ca-proposal-meta"><span>Component: <b>${esc(component)}</b></span><span>AI self-audit: <b>${esc(proposal?.selfAudit?.overall??'—')}/100</b></span></div><pre>${esc(JSON.stringify(proposal.replacement,null,2))}</pre>${check.problems.length?`<div class="ca-proposal-warnings"><b>Automated pre-check:</b>${check.problems.map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}`;
-   gate.textContent=check.pass?'Proposed correction passed the automated structural pre-check. Review it, then approve the proposal.':'The proposal was generated, but automated checks found issues. Generate again or review manually.';
-   approve.disabled=!check.pass;approve.textContent='Approve AI proposal';
+   gate.textContent=check.pass?'Proposal passed the structural pre-check. Review it, then approve and apply the patch.':'The proposal was generated, but automated checks found issues. Generate again or review manually.';
+   approve.disabled=!check.pass;approve.textContent='Approve & apply patch';
  }catch(e){gate.textContent='Generation failed: '+e.message}
  finally{b.disabled=false;b.textContent='Generate AI correction'}
+}
+async function applyProposal(r){
+ const saved=PROPOSALS[r.lesson],gate=$id('caGate'),approve=$id('caApprove');if(!saved?.check?.pass)return;
+ approve.disabled=true;approve.textContent='Applying…';gate.textContent='Saving the approved patch and reloading the active content version…';
+ try{
+   const resp=await fetch('/api/content-patches/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({courseId:'speakup-a1',lessonNumber:r.lesson,component:saved.component,replacement:saved.proposal.replacement,summary:saved.proposal.summary,selfAudit:saved.proposal.selfAudit})});
+   const data=await resp.json();if(!resp.ok)throw new Error(data?.problems?.join(' ')||data?.error||'Patch apply failed');
+   await window.EnglishGateContentPatches?.reload?.();
+   APPROVALS[r.lesson]={at:new Date().toISOString(),score:Number(saved.proposal?.selfAudit?.overall||0),status:'PUBLISHED_PATCH',component:saved.component,patchId:data.patchId};
+   const latest=audit()[r.lesson-1];
+   gate.textContent=`Patch ${data.patchId} applied. Source audit now reads ${latest.status} (${latest.score}/100). The learner renderer will use this approved ${saved.component} patch.`;
+   approve.textContent='Patch applied';setTimeout(()=>render(),1200);
+ }catch(e){gate.textContent='Patch was not applied: '+e.message;approve.disabled=false;approve.textContent='Approve & apply patch'}
 }
 function openRepair(r){
  const p=fixPlan(r); window.__caRepair=p;
  const modal=document.createElement('div');modal.className='ca-modal';modal.id='caModal';
- modal.innerHTML=`<div class="ca-modal-card"><div class="ca-modal-head"><div><span class="ca-kicker">Controlled repair</span><h2>Lesson ${r.lesson}: ${esc(r.title)}</h2><p>${esc(p.summary)}</p></div><button class="icon-btn" id="caClose">×</button></div><div class="ca-repair-flow"><div class="active"><b>1</b><span>Diagnose</span></div><div><b>2</b><span>Generate fix</span></div><div><b>3</b><span>Pre-check</span></div><div><b>4</b><span>Approve</span></div></div><div class="ca-repair-list">${p.fixes.map((x,i)=>`<article><span>${i+1}</span><div><code>${esc(x.code)}</code><p>${esc(x.action)}</p></div></article>`).join('')||'<p class="ca-clear">No configured issues remain.</p>'}</div><div class="ca-modal-actions"><button class="ghost-btn" id="caGenerate" ${p.fixes.length?'':'disabled'}>Generate AI correction</button><button class="ghost-btn" id="caReaudit">Re-audit source</button><button class="primary-btn" id="caApprove" disabled>Approve AI proposal</button></div><div class="ca-proposal hidden" id="caProposal"></div><p class="ca-gate" id="caGate">${p.fixes.length?'Generate a correction first. The source lesson is not changed automatically.':'No repair is required.'}</p></div>`;
+ modal.innerHTML=`<div class="ca-modal-card"><div class="ca-modal-head"><div><span class="ca-kicker">Controlled repair</span><h2>Lesson ${r.lesson}: ${esc(r.title)}</h2><p>${esc(p.summary)}</p></div><button class="icon-btn" id="caClose">×</button></div><div class="ca-repair-flow"><div class="active"><b>1</b><span>Diagnose</span></div><div><b>2</b><span>Generate fix</span></div><div><b>3</b><span>Pre-check</span></div><div><b>4</b><span>Apply</span></div></div><div class="ca-repair-list">${p.fixes.map((x,i)=>`<article><span>${i+1}</span><div><code>${esc(x.code)}</code><p>${esc(x.action)}</p></div></article>`).join('')||'<p class="ca-clear">No configured issues remain.</p>'}</div><div class="ca-modal-actions"><button class="ghost-btn" id="caGenerate" ${p.fixes.length?'':'disabled'}>Generate AI correction</button><button class="ghost-btn" id="caReaudit">Re-audit source</button><button class="primary-btn" id="caApprove" disabled>Approve & apply patch</button></div><div class="ca-proposal hidden" id="caProposal"></div><p class="ca-gate" id="caGate">${p.fixes.length?'Generate a correction first. The source lesson is not changed automatically.':'No repair is required.'}</p></div>`;
  document.body.appendChild(modal);
  $id('caClose').onclick=()=>modal.remove();
- $id('caGenerate').onclick=()=>generateProposal(r,modal);
- $id('caReaudit').onclick=()=>{const latest=audit()[r.lesson-1];$id('caGate').textContent=`Current source audit: ${latest.status} (${latest.score}/100). This checks the published source, not the proposed AI patch.`};
- $id('caApprove').onclick=()=>{const saved=PROPOSALS[r.lesson];if(!saved?.check?.pass)return;APPROVALS[r.lesson]={at:new Date().toISOString(),score:Number(saved.proposal?.selfAudit?.overall||0),status:'AI_PROPOSAL_APPROVED',component:saved.component,proposal:saved.proposal};$id('caGate').textContent='AI proposal approved for implementation. The live lesson has not been overwritten automatically.';$id('caApprove').disabled=true;$id('caApprove').textContent='Proposal approved';setTimeout(()=>{modal.remove();render()},800)};
+ $id('caGenerate').onclick=()=>generateProposal(r);
+ $id('caReaudit').onclick=()=>{const latest=audit()[r.lesson-1];$id('caGate').textContent=`Current source audit: ${latest.status} (${latest.score}/100).`};
+ $id('caApprove').onclick=()=>applyProposal(r);
 }
 function render(){
- const rows=audit(),avg=Math.round(rows.reduce((a,b)=>a+b.score,0)/Math.max(1,rows.length)),flagged=rows.filter(r=>!r.status.startsWith('PASS')).length,critical=rows.reduce((a,r)=>a+r.counts.critical,0),approved=Object.keys(APPROVALS).length;
+ const rows=audit(),avg=Math.round(rows.reduce((a,b)=>a+b.score,0)/Math.max(1,rows.length)),flagged=rows.filter(r=>!r.status.startsWith('PASS')).length,approved=Object.keys(APPROVALS).length;
  title('Content quality','Lesson & Activity Checker');
- $id('content').innerHTML=`<div class="ca-shell"><section class="ca-hero"><div><span class="ca-kicker">CEFR + ESL Quality Control</span><h1>A1 Lessons 1–10 audit</h1><p>Diagnose → generate a surgical AI correction → automated pre-check → admin approval. No mass regeneration and no automatic publishing.</p></div><button class="primary-btn" id="caRun">Run audit again</button></section><section class="ca-metrics"><article><span>Lessons checked</span><strong>${rows.length}</strong></article><article><span>Average score</span><strong>${avg}/100</strong></article><article><span>Need review/fix</span><strong>${flagged}</strong></article><article><span>AI proposals approved</span><strong>${approved}</strong></article></section><section class="ca-panel"><div class="ca-head"><div><h2>Audit results</h2><p>Open a lesson to generate a correction for only the flagged component.</p></div></div><div class="ca-list">${rows.map(r=>`<details class="ca-row"><summary><div class="ca-lesson"><b>${r.lesson}</b><div><strong>${esc(r.title)}</strong><small>${r.issues.length} issue${r.issues.length===1?'':'s'} detected${APPROVALS[r.lesson]?' · AI proposal approved':''}</small></div></div><div class="ca-score"><strong>${r.score}</strong>${badge(r.status)}</div></summary><div class="ca-issues">${r.issues.map(x=>`<article class="ca-issue ${x.severity.toLowerCase()}"><div><span>${esc(x.severity)}</span><code>${esc(x.code)}</code></div><strong>${esc(x.message)}</strong><p><b>Fix:</b> ${esc(x.fix)}</p></article>`).join('')||'<p class="ca-clear">No rule-based issues detected in this pilot scan.</p>'}<div class="ca-action"><button class="ghost-btn" data-ca-lesson="${r.lesson}">${r.issues.length?'Open AI repair':'Review'}</button><small>AI suggestions never publish directly to students.</small></div></div></details>`).join('')}</div></section><p class="ca-note">Pilot scope: A1 Lessons 1–10. AI generates a replacement proposal only for the flagged component. Admin approval is required before later implementation into source content.</p></div>`;
+ $id('content').innerHTML=`<div class="ca-shell"><section class="ca-hero"><div><span class="ca-kicker">CEFR + ESL Quality Control</span><h1>A1 Lessons 1–10 audit</h1><p>Diagnose → generate a surgical AI correction → pre-check → approve & apply. Approved vocabulary patches are versioned in the database and used by the learner renderer.</p></div><button class="primary-btn" id="caRun">Run audit again</button></section><section class="ca-metrics"><article><span>Lessons checked</span><strong>${rows.length}</strong></article><article><span>Average score</span><strong>${avg}/100</strong></article><article><span>Need review/fix</span><strong>${flagged}</strong></article><article><span>Patches applied this session</span><strong>${approved}</strong></article></section><section class="ca-panel"><div class="ca-head"><div><h2>Audit results</h2><p>Open a lesson to repair only the flagged component. Vocabulary is the first safe-publish pilot.</p></div></div><div class="ca-list">${rows.map(r=>`<details class="ca-row"><summary><div class="ca-lesson"><b>${r.lesson}</b><div><strong>${esc(r.title)}</strong><small>${r.issues.length} issue${r.issues.length===1?'':'s'} detected${APPROVALS[r.lesson]?' · patch applied':''}</small></div></div><div class="ca-score"><strong>${r.score}</strong>${badge(r.status)}</div></summary><div class="ca-issues">${r.issues.map(x=>`<article class="ca-issue ${x.severity.toLowerCase()}"><div><span>${esc(x.severity)}</span><code>${esc(x.code)}</code></div><strong>${esc(x.message)}</strong><p><b>Fix:</b> ${esc(x.fix)}</p></article>`).join('')||'<p class="ca-clear">No rule-based issues detected in this pilot scan.</p>'}<div class="ca-action"><button class="ghost-btn" data-ca-lesson="${r.lesson}">${r.issues.length?'Open AI repair':'Review'}</button><small>Only validated, admin-approved patches can reach learner activities.</small></div></div></details>`).join('')}</div></section><p class="ca-note">Pilot scope: A1 Lessons 1–10. Safe publishing is enabled for vocabulary first; other components remain proposal-only until component-specific validators are added.</p></div>`;
  $id('caRun').onclick=render;
  document.querySelectorAll('[data-ca-lesson]').forEach(b=>b.onclick=()=>openRepair(rows[Number(b.dataset.caLesson)-1]));
 }
