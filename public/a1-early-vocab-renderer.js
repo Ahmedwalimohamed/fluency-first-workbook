@@ -25,6 +25,12 @@ function isEarlyA1(l){
     String(l.level||'').toUpperCase()==='A1'
   );
 }
+function approvedPatchItems(l){
+  const n=Number(l?.number||0),api=window.EnglishGateContentPatches;
+  const patch=api?.get?.('speakup-a1',n,'vocabulary');
+  const items=patch?.replacement?.items;
+  return Array.isArray(items)?items.filter(q=>q&&q.q&&Array.isArray(q.options)&&q.options.length&&q.answer&&q.options.includes(q.answer)).slice(0,10):[];
+}
 function sourceItems(l){
   const source=l&&l.vocabulary&&Array.isArray(l.vocabulary.items)?l.vocabulary.items:[];
   return source.filter(q=>q&&q.q&&Array.isArray(q.options)&&q.options.length&&q.answer).slice(0,10);
@@ -46,6 +52,7 @@ function lessonOneItems(l){
   ];
 }
 function itemsFor(l){
+  const approved=approvedPatchItems(l);if(approved.length)return approved;
   if(Number(l.number)===1)return lessonOneItems(l);
   return sourceItems(l);
 }
@@ -73,5 +80,5 @@ window.vocabActivity=function(l){
     '</div>';
 };
 
-window.A1_EARLY_VOCAB_RENDERER_VERSION='context-v2-live-runner';
+window.A1_EARLY_VOCAB_RENDERER_VERSION='context-v3-approved-patches';
 })();
