@@ -73,20 +73,20 @@ function cleanup(){
  }
 }
 
-// Stop the old radio auto-advance. Selecting an answer should leave the learner
-// on the current question until they explicitly tap Next.
+// Preserve the core activity handler so simple choice questions can auto-advance.
+// This patch only refreshes the persistent navigation state after the answer is recorded.
 document.addEventListener('change',function(e){
  const radio=e.target.closest&&e.target.closest('input[type="radio"]');
  if(!radio||!document.body.classList.contains('student-question-focus-mode'))return;
  const root=radio.closest('#activityPanel');
  if(!root)return;
- e.stopPropagation();
  setTimeout(function(){
   enhance();
   const next=$('.student-question-continue',root);
-  if(next)next.disabled=false;
+  const q=currentVisibleQuestion(root);
+  if(next&&q&&questionAnswered(q))next.disabled=false;
  },0);
-},true);
+},false);
 
 document.addEventListener('input',function(e){
  if(!document.body.classList.contains('student-question-focus-mode'))return;
@@ -101,7 +101,7 @@ document.addEventListener('click',function(e){
 },true);
 
 const observer=new MutationObserver(function(){enhance();cleanup()});
-observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','disabled']});
+observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','disabled','data-auto-advance']});
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enhance);
 else enhance();
