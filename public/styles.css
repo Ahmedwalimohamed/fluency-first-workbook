@@ -1353,7 +1353,7 @@ img,video,audio{max-width:100%}
 .eg-sentence-lab>div span{padding:6px 8px;border-radius:7px;background:rgba(255,255,255,.13);font-size:.73rem}
 .eg-grammar-page .mcq-option-cards{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
 .eg-grammar-page .mcq-option-card{width:100%!important;max-width:none!important;justify-content:flex-start;text-align:left;border-radius:9px!important}
-.eg-writing-layout-designed{grid-template-columns:minmax(0,1.45fr) minmax(270px,.68fr)!important}
+.eg-writing-layout-designed{grid-template-columns:minmax(0,1fr)!important;max-width:960px;margin:0 auto;width:100%}
 .eg-writing-workspace{display:grid;gap:16px}
 .eg-writing-brief{position:sticky;top:100px;background:#f8f5ee}
 .eg-writing-brief>small{display:block;color:#6e7e89;font-size:.69rem;text-transform:uppercase;letter-spacing:.08em;font-weight:850}

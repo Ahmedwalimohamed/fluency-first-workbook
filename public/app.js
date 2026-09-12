@@ -2177,7 +2177,7 @@ function writingCoreHtml(l){
  }).join('')
 }
 function writingActivity(l){
- const saved=writingSubmission(session.id,l.id),spec=writingFinalSpec(l),assessment=Boolean(l.writing?.humanGraded),finalAssessment=assessment&&l.number===22,checkpoint=assessment&&!finalAssessment,teacherGrade=getDB().writingScores?.[session.id]?.[l.id],phrases=(l.expressions||[]).slice(0,5).map(x=>x.text),teacherView=isWorkbookPreview();
+ const saved=writingSubmission(session.id,l.id),spec=writingFinalSpec(l),assessment=Boolean(l.writing?.humanGraded),finalAssessment=assessment&&l.number===22,checkpoint=assessment&&!finalAssessment,teacherGrade=getDB().writingScores?.[session.id]?.[l.id],teacherView=isWorkbookPreview();
  const earlyWriting=isA1EarlyWriting(l),teacherGuide=teacherView?`<div class="teacher-only-writing-guide"><span class="role-kicker">Teacher view</span><strong>Activity design</strong><p>${earlyWriting?'A1 Lessons 1–10 use very short, highly supported writing: build a sentence → join two ideas → fix a sentence → order two sentences.':'12 auto-graded preparation questions: Build → Combine → Correct → Organize, followed by one real-life writing task.'}</p></div>`:'';
  return `<div class="eg-skill-page eg-writing-page">
   <header class="eg-skill-hero"><div><span class="eg-skill-kicker">${finalAssessment?'Final assessment':checkpoint?'Writing checkpoint':'Writing'}</span><h1>${teacherView?'Writing activity structure':'Writing practice'}</h1><p>${teacherView?'Preview the student practice sequence and final writing task.':'Complete the practice, then write your real-life response.'}</p></div><span class="eg-question-count">${teacherView?'12 auto-graded + 1 real writing':'13 activities'}</span></header>
@@ -2202,7 +2202,6 @@ function writingActivity(l){
      </fieldset>
     </article>
    </main>
-   <aside class="eg-writing-brief"><small>Writing support</small><h2>${escapeHtml(l.title)}</h2>${phrases.length?`<div class="eg-phrase-bank">${phrases.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div>`:''}<div class="eg-writing-reminder"><strong>Remember</strong><span>Keep the purpose clear.</span><span>Use complete sentences.</span><span>Connect ideas naturally.</span><span>Check order and punctuation before saving.</span></div></aside>
   </div>
   <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn guided-submit skill-submit" id="saveWriting">${finalAssessment?'Submit final writing':checkpoint?'Submit checkpoint writing':'Check & save writing'}</button>${activityDoneButton(l)}</div>
  </div>`
