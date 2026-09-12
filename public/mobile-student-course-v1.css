@@ -1,0 +1,292 @@
+/* EnglishGate mobile My Book v1
+   Next lesson first, compact lesson path second. */
+@media(max-width:760px){
+  body.student-course-focus-mode{
+    background:#f6f8fb!important;
+  }
+
+  body.student-course-focus-mode .topbar{
+    height:54px!important;
+    min-height:54px!important;
+    padding:0 14px!important;
+    background:rgba(255,255,255,.96)!important;
+    border-bottom:1px solid #e5eaf0!important;
+  }
+
+  body.student-course-focus-mode .mobile-menu,
+  body.student-course-focus-mode .page-identity,
+  body.student-course-focus-mode #studentTopNav,
+  body.student-course-focus-mode .top-actions .sync-indicator{
+    display:none!important;
+  }
+
+  body.student-course-focus-mode .top-actions{
+    margin-left:auto!important;
+  }
+
+  body.student-course-focus-mode .student-profile-btn{
+    display:grid!important;
+    place-items:center!important;
+    width:36px!important;
+    height:36px!important;
+    border-radius:50%!important;
+  }
+
+  body.student-course-focus-mode .content{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:12px 12px calc(82px + env(safe-area-inset-bottom))!important;
+  }
+
+  body.student-course-focus-mode .course-shell{
+    width:100%!important;
+    max-width:560px!important;
+    margin:0 auto!important;
+    display:grid!important;
+    gap:12px!important;
+  }
+
+  body.student-course-focus-mode #courseHome{
+    display:none!important;
+  }
+
+  body.student-course-focus-mode .course-intro{
+    margin:0!important;
+    padding:15px 16px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    gap:12px!important;
+    align-items:center!important;
+    border:1px solid #dce5ee!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    box-shadow:0 6px 20px rgba(31,55,88,.05)!important;
+  }
+
+  body.student-course-focus-mode .course-intro>div:first-child{
+    min-width:0!important;
+  }
+
+  body.student-course-focus-mode .course-intro .pill{
+    margin-bottom:5px!important;
+    padding:3px 7px!important;
+    font-size:.66rem!important;
+  }
+
+  body.student-course-focus-mode .course-intro h1{
+    margin:0!important;
+    font-size:1.2rem!important;
+    line-height:1.15!important;
+    letter-spacing:-.015em!important;
+    color:#10233e!important;
+  }
+
+  body.student-course-focus-mode .course-intro p{
+    margin:5px 0 0!important;
+    max-width:34ch!important;
+    color:#728195!important;
+    font-size:.76rem!important;
+    line-height:1.35!important;
+  }
+
+  body.student-course-focus-mode .course-overall{
+    min-width:82px!important;
+    padding:0!important;
+    display:grid!important;
+    gap:2px!important;
+    justify-items:end!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+
+  body.student-course-focus-mode .course-overall>strong{
+    font-size:1.35rem!important;
+    line-height:1!important;
+    color:#17369f!important;
+  }
+
+  body.student-course-focus-mode .course-overall>span{
+    color:#76869a!important;
+    font-size:.66rem!important;
+    white-space:nowrap!important;
+  }
+
+  body.student-course-focus-mode .course-overall .progress{
+    width:78px!important;
+    height:5px!important;
+    margin-top:4px!important;
+  }
+
+  body.student-course-focus-mode .course-path.student-course-list{
+    display:grid!important;
+    gap:9px!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  body.student-course-focus-mode .course-topic{
+    min-height:0!important;
+    margin:0!important;
+    padding:12px!important;
+    display:grid!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    grid-template-areas:
+      "state copy"
+      "actions actions"!important;
+    column-gap:10px!important;
+    row-gap:9px!important;
+    align-items:center!important;
+    border:1px solid #e1e7ee!important;
+    border-radius:15px!important;
+    background:#fff!important;
+    box-shadow:none!important;
+  }
+
+  body.student-course-focus-mode .course-topic.eg-course-next{
+    padding:14px!important;
+    border-color:#b9caef!important;
+    background:linear-gradient(180deg,#fbfdff 0%,#f4f8ff 100%)!important;
+    box-shadow:0 7px 22px rgba(30,62,130,.08)!important;
+  }
+
+  body.student-course-focus-mode .course-topic.eg-course-next::before{
+    content:"NEXT LESSON";
+    grid-column:1/-1!important;
+    margin-bottom:-2px!important;
+    color:#4965b0!important;
+    font-size:.64rem!important;
+    line-height:1!important;
+    font-weight:900!important;
+    letter-spacing:.09em!important;
+  }
+
+  body.student-course-focus-mode .topic-state{
+    grid-area:state!important;
+    width:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:10px!important;
+    font-size:.82rem!important;
+    font-weight:900!important;
+  }
+
+  body.student-course-focus-mode .course-topic.eg-course-next .topic-state{
+    background:#17369f!important;
+    color:#fff!important;
+  }
+
+  body.student-course-focus-mode .course-topic.complete .topic-state{
+    background:#edf8f1!important;
+    color:#2f7a4a!important;
+  }
+
+  body.student-course-focus-mode .topic-copy{
+    grid-area:copy!important;
+    min-width:0!important;
+    display:grid!important;
+    gap:2px!important;
+  }
+
+  body.student-course-focus-mode .topic-copy small{
+    color:#7c8a9a!important;
+    font-size:.66rem!important;
+    line-height:1.1!important;
+  }
+
+  body.student-course-focus-mode .topic-copy strong{
+    color:#183247!important;
+    font-size:.92rem!important;
+    line-height:1.2!important;
+  }
+
+  body.student-course-focus-mode .topic-copy>span{
+    color:#718195!important;
+    font-size:.72rem!important;
+    line-height:1.25!important;
+  }
+
+  body.student-course-focus-mode .topic-actions{
+    grid-area:actions!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+
+  body.student-course-focus-mode .topic-actions .primary-btn,
+  body.student-course-focus-mode .topic-actions .ghost-btn{
+    min-height:42px!important;
+    margin:0!important;
+    padding:8px 10px!important;
+    border-radius:11px!important;
+    font-size:.76rem!important;
+    font-weight:800!important;
+  }
+
+  /* Keep the path browsable without making every completed lesson shout for attention. */
+  body.student-course-focus-mode .course-topic.complete:not(.eg-course-next){
+    padding-top:10px!important;
+    padding-bottom:10px!important;
+    background:#fbfcfd!important;
+  }
+
+  body.student-course-focus-mode .course-topic.complete:not(.eg-course-next) .topic-actions .ghost-btn{
+    display:none!important;
+  }
+
+  body.student-course-focus-mode .course-topic.complete:not(.eg-course-next) .topic-actions{
+    grid-template-columns:1fr!important;
+  }
+
+  body.student-course-focus-mode .course-topic.complete:not(.eg-course-next) .topic-actions .primary-btn{
+    min-height:36px!important;
+    padding:6px 10px!important;
+    background:#fff!important;
+    color:#34548a!important;
+    border:1px solid #d7e0eb!important;
+  }
+
+  body.student-course-focus-mode .course-topic.pending{
+    opacity:.7!important;
+    background:#fafbfc!important;
+  }
+
+  body.student-course-focus-mode .course-topic.pending .topic-actions{
+    display:none!important;
+  }
+
+  body.student-course-focus-mode .bottom-nav{
+    min-height:62px!important;
+    padding-bottom:env(safe-area-inset-bottom)!important;
+    background:rgba(255,255,255,.98)!important;
+    box-shadow:0 -6px 24px rgba(26,46,72,.07)!important;
+  }
+}
+
+@media(max-width:390px){
+  body.student-course-focus-mode .content{
+    padding-left:9px!important;
+    padding-right:9px!important;
+  }
+
+  body.student-course-focus-mode .course-intro{
+    padding:13px!important;
+  }
+
+  body.student-course-focus-mode .course-intro h1{
+    font-size:1.08rem!important;
+  }
+
+  body.student-course-focus-mode .course-topic,
+  body.student-course-focus-mode .course-topic.eg-course-next{
+    padding:11px!important;
+  }
+
+  body.student-course-focus-mode .topic-actions{
+    grid-template-columns:1fr!important;
+  }
+}
