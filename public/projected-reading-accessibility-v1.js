@@ -15,7 +15,10 @@ function setScale(value){
   const n=Math.round(clamp(Number(value)||1)*100)/100;
   document.body.style.setProperty('--eg-project-reading-scale',String(n));
   try{localStorage.setItem(KEY,String(n))}catch{}
-  document.querySelectorAll('[data-project-reading-scale]').forEach(el=>el.textContent=Math.round(n*100)+'%');
+  const label=Math.round(n*100)+'%';
+  document.querySelectorAll('[data-project-reading-scale]').forEach(el=>{
+    if(el.textContent!==label)el.textContent=label;
+  });
   return n;
 }
 function currentScale(){
@@ -24,7 +27,7 @@ function currentScale(){
 }
 function visibleReadingStage(){
   const stages=[...document.querySelectorAll('.teacher-presentation-mode .eg-stage-content.is-reading-stage')];
-  return stages.find(el=>!el.hidden&&el.getClientRects().length)||stages[0]||null;
+  return stages.find(el=>!el.hidden&&el.getClientRects().length)||null;
 }
 function ensureControls(){
   const stage=visibleReadingStage();
@@ -49,10 +52,18 @@ function schedule(){
   scheduled=true;
   requestAnimationFrame(()=>{scheduled=false;ensureControls()});
 }
+function mutationOutsideControls(mutations){
+  return mutations.some(m=>{
+    const target=m.target?.nodeType===1?m.target:m.target?.parentElement;
+    return !target?.closest?.('.projected-reading-controls');
+  });
+}
 function boot(){
   setScale(savedScale());
   ensureControls();
-  new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
+  new MutationObserver(mutations=>{
+    if(mutationOutsideControls(mutations))schedule();
+  }).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
   document.addEventListener('fullscreenchange',schedule);
   window.addEventListener('resize',schedule,{passive:true});
 }
