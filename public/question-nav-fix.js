@@ -107,7 +107,7 @@ const observer=new MutationObserver(function(){
  refreshQueued=true;
  requestAnimationFrame(function(){refreshQueued=false;enhance();cleanup()});
 });
-observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','disabled','data-auto-advance']});
+observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','disabled']});
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enhance);
 else enhance();

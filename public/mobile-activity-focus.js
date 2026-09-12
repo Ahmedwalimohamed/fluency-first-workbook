@@ -1,4 +1,4 @@
-/* EnglishGate mobile activity focus trigger v8
+/* EnglishGate mobile activity focus trigger v9
    One-question mobile flow: MCQs auto-advance; typed/open responses use Continue; Back remains available. */
 (function(){
   const isMobile=()=>window.matchMedia('(max-width: 760px)').matches;
@@ -50,7 +50,7 @@
 
   const observer=new MutationObserver(scheduleSync);
   const start=()=>{
-    observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden','data-auto-advance','data-flow-active-list']});
+    observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden']});
     sync();
     window.addEventListener('resize',scheduleSync,{passive:true});
     window.addEventListener('orientationchange',scheduleSync,{passive:true});
