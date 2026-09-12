@@ -74,4 +74,4 @@ express.application.post=function standardsAwarePost(route,...handlers){
   install(this);
   return nativePost.call(this,route,...handlers);
 };
-require('./build-info-bootstrap.js');
+require('./ai-content-editor-bootstrap.js');
