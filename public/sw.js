@@ -1,5 +1,5 @@
 /* EnglishGate Progressive Web App service worker */
-const CACHE_NAME = 'englishgate-pwa-v1';
+const CACHE_NAME = 'englishgate-pwa-v2';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -18,7 +18,8 @@ const APP_SHELL = [
   '/mobile-single-question-v5.css',
   '/mobile-lesson-player-v1.css',
   '/mobile-student-home-v2.css',
-  '/mobile-student-course-v1.css'
+  '/mobile-student-course-v1.css',
+  '/lesson1-grammar-micro-v1.js'
 ];
 
 self.addEventListener('install', event => {
