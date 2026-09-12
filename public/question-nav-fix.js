@@ -40,19 +40,19 @@ function enhance(){
  if(!back||!next)return;
  const nav=makeNav(root),inner=$('.student-question-bottom-inner',nav);
 
- back.hidden=false;
- back.classList.add('student-question-nav-back');
- back.textContent='← Back';
- back.setAttribute('aria-label','Previous question');
+ if(back.hidden)back.hidden=false;
+ if(!back.classList.contains('student-question-nav-back'))back.classList.add('student-question-nav-back');
+ if(back.textContent!=='← Back')back.textContent='← Back';
+ if(back.getAttribute('aria-label')!=='Previous question')back.setAttribute('aria-label','Previous question');
 
- next.hidden=false;
- next.classList.add('student-question-nav-next');
- if(!/check|save/i.test(next.textContent||''))next.textContent='Next →';
+ if(next.hidden)next.hidden=false;
+ if(!next.classList.contains('student-question-nav-next'))next.classList.add('student-question-nav-next');
+ if(next.textContent!=='Next →'&&!/check|save/i.test(next.textContent||''))next.textContent='Next →';
 
  let hint=$('#activityHint');
  if(hint){
-  hint.classList.add('student-question-nav-hint');
-  hint.textContent='Hint';
+  if(!hint.classList.contains('student-question-nav-hint'))hint.classList.add('student-question-nav-hint');
+  if(hint.textContent!=='Hint')hint.textContent='Hint';
  }
 
  if(back.parentElement!==inner)inner.appendChild(back);
@@ -60,15 +60,15 @@ function enhance(){
  if(next.parentElement!==inner)inner.appendChild(next);
 
  const previousSkill=$('#previousActivity');
- if(previousSkill)previousSkill.hidden=true;
+ if(previousSkill&&!previousSkill.hidden)previousSkill.hidden=true;
 
  const q=currentVisibleQuestion(root);
- if(q&&questionAnswered(q))next.disabled=false;
- document.body.classList.add('student-question-nav-active');
+ if(next.disabled&&q&&questionAnswered(q))next.disabled=false;
+ if(!document.body.classList.contains('student-question-nav-active'))document.body.classList.add('student-question-nav-active');
 }
 
 function cleanup(){
- if(!document.body.classList.contains('student-question-focus-mode')){
+ if(!document.body.classList.contains('student-question-focus-mode')&&document.body.classList.contains('student-question-nav-active')){
   document.body.classList.remove('student-question-nav-active');
  }
 }
@@ -84,7 +84,7 @@ document.addEventListener('change',function(e){
   enhance();
   const next=$('.student-question-continue',root);
   const q=currentVisibleQuestion(root);
-  if(next&&q&&questionAnswered(q))next.disabled=false;
+  if(next?.disabled&&q&&questionAnswered(q))next.disabled=false;
  },0);
 },false);
 
@@ -100,7 +100,13 @@ document.addEventListener('click',function(e){
  }
 },true);
 
-const observer=new MutationObserver(function(){enhance();cleanup()});
+// Reconcile once per frame; idempotent writes let observed mutations settle.
+let refreshQueued=false;
+const observer=new MutationObserver(function(){
+ if(refreshQueued)return;
+ refreshQueued=true;
+ requestAnimationFrame(function(){refreshQueued=false;enhance();cleanup()});
+});
 observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','disabled','data-auto-advance']});
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enhance);

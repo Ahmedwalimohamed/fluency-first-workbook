@@ -23,9 +23,9 @@ function unlock(q){
  const root=q?.closest('#activityPanel')||panel();
  const next=nextButton(root);
  if(!q||!next||!hasResponse(q))return;
- q.dataset.responseRecorded='1';
- next.disabled=false;
- next.removeAttribute('aria-disabled');
+ if(q.dataset.responseRecorded!=='1')q.dataset.responseRecorded='1';
+ if(next.disabled)next.disabled=false;
+ if(next.hasAttribute('aria-disabled'))next.removeAttribute('aria-disabled');
 }
 
 function fallbackAdvance(q){
