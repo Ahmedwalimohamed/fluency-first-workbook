@@ -1,0 +1,139 @@
+/* EnglishGate projected reading accessibility
+   Classroom projection should favor legibility over page-density. */
+body.teacher-presentation-mode{
+  --eg-project-reading-scale:1;
+}
+
+.teacher-presentation-mode .eg-stage-content.is-reading-stage{
+  padding:24px clamp(26px,4vw,56px) 48px!important;
+  background:#fff;
+}
+
+/* The actual reading passage: larger type, shorter line length, stronger contrast. */
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>p,
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-book-bullet,
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.reading-text,
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-reading{
+  width:100%!important;
+  max-width:54ch!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  font-size:calc(clamp(1.7rem,2.35vw,2.2rem) * var(--eg-project-reading-scale))!important;
+  line-height:1.58!important;
+  letter-spacing:.005em;
+  color:#102a43!important;
+  font-weight:600;
+}
+
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-book-subhead,
+.teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-book-section{
+  width:100%!important;
+  max-width:54ch!important;
+  margin:32px auto 16px!important;
+  font-size:calc(clamp(1.45rem,2vw,1.85rem) * var(--eg-project-reading-scale))!important;
+  line-height:1.3!important;
+  font-weight:900!important;
+  letter-spacing:.035em;
+  color:#17369f!important;
+}
+
+/* Keep follow-up questions readable from the back of the room too. */
+.teacher-presentation-mode .eg-stage-content.is-reading-stage .live-prompt-grid{
+  width:100%;
+  max-width:1100px;
+  margin:22px auto 30px!important;
+  gap:20px!important;
+}
+.teacher-presentation-mode .eg-stage-content.is-reading-stage .live-prompt-grid .live-prompt-row{
+  min-height:160px!important;
+  padding:24px!important;
+}
+.teacher-presentation-mode .eg-stage-content.is-reading-stage .live-prompt-grid .live-prompt-row p{
+  font-size:calc(clamp(1.3rem,1.7vw,1.55rem) * var(--eg-project-reading-scale))!important;
+  line-height:1.5!important;
+}
+
+.teacher-presentation-mode .eg-stage-content.is-reading-stage .reading-spotlight-trigger{
+  width:min(100%,54ch)!important;
+  max-width:54ch!important;
+  min-height:52px!important;
+  margin:12px auto 22px!important;
+  padding:11px 16px!important;
+  font-size:1.02rem!important;
+  font-weight:900!important;
+}
+
+/* In-reading projector controls. */
+.projected-reading-controls{
+  width:min(100%,54ch);
+  margin:0 auto 18px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  padding:8px 0;
+}
+.projected-reading-controls>span{
+  margin-right:auto;
+  color:#52606d;
+  font-size:.88rem;
+  font-weight:850;
+}
+.projected-reading-controls button{
+  min-width:48px;
+  min-height:44px;
+  padding:7px 11px;
+  border:1px solid #b9dcec;
+  border-radius:11px;
+  background:#fff;
+  color:#17369f;
+  font-weight:900;
+  cursor:pointer;
+}
+.projected-reading-controls button:hover,
+.projected-reading-controls button:focus-visible{
+  background:#eef5ff;
+  outline:3px solid rgba(23,54,159,.15);
+  outline-offset:1px;
+}
+.projected-reading-controls .projected-reading-reset{
+  min-width:68px;
+  color:#334e68;
+}
+
+/* Reading Spotlight is the maximum-visibility option. */
+.teacher-reading-spotlight-body>h2,
+.teacher-reading-copy{
+  width:min(100%,1000px)!important;
+  max-width:1000px!important;
+}
+.teacher-reading-copy>p,
+.teacher-reading-copy>.live-book-bullet,
+.teacher-reading-copy blockquote{
+  font-size:calc(clamp(1.8rem,2.9vw,2.5rem) * var(--reading-scale))!important;
+  line-height:1.55!important;
+  color:#102a43!important;
+}
+
+/* Projector/laptop widths need larger text rather than compressed text. */
+@media(min-width:761px) and (max-width:1200px){
+  .teacher-presentation-mode .eg-stage-content.is-reading-stage>p,
+  .teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-book-bullet,
+  .teacher-presentation-mode .eg-stage-content.is-reading-stage>.reading-text,
+  .teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-reading{
+    max-width:48ch!important;
+    font-size:calc(clamp(1.6rem,2.65vw,2rem) * var(--eg-project-reading-scale))!important;
+  }
+}
+
+@media(max-width:760px){
+  .projected-reading-controls{width:100%;flex-wrap:wrap}
+  .projected-reading-controls>span{width:100%;margin:0 0 2px}
+  .teacher-presentation-mode .eg-stage-content.is-reading-stage>p,
+  .teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-book-bullet,
+  .teacher-presentation-mode .eg-stage-content.is-reading-stage>.reading-text,
+  .teacher-presentation-mode .eg-stage-content.is-reading-stage>.live-reading{
+    max-width:100%!important;
+    font-size:calc(clamp(1.45rem,6vw,1.9rem) * var(--eg-project-reading-scale))!important;
+  }
+}
