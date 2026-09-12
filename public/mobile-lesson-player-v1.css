@@ -1,0 +1,264 @@
+/* EnglishGate mobile lesson player v1
+   Focused pre-activity student experience. */
+@media (max-width:760px){
+  body.student-lesson-player-mode{
+    background:#f8fafc!important;
+  }
+
+  body.student-lesson-player-mode .sidebar,
+  body.student-lesson-player-mode .bottom-nav,
+  body.student-lesson-player-mode .student-top-nav,
+  body.student-lesson-player-mode .sync-indicator,
+  body.student-lesson-player-mode .desktop-only{
+    display:none!important;
+  }
+
+  body.student-lesson-player-mode .main{
+    margin:0!important;
+    width:100%!important;
+    min-height:100dvh!important;
+  }
+
+  body.student-lesson-player-mode .topbar{
+    position:sticky!important;
+    top:0!important;
+    z-index:60!important;
+    min-height:54px!important;
+    height:54px!important;
+    padding:0 12px!important;
+    border-bottom:1px solid #e2e8f0!important;
+    background:rgba(255,255,255,.96)!important;
+    backdrop-filter:blur(12px)!important;
+  }
+
+  body.student-lesson-player-mode .topbar .page-identity{
+    min-width:0!important;
+    flex:1 1 auto!important;
+  }
+
+  body.student-lesson-player-mode .topbar .page-identity .eyebrow{
+    display:none!important;
+  }
+
+  body.student-lesson-player-mode .topbar .page-identity h2{
+    margin:0!important;
+    font-size:1rem!important;
+    line-height:1.1!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  body.student-lesson-player-mode .mobile-menu,
+  body.student-lesson-player-mode .student-profile-btn{
+    width:40px!important;
+    height:40px!important;
+    min-width:40px!important;
+  }
+
+  body.student-lesson-player-mode .content{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0 12px 92px!important;
+  }
+
+  body.student-lesson-player-mode .lesson-book-workbook{
+    width:min(680px,100%)!important;
+    max-width:680px!important;
+    margin:0 auto!important;
+    padding:0!important;
+  }
+
+  /* Lesson identity: keep only what helps the learner know where they are. */
+  body.student-lesson-player-mode .lesson-book-workbook > .eg-lesson-header{
+    margin:0!important;
+    padding:16px 2px 10px!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  body.student-lesson-player-mode .eg-lesson-header h1,
+  body.student-lesson-player-mode .eg-lesson-header h2,
+  body.student-lesson-player-mode .eg-lesson-header h3{
+    margin:0 0 6px!important;
+    font-size:clamp(1.28rem,6vw,1.7rem)!important;
+    line-height:1.15!important;
+    letter-spacing:-.02em!important;
+    color:#0f172a!important;
+  }
+
+  body.student-lesson-player-mode .eg-lesson-header p,
+  body.student-lesson-player-mode .eg-lesson-header small{
+    margin:0!important;
+    font-size:.84rem!important;
+    line-height:1.35!important;
+    color:#64748b!important;
+  }
+
+  /* Show only the current stage when the app exposes an active state. */
+  body.student-lesson-player-mode .eg-stage-list{
+    margin:0 0 12px!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    gap:6px!important;
+  }
+
+  body.student-lesson-player-mode .eg-stage-list.eg-mobile-current-stage-only > *{
+    display:none!important;
+  }
+
+  body.student-lesson-player-mode .eg-stage-list.eg-mobile-current-stage-only > .eg-mobile-current-stage{
+    display:flex!important;
+    width:max-content!important;
+    max-width:100%!important;
+    min-height:32px!important;
+    padding:6px 10px!important;
+    border-radius:999px!important;
+  }
+
+  /* Keep the learning goal, but make it a brief orientation line rather than a card. */
+  body.student-lesson-player-mode .eg-goal{
+    margin:0 0 14px!important;
+    padding:8px 10px!important;
+    border:0!important;
+    border-left:3px solid #17369f!important;
+    border-radius:8px!important;
+    background:#eef4ff!important;
+    box-shadow:none!important;
+    font-size:.88rem!important;
+    line-height:1.35!important;
+  }
+
+  /* Remove workbook/admin-like chrome and nonessential repetition. */
+  body.student-lesson-player-mode .eg-workbook-note,
+  body.student-lesson-player-mode .eg-workbook-footer,
+  body.student-lesson-player-mode .eg-editorial-panel,
+  body.student-lesson-player-mode .eg-learning-ladder,
+  body.student-lesson-player-mode .eg-vocab-recycle,
+  body.student-lesson-player-mode .teacher-only-writing-guide,
+  body.student-lesson-player-mode .eg-task-panel-head,
+  body.student-lesson-player-mode .eg-stage-heading{
+    display:none!important;
+  }
+
+  /* Decorative visual treatment should not push the actual lesson below the fold. */
+  body.student-lesson-player-mode .eg-lesson-visual{
+    max-height:160px!important;
+    margin:0 0 12px!important;
+    overflow:hidden!important;
+    border-radius:14px!important;
+  }
+
+  body.student-lesson-player-mode .eg-lesson-visual img,
+  body.student-lesson-player-mode .eg-lesson-visual svg{
+    width:100%!important;
+    max-height:160px!important;
+    object-fit:cover!important;
+  }
+
+  /* Teaching content becomes the central surface. */
+  body.student-lesson-player-mode .eg-lesson-layout,
+  body.student-lesson-player-mode .eg-workbook-teaching-surface,
+  body.student-lesson-player-mode .eg-workbook-stage-content,
+  body.student-lesson-player-mode .eg-skill-page,
+  body.student-lesson-player-mode .eg-skill-layout,
+  body.student-lesson-player-mode .eg-source-task-section,
+  body.student-lesson-player-mode .eg-task-panel{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  body.student-lesson-player-mode .eg-skill-hero{
+    margin:0 0 12px!important;
+    padding:12px!important;
+    border:1px solid #e2e8f0!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:none!important;
+  }
+
+  body.student-lesson-player-mode .eg-source-column,
+  body.student-lesson-player-mode .transcript-card{
+    margin:0 0 12px!important;
+    padding:14px!important;
+    border:1px solid #e2e8f0!important;
+    border-radius:14px!important;
+    background:#fff!important;
+    box-shadow:none!important;
+  }
+
+  /* When a clear lesson action exists, make that the only control that competes for attention. */
+  body.student-lesson-player-mode .eg-mobile-primary-action-row > button,
+  body.student-lesson-player-mode .eg-mobile-primary-action-row > a,
+  body.student-lesson-player-mode .eg-mobile-primary-action-row > [role="button"]{
+    display:none!important;
+  }
+
+  body.student-lesson-player-mode .eg-mobile-primary-action-row > .eg-mobile-primary-action{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%!important;
+    min-height:52px!important;
+    margin:0!important;
+    padding:0 18px!important;
+    border:0!important;
+    border-radius:14px!important;
+    background:#17369f!important;
+    color:#fff!important;
+    font-weight:800!important;
+    font-size:1rem!important;
+    text-decoration:none!important;
+  }
+
+  body.student-lesson-player-mode .eg-mobile-primary-action-row{
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    z-index:70!important;
+    width:100%!important;
+    margin:0!important;
+    padding:8px 12px calc(8px + env(safe-area-inset-bottom))!important;
+    border-top:1px solid #e2e8f0!important;
+    background:rgba(255,255,255,.98)!important;
+    box-shadow:0 -8px 24px rgba(15,23,42,.06)!important;
+    backdrop-filter:blur(12px)!important;
+  }
+
+  body.student-lesson-player-mode .eg-mobile-primary-action-row > .eg-mobile-primary-action{
+    max-width:520px!important;
+    margin:0 auto!important;
+  }
+}
+
+@media (max-width:390px){
+  body.student-lesson-player-mode .content{
+    padding-left:9px!important;
+    padding-right:9px!important;
+  }
+
+  body.student-lesson-player-mode .eg-lesson-header h1,
+  body.student-lesson-player-mode .eg-lesson-header h2,
+  body.student-lesson-player-mode .eg-lesson-header h3{
+    font-size:1.2rem!important;
+  }
+
+  body.student-lesson-player-mode .eg-lesson-visual,
+  body.student-lesson-player-mode .eg-lesson-visual img,
+  body.student-lesson-player-mode .eg-lesson-visual svg{
+    max-height:120px!important;
+  }
+}
