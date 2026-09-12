@@ -12,6 +12,7 @@ function parts(path){
  if(out.some(x=>['__proto__','prototype','constructor'].includes(x)))return[];
  return out;
 }
+function specificity(path){if(path==='lesson')return 0;return Math.max(1,parts(path).length)}
 function books(){
  try{
   if(typeof BOOK_PACKS!=='undefined'&&BOOK_PACKS)return Object.values(BOOK_PACKS).filter(b=>b&&Array.isArray(b.lessons));
@@ -46,29 +47,33 @@ function setPath(root,path,value){
  if(cur==null)return false;
  cur[last]=clone(value);return true;
 }
+function patchInfo(p){return{courseId:p.course_id||p.courseId,lessonNumber:Number(p.lesson_number||p.lessonNumber),targetPath:String(p.component||'')}}
+function ensureBase(p){
+ const info=patchInfo(p),k=`${info.courseId}:${info.lessonNumber}:${info.targetPath}`,l=lesson(info.courseId,info.lessonNumber);
+ if(!l||BASE[k])return;
+ BASE[k]={...info,value:getPath(l,info.targetPath)};
+}
 function restoreApplied(){
- for(const k of APPLIED){
-  const base=BASE[k];if(!base)continue;
-  const l=lesson(base.courseId,base.lessonNumber);if(l)setPath(l,base.targetPath,base.value);
- }
+ const keys=[...APPLIED].sort((a,b)=>specificity(BASE[a]?.targetPath)-specificity(BASE[b]?.targetPath));
+ for(const k of keys){const base=BASE[k];if(!base)continue;const l=lesson(base.courseId,base.lessonNumber);if(l)setPath(l,base.targetPath,base.value)}
  APPLIED.clear();
 }
 function applyPatch(p){
- const courseId=p.course_id||p.courseId,lessonNumber=Number(p.lesson_number||p.lessonNumber),targetPath=String(p.component||''),l=lesson(courseId,lessonNumber);
- if(!l)return false;
- const k=`${courseId}:${lessonNumber}:${targetPath}`;
- if(!BASE[k])BASE[k]={courseId,lessonNumber,targetPath,value:getPath(l,targetPath)};
- if(!setPath(l,targetPath,p.replacement))return false;
+ const info=patchInfo(p),l=lesson(info.courseId,info.lessonNumber);if(!l)return false;
+ const k=`${info.courseId}:${info.lessonNumber}:${info.targetPath}`;
+ if(!BASE[k])BASE[k]={...info,value:getPath(l,info.targetPath)};
+ if(!setPath(l,info.targetPath,p.replacement))return false;
  APPLIED.add(k);return true;
 }
 async function load(){
- restoreApplied();
- Object.keys(PATCHES).forEach(k=>delete PATCHES[k]);
+ restoreApplied();Object.keys(PATCHES).forEach(k=>delete PATCHES[k]);
  try{
   const r=await fetch('/api/content-patches',{cache:'no-store'}),data=await r.json();
   if(!r.ok||!Array.isArray(data?.patches))return;
+  const ordered=data.patches.slice().sort((a,b)=>specificity(a.component)-specificity(b.component)||Number(a.id||0)-Number(b.id||0));
+  ordered.forEach(p=>ensureBase(p));
   let applied=0;
-  data.patches.forEach(p=>{PATCHES[key(p)]={...p,loadedAt:new Date().toISOString()};if(applyPatch(p))applied++});
+  ordered.forEach(p=>{PATCHES[key(p)]={...p,loadedAt:new Date().toISOString()};if(applyPatch(p))applied++});
   window.dispatchEvent(new CustomEvent('englishgate:content-patches-loaded',{detail:{count:data.patches.length,applied}}));
  }catch(e){console.warn('Content patches unavailable',e?.message||e)}
 }
