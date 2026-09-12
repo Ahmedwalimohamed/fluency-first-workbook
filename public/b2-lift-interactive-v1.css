@@ -1,0 +1,66 @@
+/* EnglishGate B2 Lift interactive stage */
+.eg-stage.b2-lift-stage{position:relative;border-color:#cab8ef;background:#fbf9ff}
+.eg-stage.b2-lift-stage:hover{border-color:#9c7bdc;background:#f7f2ff}
+.eg-stage.b2-lift-stage.is-current{border-color:#6d4bc3;box-shadow:0 0 0 2px rgba(109,75,195,.10);background:#f6f1ff}
+.eg-stage.b2-lift-stage>span:first-child{background:#eee7ff;color:#5b2c8d}
+.b2-stage-badge{margin-left:auto!important;width:auto!important;height:auto!important;padding:3px 7px!important;border-radius:999px!important;background:#5b2c8d!important;color:#fff!important;font-size:.66rem!important;font-weight:900!important;letter-spacing:.06em}
+.teacher-presentation-stage.b2-lift-stage{border-color:#bea8ea;background:#f7f2ff}
+.teacher-presentation-stage .b2-stage-badge{margin-left:8px!important}
+
+.b2-lift-interactive{display:grid;gap:18px}
+.b2-lift-hero{display:grid;gap:9px;padding:20px;border:1px solid #cab8ef;border-radius:18px;background:linear-gradient(135deg,#fbf9ff,#f3edff)}
+.b2-lift-hero h3{margin:0;font-size:1.35rem;color:#3f246f}
+.b2-lift-hero p{margin:0;line-height:1.65;font-size:1rem;color:#3f4650}
+.b2-lift-hero .stage-badge{justify-self:start;background:#eee7ff;color:#5b2c8d}
+
+.b2-lift-block{display:grid;gap:14px;padding:18px;border:1px solid var(--border);border-radius:18px;background:#fff}
+.b2-block-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.b2-block-heading>div{display:flex;align-items:center;gap:11px}
+.b2-block-heading>div>span{width:34px;height:34px;border-radius:10px;background:#eef5ff;color:var(--navy);display:grid;place-items:center;font-weight:900}
+.b2-block-heading small{display:block;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-size:.68rem;font-weight:900}
+.b2-block-heading strong{display:block;margin-top:2px;font-size:1rem;color:var(--text)}
+.b2-block-heading em{font-style:normal;color:var(--muted);font-size:.8rem;text-align:right}
+.b2-listen-block .live-audio-player{margin:0}
+
+.b2-followups{display:grid;gap:9px}
+.b2-followup-card{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:start;padding:13px;border:1px solid #dce6ef;border-radius:14px;background:#fbfdff}
+.b2-followup-number{width:30px;height:30px;border-radius:9px;background:#eef5ff;color:var(--navy);display:grid;place-items:center;font-weight:900}
+.b2-followup-copy p{margin:3px 0 0;font-weight:800;line-height:1.45;color:#24313c}
+.b2-followup-answer{margin-top:10px;padding:10px 12px;border-radius:10px;background:#eefaf5;color:#196647;line-height:1.5;font-size:.88rem}
+.b2-reveal-btn{padding:8px 11px;font-size:.78rem;white-space:nowrap}
+
+.b2-phrase-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.b2-phrase-chip{appearance:none;border:1px solid #d8e2eb;background:#f9fbfd;border-radius:13px;padding:12px;text-align:left;display:flex;gap:9px;align-items:flex-start;cursor:pointer;color:#1f2d38;font-weight:800;line-height:1.35}
+.b2-phrase-chip:hover{border-color:#9dbbd0;background:#f4f9fc}
+.b2-phrase-chip.is-selected{border-color:#5b2c8d;background:#f5efff;box-shadow:0 0 0 2px rgba(91,44,141,.08);color:#4a246f}
+.b2-phrase-chip>span{flex:0 0 auto;width:24px;height:24px;border-radius:8px;background:#edf1f6;color:#65717d;display:grid;place-items:center;font-size:.72rem;font-weight:900}
+.b2-phrase-chip.is-selected>span{background:#5b2c8d;color:#fff}
+
+.b2-lift-two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.b2-lift-mini-card{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:16px;background:#fff}
+.b2-mini-icon{width:34px;height:34px;border-radius:10px;background:#f1f5f9;color:#5b2c8d;display:grid;place-items:center;font-weight:900;flex:0 0 auto}
+.b2-lift-mini-card small{display:block;text-transform:uppercase;letter-spacing:.07em;font-size:.68rem;font-weight:900;color:#5b2c8d}
+.b2-lift-mini-card p{margin:5px 0 0;line-height:1.55;color:#394652}
+
+.b2-speaking-challenge{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:20px;border-radius:18px;background:#172c57;color:#fff}
+.b2-speaking-challenge .stage-badge{background:rgba(255,255,255,.14);color:#fff}
+.b2-speaking-challenge h3{margin:7px 0 6px;font-size:1.25rem}
+.b2-speaking-challenge p{margin:0;line-height:1.55;opacity:.88;max-width:720px}
+.b2-speaking-controls{display:grid;grid-template-columns:auto auto;gap:8px;align-items:center;justify-items:stretch;min-width:190px}
+.b2-speaking-controls [data-b2-time]{grid-column:1/-1;text-align:center;font-size:1.7rem;letter-spacing:.03em}
+.b2-speaking-controls .primary-btn{background:#fff;color:#17369f}
+.b2-speaking-controls .ghost-btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+
+@media(max-width:900px){
+ .b2-phrase-grid{grid-template-columns:1fr}
+ .b2-lift-two-col{grid-template-columns:1fr}
+ .b2-speaking-challenge{grid-template-columns:1fr}
+ .b2-speaking-controls{min-width:0;justify-self:stretch}
+}
+@media(max-width:620px){
+ .b2-block-heading{align-items:flex-start;flex-direction:column}
+ .b2-block-heading em{text-align:left}
+ .b2-followup-card{grid-template-columns:32px 1fr}
+ .b2-reveal-btn{grid-column:2;justify-self:start}
+ .b2-lift-hero,.b2-lift-block,.b2-speaking-challenge{padding:15px}
+}
