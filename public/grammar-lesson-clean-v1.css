@@ -1,0 +1,47 @@
+/* EnglishGate clean textbook-style Grammar Lesson */
+.eg-grammar-page{max-width:900px;margin:0 auto;background:#fff;border:1px solid #dfe7e3;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px rgba(25,55,45,.06);color:#26362f}
+.eg-grammar-head{padding:28px 32px 24px;background:#fbfdfc;border-bottom:1px solid #e5ece8}
+.eg-grammar-label{margin:0 0 6px!important;color:#17664f!important;font-weight:900!important;font-size:.9rem!important;letter-spacing:.02em}
+.eg-grammar-head h2{margin:0 0 12px;font-size:2rem;line-height:1.18;color:#182e26}
+.eg-grammar-goal{margin:0!important;padding:12px 14px;border-left:4px solid #2b7b61;background:#f1f8f5;border-radius:0 10px 10px 0;color:#31473f!important}
+.eg-grammar-block{padding:26px 32px;border-bottom:1px solid #e8eeeb}
+.eg-grammar-block:last-child{border-bottom:0}
+.eg-grammar-block h3{margin:0 0 14px;font-size:1.35rem;color:#1e392f}
+.eg-grammar-block h4{margin:8px 0 8px;font-size:1.05rem;color:#2a4138}
+.eg-grammar-block p{margin:0 0 14px;line-height:1.7;color:#40534b}
+.egg-question{margin:18px 0 0;padding:16px 18px;border:1px solid #dde7e3;border-radius:12px;background:#fcfefd}
+.egg-question>strong{display:block;margin-bottom:12px;line-height:1.5;color:#24372f}
+.egg-options{display:grid;gap:8px}
+.egg-option{appearance:none;width:100%;display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #d9e3df;border-radius:10px;background:#fff;text-align:left;font:inherit;color:#2c3f37;cursor:pointer}
+.egg-option:hover:not(:disabled){border-color:#7fae9d;background:#f7fbf9}
+.egg-radio{width:18px;height:18px;border:2px solid #aab9b2;border-radius:50%;flex:0 0 auto;margin-top:1px}
+.egg-option.is-correct{border-color:#4a9877;background:#eef8f3;color:#145d41}
+.egg-option.is-correct .egg-radio{border-color:#2b7b61;background:#2b7b61;box-shadow:inset 0 0 0 4px #eef8f3}
+.egg-option.is-wrong{border-color:#c98585;background:#fff3f3;color:#8a3434}
+.egg-option:disabled{opacity:1;cursor:default}
+.eg-grammar-feedback{display:block;min-height:20px;margin-top:10px;font-size:.86rem;font-weight:800}
+.eg-grammar-feedback.is-good{color:#176044}.eg-grammar-feedback.is-bad{color:#9a3e3e}
+.egg-notice{display:grid;gap:8px;margin:12px 0 16px}
+.egg-notice strong{display:block;padding:10px 12px;border-left:4px solid #2b7b61;background:#f5faf8;border-radius:0 8px 8px 0}
+.egg-change{font-size:1.05rem;color:#203b31!important}
+.egg-remember{margin-top:16px;padding:18px;border:1px solid #cfe0d8;border-radius:12px;background:#f8fbfa}
+.egg-remember h4{margin-top:0;color:#17664f}
+.egg-remember table{width:100%;border-collapse:collapse;margin:12px 0 10px}
+.egg-remember th,.egg-remember td{padding:10px 12px;border:1px solid #d6e3de;text-align:left}
+.egg-remember th{background:#edf6f2;color:#30463d}
+.egg-fix{margin:16px 0 0;padding:15px 16px;border:1px solid #e2e8e5;border-radius:12px;background:#fcfefd}
+.egg-fix p{margin-bottom:10px}
+.egg-fix label{display:grid;gap:6px;font-size:.85rem;font-weight:800;color:#4a5e55}
+.egg-fix input,.egg-about input,.egg-challenge textarea,.eg-grammar-production{width:100%;box-sizing:border-box;border:1px solid #cbd9d3;border-radius:9px;padding:10px 11px;font:inherit;background:#fff;color:#263830}
+.egg-check,.egg-boost{margin-top:10px;border:1px solid #8eb4a5;border-radius:9px;background:#fff;padding:9px 12px;font-weight:800;color:#17664f;cursor:pointer}
+.egg-about{display:grid;gap:12px}
+.egg-about label{display:grid;grid-template-columns:auto minmax(150px,1fr) auto;align-items:center;gap:8px;color:#31473f}
+.egg-challenge{margin-top:18px;padding:15px;border:1px dashed #9ebfaf;border-radius:12px;background:#fafdfb}
+.egg-challenge strong{color:#17664f}
+.egg-challenge textarea{margin-top:8px;resize:vertical}
+.eg-grammar-quick{background:#fbfefc}
+.eg-grammar-confidence{display:grid;gap:8px;margin:18px 0 0;padding:0;border:0}
+.eg-grammar-confidence legend{margin-bottom:9px;font-weight:900;color:#2b3f36}
+.eg-grammar-confidence label{display:flex;align-items:center;gap:8px;color:#40534b}
+.eg-grammar-page .grammar-book-section,.eg-grammar-page .grammar-book-hero{display:none!important}
+@media(max-width:700px){.eg-grammar-page{border-radius:0;border-left:0;border-right:0;box-shadow:none}.eg-grammar-head,.eg-grammar-block{padding:20px 18px}.eg-grammar-head h2{font-size:1.55rem}.egg-about label{grid-template-columns:1fr}.egg-remember{overflow-x:auto}.egg-remember table{min-width:420px}}
