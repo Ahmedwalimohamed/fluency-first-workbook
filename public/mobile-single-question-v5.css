@@ -1,5 +1,5 @@
-/* EnglishGate mobile single-question experience v6
-   Mobile is the source of truth: one active question, no stacked history, no wasted chrome. */
+/* EnglishGate mobile single-question experience v7
+   Mobile is the source of truth: one active question, fully visible, scrollable, and safe above navigation. */
 @media (max-width:760px){
   body.student-question-focus-mode,
   body.student-question-focus-mode.student-question-nav-active{
@@ -9,28 +9,41 @@
 
   body.student-question-focus-mode .content,
   body.student-question-nav-active .content{
-    padding-top:calc(76px + env(safe-area-inset-top))!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    max-width:none!important;
+    min-height:0!important;
+    padding-top:12px!important;
     padding-right:12px!important;
-    padding-bottom:calc(78px + env(safe-area-inset-bottom))!important;
+    padding-bottom:calc(86px + env(safe-area-inset-bottom))!important;
     padding-left:12px!important;
     overflow:hidden!important;
   }
 
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"]{
-    height:100%!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    height:calc(100dvh - 66px - env(safe-area-inset-top))!important;
     min-height:0!important;
-    overflow:hidden!important;
-    padding:0!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-y:contain!important;
+    scroll-padding-top:12px!important;
+    scroll-padding-bottom:96px!important;
+    padding:0 0 calc(88px + env(safe-area-inset-bottom))!important;
   }
 
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .activity-question-list[data-student-question-flow="1"],
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .writing-core-sequence[data-student-question-flow="1"]{
     display:grid!important;
-    grid-template-rows:1fr!important;
-    align-items:center!important;
-    height:100%!important;
+    grid-template-rows:auto!important;
+    align-items:start!important;
+    align-content:start!important;
+    width:100%!important;
+    height:auto!important;
     min-height:0!important;
-    overflow:hidden!important;
+    overflow:visible!important;
   }
 
   /* Never stack answered questions above the current task. Back changes the active task instead. */
@@ -41,28 +54,54 @@
 
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-current,
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question:not([hidden]):not(.is-flow-previous){
+    box-sizing:border-box!important;
     display:block!important;
     width:100%!important;
     max-width:520px!important;
+    min-width:0!important;
     min-height:0!important;
-    max-height:calc(100dvh - 166px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
-    margin:auto!important;
-    padding:0!important;
-    overflow:auto!important;
-    overscroll-behavior:contain!important;
+    max-height:none!important;
+    margin:0 auto!important;
+    padding:8px 0 18px!important;
+    overflow:visible!important;
     border:0!important;
     border-radius:0!important;
     background:transparent!important;
     box-shadow:none!important;
   }
 
-  /* Navigation belongs to the current job only. */
+  /* Prevent wide question content, chips, inputs, and media from escaping the viewport. */
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question *,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question *::before,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question *::after{
+    box-sizing:border-box!important;
+    max-width:100%;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] img,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] svg,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] video,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] audio{
+    max-width:100%!important;
+    height:auto!important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] input,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] textarea,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] select,
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] button{
+    max-width:100%!important;
+  }
+
+  /* Navigation belongs to the current job only and must never cover the answer area. */
   body.student-question-nav-active .student-question-bottom-nav{
     left:0!important;
     right:0!important;
     bottom:0!important;
+    z-index:100!important;
     padding:8px 12px calc(8px + env(safe-area-inset-bottom))!important;
     background:rgba(255,255,255,.98)!important;
+    border-top:1px solid rgba(226,232,240,.9)!important;
   }
 
   .student-question-bottom-inner{
@@ -99,7 +138,8 @@
   body.student-question-focus-mode .guided-question > p,
   body.student-question-focus-mode .guided-question > h3,
   body.student-question-focus-mode .guided-question > h4{
-    text-wrap:balance;
+    text-wrap:pretty!important;
+    overflow-wrap:anywhere!important;
   }
 }
 
@@ -108,12 +148,16 @@
   body.student-question-nav-active .content{
     padding-left:9px!important;
     padding-right:9px!important;
-    padding-bottom:calc(72px + env(safe-area-inset-bottom))!important;
+    padding-bottom:calc(80px + env(safe-area-inset-bottom))!important;
+  }
+
+  body.student-question-focus-mode #activityPanel[data-student-question-flow="1"]{
+    padding-bottom:calc(82px + env(safe-area-inset-bottom))!important;
   }
 
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-current,
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question:not([hidden]):not(.is-flow-previous){
-    max-height:calc(100dvh - 152px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+    padding-top:6px!important;
   }
 
   .student-question-nav-back,
