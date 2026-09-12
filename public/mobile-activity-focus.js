@@ -1,4 +1,4 @@
-/* EnglishGate mobile activity focus trigger v5
+/* EnglishGate mobile activity focus trigger v7
    One-question mobile flow: MCQs auto-advance; typed/open responses use Continue; Back remains available. */
 (function(){
   const isMobile=()=>window.matchMedia('(max-width: 760px)').matches;
@@ -18,7 +18,8 @@
 
     lists.forEach(list=>{
       const visible=Boolean(list.querySelector('.guided-question:not([hidden])'));
-      list.dataset.flowActiveList=visible?'1':'0';
+      const active=visible?'1':'0';
+      if(list.dataset.flowActiveList!==active)list.dataset.flowActiveList=active;
     });
 
     const continueBtn=panel.querySelector('.student-question-continue');
@@ -29,7 +30,8 @@
       const allQuestions=[...panel.querySelectorAll('.guided-question[data-flow-index]')];
       const index=question?allQuestions.indexOf(question):-1;
       const last=index>=0&&index===allQuestions.length-1;
-      continueBtn.dataset.autoAdvance=(isChoice||hasInlineCheck)&&!last?'1':'0';
+      const autoAdvance=(isChoice||hasInlineCheck)&&!last?'1':'0';
+      if(continueBtn.dataset.autoAdvance!==autoAdvance)continueBtn.dataset.autoAdvance=autoAdvance;
     }
   }
 
@@ -58,3 +60,4 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
 })();
+@
