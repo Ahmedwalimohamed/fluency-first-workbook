@@ -1,0 +1,50 @@
+/* Student question navigation — explicit Back / Next controls */
+body.student-question-nav-active{padding-bottom:96px}
+body.student-question-nav-active #workbookStageFooter{display:none!important}
+.student-question-bottom-nav{display:none}
+body.student-question-nav-active .student-question-bottom-nav{
+ display:block;position:fixed;z-index:70;left:250px;right:0;bottom:0;
+ padding:10px 18px calc(10px + env(safe-area-inset-bottom));
+ background:rgba(255,255,255,.98);border-top:1px solid #dbe4ee;
+ box-shadow:0 -8px 28px rgba(15,23,42,.08);backdrop-filter:blur(12px)
+}
+.student-question-bottom-inner{
+ width:min(760px,100%);margin:0 auto;display:grid;
+ grid-template-columns:minmax(120px,.8fr) auto minmax(150px,1fr);gap:10px;align-items:center
+}
+.student-question-nav-back,.student-question-nav-hint,.student-question-nav-next{
+ min-height:52px;border-radius:15px;font-weight:900;font-size:1rem;cursor:pointer
+}
+.student-question-nav-back{
+ appearance:none;border:2px solid #b9dcec;background:#fff;color:#17369f;padding:0 18px
+}
+.student-question-nav-hint{
+ appearance:none;border:1px solid #d6dee7;background:#fff;color:#64748b;padding:0 18px
+}
+.student-question-nav-next{
+ appearance:none;border:0!important;background:#17369f!important;color:#fff!important;padding:0 22px!important;margin:0!important;width:100%!important
+}
+.student-question-nav-next:disabled{opacity:.42;cursor:not-allowed}
+.student-question-flow-head [data-question-flow-back]{display:none!important}
+
+@media(max-width:760px){
+ body.student-question-nav-active{padding-bottom:152px}
+ body.student-question-nav-active .content{padding-bottom:150px!important}
+ body.student-question-nav-active .student-question-bottom-nav{
+  left:0;right:0;bottom:67px;padding:9px 12px calc(9px + env(safe-area-inset-bottom))
+ }
+ .student-question-bottom-inner{grid-template-columns:1fr auto 1.15fr;gap:8px}
+ .student-question-nav-back,.student-question-nav-hint,.student-question-nav-next{
+  min-height:50px;border-radius:14px;font-size:.95rem
+ }
+ .student-question-nav-back{padding:0 12px}
+ .student-question-nav-hint{padding:0 12px}
+ .student-question-nav-next{padding:0 14px!important}
+ body.student-question-focus-mode .guided-question{margin-bottom:8px!important}
+}
+
+@media(max-width:390px){
+ .student-question-bottom-inner{grid-template-columns:1fr 1fr}
+ .student-question-nav-hint{display:none!important}
+ .student-question-nav-back,.student-question-nav-next{min-height:50px}
+}
