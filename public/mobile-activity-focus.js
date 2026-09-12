@@ -1,5 +1,5 @@
-/* EnglishGate mobile activity focus trigger v4
-   Keeps the current question prominent and requires explicit Back/Next taps. */
+/* EnglishGate mobile activity focus trigger v5
+   One-question mobile flow: MCQs auto-advance; typed/open responses use Continue; Back remains available. */
 (function(){
   const isMobile=()=>window.matchMedia('(max-width: 760px)').matches;
   const isStudent=()=>typeof session!=='undefined'&&session?.role==='student';
@@ -14,14 +14,23 @@
     const panel=activityPanel();
     if(!panel)return;
     const lists=[...panel.querySelectorAll('.activity-question-list,.writing-core-sequence')];
+    const activeQuestion=panel.querySelector('.guided-question.is-flow-current')||panel.querySelector('.guided-question:not([hidden])');
+
     lists.forEach(list=>{
       const visible=Boolean(list.querySelector('.guided-question:not([hidden])'));
       list.dataset.flowActiveList=visible?'1':'0';
     });
 
-    // Never auto-advance. The learner must explicitly tap Next.
     const continueBtn=panel.querySelector('.student-question-continue');
-    if(continueBtn)continueBtn.dataset.autoAdvance='0';
+    if(continueBtn){
+      const question=activeQuestion;
+      const isChoice=Boolean(question?.querySelector('input[type="radio"],.mcq-option-card'));
+      const hasInlineCheck=Boolean(question?.querySelector('[data-writing-core-check]'));
+      const allQuestions=[...panel.querySelectorAll('.guided-question[data-flow-index]')];
+      const index=question?allQuestions.indexOf(question):-1;
+      const last=index>=0&&index===allQuestions.length-1;
+      continueBtn.dataset.autoAdvance=(isChoice||hasInlineCheck)&&!last?'1':'0';
+    }
   }
 
   const sync=()=>{
