@@ -21,4 +21,4 @@ express.application.get=function englishGatePublicAssetGet(route,...handlers){
   return nativeGet.call(this,route,...handlers);
 };
 
-require('./ai-content-editor-bootstrap.js');
+require('./ai-content-editor-generate-v2-bootstrap.js');
