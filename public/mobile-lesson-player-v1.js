@@ -26,34 +26,48 @@ function scoreAction(el){
  return score;
 }
 
-function markPrimaryAction(root){
- root.querySelectorAll('.eg-mobile-primary-action,.eg-mobile-primary-action-row').forEach(el=>{
-  el.classList.remove('eg-mobile-primary-action','eg-mobile-primary-action-row');
- });
+function findPrimaryAction(root){
  const rows=[...root.querySelectorAll('.skill-action-row,.activity-actions,.eg-action-row,.eg-stage-actions')].filter(visible);
  for(const row of rows){
   const candidates=[...row.querySelectorAll('button,a,[role="button"]')].filter(visible);
   if(!candidates.length)continue;
   const ranked=candidates.map(el=>({el,score:scoreAction(el)})).sort((a,b)=>b.score-a.score);
-  if(ranked[0].score<4)continue;
-  row.classList.add('eg-mobile-primary-action-row');
-  ranked[0].el.classList.add('eg-mobile-primary-action');
-  break;
+  if(ranked[0].score>=4)return {row,action:ranked[0].el};
+ }
+ return null;
+}
+
+function markPrimaryAction(root){
+ const target=findPrimaryAction(root);
+ const currentAction=root.querySelector('.eg-mobile-primary-action');
+ const currentRow=root.querySelector('.eg-mobile-primary-action-row');
+ if(target&&currentAction===target.action&&currentRow===target.row)return;
+
+ root.querySelectorAll('.eg-mobile-primary-action').forEach(el=>el.classList.remove('eg-mobile-primary-action'));
+ root.querySelectorAll('.eg-mobile-primary-action-row').forEach(el=>el.classList.remove('eg-mobile-primary-action-row'));
+ if(target){
+  target.row.classList.add('eg-mobile-primary-action-row');
+  target.action.classList.add('eg-mobile-primary-action');
  }
 }
 
 function compactStages(root){
  const stageLists=[...root.querySelectorAll('.eg-stage-list')];
  stageLists.forEach(list=>{
-  list.classList.remove('eg-mobile-current-stage-only');
-  [...list.children].forEach(el=>el.classList.remove('eg-mobile-current-stage'));
-  const current=[...list.children].find(el=>
+  const children=[...list.children];
+  const current=children.find(el=>
     el.matches('.active,.is-active,[aria-current="step"],[aria-current="true"],[aria-selected="true"],[data-active="true"]')||
     el.querySelector('.active,.is-active,[aria-current="step"],[aria-current="true"],[aria-selected="true"],[data-active="true"]')
   );
+  const marked=list.querySelector(':scope > .eg-mobile-current-stage');
   if(current){
-    current.classList.add('eg-mobile-current-stage');
+    if(marked!==current){
+      children.forEach(el=>el.classList.toggle('eg-mobile-current-stage',el===current));
+    }
     list.classList.add('eg-mobile-current-stage-only');
+  }else{
+    if(marked)marked.classList.remove('eg-mobile-current-stage');
+    list.classList.remove('eg-mobile-current-stage-only');
   }
  });
 }
