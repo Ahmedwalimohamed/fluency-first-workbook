@@ -1,4 +1,4 @@
-/* EnglishGate mobile activity focus trigger v7
+/* EnglishGate mobile activity focus trigger v8
    One-question mobile flow: MCQs auto-advance; typed/open responses use Continue; Back remains available. */
 (function(){
   const isMobile=()=>window.matchMedia('(max-width: 760px)').matches;
@@ -60,4 +60,3 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
 })();
-@
