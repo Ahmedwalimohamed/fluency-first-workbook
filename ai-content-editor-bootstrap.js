@@ -24,7 +24,7 @@ function valueType(value){return Array.isArray(value)?'array':value===null?'null
 function validPath(path){
   const p=String(path||'').trim();
   if(!p||p.length>160||/(^|\.)(?:__proto__|prototype|constructor)(\.|$)/.test(p))return false;
-  if(p==='lesson'||p==='outcome')return true;
+  if(p==='lesson'||p==='outcome'||p==='performance')return true;
   return /^(?:vocabulary|listening|reading|grammar|writing|review|expressions)(?:\.(?:items|questions|tasks))?(?:\.\d+)?$/.test(p);
 }
 function walk(value,fn){
@@ -38,13 +38,17 @@ function structuralProblems(source,replacement){
   let count=0;
   walk(replacement,obj=>{
     if(++count>500)return;
-    if(typeof obj.q==='string'||Array.isArray(obj.options)||Object.prototype.hasOwnProperty.call(obj,'answer')){
+    if(typeof obj.q==='string'||Array.isArray(obj.options)){
       if(typeof obj.q!=='string'||obj.q.trim().length<2)problems.push('A question is missing its question text.');
       if(Array.isArray(obj.options)){
         if(obj.options.length<2||obj.options.length>6)problems.push('A multiple-choice question must have 2–6 options.');
         if(new Set(obj.options.map(String)).size!==obj.options.length)problems.push('A multiple-choice question has duplicate options.');
         if(Object.prototype.hasOwnProperty.call(obj,'answer')&&!obj.options.some(x=>String(x)===String(obj.answer)))problems.push('A multiple-choice answer does not match an option.');
       }
+    }
+    if(Array.isArray(obj.choices)&&Object.prototype.hasOwnProperty.call(obj,'answer')){
+      if(obj.choices.length<2||obj.choices.length>6)problems.push('A choice item must have 2–6 choices.');
+      if(!obj.choices.some(x=>String(x)===String(obj.answer)))problems.push('A choice item answer does not match a choice.');
     }
   });
   return [...new Set(problems)].slice(0,20);
