@@ -69,6 +69,14 @@ if (!exists('public/index.html')) {
     critical.push('Duplicate question navigation controller is loaded: student-response-navigation-v1.js');
   } else passes.push('Duplicate question navigation controller removed from runtime');
 
+  const legacyLessonPlayerIndex = html.indexOf('mobile-lesson-player-v1.css');
+  const canonicalLessonPlayerIndex = html.indexOf('englishgate-lesson-player-design-v2.css');
+  if (legacyLessonPlayerIndex >= 0 && canonicalLessonPlayerIndex > legacyLessonPlayerIndex) {
+    passes.push('Lesson player structural bridge loads before canonical visual layer');
+  } else {
+    critical.push('Lesson player CSS ownership order is invalid: structural bridge must load before englishgate-lesson-player-design-v2.css.');
+  }
+
   const cssLinks = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]*>/gi)].length;
   const scripts = [...html.matchAll(/<script\s+src=/gi)].length;
   if (cssLinks > 14) warnings.push(`CSS layering risk: ${cssLinks} stylesheets are loaded by public/index.html.`);
@@ -100,6 +108,34 @@ if (exists('public/question-nav-fix.js')) {
     passes.push('Question response state and forward navigation are consolidated in one controller');
   } else {
     critical.push('Canonical question controller is missing response-state or forward-navigation handling.');
+  }
+}
+
+if (exists('public/mobile-lesson-player-v1.css')) {
+  const bridge = read('public/mobile-lesson-player-v1.css');
+  const forbiddenVisuals = /(?:background|color|border(?:-radius)?|box-shadow|font-size|font-weight)\s*:/i;
+  if (forbiddenVisuals.test(bridge)) {
+    critical.push('Lesson player structural bridge contains visual styling; visual ownership belongs to englishgate-lesson-player-design-v2.css.');
+  } else {
+    passes.push('Lesson player legacy CSS is constrained to structural layout only');
+  }
+
+  if (/\.sidebar[\s\S]*display\s*:\s*none/i.test(bridge) && /min-height\s*:\s*100dvh/i.test(bridge)) {
+    passes.push('Lesson player structural bridge preserves focused mobile shell behavior');
+  } else {
+    critical.push('Lesson player structural bridge is missing required focused mobile shell rules.');
+  }
+}
+
+if (exists('public/englishgate-lesson-player-design-v2.css')) {
+  const lessonCss = read('public/englishgate-lesson-player-design-v2.css');
+  if (/--eg-lp-primary\s*:\s*#2563EB/i.test(lessonCss)) passes.push('Lesson player canonical layer uses EnglishGate primary token');
+  else critical.push('Lesson player canonical layer must use #2563EB as its primary token.');
+
+  if (/min-width\s*:\s*44px/i.test(lessonCss) && /focus-visible/.test(lessonCss)) {
+    passes.push('Lesson player canonical layer includes touch-target and keyboard-focus safeguards');
+  } else {
+    warnings.push('Could not verify both 44px touch targets and focus-visible states in canonical lesson player layer.');
   }
 }
 
