@@ -1,0 +1,595 @@
+/* EnglishGate Lesson Player Design v2
+   Presentation-only upgrade for the real student lesson experience.
+   Preserves lesson data, grading, navigation, reading/listening separation,
+   answer state, progress, audio behavior, and teacher/admin views. */
+
+:root{
+  --eg-lp-primary:#2563EB;
+  --eg-lp-text:#0F172A;
+  --eg-lp-muted:#64748B;
+  --eg-lp-bg:#F8FAFC;
+  --eg-lp-card:#FFFFFF;
+  --eg-lp-border:#E2E8F0;
+  --eg-lp-success:#16A34A;
+  --eg-lp-error:#DC2626;
+  --eg-lp-review:#F59E0B;
+  --eg-lp-vocab:#7C3AED;
+  --eg-lp-shadow:0 10px 30px rgba(15,23,42,.055);
+  --eg-lp-shadow-soft:0 4px 16px rgba(15,23,42,.045);
+}
+
+/* ---------------------------------------------------------
+   Shared student lesson shell
+   --------------------------------------------------------- */
+body.englishgate-student-mode:has(.lesson-book-workbook){
+  background:var(--eg-lp-bg)!important;
+}
+
+body.englishgate-student-mode .lesson-book-workbook{
+  color:var(--eg-lp-text);
+}
+
+body.englishgate-student-mode .lesson-book-workbook button,
+body.englishgate-student-mode .lesson-book-workbook a,
+body.student-question-focus-mode button,
+body.student-question-focus-mode a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+body.englishgate-student-mode .lesson-book-workbook button:focus-visible,
+body.englishgate-student-mode .lesson-book-workbook a:focus-visible,
+body.englishgate-student-mode .lesson-book-workbook input:focus-visible,
+body.englishgate-student-mode .lesson-book-workbook textarea:focus-visible,
+body.englishgate-student-mode .lesson-book-workbook select:focus-visible,
+body.student-question-focus-mode .student-question-bottom-nav button:focus-visible{
+  outline:3px solid rgba(37,99,235,.28)!important;
+  outline-offset:2px!important;
+}
+
+/* ---------------------------------------------------------
+   Desktop / tablet lesson orientation
+   --------------------------------------------------------- */
+@media (min-width:761px){
+  body.englishgate-student-mode .lesson-book-workbook{
+    width:min(1120px,100%)!important;
+    max-width:1120px!important;
+    margin:0 auto!important;
+    padding:4px 0 48px!important;
+  }
+
+  body.englishgate-student-mode .lesson-book-workbook > .eg-lesson-header{
+    margin:0 0 18px!important;
+    padding:26px 28px!important;
+    border:1px solid var(--eg-lp-border)!important;
+    border-radius:20px!important;
+    background:var(--eg-lp-card)!important;
+    box-shadow:var(--eg-lp-shadow-soft)!important;
+  }
+
+  body.englishgate-student-mode .eg-lesson-header h1,
+  body.englishgate-student-mode .eg-lesson-header h2,
+  body.englishgate-student-mode .eg-lesson-header h3{
+    color:var(--eg-lp-text)!important;
+    letter-spacing:-.025em!important;
+  }
+
+  body.englishgate-student-mode .eg-lesson-header p,
+  body.englishgate-student-mode .eg-lesson-header small{
+    color:var(--eg-lp-muted)!important;
+    line-height:1.55!important;
+  }
+
+  body.englishgate-student-mode .eg-goal{
+    margin:0 0 18px!important;
+    padding:14px 16px!important;
+    border:1px solid #BFDBFE!important;
+    border-left:4px solid var(--eg-lp-primary)!important;
+    border-radius:12px!important;
+    background:#EFF6FF!important;
+    color:#1E3A8A!important;
+    box-shadow:none!important;
+  }
+
+  body.englishgate-student-mode .eg-stage-list{
+    margin:0 0 18px!important;
+    padding:10px!important;
+    border:1px solid var(--eg-lp-border)!important;
+    border-radius:16px!important;
+    background:var(--eg-lp-card)!important;
+    box-shadow:var(--eg-lp-shadow-soft)!important;
+  }
+
+  body.englishgate-student-mode .eg-stage-list [role="tablist"]{
+    gap:8px!important;
+  }
+
+  body.englishgate-student-mode .eg-stage[role="tab"]{
+    min-height:48px!important;
+    border-radius:11px!important;
+  }
+
+  body.englishgate-student-mode .eg-workbook-teaching-surface,
+  body.englishgate-student-mode .eg-workbook-stage-content,
+  body.englishgate-student-mode .eg-skill-page,
+  body.englishgate-student-mode .eg-source-task-section,
+  body.englishgate-student-mode .eg-task-panel{
+    border-color:var(--eg-lp-border)!important;
+  }
+}
+
+/* ---------------------------------------------------------
+   Mobile lesson orientation / pre-activity player
+   --------------------------------------------------------- */
+@media (max-width:760px){
+  body.student-lesson-player-mode{
+    --navy:var(--eg-lp-primary);
+    --navy-2:#1D4ED8;
+    --text:var(--eg-lp-text);
+    --muted:var(--eg-lp-muted);
+    --bg:var(--eg-lp-bg);
+    --card:var(--eg-lp-card);
+    --border:var(--eg-lp-border);
+    background:var(--eg-lp-bg)!important;
+  }
+
+  body.student-lesson-player-mode .topbar{
+    min-height:58px!important;
+    height:58px!important;
+    padding:0 14px!important;
+    border-bottom:1px solid rgba(226,232,240,.92)!important;
+    background:rgba(255,255,255,.97)!important;
+    box-shadow:0 2px 12px rgba(15,23,42,.03)!important;
+  }
+
+  body.student-lesson-player-mode .topbar .page-identity h2{
+    color:var(--eg-lp-text)!important;
+    font-size:.98rem!important;
+    font-weight:800!important;
+    letter-spacing:-.01em!important;
+  }
+
+  body.student-lesson-player-mode .mobile-menu,
+  body.student-lesson-player-mode .student-profile-btn{
+    min-width:44px!important;
+    width:44px!important;
+    height:44px!important;
+    border-radius:12px!important;
+  }
+
+  body.student-lesson-player-mode .content{
+    padding:0 14px 96px!important;
+  }
+
+  body.student-lesson-player-mode .lesson-book-workbook{
+    width:min(680px,100%)!important;
+    max-width:680px!important;
+  }
+
+  body.student-lesson-player-mode .lesson-book-workbook > .eg-lesson-header{
+    padding:18px 2px 12px!important;
+  }
+
+  body.student-lesson-player-mode .eg-lesson-header h1,
+  body.student-lesson-player-mode .eg-lesson-header h2,
+  body.student-lesson-player-mode .eg-lesson-header h3{
+    margin-bottom:7px!important;
+    color:var(--eg-lp-text)!important;
+    font-size:clamp(1.32rem,5.7vw,1.72rem)!important;
+    line-height:1.16!important;
+    letter-spacing:-.025em!important;
+  }
+
+  body.student-lesson-player-mode .eg-lesson-header p,
+  body.student-lesson-player-mode .eg-lesson-header small{
+    color:var(--eg-lp-muted)!important;
+    font-size:.84rem!important;
+    line-height:1.45!important;
+  }
+
+  body.student-lesson-player-mode .eg-stage-list{
+    margin-bottom:12px!important;
+  }
+
+  body.student-lesson-player-mode .eg-stage-list.eg-mobile-current-stage-only > .eg-mobile-current-stage{
+    min-height:34px!important;
+    padding:6px 11px!important;
+    border:1px solid #BFDBFE!important;
+    border-radius:999px!important;
+    background:#EFF6FF!important;
+    color:#1D4ED8!important;
+    font-size:.76rem!important;
+    font-weight:800!important;
+  }
+
+  body.student-lesson-player-mode .eg-goal{
+    margin-bottom:14px!important;
+    padding:10px 12px!important;
+    border-left:3px solid var(--eg-lp-primary)!important;
+    border-radius:10px!important;
+    background:#EFF6FF!important;
+    color:#1E3A8A!important;
+    font-size:.86rem!important;
+    line-height:1.45!important;
+  }
+
+  body.student-lesson-player-mode .eg-lesson-visual{
+    max-height:150px!important;
+    margin-bottom:14px!important;
+    border:1px solid var(--eg-lp-border)!important;
+    border-radius:16px!important;
+    background:#fff!important;
+  }
+
+  body.student-lesson-player-mode .eg-skill-hero,
+  body.student-lesson-player-mode .eg-source-column,
+  body.student-lesson-player-mode .transcript-card{
+    margin-bottom:14px!important;
+    padding:16px!important;
+    border:1px solid var(--eg-lp-border)!important;
+    border-radius:16px!important;
+    background:var(--eg-lp-card)!important;
+    box-shadow:var(--eg-lp-shadow-soft)!important;
+  }
+
+  body.student-lesson-player-mode .eg-skill-hero h2,
+  body.student-lesson-player-mode .eg-skill-hero h3,
+  body.student-lesson-player-mode .eg-source-column h2,
+  body.student-lesson-player-mode .eg-source-column h3,
+  body.student-lesson-player-mode .transcript-card h2,
+  body.student-lesson-player-mode .transcript-card h3{
+    color:var(--eg-lp-text)!important;
+    letter-spacing:-.015em!important;
+  }
+
+  body.student-lesson-player-mode .eg-skill-hero p,
+  body.student-lesson-player-mode .eg-source-column p,
+  body.student-lesson-player-mode .transcript-card p{
+    color:var(--eg-lp-muted)!important;
+    line-height:1.6!important;
+  }
+
+  body.student-lesson-player-mode .eg-mobile-primary-action-row{
+    padding:9px 14px calc(9px + env(safe-area-inset-bottom))!important;
+    border-top:1px solid rgba(226,232,240,.95)!important;
+    background:rgba(255,255,255,.985)!important;
+    box-shadow:0 -10px 30px rgba(15,23,42,.07)!important;
+  }
+
+  body.student-lesson-player-mode .eg-mobile-primary-action-row > .eg-mobile-primary-action{
+    min-height:52px!important;
+    max-width:520px!important;
+    border-radius:12px!important;
+    background:var(--eg-lp-primary)!important;
+    box-shadow:0 7px 18px rgba(37,99,235,.18)!important;
+    font-size:.98rem!important;
+    font-weight:800!important;
+  }
+
+  body.student-lesson-player-mode .eg-mobile-primary-action-row > .eg-mobile-primary-action:active{
+    transform:translateY(1px);
+  }
+}
+
+/* ---------------------------------------------------------
+   Question focus mode: one clear task, one clear decision
+   --------------------------------------------------------- */
+body.student-question-focus-mode{
+  --navy:var(--eg-lp-primary);
+  --navy-2:#1D4ED8;
+  --text:var(--eg-lp-text);
+  --muted:var(--eg-lp-muted);
+  --border:var(--eg-lp-border);
+  background:var(--eg-lp-bg)!important;
+}
+
+body.student-question-focus-mode #activityPanel[data-student-question-flow="1"]{
+  color:var(--eg-lp-text)!important;
+}
+
+body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-current,
+body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question:not([hidden]):not(.is-flow-previous){
+  color:var(--eg-lp-text)!important;
+}
+
+body.student-question-focus-mode .guided-question > p,
+body.student-question-focus-mode .guided-question > h3,
+body.student-question-focus-mode .guided-question > h4{
+  margin-top:0!important;
+  color:var(--eg-lp-text)!important;
+  font-size:clamp(1.08rem,4.6vw,1.34rem)!important;
+  line-height:1.45!important;
+  letter-spacing:-.012em!important;
+}
+
+body.student-question-focus-mode .guided-question label,
+body.student-question-focus-mode .guided-question .choice,
+body.student-question-focus-mode .guided-question [class*="option"]{
+  line-height:1.45!important;
+}
+
+body.student-question-focus-mode .guided-question .choice,
+body.student-question-focus-mode .guided-question label:has(input[type="radio"]),
+body.student-question-focus-mode .guided-question label:has(input[type="checkbox"]){
+  min-height:52px!important;
+  border-color:var(--eg-lp-border)!important;
+  border-radius:12px!important;
+  background:#fff!important;
+}
+
+body.student-question-focus-mode .guided-question .choice:hover,
+body.student-question-focus-mode .guided-question label:has(input[type="radio"]):hover,
+body.student-question-focus-mode .guided-question label:has(input[type="checkbox"]):hover{
+  border-color:#93C5FD!important;
+  background:#F8FBFF!important;
+}
+
+body.student-question-focus-mode .guided-question .choice:has(input:checked),
+body.student-question-focus-mode .guided-question label:has(input[type="radio"]:checked),
+body.student-question-focus-mode .guided-question label:has(input[type="checkbox"]:checked){
+  border-color:#60A5FA!important;
+  background:#EFF6FF!important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.07)!important;
+}
+
+body.student-question-focus-mode .guided-question input[type="text"],
+body.student-question-focus-mode .guided-question input:not([type]),
+body.student-question-focus-mode .guided-question textarea,
+body.student-question-focus-mode .guided-question select{
+  min-height:50px!important;
+  border:1px solid #CBD5E1!important;
+  border-radius:12px!important;
+  background:#fff!important;
+  color:var(--eg-lp-text)!important;
+}
+
+body.student-question-focus-mode .guided-question textarea{
+  min-height:128px!important;
+  padding:13px 14px!important;
+  line-height:1.55!important;
+}
+
+body.student-question-focus-mode .feedback.good,
+body.student-question-focus-mode [class*="feedback"][class*="good"],
+body.student-question-focus-mode [class*="feedback"][class*="correct"]{
+  border:1px solid #BBF7D0!important;
+  border-radius:12px!important;
+  background:#F0FDF4!important;
+  color:#166534!important;
+}
+
+body.student-question-focus-mode .feedback.bad,
+body.student-question-focus-mode [class*="feedback"][class*="bad"],
+body.student-question-focus-mode [class*="feedback"][class*="incorrect"]{
+  border:1px solid #FECACA!important;
+  border-radius:12px!important;
+  background:#FEF2F2!important;
+  color:#991B1B!important;
+}
+
+/* Explicit Back / Next navigation stays functional; visual treatment only. */
+body.student-question-nav-active .student-question-bottom-nav{
+  border-top:1px solid rgba(226,232,240,.96)!important;
+  background:rgba(255,255,255,.985)!important;
+  box-shadow:0 -10px 30px rgba(15,23,42,.07)!important;
+}
+
+.student-question-nav-back,
+.student-question-nav-next{
+  min-height:52px!important;
+  border-radius:12px!important;
+  font-size:.95rem!important;
+  font-weight:800!important;
+}
+
+.student-question-nav-back{
+  border:1px solid #CBD5E1!important;
+  background:#fff!important;
+  color:#334155!important;
+}
+
+.student-question-nav-back:hover{
+  border-color:#94A3B8!important;
+  background:#F8FAFC!important;
+}
+
+.student-question-nav-next{
+  background:var(--eg-lp-primary)!important;
+  color:#fff!important;
+  box-shadow:0 7px 18px rgba(37,99,235,.16)!important;
+}
+
+.student-question-nav-next:hover{
+  background:#1D4ED8!important;
+}
+
+.student-question-nav-next:disabled{
+  box-shadow:none!important;
+  opacity:.46!important;
+}
+
+/* ---------------------------------------------------------
+   Independent Reading / Listening tabs
+   --------------------------------------------------------- */
+body.englishgate-student-mode .eg-separated-activity{
+  color:var(--eg-lp-text)!important;
+}
+
+body.englishgate-student-mode .sep-hero{
+  padding:22px 24px!important;
+  border:1px solid var(--eg-lp-border)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:var(--eg-lp-shadow-soft)!important;
+}
+
+body.englishgate-student-mode .sep-hero h1{
+  color:var(--eg-lp-text)!important;
+  letter-spacing:-.03em!important;
+}
+
+body.englishgate-student-mode .sep-hero p,
+body.englishgate-student-mode .sep-status{
+  color:var(--eg-lp-muted)!important;
+}
+
+body.englishgate-student-mode .sep-source,
+body.englishgate-student-mode .sep-audio-source,
+body.englishgate-student-mode .sep-question-panel{
+  border:1px solid var(--eg-lp-border)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:var(--eg-lp-shadow-soft)!important;
+}
+
+body.englishgate-student-mode .sep-source summary{
+  color:#1D4ED8!important;
+  background:#F8FAFC!important;
+  border-bottom-color:var(--eg-lp-border)!important;
+}
+
+body.englishgate-student-mode .sep-reading-text{
+  color:#1E293B!important;
+  font-size:1.03rem!important;
+  line-height:1.8!important;
+}
+
+body.englishgate-student-mode .sep-question-track{
+  height:6px!important;
+  background:#E2E8F0!important;
+}
+
+body.englishgate-student-mode .sep-question-track > span{
+  background:var(--eg-lp-primary)!important;
+}
+
+body.englishgate-student-mode .sep-question-meta span{
+  background:#EFF6FF!important;
+  color:#1D4ED8!important;
+}
+
+body.englishgate-student-mode .sep-question h3{
+  color:var(--eg-lp-text)!important;
+  line-height:1.5!important;
+}
+
+body.englishgate-student-mode .sep-choice{
+  min-height:52px!important;
+  border-color:var(--eg-lp-border)!important;
+  border-radius:12px!important;
+  background:#fff!important;
+}
+
+body.englishgate-student-mode .sep-choice:hover{
+  border-color:#93C5FD!important;
+  background:#F8FBFF!important;
+}
+
+body.englishgate-student-mode .sep-choice:has(input:checked){
+  border-color:#60A5FA!important;
+  background:#EFF6FF!important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.07)!important;
+}
+
+body.englishgate-student-mode .sep-choice-index{
+  border-radius:8px!important;
+  background:#F1F5F9!important;
+  color:#475569!important;
+}
+
+body.englishgate-student-mode .sep-nav{
+  border-top-color:var(--eg-lp-border)!important;
+}
+
+body.englishgate-student-mode .sep-nav button{
+  min-height:48px!important;
+  border-radius:12px!important;
+}
+
+/* Keep audio obvious and usable without changing media behavior. */
+body.englishgate-student-mode .sep-audio-source audio,
+body.student-lesson-player-mode audio,
+body.student-question-focus-mode audio{
+  width:100%!important;
+  min-height:44px!important;
+}
+
+/* ---------------------------------------------------------
+   Responsive details
+   --------------------------------------------------------- */
+@media (max-width:980px){
+  body.englishgate-student-mode .sep-layout{
+    gap:16px!important;
+  }
+
+  body.englishgate-student-mode .eg-stage-list [role="tablist"]{
+    scrollbar-width:none!important;
+  }
+
+  body.englishgate-student-mode .eg-stage-list [role="tablist"]::-webkit-scrollbar{
+    display:none!important;
+  }
+}
+
+@media (max-width:640px){
+  body.englishgate-student-mode .sep-hero{
+    padding:16px!important;
+    border-radius:15px!important;
+  }
+
+  body.englishgate-student-mode .sep-source,
+  body.englishgate-student-mode .sep-audio-source,
+  body.englishgate-student-mode .sep-question-panel{
+    border-radius:15px!important;
+  }
+
+  body.englishgate-student-mode .sep-reading-text,
+  body.englishgate-student-mode .sep-audio-source,
+  body.englishgate-student-mode .sep-question-panel{
+    padding:15px!important;
+  }
+
+  body.englishgate-student-mode .sep-reading-text{
+    font-size:1rem!important;
+    line-height:1.72!important;
+  }
+
+  body.englishgate-student-mode .sep-nav{
+    padding:10px 0 calc(6px + env(safe-area-inset-bottom))!important;
+    background:rgba(255,255,255,.985)!important;
+  }
+}
+
+@media (max-width:390px){
+  body.student-lesson-player-mode .content,
+  body.student-question-focus-mode .content{
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+
+  body.student-lesson-player-mode .eg-skill-hero,
+  body.student-lesson-player-mode .eg-source-column,
+  body.student-lesson-player-mode .transcript-card{
+    padding:14px!important;
+    border-radius:14px!important;
+  }
+
+  .student-question-nav-back,
+  .student-question-nav-next{
+    min-height:50px!important;
+    font-size:.9rem!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  body.englishgate-student-mode .lesson-book-workbook *,
+  body.englishgate-student-mode .lesson-book-workbook *::before,
+  body.englishgate-student-mode .lesson-book-workbook *::after,
+  body.student-question-focus-mode *,
+  body.student-question-focus-mode *::before,
+  body.student-question-focus-mode *::after{
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+  }
+}
