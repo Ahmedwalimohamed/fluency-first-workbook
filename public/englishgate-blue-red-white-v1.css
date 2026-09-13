@@ -1,0 +1,168 @@
+/* EnglishGate Blue + Red + White Theme v1
+   Palette refinement layered over the unified student UI.
+   Blue = primary action and learning progress
+   Red = controlled emphasis and brand accent
+   White = dominant surface
+*/
+
+:root{
+  --eg-ink:#10233e;
+  --eg-ink-2:#183247;
+  --eg-blue:#17369f;
+  --eg-blue-2:#2754d7;
+  --eg-blue-soft:#eef3ff;
+  --eg-red:#d62828;
+  --eg-red-2:#b91c1c;
+  --eg-red-soft:#fff1f1;
+  --eg-bg:#f7f9fc;
+  --eg-surface:#ffffff;
+  --eg-surface-soft:#fbfcfe;
+  --eg-border:#dce4ee;
+  --eg-muted:#6f8092;
+  --eg-success:#16845b;
+  --eg-danger:#d62828;
+
+  --navy:var(--eg-blue);
+  --navy-2:var(--eg-blue-2);
+  --teal:var(--eg-blue);
+  --teal-soft:var(--eg-blue-soft);
+  --pink:var(--eg-red);
+  --danger:var(--eg-red);
+  --bg:var(--eg-bg);
+  --card:#fff;
+  --text:var(--eg-ink-2);
+  --muted:var(--eg-muted);
+  --border:var(--eg-border);
+}
+
+html,body{background:var(--eg-bg)}
+
+/* Login */
+.login-screen{
+  background:
+    radial-gradient(circle at 82% 14%,rgba(23,54,159,.11),transparent 24%),
+    radial-gradient(circle at 18% 85%,rgba(214,40,40,.08),transparent 22%),
+    linear-gradient(180deg,#ffffff 0%,#f7f9fc 100%)!important;
+}
+.login-brand{
+  background:
+    radial-gradient(circle at 86% 18%,rgba(255,255,255,.11),transparent 24%),
+    linear-gradient(135deg,#17369f 0%,#17369f 62%,#d62828 100%)!important;
+}
+.login-brand::before{color:#fff!important;border-color:rgba(255,255,255,.24)!important}
+.login-brand .eyebrow{color:#ffd9d9!important}
+.login-card .eyebrow{color:var(--eg-red)!important}
+.login-card .primary-btn{background:var(--eg-blue)!important}
+.login-card .primary-btn:hover{background:var(--eg-blue-2)!important}
+.login-card .forgot-password-link,.login-card .demo-login{color:var(--eg-red)!important}
+.login-card input:focus{border-color:var(--eg-blue-2)!important;box-shadow:0 0 0 3px rgba(23,54,159,.10)!important}
+
+/* Student shell */
+.app.student-mode .sidebar-brand span,
+.app.student-mode .topbar h2,
+.app.student-mode h1,
+.app.student-mode h2,
+.app.student-mode h3,
+.app.student-mode h4{color:var(--eg-ink)!important}
+.app.student-mode .nav-btn.active{background:var(--eg-blue-soft)!important;color:var(--eg-blue)!important}
+.app.student-mode .nav-btn.active::before{background:var(--eg-red)!important}
+.app.student-mode .primary-btn{background:var(--eg-blue)!important}
+.app.student-mode .primary-btn:hover{background:var(--eg-blue-2)!important}
+.app.student-mode .secondary-btn{background:var(--eg-red-soft)!important;color:var(--eg-red)!important}
+.app.student-mode .eyebrow,
+.app.student-mode .eg-premium-kicker{color:var(--eg-red)!important}
+.app.student-mode .pill{background:var(--eg-blue-soft)!important;color:var(--eg-blue)!important;border-color:#d7e1ff!important}
+.app.student-mode .progress>span{background:linear-gradient(90deg,var(--eg-blue),var(--eg-blue-2))!important}
+
+/* Homepage */
+.eg-premium-home::before{
+  background:
+    radial-gradient(circle at 78% 20%,rgba(23,54,159,.13),transparent 32%),
+    radial-gradient(circle at 46% 74%,rgba(214,40,40,.07),transparent 30%),
+    linear-gradient(135deg,#ffffff 0%,#f2f6ff 48%,#fff8f8 100%)!important;
+}
+.eg-premium-home::after{border-color:rgba(214,40,40,.08)!important}
+.eg-premium-level{background:var(--eg-blue-soft)!important;color:var(--eg-blue)!important}
+.eg-premium-learning-card{
+  background:linear-gradient(135deg,#17369f 0%,#17369f 68%,#d62828 130%)!important;
+}
+.eg-premium-learning-card .eg-premium-kicker{color:#ffd6d6!important}
+.eg-premium-continue{background:#fff!important;color:var(--eg-blue)!important}
+.eg-premium-progress-card .eg-premium-kicker{color:var(--eg-red)!important}
+.eg-progress-ring{--progress-color:var(--eg-blue)!important}
+.eg-progress-cta{color:var(--eg-blue)!important}
+.eg-premium-alert{border-left-color:var(--eg-red)!important}
+
+/* My Book / course */
+.app.student-mode .course-overall>strong{color:var(--eg-blue)!important}
+.app.student-mode .course-topic.eg-course-next{border-color:#b8c8ef!important;background:linear-gradient(180deg,#fff 0%,#f3f6ff 100%)!important}
+.app.student-mode .course-topic.eg-course-next::before{color:var(--eg-red)!important}
+.app.student-mode .course-topic.eg-course-next .topic-state{background:var(--eg-blue)!important;color:#fff!important}
+.app.student-mode .course-topic.complete .topic-state{background:#f0f6ff!important;color:var(--eg-blue)!important}
+
+/* Lesson + workbook shell */
+.app.student-mode .eg-lesson-header{
+  background:
+    radial-gradient(circle at 90% 12%,rgba(214,40,40,.06),transparent 20%),
+    linear-gradient(135deg,#fff 0%,#f5f8ff 100%)!important;
+}
+.app.student-mode .eg-stage.is-current,
+.app.student-mode .step-btn.active,
+.app.student-mode .lesson-tab.active{border-color:#afc1ef!important;background:var(--eg-blue-soft)!important;color:var(--eg-blue)!important}
+.app.student-mode .eg-goal{border-left-color:var(--eg-red)!important;background:#fff5f5!important;color:#5d3a3a!important}
+.app.student-mode .play-btn{background:var(--eg-blue)!important}
+.app.student-mode .play-btn:hover{background:var(--eg-blue-2)!important}
+
+/* Reading + Listening */
+.app.student-mode .sep-hero{
+  background:
+    radial-gradient(circle at 90% 14%,rgba(214,40,40,.06),transparent 20%),
+    linear-gradient(135deg,#fff,#f6f8ff)!important;
+}
+.app.student-mode .sep-source summary{color:var(--eg-blue)!important}
+.app.student-mode .sep-question-track>span{background:var(--eg-blue)!important}
+.app.student-mode .sep-question-meta span{background:var(--eg-red-soft)!important;color:var(--eg-red)!important}
+.app.student-mode .sep-choice:has(input:checked),
+.app.student-mode .choice:has(input:checked){border-color:#8ea8e9!important;background:#f0f4ff!important;box-shadow:0 0 0 3px rgba(23,54,159,.06)!important}
+
+/* Grammar */
+.app.student-mode .eg-grammar-label,
+.app.student-mode .egg-remember h4,
+.app.student-mode .egg-challenge strong{color:var(--eg-red)!important}
+.app.student-mode .eg-grammar-goal{border-left-color:var(--eg-red)!important;background:var(--eg-red-soft)!important;color:#5a3939!important}
+.app.student-mode .egg-option:hover:not(:disabled){border-color:#9eb0df!important;background:#f8faff!important}
+.app.student-mode .egg-option.is-correct{border-color:#8fa7df!important;background:#eef3ff!important;color:var(--eg-blue)!important}
+.app.student-mode .egg-option.is-correct .egg-radio{border-color:var(--eg-blue)!important;background:var(--eg-blue)!important;box-shadow:inset 0 0 0 4px #eef3ff!important}
+.app.student-mode .egg-option.is-wrong{border-color:#e3a3a3!important;background:var(--eg-red-soft)!important;color:var(--eg-red-2)!important}
+.app.student-mode .egg-check,
+.app.student-mode .egg-boost{border-color:#9fb1df!important;color:var(--eg-blue)!important;background:#fff!important}
+.app.student-mode .egg-check:hover,
+.app.student-mode .egg-boost:hover{background:var(--eg-blue-soft)!important}
+
+/* Writing / forms */
+.app.student-mode textarea:focus,
+.app.student-mode input:focus,
+.app.student-mode select:focus{border-color:#7f9ae0!important;box-shadow:0 0 0 3px rgba(23,54,159,.09)!important}
+.app.student-mode .feedback.bad{background:var(--eg-red-soft)!important;color:var(--eg-red-2)!important}
+
+/* Bottom navigation */
+.app.student-mode .bottom-nav .nav-btn.active{color:var(--eg-blue)!important}
+.app.student-mode .bottom-nav .nav-btn.active .nav-icon{color:var(--eg-red)!important}
+
+/* Red is an accent, never the main reading surface. */
+.app.student-mode .card,
+.app.student-mode .activity-card,
+.app.student-mode .sep-source,
+.app.student-mode .sep-audio-source,
+.app.student-mode .sep-question-panel,
+.app.student-mode .eg-grammar-page,
+.app.student-mode .eg-source-column,
+.app.student-mode .transcript-card,
+.app.student-mode .eg-task-panel{background:#fff!important}
+
+@media(max-width:760px){
+  .login-screen{padding:12px!important}
+  .login-brand{background:linear-gradient(135deg,#17369f 0%,#17369f 74%,#d62828 140%)!important}
+  .app.student-mode .topbar{border-bottom-color:#e3e8f0!important}
+  .eg-premium-learning-card{background:linear-gradient(135deg,#17369f 0%,#17369f 74%,#d62828 145%)!important}
+}
