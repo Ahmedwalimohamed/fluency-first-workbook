@@ -6,6 +6,7 @@
 
   const pageHeader=/^PAGE\s+\d+\s*[—–-]\s*(.+)$/i;
   const languageFocusHeader=/^PAGE\s+\d+\s*[—–-]\s*LANGUAGE\s+FOCUS$/i;
+  const b2LiftHeader=/^B2\s+LIFT(?:\s*[·—–-].*)?$/i;
 
   function extractLanguageFocus(text){
     const lines=String(text||'').split('\n');
@@ -13,7 +14,8 @@
     if(start<0)return null;
     let end=lines.length;
     for(let i=start+1;i<lines.length;i++){
-      if(pageHeader.test(lines[i].trim())){end=i;break}
+      const line=lines[i].trim();
+      if(pageHeader.test(line)||b2LiftHeader.test(line)){end=i;break}
     }
     return lines.slice(start+1,end).map(x=>x.trim()).filter(Boolean);
   }
@@ -25,7 +27,8 @@
     if(start<0)return section;
     let end=lines.length;
     for(let i=start+1;i<lines.length;i++){
-      if(pageHeader.test(String(lines[i]||'').trim())){end=i;break}
+      const line=String(lines[i]||'').trim();
+      if(pageHeader.test(line)||b2LiftHeader.test(line)){end=i;break}
     }
     return {...section,lines:[...lines.slice(0,start),...lines.slice(end)]};
   }
