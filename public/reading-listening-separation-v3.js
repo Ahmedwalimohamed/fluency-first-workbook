@@ -1,6 +1,6 @@
-/* EnglishGate Reading / Listening separation v3
-   Structural workbook split: independent tabs, state, attempts, completion and question flow.
-   Existing educational content is preserved; legacy combined evidence is not fabricated into new skill scores. */
+/* EnglishGate Reading / Listening separation v4
+   Structural workbook split: independent tabs, draft state, question flow and progress hydration.
+   Grading, attempts, retries and completion are owned exclusively by reading-listening-grading-v1.js. */
 (function(){
 'use strict';
 
@@ -13,7 +13,6 @@ const student=()=>typeof session!=='undefined'&&session?.role==='student';
 const preview=()=>typeof isWorkbookPreview==='function'&&isWorkbookPreview();
 const activityId=(lid,type)=>`${lid}:${type}`;
 const storageKey=(lid,type)=>`eg:activity:v3:${session?.id||'preview'}:${activityId(lid,type)}`;
-const norm=v=>String(v??'').toLowerCase().normalize('NFKD').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 
 function qsFor(l,type){
  const all=Array.isArray(l?.listening?.questions)?l.listening.questions:[];
@@ -78,12 +77,6 @@ function answered(q){
  const field=q?.querySelector('input[type="text"],textarea');
  return Boolean(checked||String(field?.value||'').trim());
 }
-function answerMatches(given,expected){
- const g=norm(given),e=norm(expected);if(!g||!e)return false;if(g===e)return true;
- const variants=String(expected||'').split(/\s*\|\s*|\s*;\s*/).map(norm).filter(Boolean);
- if(variants.some(v=>g===v||g.includes(v)))return true;
- const words=e.split(' ').filter(w=>w.length>2);return words.length>1&&words.every(w=>g.includes(w));
-}
 
 async function persist(l,type,index,status='in_progress'){
  if(!student()||preview())return;
@@ -104,7 +97,7 @@ function questionField(q,i,type){
  const opts=Array.isArray(q?.options)?q.options:[];
  return `<div class="sep-choice-list">${opts.map((o,j)=>`<label class="sep-choice"><input type="radio" name="${name}" value="${escapeHtml(String(o))}"><span class="sep-choice-index">${String.fromCharCode(65+j)}</span><span>${escapeHtml(String(o))}</span></label>`).join('')}</div>`;
 }
-function questionMarkup(q,i,type){return `<article class="sep-question" data-sep-question="${i}" ${i?'hidden':''}><div class="sep-question-meta"><span>${type==='reading'?'Reading':'Listening'} · ${i+1}</span></div><h3>${escapeHtml(String(q?.q||''))}</h3>${questionField(q,i,type)}<div class="sep-question-feedback" data-sep-feedback></div></article>`}
+function questionMarkup(q,i,type){return `<article class="sep-question" data-sep-question="${i}" ${i?'hidden':''}><div class="sep-question-meta"><span>${type==='reading'?'Reading':'Listening'} · ${i+1}</span></div><h3 tabindex="-1">${escapeHtml(String(q?.q||''))}</h3>${questionField(q,i,type)}<div class="sep-question-feedback" data-sep-feedback></div></article>`}
 function audioMarkup(){return `<div class="audio-player eg-audio-console" data-audio-player><button id="playAudio" class="play-btn" type="button" aria-label="Play or pause audio">▶</button><div class="eg-audio-body"><div class="audio-timeline"><input id="audioSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Audio progress"><div class="audio-time"><span id="audioCurrent">0:00</span><span id="audioDuration">0:00</span></div></div></div><button id="restartAudio" class="audio-icon-btn" type="button" aria-label="Restart audio">↺</button><select id="audioSpeed" class="audio-speed" aria-label="Playback speed"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select><span id="audioStatus" class="muted">Listen for the main idea first, then replay for detail.</span></div>`}
 
 function renderSeparated(l,type){
@@ -112,43 +105,35 @@ function renderSeparated(l,type){
  const root=document.getElementById('activityPanel');if(!root)return;
  const qs=qsFor(l,type),saved=cachedState(l.id,type)||localState(l,type)||{},index=Math.min(Math.max(Number(saved.current_question??saved.currentQuestion??0)||0,0),Math.max(0,qs.length-1));
  const source=type==='reading'?`<details class="sep-source" open><summary>Reading passage</summary><div class="sep-reading-text">${escapeHtml(passageFor(l)).replace(/\n/g,'<br>')}</div></details>`:`<section class="sep-audio-source"><div><span class="eg-skill-kicker">Listening audio</span><h2>${escapeHtml(l.listening?.title||l.title)}</h2><p>Use the audio only. The transcript stays hidden during the task.</p></div>${audioMarkup()}</section>`;
- root.innerHTML=`<section class="eg-separated-activity" data-activity-type="${type}" data-activity-id="${escapeHtml(activityId(l.id,type))}"><header class="sep-hero"><div><span class="eg-skill-kicker">${type==='reading'?'Reading':'Listening'}</span><h1>${escapeHtml(type==='reading'?(l.title+' · Reading'):(l.listening?.title||l.title))}</h1><p>${type==='reading'?'Read the passage, then answer each question in your own words.':'Listen to the audio, then answer the listening questions.'}</p></div><div class="sep-status"><span data-sep-save-status>${preview()?'Preview':'Saved'}</span><strong data-sep-progress>${index+1} / ${qs.length}</strong></div></header><div class="sep-layout">${source}<section class="sep-question-panel"><div class="sep-question-track"><span data-sep-bar></span></div><div class="sep-question-list">${qs.map((q,i)=>questionMarkup(q,i,type)).join('')}</div><div class="sep-nav"><button class="ghost-btn" type="button" data-sep-back>← Back</button><button class="primary-btn" type="button" data-sep-next>Next →</button></div><div id="activityFeedback"></div></section></div></section>`;
+ root.innerHTML=`<section class="eg-separated-activity" data-activity-type="${type}" data-activity-id="${escapeHtml(activityId(l.id,type))}"><header class="sep-hero"><div><span class="eg-skill-kicker">${type==='reading'?'Reading':'Listening'}</span><h1>${escapeHtml(type==='reading'?(l.title+' · Reading'):(l.listening?.title||l.title))}</h1><p>${type==='reading'?'Read the passage, then answer each question in your own words.':'Listen to the audio, then answer the listening questions.'}</p></div><div class="sep-status"><span data-sep-save-status>${preview()?'Preview':'Saved'}</span><strong data-sep-progress>${index+1} / ${qs.length}</strong></div></header><div class="sep-layout">${source}<section class="sep-question-panel"><div class="sep-question-track" aria-hidden="true"><span data-sep-bar></span></div><div class="sep-question-list">${qs.map((q,i)=>questionMarkup(q,i,type)).join('')}</div><div class="sep-nav"><button class="ghost-btn" type="button" data-sep-back>← Back</button><button class="primary-btn" type="button" data-sep-next>Next →</button></div><div id="activityFeedback" aria-live="polite"></div></section></div></section>`;
  applyResponses(root,saved.responses||{});
  let current=index;
  const questions=[...root.querySelectorAll('[data-sep-question]')],back=root.querySelector('[data-sep-back]'),next=root.querySelector('[data-sep-next]'),bar=root.querySelector('[data-sep-bar]'),progress=root.querySelector('[data-sep-progress]');
- function show(i,focus=false){current=Math.min(Math.max(i,0),questions.length-1);questions.forEach((q,n)=>q.hidden=n!==current);back.disabled=current===0;next.disabled=!answered(questions[current]);next.textContent=current===questions.length-1?'Submit '+(type==='reading'?'Reading':'Listening'):'Next →';if(bar)bar.style.width=((current+1)/Math.max(1,questions.length)*100)+'%';if(progress)progress.textContent=(current+1)+' / '+questions.length;if(focus)questions[current]?.querySelector('h3')?.scrollIntoView({block:'nearest'});if(student())schedulePersist(l,type,current)}
+ function show(i,focus=false){
+  current=Math.min(Math.max(i,0),questions.length-1);
+  questions.forEach((q,n)=>q.hidden=n!==current);
+  back.disabled=current===0;
+  next.disabled=!answered(questions[current]);
+  next.textContent=current===questions.length-1?'Check '+(type==='reading'?'Reading':'Listening'):'Next →';
+  if(bar)bar.style.width=((current+1)/Math.max(1,questions.length)*100)+'%';
+  if(progress)progress.textContent=(current+1)+' / '+questions.length;
+  if(focus)questions[current]?.querySelector('h3')?.focus({preventScroll:true});
+  if(student())schedulePersist(l,type,current);
+ }
  function onResponse(){next.disabled=!answered(questions[current]);if(student())schedulePersist(l,type,current)}
  root.addEventListener('input',onResponse);root.addEventListener('change',onResponse);
  back.onclick=()=>{if(current>0)show(current-1,true)};
- next.onclick=async()=>{if(!answered(questions[current]))return;if(current<questions.length-1){show(current+1,true);return}await submitSeparated(l,type,qs,root,current)};
+ next.onclick=()=>{
+  if(!answered(questions[current]))return;
+  if(current<questions.length-1){show(current+1,true);return}
+  root.dispatchEvent(new CustomEvent('englishgate:separated-submit',{bubbles:true,detail:{activityType:type,lessonId:l.id,currentQuestion:current}}));
+ };
  if(type==='listening'){
   if(document.getElementById('playAudio'))document.getElementById('playAudio').onclick=()=>playListening(l);
   if(typeof wireAudioControls==='function')wireAudioControls(l);
  }
  if(typeof wireMcqCards==='function')wireMcqCards();
  show(index,false);
-}
-
-async function submitSeparated(l,type,qs,root,current){
- const questions=[...root.querySelectorAll('[data-sep-question]')];
- if(questions.some(q=>!answered(q))){root.querySelector('#activityFeedback').innerHTML='<div class="feedback bad">Answer every question before submitting.</div>';return}
- let correct=0;
- const responses=responseObject(root);
- questions.forEach((el,i)=>{
-  const given=responses[String(i)]||'',expected=String(qs[i]?.answer||''),ok=answerMatches(given,expected);if(ok)correct++;
-  const f=el.querySelector('[data-sep-feedback]');if(f)f.innerHTML=`<div class="feedback ${ok?'good':'bad'}">${ok?'<strong>Correct.</strong>':'<strong>Review this answer.</strong> Correct answer: '+escapeHtml(expected)}</div>`;
- });
- const score=Math.round(correct/Math.max(1,qs.length)*100),feedback=root.querySelector('#activityFeedback');
- if(preview()){feedback.innerHTML=`<div class="feedback good"><strong>Preview complete.</strong> ${correct}/${qs.length} matched the answer key.</div>`;return}
- feedback.innerHTML='<div class="feedback">Saving your '+type+' result…</div>';
- try{
-  await persist(l,type,current,'in_progress');
-  const a=await api('/api/workbook-activities/attempts',{method:'POST',body:JSON.stringify({lessonId:l.id,activityType:type,title:type==='reading'?(l.title+' · Reading'):(l.listening?.title||l.title),score,correctCount:correct,incorrectCount:qs.length-correct,responses})});
-  const c=await api('/api/workbook-activities/complete',{method:'POST',body:JSON.stringify({lessonId:l.id,activityType:type,title:type==='reading'?(l.title+' · Reading'):(l.listening?.title||l.title)})});
-  progressCache.set(activityId(l.id,type),{...(c.state||{}),activity_id:activityId(l.id,type),status:'completed',responses});
-  feedback.innerHTML=`<div class="performance-result ${score>=70?'good':'bad'}"><div class="performance-score"><strong>${score}%</strong><span>${correct} of ${qs.length} correct</span></div><p>${SEP_LABELS[type]} is complete. This score is stored separately from the other skill.</p></div>`;
-  rebuildStages(l);
- }catch(e){writeLocal(l,type,{lessonId:l.id,activityType:type,currentQuestion:current,responses,status:'in_progress'});feedback.innerHTML=`<div class="feedback bad"><strong>Could not sync yet.</strong> Your answers are saved on this device. ${escapeHtml(e.message||'Try again when connected.')}</div>`}
 }
 
 function pauseListening(){try{if(typeof activeAudio!=='undefined'&&activeAudio){activeAudio.pause()}}catch{}}
@@ -180,14 +165,12 @@ if(typeof firstOpenStep==='function'){
  };
 }
 
-// Stop listening audio whenever the student leaves the Listening activity.
 document.addEventListener('click',e=>{if(currentStep==='listening'&&e.target.closest?.('[data-page],#backWorkbook,#previousActivity,.lesson-tab'))pauseListening()},true);
 
-// Load separated progress as soon as a student session becomes available.
 let booted=false;
 const observer=new MutationObserver(()=>{if(!booted&&student()){booted=true;loadProgress(true)}});
 observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
 if(student()){booted=true;loadProgress(true)}
 
-window.ENGLISHGATE_SEPARATED_WORKBOOK={steps:SEP_STEPS,labels:SEP_LABELS,loadProgress,stepsFor,qsFor,activityId};
+window.ENGLISHGATE_SEPARATED_WORKBOOK={steps:SEP_STEPS,labels:SEP_LABELS,loadProgress,stepsFor,qsFor,activityId,persist};
 })();
