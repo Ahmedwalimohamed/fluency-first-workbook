@@ -28,32 +28,33 @@ const TOPICS=[
 
 function lessonNumber(l){
  const direct=Number(l?.number);
- if(Number.isFinite(direct)&&direct>=1&&direct<=22)return direct;
+ if(Number.isFinite(direct))return direct;
  const m=String(l?.id||'').match(/su-b2-l(\d+)$/i);
  return m?Number(m[1]):0;
 }
-function isB2Lesson(l){return /^su-b2-l\d+$/i.test(String(l?.id||''))||String(l?.level||'').toUpperCase()==='B2'}
+function isCoreB2Lesson(l){
+ const n=lessonNumber(l);
+ return n>=1&&n<=22;
+}
 function topicFor(l){
  const n=lessonNumber(l);
- return n?TOPICS[n-1]:(l?.grammar?.focus||'Grammar');
+ return n>=1&&n<=22?TOPICS[n-1]:(l?.grammar?.focus||'Grammar');
 }
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 if(typeof grammarActivity!=='function')return;
 const original=grammarActivity;
 grammarActivity=function(l){
- if(!isB2Lesson(l))return original(l);
+ // Lessons 23+ are B2 Lift. Leave their own grammar objects untouched so
+ // EnglishGate's native interactive MCQ/free-response practice is rendered.
+ if(!isCoreB2Lesson(l))return original(l);
  const n=lessonNumber(l),topic=topicFor(l),rule=String(l?.grammar?.rule||'').trim();
- // Keep the lesson object aligned with the canonical 22-topic B2 sequence.
  if(l.grammar)l.grammar.focus=topic;
  let html=original(l);
- const briefing=`<section class="eg-grammar-briefing" aria-label="Grammar briefing"><div class="eg-grammar-briefing-meta"><span>Grammar briefing</span><span>Topic ${n||''} of 22</span></div><h2>${esc(topic)}</h2>${rule?`<p>${esc(rule)}</p>`:''}</section>`;
- html=html.replace('${learningLadderHtml(l,\'grammar\',qs.length)}','');
- // Insert the briefing immediately after the grammar hero.
+ const briefing=`<section class="eg-grammar-briefing" aria-label="Grammar briefing"><div class="eg-grammar-briefing-meta"><span>Grammar briefing</span><span>Topic ${n} of 22</span></div><h2>${esc(topic)}</h2>${rule?`<p>${esc(rule)}</p>`:''}</section>`;
  const heroEnd='</header>';
  const pos=html.indexOf(heroEnd);
  if(pos!==-1)html=html.slice(0,pos+heroEnd.length)+briefing+html.slice(pos+heroEnd.length);
- // Replace the generic hero title with the real lesson grammar topic.
  html=html.replace('<h1>Build accurate English</h1>',`<h1>Grammar: ${esc(topic)}</h1>`);
  return html;
 };
