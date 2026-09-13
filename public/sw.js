@@ -1,5 +1,5 @@
 /* EnglishGate Progressive Web App service worker */
-const CACHE_NAME = 'englishgate-pwa-v3';
+const CACHE_NAME = 'englishgate-pwa-v4';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -22,6 +22,7 @@ const APP_SHELL = [
   '/englishgate-unified-ui-v1.css',
   '/englishgate-blue-red-white-v1.css?v=2',
   '/englishgate-student-mode-v1.js?v=1',
+  '/b2-lift-vocabulary-stage-v1.js?v=1',
   '/lesson1-grammar-micro-v1.js'
 ];
 
