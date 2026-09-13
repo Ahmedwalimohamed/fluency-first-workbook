@@ -1,0 +1,127 @@
+/* EnglishGate visual refinement inspired by modern curated design galleries.
+   Presentation-only: no copy, lesson data, questions, answers, or behavior changes. */
+
+:root{
+  --eg-ink:#0f172a;
+  --eg-subtle:#64748b;
+  --eg-line:#e2e8f0;
+  --eg-panel:#ffffff;
+  --eg-soft:#f8fafc;
+  --eg-blue:#2563eb;
+  --eg-violet:#7c3aed;
+  --eg-glow:0 18px 50px rgba(15,23,42,.08);
+  --eg-glow-soft:0 8px 28px rgba(15,23,42,.06);
+}
+
+/* App shell */
+body{background:linear-gradient(180deg,#f8fafc 0%,#f4f7fb 100%);color:var(--eg-ink)}
+.topbar{background:rgba(255,255,255,.86);backdrop-filter:blur(18px) saturate(150%);border-bottom:1px solid rgba(226,232,240,.8)}
+.content{max-width:1360px;padding-top:34px}
+.sidebar{border-right:1px solid rgba(226,232,240,.9);box-shadow:8px 0 30px rgba(15,23,42,.025)}
+.nav-btn{transition:background .2s ease,color .2s ease,transform .2s ease}
+.nav-btn:hover{transform:translateX(2px)}
+
+/* Lesson book — premium editorial workspace */
+.eg-lesson{--lesson-radius:24px}
+.eg-lesson-header{position:relative;overflow:hidden;border:1px solid var(--eg-line);border-radius:28px;background:linear-gradient(135deg,#fff 0%,#f8fbff 58%,#f5f3ff 100%);padding:20px 22px;box-shadow:var(--eg-glow-soft)}
+.eg-lesson-header:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-90px;top:-140px;background:radial-gradient(circle,rgba(37,99,235,.12),rgba(124,58,237,.04) 48%,transparent 72%);pointer-events:none}
+.eg-lesson-header h1{letter-spacing:-.035em;color:var(--eg-ink)}
+.eg-lesson-header p{color:var(--eg-subtle)}
+.eg-lesson-layout{gap:22px;margin-top:22px}
+.eg-stage-list{border:1px solid var(--eg-line);border-radius:24px;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);padding:14px;box-shadow:var(--eg-glow-soft)}
+.eg-stage-list nav{display:grid;gap:7px}
+.eg-stage{border:0;background:transparent;border-radius:15px;min-height:52px;padding:9px 10px;transition:background .18s ease,transform .18s ease,box-shadow .18s ease;text-align:left}
+.eg-stage:hover{background:#f8fafc;transform:translateY(-1px)}
+.eg-stage>span{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#f1f5f9;color:#475569;font-weight:800}
+.eg-stage strong{font-weight:800;color:#475569;letter-spacing:-.01em}
+.eg-stage.is-current{background:linear-gradient(135deg,#eef4ff 0%,#f5f3ff 100%);box-shadow:inset 0 0 0 1px rgba(37,99,235,.14)}
+.eg-stage.is-current>span{background:var(--eg-blue);color:#fff;box-shadow:0 6px 16px rgba(37,99,235,.22)}
+.eg-stage.is-current strong{color:#172554}
+.eg-goal{margin-top:14px;border-top:1px solid var(--eg-line);padding-top:12px}
+.eg-teaching-surface{border:1px solid var(--eg-line);border-radius:28px;background:rgba(255,255,255,.94);box-shadow:var(--eg-glow);overflow:hidden}
+.eg-stage-heading{padding:22px 24px 18px;border-bottom:1px solid #eef2f7;background:linear-gradient(180deg,#fff,#fbfdff)}
+.eg-stage-heading h2{font-size:clamp(1.55rem,2.5vw,2.15rem);letter-spacing:-.04em;line-height:1.08;color:var(--eg-ink)}
+.eg-label{letter-spacing:.12em;font-size:.68rem;font-weight:900;color:#64748b;text-transform:uppercase}
+.eg-stage-content{padding:26px 28px 30px;line-height:1.7}
+.eg-stage-content h2,.eg-stage-content h3{letter-spacing:-.025em;color:var(--eg-ink)}
+.eg-stage-content p{max-width:78ch}
+.eg-lesson-footer{padding:18px 24px;border-top:1px solid #eef2f7;background:#fbfdff}
+
+/* Workbook — clean gallery-like hierarchy */
+.eg-skill-page{position:relative}
+.eg-skill-hero{position:relative;overflow:hidden;border:1px solid var(--eg-line);border-radius:28px;background:linear-gradient(135deg,#0f172a 0%,#172554 58%,#312e81 100%);color:#fff;padding:26px 28px;box-shadow:0 20px 55px rgba(15,23,42,.16)}
+.eg-skill-hero:after{content:"";position:absolute;inset:auto -65px -95px auto;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.15),rgba(255,255,255,.02) 58%,transparent 70%);pointer-events:none}
+.eg-skill-hero h1{font-size:clamp(1.8rem,3vw,2.55rem);line-height:1.05;letter-spacing:-.045em;margin-top:4px;color:#fff}
+.eg-skill-hero p{color:rgba(255,255,255,.76);max-width:60ch}
+.eg-skill-kicker{color:#bfdbfe!important;letter-spacing:.12em;font-weight:900}
+.eg-question-count{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.18)!important;color:#fff!important;backdrop-filter:blur(8px)}
+.eg-skill-layout{gap:22px;margin-top:22px}
+.eg-editorial-panel,.eg-task-panel{border:1px solid var(--eg-line)!important;border-radius:24px!important;background:rgba(255,255,255,.96)!important;box-shadow:var(--eg-glow-soft)}
+.eg-editorial-panel{padding:22px!important}
+.eg-task-panel{padding:22px!important}
+.eg-panel-heading h2,.eg-task-panel-head h2{letter-spacing:-.03em;color:var(--eg-ink)}
+.grammar-rule-card,.eg-tip-card,.eg-sentence-lab{border:1px solid #e8edf5!important;border-radius:18px!important;background:linear-gradient(180deg,#fff,#f8fafc)!important}
+.eg-sentence-lab span{border-radius:11px!important;background:#fff!important;border:1px solid var(--eg-line)!important}
+
+/* Interactive questions — less form-like, more product-like */
+.activity-question-list{display:grid;gap:14px}
+.guided-question{position:relative;border:1px solid #e6ebf2!important;border-radius:20px!important;background:#fff!important;padding:20px!important;box-shadow:0 5px 18px rgba(15,23,42,.035);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.guided-question:hover{border-color:#cbd5e1!important;box-shadow:0 10px 28px rgba(15,23,42,.065);transform:translateY(-1px)}
+.guided-question>p{font-size:1rem;line-height:1.55;color:var(--eg-ink);font-weight:800}
+.question-stage span{display:inline-flex;border-radius:999px;background:#f1f5f9;color:#64748b;padding:5px 9px;font-size:.68rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.mcq-picker{display:grid;gap:12px}
+.mcq-answer-slot{border:1px dashed #cbd5e1!important;border-radius:16px!important;background:#f8fafc!important;min-height:66px!important;padding:12px 14px!important}
+.mcq-option-cards{display:grid;gap:9px}
+.mcq-option-card{width:100%;min-height:50px;border:1px solid #dde5ef!important;border-radius:15px!important;background:#fff!important;color:var(--eg-ink)!important;padding:11px 13px!important;box-shadow:none!important;transition:border-color .16s ease,background .16s ease,transform .16s ease,box-shadow .16s ease}
+.mcq-option-card:hover{border-color:#93c5fd!important;background:#f8fbff!important;transform:translateY(-1px);box-shadow:0 7px 16px rgba(37,99,235,.07)!important}
+.mcq-option-card.is-selected,.mcq-option-card[aria-pressed="true"]{border-color:#60a5fa!important;background:#eff6ff!important;box-shadow:0 0 0 3px rgba(37,99,235,.08)!important}
+.mcq-option-index{display:grid!important;place-items:center;width:30px!important;height:30px!important;border-radius:10px!important;background:#f1f5f9!important;color:#475569!important;font-weight:900!important;flex:0 0 30px}
+
+/* Existing interactive states remain functionally unchanged; only visual feedback is strengthened. */
+.feedback{border-radius:14px!important;border:1px solid transparent}
+.feedback.good{border-color:#bbf7d0;background:#f0fdf4!important}
+.feedback.bad{border-color:#fecaca;background:#fef2f2!important}
+.primary-btn{border-radius:14px!important;box-shadow:0 8px 18px rgba(23,54,159,.16);transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+.primary-btn:hover{transform:translateY(-1px);box-shadow:0 11px 24px rgba(23,54,159,.2)}
+.ghost-btn{border-radius:14px!important;background:rgba(255,255,255,.92)!important}
+
+/* Grammar briefing refinement */
+.eg-grammar-briefing{border-radius:20px!important;border:1px solid var(--eg-line)!important;background:linear-gradient(135deg,#fff,#f8fbff)!important;box-shadow:var(--eg-glow-soft)!important;padding:18px 20px!important}
+.eg-grammar-briefing h2{font-size:1.28rem!important;letter-spacing:-.025em}
+.eg-grammar-briefing-meta span:first-child{color:var(--eg-blue)}
+
+/* Cards and workbook navigation */
+.lesson-picker,.activity-card,.card{border-color:var(--eg-line)!important;box-shadow:var(--eg-glow-soft)}
+.lesson-picker{border-radius:26px!important;background:rgba(255,255,255,.92)!important}
+.lesson-tab{border-color:var(--eg-line)!important;border-radius:18px!important;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.lesson-tab:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(15,23,42,.06)}
+.lesson-tab.active{background:linear-gradient(135deg,#eff6ff,#f5f3ff)!important;border-color:#bfdbfe!important;box-shadow:0 0 0 3px rgba(37,99,235,.06)!important}
+
+@media(max-width:900px){
+  .eg-lesson-layout{gap:14px}
+  .eg-stage-list{border-radius:20px;padding:10px;overflow:auto}
+  .eg-stage-list nav{display:flex;gap:8px;min-width:max-content}
+  .eg-stage{min-width:132px}
+  .eg-teaching-surface{border-radius:22px}
+  .eg-stage-content{padding:22px 20px 26px}
+  .eg-skill-hero{border-radius:22px;padding:22px}
+  .eg-editorial-panel,.eg-task-panel{border-radius:20px!important}
+}
+
+@media(max-width:640px){
+  .content{padding:18px 14px 92px}
+  .eg-lesson-header{border-radius:20px;padding:16px}
+  .eg-stage-heading{padding:18px 18px 14px}
+  .eg-stage-content{padding:19px 16px 24px}
+  .eg-lesson-footer{padding:14px 16px}
+  .eg-skill-hero{padding:20px 18px}
+  .eg-skill-hero h1{font-size:1.8rem}
+  .eg-editorial-panel,.eg-task-panel{padding:16px!important}
+  .guided-question{padding:16px!important;border-radius:17px!important}
+  .mcq-option-card{min-height:54px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .nav-btn,.eg-stage,.guided-question,.mcq-option-card,.primary-btn,.lesson-tab{transition:none!important}
+  .nav-btn:hover,.eg-stage:hover,.guided-question:hover,.mcq-option-card:hover,.primary-btn:hover,.lesson-tab:hover{transform:none!important}
+}
