@@ -51,6 +51,24 @@ if (!exists('public/index.html')) {
     'html element needs a lang attribute'
   );
 
+  requireMatch(
+    'Canonical EnglishGate theme color',
+    html,
+    /<meta\s+name=["']theme-color["']\s+content=["']#2563EB["']/i,
+    'theme-color must use canonical #2563EB'
+  );
+
+  requireMatch(
+    'Canonical question navigation controller loaded',
+    html,
+    /<script\s+src=["']question-nav-fix\.js\?v=7["']/i,
+    'question-nav-fix.js?v=7 must be loaded'
+  );
+
+  if (/student-response-navigation-v1\.js/i.test(html)) {
+    critical.push('Duplicate question navigation controller is loaded: student-response-navigation-v1.js');
+  } else passes.push('Duplicate question navigation controller removed from runtime');
+
   const cssLinks = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]*>/gi)].length;
   const scripts = [...html.matchAll(/<script\s+src=/gi)].length;
   if (cssLinks > 14) warnings.push(`CSS layering risk: ${cssLinks} stylesheets are loaded by public/index.html.`);
@@ -59,23 +77,36 @@ if (!exists('public/index.html')) {
   if (/[>\s](☰|↗|⚙|✎|✏|🗑|✓|✕)[<\s]/u.test(html)) {
     warnings.push('Glyph/emoji-style UI icons detected in public/index.html; prefer one SVG icon family with accessible names.');
   }
+}
 
-  const theme = html.match(/<meta\s+name=["']theme-color["']\s+content=["']([^"']+)["']/i)?.[1];
-  if (theme && theme.toLowerCase() !== '#2563eb') {
-    warnings.push(`Theme color is ${theme}; canonical EnglishGate primary is #2563EB. Migrate deliberately after visual regression checks.`);
+if (exists('public/question-nav-fix.css')) {
+  const navCss = read('public/question-nav-fix.css');
+  if (/env\(safe-area-inset-bottom\)/.test(navCss)) passes.push('Canonical question navigation uses safe-area bottom inset');
+  else critical.push('Canonical question navigation is missing safe-area bottom inset.');
+
+  if (/min-height\s*:\s*(44|4[5-9]|[5-9]\d)px/i.test(navCss)) passes.push('Canonical question navigation includes a >=44px touch target');
+  else critical.push('Canonical question navigation must use >=44px touch targets.');
+
+  if (/focus-visible/.test(navCss)) passes.push('Canonical question navigation has visible keyboard focus states');
+  else warnings.push('Canonical question navigation does not define focus-visible states.');
+
+  if (/prefers-reduced-motion/.test(navCss)) passes.push('Canonical question navigation respects reduced-motion preference');
+  else warnings.push('Canonical question navigation does not appear to respect reduced motion.');
+}
+
+if (exists('public/question-nav-fix.js')) {
+  const navJs = read('public/question-nav-fix.js');
+  if (/responseRecorded/.test(navJs) && /fallbackAdvance/.test(navJs)) {
+    passes.push('Question response state and forward navigation are consolidated in one controller');
+  } else {
+    critical.push('Canonical question controller is missing response-state or forward-navigation handling.');
   }
 }
 
 if (exists('public/mobile-single-question-v5.css')) {
   const mobile = read('public/mobile-single-question-v5.css');
-  if (/env\(safe-area-inset-bottom\)/.test(mobile)) passes.push('Mobile question flow uses safe-area bottom inset');
-  else warnings.push('Mobile question flow does not appear to use safe-area bottom inset.');
-
-  if (/min-height\s*:\s*(44|4[5-9]|[5-9]\d)px/i.test(mobile)) passes.push('Mobile question navigation includes a >=44px minimum control height');
-  else warnings.push('Could not verify >=44px touch-target height in mobile question navigation stylesheet.');
-
   if (/overflow\s*:\s*hidden\s*!important/i.test(mobile)) {
-    warnings.push('Nested-scroll risk: mobile question flow uses overflow:hidden; test virtual keyboard and long-form writing on phones.');
+    warnings.push('Nested-scroll risk remains in mobile-single-question-v5.css; test virtual keyboard and long-form writing on phones.');
   }
 }
 
