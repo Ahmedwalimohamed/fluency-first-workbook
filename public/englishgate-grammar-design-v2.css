@@ -1,0 +1,474 @@
+/* EnglishGate Grammar Design v2
+   UI-only layer for grammar lessons. Preserves scoring, Boost Grammar,
+   answer state, lesson data, navigation, and teacher/admin behavior. */
+
+:root{
+  --eg-g-primary:#2563EB;
+  --eg-g-text:#0F172A;
+  --eg-g-muted:#64748B;
+  --eg-g-bg:#F8FAFC;
+  --eg-g-card:#FFFFFF;
+  --eg-g-border:#E2E8F0;
+  --eg-g-success:#16A34A;
+  --eg-g-error:#DC2626;
+  --eg-g-review:#F59E0B;
+  --eg-g-shadow:0 8px 24px rgba(15,23,42,.05);
+}
+
+/* Shared grammar surface */
+body.englishgate-student-mode .eg-grammar-page{
+  color:var(--eg-g-text)!important;
+}
+
+body.englishgate-student-mode .eg-grammar-page button:focus-visible,
+body.englishgate-student-mode .eg-grammar-page input:focus-visible,
+body.englishgate-student-mode .eg-grammar-page textarea:focus-visible,
+body.englishgate-student-mode .eg-grammar-page select:focus-visible{
+  outline:3px solid rgba(37,99,235,.25)!important;
+  outline-offset:2px!important;
+}
+
+/* Clean/general grammar renderer */
+body.englishgate-student-mode article.eg-grammar-page[data-grammar-clean]{
+  max-width:860px!important;
+  margin:0 auto!important;
+  border:1px solid var(--eg-g-border)!important;
+  border-radius:20px!important;
+  background:var(--eg-g-card)!important;
+  box-shadow:var(--eg-g-shadow)!important;
+  overflow:hidden!important;
+  color:var(--eg-g-text)!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-head{
+  padding:24px 26px 20px!important;
+  border-bottom:1px solid var(--eg-g-border)!important;
+  background:#fff!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-label{
+  margin:0 0 7px!important;
+  color:var(--eg-g-primary)!important;
+  font-size:.76rem!important;
+  font-weight:900!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-head h2{
+  margin:0 0 11px!important;
+  color:var(--eg-g-text)!important;
+  font-size:clamp(1.55rem,3vw,2rem)!important;
+  line-height:1.16!important;
+  letter-spacing:-.025em!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-goal{
+  margin:0!important;
+  padding:11px 13px!important;
+  border:0!important;
+  border-left:4px solid var(--eg-g-primary)!important;
+  border-radius:0 10px 10px 0!important;
+  background:#EFF6FF!important;
+  color:#1E3A8A!important;
+  line-height:1.5!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-block{
+  padding:22px 26px!important;
+  border-bottom:1px solid var(--eg-g-border)!important;
+  background:#fff!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-block:last-child{
+  border-bottom:0!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-block h3{
+  margin:0 0 12px!important;
+  color:var(--eg-g-text)!important;
+  font-size:1.18rem!important;
+  line-height:1.3!important;
+  letter-spacing:-.012em!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-block h4{
+  color:#1E293B!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-block p{
+  color:#475569!important;
+  line-height:1.65!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-question,
+body.englishgate-student-mode [data-grammar-clean] .egg-fix,
+body.englishgate-student-mode [data-grammar-clean] .egg-remember,
+body.englishgate-student-mode [data-grammar-clean] .egg-challenge{
+  border:1px solid var(--eg-g-border)!important;
+  border-radius:14px!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-question{
+  margin-top:14px!important;
+  padding:14px!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-question>strong{
+  color:var(--eg-g-text)!important;
+  line-height:1.5!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-options{
+  gap:9px!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-option{
+  min-height:50px!important;
+  padding:12px 13px!important;
+  border:1px solid var(--eg-g-border)!important;
+  border-radius:12px!important;
+  background:#fff!important;
+  color:#334155!important;
+  line-height:1.45!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-option:hover:not(:disabled){
+  border-color:#93C5FD!important;
+  background:#F8FBFF!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-option.is-correct{
+  border-color:#86EFAC!important;
+  background:#F0FDF4!important;
+  color:#166534!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-option.is-correct .egg-radio{
+  border-color:var(--eg-g-success)!important;
+  background:var(--eg-g-success)!important;
+  box-shadow:inset 0 0 0 4px #F0FDF4!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-option.is-wrong{
+  border-color:#FCA5A5!important;
+  background:#FEF2F2!important;
+  color:#991B1B!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-feedback.is-good{
+  color:#166534!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-feedback.is-bad{
+  color:#991B1B!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-notice strong{
+  border-left:4px solid var(--eg-g-primary)!important;
+  border-radius:0 9px 9px 0!important;
+  background:#EFF6FF!important;
+  color:#1E3A8A!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-remember{
+  padding:16px!important;
+  background:#F8FAFC!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-remember h4{
+  color:#1D4ED8!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-remember th,
+body.englishgate-student-mode [data-grammar-clean] .egg-remember td{
+  border-color:#CBD5E1!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-remember th{
+  background:#EFF6FF!important;
+  color:#1E3A8A!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-fix{
+  padding:14px!important;
+  background:#F8FAFC!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-fix input,
+body.englishgate-student-mode [data-grammar-clean] .egg-about input,
+body.englishgate-student-mode [data-grammar-clean] .egg-challenge textarea,
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-production{
+  min-height:48px!important;
+  border:1px solid #CBD5E1!important;
+  border-radius:11px!important;
+  background:#fff!important;
+  color:var(--eg-g-text)!important;
+  font-size:16px!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-challenge textarea,
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-production{
+  min-height:110px!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-check,
+body.englishgate-student-mode [data-grammar-clean] .egg-boost{
+  min-height:46px!important;
+  border:1px solid #BFDBFE!important;
+  border-radius:11px!important;
+  background:#fff!important;
+  color:#1D4ED8!important;
+  font-weight:800!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .egg-check:hover,
+body.englishgate-student-mode [data-grammar-clean] .egg-boost:hover{
+  background:#EFF6FF!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-quick{
+  background:#F8FAFC!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-confidence{
+  gap:10px!important;
+}
+
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-confidence label{
+  min-height:44px!important;
+  color:#475569!important;
+}
+
+/* Under-5-minute micro grammar */
+body.englishgate-student-mode .eg-grammar-micro-page{
+  max-width:760px!important;
+  margin:0 auto!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .eg-micro-hero{
+  margin-bottom:12px!important;
+  padding:20px!important;
+  border:1px solid var(--eg-g-border)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:var(--eg-g-shadow)!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .eg-skill-kicker{
+  color:var(--eg-g-primary)!important;
+  font-weight:900!important;
+  letter-spacing:.06em!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .eg-micro-hero h1{
+  margin:.35rem 0 .4rem!important;
+  color:var(--eg-g-text)!important;
+  font-size:clamp(1.45rem,4vw,1.9rem)!important;
+  line-height:1.16!important;
+  letter-spacing:-.025em!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .eg-micro-hero p{
+  color:var(--eg-g-muted)!important;
+  line-height:1.5!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .eg-question-count{
+  color:#1D4ED8!important;
+  background:#EFF6FF!important;
+  border:1px solid #BFDBFE!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-flow{
+  gap:10px!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-section{
+  padding:15px!important;
+  border:1px solid var(--eg-g-border)!important;
+  border-radius:14px!important;
+  background:#fff!important;
+  box-shadow:0 3px 12px rgba(15,23,42,.035)!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-section>h2{
+  margin:0 0 9px!important;
+  color:var(--eg-g-text)!important;
+  font-size:.98rem!important;
+  letter-spacing:-.01em!important;
+}
+
+body.englishgate-student-mode .eg-micro-dialogue,
+body.englishgate-student-mode .eg-micro-examples,
+body.englishgate-student-mode .eg-micro-rule{
+  color:#334155!important;
+}
+
+body.englishgate-student-mode .eg-micro-dialogue p,
+body.englishgate-student-mode .eg-micro-examples p,
+body.englishgate-student-mode .eg-micro-rule p{
+  line-height:1.5!important;
+}
+
+body.englishgate-student-mode .eg-micro-rule{
+  padding:11px!important;
+  border:1px solid #DBEAFE!important;
+  border-radius:11px!important;
+  background:#EFF6FF!important;
+}
+
+body.englishgate-student-mode .eg-micro-task-label{
+  color:var(--eg-g-primary)!important;
+  font-size:.72rem!important;
+  font-weight:900!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .guided-question{
+  margin-top:9px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .mcq-picker label,
+body.englishgate-student-mode .eg-grammar-micro-page .mcq-option{
+  min-height:48px!important;
+  border-color:var(--eg-g-border)!important;
+  border-radius:11px!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page textarea,
+body.englishgate-student-mode .eg-grammar-micro-page input[type=text]{
+  min-height:48px!important;
+  border-color:#CBD5E1!important;
+  border-radius:11px!important;
+  font-size:16px!important;
+}
+
+body.englishgate-student-mode .eg-micro-boost-line{
+  margin:12px 0!important;
+}
+
+body.englishgate-student-mode .eg-micro-boost-line .ghost-btn{
+  min-height:48px!important;
+  border:1px solid #BFDBFE!important;
+  border-radius:11px!important;
+  background:#fff!important;
+  color:#1D4ED8!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .skill-action-row{
+  gap:10px!important;
+}
+
+body.englishgate-student-mode .eg-grammar-micro-page .skill-action-row .primary-btn{
+  min-height:50px!important;
+  border-radius:12px!important;
+  background:var(--eg-g-primary)!important;
+  box-shadow:0 7px 18px rgba(37,99,235,.16)!important;
+}
+
+/* B2 Lift grammar: align the interactive quick check with the same system. */
+body.englishgate-student-mode [data-b2-lift-grammar] .b2-lift-grammar-quick{
+  border:1px solid var(--eg-g-border)!important;
+  border-radius:14px!important;
+  background:#F8FAFC!important;
+}
+
+body.englishgate-student-mode [data-b2-lift-grammar] .b2-lift-grammar-quick small{
+  color:var(--eg-g-primary)!important;
+}
+
+body.englishgate-student-mode [data-b2-lift-grammar] .b2-lift-grammar-quick-option{
+  min-height:48px!important;
+  border-color:var(--eg-g-border)!important;
+  border-radius:11px!important;
+}
+
+body.englishgate-student-mode [data-b2-lift-grammar] .b2-lift-grammar-quick-option:hover{
+  border-color:#93C5FD!important;
+  background:#F8FBFF!important;
+}
+
+body.englishgate-student-mode [data-b2-lift-grammar] .b2-lift-grammar-quick-option.is-correct{
+  border-color:#86EFAC!important;
+  background:#F0FDF4!important;
+}
+
+body.englishgate-student-mode [data-b2-lift-grammar] .b2-lift-grammar-quick-option.is-wrong{
+  border-color:#FCA5A5!important;
+  background:#FEF2F2!important;
+}
+
+/* Mobile source of truth */
+@media(max-width:700px){
+  body.englishgate-student-mode article.eg-grammar-page[data-grammar-clean]{
+    margin:0!important;
+    border-left:0!important;
+    border-right:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+
+  body.englishgate-student-mode [data-grammar-clean] .eg-grammar-head,
+  body.englishgate-student-mode [data-grammar-clean] .eg-grammar-block{
+    padding:17px 14px!important;
+  }
+
+  body.englishgate-student-mode [data-grammar-clean] .eg-grammar-head h2{
+    font-size:1.45rem!important;
+  }
+
+  body.englishgate-student-mode [data-grammar-clean] .egg-question,
+  body.englishgate-student-mode [data-grammar-clean] .egg-fix,
+  body.englishgate-student-mode [data-grammar-clean] .egg-remember,
+  body.englishgate-student-mode [data-grammar-clean] .egg-challenge{
+    border-radius:12px!important;
+  }
+
+  body.englishgate-student-mode [data-grammar-clean] .egg-remember{
+    overflow-x:auto!important;
+  }
+
+  body.englishgate-student-mode .eg-grammar-micro-page .eg-micro-hero{
+    padding:16px!important;
+    border-radius:15px!important;
+  }
+
+  body.englishgate-student-mode .eg-grammar-micro-section{
+    padding:13px!important;
+    border-radius:13px!important;
+  }
+
+  body.englishgate-student-mode .eg-grammar-micro-page .eg-question-count{
+    white-space:normal!important;
+  }
+}
+
+@media(max-width:390px){
+  body.englishgate-student-mode [data-grammar-clean] .eg-grammar-head,
+  body.englishgate-student-mode [data-grammar-clean] .eg-grammar-block{
+    padding-left:11px!important;
+    padding-right:11px!important;
+  }
+
+  body.englishgate-student-mode .eg-grammar-micro-page .eg-micro-hero,
+  body.englishgate-student-mode .eg-grammar-micro-section{
+    padding:12px!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  body.englishgate-student-mode .eg-grammar-page *,
+  body.englishgate-student-mode .eg-grammar-page *::before,
+  body.englishgate-student-mode .eg-grammar-page *::after{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+  }
+}
