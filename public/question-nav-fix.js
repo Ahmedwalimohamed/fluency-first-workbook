@@ -1,24 +1,23 @@
+/* EnglishGate canonical student question navigation
+   Single owner for Back/Next placement and response-based navigation state.
+   Correctness affects feedback/score only; any genuine response may move forward. */
 (function(){
 'use strict';
 
-function $(sel,root=document){return root.querySelector(sel)}
+const $=(sel,root=document)=>root.querySelector(sel);
+const isStudent=()=>typeof session==='undefined'||session?.role==='student';
 
-function currentVisibleQuestion(root){
- return [...root.querySelectorAll('.guided-question')].find(q=>!q.hidden&&getComputedStyle(q).display!=='none')||null;
+function currentQuestion(root){
+ return root?.querySelector('.guided-question.is-flow-current')||
+  [...(root?.querySelectorAll('.guided-question')||[])].find(q=>!q.hidden&&getComputedStyle(q).display!=='none')||null;
 }
 
-function questionAnswered(q){
+function hasResponse(q){
  if(!q)return false;
- const radio=q.querySelector('input[type="radio"]');
- if(radio)return Boolean(q.querySelector('input[type="radio"]:checked'));
- const short=q.querySelector('input[data-short-answer],input[type="text"]');
- if(short)return Boolean(String(short.value||'').trim());
- const area=q.querySelector('textarea');
- if(area)return Boolean(String(area.value||'').trim());
- const checked=q.querySelector('input[type="checkbox"]:checked');
- if(checked)return true;
- if(q.dataset.coreComplete==='1')return true;
- return false;
+ if(q.dataset.responseRecorded==='1'||q.dataset.coreComplete==='1')return true;
+ if(q.querySelector('input[type="radio"]:checked,input[type="checkbox"]:checked'))return true;
+ const field=q.querySelector('input[data-short-answer],input[type="text"],textarea,[data-writing-core-input]');
+ return Boolean(field&&String(field.value||'').trim());
 }
 
 function makeNav(root){
@@ -32,27 +31,50 @@ function makeNav(root){
  return nav;
 }
 
+function syncResponseState(q){
+ if(!q)return;
+ q.dataset.responseRecorded=hasResponse(q)?'1':'0';
+}
+
+function syncNavigationState(root){
+ const q=currentQuestion(root);
+ const next=$('.student-question-continue',root);
+ if(!q||!next)return;
+ syncResponseState(q);
+ const attempted=hasResponse(q);
+ if(attempted){
+  next.disabled=false;
+  next.removeAttribute('aria-disabled');
+ }else if(!/check|save/i.test(next.textContent||'')){
+  next.setAttribute('aria-disabled',String(Boolean(next.disabled)));
+ }
+}
+
 function enhance(){
  const root=$('#activityPanel');
- if(!root||!document.body.classList.contains('student-question-focus-mode'))return;
+ if(!root||!document.body.classList.contains('student-question-focus-mode')||!isStudent())return;
  const back=$('[data-question-flow-back]',root);
  const next=$('.student-question-continue',root);
  if(!back||!next)return;
- const nav=makeNav(root),inner=$('.student-question-bottom-inner',nav);
 
- if(back.hidden)back.hidden=false;
- if(!back.classList.contains('student-question-nav-back'))back.classList.add('student-question-nav-back');
- if(back.textContent!=='← Back')back.textContent='← Back';
- if(back.getAttribute('aria-label')!=='Previous question')back.setAttribute('aria-label','Previous question');
+ const nav=makeNav(root);
+ const inner=$('.student-question-bottom-inner',nav);
 
- if(next.hidden)next.hidden=false;
- if(!next.classList.contains('student-question-nav-next'))next.classList.add('student-question-nav-next');
- if(next.textContent!=='Next →'&&!/check|save/i.test(next.textContent||''))next.textContent='Next →';
+ back.hidden=false;
+ back.classList.add('student-question-nav-back');
+ back.textContent='← Back';
+ back.setAttribute('aria-label','Previous question');
 
- let hint=$('#activityHint');
+ next.hidden=false;
+ next.classList.add('student-question-nav-next');
+ next.setAttribute('aria-label',/check/i.test(next.textContent||'')?'Check answer':'Next question');
+ if(!/check|save/i.test(next.textContent||''))next.textContent='Next →';
+
+ const hint=$('#activityHint');
  if(hint){
-  if(!hint.classList.contains('student-question-nav-hint'))hint.classList.add('student-question-nav-hint');
-  if(hint.textContent!=='Hint')hint.textContent='Hint';
+  hint.classList.add('student-question-nav-hint');
+  hint.textContent='Hint';
+  hint.setAttribute('aria-label','Show hint');
  }
 
  if(back.parentElement!==inner)inner.appendChild(back);
@@ -62,53 +84,91 @@ function enhance(){
  const previousSkill=$('#previousActivity');
  if(previousSkill&&!previousSkill.hidden)previousSkill.hidden=true;
 
- const q=currentVisibleQuestion(root);
- if(next.disabled&&q&&questionAnswered(q))next.disabled=false;
- if(!document.body.classList.contains('student-question-nav-active'))document.body.classList.add('student-question-nav-active');
+ syncNavigationState(root);
+ document.body.classList.add('student-question-nav-active');
 }
 
 function cleanup(){
- if(!document.body.classList.contains('student-question-focus-mode')&&document.body.classList.contains('student-question-nav-active')){
-  document.body.classList.remove('student-question-nav-active');
- }
+ if(document.body.classList.contains('student-question-focus-mode'))return;
+ document.body.classList.remove('student-question-nav-active');
 }
 
-// Preserve the core activity handler so simple choice questions can auto-advance.
-// This patch only refreshes the persistent navigation state after the answer is recorded.
-document.addEventListener('change',function(e){
- const radio=e.target.closest&&e.target.closest('input[type="radio"]');
- if(!radio||!document.body.classList.contains('student-question-focus-mode'))return;
- const root=radio.closest('#activityPanel');
+function fallbackAdvance(q){
+ const root=q?.closest('#activityPanel');
  if(!root)return;
- setTimeout(function(){
-  enhance();
+ window.setTimeout(()=>{
+  if(!document.body.contains(q))return;
+  const active=currentQuestion(root);
+  if(active!==q)return;
   const next=$('.student-question-continue',root);
-  const q=currentVisibleQuestion(root);
-  if(next?.disabled&&q&&questionAnswered(q))next.disabled=false;
- },0);
+  if(!next||!hasResponse(q))return;
+  next.disabled=false;
+  next.removeAttribute('aria-disabled');
+  if(next.dataset.autoAdvance==='1')next.click();
+ },950);
+}
+
+document.addEventListener('change',e=>{
+ if(!document.body.classList.contains('student-question-focus-mode'))return;
+ const q=e.target.closest?.('#activityPanel .guided-question');
+ if(!q||!e.target.matches('input[type="radio"],input[type="checkbox"]'))return;
+ q.dataset.responseRecorded='1';
+ enhance();
+ fallbackAdvance(q);
 },false);
 
-document.addEventListener('input',function(e){
+document.addEventListener('input',e=>{
  if(!document.body.classList.contains('student-question-focus-mode'))return;
- if(!e.target.closest||!e.target.closest('#activityPanel .guided-question'))return;
- setTimeout(enhance,0);
-},true);
+ const q=e.target.closest?.('#activityPanel .guided-question');
+ if(!q)return;
+ syncResponseState(q);
+ enhance();
+},false);
 
-document.addEventListener('click',function(e){
- if(e.target.closest&&e.target.closest('.student-question-nav-back,.student-question-nav-next,[data-mcq-option],.choice')){
-  setTimeout(function(){enhance();cleanup()},0);
+document.addEventListener('click',e=>{
+ if(!document.body.classList.contains('student-question-focus-mode'))return;
+ const check=e.target.closest?.('[data-writing-core-check]');
+ if(check){
+  const q=check.closest('.guided-question');
+  setTimeout(()=>{
+   if(q?.dataset.coreComplete==='1')q.dataset.responseRecorded='1';
+   enhance();
+   fallbackAdvance(q);
+  },0);
+  return;
+ }
+ const choice=e.target.closest?.('[data-mcq-option],.mcq-option-card,.choice');
+ if(choice){
+  const q=choice.closest('.guided-question');
+  setTimeout(()=>{enhance();fallbackAdvance(q)},0);
+  return;
+ }
+ if(e.target.closest?.('.student-question-nav-back,.student-question-nav-next')){
+  setTimeout(()=>{enhance();cleanup()},0);
  }
 },true);
 
-// Reconcile once per frame; idempotent writes let observed mutations settle.
-let refreshQueued=false;
-const observer=new MutationObserver(function(){
- if(refreshQueued)return;
- refreshQueued=true;
- requestAnimationFrame(function(){refreshQueued=false;enhance();cleanup()});
+let queued=false;
+const observer=new MutationObserver(()=>{
+ if(queued)return;
+ queued=true;
+ requestAnimationFrame(()=>{
+  queued=false;
+  enhance();
+  cleanup();
+ });
 });
-observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','disabled']});
 
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enhance);
-else enhance();
+function start(){
+ observer.observe(document.documentElement,{
+  subtree:true,
+  childList:true,
+  attributes:true,
+  attributeFilter:['class','hidden','disabled','data-core-complete','data-core-correct']
+ });
+ enhance();
+}
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+else start();
 })();
