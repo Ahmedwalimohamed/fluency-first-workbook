@@ -1,0 +1,152 @@
+/* EnglishGate Reading / Listening grading workflow v1
+   Immediate results, low-score warning, and retry-only-missed questions.
+   Each submission is preserved as a separate attempt; completion happens only when the learner accepts a result. */
+(function(){
+'use strict';
+
+const PASS_MARK=70;
+const isStudent=()=>typeof session!=='undefined'&&session?.role==='student';
+const isPreview=()=>typeof isWorkbookPreview==='function'&&isWorkbookPreview();
+const norm=v=>String(v??'').toLowerCase().normalize('NFKD').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
+const esc=v=>typeof escapeHtml==='function'?escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function answerMatches(given,expected){
+ const g=norm(given),e=norm(expected);if(!g||!e)return false;if(g===e)return true;
+ const variants=String(expected||'').split(/\s*\|\s*|\s*;\s*/).map(norm).filter(Boolean);
+ if(variants.some(v=>g===v||g.includes(v)))return true;
+ const words=e.split(' ').filter(w=>w.length>2);
+ return words.length>1&&words.every(w=>g.includes(w));
+}
+function root(){return document.querySelector('.eg-separated-activity[data-activity-type="reading"],.eg-separated-activity[data-activity-type="listening"]')}
+function typeOf(r){return r?.dataset.activityType||''}
+function lessonData(type){
+ const l=typeof lesson==='function'?lesson():null;
+ const api=window.ENGLISHGATE_SEPARATED_WORKBOOK;
+ return {l,qs:l&&api?.qsFor?api.qsFor(l,type):[]};
+}
+function questionEls(r){return [...r.querySelectorAll('[data-sep-question]')]}
+function responseFor(q){
+ const checked=q.querySelector('input[type="radio"]:checked,input[type="checkbox"]:checked');
+ const field=q.querySelector('input[type="text"],textarea');
+ return checked?checked.value:String(field?.value||'');
+}
+function responsesFor(r){const out={};questionEls(r).forEach(q=>out[String(Number(q.dataset.sepQuestion))]=responseFor(q));return out}
+function allAnswered(r,indexes=null){
+ const qs=questionEls(r),wanted=indexes?new Set(indexes):null;
+ return qs.filter(q=>!wanted||wanted.has(Number(q.dataset.sepQuestion))).every(q=>Boolean(norm(responseFor(q))));
+}
+function setInputsDisabled(r,disabled){r.querySelectorAll('[data-sep-question] input,[data-sep-question] textarea').forEach(el=>el.disabled=disabled)}
+function clearQuestion(q){
+ q.querySelectorAll('input[type="radio"],input[type="checkbox"]').forEach(i=>i.checked=false);
+ q.querySelectorAll('input[type="text"],textarea').forEach(i=>i.value='');
+ const f=q.querySelector('[data-sep-feedback]');if(f)f.innerHTML='';
+ q.classList.remove('is-correct','is-missed');
+}
+function markQuestions(r,correctSet,missed){
+ const miss=new Set(missed);
+ questionEls(r).forEach(q=>{const i=Number(q.dataset.sepQuestion);q.classList.toggle('is-correct',correctSet.has(i));q.classList.toggle('is-missed',miss.has(i));const f=q.querySelector('[data-sep-feedback]');if(f)f.innerHTML=correctSet.has(i)?'<div class="feedback good"><strong>Correct.</strong></div>':miss.has(i)?'<div class="feedback bad"><strong>Needs another look.</strong> You can retry this question.</div>':''});
+}
+function activityTitle(l,type){return type==='reading'?(l.title+' · Reading'):(l.listening?.title||l.title)}
+async function saveState(l,type,responses,status='needs_review',currentQuestion=0){
+ return api('/api/workbook-activities/state',{method:'POST',body:JSON.stringify({lessonId:l.id,activityType:type,title:activityTitle(l,type),instructions:type==='reading'?'Read the passage and answer the questions.':'Listen to the audio and answer the questions.',currentQuestion,responses,status})});
+}
+async function saveAttempt(l,type,score,correctCount,total,responses,missed,retryOnly){
+ return api('/api/workbook-activities/attempts',{method:'POST',body:JSON.stringify({lessonId:l.id,activityType:type,title:activityTitle(l,type),score,correctCount,incorrectCount:total-correctCount,responses,missedQuestionIndexes:missed,retryOnly:Boolean(retryOnly)})});
+}
+function resultCopy(type,score,correct,total,missed){
+ const label=type==='reading'?'Reading':'Listening';
+ const perfect=!missed.length;
+ const low=score<PASS_MARK;
+ const headline=perfect?'Excellent — all correct':low?'You can improve this score':'Good work — you can still improve';
+ const note=perfect?`Your ${label} result is ready to record.`:low?`If you continue now, <strong>${score}%</strong> will be recorded as your final ${label} grade. Try again to improve it — you only need to redo the ${missed.length} question${missed.length===1?'':'s'} you missed.`:`Your current ${label} score is <strong>${score}%</strong>. You may keep it, or retry only the ${missed.length} question${missed.length===1?'':'s'} you missed.`;
+ return {label,perfect,low,headline,note};
+}
+function showResult(r,state){
+ const feedback=r.querySelector('#activityFeedback'),nav=r.querySelector('.sep-nav');if(!feedback)return;
+ if(nav)nav.hidden=true;
+ setInputsDisabled(r,true);
+ markQuestions(r,state.correct,state.missed);
+ questionEls(r).forEach(q=>q.hidden=false);
+ const c=resultCopy(state.type,state.score,state.correct.size,state.total,state.missed);
+ feedback.innerHTML=`<section class="eg-grade-result ${c.low?'is-low':c.perfect?'is-perfect':''}" aria-live="polite"><div class="eg-grade-score"><strong>${state.score}%</strong><span>${state.correct.size} of ${state.total} correct</span></div><div class="eg-grade-copy"><span class="eg-grade-kicker">${esc(c.label)} result</span><h3>${esc(c.headline)}</h3><p>${c.note}</p>${state.missed.length?`<div class="eg-missed-summary"><strong>${state.missed.length} to review</strong><span>Only missed questions will appear when you try again.</span></div>`:''}<div class="eg-grade-actions">${state.missed.length?'<button class="primary-btn" type="button" data-grade-retry>Try missed questions again</button>':''}<button class="ghost-btn" type="button" data-grade-accept>${c.perfect?'Record result & continue':c.low?`Keep ${state.score}% as final score`:`Keep ${state.score}% & continue`}</button></div></div></section>`;
+ const retry=feedback.querySelector('[data-grade-retry]');if(retry)retry.onclick=()=>beginRetry(r,state);
+ const accept=feedback.querySelector('[data-grade-accept]');if(accept)accept.onclick=()=>finalize(r,state,accept);
+ feedback.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function syncRetryNav(r,state){
+ const pos=Math.max(0,Math.min(Number(r.dataset.retryPos||0),state.missed.length-1)),idx=state.missed[pos],qs=questionEls(r),back=r.querySelector('[data-sep-back]'),next=r.querySelector('[data-sep-next]'),bar=r.querySelector('[data-sep-bar]'),progress=r.querySelector('[data-sep-progress]');
+ qs.forEach(q=>q.hidden=Number(q.dataset.sepQuestion)!==idx);
+ if(back){back.disabled=pos===0;back.textContent='← Back'}
+ const active=qs.find(q=>Number(q.dataset.sepQuestion)===idx);
+ if(next){next.disabled=!active||!norm(responseFor(active));next.textContent=pos===state.missed.length-1?'Check retry':'Next →'}
+ if(bar)bar.style.width=((pos+1)/Math.max(1,state.missed.length)*100)+'%';
+ if(progress)progress.textContent=`Retry ${pos+1} / ${state.missed.length}`;
+ active?.querySelector('h3')?.scrollIntoView({block:'nearest'});
+}
+function beginRetry(r,state){
+ r.dataset.retryMode='1';r.dataset.retryPos='0';
+ const feedback=r.querySelector('#activityFeedback'),nav=r.querySelector('.sep-nav');if(feedback)feedback.innerHTML=`<div class="eg-retry-banner"><strong>Retry missed questions only</strong><span>You already earned credit for ${state.correct.size} correct answer${state.correct.size===1?'':'s'}. Those questions are locked in.</span></div>`;
+ if(nav)nav.hidden=false;
+ setInputsDisabled(r,false);
+ questionEls(r).forEach(q=>{const i=Number(q.dataset.sepQuestion);if(state.correct.has(i)){q.querySelectorAll('input,textarea').forEach(el=>el.disabled=true)}else if(state.missed.includes(i)){clearQuestion(q)}});
+ syncRetryNav(r,state);
+}
+async function grade(r,retryOnly=false){
+ if(r.dataset.gradingBusy==='1')return;
+ const type=typeOf(r),{l,qs}=lessonData(type);if(!l||!qs.length)return;
+ let state=r.__englishGateGradeState;
+ const target=retryOnly&&state?state.missed:qs.map((_,i)=>i);
+ if(!allAnswered(r,target)){const f=r.querySelector('#activityFeedback');if(f)f.innerHTML='<div class="feedback bad">Answer every question in this round before checking your result.</div>';return}
+ r.dataset.gradingBusy='1';
+ try{
+  const responses=responsesFor(r),correct=state?.correct?new Set(state.correct):new Set();
+  target.forEach(i=>{if(answerMatches(responses[String(i)],qs[i]?.answer))correct.add(i);else correct.delete(i)});
+  const missed=qs.map((_,i)=>i).filter(i=>!correct.has(i)),score=Math.round(correct.size/Math.max(1,qs.length)*100);
+  const nextState={type,l,qs,total:qs.length,correct,missed,score,responses,retryOnly:Boolean(retryOnly),attemptId:null};
+  if(isPreview()){r.__englishGateGradeState=nextState;showResult(r,nextState);return}
+  const currentQuestion=missed[0]??Math.max(0,qs.length-1);
+  await saveState(l,type,responses,missed.length?'needs_review':'in_progress',currentQuestion);
+  const saved=await saveAttempt(l,type,score,correct.size,qs.length,responses,missed,retryOnly);
+  nextState.attemptId=saved?.attempt?.attempt_id||saved?.attempt?.attemptId||null;
+  r.__englishGateGradeState=nextState;
+  r.dataset.retryMode='0';
+  showResult(r,nextState);
+ }catch(e){const f=r.querySelector('#activityFeedback');if(f)f.innerHTML=`<div class="feedback bad"><strong>Result could not be saved yet.</strong> Your answers remain on this page. ${esc(e?.message||'Try again.')}</div>`}
+ finally{r.dataset.gradingBusy='0'}
+}
+async function finalize(r,state,button){
+ if(isPreview()){button.textContent='Preview complete';return}
+ button.disabled=true;button.textContent='Recording result…';
+ try{
+  await api('/api/workbook-activities/complete',{method:'POST',body:JSON.stringify({lessonId:state.l.id,activityType:state.type,title:activityTitle(state.l,state.type),attemptId:state.attemptId})});
+  const apiSep=window.ENGLISHGATE_SEPARATED_WORKBOOK;if(apiSep?.loadProgress)await apiSep.loadProgress(true);
+  const steps=apiSep?.stepsFor?apiSep.stepsFor(state.l):['grammar','reading','listening','vocabulary','writing'];
+  const i=steps.indexOf(state.type),nextStep=i>=0&&i<steps.length-1?steps[i+1]:null;
+  if(nextStep){try{currentStep=nextStep}catch{};if(typeof workbook==='function')workbook();return}
+  if(typeof workbook==='function')workbook();
+ }catch(e){button.disabled=false;button.textContent=state.score<PASS_MARK?`Keep ${state.score}% as final score`:`Keep ${state.score}% & continue`;const f=r.querySelector('#activityFeedback');if(f)f.insertAdjacentHTML('beforeend',`<div class="feedback bad">${esc(e?.message||'Could not record the result. Try again.')}</div>`)}
+}
+
+// Intercept only the final submit/check action. Normal Next/Back remains owned by the separated activity renderer.
+document.addEventListener('click',e=>{
+ const r=root();if(!r||!isStudent())return;
+ const next=e.target.closest?.('[data-sep-next]'),back=e.target.closest?.('[data-sep-back]');
+ if(r.dataset.retryMode==='1'&&(next||back)){
+  e.preventDefault();e.stopImmediatePropagation();
+  const state=r.__englishGateGradeState;if(!state)return;
+  let pos=Math.max(0,Math.min(Number(r.dataset.retryPos||0),state.missed.length-1));
+  if(back){if(pos>0)r.dataset.retryPos=String(--pos);syncRetryNav(r,state);return}
+  const idx=state.missed[pos],q=questionEls(r).find(x=>Number(x.dataset.sepQuestion)===idx);if(!q||!norm(responseFor(q))){syncRetryNav(r,state);return}
+  if(pos<state.missed.length-1){r.dataset.retryPos=String(++pos);syncRetryNav(r,state);return}
+  grade(r,true);return;
+ }
+ if(!next||r.dataset.retryMode==='1')return;
+ const all=questionEls(r),visible=all.findIndex(q=>!q.hidden);
+ if(visible!==all.length-1)return;
+ if(!allAnswered(r))return;
+ e.preventDefault();e.stopImmediatePropagation();grade(r,false);
+},true);
+
+document.addEventListener('input',e=>{const r=root();if(!r||r.dataset.retryMode!=='1'||!e.target.closest?.('[data-sep-question]'))return;setTimeout(()=>syncRetryNav(r,r.__englishGateGradeState),0)},true);
+document.addEventListener('change',e=>{const r=root();if(!r||r.dataset.retryMode!=='1'||!e.target.closest?.('[data-sep-question]'))return;setTimeout(()=>syncRetryNav(r,r.__englishGateGradeState),0)},true);
+})();
