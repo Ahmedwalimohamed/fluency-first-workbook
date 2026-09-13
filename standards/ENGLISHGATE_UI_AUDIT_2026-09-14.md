@@ -12,19 +12,19 @@ This audit does not change authentication, curriculum, grading, progress, or dat
 ## Executive finding
 EnglishGate already contains many good mobile and accessibility patches, but the front end has accumulated too many overlapping CSS and JavaScript layers. The largest current UX risk is **design/behavior drift caused by patch stacking**, not the absence of responsive work.
 
-`public/index.html` currently loads the large base stylesheet plus many subsequent mobile, activity, skill-specific, unified-UI, and redesign stylesheets. It also loads a long chain of behavior patches after the main application script. This makes cascade order and runtime patch order part of product behavior and increases regression risk.
+The remediation strategy is therefore **consolidate, verify, retire** rather than add another redesign layer.
 
 ## Critical
 ### C1 — No single automated UI quality gate
-**Status:** Open
+**Status:** Completed — non-blocking gate added
 
-The repository has curriculum, deployment, security, multi-school, community, CEFR, and learning-ladder QA scripts, but there is no UI/UX standards check in the package scripts.
-
-**Action:** add a non-destructive `qa:ui` command first. Do not add it to blocking `prestart` until the current application passes reliably.
+`npm run qa:ui` now provides static checks for the EnglishGate UI standards. It remains intentionally outside blocking `prestart` until the existing application passes reliably and the checks have been validated against production behavior.
 
 ## High
 ### H1 — CSS patch-stack complexity
-**Evidence:** `public/index.html` loads `styles.css` followed by numerous targeted/mobile redesign stylesheets, including mobile activity, question nav, single-question, lesson player, student home/course, reading/listening separation, unified UI, blue/red/white theme, and separate skill design sheets.
+**Status:** In progress
+
+`public/index.html` still loads the large base stylesheet plus numerous targeted/mobile redesign stylesheets.
 
 **Risk:**
 - later files override earlier files unpredictably
@@ -33,70 +33,102 @@ The repository has curriculum, deployment, security, multi-school, community, CE
 - tokens and spacing drift across skill pages
 - mobile bugs are repaired downstream instead of at the shared source
 
-**Action:** create a controlled consolidation path. Do not delete old CSS immediately. First inventory which selectors are still active, move shared tokens/controls into the unified layer, then retire redundant patches one at a time with regression checks.
+**Completed step:** `question-nav-fix.css` is now the canonical final authority for the student Back/Next navigation controls and loads after the older mobile single-question layer.
+
+**Next:** consolidate Lesson Player styling and then Reading/Listening surfaces.
 
 ### H2 — JavaScript behavior patch-stack complexity
-`public/index.html` loads many post-`app.js` behavior patches for mobile focus, lesson player, student course/home, question navigation, response navigation, listening visibility, reading/listening separation, grading, grammar cleanup and other fixes.
+**Status:** In progress
 
-**Risk:** behavior depends on script order and DOM mutation timing; multiple patches may observe or rewrite the same elements.
+**Completed step:** question response navigation and question Back/Next behavior are now owned by one runtime controller: `public/question-nav-fix.js`. The separate `student-response-navigation-v1.js` controller is no longer loaded by `public/index.html`.
 
-**Action:** identify ownership for each interaction (question navigation, activity tabs, reading/listening rendering, grading feedback). Move each behavior toward one canonical implementation before adding further patch files.
+The canonical controller now owns:
+- response detection
+- response-based Next unlocking
+- wrong-answer forward progression
+- MCQ auto-advance fallback
+- Back/Next placement
+- navigation accessibility labels
+- question-navigation runtime reconciliation
 
-### H3 — Visual source of truth is not fully aligned with the new design token contract
-`englishgate-unified-ui-v1.css` already defines a strong token layer and uses the correct primary blue `#2563EB`, but some token values differ from the new canonical contract (for example background, muted, border, success/error variants). The HTML theme color also still uses an older blue.
+`qa:ui` now treats re-loading the duplicate response-navigation controller as a critical failure.
 
-**Action:** treat the new Design System file as policy, then migrate tokens deliberately. Do not mass-replace raw colors until contrast and role-specific states have been checked.
+**Next interaction owner to consolidate:** Lesson Player.
+
+### H3 — Visual source of truth alignment
+**Status:** Partially completed
+
+`englishgate-unified-ui-v1.css` already defines a strong token layer and uses the correct primary blue `#2563EB`.
+
+**Completed:** HTML/PWA browser theme color migrated from the older `#17369F` to canonical `#2563EB`.
+
+**Remaining:** alias/migrate lesson-player and skill-specific tokens toward the shared semantic token contract without mass replacing colors before contrast checks.
 
 ### H4 — Interface icons still include text/emoji-style glyphs
-The current shell includes glyph-based menu/sign-out controls such as `☰` and `↗`.
+**Status:** Open
 
-**Risk:** inconsistent rendering and weaker accessible/icon-system consistency.
+The shell still includes glyph-based menu/sign-out controls such as `☰` and `↗`.
 
-**Action:** replace with one SVG icon family and add explicit accessible names. This is visual-only and can be done without changing the actions.
+**Action:** replace with one SVG icon family and explicit accessible names without changing actions.
 
 ### H5 — Global `overflow:hidden` in mobile question focus is structurally fragile
+**Status:** Open — guarded by QA warning
+
 The current single-question stylesheet deliberately sets body/content overflow to hidden and creates its own internal scroll container. This solves coverage issues but makes the experience dependent on exact topbar/nav height assumptions and nested scrolling.
 
-**Positive:** it already uses `100dvh`, safe-area insets, constrained media, and 48px mobile navigation buttons.
+**Positive:** it uses `100dvh`, safe-area insets, constrained media, and >=48px mobile question navigation controls.
 
-**Action:** preserve the current behavior for now; test at 320, 360/375, 390/430 widths and with the virtual keyboard. Long writing/input tasks should be specifically tested because nested scroll + keyboard is the likely failure mode.
+**Action:** preserve current behavior until device regression tests cover 320, 360/375, 390/430 widths plus virtual keyboard and long writing tasks.
 
 ## Medium
 ### M1 — Existing unified tokens should be renamed/mapped to canonical semantic tokens
+**Status:** Open
+
 The unified stylesheet uses `--eg-ink`, `--eg-blue`, `--eg-bg`, etc. These are good foundations. Add canonical aliases (`--eg-primary`, `--eg-text`, `--eg-background`, `--eg-error`) rather than duplicating another independent token system.
 
 ### M2 — Hover transforms should not be the main feedback model
-Several desktop controls/cards translate slightly on hover. This is acceptable as polish, but touch/keyboard feedback must remain complete without hover.
+**Status:** Open
+
+Several desktop controls/cards translate slightly on hover. Touch/keyboard feedback must remain complete without hover.
 
 ### M3 — Login copy still describes the older skill-page model
-The login hero currently says “Four skill pages” while the platform now treats Reading and Listening as separate destinations and EnglishGate has expanded beyond that earlier model.
+**Status:** Open
 
-**Action:** revise marketing copy only after confirming the final current activity taxonomy. This is copy, not structural UX.
+The login hero currently says “Four skill pages” while Reading and Listening are now separate destinations and the platform has expanded beyond the older model.
 
 ### M4 — Font policy needs consolidation
-The unified layer uses Nunito with system fallbacks. The Design System now requires one deliberate readable application font and discourages family drift. Confirm whether Nunito is the permanent EnglishGate UI font before adding more typography overrides.
+**Status:** Open
+
+The unified layer uses Nunito with system fallbacks. Confirm one permanent EnglishGate application font before adding more typography overrides.
 
 ## Positive findings already present
 - Correct mobile viewport meta with `viewport-fit=cover`.
+- Canonical browser theme color is now `#2563EB`.
 - Existing safe-area handling in the mobile single-question flow.
 - Mobile media constrained to viewport width.
-- Mobile question navigation uses 48px minimum height in compact layouts.
+- Canonical question navigation uses >=48px mobile controls, visible keyboard focus, safe-area padding and reduced-motion handling.
 - A unified UI token layer already exists, making consolidation feasible.
 - Reading/Listening separation and grading have dedicated implementation files, so the product is already moving toward activity ownership.
 - Lesson visuals already require alt text at the product-contract level.
 - Existing B2 QA is explicitly blocking and separates course completion from demonstrated B2 performance, which is the right pattern to mirror for future UI QA maturity.
 
-## Remediation order
-1. Add non-blocking `npm run qa:ui` static checks.
-2. Standardize canonical design tokens by aliasing existing unified tokens.
-3. Replace shell glyph icons with accessible SVG icons.
-4. Inventory CSS ownership for Student Shell, Lesson Player, Question Card, Reading, Listening, Grammar, Vocabulary.
-5. Inventory JS ownership for Activity Tabs, Question Navigation, Feedback/Grading, Reading/Listening rendering.
-6. Consolidate the Question Card + navigation pattern first.
-7. Consolidate Lesson Player shell second.
-8. Consolidate Reading and Listening skill surfaces third.
-9. Expand to Student Home, Teacher, then Admin.
-10. Only after the application passes consistently, consider making UI QA blocking in `prestart`.
+## Completed remediation
+1. Added non-blocking `npm run qa:ui` static checks.
+2. Consolidated Question Card navigation behavior into one JavaScript controller.
+3. Made question navigation CSS the final navigation authority.
+4. Removed duplicate response-navigation controller from runtime.
+5. Added keyboard focus, reduced motion, safe-area and >=44px touch-target protections to canonical question navigation.
+6. Migrated browser theme color to `#2563EB`.
+
+## Next remediation order
+1. Consolidate Lesson Player shell ownership.
+2. Consolidate Reading and Listening skill surfaces.
+3. Alias existing unified tokens to canonical semantic tokens.
+4. Replace shell glyph icons with accessible SVG icons.
+5. Consolidate Grammar and Vocabulary surfaces.
+6. Expand to Student Home, Teacher, then Admin.
+7. Test nested scrolling and virtual-keyboard behavior on mobile.
+8. Only after stable passing results, consider making UI QA blocking in `prestart`.
 
 ## Do-not-do list
 - Do not redesign every page in one commit.
