@@ -9,6 +9,7 @@
     "qa:multischool": "node --check school-platform-bootstrap.js && node --check public/assets/school-platform.js && node --check public/assets/academic-manager.js",
     "qa:deployment": "node scripts/qa-deployment.mjs",
     "qa:security": "node --check build-info-bootstrap.js && node --check ai-content-editor-bootstrap.js && node --check teacher-management-bootstrap.js && node --check scripts/smoke-production.mjs",
+    "qa:ui": "node scripts/qa-ui.mjs",
     "smoke:production": "node scripts/smoke-production.mjs",
     "prestart": "npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
     "start": "node teacher-management-bootstrap.js",
