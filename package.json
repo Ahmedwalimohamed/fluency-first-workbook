@@ -13,7 +13,6 @@
     "qa:teacher-ui": "node scripts/qa-teacher-ui.mjs",
     "qa:admin-ui": "node scripts/qa-admin-ui.mjs",
     "qa:final-ui": "node scripts/qa-final-ui.mjs",
-    "qa:visual-scenes": "node scripts/qa-visual-scenes.mjs",
     "smoke:production": "node scripts/smoke-production.mjs",
     "prestart": "npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
     "start": "node teacher-management-bootstrap.js",
