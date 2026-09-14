@@ -26,13 +26,18 @@ Completed ownership steps:
 - `question-nav-fix.css` is the final visual authority for student Back/Next navigation.
 - `mobile-lesson-player-v1.css` is restricted to mobile Lesson Player structure only.
 - `englishgate-lesson-player-design-v2.css` owns Lesson Player visual treatment.
-- `reading-listening-separation-v3.css?v=2` is now a structural bridge only: shared layout, sizing, overflow and responsive behavior.
-- `englishgate-reading-design-v2.css` owns Reading presentation, including passage readability, response fields, Reading navigation styling, focus states and reduced motion.
-- `englishgate-listening-design-v2.css` owns Listening presentation, including audio controls, Listening questions, touch targets and focus states.
+- `reading-listening-separation-v3.css?v=2` is a structural bridge only.
+- `englishgate-reading-design-v2.css` owns Reading presentation.
+- `englishgate-listening-design-v2.css` owns Listening presentation.
 - `reading-listening-grading-v1.css` owns result/retry presentation.
-- `qa:ui` enforces Lesson Player and Reading/Listening CSS ownership/order and fails if visual properties leak back into structural bridges.
+- `grammar-lesson-clean-v1.css?v=2` is now a structural/content-layout bridge only.
+- `englishgate-grammar-design-v2.css` owns Grammar presentation.
+- `englishgate-vocabulary-design-v2.css` remains the Vocabulary visual authority.
+- `mobile-student-home-v2.css?v=3` is now restricted to focused mobile Student Home structure only.
+- `englishgate-student-home-design-v3.css` is the canonical Student Home visual layer on desktop and mobile.
+- `qa:ui` enforces these ownership boundaries and stylesheet ordering.
 
-Remaining CSS targets: Grammar, Vocabulary, Student Home, Teacher and Admin.
+Remaining CSS targets: Teacher and Admin surfaces, then legacy shell/course layers where duplication remains.
 
 ### H2 — JavaScript behavior patch-stack complexity
 **Status:** In progress
@@ -40,25 +45,34 @@ Remaining CSS targets: Grammar, Vocabulary, Student Home, Teacher and Admin.
 Completed ownership steps:
 - `public/question-nav-fix.js` is the sole generic student question-navigation controller.
 - `student-response-navigation-v1.js` is no longer loaded.
-- `reading-listening-separation-v3.js?v=4` owns only Reading/Listening rendering, draft persistence, stage navigation and question navigation.
-- `reading-listening-grading-v1.js?v=2` is the sole owner of Reading/Listening submission, score calculation, attempts, retry-only-missed workflow, result acceptance and completion.
-- Final submission crosses an explicit `englishgate:separated-submit` event boundary instead of relying on competing submit implementations.
-- The obsolete `submitSeparated()` grading/completion path has been removed from the renderer.
-- `qa:ui` fails if grading/attempt/completion logic is reintroduced into the Reading/Listening renderer.
+- `reading-listening-separation-v3.js?v=4` owns Reading/Listening rendering, draft persistence, stage navigation and question navigation only.
+- `reading-listening-grading-v1.js?v=2` solely owns Reading/Listening submission, scoring, attempts, retry-only-missed workflow, result acceptance and completion.
+- Final Reading/Listening submission crosses the explicit `englishgate:separated-submit` event boundary.
+- `mobile-student-home-v2.js` owns only activation/deactivation of `student-home-focus-mode`; it does not render dashboard content or own data/navigation behavior.
 
 ### H3 — Visual source of truth alignment
-**Status:** Partially completed
+**Status:** Substantially completed for student learning surfaces
 
-`englishgate-unified-ui-v1.css` already provides a strong token foundation and the canonical primary blue `#2563EB`. HTML/PWA theme color now uses the same primary.
+`englishgate-unified-ui-v1.css?v=2` now exposes the canonical semantic token contract:
+- `--eg-primary: #2563EB`
+- `--eg-text: #0F172A`
+- `--eg-secondary: #64748B`
+- `--eg-background: #F8FAFC`
+- `--eg-card: #FFFFFF`
+- `--eg-border: #E2E8F0`
+- `--eg-success: #16A34A`
+- `--eg-error: #DC2626`
+- `--eg-review: #F59E0B`
+- `--eg-vocabulary: #7C3AED`
 
-Reading, Listening and Lesson Player canonical layers also use `#2563EB`, but they still define their own local token families. Remaining: alias existing token names to semantic tokens and reduce skill-specific token drift.
+Legacy aliases remain for compatibility while new work can use the semantic contract directly.
 
-### H4 — Interface icons still include glyph-style controls
-**Status:** Open
+### H4 — Interface icons
+**Status:** Shell actions completed; learning-surface migration remains
 
-Shell and learning surfaces still contain glyph controls such as `☰`, `↗`, `▶`, `↺` and completion checkmarks.
+The main shell menu and sign-out controls no longer use `☰` and `↗`. They now use inline stroke SVG icons with explicit accessible names while preserving the existing button IDs and behavior.
 
-Action: migrate actionable controls to one accessible SVG icon family without changing behavior. Decorative completion marks may remain text only where semantically appropriate.
+Remaining actionable glyphs such as audio play/restart controls should be migrated later when their component ownership is touched. Decorative completion checkmarks may remain where semantically appropriate.
 
 ### H5 — Mobile question nested-scroll risk
 **Status:** Open — guarded by QA warning
@@ -67,9 +81,9 @@ The current single-question experience uses an internal scroll container with `o
 
 ## Medium
 ### M1 — Semantic token aliases
-**Status:** Open
+**Status:** Completed
 
-Add canonical aliases such as `--eg-primary`, `--eg-text`, `--eg-background`, `--eg-border`, `--eg-success`, `--eg-error` to the existing unified token system rather than introducing another token family.
+Canonical semantic tokens now exist in the unified UI layer while legacy aliases remain available for compatibility.
 
 ### M2 — Hover transforms
 **Status:** Open
@@ -89,15 +103,19 @@ Confirm a single permanent EnglishGate application font before adding further ty
 ## Positive findings already present
 - Correct mobile viewport meta with `viewport-fit=cover`.
 - Canonical browser theme color `#2563EB`.
-- Safe-area handling in question and lesson-player navigation.
+- Unified semantic design token contract now matches the approved EnglishGate palette.
+- Safe-area handling in question, Lesson Player and Student Home navigation.
 - Canonical question navigation has >=44px controls, visible keyboard focus and reduced-motion support.
 - Lesson Player has a structural-vs-visual ownership boundary.
-- Reading and Listening now also have structural-vs-visual ownership boundaries.
+- Reading and Listening have structural-vs-visual ownership boundaries.
+- Grammar has a structural-vs-visual ownership boundary.
+- Vocabulary has an explicit canonical visual layer with the approved purple vocabulary accent.
+- Student Home now has structural focus-mode ownership separated from canonical visual ownership.
+- Student Home focus-mode JavaScript does not own dashboard rendering or data behavior.
 - Reading and Listening are independent activities with separately stored attempts and completion.
 - Reading question headings receive programmatic focus when moving Back/Next.
 - Reading/Listening grading preserves retry-only-missed behavior while having a single submission owner.
-- Reading canonical styling includes focus and reduced-motion safeguards.
-- Listening canonical styling includes >=44px controls and visible focus states.
+- Main shell menu/sign-out actions use accessible SVG icons instead of text glyphs.
 - Lesson visuals require alt text at the product-contract level.
 
 ## Completed remediation
@@ -112,15 +130,24 @@ Confirm a single permanent EnglishGate application font before adding further ty
 9. Established explicit renderer → grader submission event boundary.
 10. Reduced shared Reading/Listening CSS to structural ownership only.
 11. Made Reading, Listening and grading styles the presentation owners for their respective surfaces.
-12. Added QA enforcement for Reading/Listening CSS ownership/order and accessibility safeguards.
+12. Reduced legacy Grammar CSS to structural/content-layout ownership only.
+13. Preserved `englishgate-grammar-design-v2.css` as the Grammar visual authority.
+14. Verified Vocabulary’s canonical design layer and accessibility safeguards.
+15. Added canonical semantic design tokens to the unified UI layer.
+16. Reduced `mobile-student-home-v2.css` to Student Home focus structure only.
+17. Preserved `mobile-student-home-v2.js` as mode activation only.
+18. Made `englishgate-student-home-design-v3.css` the canonical Student Home presentation layer.
+19. Replaced shell menu/sign-out glyphs with accessible inline SVG icons.
+20. Added QA enforcement for Student Home ownership, semantic tokens and shell SVG controls.
 
 ## Next remediation order
-1. **Consolidate Grammar and Vocabulary surfaces. Current target.**
-2. Alias unified tokens to canonical semantic tokens.
-3. Replace actionable glyph icons with accessible SVG icons.
-4. Expand to Student Home, Teacher, then Admin.
-5. Test nested scrolling and virtual-keyboard behavior on mobile.
-6. Only after stable passing results, consider making UI QA blocking in `prestart`.
+1. **Consolidate Teacher surfaces. Current target.**
+2. Consolidate Admin surfaces.
+3. Review remaining legacy shell/course CSS ownership.
+4. Replace remaining actionable learning-surface glyph icons with accessible SVG controls when their owning components are touched.
+5. Update outdated login activity-model copy once the final public wording is confirmed.
+6. Test nested scrolling, safe areas and virtual-keyboard behavior on mobile devices.
+7. Only after stable passing results, consider making UI QA blocking in `prestart`.
 
 ## Do-not-do list
 - Do not redesign every page in one commit.
