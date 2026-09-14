@@ -105,7 +105,11 @@ function wireNotes(){
    overrides.set(key,freshStyle);
   }
   const o=overrides.get(key);
-  if(o){note.textContent=o.text;note.style.color=o.color;note.style.fontSize=`${o.size}px`}
+  if(o){
+   if(!note.isContentEditable&&!note.classList.contains('is-text-editing'))note.textContent=o.text;
+   note.style.color=o.color;
+   note.style.fontSize=`${o.size}px`;
+  }
   if(note.dataset.textFormattingBound==='1')return;
   note.dataset.textFormattingBound='1';note.tabIndex=0;
   note.addEventListener('click',e=>{if(!textMode())return;e.stopPropagation();selectNote(note)});
