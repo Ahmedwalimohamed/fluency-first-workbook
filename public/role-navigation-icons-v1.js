@@ -47,6 +47,23 @@ function enhance(root=document){
   });
 }
 
+function loadTeacherTextFormatting(){
+  if(!document.getElementById('teacherTextFormattingCss')){
+    const link=document.createElement('link');
+    link.id='teacherTextFormattingCss';
+    link.rel='stylesheet';
+    link.href='teacher-text-formatting-v1.css?v=1';
+    document.head.appendChild(link);
+  }
+  if(!document.getElementById('teacherTextFormattingJs')){
+    const script=document.createElement('script');
+    script.id='teacherTextFormattingJs';
+    script.src='teacher-text-formatting-v1.js?v=1';
+    script.defer=true;
+    document.body.appendChild(script);
+  }
+}
+
 let queued=false;
 function schedule(){
   if(queued)return;
@@ -56,6 +73,7 @@ function schedule(){
 
 function boot(){
   enhance();
+  loadTeacherTextFormatting();
   new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true});
 }
 
