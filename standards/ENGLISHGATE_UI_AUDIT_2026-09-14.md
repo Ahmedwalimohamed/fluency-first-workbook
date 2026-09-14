@@ -26,9 +26,13 @@ Completed ownership steps:
 - `question-nav-fix.css` is the final visual authority for student Back/Next navigation.
 - `mobile-lesson-player-v1.css` is restricted to mobile Lesson Player structure only.
 - `englishgate-lesson-player-design-v2.css` owns Lesson Player visual treatment.
-- `qa:ui` fails if Lesson Player visual properties leak into the structural bridge or if CSS ownership order is reversed.
+- `reading-listening-separation-v3.css?v=2` is now a structural bridge only: shared layout, sizing, overflow and responsive behavior.
+- `englishgate-reading-design-v2.css` owns Reading presentation, including passage readability, response fields, Reading navigation styling, focus states and reduced motion.
+- `englishgate-listening-design-v2.css` owns Listening presentation, including audio controls, Listening questions, touch targets and focus states.
+- `reading-listening-grading-v1.css` owns result/retry presentation.
+- `qa:ui` enforces Lesson Player and Reading/Listening CSS ownership/order and fails if visual properties leak back into structural bridges.
 
-Remaining CSS targets: Reading, Listening, Grammar, Vocabulary, Student Home, Teacher and Admin.
+Remaining CSS targets: Grammar, Vocabulary, Student Home, Teacher and Admin.
 
 ### H2 — JavaScript behavior patch-stack complexity
 **Status:** In progress
@@ -36,18 +40,18 @@ Remaining CSS targets: Reading, Listening, Grammar, Vocabulary, Student Home, Te
 Completed ownership steps:
 - `public/question-nav-fix.js` is the sole generic student question-navigation controller.
 - `student-response-navigation-v1.js` is no longer loaded.
-- `reading-listening-separation-v3.js?v=4` now owns only Reading/Listening rendering, draft persistence, stage navigation and question navigation.
+- `reading-listening-separation-v3.js?v=4` owns only Reading/Listening rendering, draft persistence, stage navigation and question navigation.
 - `reading-listening-grading-v1.js?v=2` is the sole owner of Reading/Listening submission, score calculation, attempts, retry-only-missed workflow, result acceptance and completion.
-- Final submission now crosses an explicit `englishgate:separated-submit` event boundary instead of relying on two competing submit implementations.
+- Final submission crosses an explicit `englishgate:separated-submit` event boundary instead of relying on competing submit implementations.
 - The obsolete `submitSeparated()` grading/completion path has been removed from the renderer.
-- `qa:ui` now fails if grading/attempt/completion logic is reintroduced into the Reading/Listening renderer.
+- `qa:ui` fails if grading/attempt/completion logic is reintroduced into the Reading/Listening renderer.
 
 ### H3 — Visual source of truth alignment
 **Status:** Partially completed
 
 `englishgate-unified-ui-v1.css` already provides a strong token foundation and the canonical primary blue `#2563EB`. HTML/PWA theme color now uses the same primary.
 
-Remaining: alias existing token names to semantic tokens and reduce skill-specific token drift.
+Reading, Listening and Lesson Player canonical layers also use `#2563EB`, but they still define their own local token families. Remaining: alias existing token names to semantic tokens and reduce skill-specific token drift.
 
 ### H4 — Interface icons still include glyph-style controls
 **Status:** Open
@@ -88,9 +92,12 @@ Confirm a single permanent EnglishGate application font before adding further ty
 - Safe-area handling in question and lesson-player navigation.
 - Canonical question navigation has >=44px controls, visible keyboard focus and reduced-motion support.
 - Lesson Player has a structural-vs-visual ownership boundary.
+- Reading and Listening now also have structural-vs-visual ownership boundaries.
 - Reading and Listening are independent activities with separately stored attempts and completion.
-- Reading question headings now receive programmatic focus when moving Back/Next.
+- Reading question headings receive programmatic focus when moving Back/Next.
 - Reading/Listening grading preserves retry-only-missed behavior while having a single submission owner.
+- Reading canonical styling includes focus and reduced-motion safeguards.
+- Listening canonical styling includes >=44px controls and visible focus states.
 - Lesson visuals require alt text at the product-contract level.
 
 ## Completed remediation
@@ -103,16 +110,17 @@ Confirm a single permanent EnglishGate application font before adding further ty
 7. Added QA enforcement for Lesson Player ownership/order.
 8. Removed duplicate Reading/Listening grading/completion implementation from the renderer.
 9. Established explicit renderer → grader submission event boundary.
-10. Added QA enforcement for Reading/Listening ownership.
+10. Reduced shared Reading/Listening CSS to structural ownership only.
+11. Made Reading, Listening and grading styles the presentation owners for their respective surfaces.
+12. Added QA enforcement for Reading/Listening CSS ownership/order and accessibility safeguards.
 
 ## Next remediation order
-1. **Consolidate Reading and Listening visual surfaces.**
+1. **Consolidate Grammar and Vocabulary surfaces. Current target.**
 2. Alias unified tokens to canonical semantic tokens.
-3. Consolidate Grammar and Vocabulary surfaces.
-4. Replace actionable glyph icons with accessible SVG icons.
-5. Expand to Student Home, Teacher, then Admin.
-6. Test nested scrolling and virtual-keyboard behavior on mobile.
-7. Only after stable passing results, consider making UI QA blocking in `prestart`.
+3. Replace actionable glyph icons with accessible SVG icons.
+4. Expand to Student Home, Teacher, then Admin.
+5. Test nested scrolling and virtual-keyboard behavior on mobile.
+6. Only after stable passing results, consider making UI QA blocking in `prestart`.
 
 ## Do-not-do list
 - Do not redesign every page in one commit.
