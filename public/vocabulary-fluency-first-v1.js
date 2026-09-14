@@ -170,6 +170,7 @@ function productionPrompt(item,l,index){
 
 window.vocabActivity=function(l){
   try{
+    if(l?.workbookMode==='approved-pilot-exact')return previousVocabActivity(l);
     const pool=uniq(references(l),x=>norm(x.word)).filter(x=>x.word&&x.word.length<=48);
     if(!pool.length)return previousVocabActivity(l);
     const graded=gradedItems(l,pool);
@@ -213,5 +214,5 @@ document.addEventListener('click',e=>{
   if(card)checkProduction(card);
 });
 
-window.ENGLISHGATE_VOCAB_FLUENCY_FIRST_VERSION='1.1.0';
+window.ENGLISHGATE_VOCAB_FLUENCY_FIRST_VERSION='1.2.0';
 })();
