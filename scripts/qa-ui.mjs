@@ -40,6 +40,7 @@ if (!exists('public/index.html')) {
   requireMatch('Reading/Listening structural stylesheet cache version', html, /reading-listening-separation-v3\.css\?v=2/i, 'reading-listening-separation-v3.css?v=2 must be loaded');
   requireMatch('Grammar structural stylesheet cache version', html, /grammar-lesson-clean-v1\.css\?v=2/i, 'grammar-lesson-clean-v1.css?v=2 must be loaded');
   requireMatch('Unified semantic-token stylesheet cache version', html, /englishgate-unified-ui-v1\.css\?v=2/i, 'englishgate-unified-ui-v1.css?v=2 must be loaded');
+  requireMatch('Student Home structural stylesheet cache version', html, /mobile-student-home-v2\.css\?v=3/i, 'mobile-student-home-v2.css?v=3 must be loaded');
 
   if (/student-response-navigation-v1\.js/i.test(html)) critical.push('Duplicate question navigation controller is loaded: student-response-navigation-v1.js');
   else passes.push('Duplicate question navigation controller removed from runtime');
@@ -60,12 +61,23 @@ if (!exists('public/index.html')) {
   if (grammarBridgeIndex >= 0 && grammarDesignIndex > grammarBridgeIndex) passes.push('Grammar structural CSS loads before canonical Grammar design layer');
   else critical.push('Grammar CSS ownership order is invalid: grammar structural CSS must load before englishgate-grammar-design-v2.css.');
 
+  const homeBridgeIndex = html.indexOf('mobile-student-home-v2.css');
+  const homeDesignIndex = html.indexOf('englishgate-student-home-design-v3.css');
+  if (homeBridgeIndex >= 0 && homeDesignIndex > homeBridgeIndex) passes.push('Student Home structural bridge loads before canonical Student Home design layer');
+  else critical.push('Student Home CSS ownership order is invalid: mobile structural bridge must load before englishgate-student-home-design-v3.css.');
+
+  if (/id=["']menuBtn["'][^>]*>[\s\S]*?<svg[^>]*aria-hidden=["']true["']/i.test(html) && /id=["']logoutBtn["'][^>]*aria-label=["']Sign out["'][^>]*>[\s\S]*?<svg[^>]*aria-hidden=["']true["']/i.test(html)) {
+    passes.push('Primary shell actions use accessible inline SVG icons');
+  } else {
+    critical.push('Menu and sign-out shell actions must use accessible inline SVG icons.');
+  }
+
   const cssLinks = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]*>/gi)].length;
   const scripts = [...html.matchAll(/<script\s+src=/gi)].length;
   if (cssLinks > 14) warnings.push(`CSS layering risk: ${cssLinks} stylesheets are loaded by public/index.html.`);
   if (scripts > 24) warnings.push(`JavaScript patch-stack risk: ${scripts} external scripts are loaded by public/index.html.`);
 
-  if (/[>\s](☰|↗|⚙|✎|✏|🗑|✓|✕)[<\s]/u.test(html)) warnings.push('Glyph/emoji-style UI icons detected in public/index.html; prefer one SVG icon family with accessible names.');
+  if (/[>\s](☰|↗|⚙|✎|✏|🗑|✕)[<\s]/u.test(html)) warnings.push('Actionable glyph-style UI icons remain in public/index.html; prefer one SVG icon family with accessible names.');
 }
 
 if (exists('public/englishgate-unified-ui-v1.css')) {
@@ -182,6 +194,27 @@ if (exists('public/englishgate-vocabulary-design-v2.css')) {
   const vocabularyCss = read('public/englishgate-vocabulary-design-v2.css');
   if (/--eg-vocab-primary\s*:\s*#2563EB/i.test(vocabularyCss) && /--eg-vocab-accent\s*:\s*#7C3AED/i.test(vocabularyCss) && /focus-visible/.test(vocabularyCss) && /min-width\s*:\s*44px/i.test(vocabularyCss)) passes.push('Vocabulary canonical design layer includes approved tokens, focus states and touch targets');
   else warnings.push('Vocabulary canonical design layer is missing one or more accessibility/design safeguards.');
+}
+
+if (exists('public/mobile-student-home-v2.css')) {
+  const bridge = read('public/mobile-student-home-v2.css');
+  const forbiddenVisuals = /(?:background|color|border(?:-radius)?|box-shadow|font-size|font-weight|letter-spacing|line-height)\s*:/i;
+  if (forbiddenVisuals.test(bridge)) critical.push('Student Home structural bridge contains visual styling; presentation belongs to englishgate-student-home-design-v3.css.');
+  else passes.push('Student Home mobile bridge is constrained to focus structure only');
+  if (/student-home-focus-mode/.test(bridge) && /grid-template-areas/.test(bridge) && /display\s*:\s*none/i.test(bridge)) passes.push('Student Home structural bridge preserves focused mobile information hierarchy');
+  else critical.push('Student Home structural bridge is missing focus-layout ownership rules.');
+}
+
+if (exists('public/mobile-student-home-v2.js')) {
+  const controller = read('public/mobile-student-home-v2.js');
+  if (/classList\.toggle\(['"]student-home-focus-mode/.test(controller) && !/innerHTML|insertAdjacentHTML|fetch\(|api\(/.test(controller)) passes.push('Student Home mobile controller owns mode activation only');
+  else warnings.push('Student Home mobile controller may own more than focus-mode activation.');
+}
+
+if (exists('public/englishgate-student-home-design-v3.css')) {
+  const homeCss = read('public/englishgate-student-home-design-v3.css');
+  if (/--eg-home-primary\s*:\s*#2563EB/i.test(homeCss) && /focus-visible/.test(homeCss) && /env\(safe-area-inset-bottom\)/.test(homeCss)) passes.push('Student Home canonical design includes approved primary, focus states and safe-area support');
+  else warnings.push('Student Home canonical design layer is missing one or more accessibility/design safeguards.');
 }
 
 if (exists('public/mobile-single-question-v5.css')) {
