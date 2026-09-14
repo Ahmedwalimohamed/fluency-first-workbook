@@ -182,56 +182,43 @@ HOMEWORK
 Write a 180–220 word career story with four parts: starting point, turning point, achievement, next direction. Include at least two past simple verbs, two present perfect forms, and one specific statement of impact.
 `;
 
+// PILOT WORKBOOK: 25 activities total — 24 auto-graded + 1 authentic writing task.
+// Source-of-truth rule: every activity below practises language explicitly taught in this parent lesson.
 const vocabItems=[
- {type:'choice',q:'What is a “turning point” in a career?',options:['An event that causes an important change in direction','A routine daily task','A salary payment'],answer:'An event that causes an important change in direction',tag:'vocabulary:meaning'},
- {type:'choice',q:'Which is a transferable skill?',options:['communication','one company password','one office address'],answer:'communication',tag:'vocabulary:application'},
- {type:'choice',q:'Which sentence best shows impact?',options:['The new process reduced missed updates.','I had a process.','The office was busy.'],answer:'The new process reduced missed updates.',tag:'vocabulary:application'},
- {type:'choice',q:'To “take initiative” means to...',options:['act without waiting to be told every step','avoid responsibility','repeat someone else’s work'],answer:'act without waiting to be told every step',tag:'vocabulary:meaning'},
- {type:'choice',q:'Which phrase describes movement into more advanced roles?',options:['career progression','career repetition','career delay'],answer:'career progression',tag:'vocabulary:meaning'},
- {type:'choice',q:'A career “transition” is...',options:['a move from one role, field, or stage to another','a lunch break','a job advertisement'],answer:'a move from one role, field, or stage to another',tag:'vocabulary:meaning'},
- {type:'choice',q:'Which is the best example of professional growth?',options:['becoming more confident at leading projects','using the same password for years','working at the same desk'],answer:'becoming more confident at leading projects',tag:'vocabulary:application'},
- {type:'choice',q:'Which sentence uses “achievement” naturally?',options:['One achievement I’m proud of is improving the handover process.','My achievement is every Monday.','I achievement the report.'],answer:'One achievement I’m proud of is improving the handover process.',tag:'vocabulary:context'},
- {type:'exact',q:'Type the two-word phrase for a skill useful in many different jobs.',answer:'transferable skill',min:2,tag:'vocabulary:recall'},
- {type:'choice',q:'Which phrase best completes: “Her ___ from banking to education took careful planning.”',options:['transition','impact','responsibility'],answer:'transition',tag:'vocabulary:context'}
+ {type:'choice',q:'Fatima says: “Moving from nursing into hospital management completely changed the direction of my career.” Which lesson phrase best describes this event?',options:['professional growth','turning point','responsibility','impact'],answer:'turning point',tag:'vocabulary:context'},
+ {type:'choice',q:'Which sentence uses “take initiative” naturally?',options:['Ali took initiative and suggested a better reporting system.','Ali took initiative from his manager every Friday.','Ali made an initiative his career.','Ali was initiative for three years.'],answer:'Ali took initiative and suggested a better reporting system.',tag:'vocabulary:usage'},
+ {type:'choice',q:'You learned communication skills while working in customer service. Now those skills help you manage staff. What kind of skills are they?',options:['transferable skills','transitions','impacts','career paths'],answer:'transferable skills',tag:'vocabulary:situation'},
+ {type:'choice',q:'Complete naturally: “The training programme had a positive ___ on staff confidence.”',options:['transition','progression','impact','path'],answer:'impact',tag:'vocabulary:context'},
+ {type:'choice',q:'Which sentence best describes career progression?',options:['I have gradually moved into roles with more responsibility.','I arrive at work at 8:00 every morning.','I changed my office last week.','I completed one report yesterday.'],answer:'I have gradually moved into roles with more responsibility.',tag:'vocabulary:usage'},
+ {type:'choice',q:'Interviewer: “What did you learn from managing your first team?” Candidate: “It contributed greatly to my ___ because I became more confident in leadership.”',options:['professional growth','career path','transition','responsibility'],answer:'professional growth',tag:'vocabulary:situation'}
 ];
 
 const questions=[
- {q:'How did Yusuf describe his role at first?',options:['By listing routine tasks','By explaining one major achievement','By discussing his future goals'],answer:'By listing routine tasks',tag:'reading:detail'},
- {q:'What problem did Yusuf identify?',options:['Drivers were missing schedule updates sent through different channels','The company had no drivers','Customers stopped using the company'],answer:'Drivers were missing schedule updates sent through different channels',tag:'reading:detail'},
- {q:'What did Yusuf do?',options:['He proposed and tested one shared dispatch sheet','He resigned immediately','He bought new vehicles'],answer:'He proposed and tested one shared dispatch sheet',tag:'reading:detail'},
- {q:'Which skill did the situation demonstrate?',options:['Taking initiative','Avoiding communication','Memorising job titles'],answer:'Taking initiative',tag:'reading:inference'},
- {q:'Why does Yusuf avoid saying he transformed the whole company?',options:['Because he wants to describe his contribution accurately without exaggerating','Because nothing improved','Because he cannot remember the project'],answer:'Because he wants to describe his contribution accurately without exaggerating',tag:'reading:inference'},
- {q:'What was Samira’s original role?',options:['Classroom teacher','Finance manager','Software engineer'],answer:'Classroom teacher',tag:'listening:detail'},
- {q:'What became a turning point for Samira?',options:['Coordinating a teacher-support programme','Changing classrooms','Taking annual leave'],answer:'Coordinating a teacher-support programme',tag:'listening:detail'},
- {q:'Why did Samira speak with teachers?',options:['To understand why attendance was inconsistent','To cancel the programme','To choose new uniforms'],answer:'To understand why attendance was inconsistent',tag:'listening:reason'},
- {q:'What has Samira developed since that experience?',options:['Planning, facilitation, and follow-up skills','Only typing speed','A new school building'],answer:'Planning, facilitation, and follow-up skills',tag:'listening:detail'},
- {q:'How did the experience influence her career direction?',options:['It increased her interest in education management','It made her leave education completely','It made her avoid project work'],answer:'It increased her interest in education management',tag:'listening:inference'}
+ {q:'What is the main purpose of Yusuf’s story?',options:['To show how he learned to describe career growth through evidence and impact','To explain how delivery trucks work','To complain about his colleagues','To advertise the logistics company'],answer:'To show how he learned to describe career growth through evidence and impact',tag:'reading:gist'},
+ {q:'What recurring problem did Yusuf notice?',options:['Drivers received schedule changes through several channels and sometimes missed them.','The company did not have enough vehicles.','Customers stopped ordering deliveries.','His manager refused to prepare reports.'],answer:'Drivers received schedule changes through several channels and sometimes missed them.',tag:'reading:detail'},
+ {q:'What did Yusuf do after identifying the problem?',options:['He created and tested a shared daily dispatch sheet.','He waited for management to solve it.','He changed companies.','He stopped updating delivery records.'],answer:'He created and tested a shared daily dispatch sheet.',tag:'reading:action'},
+ {q:'Which action best demonstrates that Yusuf took initiative?',options:['He noticed the problem and proposed a solution.','He answered normal customer calls.','He received instructions from his manager.','He listed his daily tasks.'],answer:'He noticed the problem and proposed a solution.',tag:'reading:evidence'},
+ {q:'Why does Yusuf avoid saying that he “transformed the whole company”?',options:['He wants his career story to remain accurate and credible.','He does not remember what happened.','He dislikes the company.','His project had no effect.'],answer:'He wants his career story to remain accurate and credible.',tag:'reading:inference'},
+ {q:'According to the reading, what makes a strong career story?',options:['Connecting experience, evidence, learning and direction','Listing every job title','Using impressive claims','Mentioning only promotions'],answer:'Connecting experience, evidence, learning and direction',tag:'reading:message'},
+ {q:'What is Samira mainly describing?',options:['An experience that changed her professional direction','Her daily teaching timetable','A disagreement with her manager','Why she wants to leave education'],answer:'An experience that changed her professional direction',tag:'listening:gist'},
+ {q:'What was Samira doing before she coordinated the programme?',options:['Classroom teaching','Banking','School finance','Logistics'],answer:'Classroom teaching',tag:'listening:detail'},
+ {q:'What problem did Samira’s programme initially have?',options:['Workshop attendance was inconsistent.','There were no teachers.','The school cancelled the programme.','She had no classroom.'],answer:'Workshop attendance was inconsistent.',tag:'listening:problem'},
+ {q:'What did Samira and the team do in response?',options:['They changed the schedule and made the sessions more practical.','They stopped the workshops.','They replaced all the teachers.','They shortened the school year.'],answer:'They changed the schedule and made the sessions more practical.',tag:'listening:response'},
+ {q:'When Samira says the “bigger result” was professional growth, what does she mean?',options:['The experience developed her own skills and confidence as well as improving attendance.','The programme earned more money.','She received a larger classroom.','More students joined the school.'],answer:'The experience developed her own skills and confidence as well as improving attendance.',tag:'listening:meaning'},
+ {q:'Why is Samira now interested in education management?',options:['She discovered that she enjoys developing systems and supporting other teachers.','She no longer likes education.','She wants to avoid working with teachers.','Her manager told her she must change careers.'],answer:'She discovered that she enjoys developing systems and supporting other teachers.',tag:'listening:implication'}
 ];
 
 const grammarItems=[
- {q:'Choose the correct form: I ___ the organisation in 2021.',options:['joined','have joined','have been joining'],answer:'joined',tag:'grammar:past-simple'},
- {q:'Choose the correct form: Since then, I ___ stronger leadership skills.',options:['have developed','developed in 2021','am develop'],answer:'have developed',tag:'grammar:present-perfect'},
- {q:'Choose the correct sentence.',options:['I have managed the branch for two years.','I manage the branch since two years.','I managed the branch for two years and still do.'],answer:'I have managed the branch for two years.',tag:'grammar:for'},
- {q:'Choose the correct sentence.',options:['I have worked in education since 2023.','I work in education since 2023.','I have worked in education from 2023 ago.'],answer:'I have worked in education since 2023.',tag:'grammar:since'},
- {q:'Which sentence describes a specific finished event?',options:['I led my first project last year.','I have led projects since 2022.','I have developed confidence over time.'],answer:'I led my first project last year.',tag:'grammar:past-simple'},
- {q:'Which sentence best links action to result?',options:['I redesigned the form, which reduced duplicate entries.','I redesigned the form and things.','I was responsible because result.'],answer:'I redesigned the form, which reduced duplicate entries.',tag:'grammar:result-clause'},
- {q:'Choose the best evidence-based claim.',options:['I helped improve the reporting process for our branch.','I completely transformed everything.','I was obviously the best person there.'],answer:'I helped improve the reporting process for our branch.',tag:'grammar:hedging'},
- {q:'Complete: A major turning point ___ when I was asked to lead the project.',options:['came','has come yesterday','coming'],answer:'came',tag:'grammar:past-simple'},
- {q:'Complete: That experience ___ my career direction ever since.',options:['has influenced','influenced last week only','influence'],answer:'has influenced',tag:'grammar:present-perfect'},
- {q:'Which sequence tells an achievement most clearly?',options:['situation → action → result → learning','title → title → title → salary','opinion → exaggeration → conclusion'],answer:'situation → action → result → learning',tag:'grammar:discourse'}
+ {q:'Complete your career story: “I ___ the company in 2021.”',options:['joined','have joined','have been joining','join since'],answer:'joined',tag:'grammar:past-simple'},
+ {q:'Complete naturally: “Since becoming a supervisor, I ___ much more confident.”',options:['became yesterday','have become','become last year','have becoming'],answer:'have become',tag:'grammar:present-perfect'},
+ {q:'Complete: “I have worked in education ___ 2023.”',options:['for','since','during','from ago'],answer:'since',tag:'grammar:since'},
+ {q:'Interviewer: “Have you ever managed a project?” Which answer is most natural?',options:['Yes, I managed one last year.','Yes, I have manage one.','Yes, I am managing yesterday.','Yes, I have managed last year.'],answer:'Yes, I managed one last year.',tag:'grammar:experience'},
+ {q:'Which version turns the task into a stronger achievement?',options:['I prepared weekly reports.','I prepared weekly reports, which helped the team identify delivery delays earlier.','Weekly reports are reports.','I was the greatest report writer.'],answer:'I prepared weekly reports, which helped the team identify delivery delays earlier.',tag:'grammar:result-clause'},
+ {q:'Which sentence would be most appropriate in a professional interview?',options:['I completely transformed the entire organisation.','I helped redesign our branch reporting system, which reduced duplication.','Nobody could do the job except me.','Everything improved because of me.'],answer:'I helped redesign our branch reporting system, which reduced duplication.',tag:'grammar:credible-claim'}
 ];
 
 const writingTasks=[
- {prompt:'Write one sentence stating where your career or study path started.',minWords:8},
- {prompt:'Describe one turning point in your work or studies.',minWords:15},
- {prompt:'Write one sentence using “Since then, I have…” to show development.',minWords:10},
- {prompt:'Describe one responsibility you currently handle.',minWords:12},
- {prompt:'Turn one routine task into an achievement by adding a result.',minWords:18},
- {prompt:'Write one accurate statement of impact without exaggerating.',minWords:15},
- {prompt:'Explain one transferable skill you developed and where you developed it.',minWords:25},
- {prompt:'Describe one career or study transition and why you made it.',minWords:30},
- {prompt:'Draft a 100–130 word career story: starting point, turning point, achievement, learning.',minWords:100},
- {prompt:'Final transfer: write a polished 180–220 word career story linking past experience, present strengths, and next direction.',minWords:180}
+ {prompt:'Tell your career story in 120–150 words. Include where you started, one turning point, something you did, the result or impact, what you learned, and how the experience influenced your future direction. Use at least two lesson vocabulary expressions, one Past Simple sentence, two Present Perfect forms, and one clear action → result statement. If you do not have formal work experience, use study, volunteering, community work, an internship, or a personal project.',minWords:120,maxWords:150,authentic:true,autoGrade:false,tag:'writing:authentic-transfer'}
 ];
 
 const workbookLesson={
