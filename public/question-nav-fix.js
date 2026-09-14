@@ -6,6 +6,7 @@
 
 const $=(sel,root=document)=>root.querySelector(sel);
 const isStudent=()=>typeof session==='undefined'||session?.role==='student';
+const isMobile=()=>window.matchMedia('(max-width:760px)').matches;
 
 function currentQuestion(root){
  return root?.querySelector('.guided-question.is-flow-current')||
@@ -31,6 +32,27 @@ function makeNav(root){
  return nav;
 }
 
+function makeMobileProxy(){
+ let nav=document.querySelector('.student-question-mobile-proxy');
+ if(nav)return nav;
+ nav=document.createElement('nav');
+ nav.className='student-question-mobile-proxy';
+ nav.setAttribute('aria-label','Question navigation');
+ nav.innerHTML='<div class="student-question-mobile-proxy-inner"><button type="button" class="student-question-mobile-back">← Back</button><button type="button" class="student-question-mobile-next">Next →</button></div>';
+ document.body.appendChild(nav);
+ nav.querySelector('.student-question-mobile-back').addEventListener('click',()=>{
+  const root=$('#activityPanel');
+  const original=$('[data-question-flow-back]',root);
+  if(original&&!original.disabled)original.click();
+ });
+ nav.querySelector('.student-question-mobile-next').addEventListener('click',()=>{
+  const root=$('#activityPanel');
+  const original=$('.student-question-continue',root);
+  if(original&&!original.disabled)original.click();
+ });
+ return nav;
+}
+
 function syncResponseState(q){
  if(!q)return;
  q.dataset.responseRecorded=hasResponse(q)?'1':'0';
@@ -48,6 +70,32 @@ function syncNavigationState(root){
  }else if(!/check|save/i.test(next.textContent||'')){
   next.setAttribute('aria-disabled',String(Boolean(next.disabled)));
  }
+}
+
+function syncMobileProxy(root,back,next){
+ const proxy=makeMobileProxy();
+ const proxyBack=$('.student-question-mobile-back',proxy);
+ const proxyNext=$('.student-question-mobile-next',proxy);
+ const q=currentQuestion(root);
+ const active=isMobile()&&document.body.classList.contains('student-question-focus-mode')&&isStudent();
+ proxy.hidden=!active;
+ if(!active)return;
+
+ proxyBack.hidden=Boolean(back.hidden);
+ proxyBack.disabled=Boolean(back.disabled||back.hidden);
+ proxyNext.hidden=false;
+ proxyNext.disabled=Boolean(next.disabled);
+ proxyNext.textContent=/check/i.test(next.textContent||'')?'Check answer':(/save/i.test(next.textContent||'')?next.textContent:'Next →');
+ proxyNext.setAttribute('aria-disabled',String(Boolean(next.disabled)));
+
+ if(q&&hasResponse(q)){
+  q.dataset.responseRecorded='1';
+  next.disabled=false;
+  next.removeAttribute('aria-disabled');
+  proxyNext.disabled=false;
+  proxyNext.removeAttribute('aria-disabled');
+ }
+ document.body.classList.add('student-question-mobile-proxy-active');
 }
 
 function enhance(){
@@ -86,11 +134,14 @@ function enhance(){
 
  syncNavigationState(root);
  document.body.classList.add('student-question-nav-active');
+ syncMobileProxy(root,back,next);
 }
 
 function cleanup(){
  if(document.body.classList.contains('student-question-focus-mode'))return;
- document.body.classList.remove('student-question-nav-active');
+ document.body.classList.remove('student-question-nav-active','student-question-mobile-proxy-active');
+ const proxy=document.querySelector('.student-question-mobile-proxy');
+ if(proxy)proxy.hidden=true;
 }
 
 function fallbackAdvance(q){
@@ -105,6 +156,7 @@ function fallbackAdvance(q){
   next.disabled=false;
   next.removeAttribute('aria-disabled');
   if(next.dataset.autoAdvance==='1')next.click();
+  else enhance();
  },950);
 }
 
@@ -127,9 +179,9 @@ document.addEventListener('input',e=>{
 
 document.addEventListener('click',e=>{
  if(!document.body.classList.contains('student-question-focus-mode'))return;
- const check=e.target.closest?.('[data-writing-core-check]');
- if(check){
-  const q=check.closest('.guided-question');
+ const writingCheck=e.target.closest?.('[data-writing-core-check]');
+ if(writingCheck){
+  const q=writingCheck.closest('.guided-question');
   setTimeout(()=>{
    if(q?.dataset.coreComplete==='1')q.dataset.responseRecorded='1';
    enhance();
@@ -137,6 +189,16 @@ document.addEventListener('click',e=>{
   },0);
   return;
  }
+
+ // Typed grammar/transformation questions often use a plain "Check" button.
+ // A genuine typed attempt must unlock navigation regardless of correctness.
+ const genericCheck=e.target.closest?.('button');
+ if(genericCheck&&/^check(?: answer| answers)?$/i.test(String(genericCheck.textContent||'').trim())){
+  const q=genericCheck.closest('.guided-question');
+  if(q&&hasResponse(q))q.dataset.responseRecorded='1';
+  setTimeout(()=>{enhance();if(q)fallbackAdvance(q)},0);
+ }
+
  const choice=e.target.closest?.('[data-mcq-option],.mcq-option-card,.choice');
  if(choice){
   const q=choice.closest('.guided-question');
@@ -164,9 +226,11 @@ function start(){
   subtree:true,
   childList:true,
   attributes:true,
-  attributeFilter:['class','hidden','disabled','data-core-complete','data-core-correct']
+  attributeFilter:['class','hidden','disabled','data-core-complete','data-core-correct','data-response-recorded']
  });
  enhance();
+ window.addEventListener('resize',()=>{enhance();cleanup()},{passive:true});
+ window.addEventListener('orientationchange',()=>{enhance();cleanup()},{passive:true});
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
