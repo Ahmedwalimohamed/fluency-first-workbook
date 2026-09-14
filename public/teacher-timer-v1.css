@@ -1,0 +1,19 @@
+/* EnglishGate teacher classroom timer v1 */
+.teacher-class-timer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0 14px;padding:10px 12px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;color:#0F172A;box-shadow:0 3px 10px rgba(15,23,42,.04)}
+.teacher-timer-main,.teacher-timer-settings,.teacher-timer-presets,.teacher-timer-custom{display:flex;align-items:center;gap:8px}
+.teacher-timer-label{font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#64748B}
+.teacher-timer-display{min-width:86px;font-variant-numeric:tabular-nums;font-size:1.45rem;line-height:1;font-weight:900;letter-spacing:.03em;color:#0F172A}
+.teacher-class-timer button{min-height:38px;border:1px solid #CBD5E1;border-radius:9px;background:#F8FAFC;color:#0F172A;padding:7px 11px;font-weight:800;cursor:pointer}
+.teacher-class-timer button:hover{background:#EEF2F7}
+.teacher-class-timer .teacher-timer-primary{background:#2563EB;border-color:#2563EB;color:#fff}
+.teacher-class-timer .teacher-timer-primary:hover{background:#1D4ED8}
+.teacher-timer-presets button.is-active{border-color:#2563EB;background:#EFF6FF;color:#1D4ED8}
+.teacher-timer-custom{font-size:.78rem;font-weight:800;color:#64748B}
+.teacher-timer-custom input{width:62px;min-height:38px;padding:6px 8px;border:1px solid #CBD5E1;border-radius:9px;background:#fff;color:#0F172A;font-weight:800;text-align:center}
+.teacher-class-timer.is-warning{border-color:#F59E0B;background:#FFFBEB}
+.teacher-class-timer.is-warning .teacher-timer-display{color:#B45309}
+.teacher-class-timer.is-finished{border-color:#DC2626;background:#FEF2F2;animation:egTeacherTimerPulse .8s ease-in-out 3}
+.teacher-class-timer.is-finished .teacher-timer-display{color:#DC2626}
+@keyframes egTeacherTimerPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}50%{box-shadow:0 0 0 5px rgba(220,38,38,.16)}}
+@media(max-width:900px){.teacher-class-timer{align-items:flex-start}.teacher-timer-settings{width:100%;justify-content:space-between;overflow-x:auto}.teacher-timer-presets{flex-wrap:nowrap}.teacher-timer-presets button{white-space:nowrap}}
+@media(prefers-reduced-motion:reduce){.teacher-class-timer.is-finished{animation:none}}
