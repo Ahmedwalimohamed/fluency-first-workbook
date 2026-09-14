@@ -10,7 +10,7 @@
 .teacher-text-size output{min-width:52px;text-align:center;font-weight:800;font-size:.82rem;color:#475569}
 .teacher-text-edit{background:#2563EB;color:#fff;border-color:#2563EB}
 .teacher-text-edit:disabled{opacity:.45;cursor:not-allowed}
-body.teacher-text-edit-mode .teacher-annotation-text-layer{pointer-events:auto!important;z-index:4}
+body.teacher-text-edit-mode .teacher-annotation-text-layer{pointer-events:none!important;z-index:4}
 body.teacher-text-edit-mode .live-text-note{pointer-events:auto!important;cursor:text;user-select:text;min-width:24px;line-height:1.25;white-space:pre-wrap}
 .live-text-note.is-text-selected{outline:3px solid rgba(37,99,235,.35);outline-offset:3px}
 .live-text-note.is-text-editing{outline:3px solid #2563EB;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.16)}
