@@ -1,0 +1,98 @@
+/* EnglishGate Vocabulary Fluency First v1 */
+body.englishgate-student-mode .eg-vocab-fluency-first .eg-vocab-production-lab{
+  margin-top:22px;
+  padding-top:20px;
+  border-top:1px solid var(--eg-vocab-border,#E2E8F0);
+}
+body.englishgate-student-mode .eg-vocab-fluency-first .eg-vocab-production-lab>.eg-panel-heading{
+  margin-bottom:12px;
+}
+body.englishgate-student-mode .eg-vocab-fluency-first .eg-vocab-production-lab>.eg-panel-heading small{
+  color:var(--eg-vocab-accent,#7C3AED)!important;
+  font-weight:900!important;
+  letter-spacing:.06em!important;
+  text-transform:uppercase!important;
+}
+body.englishgate-student-mode .eg-vocab-fluency-first .eg-vocab-production-lab>.eg-panel-heading h2{
+  margin:4px 0 5px!important;
+  color:#0F172A!important;
+}
+body.englishgate-student-mode .eg-vocab-fluency-first .eg-vocab-production-lab>.eg-panel-heading p{
+  margin:0!important;
+  color:#64748B!important;
+}
+body.englishgate-student-mode .eg-vocab-production-card{
+  margin-top:10px;
+  padding:15px;
+  border:1px solid #DDD6FE;
+  border-radius:14px;
+  background:#FAF5FF;
+}
+body.englishgate-student-mode .eg-vocab-production-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+body.englishgate-student-mode .eg-vocab-production-meta span{
+  color:#6D28D9;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+}
+body.englishgate-student-mode .eg-vocab-production-meta strong{
+  padding:4px 9px;
+  border-radius:999px;
+  background:#EDE9FE;
+  color:#5B21B6;
+  font-size:.82rem;
+}
+body.englishgate-student-mode .eg-vocab-production-card p{
+  margin:0 0 10px;
+  color:#1E293B;
+  line-height:1.5;
+}
+body.englishgate-student-mode .eg-vocab-production-card textarea{
+  width:100%;
+  min-height:96px;
+  padding:12px 13px;
+  border:1px solid #C4B5FD;
+  border-radius:12px;
+  background:#fff;
+  color:#0F172A;
+  font:inherit;
+  font-size:16px;
+  line-height:1.55;
+  resize:vertical;
+}
+body.englishgate-student-mode .eg-vocab-production-card textarea:focus-visible{
+  outline:3px solid rgba(124,58,237,.18);
+  outline-offset:2px;
+  border-color:#8B5CF6;
+}
+body.englishgate-student-mode .eg-vocab-production-card [data-vocab-production-check]{
+  margin-top:10px;
+  min-height:44px;
+  border:1px solid #C4B5FD;
+  border-radius:11px;
+  background:#fff;
+  color:#6D28D9;
+  font-weight:800;
+}
+body.englishgate-student-mode .eg-vocab-production-card .core-inline-feedback{
+  margin-top:8px;
+}
+body.englishgate-student-mode .eg-vocab-production-card .core-inline-feedback.is-correct{
+  color:#166534;
+}
+body.englishgate-student-mode .eg-vocab-production-card .core-inline-feedback.is-wrong{
+  color:#991B1B;
+}
+@media(max-width:760px){
+  body.englishgate-student-mode .eg-vocab-production-card{
+    padding:13px;
+    border-radius:12px;
+  }
+}
