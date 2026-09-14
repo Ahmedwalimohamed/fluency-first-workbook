@@ -20,6 +20,38 @@ function activeQuestion(root){
     [...(root?.querySelectorAll('.guided-question')||[])].find(q=>!q.hidden&&getComputedStyle(q).display!=='none') || null;
 }
 
+function cleanSharedInstruction(text){
+  const value=String(text||'').trim();
+  const match=value.match(/^([^:]{3,80}:)\s+/);
+  return match?match[1].replace(/:$/,'').trim():'';
+}
+
+function repairRepeatedOptionInstruction(q){
+  if(!q||q.dataset.sharedInstructionFixed==='1')return;
+  const optionTexts=[...q.querySelectorAll('.mcq-option-text')];
+  if(optionTexts.length<2)return;
+  const values=optionTexts.map(node=>String(node.textContent||'').trim());
+  const instruction=cleanSharedInstruction(values[0]);
+  if(!instruction)return;
+  const prefix=instruction+':';
+  if(!values.every(value=>value.startsWith(prefix)))return;
+
+  optionTexts.forEach(node=>{
+    node.textContent=String(node.textContent||'').trim().slice(prefix.length).trim();
+  });
+
+  const instructionNode=document.createElement('p');
+  instructionNode.className='grammar-shared-instruction';
+  instructionNode.textContent=instruction+'.';
+  const intended=q.querySelector('.grammar-intended-meaning');
+  const stage=q.querySelector('.question-stage');
+  if(intended)q.insertBefore(instructionNode,intended);
+  else if(stage&&stage.nextSibling)q.insertBefore(instructionNode,stage.nextSibling);
+  else q.prepend(instructionNode);
+
+  q.dataset.sharedInstructionFixed='1';
+}
+
 function clear(root){
   root?.classList.remove('eg-grammar-question-only');
   root?.querySelectorAll('.eg-focus-path').forEach(el=>el.classList.remove('eg-focus-path'));
@@ -34,6 +66,7 @@ function sync(){
   const q=activeQuestion(root);
   if(!q)return;
 
+  repairRepeatedOptionInstruction(q);
   root.classList.add('eg-grammar-question-only');
   let node=q;
   while(node&&node!==root){
@@ -45,6 +78,11 @@ function sync(){
   const flowStage=root.querySelector('[data-question-flow-stage]');
   if(stage&&flowStage)flowStage.textContent=stage.textContent.trim();
 }
+
+const style=document.createElement('style');
+style.id='grammar-shared-instruction-style';
+style.textContent='.grammar-shared-instruction{margin:0 0 14px;font-weight:800;line-height:1.45;color:var(--eg-text,#0F172A)}.grammar-shared-instruction+.grammar-intended-meaning{margin-top:0}';
+document.head.appendChild(style);
 
 let queued=false;
 const schedule=()=>{
