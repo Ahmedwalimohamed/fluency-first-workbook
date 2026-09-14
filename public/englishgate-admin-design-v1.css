@@ -1,0 +1,186 @@
+/* EnglishGate Admin Design v1
+   Canonical presentation layer for System Admin surfaces.
+   Behavior, CRUD operations, permissions, API calls and data ownership remain in app.js and admin enhancement scripts. */
+
+.app.admin-mode{
+  --eg-admin-primary:var(--eg-primary,#2563EB);
+  --eg-admin-text:var(--eg-text,#0F172A);
+  --eg-admin-muted:var(--eg-secondary,#64748B);
+  --eg-admin-bg:var(--eg-background,#F8FAFC);
+  --eg-admin-card:var(--eg-card,#FFFFFF);
+  --eg-admin-border:var(--eg-border,#E2E8F0);
+  --eg-admin-success:var(--eg-success,#16A34A);
+  --eg-admin-error:var(--eg-error,#DC2626);
+  --eg-admin-review:var(--eg-review,#F59E0B);
+  background:var(--eg-admin-bg);
+  color:var(--eg-admin-text);
+}
+
+.app.admin-mode .sidebar,
+.app.admin-mode .topbar,
+.app.admin-mode .card,
+.app.admin-mode .role-hero,
+.app.admin-mode .management-card,
+.app.admin-mode .school-card,
+.app.admin-mode .school-section,
+.app.admin-mode .school-list,
+.app.admin-mode .am-panel,
+.app.admin-mode .am-metric,
+.app.admin-mode .am-class-card{
+  border-color:var(--eg-admin-border)!important;
+}
+
+.app.admin-mode .topbar{background:rgba(255,255,255,.97)!important}
+.app.admin-mode .nav-btn.active{background:#EFF6FF!important;color:#1D4ED8!important}
+.app.admin-mode .primary-btn{background:var(--eg-admin-primary)!important;color:#fff!important}
+.app.admin-mode .primary-btn:hover{background:#1D4ED8!important}
+.app.admin-mode .secondary-btn{background:#EFF6FF!important;color:#1D4ED8!important}
+.app.admin-mode .role-kicker,
+.app.admin-mode .school-kicker,
+.app.admin-mode .am-kicker{color:#1D4ED8!important}
+
+.app.admin-mode button:focus-visible,
+.app.admin-mode a:focus-visible,
+.app.admin-mode input:focus-visible,
+.app.admin-mode textarea:focus-visible,
+.app.admin-mode select:focus-visible{
+  outline:3px solid rgba(37,99,235,.25)!important;
+  outline-offset:2px!important;
+}
+
+/* Overview */
+.app.admin-mode .admin-hero,
+.app.admin-mode .role-hero.admin-hero{
+  border:1px solid var(--eg-admin-border)!important;
+  border-radius:18px!important;
+  background:var(--eg-admin-card)!important;
+  color:var(--eg-admin-text)!important;
+  box-shadow:0 6px 22px rgba(15,23,42,.045)!important;
+}
+.app.admin-mode .admin-hero h1,
+.app.admin-mode .admin-hero p{color:inherit!important}
+.app.admin-mode .admin-hero p{color:var(--eg-admin-muted)!important}
+.app.admin-mode .admin-metrics .metric-card{
+  border:1px solid var(--eg-admin-border)!important;
+  background:var(--eg-admin-card)!important;
+  box-shadow:none!important;
+}
+.app.admin-mode .setup-step{
+  border:1px solid var(--eg-admin-border)!important;
+  background:var(--eg-admin-card)!important;
+}
+.app.admin-mode .setup-step>b{background:#EFF6FF!important;color:#1D4ED8!important}
+.app.admin-mode .setup-step span{color:var(--eg-admin-muted)!important}
+
+/* Management pages */
+.app.admin-mode .role-page-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+.app.admin-mode .role-page-head h1{color:var(--eg-admin-text)!important}
+.app.admin-mode .role-page-head p{color:var(--eg-admin-muted)!important}
+.app.admin-mode .management-card{
+  border:1px solid var(--eg-admin-border)!important;
+  border-radius:16px!important;
+  background:var(--eg-admin-card)!important;
+  box-shadow:none!important;
+}
+.app.admin-mode .management-row{
+  border-bottom-color:var(--eg-admin-border)!important;
+}
+.app.admin-mode .management-row:last-child{border-bottom:0!important}
+.app.admin-mode .management-row small,
+.app.admin-mode .management-row-meta>span,
+.app.admin-mode .management-card .muted{color:var(--eg-admin-muted)!important}
+.app.admin-mode .management-card-actions,
+.app.admin-mode .management-row-meta{
+  gap:8px!important;
+}
+.app.admin-mode .management-card-actions button,
+.app.admin-mode .management-row-meta button,
+.app.admin-mode .compact-action{
+  min-height:44px!important;
+}
+.app.admin-mode .danger-action{
+  color:var(--eg-admin-error)!important;
+  border-color:#FECACA!important;
+  background:#FFF!important;
+}
+.app.admin-mode .danger-action:hover{background:#FEF2F2!important}
+
+/* Forms and modals */
+.app.admin-mode .modal-card{
+  border:1px solid var(--eg-admin-border)!important;
+  background:var(--eg-admin-card)!important;
+}
+.app.admin-mode .form-grid input,
+.app.admin-mode .form-grid select,
+.app.admin-mode .form-grid textarea{
+  border-color:var(--eg-admin-border)!important;
+  background:#fff!important;
+  color:var(--eg-admin-text)!important;
+}
+.app.admin-mode .form-grid small{color:var(--eg-admin-muted)!important}
+.app.admin-mode .student-manage-actions{display:flex!important;gap:8px!important;flex-wrap:wrap!important}
+.app.admin-mode .student-manage-actions button{min-height:44px!important}
+
+/* Academic manager + school platform surfaces */
+.app.admin-mode .am-hero{
+  background:linear-gradient(135deg,#1D4ED8,#2563EB)!important;
+  box-shadow:0 8px 24px rgba(37,99,235,.15)!important;
+}
+.app.admin-mode .am-tabs{background:#F1F5F9!important;border-color:var(--eg-admin-border)!important}
+.app.admin-mode .am-tabs button.active{color:#1D4ED8!important;background:#fff!important}
+.app.admin-mode .am-bar i,
+.app.admin-mode .school-mark{background:var(--eg-admin-primary)!important}
+.app.admin-mode .am-gap-score strong,
+.app.admin-mode .am-class-head>strong,
+.app.admin-mode .am-report-summary strong,
+.app.admin-mode .school-badge{color:#1D4ED8!important}
+.app.admin-mode .school-badge{background:#EFF6FF!important}
+.app.admin-mode .school-hero{
+  border-color:var(--eg-admin-border)!important;
+  background:linear-gradient(135deg,#F8FAFC,#EFF6FF)!important;
+}
+.app.admin-mode .school-row{border-bottom-color:var(--eg-admin-border)!important}
+.app.admin-mode .school-form-grid input,
+.app.admin-mode .school-form-grid select{border-color:var(--eg-admin-border)!important}
+
+/* Data tables */
+.app.admin-mode .data-table,
+.app.admin-mode .school-student-table,
+.app.admin-mode .am-table{background:#fff!important}
+.app.admin-mode .data-table th,
+.app.admin-mode .school-student-table th,
+.app.admin-mode .am-table th{color:var(--eg-admin-muted)!important}
+.app.admin-mode .data-table td,
+.app.admin-mode .school-student-table td,
+.app.admin-mode .am-table td{border-bottom-color:var(--eg-admin-border)!important}
+.app.admin-mode .table-wrap,
+.app.admin-mode .school-table-wrap,
+.app.admin-mode .am-table-wrap{max-width:100%;overflow:auto;-webkit-overflow-scrolling:touch}
+
+@media(max-width:760px){
+  .app.admin-mode .content{padding-left:14px!important;padding-right:14px!important}
+  .app.admin-mode .role-page-head{flex-direction:column!important}
+  .app.admin-mode .role-page-head>.primary-btn{width:100%!important;min-height:48px!important}
+  .app.admin-mode .management-row{align-items:flex-start!important}
+  .app.admin-mode .management-row-meta{width:100%!important;flex-wrap:wrap!important}
+  .app.admin-mode .management-row-meta button{flex:1 1 140px!important}
+  .app.admin-mode .management-card-actions button{flex:1 1 140px!important}
+  .app.admin-mode .student-manage-actions{flex-direction:column!important}
+  .app.admin-mode .student-manage-actions button{width:100%!important;min-height:48px!important}
+  .app.admin-mode .am-tabs button{min-height:44px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .app.admin-mode *,
+  .app.admin-mode *::before,
+  .app.admin-mode *::after{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
