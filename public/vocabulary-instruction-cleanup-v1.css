@@ -1,0 +1,28 @@
+/* EnglishGate Vocabulary instruction cleanup v1
+   Removes duplicated task labels/instructions from the focused vocabulary runner.
+   The page title already establishes Vocabulary, the progress row owns question count,
+   and the question itself communicates the task. No grading/navigation behavior changes. */
+
+body.englishgate-student-mode .eg-vocabulary-page .vocab-question-meta,
+body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading > p{
+  display:none!important;
+}
+
+/* Preserve comfortable spacing after removing the redundant metadata/instruction rows. */
+body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading{
+  margin-top:18px!important;
+}
+
+body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading h1{
+  margin-top:0!important;
+  margin-bottom:20px!important;
+}
+
+@media(max-width:760px){
+  body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading{
+    margin-top:14px!important;
+  }
+  body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading h1{
+    margin-bottom:16px!important;
+  }
+}
