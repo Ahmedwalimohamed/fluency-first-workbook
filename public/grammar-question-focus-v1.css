@@ -1,0 +1,79 @@
+/* EnglishGate grammar question focus v1
+   Mobile grammar = progress + current task + feedback + navigation only. */
+@media(max-width:760px){
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only{
+    padding-top:0!important;
+    scroll-padding-top:72px!important;
+  }
+
+  /* Keep only the branch that contains the active grammar question. */
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only > *:not(.student-question-flow-head):not(.eg-focus-path):not(#activityFeedback):not(.student-question-bottom-nav){
+    display:none!important;
+  }
+
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .eg-focus-path:not(.guided-question) > *:not(.eg-focus-path){
+    display:none!important;
+  }
+
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .eg-focus-path{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .guided-question.is-flow-current{
+    display:block!important;
+    max-width:520px!important;
+    margin:0 auto!important;
+    padding:14px 0 22px!important;
+  }
+
+  /* Progress header is the only header in question mode. */
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .student-question-flow-head{
+    position:sticky!important;
+    top:0!important;
+    z-index:40!important;
+    margin:0 0 10px!important;
+    padding:10px 4px 9px!important;
+    background:rgba(248,250,252,.98)!important;
+    backdrop-filter:blur(10px)!important;
+    -webkit-backdrop-filter:blur(10px)!important;
+  }
+
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only [data-question-flow-label]{
+    display:block!important;
+    color:#64748B!important;
+    font-size:.82rem!important;
+    font-weight:800!important;
+    line-height:1.2!important;
+  }
+
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only [data-question-flow-stage]{
+    display:block!important;
+    margin-top:3px!important;
+    color:#0F172A!important;
+    font-size:.95rem!important;
+    font-weight:900!important;
+    line-height:1.25!important;
+  }
+
+  /* The active question already identifies its section; remove duplicate chrome. */
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .eg-skill-hero,
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .eg-grammar-briefing,
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .eg-editorial-panel,
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .eg-task-panel-head,
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only .skill-action-row{
+    display:none!important;
+  }
+
+  body.student-question-focus-mode #activityPanel.eg-grammar-question-only #activityFeedback:not(:empty){
+    display:block!important;
+    width:min(520px,100%)!important;
+    margin:8px auto 18px!important;
+  }
+}
