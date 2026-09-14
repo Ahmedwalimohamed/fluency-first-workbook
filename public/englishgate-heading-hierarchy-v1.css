@@ -1,0 +1,142 @@
+/* EnglishGate Heading Hierarchy v1
+   Presentation-only color hierarchy for student lesson and activity headings.
+   Goal: more vibrant orientation without turning skill pages into a multi-color UI.
+   Keeps feedback colors reserved for correctness states. */
+
+:root{
+  --eg-h-title:#0F172A;
+  --eg-h-primary:#2563EB;
+  --eg-h-primary-dark:#1D4ED8;
+  --eg-h-accent:#7C3AED;
+  --eg-h-accent-dark:#6D28D9;
+  --eg-h-muted:#64748B;
+  --eg-h-blue-soft:#EFF6FF;
+  --eg-h-purple-soft:#F5F3FF;
+  --eg-h-border:#E2E8F0;
+}
+
+/* Lesson identity: strongest, calmest level. */
+body.englishgate-student-mode .eg-lesson-header h1,
+body.englishgate-student-mode .eg-lesson-header h2,
+body.englishgate-student-mode .eg-lesson-header h3{
+  color:var(--eg-h-title)!important;
+  font-weight:900!important;
+}
+
+body.englishgate-student-mode .eg-lesson-header .eyebrow,
+body.englishgate-student-mode .eg-lesson-header small:first-child{
+  color:var(--eg-h-primary)!important;
+  font-weight:900!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+}
+
+/* Main activity titles: EnglishGate blue. */
+body.englishgate-student-mode .eg-skill-hero h1,
+body.englishgate-student-mode .eg-skill-hero h2,
+body.englishgate-student-mode .eg-skill-hero h3,
+body.englishgate-student-mode .eg-separated-activity .sep-hero h1,
+body.englishgate-student-mode .eg-separated-activity .sep-hero h2,
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-head h2,
+body.englishgate-student-mode .eg-grammar-micro-page .eg-micro-hero h1,
+body.englishgate-student-mode .eg-vocab-reference .eg-panel-heading h2,
+body.englishgate-student-mode .eg-vocabulary-page .eg-task-panel-head h2{
+  color:var(--eg-h-primary)!important;
+  font-weight:900!important;
+}
+
+/* Stage labels / kickers: compact blue orientation chips. */
+body.englishgate-student-mode .eg-skill-kicker,
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-label,
+body.englishgate-student-mode .eg-vocab-reference .eg-panel-heading small,
+body.englishgate-student-mode .eg-vocabulary-page .eg-task-panel-head small{
+  color:var(--eg-h-primary-dark)!important;
+  font-weight:900!important;
+  letter-spacing:.065em!important;
+  text-transform:uppercase!important;
+}
+
+/* Activity subheads: controlled purple accent, matching the approved mockup. */
+body.englishgate-student-mode .eg-skill-hero .eg-skill-subtitle,
+body.englishgate-student-mode .eg-skill-hero .activity-subtitle,
+body.englishgate-student-mode .eg-skill-hero h2 + h3,
+body.englishgate-student-mode .eg-skill-hero h1 + h2,
+body.englishgate-student-mode .eg-separated-activity .sep-hero h1 + h2,
+body.englishgate-student-mode .eg-separated-activity .sep-hero h1 + h3,
+body.englishgate-student-mode .eg-separated-activity .sep-hero .activity-subtitle,
+body.englishgate-student-mode .eg-separated-activity .sep-hero .sep-subtitle,
+body.englishgate-student-mode [data-grammar-clean] .eg-grammar-block h3,
+body.englishgate-student-mode .eg-grammar-micro-section>h2,
+body.englishgate-student-mode .vocab-question-heading h1{
+  color:var(--eg-h-accent)!important;
+  font-weight:850!important;
+}
+
+/* Source-card headings stay distinct from the main activity title. */
+body.englishgate-student-mode .eg-separated-activity .sep-source summary,
+body.englishgate-student-mode .eg-separated-activity .sep-audio-source h2,
+body.englishgate-student-mode .eg-source-column h2,
+body.englishgate-student-mode .eg-source-column h3,
+body.englishgate-student-mode .transcript-card h2,
+body.englishgate-student-mode .transcript-card h3{
+  color:var(--eg-h-primary-dark)!important;
+  font-weight:850!important;
+}
+
+/* Keep question text strong and neutral so accent colors orient rather than distract. */
+body.englishgate-student-mode .sep-question h3,
+body.englishgate-student-mode .guided-question>p,
+body.englishgate-student-mode .guided-question>h3,
+body.englishgate-student-mode .guided-question>h4,
+body.englishgate-student-mode [data-grammar-clean] .egg-question>strong,
+body.englishgate-student-mode .eg-vocabulary-page .vocab-core-card>p,
+body.englishgate-student-mode .eg-vocabulary-page .guided-question>p{
+  color:var(--eg-h-title)!important;
+}
+
+/* Supporting copy remains quiet. */
+body.englishgate-student-mode .eg-skill-hero p,
+body.englishgate-student-mode .eg-separated-activity .sep-hero p,
+body.englishgate-student-mode .eg-grammar-micro-page .eg-micro-hero p,
+body.englishgate-student-mode .eg-vocab-reference .eg-panel-heading p,
+body.englishgate-student-mode .eg-vocabulary-page .eg-task-panel-head>span,
+body.englishgate-student-mode .vocab-question-heading p{
+  color:var(--eg-h-muted)!important;
+}
+
+/* Small progress/status elements use soft tints, never error/success colors. */
+body.englishgate-student-mode .eg-question-count,
+body.englishgate-student-mode .sep-question-meta span{
+  border-color:#DDD6FE!important;
+  background:var(--eg-h-purple-soft)!important;
+  color:var(--eg-h-accent-dark)!important;
+}
+
+body.englishgate-student-mode .eg-goal{
+  border-color:#BFDBFE!important;
+  border-left-color:var(--eg-h-primary)!important;
+  background:var(--eg-h-blue-soft)!important;
+  color:#1E3A8A!important;
+}
+
+@media(max-width:760px){
+  body.englishgate-student-mode .eg-skill-hero h1,
+  body.englishgate-student-mode .eg-separated-activity .sep-hero h1,
+  body.englishgate-student-mode [data-grammar-clean] .eg-grammar-head h2,
+  body.englishgate-student-mode .eg-grammar-micro-page .eg-micro-hero h1{
+    line-height:1.16!important;
+  }
+
+  body.englishgate-student-mode .eg-skill-hero h2 + h3,
+  body.englishgate-student-mode .eg-skill-hero h1 + h2,
+  body.englishgate-student-mode .eg-separated-activity .sep-hero h1 + h2,
+  body.englishgate-student-mode .eg-separated-activity .sep-hero h1 + h3{
+    margin-top:4px!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  body.englishgate-student-mode *{
+    transition-duration:.01ms!important;
+  }
+}
