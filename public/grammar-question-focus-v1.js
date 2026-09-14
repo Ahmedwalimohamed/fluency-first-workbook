@@ -1,11 +1,11 @@
-/* EnglishGate grammar question focus v2
-   Global mobile grammar question focus: whenever any grammar question is active,
-   show only the current question, its task label/progress, feedback, and navigation.
+/* EnglishGate grammar question focus v3
+   Student grammar question focus: whenever any grammar question is active,
+   show only the current question, its task label/progress, feedback, and navigation
+   on every screen size. Teacher/admin views remain untouched.
    No grading, lesson data, answer keys, or progress logic changes. */
 (function(){
 'use strict';
 
-const isMobile=()=>window.matchMedia('(max-width:760px)').matches;
 const panel=()=>document.getElementById('activityPanel');
 
 function isGrammarActivity(root){
@@ -85,7 +85,9 @@ function sync(){
   const root=panel();
   if(!root)return;
   clear(root);
-  if(!isMobile()||!isGrammarActivity(root))return;
+
+  if(!document.body.classList.contains('englishgate-student-mode'))return;
+  if(!isGrammarActivity(root))return;
 
   const q=activeQuestion(root);
   if(!q)return;
@@ -117,7 +119,7 @@ style.id='grammar-shared-instruction-style';
 style.textContent='\
 .grammar-shared-instruction{margin:0 0 14px;font-weight:800;line-height:1.45;color:var(--eg-text,#0F172A)}\
 .grammar-shared-instruction+.grammar-intended-meaning{margin-top:0}\
-@media(max-width:760px){#activityPanel.eg-grammar-question-only .eg-grammar-focus-hidden{display:none!important}}';
+body.englishgate-student-mode #activityPanel.eg-grammar-question-only .eg-grammar-focus-hidden{display:none!important}';
 document.head.appendChild(style);
 
 let queued=false;
