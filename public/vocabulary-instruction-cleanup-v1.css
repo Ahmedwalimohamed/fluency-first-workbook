@@ -1,28 +1,49 @@
-/* EnglishGate Vocabulary instruction cleanup v1
-   Removes duplicated task labels/instructions from the focused vocabulary runner.
-   The page title already establishes Vocabulary, the progress row owns question count,
-   and the question itself communicates the task. No grading/navigation behavior changes. */
+/* EnglishGate Vocabulary instruction cleanup v2
+   Focused vocabulary questions keep one task label only.
+   The page title already establishes Vocabulary and the progress row owns question count.
+   No grading, answer, navigation, or lesson-data behavior changes. */
 
-body.englishgate-student-mode .eg-vocabulary-page .vocab-question-meta,
-body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading > p{
+/* Keep only the useful middle task label: e.g. “Choose the meaning”. */
+.eg-vocabulary-page .vocab-question-meta > span:first-of-type,
+.eg-vocabulary-page .vocab-question-meta > i,
+.eg-vocabulary-page .vocab-question-meta > strong{
   display:none!important;
 }
 
-/* Preserve comfortable spacing after removing the redundant metadata/instruction rows. */
-body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading{
-  margin-top:18px!important;
+.eg-vocabulary-page .vocab-question-meta{
+  display:block!important;
+  margin:0 0 18px!important;
+  color:var(--eg-vocab-muted,#64748B)!important;
+  font-size:.82rem!important;
+  font-weight:800!important;
+  line-height:1.3!important;
 }
 
-body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading h1{
+.eg-vocabulary-page .vocab-question-meta > span:nth-of-type(2){
+  display:inline!important;
+  color:var(--eg-vocab-muted,#64748B)!important;
+  font-weight:800!important;
+}
+
+/* The question already makes the action clear; remove the repeated helper sentence. */
+.eg-vocabulary-page .vocab-question-heading > p{
+  display:none!important;
+}
+
+.eg-vocabulary-page .vocab-question-heading{
+  margin-top:0!important;
+}
+
+.eg-vocabulary-page .vocab-question-heading h1{
   margin-top:0!important;
   margin-bottom:20px!important;
 }
 
 @media(max-width:760px){
-  body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading{
-    margin-top:14px!important;
+  .eg-vocabulary-page .vocab-question-meta{
+    margin-bottom:14px!important;
   }
-  body.englishgate-student-mode .eg-vocabulary-page .vocab-question-heading h1{
+  .eg-vocabulary-page .vocab-question-heading h1{
     margin-bottom:16px!important;
   }
 }
