@@ -47,39 +47,19 @@ function enhance(root=document){
   });
 }
 
-function loadTeacherTextFormatting(){
-  if(!document.getElementById('teacherTextFormattingCss')){
-    const link=document.createElement('link');
-    link.id='teacherTextFormattingCss';
-    link.rel='stylesheet';
-    link.href='teacher-text-formatting-v1.css?v=1';
-    document.head.appendChild(link);
+function loadAssetPair(key,css,js){
+  const cssId=key+'Css',jsId=key+'Js';
+  if(css&&!document.getElementById(cssId)){
+    const link=document.createElement('link');link.id=cssId;link.rel='stylesheet';link.href=css;document.head.appendChild(link);
   }
-  if(!document.getElementById('teacherTextFormattingJs')){
-    const script=document.createElement('script');
-    script.id='teacherTextFormattingJs';
-    script.src='teacher-text-formatting-v1.js?v=1';
-    script.defer=true;
-    document.body.appendChild(script);
+  if(js&&!document.getElementById(jsId)){
+    const script=document.createElement('script');script.id=jsId;script.src=js;script.defer=true;document.body.appendChild(script);
   }
 }
-
-function loadTeacherTimer(){
-  if(!document.getElementById('teacherTimerCss')){
-    const link=document.createElement('link');
-    link.id='teacherTimerCss';
-    link.rel='stylesheet';
-    link.href='teacher-timer-v1.css?v=1';
-    document.head.appendChild(link);
-  }
-  if(!document.getElementById('teacherTimerJs')){
-    const script=document.createElement('script');
-    script.id='teacherTimerJs';
-    script.src='teacher-timer-v1.js?v=1';
-    script.defer=true;
-    document.body.appendChild(script);
-  }
-}
+function loadTeacherTextFormatting(){loadAssetPair('teacherTextFormatting','teacher-text-formatting-v1.css?v=1','teacher-text-formatting-v1.js?v=1')}
+function loadTeacherTimer(){loadAssetPair('teacherTimer','teacher-timer-v1.css?v=1','teacher-timer-v1.js?v=1')}
+function loadLivePresence(){loadAssetPair('livePresence','live-presence-v1.css?v=1','live-presence-v1.js?v=1')}
+function loadReadingReadAloud(){loadAssetPair('readingReadAloud','reading-read-aloud-v1.css?v=1','reading-read-aloud-v1.js?v=1')}
 
 let queued=false;
 function schedule(){
@@ -92,6 +72,8 @@ function boot(){
   enhance();
   loadTeacherTextFormatting();
   loadTeacherTimer();
+  loadLivePresence();
+  loadReadingReadAloud();
   new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true});
 }
 
