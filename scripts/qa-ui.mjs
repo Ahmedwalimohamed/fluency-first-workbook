@@ -39,6 +39,7 @@ if (!exists('public/index.html')) {
   requireMatch('Consolidated Reading/Listening grader loaded', html, /reading-listening-grading-v1\.js\?v=2/i, 'reading-listening-grading-v1.js?v=2 must be loaded');
   requireMatch('Reading/Listening structural stylesheet cache version', html, /reading-listening-separation-v3\.css\?v=2/i, 'reading-listening-separation-v3.css?v=2 must be loaded');
   requireMatch('Grammar structural stylesheet cache version', html, /grammar-lesson-clean-v1\.css\?v=2/i, 'grammar-lesson-clean-v1.css?v=2 must be loaded');
+  requireMatch('Unified semantic-token stylesheet cache version', html, /englishgate-unified-ui-v1\.css\?v=2/i, 'englishgate-unified-ui-v1.css?v=2 must be loaded');
 
   if (/student-response-navigation-v1\.js/i.test(html)) critical.push('Duplicate question navigation controller is loaded: student-response-navigation-v1.js');
   else passes.push('Duplicate question navigation controller removed from runtime');
@@ -65,6 +66,29 @@ if (!exists('public/index.html')) {
   if (scripts > 24) warnings.push(`JavaScript patch-stack risk: ${scripts} external scripts are loaded by public/index.html.`);
 
   if (/[>\s](☰|↗|⚙|✎|✏|🗑|✓|✕)[<\s]/u.test(html)) warnings.push('Glyph/emoji-style UI icons detected in public/index.html; prefer one SVG icon family with accessible names.');
+}
+
+if (exists('public/englishgate-unified-ui-v1.css')) {
+  const unified = read('public/englishgate-unified-ui-v1.css');
+  const semanticTokens = [
+    ['--eg-primary', '#2563EB'],
+    ['--eg-text', '#0F172A'],
+    ['--eg-secondary', '#64748B'],
+    ['--eg-background', '#F8FAFC'],
+    ['--eg-card', '#FFFFFF'],
+    ['--eg-error', '#DC2626'],
+    ['--eg-review', '#F59E0B'],
+    ['--eg-vocabulary', '#7C3AED']
+  ];
+  const missing = semanticTokens.filter(([name,value]) => !new RegExp(`${name}\\s*:\\s*${value.replace('#','\\#')}`, 'i').test(unified));
+  if (missing.length) critical.push(`Unified UI is missing canonical semantic tokens: ${missing.map(([name])=>name).join(', ')}`);
+  else passes.push('Unified UI exposes the canonical EnglishGate semantic token set');
+
+  if (/--eg-border\s*:\s*#E2E8F0/i.test(unified) && /--eg-success\s*:\s*#16A34A/i.test(unified) && /--eg-danger\s*:\s*var\(--eg-error\)/i.test(unified)) {
+    passes.push('Legacy unified aliases resolve to canonical border, success and error values');
+  } else {
+    warnings.push('Unified legacy aliases are not fully aligned to canonical border/success/error values.');
+  }
 }
 
 if (exists('public/question-nav-fix.css')) {
