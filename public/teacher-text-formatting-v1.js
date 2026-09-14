@@ -101,7 +101,8 @@ function wireNotes(){
   const key=noteKey(note);
   if(!knownKeys.has(key)){
    knownKeys.add(key);
-   overrides.set(key,{text:note.textContent,color:getComputedStyle(note).color,size:parseInt(getComputedStyle(note).fontSize,10)||currentSize});
+   const freshStyle=textMode()?{text:note.textContent,color:currentColor,size:currentSize}:{text:note.textContent,color:getComputedStyle(note).color,size:parseInt(getComputedStyle(note).fontSize,10)||currentSize};
+   overrides.set(key,freshStyle);
   }
   const o=overrides.get(key);
   if(o){note.textContent=o.text;note.style.color=o.color;note.style.fontSize=`${o.size}px`}
