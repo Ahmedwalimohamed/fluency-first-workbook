@@ -182,15 +182,14 @@ HOMEWORK
 Write a 180–220 word career story with four parts: starting point, turning point, achievement, next direction. Include at least two past simple verbs, two present perfect forms, and one specific statement of impact.
 `;
 
-// PILOT WORKBOOK: 25 activities total — 24 auto-graded + 1 authentic writing task.
-// Source-of-truth rule: every activity below practises language explicitly taught in this parent lesson.
+// APPROVED PILOT WORKBOOK: exact question wording and order.
 const vocabItems=[
  {type:'choice',q:'Fatima says: “Moving from nursing into hospital management completely changed the direction of my career.” Which lesson phrase best describes this event?',options:['professional growth','turning point','responsibility','impact'],answer:'turning point',tag:'vocabulary:context'},
  {type:'choice',q:'Which sentence uses “take initiative” naturally?',options:['Ali took initiative and suggested a better reporting system.','Ali took initiative from his manager every Friday.','Ali made an initiative his career.','Ali was initiative for three years.'],answer:'Ali took initiative and suggested a better reporting system.',tag:'vocabulary:usage'},
  {type:'choice',q:'You learned communication skills while working in customer service. Now those skills help you manage staff. What kind of skills are they?',options:['transferable skills','transitions','impacts','career paths'],answer:'transferable skills',tag:'vocabulary:situation'},
- {type:'choice',q:'Complete naturally: “The training programme had a positive ___ on staff confidence.”',options:['transition','progression','impact','path'],answer:'impact',tag:'vocabulary:context'},
+ {type:'choice',q:'“The training programme had a positive ______ on staff confidence.”',options:['transition','progression','impact','path'],answer:'impact',tag:'vocabulary:context'},
  {type:'choice',q:'Which sentence best describes career progression?',options:['I have gradually moved into roles with more responsibility.','I arrive at work at 8:00 every morning.','I changed my office last week.','I completed one report yesterday.'],answer:'I have gradually moved into roles with more responsibility.',tag:'vocabulary:usage'},
- {type:'choice',q:'Interviewer: “What did you learn from managing your first team?” Candidate: “It contributed greatly to my ___ because I became more confident in leadership.”',options:['professional growth','career path','transition','responsibility'],answer:'professional growth',tag:'vocabulary:situation'}
+ {type:'choice',q:'Interviewer: “What did you learn from managing your first team?” Candidate: “It contributed greatly to my ______ because I became more confident in leadership.”',options:['professional growth','career path','transition','responsibility'],answer:'professional growth',tag:'vocabulary:situation'}
 ];
 
 const questions=[
@@ -203,22 +202,22 @@ const questions=[
  {q:'What is Samira mainly describing?',options:['An experience that changed her professional direction','Her daily teaching timetable','A disagreement with her manager','Why she wants to leave education'],answer:'An experience that changed her professional direction',tag:'listening:gist'},
  {q:'What was Samira doing before she coordinated the programme?',options:['Classroom teaching','Banking','School finance','Logistics'],answer:'Classroom teaching',tag:'listening:detail'},
  {q:'What problem did Samira’s programme initially have?',options:['Workshop attendance was inconsistent.','There were no teachers.','The school cancelled the programme.','She had no classroom.'],answer:'Workshop attendance was inconsistent.',tag:'listening:problem'},
- {q:'What did Samira and the team do in response?',options:['They changed the schedule and made the sessions more practical.','They stopped the workshops.','They replaced all the teachers.','They shortened the school year.'],answer:'They changed the schedule and made the sessions more practical.',tag:'listening:response'},
+ {q:'What did Samira and the team do?',options:['They changed the schedule and made the sessions more practical.','They stopped the workshops.','They replaced all the teachers.','They shortened the school year.'],answer:'They changed the schedule and made the sessions more practical.',tag:'listening:response'},
  {q:'When Samira says the “bigger result” was professional growth, what does she mean?',options:['The experience developed her own skills and confidence as well as improving attendance.','The programme earned more money.','She received a larger classroom.','More students joined the school.'],answer:'The experience developed her own skills and confidence as well as improving attendance.',tag:'listening:meaning'},
  {q:'Why is Samira now interested in education management?',options:['She discovered that she enjoys developing systems and supporting other teachers.','She no longer likes education.','She wants to avoid working with teachers.','Her manager told her she must change careers.'],answer:'She discovered that she enjoys developing systems and supporting other teachers.',tag:'listening:implication'}
 ];
 
 const grammarItems=[
- {q:'Complete your career story: “I ___ the company in 2021.”',options:['joined','have joined','have been joining','join since'],answer:'joined',tag:'grammar:past-simple'},
- {q:'Complete naturally: “Since becoming a supervisor, I ___ much more confident.”',options:['became yesterday','have become','become last year','have becoming'],answer:'have become',tag:'grammar:present-perfect'},
- {q:'Complete: “I have worked in education ___ 2023.”',options:['for','since','during','from ago'],answer:'since',tag:'grammar:since'},
+ {q:'“I ______ the company in 2021.”',options:['joined','have joined','have been joining','join since'],answer:'joined',tag:'grammar:past-simple'},
+ {q:'“Since becoming a supervisor, I ______ much more confident.”',options:['became yesterday','have become','become last year','have becoming'],answer:'have become',tag:'grammar:present-perfect'},
+ {q:'“I have worked in education ______ 2023.”',options:['for','since','during','from ago'],answer:'since',tag:'grammar:since'},
  {q:'Interviewer: “Have you ever managed a project?” Which answer is most natural?',options:['Yes, I managed one last year.','Yes, I have manage one.','Yes, I am managing yesterday.','Yes, I have managed last year.'],answer:'Yes, I managed one last year.',tag:'grammar:experience'},
  {q:'Which version turns the task into a stronger achievement?',options:['I prepared weekly reports.','I prepared weekly reports, which helped the team identify delivery delays earlier.','Weekly reports are reports.','I was the greatest report writer.'],answer:'I prepared weekly reports, which helped the team identify delivery delays earlier.',tag:'grammar:result-clause'},
  {q:'Which sentence would be most appropriate in a professional interview?',options:['I completely transformed the entire organisation.','I helped redesign our branch reporting system, which reduced duplication.','Nobody could do the job except me.','Everything improved because of me.'],answer:'I helped redesign our branch reporting system, which reduced duplication.',tag:'grammar:credible-claim'}
 ];
 
 const writingTasks=[
- {prompt:'Tell your career story in 120–150 words. Include where you started, one turning point, something you did, the result or impact, what you learned, and how the experience influenced your future direction. Use at least two lesson vocabulary expressions, one Past Simple sentence, two Present Perfect forms, and one clear action → result statement. If you do not have formal work experience, use study, volunteering, community work, an internship, or a personal project.',minWords:120,maxWords:150,authentic:true,autoGrade:false,tag:'writing:authentic-transfer'}
+ {prompt:'Write 120–150 words about one important stage in your work, study, or professional life. Include where you started, one turning point, something you did, the result or impact, what you learned, and how the experience has influenced your future direction. Use at least 2 lesson vocabulary expressions, 1 Past Simple sentence, 2 Present Perfect forms, and 1 clear action → result statement. For learners without formal work experience, the task can use study, volunteering, community work, internships, or personal projects instead.',minWords:120,maxWords:150,authentic:true,autoGrade:false,tag:'writing:authentic-transfer'}
 ];
 
 const workbookLesson={
