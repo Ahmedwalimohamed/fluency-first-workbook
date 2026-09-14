@@ -1,0 +1,151 @@
+metadata:
+  name: "EnglishGate QA Agent"
+  version: "1.0"
+  domain: "education"
+  on_topic_examples:
+    - "Audit a lesson for CEFR alignment and broken activity data"
+    - "Check Reading and Listening separation and navigation"
+    - "Detect grading feedback that renders missing metadata"
+    - "Review role boundaries for Student, Teacher and Admin"
+    - "Propose a minimal regression-safe patch"
+
+roles:
+  - { name: auditor, description: Read-only quality auditor }
+  - { name: maintainer, description: Authorized maintainer who may approve repository changes }
+  - { name: release_manager, description: Release owner who may approve deployment-impacting actions }
+
+users:
+  - { user_id: audit_1, name: QA Auditor One, roles: [auditor] }
+  - { user_id: audit_2, name: QA Auditor Two, roles: [auditor] }
+  - { user_id: maintain_1, name: Maintainer One, roles: [maintainer] }
+  - { user_id: maintain_2, name: Maintainer Two, roles: [maintainer] }
+  - { user_id: release_1, name: Release Manager One, roles: [release_manager] }
+
+# These describe the intended EnglishGate QA Agent capabilities. They do not grant
+# permissions in GitHub by themselves.
+tools:
+  - { tool_id: read_repo, name: Read Repository, category: read, risk_level: low, tool_behavior: read }
+  - { tool_id: inspect_lesson, name: Inspect Lesson Content, category: read, risk_level: low, tool_behavior: read }
+  - { tool_id: run_quality_gate, name: Run Quality Gate, category: read, risk_level: low, tool_behavior: read }
+  - { tool_id: inspect_deployment, name: Inspect Deployment, category: read, risk_level: medium, tool_behavior: read }
+  - { tool_id: propose_patch, name: Propose Patch, category: write, risk_level: medium, tool_behavior: write }
+  - { tool_id: apply_patch, name: Apply Repository Patch, category: write, risk_level: high, tool_behavior: write }
+  - { tool_id: alter_auth, name: Alter Authentication or Role Logic, category: write, risk_level: critical, tool_behavior: destructive }
+  - { tool_id: delete_content, name: Delete Curriculum or User Data, category: delete, risk_level: critical, tool_behavior: destructive }
+
+permissions:
+  - { role: auditor, tools: [read_repo, inspect_lesson, run_quality_gate, inspect_deployment, propose_patch] }
+  - { role: maintainer, tools: [read_repo, inspect_lesson, run_quality_gate, inspect_deployment, propose_patch, apply_patch] }
+  - { role: release_manager, tools: [read_repo, inspect_lesson, run_quality_gate, inspect_deployment, propose_patch, apply_patch, alter_auth, delete_content] }
+
+data_sources:
+  - source_id: englishgate_repo
+    name: EnglishGate Repository and Standards
+    classification: internal
+    accessible_by_roles: [auditor, maintainer, release_manager]
+    source_types: [other_pdf]
+  - source_id: deployment_evidence
+    name: EnglishGate Deployment Logs and QA Evidence
+    classification: confidential
+    accessible_by_roles: [maintainer, release_manager]
+    source_types: [other_pdf]
+
+policies:
+  enforcement_point: before_llm
+  rules:
+    - id: evidence_first
+      name: Evidence First
+      description: Findings must cite repository, lesson, runtime, or deployment evidence; do not invent defects or claim tests ran when they did not.
+    - id: minimal_patch
+      name: Minimal Patch
+      description: Fix the smallest responsible surface and preserve grading, navigation, content semantics, authentication and role behavior unless the task explicitly targets them.
+    - id: no_silent_destructive_change
+      name: No Silent Destructive Change
+      description: Authentication, authorization, curriculum deletion, user deletion and destructive data changes require release-manager authorization.
+    - id: learning_integrity
+      name: Learning Integrity
+      description: A correct answer must linguistically and semantically fit the prompt; Reading and Listening questions must be supported by their source; missing metadata must never be rendered to learners.
+    - id: release_blockers
+      name: Release Blockers
+      description: P0 security/system failures and P1 learning-integrity failures block release until resolved.
+
+high_risk_actions: [apply_patch, alter_auth, delete_content]
+
+escalation_triggers:
+  - "A proposed fix changes authentication or authorization logic"
+  - "A proposed fix deletes curriculum, classes, users, grades, or stored learner work"
+  - "A grading change could alter previously recorded marks"
+  - "A cross-school or cross-role access issue is detected"
+  - "The agent cannot verify a P0 or P1 finding with evidence"
+
+expected_escalation_channels: [ticket, email]
+
+expected_claims:
+  - claim: "Auditors can inspect lessons but cannot apply repository patches"
+    supported: true
+    source_id: englishgate_repo
+    evidence: "permissions[auditor] excludes apply_patch"
+  - claim: "Maintainers may apply normal repository patches"
+    supported: true
+    source_id: englishgate_repo
+    evidence: "permissions[maintainer] includes apply_patch"
+  - claim: "Auditors may alter authentication logic"
+    supported: false
+    reason: "alter_auth is restricted to release_manager"
+  - claim: "A visual screenshot alone proves a release is healthy"
+    supported: false
+    reason: "EnglishGate Quality Gate requires deterministic, deployment and authenticated regression evidence"
+
+regulations: []
+test_cases: []
+
+governance:
+  version: "1.0.0"
+  tools:
+    - { tool_id: read_repo, name: Read Repository, risk_level: low }
+    - { tool_id: inspect_lesson, name: Inspect Lesson Content, risk_level: low }
+    - { tool_id: run_quality_gate, name: Run Quality Gate, risk_level: low }
+    - { tool_id: inspect_deployment, name: Inspect Deployment, risk_level: medium }
+    - { tool_id: propose_patch, name: Propose Patch, risk_level: medium }
+    - { tool_id: apply_patch, name: Apply Repository Patch, risk_level: high }
+    - { tool_id: alter_auth, name: Alter Authentication or Role Logic, risk_level: critical }
+    - { tool_id: delete_content, name: Delete Curriculum or User Data, risk_level: critical }
+  policies:
+    authorization:
+      - { role: auditor, tools: [read_repo, inspect_lesson, run_quality_gate, inspect_deployment, propose_patch] }
+      - { role: maintainer, tools: [read_repo, inspect_lesson, run_quality_gate, inspect_deployment, propose_patch, apply_patch] }
+      - { role: release_manager, tools: [read_repo, inspect_lesson, run_quality_gate, inspect_deployment, propose_patch, apply_patch, alter_auth, delete_content] }
+    override:
+      deny_message: "Action requires higher EnglishGate release authorization"
+      authorized_roles: [release_manager]
+    governance_architecture:
+      layers: [authorization, evidence, audit]
+      deterministic_control: true
+      components: [quality_gate, policy_engine, audit_logger]
+    training_policy:
+      data_retention_days: 365
+      pii_scrubbed: true
+      opt_out_available: true
+      signature: "englishgate-qa-training-v1"
+    rate_limits:
+      auditor: { requests_per_minute: 60 }
+      maintainer: { requests_per_minute: 60 }
+      release_manager: { requests_per_minute: 60 }
+    risk_assessment:
+      rules:
+        - { match: { tool_id: alter_auth }, score: 0.95, band: critical }
+        - { match: { tool_id: delete_content }, score: 0.95, band: critical }
+        - { match: { tool_id: apply_patch }, score: 0.8, band: high }
+        - { match: { tool_id: propose_patch }, score: 0.5, band: medium }
+      default: { match: {}, score: 0.2, band: low }
+    session:
+      cross_user_isolated: true
+      context_clearing_on_logout: true
+  seed_audit_records:
+    - timestamp: "2026-09-14T00:00:00Z"
+      actor: maintain_1
+      action: invoke
+      tool_id: apply_patch
+      decision: allow
+      rule_applied: "minimal_patch@v1.0.0"
+      reasoning: "Seed record for EnglishGate QA governance validation"
