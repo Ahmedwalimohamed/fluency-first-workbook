@@ -1,69 +1,77 @@
 # EnglishGate UI/UX Audit — 2026-09-14
 
 ## Scope
-Initial code-level audit of the current EnglishGate student shell and lesson/workbook UI against:
+Code-level audit and consolidation of the EnglishGate Student, Teacher and Admin UI against:
 - `standards/ENGLISHGATE_DESIGN_SYSTEM.md`
 - `standards/ENGLISHGATE_LEARNING_UX.md`
 - `standards/ENGLISHGATE_UI_QA_CHECKLIST.md`
 - UI/UX Pro Max priority rules
 
-This audit does not change authentication, curriculum, grading rules, progress meaning, or database contracts.
+This program does not change authentication, curriculum, grading rules, progress meaning, CRUD routes, role permissions, assignment logic or database contracts.
 
 ## Executive finding
-EnglishGate already contains many good mobile and accessibility improvements, but the front end accumulated overlapping CSS and JavaScript patches. The remediation strategy is therefore **consolidate, verify, retire** rather than add another redesign layer.
+EnglishGate had accumulated overlapping CSS and JavaScript patches. The remediation strategy has been **consolidate, verify, retire** rather than layering a wholesale redesign on top.
+
+Primary Student, Teacher and Admin presentation ownership is now explicit. The remaining work is production/browser validation and deliberate retirement of a few legacy blocks that are still physically present but no longer visual authorities.
 
 ## Critical
-### C1 — No single automated UI quality gate
+### C1 — Automated UI quality gates
 **Status:** Completed — non-blocking gates added
 
-`npm run qa:ui` provides static checks for EnglishGate UI standards and ownership boundaries. `npm run qa:teacher-ui` adds Teacher-specific ownership and accessibility checks. `npm run qa:admin-ui` adds Admin-specific ownership, destructive-action, table and mobile checks. These remain intentionally outside blocking `prestart` until validated against production behavior.
+Available commands:
+- `npm run qa:ui`
+- `npm run qa:teacher-ui`
+- `npm run qa:admin-ui`
+- `npm run qa:final-ui`
+
+They remain outside blocking `prestart` until production/browser verification confirms there are no false positives or missed regressions.
 
 ## High
 ### H1 — CSS patch-stack complexity
-**Status:** In progress
+**Status:** Primary ownership consolidation completed
 
-Completed ownership steps:
-- `question-nav-fix.css` is the final visual authority for student Back/Next navigation.
-- `mobile-lesson-player-v1.css` is restricted to mobile Lesson Player structure only.
-- `englishgate-lesson-player-design-v2.css` owns Lesson Player visual treatment.
-- `reading-listening-separation-v3.css?v=2` is a structural bridge only.
-- `englishgate-reading-design-v2.css` owns Reading presentation.
-- `englishgate-listening-design-v2.css` owns Listening presentation.
-- `reading-listening-grading-v1.css` owns result/retry presentation.
-- `grammar-lesson-clean-v1.css?v=2` is a structural/content-layout bridge only.
-- `englishgate-grammar-design-v2.css` owns Grammar presentation.
-- `englishgate-vocabulary-design-v2.css` remains the Vocabulary visual authority.
-- `mobile-student-home-v2.css?v=3` is restricted to focused mobile Student Home structure only.
-- `englishgate-student-home-design-v3.css` is the canonical Student Home visual layer on desktop and mobile.
-- `englishgate-teacher-design-v1.css?v=1` is the final Teacher presentation layer for Teacher Assist, live-book browsing, assignment surfaces and live-lesson controls.
-- `englishgate-admin-design-v1.css?v=1` is the final Admin presentation layer for overview, user/class management, forms, tables, academic-manager and school-platform surfaces.
-- `qa:ui`, `qa:teacher-ui` and `qa:admin-ui` enforce these ownership boundaries and stylesheet ordering.
+Canonical ownership now includes:
+- `question-nav-fix.css` — student Back/Next navigation.
+- `mobile-lesson-player-v1.css` — mobile Lesson Player structure only.
+- `englishgate-lesson-player-design-v2.css` — Lesson Player presentation.
+- `reading-listening-separation-v3.css` — Reading/Listening structure only.
+- `englishgate-reading-design-v2.css` — Reading presentation.
+- `englishgate-listening-design-v2.css` — Listening presentation.
+- `reading-listening-grading-v1.css` — result/retry presentation.
+- `grammar-lesson-clean-v1.css` — Grammar structural/content bridge only.
+- `englishgate-grammar-design-v2.css` — Grammar presentation.
+- `englishgate-vocabulary-design-v2.css` — Vocabulary presentation.
+- `mobile-student-home-v2.css` — Student Home mobile focus structure only.
+- `englishgate-student-home-design-v3.css` — Student Home presentation.
+- `mobile-student-course-v1.css` — My Book mobile focus structure only.
+- `englishgate-student-course-design-v1.css` — My Book / course presentation.
+- `englishgate-teacher-design-v1.css` — Teacher presentation.
+- `englishgate-admin-design-v1.css` — Admin presentation.
 
-**Known Teacher legacy debt:** `public/styles.css` still physically contains duplicate `Teacher Assist intelligence layer v1` and `Teacher live book + assignment flow` blocks. The canonical Teacher stylesheet loads after the monolith and wins at runtime. `qa:teacher-ui` reports those duplicate legacy blocks as warnings. They have not been surgically deleted because `styles.css` is a large monolith and a broad replacement would create unnecessary regression risk.
+### Known legacy debt
+`public/styles.css` still physically contains duplicate Teacher Assist and Teacher live-book blocks. The canonical Teacher layer loads later and wins. These blocks were not surgically deleted because the base stylesheet is a large monolith and broad replacement adds unnecessary regression risk.
 
-**Known Admin legacy debt:** `public/assets/academic-manager.css` and `public/assets/school-platform.css` still contain older `#17369f` visual values. `englishgate-admin-design-v1.css` loads later and normalizes Admin presentation to the canonical semantic token system. `qa:admin-ui` reports the old values as warnings so they can be retired deliberately instead of through blind global replacement.
+`public/assets/academic-manager.css` and `public/assets/school-platform.css` still contain older `#17369f` values. The canonical Admin layer normalizes presentation at runtime. Retire those legacy values only after confirming no non-Admin consumer depends on them.
 
-Remaining CSS target: legacy shell/course layers and safe physical retirement of superseded visual blocks.
+### H2 — JavaScript ownership
+**Status:** Primary behavior ownership consolidated
 
-### H2 — JavaScript behavior patch-stack complexity
-**Status:** In progress
+- `question-nav-fix.js` is the sole generic student question-navigation controller.
+- `student-response-navigation-v1.js` is not loaded.
+- `reading-listening-separation-v3.js` owns rendering, draft persistence, stage navigation and question flow only.
+- `reading-listening-grading-v1.js` owns submission, scoring, attempts, retry-only-missed, acceptance and completion.
+- Reading/Listening submission crosses `englishgate:separated-submit`.
+- `mobile-student-home-v2.js` owns Student Home focus-mode activation only.
+- `mobile-student-course-v1.js` owns My Book focus-mode activation and next-lesson tagging only.
+- Teacher behavior remains in `app.js`.
+- Admin core rendering/CRUD remains in `app.js`.
+- `admin-student-management-v2.js` and `admin-teacher-management-v1.js` remain scoped enhancement scripts.
+- `role-navigation-icons-v1.js` is presentation-only: it replaces rendered navigation glyphs with inline SVG while preserving `data-page`, labels, click handlers and routing.
 
-Completed ownership steps:
-- `public/question-nav-fix.js` is the sole generic student question-navigation controller.
-- `student-response-navigation-v1.js` is no longer loaded.
-- `reading-listening-separation-v3.js?v=4` owns Reading/Listening rendering, draft persistence, stage navigation and question navigation only.
-- `reading-listening-grading-v1.js?v=2` solely owns Reading/Listening submission, scoring, attempts, retry-only-missed workflow, result acceptance and completion.
-- Final Reading/Listening submission crosses the explicit `englishgate:separated-submit` event boundary.
-- `mobile-student-home-v2.js` owns only activation/deactivation of `student-home-focus-mode`; it does not render dashboard content or own data/navigation behavior.
-- Teacher behavior remains in `app.js`: page routing, Teacher Assist data, resume context, lesson state, assignment logic, presentation-mode state and role permissions were not moved into the Teacher design layer.
-- Admin core page rendering and CRUD bindings remain in `app.js`.
-- `admin-student-management-v2.js` remains scoped to Admin student/class management enhancement only.
-- `admin-teacher-management-v1.js` remains scoped to Admin teacher editing only.
+### H3 — Visual source of truth
+**Status:** Completed for primary surfaces
 
-### H3 — Visual source of truth alignment
-**Status:** Substantially completed across Student, Teacher and Admin primary surfaces
-
-`englishgate-unified-ui-v1.css?v=2` exposes the canonical semantic token contract:
+`englishgate-unified-ui-v1.css` exposes the approved semantic tokens:
 - `--eg-primary: #2563EB`
 - `--eg-text: #0F172A`
 - `--eg-secondary: #64748B`
@@ -75,100 +83,101 @@ Completed ownership steps:
 - `--eg-review: #F59E0B`
 - `--eg-vocabulary: #7C3AED`
 
-Teacher and Admin canonical layers inherit these semantic tokens instead of defining competing palettes. Legacy aliases remain for compatibility while new work can use the semantic contract directly.
+Student Course, Teacher and Admin canonical layers inherit this token system rather than defining competing palettes.
 
 ### H4 — Interface icons
-**Status:** Shell actions completed; navigation and learning-surface migration remains
+**Status:** Primary shell and role navigation completed; audio glyphs remain
 
-The main shell menu and sign-out controls no longer use `☰` and `↗`. They use inline stroke SVG icons with explicit accessible names while preserving existing button IDs and behavior.
+Completed:
+- main shell menu SVG
+- sign-out SVG
+- Student/Teacher/Admin role navigation SVGs
 
-Role navigation generated in `app.js` still uses compact text glyphs such as `⌂`, `▣`, `▤`, `◎`, `✎`, `△` and `▦`. Audio/playback and some live-class controls also still contain glyphs. Migrate these only when their owning component is consolidated so icon work does not become another global patch.
+Remaining known glyph debt:
+- Reading/Listening audio play/restart controls currently render `▶` and `↺`.
+
+The audio handlers bind by ID/function rather than visible text, so these can be migrated safely in the owning renderer after browser verification. `qa:final-ui` reports them as a warning.
 
 ### H5 — Mobile question nested-scroll risk
-**Status:** Open — guarded by QA warning
+**Status:** Open — requires real device/browser testing
 
-The current single-question experience uses an internal scroll container with `overflow:hidden` on outer containers. Preserve until device testing covers 320, 360/375, 390/430 widths plus virtual keyboard and long writing responses.
+The single-question experience still uses an internal scroll container with outer `overflow:hidden`. Preserve until validation covers:
+- 320px
+- 360/375px
+- 390/430px
+- long Reading/Writing responses
+- virtual keyboard open/close
+- safe-area devices
 
 ## Medium
 ### M1 — Semantic token aliases
 **Status:** Completed
 
-Canonical semantic tokens exist in the unified UI layer while legacy aliases remain available for compatibility.
+Legacy aliases remain for compatibility while canonical semantic tokens are available to all new layers.
 
-### M2 — Hover transforms
-**Status:** Open
+### M2 — Hover-only interaction risk
+**Status:** Reduced, still verify in browser
 
-Touch and keyboard feedback must remain complete without hover-dependent movement.
+Canonical layers include keyboard focus and touch behavior. Final validation must ensure no important action depends on hover.
 
-### M3 — Login copy reflects an older activity model
-**Status:** Open
+### M3 — Login activity-model copy
+**Status:** Completed
 
-The login hero still references “Four skill pages” even though Reading and Listening are independent activities and the workbook taxonomy has evolved.
+The old “Four skill pages” promise was removed. Login now states that the workbook contains Grammar, Reading, Listening, Vocabulary and Writing and explicitly notes that Reading and Listening are separate activities.
 
 ### M4 — Font policy
 **Status:** Open
 
-Confirm a single permanent EnglishGate application font before adding further typography overrides.
+Confirm one permanent application font before further typography work. Do not add another font override during this consolidation program.
 
-## Positive findings already present
-- Correct mobile viewport meta with `viewport-fit=cover`.
-- Canonical browser theme color `#2563EB`.
-- Unified semantic design token contract matches the approved EnglishGate palette.
-- Safe-area handling in question, Lesson Player and Student Home navigation.
-- Canonical question navigation has >=44px controls, visible keyboard focus and reduced-motion support.
-- Lesson Player has a structural-vs-visual ownership boundary.
-- Reading and Listening have structural-vs-visual ownership boundaries.
-- Grammar has a structural-vs-visual ownership boundary.
-- Vocabulary has an explicit canonical visual layer with the approved purple vocabulary accent.
-- Student Home has structural focus-mode ownership separated from canonical visual ownership.
-- Student Home focus-mode JavaScript does not own dashboard rendering or data behavior.
-- Teacher has a canonical semantic-token-based presentation layer loaded after legacy design layers.
-- Teacher live controls receive >=44px touch-target protection, visible focus states and reduced-motion handling from the canonical layer.
-- Admin has a canonical semantic-token-based presentation layer loaded after academic/school management styles.
-- Admin destructive actions receive explicit error styling, management controls receive touch-target protection, and data tables remain horizontally scrollable instead of clipping on narrow screens.
-- Teacher and Admin behavior remain isolated from presentation work.
-- Reading and Listening are independent activities with separately stored attempts and completion.
-- Reading question headings receive programmatic focus when moving Back/Next.
-- Reading/Listening grading preserves retry-only-missed behavior while having a single submission owner.
-- Main shell menu/sign-out actions use accessible SVG icons instead of text glyphs.
-- Lesson visuals require alt text at the product-contract level.
+## Positive findings
+- `viewport-fit=cover` is present.
+- Browser theme color is `#2563EB`.
+- Semantic tokens match the approved EnglishGate palette.
+- Student Home and My Book have structure-vs-presentation ownership boundaries.
+- Lesson Player has structure-vs-presentation ownership.
+- Reading and Listening have separate presentation and behavior boundaries.
+- Grammar and Vocabulary have canonical presentation owners.
+- Teacher and Admin have canonical semantic-token-based presentation layers.
+- Question navigation has visible keyboard focus, safe-area handling and >=44px controls.
+- Student Course actions have >=44px touch targets and visible focus states.
+- Teacher live controls and Admin management controls have touch/focus safeguards.
+- Admin destructive actions have explicit error styling.
+- Admin tables remain horizontally scrollable rather than clipping.
+- Role navigation no longer visually depends on text glyph icons.
+- Reading/Listening grading has one submission owner.
+- Reading question headings receive programmatic focus on Back/Next.
 
 ## Completed remediation
-1. Added non-blocking `npm run qa:ui`.
-2. Consolidated generic Question Card navigation into one controller.
-3. Removed duplicate response-navigation runtime controller.
-4. Added keyboard focus, reduced motion, safe-area and touch-target protections.
-5. Migrated browser theme color to `#2563EB`.
+1. Added `qa:ui`.
+2. Consolidated generic question navigation.
+3. Retired duplicate response-navigation runtime loading.
+4. Added keyboard, reduced-motion, safe-area and touch protections.
+5. Standardized browser theme color.
 6. Split Lesson Player structural and visual ownership.
-7. Added QA enforcement for Lesson Player ownership/order.
-8. Removed duplicate Reading/Listening grading/completion implementation from the renderer.
-9. Established explicit renderer → grader submission event boundary.
-10. Reduced shared Reading/Listening CSS to structural ownership only.
-11. Made Reading, Listening and grading styles the presentation owners for their respective surfaces.
-12. Reduced legacy Grammar CSS to structural/content-layout ownership only.
-13. Preserved `englishgate-grammar-design-v2.css` as the Grammar visual authority.
-14. Verified Vocabulary’s canonical design layer and accessibility safeguards.
-15. Added canonical semantic design tokens to the unified UI layer.
-16. Reduced `mobile-student-home-v2.css` to Student Home focus structure only.
-17. Preserved `mobile-student-home-v2.js` as mode activation only.
-18. Made `englishgate-student-home-design-v3.css` the canonical Student Home presentation layer.
-19. Replaced shell menu/sign-out glyphs with accessible inline SVG icons.
-20. Added QA enforcement for Student Home ownership, semantic tokens and shell SVG controls.
-21. Added `englishgate-teacher-design-v1.css` as the canonical Teacher presentation layer.
-22. Loaded the Teacher design layer after legacy/global styles so it is the final Teacher visual authority.
-23. Added `npm run qa:teacher-ui` to verify Teacher token inheritance, focus states, touch targets, responsive safeguards and known duplicate legacy blocks.
-24. Added `englishgate-admin-design-v1.css` as the canonical Admin presentation layer.
-25. Loaded the Admin layer after academic-manager, school-platform and Teacher styles so Admin presentation wins only inside `.app.admin-mode`.
-26. Added `npm run qa:admin-ui` to verify Admin token inheritance, destructive-action styling, touch targets, responsive tables, enhancement-script scope and legacy palette warnings.
+7. Split Reading/Listening rendering and grading ownership.
+8. Split Reading/Listening structural and visual ownership.
+9. Split Grammar structural and visual ownership.
+10. Verified Vocabulary canonical ownership.
+11. Added canonical semantic design tokens.
+12. Split Student Home structural and presentation ownership.
+13. Replaced shell menu/sign-out glyphs with SVG.
+14. Added canonical Teacher design layer plus `qa:teacher-ui`.
+15. Added canonical Admin design layer plus `qa:admin-ui`.
+16. Split My Book / Student Course structural and presentation ownership.
+17. Added accessible SVG role-navigation presentation.
+18. Updated login activity-model copy for separate Reading and Listening.
+19. Added `qa:final-ui` to verify the consolidated ownership model and report remaining legacy debt.
 
-## Next remediation order
-1. **Review remaining legacy shell/course CSS ownership. Current target.**
-2. Physically retire duplicate Teacher blocks from the monolithic base stylesheet only when a low-risk editing path is available.
-3. Retire legacy academic-manager/school-platform color values after verifying no non-Admin consumers depend on them.
-4. Replace remaining actionable role-navigation and learning-surface glyph icons with accessible SVG controls when their owning components are touched.
-5. Update outdated login activity-model copy once the final public wording is confirmed.
-6. Test nested scrolling, safe areas, Teacher presentation mode, Admin management tables and virtual-keyboard behavior on mobile devices.
-7. Only after stable passing results, consider making UI QA blocking in `prestart`.
+## Remaining work before declaring production UI complete
+1. Run the static QA commands in the deployed/build environment.
+2. Browser-test Student Home, My Book, Lesson Player, Grammar, Reading, Listening, Vocabulary and Writing.
+3. Browser-test Teacher Assist and Teacher PRESENT mode.
+4. Browser-test Admin books/classes/teachers/students/reports plus long tables and modals.
+5. Validate mobile widths 320, 360/375, 390/430 and virtual keyboard behavior.
+6. Migrate Reading/Listening audio play/restart glyphs to SVG in their owning renderer.
+7. Retire duplicate legacy Teacher CSS and old Admin palette values only after regression verification.
+8. Consider making UI QA blocking in `prestart` only after stable production validation.
 
 ## Do-not-do list
 - Do not redesign every page in one commit.
@@ -176,4 +185,4 @@ Confirm a single permanent EnglishGate application font before adding further ty
 - Do not mass-remove `!important` until selector ownership is understood.
 - Do not migrate frameworks as part of this UX program.
 - Do not change lesson IDs, answer keys, scoring rules, progress meaning, role permissions, CRUD routes or content sources while consolidating UI.
-- Do not add another broad patch to fix a conflict created by existing design layers; establish explicit component ownership instead.
+- Do not add another broad patch to fix conflicts created by legacy layers; retire them deliberately after validation.
