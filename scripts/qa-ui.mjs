@@ -37,6 +37,7 @@ if (!exists('public/index.html')) {
   requireMatch('Canonical question navigation controller loaded', html, /<script\s+src=["']question-nav-fix\.js\?v=7["']/i, 'question-nav-fix.js?v=7 must be loaded');
   requireMatch('Consolidated Reading/Listening renderer loaded', html, /reading-listening-separation-v3\.js\?v=4/i, 'reading-listening-separation-v3.js?v=4 must be loaded');
   requireMatch('Consolidated Reading/Listening grader loaded', html, /reading-listening-grading-v1\.js\?v=2/i, 'reading-listening-grading-v1.js?v=2 must be loaded');
+  requireMatch('Reading/Listening structural stylesheet cache version', html, /reading-listening-separation-v3\.css\?v=2/i, 'reading-listening-separation-v3.css?v=2 must be loaded');
 
   if (/student-response-navigation-v1\.js/i.test(html)) critical.push('Duplicate question navigation controller is loaded: student-response-navigation-v1.js');
   else passes.push('Duplicate question navigation controller removed from runtime');
@@ -45,6 +46,12 @@ if (!exists('public/index.html')) {
   const canonicalLessonPlayerIndex = html.indexOf('englishgate-lesson-player-design-v2.css');
   if (legacyLessonPlayerIndex >= 0 && canonicalLessonPlayerIndex > legacyLessonPlayerIndex) passes.push('Lesson player structural bridge loads before canonical visual layer');
   else critical.push('Lesson player CSS ownership order is invalid: structural bridge must load before englishgate-lesson-player-design-v2.css.');
+
+  const sepCssIndex = html.indexOf('reading-listening-separation-v3.css');
+  const readCssIndex = html.indexOf('englishgate-reading-design-v2.css');
+  const listenCssIndex = html.indexOf('englishgate-listening-design-v2.css');
+  if (sepCssIndex >= 0 && readCssIndex > sepCssIndex && listenCssIndex > sepCssIndex) passes.push('Reading/Listening structural CSS loads before both canonical skill design layers');
+  else critical.push('Reading/Listening CSS ownership order is invalid: structural CSS must load before Reading and Listening design layers.');
 
   const cssLinks = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]*>/gi)].length;
   const scripts = [...html.matchAll(/<script\s+src=/gi)].length;
@@ -93,9 +100,8 @@ if (exists('public/reading-listening-separation-v3.js')) {
   const renderer = read('public/reading-listening-separation-v3.js');
   if (/englishgate:separated-submit/.test(renderer)) passes.push('Reading/Listening renderer delegates final submission through the canonical event boundary');
   else critical.push('Reading/Listening renderer must dispatch englishgate:separated-submit at final submission.');
-  if (/function\s+submitSeparated\b/.test(renderer) || /workbook-activities\/attempts/.test(renderer) || /workbook-activities\/complete/.test(renderer)) {
-    critical.push('Reading/Listening renderer still contains grading/attempt/completion ownership.');
-  } else passes.push('Reading/Listening renderer contains no grading, attempt or completion implementation');
+  if (/function\s+submitSeparated\b/.test(renderer) || /workbook-activities\/attempts/.test(renderer) || /workbook-activities\/complete/.test(renderer)) critical.push('Reading/Listening renderer still contains grading/attempt/completion ownership.');
+  else passes.push('Reading/Listening renderer contains no grading, attempt or completion implementation');
 }
 
 if (exists('public/reading-listening-grading-v1.js')) {
@@ -104,6 +110,27 @@ if (exists('public/reading-listening-grading-v1.js')) {
   else critical.push('Reading/Listening grader must own the canonical submission event and grade function.');
   if (/workbook-activities\/attempts/.test(grader) && /workbook-activities\/complete/.test(grader) && /data-grade-retry/.test(grader)) passes.push('Reading/Listening grader owns attempts, completion and retry workflow');
   else critical.push('Reading/Listening grader is missing attempt, completion or retry ownership.');
+}
+
+if (exists('public/reading-listening-separation-v3.css')) {
+  const bridge = read('public/reading-listening-separation-v3.css');
+  const forbiddenVisuals = /(?:background|color|border(?:-radius)?|box-shadow|font-size|font-weight|letter-spacing|line-height)\s*:/i;
+  if (forbiddenVisuals.test(bridge)) critical.push('Reading/Listening structural bridge contains visual styling; presentation belongs to skill-specific design layers.');
+  else passes.push('Reading/Listening shared CSS is constrained to structural layout only');
+  if (/grid-template-columns/.test(bridge) && /env\(safe-area-inset-bottom\)/.test(bridge) && /min-height\s*:\s*48px/i.test(bridge)) passes.push('Reading/Listening structural bridge preserves responsive layout and mobile navigation safeguards');
+  else critical.push('Reading/Listening structural bridge is missing responsive layout or mobile navigation safeguards.');
+}
+
+if (exists('public/englishgate-reading-design-v2.css')) {
+  const readingCss = read('public/englishgate-reading-design-v2.css');
+  if (/--eg-read-primary\s*:\s*#2563EB/i.test(readingCss) && /focus-visible/.test(readingCss) && /prefers-reduced-motion/.test(readingCss)) passes.push('Reading canonical design layer includes primary token, focus states and reduced-motion support');
+  else warnings.push('Reading canonical design layer is missing one or more accessibility/design safeguards.');
+}
+
+if (exists('public/englishgate-listening-design-v2.css')) {
+  const listeningCss = read('public/englishgate-listening-design-v2.css');
+  if (/--eg-li-primary\s*:\s*#2563EB/i.test(listeningCss) && /min-width\s*:\s*44px/i.test(listeningCss) && /focus-visible/.test(listeningCss)) passes.push('Listening canonical design layer includes primary token, touch targets and focus states');
+  else warnings.push('Listening canonical design layer is missing one or more accessibility/design safeguards.');
 }
 
 if (exists('public/mobile-single-question-v5.css')) {
