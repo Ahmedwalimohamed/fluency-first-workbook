@@ -1,0 +1,17 @@
+/* EnglishGate teacher text formatting v1 */
+.teacher-text-format-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 12px;margin-top:10px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;color:#0F172A}
+.teacher-text-format-label{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#64748B}
+.teacher-text-colors,.teacher-text-size{display:flex;align-items:center;gap:6px}
+.teacher-text-color{width:30px;height:30px;padding:0;border:2px solid #fff;border-radius:50%;background:var(--swatch);box-shadow:0 0 0 1px #CBD5E1;cursor:pointer}
+.teacher-text-color.is-active{box-shadow:0 0 0 3px #2563EB}
+.teacher-text-custom{display:flex;align-items:center;gap:5px;font-size:.75rem;color:#64748B;font-weight:700}
+.teacher-text-custom input{width:34px;height:30px;padding:2px;border:1px solid #CBD5E1;border-radius:8px;cursor:pointer}
+.teacher-text-size button,.teacher-text-edit{min-width:44px;min-height:36px;border:1px solid #CBD5E1;border-radius:9px;background:#F8FAFC;color:#0F172A;font-weight:800;cursor:pointer;padding:7px 10px}
+.teacher-text-size output{min-width:52px;text-align:center;font-weight:800;font-size:.82rem;color:#475569}
+.teacher-text-edit{background:#2563EB;color:#fff;border-color:#2563EB}
+.teacher-text-edit:disabled{opacity:.45;cursor:not-allowed}
+body.teacher-text-edit-mode .teacher-annotation-text-layer{pointer-events:auto!important;z-index:4}
+body.teacher-text-edit-mode .live-text-note{pointer-events:auto!important;cursor:text;user-select:text;min-width:24px;line-height:1.25;white-space:pre-wrap}
+.live-text-note.is-text-selected{outline:3px solid rgba(37,99,235,.35);outline-offset:3px}
+.live-text-note.is-text-editing{outline:3px solid #2563EB;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.16)}
+@media(max-width:900px){.teacher-text-format-controls{gap:8px}.teacher-text-custom span{display:none}}
