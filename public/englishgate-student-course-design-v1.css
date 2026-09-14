@@ -1,0 +1,123 @@
+/* EnglishGate Student Course Design v1
+   Canonical presentation for My Book / course path.
+   Mobile structure remains in mobile-student-course-v1.css. */
+
+.app.student-mode .course-shell{
+  color:var(--eg-text,#0F172A);
+}
+
+.app.student-mode .course-intro{
+  border:1px solid var(--eg-border,#E2E8F0)!important;
+  border-radius:18px!important;
+  background:var(--eg-card,#FFFFFF)!important;
+  box-shadow:0 6px 20px rgba(15,23,42,.045)!important;
+}
+
+.app.student-mode .course-intro h1{color:var(--eg-text,#0F172A)!important}
+.app.student-mode .course-intro p,
+.app.student-mode .course-overall>span,
+.app.student-mode .topic-copy small,
+.app.student-mode .topic-copy>span{color:var(--eg-secondary,#64748B)!important}
+.app.student-mode .course-overall>strong{color:var(--eg-primary,#2563EB)!important}
+
+.app.student-mode .course-topic{
+  border:1px solid var(--eg-border,#E2E8F0)!important;
+  border-radius:15px!important;
+  background:var(--eg-card,#FFFFFF)!important;
+  box-shadow:none!important;
+}
+
+.app.student-mode .course-topic.eg-course-next{
+  border-color:#BFDBFE!important;
+  background:#F8FBFF!important;
+  box-shadow:0 7px 22px rgba(37,99,235,.07)!important;
+}
+
+.app.student-mode .course-topic.eg-course-next::before{
+  content:"NEXT LESSON";
+  color:#1D4ED8!important;
+  font-size:.64rem!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:.09em!important;
+}
+
+.app.student-mode .topic-state{
+  border-radius:10px!important;
+  font-size:.82rem!important;
+  font-weight:900!important;
+}
+
+.app.student-mode .course-topic.eg-course-next .topic-state{
+  background:var(--eg-primary,#2563EB)!important;
+  color:#fff!important;
+}
+
+.app.student-mode .course-topic.complete .topic-state{
+  background:#F0FDF4!important;
+  color:#15803D!important;
+}
+
+.app.student-mode .topic-copy strong{color:var(--eg-text,#0F172A)!important}
+
+.app.student-mode .topic-actions .primary-btn,
+.app.student-mode .topic-actions .ghost-btn{
+  min-height:44px!important;
+  border-radius:11px!important;
+  font-weight:800!important;
+}
+
+.app.student-mode .course-topic.complete:not(.eg-course-next){background:#FBFCFD!important}
+.app.student-mode .course-topic.complete:not(.eg-course-next) .topic-actions .primary-btn{
+  background:#fff!important;
+  color:#1D4ED8!important;
+  border:1px solid var(--eg-border,#E2E8F0)!important;
+}
+
+.app.student-mode .course-topic.pending{
+  opacity:.72!important;
+  background:#F8FAFC!important;
+}
+
+body.student-course-focus-mode{
+  background:var(--eg-background,#F8FAFC)!important;
+}
+
+body.student-course-focus-mode .topbar,
+body.student-course-focus-mode .bottom-nav{
+  background:rgba(255,255,255,.98)!important;
+}
+body.student-course-focus-mode .topbar{border-bottom:1px solid var(--eg-border,#E2E8F0)!important}
+body.student-course-focus-mode .bottom-nav{box-shadow:0 -6px 24px rgba(15,23,42,.06)!important}
+
+.app.student-mode .course-shell button:focus-visible,
+.app.student-mode .course-shell a:focus-visible{
+  outline:3px solid rgba(37,99,235,.25)!important;
+  outline-offset:2px!important;
+}
+
+@media(max-width:760px){
+  body.student-course-focus-mode .course-intro h1{font-size:1.2rem!important;line-height:1.15!important;letter-spacing:-.015em!important}
+  body.student-course-focus-mode .course-intro p{font-size:.76rem!important;line-height:1.35!important}
+  body.student-course-focus-mode .course-overall>strong{font-size:1.35rem!important;line-height:1!important}
+  body.student-course-focus-mode .course-overall>span{font-size:.66rem!important;white-space:nowrap!important}
+  body.student-course-focus-mode .topic-copy small{font-size:.66rem!important;line-height:1.1!important}
+  body.student-course-focus-mode .topic-copy strong{font-size:.92rem!important;line-height:1.2!important}
+  body.student-course-focus-mode .topic-copy>span{font-size:.72rem!important;line-height:1.25!important}
+  body.student-course-focus-mode .topic-actions .primary-btn,
+  body.student-course-focus-mode .topic-actions .ghost-btn{min-height:44px!important;padding:8px 10px!important;font-size:.76rem!important}
+}
+
+@media(max-width:390px){
+  body.student-course-focus-mode .course-intro h1{font-size:1.08rem!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .app.student-mode .course-shell *,
+  .app.student-mode .course-shell *::before,
+  .app.student-mode .course-shell *::after{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
