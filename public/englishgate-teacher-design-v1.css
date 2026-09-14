@@ -1,0 +1,140 @@
+/* EnglishGate Teacher Design v1
+   Canonical presentation layer for teacher overview, teaching flow and live lesson controls.
+   Behavior, assignment logic, lesson state, permissions and data remain owned by app.js. */
+
+.app.teacher-mode{
+  --eg-teacher-primary:var(--eg-primary,#2563EB);
+  --eg-teacher-text:var(--eg-text,#0F172A);
+  --eg-teacher-muted:var(--eg-secondary,#64748B);
+  --eg-teacher-bg:var(--eg-background,#F8FAFC);
+  --eg-teacher-card:var(--eg-card,#FFFFFF);
+  --eg-teacher-border:var(--eg-border,#E2E8F0);
+  --eg-teacher-success:var(--eg-success,#16A34A);
+  --eg-teacher-error:var(--eg-error,#DC2626);
+  --eg-teacher-review:var(--eg-review,#F59E0B);
+  background:var(--eg-teacher-bg);
+  color:var(--eg-teacher-text);
+}
+
+.app.teacher-mode .sidebar,
+.app.teacher-mode .topbar,
+.app.teacher-mode .card,
+.app.teacher-mode .teacher-assist-hero,
+.app.teacher-mode .teacher-assist-card,
+.app.teacher-mode .teacher-book-card,
+.app.teacher-mode .live-book-page,
+.app.teacher-mode .assignment-match-card{
+  border-color:var(--eg-teacher-border)!important;
+}
+
+.app.teacher-mode .topbar{background:rgba(255,255,255,.97)!important}
+.app.teacher-mode .nav-btn.active{background:#EFF6FF!important;color:#1D4ED8!important}
+.app.teacher-mode .primary-btn{background:var(--eg-teacher-primary)!important;color:#fff!important}
+.app.teacher-mode .primary-btn:hover{background:#1D4ED8!important}
+.app.teacher-mode button:focus-visible,
+.app.teacher-mode a:focus-visible,
+.app.teacher-mode input:focus-visible,
+.app.teacher-mode textarea:focus-visible,
+.app.teacher-mode select:focus-visible{
+  outline:3px solid rgba(37,99,235,.25)!important;
+  outline-offset:2px!important;
+}
+
+/* Teacher Assist */
+.app.teacher-mode .teacher-assist-hero{
+  border:1px solid var(--eg-teacher-border)!important;
+  border-radius:18px!important;
+  background:var(--eg-teacher-card)!important;
+  box-shadow:0 6px 22px rgba(15,23,42,.045)!important;
+}
+.app.teacher-mode .teacher-assist-badge{
+  background:#EFF6FF!important;
+  color:#1D4ED8!important;
+}
+.app.teacher-mode .teacher-assist-main h1,
+.app.teacher-mode .teacher-assist-reason strong,
+.app.teacher-mode .teacher-assist-card>strong{color:var(--eg-teacher-text)!important}
+.app.teacher-mode .teacher-assist-main p,
+.app.teacher-mode .teacher-assist-main small,
+.app.teacher-mode .teacher-assist-reason,
+.app.teacher-mode .teacher-assist-card>span,
+.app.teacher-mode .teacher-assist-card>p{color:var(--eg-teacher-muted)!important}
+.app.teacher-mode .teacher-assist-reason{
+  border:1px solid var(--eg-teacher-border)!important;
+  border-radius:12px!important;
+  background:#F8FAFC!important;
+}
+.app.teacher-mode .teacher-assist-card{
+  border:1px solid var(--eg-teacher-border)!important;
+  border-radius:16px!important;
+  background:var(--eg-teacher-card)!important;
+}
+.app.teacher-mode .teacher-assist-card.needs-attention{border-top:3px solid var(--eg-teacher-review)!important}
+
+/* Teacher book browser */
+.app.teacher-mode .teacher-live-row{
+  min-height:58px!important;
+  border:1px solid var(--eg-teacher-border)!important;
+  border-radius:14px!important;
+  background:#fff!important;
+  color:var(--eg-teacher-text)!important;
+}
+.app.teacher-mode .teacher-live-row:hover{border-color:#93C5FD!important;background:#F8FBFF!important}
+.app.teacher-mode .teacher-live-num{
+  background:#EFF6FF!important;
+  color:#1D4ED8!important;
+}
+.app.teacher-mode .teacher-live-row small,
+.app.teacher-mode .live-teaching-context,
+.app.teacher-mode .live-book-title p,
+.app.teacher-mode .live-book-marker{color:var(--eg-teacher-muted)!important}
+.app.teacher-mode .teacher-live-row b{color:#1D4ED8!important}
+
+/* Live lesson */
+.app.teacher-mode .live-book-page{
+  border:1px solid var(--eg-teacher-border)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:0 5px 18px rgba(15,23,42,.04)!important;
+}
+.app.teacher-mode .live-book-title{
+  border-bottom:1px solid var(--eg-teacher-border)!important;
+  background:#F8FAFC!important;
+}
+.app.teacher-mode .assignment-match-card{background:#F8FAFC!important}
+.app.teacher-mode .assignment-skill-row span{background:#EFF6FF!important;color:#1D4ED8!important}
+.app.teacher-mode .assign-workbook-end{
+  border:1px solid #BBF7D0!important;
+  background:#F0FDF4!important;
+}
+.app.teacher-mode .assign-workbook-end p{color:#166534!important}
+
+/* Presentation and teaching controls */
+.teacher-live-active .live-tool-btn,
+.teacher-live-active .eg-lesson-header-actions button,
+.teacher-live-active .eg-lesson-header-actions a{
+  min-height:44px!important;
+}
+.teacher-presentation-mode .live-tool-btn:focus-visible,
+.teacher-live-active .live-tool-btn:focus-visible{outline:3px solid rgba(37,99,235,.28)!important;outline-offset:2px!important}
+
+@media(max-width:760px){
+  .app.teacher-mode .content{padding-left:14px!important;padding-right:14px!important}
+  .app.teacher-mode .teacher-live-row{min-height:56px!important}
+  .app.teacher-mode .teacher-assist-hero{padding:18px!important}
+  .app.teacher-mode .teacher-assist-main{gap:16px!important}
+  .app.teacher-mode .teacher-resume-btn,
+  .app.teacher-mode .teacher-assist-main>.primary-btn{min-height:48px!important}
+  .app.teacher-mode .live-book-title,
+  .app.teacher-mode .live-book-content{padding-left:16px!important;padding-right:16px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .app.teacher-mode *,
+  .app.teacher-mode *::before,
+  .app.teacher-mode *::after{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
