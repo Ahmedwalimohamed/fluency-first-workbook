@@ -38,6 +38,7 @@ if (!exists('public/index.html')) {
   requireMatch('Consolidated Reading/Listening renderer loaded', html, /reading-listening-separation-v3\.js\?v=4/i, 'reading-listening-separation-v3.js?v=4 must be loaded');
   requireMatch('Consolidated Reading/Listening grader loaded', html, /reading-listening-grading-v1\.js\?v=2/i, 'reading-listening-grading-v1.js?v=2 must be loaded');
   requireMatch('Reading/Listening structural stylesheet cache version', html, /reading-listening-separation-v3\.css\?v=2/i, 'reading-listening-separation-v3.css?v=2 must be loaded');
+  requireMatch('Grammar structural stylesheet cache version', html, /grammar-lesson-clean-v1\.css\?v=2/i, 'grammar-lesson-clean-v1.css?v=2 must be loaded');
 
   if (/student-response-navigation-v1\.js/i.test(html)) critical.push('Duplicate question navigation controller is loaded: student-response-navigation-v1.js');
   else passes.push('Duplicate question navigation controller removed from runtime');
@@ -52,6 +53,11 @@ if (!exists('public/index.html')) {
   const listenCssIndex = html.indexOf('englishgate-listening-design-v2.css');
   if (sepCssIndex >= 0 && readCssIndex > sepCssIndex && listenCssIndex > sepCssIndex) passes.push('Reading/Listening structural CSS loads before both canonical skill design layers');
   else critical.push('Reading/Listening CSS ownership order is invalid: structural CSS must load before Reading and Listening design layers.');
+
+  const grammarBridgeIndex = html.indexOf('grammar-lesson-clean-v1.css');
+  const grammarDesignIndex = html.indexOf('englishgate-grammar-design-v2.css');
+  if (grammarBridgeIndex >= 0 && grammarDesignIndex > grammarBridgeIndex) passes.push('Grammar structural CSS loads before canonical Grammar design layer');
+  else critical.push('Grammar CSS ownership order is invalid: grammar structural CSS must load before englishgate-grammar-design-v2.css.');
 
   const cssLinks = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]*>/gi)].length;
   const scripts = [...html.matchAll(/<script\s+src=/gi)].length;
@@ -131,6 +137,27 @@ if (exists('public/englishgate-listening-design-v2.css')) {
   const listeningCss = read('public/englishgate-listening-design-v2.css');
   if (/--eg-li-primary\s*:\s*#2563EB/i.test(listeningCss) && /min-width\s*:\s*44px/i.test(listeningCss) && /focus-visible/.test(listeningCss)) passes.push('Listening canonical design layer includes primary token, touch targets and focus states');
   else warnings.push('Listening canonical design layer is missing one or more accessibility/design safeguards.');
+}
+
+if (exists('public/grammar-lesson-clean-v1.css')) {
+  const bridge = read('public/grammar-lesson-clean-v1.css');
+  const forbiddenVisuals = /(?:background|color|border(?:-radius)?|box-shadow|font-size|font-weight|letter-spacing|line-height)\s*:/i;
+  if (forbiddenVisuals.test(bridge)) critical.push('Grammar structural bridge contains visual styling; presentation belongs to englishgate-grammar-design-v2.css.');
+  else passes.push('Legacy Grammar CSS is constrained to structure and content layout only');
+  if (/grid-template-columns/.test(bridge) && /overflow-x\s*:\s*auto/i.test(bridge)) passes.push('Grammar structural bridge preserves responsive form and table layout behavior');
+  else warnings.push('Could not verify expected responsive Grammar structural safeguards.');
+}
+
+if (exists('public/englishgate-grammar-design-v2.css')) {
+  const grammarCss = read('public/englishgate-grammar-design-v2.css');
+  if (/--eg-g-primary\s*:\s*#2563EB/i.test(grammarCss) && /focus-visible/.test(grammarCss) && /min-height\s*:\s*44px/i.test(grammarCss)) passes.push('Grammar canonical design layer includes primary token, focus states and touch targets');
+  else warnings.push('Grammar canonical design layer is missing one or more accessibility/design safeguards.');
+}
+
+if (exists('public/englishgate-vocabulary-design-v2.css')) {
+  const vocabularyCss = read('public/englishgate-vocabulary-design-v2.css');
+  if (/--eg-vocab-primary\s*:\s*#2563EB/i.test(vocabularyCss) && /--eg-vocab-accent\s*:\s*#7C3AED/i.test(vocabularyCss) && /focus-visible/.test(vocabularyCss) && /min-width\s*:\s*44px/i.test(vocabularyCss)) passes.push('Vocabulary canonical design layer includes approved tokens, focus states and touch targets');
+  else warnings.push('Vocabulary canonical design layer is missing one or more accessibility/design safeguards.');
 }
 
 if (exists('public/mobile-single-question-v5.css')) {
