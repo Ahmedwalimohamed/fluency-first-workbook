@@ -4,18 +4,29 @@
    without changing any authentication, grading or learning behavior. */
 
 :root{
-  --eg-ink:#0f172a;
+  /* Canonical EnglishGate semantic tokens */
+  --eg-primary:#2563EB;
+  --eg-text:#0F172A;
+  --eg-secondary:#64748B;
+  --eg-background:#F8FAFC;
+  --eg-card:#FFFFFF;
+  --eg-error:#DC2626;
+  --eg-review:#F59E0B;
+  --eg-vocabulary:#7C3AED;
+
+  /* Existing aliases retained for compatibility */
+  --eg-ink:var(--eg-text);
   --eg-ink-2:#10233e;
-  --eg-blue:#2563eb;
+  --eg-blue:var(--eg-primary);
   --eg-blue-2:#2f5bff;
   --eg-blue-soft:#eef4ff;
-  --eg-bg:#f4f7fb;
-  --eg-surface:#ffffff;
+  --eg-bg:var(--eg-background);
+  --eg-surface:var(--eg-card);
   --eg-surface-soft:#f8fafc;
-  --eg-border:#dce5ee;
-  --eg-muted:#6f8092;
-  --eg-success:#16845b;
-  --eg-danger:#c53c3c;
+  --eg-border:#E2E8F0;
+  --eg-muted:var(--eg-secondary);
+  --eg-success:#16A34A;
+  --eg-danger:var(--eg-error);
   --eg-radius-sm:12px;
   --eg-radius:18px;
   --eg-radius-lg:24px;
