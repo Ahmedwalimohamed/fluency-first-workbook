@@ -1,5 +1,14 @@
-/* EnglishGate grammar question focus v1
-   Mobile grammar = progress + current task + feedback + navigation only. */
+/* EnglishGate grammar question focus v2
+   Student grammar = one progress label + current question + feedback + navigation.
+   Removes duplicate per-question task labels such as “Grammar in Context · 2”. */
+
+/* The flow header already says "Question X of Y". Hide the duplicated task label
+   beside it and the repeated question-stage label inside every grammar card. */
+body.englishgate-student-mode #activityPanel.eg-grammar-question-only [data-question-flow-stage],
+body.englishgate-student-mode #activityPanel.eg-grammar-question-only .guided-question .question-stage{
+  display:none!important;
+}
+
 @media(max-width:760px){
   body.student-question-focus-mode #activityPanel.eg-grammar-question-only{
     padding-top:0!important;
@@ -51,15 +60,6 @@
     font-size:.82rem!important;
     font-weight:800!important;
     line-height:1.2!important;
-  }
-
-  body.student-question-focus-mode #activityPanel.eg-grammar-question-only [data-question-flow-stage]{
-    display:block!important;
-    margin-top:3px!important;
-    color:#0F172A!important;
-    font-size:.95rem!important;
-    font-weight:900!important;
-    line-height:1.25!important;
   }
 
   /* The active question already identifies its section; remove duplicate chrome. */
