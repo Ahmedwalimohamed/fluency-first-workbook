@@ -1,0 +1,6 @@
+/* EnglishGate student Reading read-aloud v1 */
+.eg-reading-readaloud{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 18px;padding:11px 12px;border:1px solid #E2E8F0;border-radius:12px;background:#F8FAFC}
+.eg-reading-readaloud .eg-read-btn{min-height:42px;padding:9px 13px}.eg-reading-readaloud .eg-read-btn:disabled{opacity:.45;cursor:not-allowed}
+.eg-read-speed{display:flex;align-items:center;gap:6px;margin-left:2px;font-size:.78rem;font-weight:800;color:#64748B}.eg-read-speed select{width:auto;min-width:78px;min-height:42px;padding:8px 9px;border:1px solid #CBD5E1;border-radius:9px;background:#fff;color:#0F172A}
+.eg-read-status{flex:1 1 170px;color:#64748B;font-size:.78rem;line-height:1.35}.eg-reading-article.is-reading-aloud{box-shadow:0 0 0 2px rgba(37,99,235,.12)}
+@media(max-width:640px){.eg-reading-readaloud{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.eg-reading-readaloud .eg-read-btn{width:100%;padding-inline:8px}.eg-read-speed{grid-column:1/2;margin:0}.eg-read-speed select{min-width:72px}.eg-read-status{grid-column:2/4;align-self:center}.eg-reading-readaloud .primary-btn{font-size:.84rem}}
