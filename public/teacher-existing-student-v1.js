@@ -1,42 +1,39 @@
-/* EnglishGate teacher: add an existing school student to another class without moving or duplicating them. */
+/* EnglishGate teacher class membership controls: add existing, remove enrollment, rename class. */
 (function(){
 'use strict';
 let scheduled=false;
 function esc(s){return String(s??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]))}
 function escAttr(s){return esc(s).replace(/'/g,'&#39;')}
 function isTeacherClasses(){return String(document.getElementById('pageEyebrow')?.textContent||'').trim()==='Teacher'&&String(document.getElementById('pageTitle')?.textContent||'').trim()==='Classes'}
+function data(){try{return typeof getDB==='function'?getDB():window.getDB?.()}catch{return null}}
 async function openExistingStudent(classId,className){
  if(typeof showModal!=='function'||typeof api!=='function')return;
  showModal(`<section class="student-manage-modal"><div class="section-head"><div><span class="role-kicker">Class enrollment</span><h3>Add existing student</h3><p class="muted">Add an existing EnglishGate student to ${esc(className)}. The student stays in their other classes and keeps existing learning progress.</p></div><button class="icon-btn" data-close>×</button></div><div id="existingStudentBody"><div class="feedback">Loading students…</div></div></section>`);
- const close=document.querySelector('[data-close]');if(close)close.onclick=closeModal;
- const body=document.getElementById('existingStudentBody');
+ document.querySelector('[data-close]').onclick=closeModal;const body=document.getElementById('existingStudentBody');
  try{
-  const data=await api('/api/teacher/classes/'+encodeURIComponent(classId)+'/available-students');
-  const students=Array.isArray(data?.students)?data.students:[];
+  const response=await api('/api/teacher/classes/'+encodeURIComponent(classId)+'/available-students'),students=Array.isArray(response?.students)?response.students:[];
   if(!students.length){body.innerHTML='<div class="feedback"><strong>No available existing students.</strong><br>Every existing student is already in this class, or no student accounts exist yet.</div>';return}
   body.innerHTML=`<form id="existingStudentForm" class="form-grid"><label>Search existing students<input id="existingStudentSearch" type="search" placeholder="Search by name or username" autocomplete="off"></label><label>Select student<select id="existingStudentSelect" size="8" required>${students.map(s=>`<option value="${escAttr(s.id)}" data-search="${escAttr((s.name+' '+s.username).toLowerCase())}">${esc(s.name)} · ${esc(s.username)}</option>`).join('')}</select></label><div class="feedback"><strong>This adds membership only.</strong> It does not create a duplicate account, remove the student from another class, or reset learning progress.</div><button class="primary-btn" type="submit">Add to this class</button></form><div id="existingStudentResult"></div>`;
-  const search=document.getElementById('existingStudentSearch'),select=document.getElementById('existingStudentSelect');
-  search.oninput=()=>{const q=search.value.trim().toLowerCase();[...select.options].forEach(o=>{o.hidden=q&&!o.dataset.search.includes(q)});const first=[...select.options].find(o=>!o.hidden);if(first)select.value=first.value};
-  document.getElementById('existingStudentForm').onsubmit=async e=>{
-   e.preventDefault();const btn=e.submitter||e.currentTarget.querySelector('button[type="submit"]'),studentId=select.value,result=document.getElementById('existingStudentResult');
-   if(!studentId)return;
-   btn.disabled=true;btn.textContent='Adding…';
-   try{
-    await api('/api/teacher/classes/'+encodeURIComponent(classId)+'/existing-students',{method:'POST',body:JSON.stringify({studentId})});
-    if(typeof refreshState==='function')await refreshState();
-    closeModal();if(typeof renderPage==='function')renderPage();
-   }catch(err){btn.disabled=false;btn.textContent='Add to this class';result.innerHTML='<div class="feedback bad">'+esc(err.message)+'</div>'}
-  };
+  const search=document.getElementById('existingStudentSearch'),select=document.getElementById('existingStudentSelect');search.oninput=()=>{const q=search.value.trim().toLowerCase();[...select.options].forEach(o=>{o.hidden=q&&!o.dataset.search.includes(q)});const first=[...select.options].find(o=>!o.hidden);if(first)select.value=first.value};
+  document.getElementById('existingStudentForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter||e.currentTarget.querySelector('button[type="submit"]'),studentId=select.value,result=document.getElementById('existingStudentResult');if(!studentId)return;btn.disabled=true;btn.textContent='Adding…';try{await api('/api/teacher/classes/'+encodeURIComponent(classId)+'/existing-students',{method:'POST',body:JSON.stringify({studentId})});await refreshState();closeModal();renderPage()}catch(err){btn.disabled=false;btn.textContent='Add to this class';result.innerHTML='<div class="feedback bad">'+esc(err.message)+'</div>'}};
  }catch(err){body.innerHTML='<div class="feedback bad">'+esc(err.message||'Could not load existing students.')+'</div>'}
 }
+function openRenameClass(c){
+ showModal(`<section class="student-manage-modal"><div class="section-head"><div><span class="role-kicker">Class settings</span><h3>Edit class name</h3><p class="muted">Renaming the class does not change its students, book, progress, assignments, or approval status.</p></div><button class="icon-btn" data-close>×</button></div><form id="teacherRenameClassForm" class="form-grid"><label>Class name<input id="teacherRenameClassName" value="${escAttr(c.name)}" required minlength="2" maxlength="100"></label><button class="primary-btn" type="submit">Save class name</button></form><div id="teacherRenameClassResult"></div></section>`);
+ document.querySelector('[data-close]').onclick=closeModal;document.getElementById('teacherRenameClassForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter||e.currentTarget.querySelector('button[type="submit"]'),result=document.getElementById('teacherRenameClassResult'),name=document.getElementById('teacherRenameClassName').value.trim();btn.disabled=true;btn.textContent='Saving…';try{await api('/api/teacher/classes/'+encodeURIComponent(c.id),{method:'PATCH',body:JSON.stringify({name})});await refreshState();closeModal();renderPage()}catch(err){btn.disabled=false;btn.textContent='Save class name';result.innerHTML='<div class="feedback bad">'+esc(err.message)+'</div>'}};
+}
+function openRemoveStudent(c){
+ const d=data(),students=(d?.users||[]).filter(u=>u.role==='student'&&(u.classIds||u.class_ids||[]).includes(c.id));
+ showModal(`<section class="student-manage-modal"><div class="section-head"><div><span class="role-kicker">Class enrollment</span><h3>Remove student</h3><p class="muted">Remove a student from ${esc(c.name)} only. Their EnglishGate account, other classes, and learning history will not be deleted.</p></div><button class="icon-btn" data-close>×</button></div>${students.length?`<form id="teacherRemoveStudentForm" class="form-grid"><label>Select student<select id="teacherRemoveStudentSelect" size="8" required>${students.map(s=>`<option value="${escAttr(s.id)}">${esc(s.name)} · ${esc(s.username)}</option>`).join('')}</select></label><div class="feedback"><strong>Safe removal:</strong> this removes only the class membership. It does not delete the student account or learning history.</div><button class="danger-btn" type="submit">Remove from this class</button></form><div id="teacherRemoveStudentResult"></div>`:'<div class="feedback">There are no students in this class.</div>'}</section>`);
+ document.querySelector('[data-close]').onclick=closeModal;if(!students.length)return;document.getElementById('teacherRemoveStudentForm').onsubmit=async e=>{e.preventDefault();const select=document.getElementById('teacherRemoveStudentSelect'),student=students.find(s=>s.id===select.value);if(!student)return;if(!confirm(`Remove ${student.name} from ${c.name}? Their account and learning history will be kept.`))return;const btn=e.submitter||e.currentTarget.querySelector('button[type="submit"]'),result=document.getElementById('teacherRemoveStudentResult');btn.disabled=true;btn.textContent='Removing…';try{await api('/api/teacher/classes/'+encodeURIComponent(c.id)+'/students/'+encodeURIComponent(student.id),{method:'DELETE'});await refreshState();closeModal();renderPage()}catch(err){btn.disabled=false;btn.textContent='Remove from this class';result.innerHTML='<div class="feedback bad">'+esc(err.message)+'</div>'}};
+}
 function enhance(){
- if(!isTeacherClasses())return;
- const data=typeof getDB==='function'?getDB():window.getDB?.();
+ if(!isTeacherClasses())return;const d=data();if(!d)return;
  document.querySelectorAll('[data-add-student-class]').forEach(add=>{
-  const classId=add.dataset.addStudentClass;if(!classId)return;
-  const actions=add.closest('.management-card-actions')||add.parentElement;if(!actions||actions.querySelector('[data-add-existing-student="'+CSS.escape(classId)+'"]'))return;
-  const c=data?.classes?.find(x=>x.id===classId),className=c?.name||add.closest('.management-card')?.querySelector('h3')?.textContent?.trim()||'this class';
-  const button=document.createElement('button');button.type='button';button.className='ghost-btn';button.dataset.addExistingStudent=classId;button.textContent='+ Add existing student';button.onclick=()=>openExistingStudent(classId,className);actions.insertBefore(button,add.nextSibling);
+  const classId=add.dataset.addStudentClass;if(!classId)return;const actions=add.closest('.management-card-actions')||add.parentElement,c=(d.classes||[]).find(x=>x.id===classId);if(!actions||!c)return;
+  if(!actions.querySelector('[data-add-existing-student="'+CSS.escape(classId)+'"]')){const b=document.createElement('button');b.type='button';b.className='ghost-btn';b.dataset.addExistingStudent=classId;b.textContent='+ Add existing student';b.onclick=()=>openExistingStudent(classId,c.name);actions.insertBefore(b,add.nextSibling)}
+  if(!actions.querySelector('[data-remove-class-student="'+CSS.escape(classId)+'"]')){const b=document.createElement('button');b.type='button';b.className='ghost-btn';b.dataset.removeClassStudent=classId;b.textContent='Remove student';b.onclick=()=>openRemoveStudent(c);actions.appendChild(b)}
+  if(!actions.querySelector('[data-rename-teacher-class="'+CSS.escape(classId)+'"]')){const b=document.createElement('button');b.type='button';b.className='ghost-btn';b.dataset.renameTeacherClass=classId;b.textContent='Edit class name';b.onclick=()=>openRenameClass(c);actions.appendChild(b)}
   if(!add.dataset.newStudentLabel){add.dataset.newStudentLabel='1';add.textContent='+ Add new student'}
  });
 }
