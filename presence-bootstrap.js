@@ -41,4 +41,5 @@ function install(app){
 express.application.get=function presenceAwareGet(route,...handlers){install(this);return nativeGet.call(this,route,...handlers)};
 express.application.post=function presenceAwarePost(route,...handlers){install(this);return nativePost.call(this,route,...handlers)};
 
+require('./class-teaching-context-bootstrap.js');
 require('./class-approval-bootstrap.js');
