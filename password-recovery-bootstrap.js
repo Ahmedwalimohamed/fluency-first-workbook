@@ -120,4 +120,6 @@ express.application.post=function patchedPost(route,...handlers){
  return originalPost.call(this,route,...handlers);
 };
 
+// Install the Reading/Listening persistence routes before server.js registers the app routes.
+require('./reading-listening-separation-bootstrap.js');
 require('./server.js');
