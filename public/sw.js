@@ -1,5 +1,8 @@
-/* EnglishGate Progressive Web App service worker */
-const CACHE_NAME = 'englishgate-pwa-v4';
+/* EnglishGate Progressive Web App service worker
+   Resilient navigation policy: never turn a temporary upstream/network failure
+   into Chrome's ERR_FAILED page when a previously installed EnglishGate PWA
+   can still serve its application shell. */
+const CACHE_NAME = 'englishgate-pwa-v5';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -46,6 +49,10 @@ self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
+function offlinePage() {
+  return new Response(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EnglishGate</title><style>body{font-family:system-ui,sans-serif;margin:0;background:#f8fafc;color:#0f172a;display:grid;min-height:100vh;place-items:center}.card{max-width:520px;margin:24px;padding:32px;background:white;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 12px 35px #0f172a12}h1{margin:0 0 12px;font-size:26px}p{line-height:1.55;color:#475569}button{border:0;border-radius:10px;padding:12px 18px;background:#2563eb;color:white;font-weight:700;cursor:pointer}</style></head><body><main class="card"><h1>EnglishGate is reconnecting</h1><p>Your browser temporarily lost the connection. Your account and learning data are safe. Check your connection and try again.</p><button onclick="location.reload()">Try again</button></main></body></html>`, {status: 200, headers: {'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+}
+
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
@@ -62,11 +69,14 @@ self.addEventListener('fetch', event => {
         const response = await fetch(request);
         if (response && response.ok) {
           const cache = await caches.open(CACHE_NAME);
-          cache.put('/index.html', response.clone());
+          await cache.put('/index.html', response.clone());
+          return response;
         }
-        return response;
+        const cached = await caches.match('/index.html') || await caches.match('/');
+        return cached || response || offlinePage();
       } catch (error) {
-        return (await caches.match('/index.html')) || (await caches.match('/')) || Response.error();
+        const cached = await caches.match('/index.html') || await caches.match('/');
+        return cached || offlinePage();
       }
     })());
     return;
@@ -77,14 +87,17 @@ self.addEventListener('fetch', event => {
 
   event.respondWith((async () => {
     const cached = await caches.match(request);
-    const network = fetch(request).then(async response => {
+    if (cached) return cached;
+    try {
+      const response = await fetch(request);
       if (response && response.ok) {
         const cache = await caches.open(CACHE_NAME);
-        cache.put(request, response.clone());
+        await cache.put(request, response.clone());
       }
       return response;
-    }).catch(() => null);
-
-    return cached || (await network) || Response.error();
+    } catch (error) {
+      // A normal HTTP response avoids the FetchEvent network-error state shown by Chrome.
+      return new Response('', {status: 503, statusText: 'Temporarily unavailable'});
+    }
   })());
 });
