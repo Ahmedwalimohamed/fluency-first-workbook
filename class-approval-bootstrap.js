@@ -6,6 +6,7 @@ const {Pool}=require('pg');
 const inheritedGet=express.application.get;
 const inheritedPost=express.application.post;
 const inheritedPatch=express.application.patch;
+const inheritedDelete=express.application.delete;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 let schemaPromise=null;
@@ -79,6 +80,30 @@ function install(app){
     }catch(e){try{await client.query('rollback')}catch{}console.error('existing student enrollment error',e);res.status(500).json({error:'The student could not be added to the class.'})}finally{client.release()}
   });
 
+  inheritedDelete.call(app,'/api/teacher/classes/:id/students/:studentId',async(req,res)=>{
+    const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
+    const classId=String(req.params.id||'').trim(),studentId=String(req.params.studentId||'').trim();
+    const owns=await pool.query('select id,name from classes where id=$1 and teacher_id=$2',[classId,u.id]);
+    if(!owns.rowCount)return res.status(403).json({error:'You can only remove students from your own classes.'});
+    const student=await pool.query("select id,name,username from users where id=$1 and role='student'",[studentId]);
+    if(!student.rowCount)return res.status(404).json({error:'Student not found.'});
+    const removed=await pool.query('delete from enrollments where class_id=$1 and user_id=$2 returning class_id,user_id',[classId,studentId]);
+    if(!removed.rowCount)return res.status(404).json({error:'This student is not enrolled in the class.'});
+    res.json({ok:true,student:student.rows[0],class:{id:owns.rows[0].id,name:owns.rows[0].name},message:'Student removed from this class only. Their account, other class memberships, and learning history were preserved.'});
+  });
+
+  inheritedPatch.call(app,'/api/teacher/classes/:id',async(req,res)=>{
+    const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
+    const classId=String(req.params.id||'').trim(),name=String(req.body?.name||'').trim().replace(/\s+/g,' ');
+    if(name.length<2||name.length>100)return res.status(400).json({error:'Enter a class name between 2 and 100 characters.'});
+    const owns=await pool.query('select id from classes where id=$1 and teacher_id=$2',[classId,u.id]);
+    if(!owns.rowCount)return res.status(403).json({error:'You can only edit your own classes.'});
+    const duplicate=await pool.query('select 1 from classes where teacher_id=$1 and id<>$2 and lower(trim(name))=lower(trim($3))',[u.id,classId,name]);
+    if(duplicate.rowCount)return res.status(409).json({error:'You already have another class with that name.'});
+    const q=await pool.query('update classes set name=$1 where id=$2 returning *',[name,classId]);
+    const c=q.rows[0];res.json({ok:true,class:{...c,bookId:c.course_id},message:'Class name updated.'});
+  });
+
   inheritedPost.call(app,'/api/teacher/classes',async(req,res)=>{
     const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
     try{await ensureSchema()}catch(e){console.error('class approval schema error',e);return res.status(500).json({error:'Class setup is temporarily unavailable.'})}
@@ -125,5 +150,6 @@ function install(app){
 express.application.get=function classApprovalAwareGet(route,...handlers){install(this);return inheritedGet.call(this,route,...handlers)};
 express.application.post=function classApprovalAwarePost(route,...handlers){install(this);return inheritedPost.call(this,route,...handlers)};
 express.application.patch=function classApprovalAwarePatch(route,...handlers){install(this);return inheritedPatch.call(this,route,...handlers)};
+express.application.delete=function classApprovalAwareDelete(route,...handlers){install(this);return inheritedDelete.call(this,route,...handlers)};
 
 require('./ai-content-editor-generate-v2-bootstrap.js');
