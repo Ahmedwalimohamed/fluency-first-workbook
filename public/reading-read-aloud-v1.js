@@ -1,21 +1,24 @@
-/* EnglishGate student Reading read-aloud v2 — persistent control dock */
+/* EnglishGate student Reading read-aloud v3 — visible Reading button */
 (function(){
 'use strict';
 const synth=window.speechSynthesis;
-let activeArticle=null,chunks=[],chunkIndex=0,currentUtterance=null,rate=1,playing=false,paused=false;
+let activeSource=null,chunks=[],chunkIndex=0,currentUtterance=null,rate=1,playing=false,paused=false;
 const app=()=>document.getElementById('app');
 const studentMode=()=>{const el=app();return !!el&&!el.classList.contains('hidden')&&el.classList.contains('student-mode')};
 
-function readingArticles(){
+function readingSources(){
  if(!studentMode())return[];
- return [...document.querySelectorAll('.eg-reading-article')].filter(article=>{
+ const separated=[...document.querySelectorAll('.eg-separated-activity[data-activity-type="reading"] .sep-reading-text')];
+ const legacy=[...document.querySelectorAll('.eg-reading-article')].filter(article=>{
    const text=(article.querySelector('.eg-skill-kicker')?.textContent||'Reading')+' '+(article.closest('.eg-reading-section,.eg-reading-page,.eg-reading-listening-page,.eg-skill-page')?.textContent||'');
    return /reading/i.test(text);
  });
+ return [...separated,...legacy];
 }
-function passageText(article){
- if(!article)return'';
- const ps=[...article.querySelectorAll('p')].map(p=>p.textContent.trim()).filter(Boolean);
+function sourceText(source){
+ if(!source)return'';
+ if(source.classList?.contains('sep-reading-text'))return String(source.textContent||'').trim();
+ const ps=[...source.querySelectorAll('p')].map(p=>p.textContent.trim()).filter(Boolean);
  return ps.join(' ');
 }
 function splitText(text,max=220){
@@ -28,15 +31,17 @@ function preferredVoice(){
  const voices=synth?.getVoices?.()||[];
  return voices.find(v=>/^en-US$/i.test(v.lang)&&/samantha|ava|allison|karen|zira|google us english|aria|jenny|guy/i.test(v.name))||voices.find(v=>/^en-US$/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||null;
 }
-function dock(){return document.getElementById('egReadingReadAloudDock')}
-function setStatus(text){const el=dock()?.querySelector('[data-read-status]');if(el)el.textContent=text}
+function controlsFor(source){return source?.parentElement?.querySelector?.('.eg-reading-readaloud-inline')||source?.querySelector?.('.eg-reading-readaloud-inline')||null}
+function allControls(){return [...document.querySelectorAll('.eg-reading-readaloud-inline')]}
+function setStatus(text){allControls().forEach(c=>{const el=c.querySelector('[data-read-status]');if(el)el.textContent=text})}
 function updateControls(){
- const d=dock();if(!d)return;
- const read=d.querySelector('[data-read-action="read"]'),pause=d.querySelector('[data-read-action="pause"]'),stop=d.querySelector('[data-read-action="stop"]');
- if(read)read.textContent=playing?'Restart':'Read aloud';
- if(pause){pause.disabled=!playing;pause.textContent=paused?'Resume':'Pause'}
- if(stop)stop.disabled=!playing;
- d.classList.toggle('is-reading-aloud',playing);
+ allControls().forEach(c=>{
+  const read=c.querySelector('[data-read-action="read"]'),pause=c.querySelector('[data-read-action="pause"]'),stop=c.querySelector('[data-read-action="stop"]');
+  if(read)read.textContent=playing?'Restart':'Read aloud';
+  if(pause){pause.disabled=!playing;pause.textContent=paused?'Resume':'Pause'}
+  if(stop)stop.disabled=!playing;
+  c.classList.toggle('is-reading-aloud',playing);
+ });
 }
 function stopReading(status='Ready to read aloud.'){
  try{synth?.cancel()}catch{}
@@ -50,13 +55,11 @@ function speakNext(){
  u.onerror=e=>{if(e.error==='canceled'||e.error==='interrupted')return;stopReading('Read aloud stopped. Try again.')};
  try{synth.speak(u)}catch{stopReading('Read aloud is not available on this device.')}
 }
-function startReading(){
- const article=readingArticles()[0];
- if(!article){stopReading('Open a Reading activity first.');return}
- activeArticle=article;
+function startReading(source){
+ activeSource=source;
  if(!synth){setStatus('Read aloud is not supported by this browser.');return}
  try{synth.cancel()}catch{}
- const text=passageText(article);if(!text){setStatus('No reading text found.');return}
+ const text=sourceText(source);if(!text){setStatus('No reading text found.');return}
  chunks=splitText(text);chunkIndex=0;playing=true;paused=false;setStatus('Starting…');updateControls();setTimeout(speakNext,60);
 }
 function togglePause(){
@@ -64,31 +67,26 @@ function togglePause(){
  try{if(paused){synth.resume();paused=false;setStatus(`Reading ${Math.min(chunkIndex+1,chunks.length)} of ${chunks.length}…`)}else{synth.pause();paused=true;setStatus('Paused.')}}catch{}
  updateControls();
 }
-function ensureDock(){
- let d=dock();
- if(!d){
-   d=document.createElement('aside');d.id='egReadingReadAloudDock';d.className='eg-reading-readaloud-dock';d.setAttribute('aria-label','Reading read aloud controls');
-   d.innerHTML='<div class="eg-read-dock-head"><strong>Reading audio</strong><span data-read-status aria-live="polite">Ready to read aloud.</span></div><div class="eg-read-dock-actions"><button type="button" class="primary-btn" data-read-action="read">Read aloud</button><button type="button" class="ghost-btn" data-read-action="pause" disabled>Pause</button><button type="button" class="ghost-btn" data-read-action="stop" disabled>Stop</button><label class="eg-read-speed"><span>Speed</span><select data-read-speed aria-label="Reading speed"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option></select></label></div>';
-   document.body.appendChild(d);
-   d.querySelector('[data-read-action="read"]').addEventListener('click',startReading);
-   d.querySelector('[data-read-action="pause"]').addEventListener('click',togglePause);
-   d.querySelector('[data-read-action="stop"]').addEventListener('click',()=>stopReading());
-   d.querySelector('[data-read-speed]').addEventListener('change',e=>{rate=Number(e.target.value)||1;if(playing)startReading()});
- }
- return d;
+function ensureControls(source){
+ const host=source.classList?.contains('sep-reading-text')?source.parentElement:source;
+ if(!host||host.querySelector('.eg-reading-readaloud-inline'))return;
+ const controls=document.createElement('div');controls.className='eg-reading-readaloud-inline';controls.setAttribute('aria-label','Reading read aloud controls');
+ controls.innerHTML='<button type="button" class="primary-btn" data-read-action="read">Read aloud</button><button type="button" class="ghost-btn" data-read-action="pause" disabled>Pause</button><button type="button" class="ghost-btn" data-read-action="stop" disabled>Stop</button><label class="eg-read-speed"><span>Speed</span><select data-read-speed aria-label="Reading speed"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option></select></label><span class="eg-read-status" data-read-status aria-live="polite">Ready to read aloud.</span>';
+ if(source.classList?.contains('sep-reading-text'))host.insertBefore(controls,source);else{const heading=host.querySelector('h2');if(heading)heading.insertAdjacentElement('afterend',controls);else host.prepend(controls)}
+ controls.querySelector('[data-read-action="read"]').addEventListener('click',()=>startReading(source));
+ controls.querySelector('[data-read-action="pause"]').addEventListener('click',togglePause);
+ controls.querySelector('[data-read-action="stop"]').addEventListener('click',()=>stopReading());
+ controls.querySelector('[data-read-speed]').addEventListener('change',e=>{rate=Number(e.target.value)||1;if(playing&&activeSource===source)startReading(source)});
 }
 function sync(){
- const articles=readingArticles();const d=ensureDock();
- const show=studentMode()&&articles.length>0;
- d.classList.toggle('is-visible',show);
- d.setAttribute('aria-hidden',show?'false':'true');
- if(show)activeArticle=articles[0];
- if(!show&&playing)stopReading();
- if(activeArticle&&!document.body.contains(activeArticle)&&playing)stopReading();
+ const sources=readingSources();sources.forEach(ensureControls);
+ if(activeSource&&!document.body.contains(activeSource)&&playing)stopReading();
+ if(!studentMode()&&playing)stopReading();
 }
 let queued=false;function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;sync()})}
 new MutationObserver(schedule).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&playing&&!paused)togglePause()});
+document.addEventListener('click',e=>{if(e.target.closest?.('[data-sep-stage]:not([data-sep-stage="reading"]),[data-page],#backWorkbook,#previousActivity,.lesson-tab')&&playing)stopReading()},true);
 window.addEventListener('pagehide',()=>{try{synth?.cancel()}catch{}});
 if(synth&&'onvoiceschanged' in synth)synth.onvoiceschanged=()=>{};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();
