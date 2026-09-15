@@ -50,6 +50,35 @@ function install(app){
     next();
   });
 
+  inheritedGet.call(app,'/api/teacher/classes/:id/available-students',async(req,res)=>{
+    const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
+    const classId=String(req.params.id||'').trim();
+    const owns=await pool.query('select id,name,course_id from classes where id=$1 and teacher_id=$2',[classId,u.id]);
+    if(!owns.rowCount)return res.status(403).json({error:'You can only add students to your own classes.'});
+    const q=await pool.query(`select u.id,u.name,u.username from users u where u.role='student' and not exists(select 1 from enrollments e where e.user_id=u.id and e.class_id=$1) order by lower(u.name),lower(u.username) limit 1000`,[classId]);
+    res.set('Cache-Control','no-store');
+    res.json({class:{id:owns.rows[0].id,name:owns.rows[0].name,bookId:owns.rows[0].course_id},students:q.rows});
+  });
+
+  inheritedPost.call(app,'/api/teacher/classes/:id/existing-students',async(req,res)=>{
+    const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
+    const classId=String(req.params.id||'').trim(),studentId=String(req.body?.studentId||'').trim();
+    if(!studentId)return res.status(400).json({error:'Choose an existing student.'});
+    const client=await pool.connect();
+    try{
+      await client.query('begin');
+      const owns=await client.query('select id,name,course_id from classes where id=$1 and teacher_id=$2 for update',[classId,u.id]);
+      if(!owns.rowCount){await client.query('rollback');return res.status(403).json({error:'You can only add students to your own classes.'})}
+      const student=await client.query("select id,name,username from users where id=$1 and role='student'",[studentId]);
+      if(!student.rowCount){await client.query('rollback');return res.status(404).json({error:'Student not found.'})}
+      const existing=await client.query('select 1 from enrollments where class_id=$1 and user_id=$2',[classId,studentId]);
+      if(existing.rowCount){await client.query('rollback');return res.status(409).json({error:'This student is already in the class.'})}
+      await client.query('insert into enrollments(class_id,user_id) values($1,$2)',[classId,studentId]);
+      await client.query('commit');
+      res.status(201).json({ok:true,student:student.rows[0],class:{id:owns.rows[0].id,name:owns.rows[0].name,bookId:owns.rows[0].course_id},message:'Existing student added to class. Previous class enrollments and learning progress were preserved.'});
+    }catch(e){try{await client.query('rollback')}catch{}console.error('existing student enrollment error',e);res.status(500).json({error:'The student could not be added to the class.'})}finally{client.release()}
+  });
+
   inheritedPost.call(app,'/api/teacher/classes',async(req,res)=>{
     const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
     try{await ensureSchema()}catch(e){console.error('class approval schema error',e);return res.status(500).json({error:'Class setup is temporarily unavailable.'})}
