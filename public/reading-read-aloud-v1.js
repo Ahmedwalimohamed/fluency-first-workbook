@@ -1,15 +1,17 @@
-/* EnglishGate student Reading read-aloud v2 — persistent control dock */
+/* EnglishGate student Reading read-aloud v3 — dedicated lesson tab + persistent controls */
 (function(){
 'use strict';
 const synth=window.speechSynthesis;
 let activeArticle=null,chunks=[],chunkIndex=0,currentUtterance=null,rate=1,playing=false,paused=false;
 const app=()=>document.getElementById('app');
 const studentMode=()=>{const el=app();return !!el&&!el.classList.contains('hidden')&&el.classList.contains('student-mode')};
+const currentLesson=()=>{try{return typeof lesson==='function'?lesson():null}catch{return null}};
+function lessonPassage(l){return String(l?.reading?.passage||l?.listening?.readingText||'').trim()}
 
 function readingArticles(){
  if(!studentMode())return[];
  return [...document.querySelectorAll('.eg-reading-article')].filter(article=>{
-   const text=(article.querySelector('.eg-skill-kicker')?.textContent||'Reading')+' '+(article.closest('.eg-reading-section,.eg-reading-page,.eg-reading-listening-page,.eg-skill-page')?.textContent||'');
+   const text=(article.querySelector('.eg-skill-kicker')?.textContent||'Reading')+' '+(article.closest('.eg-reading-section,.eg-reading-page,.eg-reading-listening-page,.eg-skill-page,.eg-readaloud-tab-view')?.textContent||'');
    return /reading/i.test(text);
  });
 }
@@ -52,7 +54,7 @@ function speakNext(){
 }
 function startReading(){
  const article=readingArticles()[0];
- if(!article){stopReading('Open a Reading activity first.');return}
+ if(!article){stopReading('Open the Read Aloud or Reading tab first.');return}
  activeArticle=article;
  if(!synth){setStatus('Read aloud is not supported by this browser.');return}
  try{synth.cancel()}catch{}
@@ -77,10 +79,40 @@ function ensureDock(){
  }
  return d;
 }
+function escapeText(value){const div=document.createElement('div');div.textContent=String(value||'');return div.innerHTML}
+function renderReadAloudTab(l){
+ const root=document.getElementById('activityPanel');if(!root||!l)return;
+ const passage=lessonPassage(l);if(!passage)return;
+ root.innerHTML=`<section class="eg-readaloud-tab-view"><header class="sep-hero"><div><span class="eg-skill-kicker">Reading · Read Aloud</span><h1>${escapeText(l.title||'Read Aloud')}</h1><p>Listen to the passage while you follow the text. Change the speed, pause, or replay as needed. This practice does not affect your score.</p></div></header><article class="eg-reading-article"><span class="eg-skill-kicker">Reading passage</span><h2>${escapeText(l.title||'Reading')}</h2><p>${escapeText(passage).replace(/\n/g,'<br>')}</p></article></section>`;
+ const d=ensureDock();d.classList.add('is-visible','is-tab-mode');d.setAttribute('aria-hidden','false');activeArticle=root.querySelector('.eg-reading-article');
+}
+function ensureReadAloudTab(){
+ if(!studentMode())return;
+ const l=currentLesson(),passage=lessonPassage(l);if(!l||!passage)return;
+ const host=document.querySelector('.eg-stage-list nav')||document.querySelector('.eg-stage-list');if(!host)return;
+ const reading=host.querySelector('[data-sep-stage="reading"]');if(!reading)return;
+ let tab=host.querySelector('[data-sep-stage="readaloud"]');
+ if(!tab){
+   tab=document.createElement('button');tab.className='eg-stage';tab.type='button';tab.setAttribute('role','tab');tab.dataset.sepStage='readaloud';tab.innerHTML='<span aria-hidden="true">▶</span><strong>Read Aloud</strong>';
+   reading.insertAdjacentElement('afterend',tab);
+   tab.addEventListener('click',()=>{
+     try{if(typeof activeAudio!=='undefined'&&activeAudio)activeAudio.pause()}catch{}
+     try{currentStep='readaloud'}catch{}
+     host.querySelectorAll('[data-sep-stage]').forEach(btn=>{const current=btn===tab;btn.classList.toggle('is-current',current);btn.setAttribute('aria-selected',current?'true':'false')});
+     renderReadAloudTab(currentLesson());
+   });
+ }
+ const active=typeof currentStep!=='undefined'&&currentStep==='readaloud';
+ tab.classList.toggle('is-current',active);tab.setAttribute('aria-selected',active?'true':'false');
+ if(active&&!document.querySelector('.eg-readaloud-tab-view'))renderReadAloudTab(l);
+}
 function sync(){
- const articles=readingArticles();const d=ensureDock();
+ ensureReadAloudTab();
+ const articles=readingArticles(),d=ensureDock();
+ const readAloudActive=typeof currentStep!=='undefined'&&currentStep==='readaloud';
  const show=studentMode()&&articles.length>0;
  d.classList.toggle('is-visible',show);
+ d.classList.toggle('is-tab-mode',readAloudActive);
  d.setAttribute('aria-hidden',show?'false':'true');
  if(show)activeArticle=articles[0];
  if(!show&&playing)stopReading();
@@ -89,6 +121,7 @@ function sync(){
 let queued=false;function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;sync()})}
 new MutationObserver(schedule).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&playing&&!paused)togglePause()});
+document.addEventListener('click',e=>{if(e.target.closest?.('[data-sep-stage]:not([data-sep-stage="readaloud"]),[data-page],#backWorkbook,#previousActivity,.lesson-tab')){if(playing)stopReading();const d=dock();if(d)d.classList.remove('is-tab-mode')}},true);
 window.addEventListener('pagehide',()=>{try{synth?.cancel()}catch{}});
 if(synth&&'onvoiceschanged' in synth)synth.onvoiceschanged=()=>{};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();
