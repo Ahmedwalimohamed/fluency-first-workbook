@@ -59,7 +59,7 @@ function loadAssetPair(key,css,js){
 function loadTeacherTextFormatting(){loadAssetPair('teacherTextFormatting','teacher-text-formatting-v1.css?v=1','teacher-text-formatting-v1.js?v=1')}
 function loadTeacherTimer(){loadAssetPair('teacherTimer','teacher-timer-v1.css?v=1','teacher-timer-v1.js?v=1')}
 function loadLivePresence(){loadAssetPair('livePresence','live-presence-v1.css?v=1','live-presence-v1.js?v=1')}
-function loadReadingReadAloud(){loadAssetPair('readingReadAloud','reading-read-aloud-v1.css?v=3','reading-read-aloud-v1.js?v=3')}
+function loadReadingReadAloud(){loadAssetPair('readingReadAloud','reading-read-aloud-v1.css?v=3','reading-read-aloud-v1.js?v=4')}
 
 let queued=false;
 function schedule(){
