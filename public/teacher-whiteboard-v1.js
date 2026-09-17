@@ -24,4 +24,5 @@
     document.querySelectorAll('.live-class-tools').forEach(bar=>{if(bar.querySelector('[data-open-whiteboard]'))return;const actions=bar.querySelector('.live-tool-actions')||bar;const b=document.createElement('button');b.type='button';b.className='live-tool-btn teacher-whiteboard-btn';b.dataset.openWhiteboard='1';b.innerHTML='<span aria-hidden="true">▭</span> <span>Whiteboard</span>';b.onclick=open;actions.prepend(b)});
   }
   const obs=new MutationObserver(inject);obs.observe(document.documentElement,{childList:true,subtree:true});document.addEventListener('DOMContentLoaded',inject);inject();
+  if(!document.querySelector('script[data-live-intervention-teach-loader]')){const s=document.createElement('script');s.src='/live-intervention-teach-mode-v1.js?v=1';s.dataset.liveInterventionTeachLoader='1';document.head.appendChild(s)}
 })();
