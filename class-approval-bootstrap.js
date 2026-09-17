@@ -152,4 +152,4 @@ express.application.post=function classApprovalAwarePost(route,...handlers){inst
 express.application.patch=function classApprovalAwarePatch(route,...handlers){install(this);return inheritedPatch.call(this,route,...handlers)};
 express.application.delete=function classApprovalAwareDelete(route,...handlers){install(this);return inheritedDelete.call(this,route,...handlers)};
 
-require('./ai-content-editor-generate-v2-bootstrap.js');
+require('./live-intervention-bootstrap.js');
