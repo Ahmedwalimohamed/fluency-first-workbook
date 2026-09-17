@@ -1,7 +1,7 @@
 /* EnglishGate Live Intervention — zero-fee template/question-bank workflow */
 (function(){
 'use strict';
-let scheduled=false,currentDraft=null,monitorSeq=0,studentTaskId=null,studentTimer=null,studentSubmitting=false;
+let scheduled=false,currentDraft=null,monitorSeq=0,studentTaskId=null,studentTimer=null,studentSubmitting=false,studentResultShowing=false;
 const dismissed=new Set();
 const $id=id=>document.getElementById(id);
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -66,12 +66,12 @@ function renderResults(r){
 function ensureStudentRoot(){let root=$id('egLiveTaskRoot');if(!root){root=document.createElement('div');root.id='egLiveTaskRoot';document.body.appendChild(root)}return root}
 async function pollStudent(){
  if(role()!=='student'){setTimeout(pollStudent,4000);return}
- try{const r=await api('/api/student/live-task/current');if(!r.task){studentTaskId=null;clearStudentTimer();const root=$id('egLiveTaskRoot');if(root)root.innerHTML=''}else if(!r.submission&&!dismissed.has(r.task.id)){if(studentTaskId!==r.task.id)renderStudentTask(r.task,r.serverNow);studentTaskId=r.task.id}else if(r.submission&&studentTaskId!==r.task.id&&!dismissed.has(r.task.id)){renderStudentExistingResult(r.task,r.submission);studentTaskId=r.task.id}}catch{}
+ try{const r=await api('/api/student/live-task/current');if(!r.task){studentTaskId=null;clearStudentTimer();const root=$id('egLiveTaskRoot');if(root&&!studentResultShowing)root.innerHTML=''}else if(!r.submission&&!dismissed.has(r.task.id)){if(studentTaskId!==r.task.id)renderStudentTask(r.task,r.serverNow);studentTaskId=r.task.id}else if(r.submission&&studentTaskId!==r.task.id&&!dismissed.has(r.task.id)){renderStudentExistingResult(r.task,r.submission);studentTaskId=r.task.id}}catch{}
  setTimeout(pollStudent,4000);
 }
 function clearStudentTimer(){if(studentTimer){clearInterval(studentTimer);studentTimer=null}}
 function renderStudentTask(task,serverNow){
- clearStudentTimer();studentSubmitting=false;const root=ensureStudentRoot(),offset=Date.now()-new Date(serverNow||Date.now()).getTime(),endLocal=new Date(task.endsAt).getTime()+offset;
+ clearStudentTimer();studentSubmitting=false;studentResultShowing=false;const root=ensureStudentRoot(),offset=Date.now()-new Date(serverNow||Date.now()).getTime(),endLocal=new Date(task.endsAt).getTime()+offset;
  const body=task.taskType==='mcq'?`<div class="student-live-questions">${task.content.questions.map((q,i)=>`<fieldset class="student-live-q"><legend><span>${i+1}</span>${esc(q.q)}</legend>${q.options.map((o,j)=>`<label><input type="radio" name="live_${esc(q.id)}" value="${j}"><span>${esc(o)}</span></label>`).join('')}</fieldset>`).join('')}</div>`:`<div class="student-live-writing"><p>${esc(task.content.instructions)}</p><textarea id="studentLiveWriting" rows="8" placeholder="Write your response here…"></textarea><small>Minimum ${Number(task.content.minWords)||0} words</small></div>`;
  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel"><header><div><span class="role-kicker">Live task · ${esc(task.className)}</span><h2>${esc(task.title)}</h2></div><div class="student-live-clock" id="studentLiveClock">00:00</div></header><div class="student-live-progress"><span>Complete and submit before the timer ends.</span></div>${body}<div class="student-live-submit"><div id="studentLiveMessage"></div><button class="primary-btn" type="button" id="studentLiveSubmit">Submit live task</button></div></section></div>`;
  $id('studentLiveSubmit').onclick=()=>submitStudent(task,false);
@@ -86,12 +86,12 @@ async function submitStudent(task,automatic){
  try{const r=await api('/api/student/live-tasks/'+encodeURIComponent(task.id)+'/submit',{method:'POST',body:JSON.stringify(studentPayload(task))});clearStudentTimer();showStudentResult(task,r)}catch(e){studentSubmitting=false;if(msg)msg.innerHTML=`<div class="feedback bad">${esc(e.message)}</div>`;if(btn){btn.disabled=false;btn.textContent='Submit live task'}}
 }
 function showStudentResult(task,r){
- const root=ensureStudentRoot();let detail='';if(task.taskType==='mcq'){detail=`<div class="student-live-score"><strong>${r.score}%</strong><span>${r.correctCount} of ${r.totalCount} correct</span></div><div class="student-live-review">${(r.review||[]).map((x,i)=>`<div class="${x.correct?'good':'bad'}"><strong>Q${i+1}: ${x.correct?'Correct':'Review'}</strong>${x.explanation?`<span>${esc(x.explanation)}</span>`:''}</div>`).join('')}</div>`}else detail='<div class="student-live-score"><strong>Submitted</strong><span>Your writing was sent to your teacher.</span></div>';
+ studentResultShowing=true;const root=ensureStudentRoot();let detail='';if(task.taskType==='mcq'){detail=`<div class="student-live-score"><strong>${r.score}%</strong><span>${r.correctCount} of ${r.totalCount} correct</span></div><div class="student-live-review">${(r.review||[]).map((x,i)=>`<div class="${x.correct?'good':'bad'}"><strong>Q${i+1}: ${x.correct?'Correct':'Review'}</strong>${x.explanation?`<span>${esc(x.explanation)}</span>`:''}</div>`).join('')}</div>`}else detail='<div class="student-live-score"><strong>Submitted</strong><span>Your writing was sent to your teacher.</span></div>';
  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${detail}<div class="feedback ${r.timedOut?'bad':'good'}">${esc(r.message||'Submitted.')}</div><button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
- $id('closeStudentLiveResult').onclick=()=>{dismissed.add(task.id);root.innerHTML='';studentTaskId=task.id};
+ $id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML='';studentTaskId=task.id};
 }
 function renderStudentExistingResult(task,sub){
- const root=ensureStudentRoot();root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${task.taskType==='mcq'?`<div class="student-live-score"><strong>${sub.score}%</strong><span>${sub.correctCount} of ${sub.totalCount} correct</span></div>`:'<div class="student-live-score"><strong>Submitted</strong><span>Your writing was sent to your teacher.</span></div>'}<button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;$id('closeStudentLiveResult').onclick=()=>{dismissed.add(task.id);root.innerHTML=''};
+ studentResultShowing=true;const root=ensureStudentRoot();root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${task.taskType==='mcq'?`<div class="student-live-score"><strong>${sub.score}%</strong><span>${sub.correctCount} of ${sub.totalCount} correct</span></div>`:'<div class="student-live-score"><strong>Submitted</strong><span>Your writing was sent to your teacher.</span></div>'}<button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;$id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML=''};
 }
 function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;enhanceTeacherClasses()})}
 function boot(){enhanceTeacherClasses();new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true});setTimeout(pollStudent,1500)}
