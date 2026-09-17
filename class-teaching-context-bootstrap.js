@@ -6,7 +6,19 @@ const nativeUse=express.application.use;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 let schemaPromise;
-function user(req){try{return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}}
+function ensureEarlyCookies(req){
+ if(req.cookies&&req.cookies.ff_session)return;
+ const cookies=req.cookies&&typeof req.cookies==='object'?req.cookies:{};
+ const raw=String(req.headers?.cookie||'');
+ for(const part of raw.split(';')){
+  const i=part.indexOf('=');if(i<1)continue;
+  const key=part.slice(0,i).trim();let value=part.slice(i+1).trim();
+  try{value=decodeURIComponent(value)}catch{}
+  if(key&&!Object.prototype.hasOwnProperty.call(cookies,key))cookies[key]=value;
+ }
+ req.cookies=cookies;
+}
+function user(req){try{ensureEarlyCookies(req);return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}}
 function schema(){if(!schemaPromise)schemaPromise=pool.query(`create table if not exists class_teaching_contexts(
  teacher_id text not null references users(id) on delete cascade,
  class_id text not null references classes(id) on delete cascade,
@@ -17,6 +29,7 @@ function schema(){if(!schemaPromise)schemaPromise=pool.query(`create table if no
 )`).catch(e=>{schemaPromise=null;throw e});return schemaPromise}
 function install(app){
  if(installed.has(app))return;installed.add(app);
+ nativeUse.call(app,(req,res,next)=>{ensureEarlyCookies(req);next()});
  nativeUse.call(app,async(req,res,next)=>{
   if(req.method!=='PUT'||req.path!=='/api/teacher/context')return next();
   const u=user(req),classId=String(req.body?.classId||'').trim();if(!u||u.role!=='teacher'||!classId)return next();
