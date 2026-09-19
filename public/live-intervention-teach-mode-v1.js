@@ -91,9 +91,11 @@ function openBuilder(){
         <h1>Create a quick classroom check</h1>
         <p>Use the prompt in the top bar. The activity will appear here for review before students receive it.</p>
         <div class="eg-live-prompt-examples">
-          <button type="button" data-prompt-example="Give me 5 MCQs about going to. 5 minutes.">5 MCQs · going to</button>
-          <button type="button" data-prompt-example="Give me 5 MCQs about present simple. 5 minutes.">5 MCQs · present simple</button>
-          <button type="button" data-prompt-example="Give the students a writing task about future plans. 7 minutes.">Writing · future plans</button>
+          <button type="button" data-prompt-example="Create 5 mixed questions about present perfect for B2. 5 minutes.">Mixed check</button>
+          <button type="button" data-prompt-example="Create 5 fill-in-the-blank questions about for and since. 5 minutes.">Fill blanks</button>
+          <button type="button" data-prompt-example="Create a matching task about travel vocabulary. 5 minutes.">Matching</button>
+          <button type="button" data-prompt-example="Create 3 individual speaking prompts about future plans. 6 minutes.">Speaking</button>
+          <button type="button" data-prompt-example="Create a pair discussion about work and careers. 7 minutes.">Pair discussion</button>
         </div>
       </div>
     </main>
@@ -141,6 +143,18 @@ function renderDraft(){
   renderDraftQuestion();
 }
 
+function typeLabel(type){
+  return ({
+    multiple_choice:'Multiple choice',true_false:'True / False',short_answer:'Short answer',
+    fill_blank:'Fill in the blank',sentence_correction:'Sentence correction',matching:'Matching',
+    ordering:'Ordering',sentence_construction:'Sentence construction',teacher_speaking:'Teacher-led speaking',
+    individual_speaking:'Individual speaking',pair_discussion:'Pair discussion'
+  })[type]||'Activity';
+}
+function isChoice(type){return type==='multiple_choice'||type==='true_false'}
+function isText(type){return ['short_answer','fill_blank','sentence_correction','sentence_construction'].includes(type)}
+function isSpeaking(type){return ['teacher_speaking','individual_speaking','pair_discussion'].includes(type)}
+
 function saveDraftQuestion(){
   if(!currentDraft)return;
   if(currentDraft.taskType==='writing'){
@@ -151,18 +165,49 @@ function saveDraftQuestion(){
     return;
   }
   const item=currentDraft.content.questions?.[currentQuestionIndex];if(!item)return;
-  const text=q('[data-draft-question]')?.value.trim();
-  const options=qa('[data-draft-option]').map(x=>x.value.trim());
-  const answer=Number(q('[data-draft-answer]')?.value);
-  if(text)item.q=text;
-  if(options.length)item.options=options;
-  if(Number.isInteger(answer))item.answer=answer;
+  const prompt=q('[data-draft-question]')?.value.trim();
+  if(prompt)item.prompt=prompt;
+  if(isChoice(item.type)){
+    const options=qa('[data-draft-option]').map(x=>x.value.trim());
+    const answer=Number(q('[data-draft-answer]')?.value);
+    if(options.length)item.options=options;
+    if(Number.isInteger(answer))item.answer=answer;
+  }else if(isText(item.type)){
+    const values=String(q('[data-draft-answers]')?.value||'').split(/\n|\|/).map(x=>x.trim()).filter(Boolean);
+    item.acceptedAnswers=values;
+  }else if(item.type==='matching'){
+    item.pairs=qa('[data-draft-pair]').map(row=>({left:row.querySelector('[data-pair-left]')?.value.trim()||'',right:row.querySelector('[data-pair-right]')?.value.trim()||''})).filter(x=>x.left&&x.right);
+  }else if(item.type==='ordering'){
+    item.items=String(q('[data-draft-items]')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean);
+    item.correctOrder=String(q('[data-draft-order]')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  }else if(isSpeaking(item.type)){
+    item.successCriteria=String(q('[data-draft-criteria]')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  }
 }
 function changeDraftQuestion(delta){
   saveDraftQuestion();
   const total=currentDraft?.content?.questions?.length||1;
   currentQuestionIndex=Math.max(0,Math.min(total-1,currentQuestionIndex+delta));
   renderDraftQuestion();
+}
+function draftTypeEditor(item){
+  if(isChoice(item.type)){
+    return `<div class="eg-live-draft-options">${(item.options||[]).map((o,j)=>`<label><span>${String.fromCharCode(65+j)}</span><input data-draft-option="${j}" value="${esc(o)}"></label>`).join('')}</div>
+      <label class="eg-live-correct-select">Correct answer<select data-draft-answer>${(item.options||[]).map((_,j)=>`<option value="${j}" ${j===Number(item.answer)?'selected':''}>${String.fromCharCode(65+j)}</option>`).join('')}</select></label>`;
+  }
+  if(isText(item.type)){
+    return `<label>Accepted answer(s) <small>One per line. Leave blank for teacher-reviewed open response.</small><textarea data-draft-answers rows="5">${esc((item.acceptedAnswers||[]).join('\n'))}</textarea></label>`;
+  }
+  if(item.type==='matching'){
+    return `<div class="eg-live-draft-pairs">${(item.pairs||[]).map((p,j)=>`<div data-draft-pair="${j}"><input data-pair-left value="${esc(p.left)}"><span>↔</span><input data-pair-right value="${esc(p.right)}"></div>`).join('')}</div>`;
+  }
+  if(item.type==='ordering'){
+    return `<div class="eg-live-order-edit"><label>Items shown to students<textarea data-draft-items rows="6">${esc((item.items||[]).join('\n'))}</textarea></label><label>Correct order<textarea data-draft-order rows="6">${esc((item.correctOrder||[]).join('\n'))}</textarea></label></div>`;
+  }
+  if(isSpeaking(item.type)){
+    return `<label>Success criteria<textarea data-draft-criteria rows="5">${esc((item.successCriteria||[]).join('\n'))}</textarea></label>`;
+  }
+  return '';
 }
 function renderDraftQuestion(){
   const main=q('[data-draft-main]');if(!main||!currentDraft)return;
@@ -173,13 +218,12 @@ function renderDraftQuestion(){
   }
   const items=currentDraft.content.questions||[],item=items[currentQuestionIndex];if(!item)return;
   main.innerHTML=`<div class="eg-live-pane-head">
-      <div><span class="eg-live-kicker">Preview · Question ${currentQuestionIndex+1} of ${items.length}</span><h2>Edit before sending</h2></div>
+      <div><span class="eg-live-kicker">Preview · Question ${currentQuestionIndex+1} of ${items.length}</span><h2>${esc(typeLabel(item.type))}</h2></div>
       <div class="eg-live-question-nav"><button type="button" data-draft-prev ${currentQuestionIndex===0?'disabled':''}>← Previous</button><button type="button" data-draft-next ${currentQuestionIndex===items.length-1?'disabled':''}>Next →</button></div>
     </div>
     <div class="eg-live-draft-question">
-      <label class="eg-live-draft-question-text">Question<textarea data-draft-question rows="3">${esc(item.q)}</textarea></label>
-      <div class="eg-live-draft-options">${item.options.map((o,j)=>`<label><span>${String.fromCharCode(65+j)}</span><input data-draft-option="${j}" value="${esc(o)}"></label>`).join('')}</div>
-      <label class="eg-live-correct-select">Correct answer<select data-draft-answer>${item.options.map((_,j)=>`<option value="${j}" ${j===Number(item.answer)?'selected':''}>${String.fromCharCode(65+j)}</option>`).join('')}</select></label>
+      <label class="eg-live-draft-question-text">Prompt<textarea data-draft-question rows="3">${esc(item.prompt||'')}</textarea></label>
+      ${draftTypeEditor(item)}
     </div>`;
   q('[data-draft-prev]')?.addEventListener('click',()=>changeDraftQuestion(-1));
   q('[data-draft-next]')?.addEventListener('click',()=>changeDraftQuestion(1));
@@ -193,9 +237,9 @@ async function launchDraft(){
   try{
     const title=q('[data-draft-title]')?.value.trim()||currentDraft.title;
     const durationSeconds=(Number(q('[data-draft-minutes]')?.value)||5)*60;
-    const content=currentDraft.taskType==='mcq'
-      ?{topic:currentDraft.content.topic,tip:currentDraft.content.tip,questions:currentDraft.content.questions}
-      :{topic:currentDraft.content.topic,instructions:currentDraft.content.instructions,minWords:currentDraft.content.minWords};
+    const content=currentDraft.taskType==='writing'
+      ?{topic:currentDraft.content.topic,instructions:currentDraft.content.instructions,minWords:currentDraft.content.minWords}
+      :{topic:currentDraft.content.topic,tip:currentDraft.content.tip,questions:currentDraft.content.questions};
     const r=await api('/api/teacher/live-tasks',{method:'POST',body:JSON.stringify({
       classId:currentClass.id,requestText:currentDraft.requestText,taskType:currentDraft.taskType,title,durationSeconds,content
     })});
@@ -206,9 +250,9 @@ async function launchDraft(){
   }
 }
 
-function openMonitor(task,serverNow){
+function openMonitor(task,serverNow){function openMonitor(task,serverNow){
   stopPolling();activeTask=task;currentResults=null;
-  const total=task.taskType==='mcq'?(task.content?.questions?.length||1):1;
+  const total=task.taskType==='activity'?(task.content?.questions?.length||1):1;
   currentQuestionIndex=Math.max(0,Math.min(currentQuestionIndex,total-1));
   const offset=Date.now()-new Date(serverNow||Date.now()).getTime();
   liveEndLocal=new Date(task.endsAt).getTime()+offset;
@@ -235,16 +279,46 @@ function openMonitor(task,serverNow){
 }
 
 function changeActiveQuestion(delta){
-  if(!activeTask||activeTask.taskType!=='mcq')return;
+  if(!activeTask||activeTask.taskType!=='activity')return;
   const total=activeTask.content?.questions?.length||1;
   currentQuestionIndex=Math.max(0,Math.min(total-1,currentQuestionIndex+delta));
   renderActiveQuestion();renderLiveSide(currentResults);
 }
 function toggleReveal(){
-  if(!activeTask||activeTask.taskType!=='mcq')return;
+  if(!activeTask||activeTask.taskType!=='activity')return;
   const item=activeTask.content.questions[currentQuestionIndex],set=revealSet(activeTask.id);
   if(set.has(item.id))set.delete(item.id);else set.add(item.id);
   renderActiveQuestion();renderLiveSide(currentResults);
+}
+function liveQuestionBody(item,revealed){
+  if(isChoice(item.type)){
+    const answerIndex=Number(item.answer);
+    return `<div class="eg-live-board-options">${(item.options||[]).map((o,j)=>`<div class="eg-live-board-option ${revealed&&j===answerIndex?'is-correct':''}"><span>${String.fromCharCode(65+j)}</span><strong>${esc(o)}</strong>${revealed&&j===answerIndex?'<b>Correct</b>':''}</div>`).join('')}</div>`;
+  }
+  if(item.type==='matching'){
+    return `<div class="eg-live-board-matching"><div>${(item.pairs||[]).map((p,i)=>`<span><b>${i+1}</b>${esc(p.left)}</span>`).join('')}</div><div>${(item.pairs||[]).map((p,i)=>`<span><b>${String.fromCharCode(65+i)}</b>${esc(p.right)}</span>`).join('')}</div></div>`;
+  }
+  if(item.type==='ordering'){
+    return `<div class="eg-live-board-order">${(item.items||[]).map((x,i)=>`<div><span>${i+1}</span><strong>${esc(x)}</strong></div>`).join('')}</div>`;
+  }
+  if(isSpeaking(item.type)){
+    return `<div class="eg-live-speaking-card"><strong>${esc(typeLabel(item.type))}</strong><span>Students respond orally. Use the board to model an example before showing the success criteria.</span></div>`;
+  }
+  return `<div class="eg-live-open-response"><span>Students type their own response.</span></div>`;
+}
+function revealContent(item){
+  if(isChoice(item.type)){
+    const i=Number(item.answer);
+    return `<span>Correct answer</span><strong>${String.fromCharCode(65+i)}. ${esc(item.options?.[i]||'')}</strong>${item.explanation?`<p>${esc(item.explanation)}</p>`:''}`;
+  }
+  if(isText(item.type)){
+    const answers=item.acceptedAnswers||[];
+    return answers.length?`<span>Accepted answer${answers.length>1?'s':''}</span><strong>${esc(answers.join(' / '))}</strong>${item.explanation?`<p>${esc(item.explanation)}</p>`:''}`:`<span>Teacher-reviewed response</span><strong>Discuss a strong answer with the class.</strong>`;
+  }
+  if(item.type==='matching')return `<span>Correct matches</span><div class="eg-live-reveal-list">${(item.pairs||[]).map(p=>`<p><strong>${esc(p.left)}</strong> → ${esc(p.right)}</p>`).join('')}</div>`;
+  if(item.type==='ordering')return `<span>Correct order</span><div class="eg-live-reveal-list">${(item.correctOrder||[]).map((x,i)=>`<p><strong>${i+1}.</strong> ${esc(x)}</p>`).join('')}</div>`;
+  if(isSpeaking(item.type))return `<span>Success criteria</span><div class="eg-live-reveal-list">${(item.successCriteria||[]).map(x=>`<p>✓ ${esc(x)}</p>`).join('')}</div>`;
+  return '<span>Teacher review</span><strong>Discuss the response with the class.</strong>';
 }
 function renderActiveQuestion(){
   const main=q('[data-active-main]');if(!main||!activeTask)return;
@@ -259,28 +333,28 @@ function renderActiveQuestion(){
     return;
   }
   const items=activeTask.content?.questions||[],item=items[currentQuestionIndex];if(!item)return;
-  const revealed=revealSet(activeTask.id).has(item.id),answerIndex=Number(item.answer);
+  const revealed=revealSet(activeTask.id).has(item.id),revealLabel=isSpeaking(item.type)?'Reveal criteria':'Reveal answer';
   main.innerHTML=`<div class="eg-live-pane-head">
-      <div><span class="eg-live-kicker">Question ${currentQuestionIndex+1} of ${items.length}</span><h2>${esc(activeTask.title)}</h2></div>
+      <div><span class="eg-live-kicker">Question ${currentQuestionIndex+1} of ${items.length} · ${esc(typeLabel(item.type))}</span><h2>${esc(activeTask.title)}</h2></div>
       <div class="eg-live-question-nav"><button type="button" data-active-prev ${currentQuestionIndex===0?'disabled':''}>← Previous</button><button type="button" data-active-next ${currentQuestionIndex===items.length-1?'disabled':''}>Next →</button></div>
     </div>
     <div class="eg-live-question-surface" data-annotation-surface>
       <div class="eg-live-question-content">
         <span class="eg-live-question-number">${currentQuestionIndex+1}</span>
-        <h1>${esc(item.q)}</h1>
-        <div class="eg-live-board-options">${item.options.map((o,j)=>`<div class="eg-live-board-option ${revealed&&j===answerIndex?'is-correct':''}"><span>${String.fromCharCode(65+j)}</span><strong>${esc(o)}</strong>${revealed&&j===answerIndex?'<b>Correct</b>':''}</div>`).join('')}</div>
-        ${revealed?`<div class="eg-live-answer-reveal"><span>Correct answer</span><strong>${String.fromCharCode(65+answerIndex)}. ${esc(item.options[answerIndex]||'')}</strong>${item.explanation?`<p>${esc(item.explanation)}</p>`:''}</div>`:''}
+        <h1>${esc(item.prompt||'')}</h1>
+        ${liveQuestionBody(item,revealed)}
+        ${revealed?`<div class="eg-live-answer-reveal">${revealContent(item)}</div>`:''}
       </div>
       <canvas class="eg-live-annotation-canvas" data-annotation-canvas></canvas>
     </div>
-    <div class="eg-live-board-footer"><span>Use Pen, Highlighter or Text above to work through the question before revealing the answer.</span><button class="${revealed?'eg-live-secondary':'eg-live-primary'}" type="button" data-reveal-answer>${revealed?'Hide answer':'Reveal answer'}</button></div>`;
+    <div class="eg-live-board-footer"><span>Use Pen, Highlighter or Text to model an example before revealing the answer or criteria.</span><button class="${revealed?'eg-live-secondary':'eg-live-primary'}" type="button" data-reveal-answer>${revealed?'Hide':' '+revealLabel}</button></div>`;
   q('[data-active-prev]')?.addEventListener('click',()=>changeActiveQuestion(-1));
   q('[data-active-next]')?.addEventListener('click',()=>changeActiveQuestion(1));
   q('[data-reveal-answer]')?.addEventListener('click',toggleReveal);
   bindAnnotationCanvas(main.querySelector('[data-annotation-surface]'),main.querySelector('[data-annotation-canvas]'),activeTask.id+':'+item.id);
 }
 
-function statusLabel(status){
+function statusLabel(status){function statusLabel(status){
   if(status==='submitted')return 'Submitted';
   if(status==='working')return 'Working';
   return 'Waiting';
@@ -291,13 +365,20 @@ function renderLiveSide(r){
   const working=Number(r?.workingCount||0),submitted=Number(r?.submittedCount||0),connected=Number(r?.connectedCount||submitted+working),roster=Number(r?.rosterCount||classSize(currentClass));
   const sorted=[...students].sort((a,b)=>({working:0,submitted:1,waiting:2}[a.status]??3)-({working:0,submitted:1,waiting:2}[b.status]??3)||String(a.name).localeCompare(String(b.name)));
   let distribution='';
-  if(activeTask.taskType==='mcq'){
-    const item=activeTask.content.questions[currentQuestionIndex],stat=(r?.questionStats||[]).find(x=>x.id===item.id)||(r?.questionStats||[])[currentQuestionIndex],choices=stat?.choices||[];
-    const max=Math.max(1,...choices),revealed=revealSet(activeTask.id).has(item.id),answer=Number(item.answer);
-    distribution=`<section class="eg-live-response-block"><div class="eg-live-side-title"><strong>Responses · Q${currentQuestionIndex+1}</strong><span>${Number(stat?.answered||0)} answers</span></div>
-      <div class="eg-live-choice-bars">${item.options.map((o,j)=>`<div class="eg-live-choice-row ${revealed&&j===answer?'is-correct':''}"><span>${String.fromCharCode(65+j)}</span><div><i style="width:${Math.round((Number(choices[j]||0)/max)*100)}%"></i></div><strong>${Number(choices[j]||0)}</strong></div>`).join('')}</div>
-      ${revealed&&stat?`<div class="eg-live-understanding"><strong>${stat.correctPct}% correct</strong><span>Use this as one piece of classroom evidence, not a final mastery judgment.</span></div>`:''}
-    </section>`;
+  if(activeTask.taskType==='activity'){
+    const item=activeTask.content.questions[currentQuestionIndex],stat=(r?.questionStats||[]).find(x=>x.id===item.id)||(r?.questionStats||[])[currentQuestionIndex];
+    const revealed=revealSet(activeTask.id).has(item.id);
+    if(isChoice(item.type)){
+      const choices=stat?.choices||[],max=Math.max(1,...choices),answer=Number(item.answer);
+      distribution=`<section class="eg-live-response-block"><div class="eg-live-side-title"><strong>Responses · Q${currentQuestionIndex+1}</strong><span>${Number(stat?.answered||0)} answers</span></div>
+        <div class="eg-live-choice-bars">${(item.options||[]).map((o,j)=>`<div class="eg-live-choice-row ${revealed&&j===answer?'is-correct':''}"><span>${String.fromCharCode(65+j)}</span><div><i style="width:${Math.round((Number(choices[j]||0)/max)*100)}%"></i></div><strong>${Number(choices[j]||0)}</strong></div>`).join('')}</div>
+        ${revealed&&stat?.correctPct!==null&&stat?.correctPct!==undefined?`<div class="eg-live-understanding"><strong>${stat.correctPct}% correct</strong><span>Use this as one piece of classroom evidence, not a final mastery judgment.</span></div>`:''}
+      </section>`;
+    }else{
+      distribution=`<section class="eg-live-response-block"><div class="eg-live-side-title"><strong>Responses · Q${currentQuestionIndex+1}</strong><span>${Number(stat?.answered||0)} answers</span></div>
+        <div class="eg-live-understanding"><strong>${Number(stat?.answered||0)} responded</strong><span>${stat?.correctPct===null||stat?.correctPct===undefined?'Teacher review required':revealed?stat.correctPct+'% matched the expected answer':'Reveal the answer to discuss accuracy'}</span></div>
+      </section>`;
+    }
   }
   side.innerHTML=`<div class="eg-live-livehead"><div><span class="eg-live-dot"></span><strong>LIVE</strong><small>${esc(activeTask.className||currentClass?.name||'Class')}</small></div><div class="eg-live-timer" data-live-timer>${fmt((liveEndLocal-Date.now())/1000)}</div></div>
     <div class="eg-live-mini-metrics"><div><strong>${connected}</strong><span>active</span></div><div><strong>${working}</strong><span>working</span></div><div><strong>${submitted}/${roster}</strong><span>submitted</span></div></div>
@@ -310,7 +391,7 @@ function renderLiveSide(r){
   q('[data-end-live]')?.addEventListener('click',endTask);
 }
 
-async function endTask(){
+async function endTask(){async function endTask(){
   if(!activeTask||!confirm('End this live task now?'))return;
   try{await api('/api/teacher/live-tasks/'+encodeURIComponent(activeTask.id)+'/close',{method:'PATCH'});stopPolling();activeTask=null;openBuilder()}catch(e){
     const status=promptElements().status;if(status)status.textContent=e.message;
