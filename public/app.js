@@ -2757,19 +2757,8 @@ function teacherToolButton(mode,label,icon){
  return `<button class="live-tool-btn ${teacherLiveTool===mode?'active':''}" type="button" data-live-tool="${mode}" aria-pressed="${teacherLiveTool===mode?'true':'false'}"><span aria-hidden="true">${icon}</span>${label}</button>`;
 }
 function teacherLiveToolsHtml(){
- return `<div class="live-class-tools" role="toolbar" aria-label="Live class teaching tools">
-  <div class="live-tool-modes">
-   ${teacherToolButton('interact','Interact','↖')}
-   ${teacherToolButton('pointer','Pointer','●')}
-   ${teacherToolButton('highlight','Highlighter','▰')}
-   ${teacherToolButton('text','Text','T')}
-   ${teacherToolButton('example','Give example','✦')}
-   ${teacherToolButton('pronunciation','Pronunciation','🔊')}
-  </div>
-  <div class="live-tool-actions">
-   <button class="live-tool-btn" type="button" id="undoLiveAnnotation" title="Undo last annotation">↶ <span>Undo</span></button>
-   <button class="live-tool-btn" type="button" id="clearLiveAnnotations" title="Clear annotations">× <span>Clear</span></button>
-  </div>
+ return `<div class="live-class-tools live-class-tools-whiteboard-only" role="toolbar" aria-label="Classroom whiteboard">
+  <div class="live-tool-actions"></div>
  </div>`;
 }
 function setTeacherPresentationMode(on){
