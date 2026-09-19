@@ -134,7 +134,7 @@ function renderDraft(){
         <label>Activity title<input data-draft-title maxlength="100" value="${esc(currentDraft.title)}"></label>
         <label>Timer<input data-draft-minutes type="number" min="1" max="60" value="${Math.max(1,Math.round(currentDraft.durationSeconds/60))}"><span>minutes</span></label>
       </div>
-      <div class="eg-live-side-note"><strong>Teacher approval</strong><span>Edit the question and answers before sending. Nothing is sent automatically.</span></div>
+      <div class="eg-live-side-note"><strong>Presenter-safe preview</strong><span>Student-facing content stays visible, but answer keys are hidden by default. Stop screen sharing before opening a private answer key.</span></div>
       <button class="eg-live-primary eg-live-send" data-draft-send type="button">Send to students</button>
       <div class="eg-live-side-feedback" data-draft-feedback></div>
     </aside>
@@ -193,19 +193,19 @@ function changeDraftQuestion(delta){
 function draftTypeEditor(item){
   if(isChoice(item.type)){
     return `<div class="eg-live-draft-options">${(item.options||[]).map((o,j)=>`<label><span>${String.fromCharCode(65+j)}</span><input data-draft-option="${j}" value="${esc(o)}"></label>`).join('')}</div>
-      <label class="eg-live-correct-select">Correct answer<select data-draft-answer>${(item.options||[]).map((_,j)=>`<option value="${j}" ${j===Number(item.answer)?'selected':''}>${String.fromCharCode(65+j)}</option>`).join('')}</select></label>`;
+      <details class="eg-live-private-key"><summary>Private answer key · hidden</summary><div class="eg-live-private-key-body"><p>Stop screen sharing before opening or editing the answer key.</p><label class="eg-live-correct-select">Correct answer<select data-draft-answer>${(item.options||[]).map((_,j)=>`<option value="${j}" ${j===Number(item.answer)?'selected':''}>${String.fromCharCode(65+j)}</option>`).join('')}</select></label></div></details>`;
   }
   if(isText(item.type)){
-    return `<label>Accepted answer(s) <small>One per line. Leave blank for teacher-reviewed open response.</small><textarea data-draft-answers rows="5">${esc((item.acceptedAnswers||[]).join('\n'))}</textarea></label>`;
+    return `<details class="eg-live-private-key"><summary>Private answer key · hidden</summary><div class="eg-live-private-key-body"><p>Stop screen sharing before opening or editing the answer key.</p><label>Accepted answer(s) <small>One per line. Leave blank for teacher-reviewed open response.</small><textarea data-draft-answers rows="5">${esc((item.acceptedAnswers||[]).join('\n'))}</textarea></label></div></details>`;
   }
   if(item.type==='matching'){
-    return `<div class="eg-live-draft-pairs">${(item.pairs||[]).map((p,j)=>`<div data-draft-pair="${j}"><input data-pair-left value="${esc(p.left)}"><span>↔</span><input data-pair-right value="${esc(p.right)}"></div>`).join('')}</div>`;
+    return `<div class="eg-live-board-matching"><div>${(item.pairs||[]).map((p,i)=>`<span><b>${i+1}</b>${esc(p.left)}</span>`).join('')}</div><div>${(item.pairs||[]).map((p,i)=>`<span><b>${String.fromCharCode(65+i)}</b>${esc(p.right)}</span>`).join('')}</div></div><details class="eg-live-private-key"><summary>Private matching key · hidden</summary><div class="eg-live-private-key-body"><p>Stop screen sharing before opening or editing the matching key.</p><div class="eg-live-draft-pairs">${(item.pairs||[]).map((p,j)=>`<div data-draft-pair="${j}"><input data-pair-left value="${esc(p.left)}"><span>↔</span><input data-pair-right value="${esc(p.right)}"></div>`).join('')}</div></div></details>`;
   }
   if(item.type==='ordering'){
-    return `<div class="eg-live-order-edit"><label>Items shown to students<textarea data-draft-items rows="6">${esc((item.items||[]).join('\n'))}</textarea></label><label>Correct order<textarea data-draft-order rows="6">${esc((item.correctOrder||[]).join('\n'))}</textarea></label></div>`;
+    return `<div class="eg-live-order-edit"><label>Items shown to students<textarea data-draft-items rows="6">${esc((item.items||[]).join('\n'))}</textarea></label></div><details class="eg-live-private-key"><summary>Private correct order · hidden</summary><div class="eg-live-private-key-body"><p>Stop screen sharing before opening or editing the correct order.</p><label>Correct order<textarea data-draft-order rows="6">${esc((item.correctOrder||[]).join('\n'))}</textarea></label></div></details>`;
   }
   if(isSpeaking(item.type)){
-    return `<label>Success criteria<textarea data-draft-criteria rows="5">${esc((item.successCriteria||[]).join('\n'))}</textarea></label>`;
+    return `<details class="eg-live-private-key"><summary>Private success criteria · hidden</summary><div class="eg-live-private-key-body"><p>Stop screen sharing before opening or editing the criteria.</p><label>Success criteria<textarea data-draft-criteria rows="5">${esc((item.successCriteria||[]).join('\n'))}</textarea></label></div></details>`;
   }
   return '';
 }
@@ -287,7 +287,18 @@ function changeActiveQuestion(delta){
 function toggleReveal(){
   if(!activeTask||activeTask.taskType!=='activity')return;
   const item=activeTask.content.questions[currentQuestionIndex],set=revealSet(activeTask.id);
-  if(set.has(item.id))set.delete(item.id);else set.add(item.id);
+  if(set.has(item.id)){
+    set.delete(item.id);renderActiveQuestion();renderLiveSide(currentResults);return;
+  }
+  const roster=Number(currentResults?.rosterCount||classSize(currentClass)||0);
+  const submitted=Number(currentResults?.submittedCount||0);
+  const stillWorking=roster>submitted&&Date.now()<liveEndLocal;
+  if(stillWorking){
+    const remaining=Math.max(0,roster-submitted);
+    alert(`Answer hidden: ${remaining} student${remaining===1?' is':'s are'} still working. The answer can be revealed after everyone submits or the timer ends.`);
+    return;
+  }
+  set.add(item.id);
   renderActiveQuestion();renderLiveSide(currentResults);
 }
 function liveQuestionBody(item,revealed){
