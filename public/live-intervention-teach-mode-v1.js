@@ -250,7 +250,7 @@ async function launchDraft(){
   }
 }
 
-function openMonitor(task,serverNow){function openMonitor(task,serverNow){
+function openMonitor(task,serverNow){
   stopPolling();activeTask=task;currentResults=null;
   const total=task.taskType==='activity'?(task.content?.questions?.length||1):1;
   currentQuestionIndex=Math.max(0,Math.min(currentQuestionIndex,total-1));
@@ -354,7 +354,7 @@ function renderActiveQuestion(){
   bindAnnotationCanvas(main.querySelector('[data-annotation-surface]'),main.querySelector('[data-annotation-canvas]'),activeTask.id+':'+item.id);
 }
 
-function statusLabel(status){function statusLabel(status){
+function statusLabel(status){
   if(status==='submitted')return 'Submitted';
   if(status==='working')return 'Working';
   return 'Waiting';
