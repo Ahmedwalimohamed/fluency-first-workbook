@@ -391,7 +391,7 @@ function renderLiveSide(r){
   q('[data-end-live]')?.addEventListener('click',endTask);
 }
 
-async function endTask(){async function endTask(){
+async function endTask(){
   if(!activeTask||!confirm('End this live task now?'))return;
   try{await api('/api/teacher/live-tasks/'+encodeURIComponent(activeTask.id)+'/close',{method:'PATCH'});stopPolling();activeTask=null;openBuilder()}catch(e){
     const status=promptElements().status;if(status)status.textContent=e.message;
