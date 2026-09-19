@@ -23,7 +23,7 @@ function ensureCookies(req){
 function user(req){try{ensureCookies(req);return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}}
 function clean(v,max=120){return String(v??'').trim().slice(0,max)}
 function controlToken(u,session,role){
-  return jwt.sign({scope:'englishgate-jitsi',userId:String(u.id),role:String(role),classId:String(session.class_id),sessionId:String(session.id)},process.env.JWT_SECRET,{expiresIn:'8h'});
+  return jwt.sign({scope:'englishgate-jitsi',userId:String(u.id),name:String(u.name||u.username||role),username:String(u.username||''),role:String(role),classId:String(session.class_id),sessionId:String(session.id)},process.env.JWT_SECRET,{expiresIn:'8h'});
 }
 function scoped(req){
   try{
@@ -36,13 +36,13 @@ function teacherAuth(req,{classId=null,sessionId=null}={}){
   const p=scoped(req);if(!p||p.role!=='teacher')return null;
   if(classId&&String(p.classId)!==String(classId))return null;
   if(sessionId&&String(p.sessionId)!==String(sessionId))return null;
-  return {id:String(p.userId),name:'Teacher',username:''};
+  return {id:String(p.userId),name:String(p.name||'Teacher'),username:String(p.username||'')};
 }
 function studentAuth(req,{sessionId=null}={}){
   const u=user(req);if(u?.role==='student')return {id:String(u.id),name:u.name,username:u.username};
   const p=scoped(req);if(!p||p.role!=='student')return null;
   if(sessionId&&String(p.sessionId)!==String(sessionId))return null;
-  return {id:String(p.userId),name:'Student',username:''};
+  return {id:String(p.userId),name:String(p.name||'Student'),username:String(p.username||'')};
 }
 function domainHost(){
   const raw=clean(process.env.JITSI_DOMAIN,300).replace(/\/$/,'');
@@ -148,7 +148,7 @@ function install(app){
   });
 
   nativePost.call(app,'/api/jitsi-session/:id/presence',async(req,res)=>{
-    const p=scoped(req),cookie=user(req),role=cookie?.role||p?.role,u=role==='teacher'?teacherAuth(req,{sessionId:req.params.id}):studentAuth(req,{sessionId:req.params.id});if(!u||!['teacher','student'].includes(role))return res.status(403).json({error:'Live classroom access required.'});u.role=role;
+    const p=scoped(req),cookie=user(req),role=p?.role||cookie?.role,u=role==='teacher'?teacherAuth(req,{sessionId:req.params.id}):studentAuth(req,{sessionId:req.params.id});if(!u||!['teacher','student'].includes(role))return res.status(403).json({error:'Live classroom access required.'});u.role=role;
     try{
       await ensureSchema();
       const sessionQ=await pool.query(`select s.* from jitsi_class_sessions s where s.id=$1`,[req.params.id]);
