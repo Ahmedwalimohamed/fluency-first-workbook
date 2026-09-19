@@ -1,4 +1,4 @@
-/* EnglishGate password recovery: personal-link reset or username + registered WhatsApp fallback. */
+/* EnglishGate password recovery for admin, teacher and student accounts. */
 (function(){
  function closeButton(){const el=document.querySelector('[data-close]');if(el)el.onclick=closeModal;}
  function successHtml(){return '<div class="feedback good"><strong>New password sent.</strong><br>Check the WhatsApp number registered on your EnglishGate account, then sign in with the new password.</div>';}
@@ -24,7 +24,7 @@
    return;
   }
   const currentUsername=String($('username')?.value||'').trim();
-  showModal('<div class="section-head"><div><span class="role-kicker">Password help</span><h3>Get a new password</h3><p class="muted">Enter your EnglishGate username and the WhatsApp number registered on your account. We will send the new password there.</p></div><button class="icon-btn" data-close>×</button></div><form id="forgotPasswordForm" class="form-grid"><label>Username<input id="forgotUsername" autocomplete="username" required value="'+escapeAttr(currentUsername)+'" placeholder="e.g. amina.ali"></label><label>Registered WhatsApp number<input id="forgotWhatsapp" type="tel" autocomplete="tel" required maxlength="40" placeholder="+252 63 1234567"><small>Use the same WhatsApp number saved on your EnglishGate account.</small></label><button class="primary-btn" type="submit">Send new password</button></form><div id="forgotPasswordResult"></div>');
+  showModal('<div class="section-head"><div><span class="role-kicker">Password help</span><h3>Get a new password</h3><p class="muted">Enter your EnglishGate username and the WhatsApp number registered on your account. Admins, teachers, and students can recover access here. We will send the new password only to that number.</p></div><button class="icon-btn" data-close>×</button></div><form id="forgotPasswordForm" class="form-grid"><label>Username<input id="forgotUsername" autocomplete="username" required value="'+escapeAttr(currentUsername)+'" placeholder="e.g. amina.ali"></label><label>Registered WhatsApp number<input id="forgotWhatsapp" type="tel" autocomplete="tel" required maxlength="40" placeholder="+252 63 1234567"><small>Use the same WhatsApp number saved on your EnglishGate account, including country code.</small></label><button class="primary-btn" type="submit">Send new password</button></form><div id="forgotPasswordResult"></div>');
   closeButton();
   const form=$('forgotPasswordForm'),result=$('forgotPasswordResult');
   form.onsubmit=e=>{e.preventDefault();const button=e.submitter||form.querySelector('button[type="submit"]');submitReset({username:$('forgotUsername').value.trim(),whatsappNumber:$('forgotWhatsapp').value.trim()},form,result,button);};
