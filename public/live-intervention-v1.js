@@ -2,13 +2,19 @@
 (function(){
 'use strict';
 
-let studentTaskId=null,studentTimer=null,studentSubmitting=false,studentResultShowing=false,studentEndLocal=0;
+let studentTaskId=null,studentTimer=null,studentSubmitting=false,studentResultShowing=false,studentEndLocal=0,studentLiveToken='';
+try{studentLiveToken=sessionStorage.getItem('englishgateStudentLiveToken')||''}catch{}
 const dismissed=new Set();
 const $id=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const role=()=>{try{return typeof session!=='undefined'?session?.role:null}catch{return null}};
 const fmt=sec=>{sec=Math.max(0,Math.ceil(sec));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')};
 
+function studentLiveHeaders(){return studentLiveToken?{'X-Live-Task-Token':studentLiveToken}:{}}
+function rememberStudentLiveToken(token){
+  studentLiveToken=String(token||'');
+  try{if(studentLiveToken)sessionStorage.setItem('englishgateStudentLiveToken',studentLiveToken);else sessionStorage.removeItem('englishgateStudentLiveToken')}catch{}
+}
 function ensureRoot(){
   let root=$id('egLiveTaskRoot');
   if(!root){root=document.createElement('div');root.id='egLiveTaskRoot';document.body.appendChild(root)}
@@ -90,7 +96,7 @@ async function submit(task,automatic){
   const btn=$id('studentLiveSubmit'),msg=$id('studentLiveMessage');
   if(btn){btn.disabled=true;btn.textContent=automatic?'Time ended · saving…':'Submitting…'}
   try{
-    const r=await api('/api/student/live-tasks/'+encodeURIComponent(task.id)+'/submit',{method:'POST',body:JSON.stringify(payload(task))});
+    const r=await api('/api/student/live-tasks/'+encodeURIComponent(task.id)+'/submit',{method:'POST',headers:studentLiveHeaders(),body:JSON.stringify(payload(task))});
     clearTimer();showResult(task,r);
   }catch(e){
     studentSubmitting=false;
@@ -147,7 +153,8 @@ function showExistingResult(task,sub){
 async function poll(){
   if(role()!=='student'){setTimeout(poll,4000);return}
   try{
-    const r=await api('/api/student/live-task/current');
+    const r=await api('/api/student/live-task/current',{headers:studentLiveHeaders()});
+    if(r?.studentLiveToken)rememberStudentLiveToken(r.studentLiveToken);
     if(!r.task){
       studentTaskId=null;clearTimer();const root=$id('egLiveTaskRoot');if(root&&!studentResultShowing)root.innerHTML='';
     }else if(!r.submission&&!dismissed.has(r.task.id)){
