@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 
-let studentTaskId=null,studentTimer=null,studentSubmitting=false,studentResultShowing=false;
+let studentTaskId=null,studentTimer=null,studentSubmitting=false,studentResultShowing=false,studentEndLocal=0;
 const dismissed=new Set();
 const $id=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -40,7 +40,7 @@ function renderQuestion(q,i){
 
 function renderTask(task,serverNow){
   clearTimer();studentSubmitting=false;studentResultShowing=false;
-  const root=ensureRoot(),offset=Date.now()-new Date(serverNow||Date.now()).getTime(),endLocal=new Date(task.endsAt).getTime()+offset;
+  const root=ensureRoot(),offset=Date.now()-new Date(serverNow||Date.now()).getTime();studentEndLocal=new Date(task.endsAt).getTime()+offset;
   const body=task.taskType==='writing'
     ?`<div class="student-live-writing"><p>${esc(task.content.instructions)}</p><textarea id="studentLiveWriting" rows="8" placeholder="Write your response here…"></textarea><small>Minimum ${Number(task.content.minWords)||0} words</small></div>`
     :`<div class="student-live-questions">${(task.content.questions||[]).map(renderQuestion).join('')}</div>`;
@@ -48,7 +48,7 @@ function renderTask(task,serverNow){
   $id('studentLiveSubmit').onclick=()=>submit(task,false);
   let autoSent=false;
   const tick=()=>{
-    const remain=(endLocal-Date.now())/1000,clock=$id('studentLiveClock');
+    const remain=(studentEndLocal-Date.now())/1000,clock=$id('studentLiveClock');
     if(clock)clock.textContent=fmt(remain);
     if(remain<=0&&!autoSent){autoSent=true;submit(task,true)}
   };
@@ -125,7 +125,9 @@ async function poll(){
     if(!r.task){
       studentTaskId=null;clearTimer();const root=$id('egLiveTaskRoot');if(root&&!studentResultShowing)root.innerHTML='';
     }else if(!r.submission&&!dismissed.has(r.task.id)){
-      if(studentTaskId!==r.task.id)renderTask(r.task,r.serverNow);studentTaskId=r.task.id;
+      if(studentTaskId!==r.task.id)renderTask(r.task,r.serverNow);
+      else if(r.task?.endsAt){const offset=Date.now()-new Date(r.serverNow||Date.now()).getTime();studentEndLocal=new Date(r.task.endsAt).getTime()+offset}
+      studentTaskId=r.task.id;
     }else if(r.submission&&studentTaskId!==r.task.id&&!dismissed.has(r.task.id)){
       showExistingResult(r.task,r.submission);studentTaskId=r.task.id;
     }
