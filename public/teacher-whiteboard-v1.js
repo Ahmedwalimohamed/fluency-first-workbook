@@ -47,7 +47,7 @@ async function openLiveTask(){
 }
 
 function open(){
-  if(overlay){overlay.hidden=false;setMode(mode);return}
+  if(overlay){overlay.hidden=false;if(mode==='live-task')openLiveTask();else setMode(mode);return}
   overlay=document.createElement('section');
   overlay.className='eg-whiteboard';
   overlay.setAttribute('aria-label','Teacher whiteboard');
