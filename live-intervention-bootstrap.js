@@ -2,6 +2,7 @@ const express=require('express');
 const jwt=require('jsonwebtoken');
 const crypto=require('crypto');
 const {Pool}=require('pg');
+const {runLiveTaskGraph,normalizeType,CHOICE_TYPES,TEXT_TYPES,SPEAKING_TYPES}=require('./live-task-generation-graph.js');
 
 const inheritedGet=express.application.get;
 const inheritedPost=express.application.post;
@@ -75,6 +76,8 @@ function cleanText(v,max=500){return String(v??'').trim().replace(/\s+/g,' ').sl
 function ensureSchema(){if(!schemaPromise){schemaPromise=(async()=>{
   await pool.query(`create table if not exists live_tasks(id text primary key,class_id text not null references classes(id) on delete cascade,teacher_id text not null references users(id) on delete cascade,title text not null,task_type text not null check(task_type in ('mcq','writing')),request_text text not null default '',duration_seconds int not null check(duration_seconds between 60 and 3600),content jsonb not null default '{}'::jsonb,status text not null default 'live' check(status in ('live','closed')),starts_at timestamptz not null default now(),ends_at timestamptz not null,created_at timestamptz not null default now())`);
   await pool.query(`create table if not exists live_task_submissions(task_id text not null references live_tasks(id) on delete cascade,student_id text not null references users(id) on delete cascade,answers jsonb not null default '{}'::jsonb,score int check(score between 0 and 100),correct_count int,total_count int,timed_out boolean not null default false,submitted_at timestamptz not null default now(),primary key(task_id,student_id))`);
+  await pool.query('alter table live_tasks drop constraint if exists live_tasks_task_type_check');
+  await pool.query("alter table live_tasks add constraint live_tasks_task_type_check check(task_type in ('mcq','writing','activity'))");
   await pool.query('create index if not exists live_tasks_class_status_idx on live_tasks(class_id,status,ends_at desc)');
 })().catch(e=>{schemaPromise=null;throw e})}return schemaPromise}
 function findBank(request){const text=String(request||'').toLowerCase();for(const [key,entry] of Object.entries(MCQ_BANK))if(entry.aliases.some(a=>text.includes(a)))return {key,entry};return null}
@@ -94,18 +97,121 @@ function prepareTask(request){
   const bank=findBank(text);if(!bank)throw Object.assign(new Error('No free MCQ bank matches that topic yet. Try “going to”, “present simple”, “past simple”, “present continuous”, or “comparatives”, or create a writing task on any topic.'),{status:422});
   const count=Math.min(parseCount(text),bank.entry.questions.length),minutes=parseMinutes(text,5),questions=bank.entry.questions.slice(0,count).map((q,i)=>({id:`q${i+1}`,...q}));return {taskType:'mcq',title:bank.entry.title,durationSeconds:minutes*60,content:{topic:bank.key,tip:bank.entry.tip,questions}};
 }
-function validateLaunch(body){
-  const taskType=String(body?.taskType||''),title=cleanText(body?.title,100),durationSeconds=clamp(Number(body?.durationSeconds)||300,60,3600),requestText=cleanText(body?.requestText,500),content=body?.content;if(!['mcq','writing'].includes(taskType)||title.length<2||!content||typeof content!=='object')throw Object.assign(new Error('Invalid live task.'),{status:400});
-  if(taskType==='mcq'){const qs=Array.isArray(content.questions)?content.questions.slice(0,10):[];if(!qs.length)throw Object.assign(new Error('Add at least one MCQ.'),{status:400});const questions=qs.map((raw,i)=>{const q=cleanText(raw.q,300),options=Array.isArray(raw.options)?raw.options.slice(0,4).map(x=>cleanText(x,220)):[],answer=Number(raw.answer),explanation=cleanText(raw.explanation,350);if(q.length<3||options.length<2||options.some(x=>!x)||!Number.isInteger(answer)||answer<0||answer>=options.length)throw Object.assign(new Error(`Check question ${i+1} and its correct answer.`),{status:400});return {id:`q${i+1}`,q,options,answer,explanation}});return {taskType,title,durationSeconds,requestText,content:{topic:cleanText(content.topic,80),tip:cleanText(content.tip,300),questions}}}
-  const instructions=cleanText(content.instructions,1200),minWords=clamp(Number(content.minWords)||40,1,500);if(instructions.length<5)throw Object.assign(new Error('Add writing instructions.'),{status:400});return {taskType,title,durationSeconds,requestText,content:{topic:cleanText(content.topic,80),instructions,minWords}};
+function sanitizeLaunchQuestion(raw,i){
+  const type=normalizeType(raw?.type,raw?.options?'multiple_choice':'short_answer'),prompt=cleanText(raw?.prompt||raw?.q,400);
+  if(prompt.length<3)throw Object.assign(new Error(`Question ${i+1} needs a prompt.`),{status:400});
+  const base={id:`q${i+1}`,type,prompt,explanation:cleanText(raw?.explanation,500)};
+  if(CHOICE_TYPES.has(type)){
+    const options=type==='true_false'?['True','False']:(Array.isArray(raw?.options)?raw.options.slice(0,4).map(x=>cleanText(x,220)).filter(Boolean):[]);
+    const answer=Number(raw?.answer);
+    if(options.length<2||!Number.isInteger(answer)||answer<0||answer>=options.length)throw Object.assign(new Error(`Check question ${i+1} and its correct answer.`),{status:400});
+    return {...base,options,answer};
+  }
+  if(TEXT_TYPES.has(type)){
+    const acceptedAnswers=Array.isArray(raw?.acceptedAnswers)?raw.acceptedAnswers.slice(0,8).map(x=>cleanText(x,300)).filter(Boolean):[];
+    return {...base,acceptedAnswers};
+  }
+  if(type==='matching'){
+    const pairs=(Array.isArray(raw?.pairs)?raw.pairs:[]).slice(0,8).map(p=>({left:cleanText(p?.left,220),right:cleanText(p?.right,220)})).filter(p=>p.left&&p.right);
+    if(pairs.length<2)throw Object.assign(new Error(`Question ${i+1} needs at least two matching pairs.`),{status:400});
+    return {...base,pairs};
+  }
+  if(type==='ordering'){
+    const items=Array.isArray(raw?.items)?raw.items.slice(0,8).map(x=>cleanText(x,220)).filter(Boolean):[];
+    const correctOrder=Array.isArray(raw?.correctOrder)?raw.correctOrder.slice(0,8).map(x=>cleanText(x,220)).filter(Boolean):[];
+    if(items.length<2||correctOrder.length!==items.length||!correctOrder.every(x=>items.includes(x)))throw Object.assign(new Error(`Check the ordering answer for question ${i+1}.`),{status:400});
+    return {...base,items,correctOrder};
+  }
+  if(SPEAKING_TYPES.has(type)){
+    const successCriteria=Array.isArray(raw?.successCriteria)?raw.successCriteria.slice(0,6).map(x=>cleanText(x,220)).filter(Boolean):[];
+    return {...base,successCriteria:successCriteria.length?successCriteria:['Completes the speaking task','Uses the target language']};
+  }
+  throw Object.assign(new Error(`Unsupported activity type in question ${i+1}.`),{status:400});
 }
-async function ownedApprovedClass(classId,teacherId){return (await pool.query('select id,name,approval_status from classes where id=$1 and teacher_id=$2',[classId,teacherId])).rows[0]||null}
-function publicTask(row,includeAnswers=false){const content=row.content||{};let safeContent;if(row.task_type==='mcq')safeContent={topic:content.topic||'',tip:content.tip||'',questions:(content.questions||[]).map(q=>includeAnswers?q:{id:q.id,q:q.q,options:q.options})};else safeContent={topic:content.topic||'',instructions:content.instructions||'',minWords:content.minWords||0};return {id:row.id,classId:row.class_id,className:row.class_name||'',title:row.title,taskType:row.task_type,durationSeconds:row.duration_seconds,status:row.status,startsAt:row.starts_at,endsAt:row.ends_at,content:safeContent}}
-function gradeMcq(taskContent,answers){const qs=Array.isArray(taskContent?.questions)?taskContent.questions:[];let correct=0;const detail=qs.map(q=>{const selected=Number(answers?.[q.id]),ok=Number.isInteger(selected)&&selected===Number(q.answer);if(ok)correct++;return {id:q.id,selected:Number.isInteger(selected)?selected:null,answer:q.answer,correct:ok,explanation:q.explanation||''}});return {correct,total:qs.length,score:qs.length?Math.round(correct*100/qs.length):0,detail}}
+function validateLaunch(body){
+  let taskType=String(body?.taskType||''),title=cleanText(body?.title,100),durationSeconds=clamp(Number(body?.durationSeconds)||300,60,3600),requestText=cleanText(body?.requestText,800),content=body?.content;
+  if(taskType==='mcq')taskType='activity';
+  if(!['activity','writing'].includes(taskType)||title.length<2||!content||typeof content!=='object')throw Object.assign(new Error('Invalid live task.'),{status:400});
+  if(taskType==='writing'){
+    const instructions=cleanText(content.instructions,1600),minWords=clamp(Number(content.minWords)||40,1,500);
+    if(instructions.length<5)throw Object.assign(new Error('Add writing instructions.'),{status:400});
+    return {taskType,title,durationSeconds,requestText,content:{topic:cleanText(content.topic,120),instructions,minWords}};
+  }
+  const qs=Array.isArray(content.questions)?content.questions.slice(0,10):[];
+  if(!qs.length)throw Object.assign(new Error('Add at least one activity question.'),{status:400});
+  const questions=qs.map((raw,i)=>sanitizeLaunchQuestion(raw,i));
+  return {taskType,title,durationSeconds,requestText,content:{topic:cleanText(content.topic,120),tip:cleanText(content.tip,400),questions}};
+}
+async function ownedApprovedClass(classId,teacherId){return (await pool.query('select id,name,level,course_id,approval_status from classes where id=$1 and teacher_id=$2',[classId,teacherId])).rows[0]||null}
+function safeQuestionForStudent(q){
+  const common={id:q.id,type:q.type||'multiple_choice',prompt:q.prompt||q.q||'',explanation:''};
+  if(CHOICE_TYPES.has(common.type))return {...common,options:Array.isArray(q.options)?q.options:[]};
+  if(TEXT_TYPES.has(common.type))return common;
+  if(common.type==='matching'){
+    const pairs=Array.isArray(q.pairs)?q.pairs:[];
+    return {...common,leftItems:pairs.map(p=>p.left),rightOptions:pairs.map(p=>p.right).reverse()};
+  }
+  if(common.type==='ordering')return {...common,items:Array.isArray(q.items)?q.items:[]};
+  if(SPEAKING_TYPES.has(common.type))return {...common,successCriteria:Array.isArray(q.successCriteria)?q.successCriteria:[]};
+  return common;
+}
+function publicTask(row,includeAnswers=false){
+  const content=row.content||{};let safeContent;
+  if(row.task_type==='writing'){
+    safeContent={topic:content.topic||'',instructions:content.instructions||'',minWords:content.minWords||0};
+  }else{
+    const legacy=row.task_type==='mcq';
+    const questions=(content.questions||[]).map((q,i)=>{
+      const normalized=legacy?{id:q.id||`q${i+1}`,type:'multiple_choice',prompt:q.prompt||q.q,options:q.options,answer:q.answer,explanation:q.explanation}:q;
+      return includeAnswers?normalized:safeQuestionForStudent(normalized);
+    });
+    safeContent={topic:content.topic||'',tip:content.tip||'',questions};
+  }
+  return {id:row.id,classId:row.class_id,className:row.class_name||'',title:row.title,taskType:row.task_type==='mcq'?'activity':row.task_type,durationSeconds:row.duration_seconds,status:row.status,startsAt:row.starts_at,endsAt:row.ends_at,content:safeContent};
+}
+function normAnswer(v){return cleanText(v,500).toLowerCase().replace(/[’‘]/g,"'").replace(/[^\p{L}\p{N}'\s]/gu,'').replace(/\s+/g,' ').trim()}
+function answerPresent(v){if(v===null||v===undefined)return false;if(Array.isArray(v))return v.length>0;if(typeof v==='object')return Object.keys(v).length>0;return String(v).trim().length>0}
+function gradeQuestion(q,raw){
+  const type=q.type||'multiple_choice';
+  if(CHOICE_TYPES.has(type)){
+    const selected=Number(raw),answer=Number(q.answer),answered=Number.isInteger(selected),correct=answered&&selected===answer;
+    return {gradable:true,answered,correct,selected,answer};
+  }
+  if(TEXT_TYPES.has(type)){
+    const accepted=Array.isArray(q.acceptedAnswers)?q.acceptedAnswers.map(normAnswer).filter(Boolean):[];
+    const given=normAnswer(raw);
+    if(!accepted.length)return {gradable:false,answered:Boolean(given),correct:null};
+    return {gradable:true,answered:Boolean(given),correct:Boolean(given)&&accepted.includes(given)};
+  }
+  if(type==='matching'){
+    const pairs=Array.isArray(q.pairs)?q.pairs:[],obj=raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{};
+    const answered=pairs.some(p=>String(obj[p.left]??'').trim());
+    const correct=answered&&pairs.every(p=>String(obj[p.left]??'')===String(p.right));
+    return {gradable:true,answered,correct};
+  }
+  if(type==='ordering'){
+    const given=Array.isArray(raw)?raw.map(String):[],correctOrder=Array.isArray(q.correctOrder)?q.correctOrder.map(String):[];
+    const answered=given.length>0,correct=answered&&given.length===correctOrder.length&&given.every((x,i)=>x===correctOrder[i]);
+    return {gradable:true,answered,correct};
+  }
+  if(SPEAKING_TYPES.has(type))return {gradable:false,answered:answerPresent(raw),correct:null};
+  return {gradable:false,answered:answerPresent(raw),correct:null};
+}
+function gradeActivity(taskContent,answers){
+  const qs=Array.isArray(taskContent?.questions)?taskContent.questions:[];
+  let correct=0,graded=0,answered=0;
+  const detail=qs.map(q=>{
+    const g=gradeQuestion(q,answers?.[q.id]);
+    if(g.answered)answered++;
+    if(g.gradable){graded++;if(g.correct)correct++}
+    return {id:q.id,type:q.type,answered:g.answered,gradable:g.gradable,correct:g.correct};
+  });
+  return {correct,total:graded,answered,score:graded?Math.round(correct*100/graded):null,detail};
+}
 
 function install(app){
   if(installed.has(app))return;installed.add(app);
-  inheritedPost.call(app,'/api/teacher/live-tasks/prepare',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});try{await ensureSchema();const classId=cleanText(req.body?.classId,100),c=await ownedApprovedClass(classId,u.id);if(!c)return res.status(404).json({error:'Class not found.'});if(c.approval_status!=='approved')return res.status(409).json({error:'The class must be approved before you can launch a live task.'});const task=prepareTask(req.body?.request);res.set('Cache-Control','no-store');res.json({ok:true,class:{id:c.id,name:c.name},requestText:cleanText(req.body?.request,500),...task})}catch(e){console.error('live task prepare error',e);res.status(e.status||500).json({error:e.status?e.message:'The live task could not be prepared.'})}});
+  inheritedPost.call(app,'/api/teacher/live-tasks/prepare',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});try{await ensureSchema();const classId=cleanText(req.body?.classId,100),c=await ownedApprovedClass(classId,u.id);if(!c)return res.status(404).json({error:'Class not found.'});if(c.approval_status!=='approved')return res.status(409).json({error:'The class must be approved before you can launch a live task.'});const task=await runLiveTaskGraph({request:req.body?.request,classInfo:c,lessonContext:req.body?.lessonContext});res.set('Cache-Control','no-store');res.json({ok:true,class:{id:c.id,name:c.name},...task})}catch(e){console.error('live task prepare error',e);res.status(e.status||500).json({error:e.status?e.message:'The live task could not be prepared.'})}});
   inheritedPost.call(app,'/api/teacher/live-tasks',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});try{await ensureSchema();const classId=cleanText(req.body?.classId,100),c=await ownedApprovedClass(classId,u.id);if(!c)return res.status(404).json({error:'Class not found.'});if(c.approval_status!=='approved')return res.status(409).json({error:'The class must be approved before you can launch a live task.'});const task=validateLaunch(req.body),client=await pool.connect();try{await client.query('begin');await client.query("update live_tasks set status='closed',ends_at=least(ends_at,now()) where class_id=$1 and status='live'",[classId]);const id='lt_'+crypto.randomUUID(),q=await client.query(`insert into live_tasks(id,class_id,teacher_id,title,task_type,request_text,duration_seconds,content,status,starts_at,ends_at) values($1,$2,$3,$4,$5,$6,$7,$8::jsonb,'live',now(),now()+($7::int*interval '1 second')) returning *`,[id,classId,u.id,task.title,task.taskType,task.requestText,task.durationSeconds,JSON.stringify(task.content)]);await client.query('commit');res.status(201).json({ok:true,task:publicTask({...q.rows[0],class_name:c.name},true),serverNow:new Date().toISOString()})}catch(e){await client.query('rollback');throw e}finally{client.release()}}catch(e){console.error('live task launch error',e);res.status(e.status||500).json({error:e.status?e.message:'The live task could not be launched.'})}});
   inheritedGet.call(app,'/api/teacher/live-tasks/current',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});try{await ensureSchema();const classId=cleanText(req.query?.classId,100),q=await pool.query(`select lt.*,c.name as class_name from live_tasks lt join classes c on c.id=lt.class_id where lt.class_id=$1 and lt.teacher_id=$2 and lt.status='live' and lt.ends_at>now() order by lt.starts_at desc limit 1`,[classId,u.id]);res.set('Cache-Control','no-store');res.json({task:q.rowCount?publicTask(q.rows[0],true):null,serverNow:new Date().toISOString()})}catch(e){console.error('current live task error',e);res.status(500).json({error:'Live task status is temporarily unavailable.'})}});
   inheritedGet.call(app,'/api/teacher/live-tasks/:id/results',async(req,res)=>{
@@ -120,18 +226,18 @@ function install(app){
       const scoreRows=subs.rows.filter(x=>x.score!==null&&x.score!==undefined&&Number.isFinite(Number(x.score)));
       const avg=scoreRows.length?Math.round(scoreRows.reduce((a,x)=>a+Number(x.score),0)/scoreRows.length):null;
       let questionStats=[];
-      if(task.task_type==='mcq'){
-        questionStats=(task.content?.questions||[]).map(q=>{
-          let correct=0,answered=0;const choices=Array.from({length:Array.isArray(q.options)?q.options.length:0},()=>0);
+      if(task.task_type!=='writing'){
+        const questions=(task.content?.questions||[]).map((q,i)=>task.task_type==='mcq'?{id:q.id||`q${i+1}`,type:'multiple_choice',prompt:q.q||q.prompt,options:q.options,answer:q.answer,explanation:q.explanation}:q);
+        questionStats=questions.map(q=>{
+          let correct=0,answered=0,graded=0;
+          const choices=CHOICE_TYPES.has(q.type)?Array.from({length:Array.isArray(q.options)?q.options.length:0},()=>0):[];
           for(const s of subs.rows){
-            const selected=Number(s.answers?.[q.id]);
-            if(Number.isInteger(selected)&&selected>=0){
-              answered++;
-              if(selected<choices.length)choices[selected]++;
-              if(selected===Number(q.answer))correct++;
-            }
+            const raw=s.answers?.[q.id],g=gradeQuestion(q,raw);
+            if(g.answered)answered++;
+            if(g.gradable){graded++;if(g.correct)correct++}
+            if(choices.length&&Number.isInteger(Number(raw))&&Number(raw)>=0&&Number(raw)<choices.length)choices[Number(raw)]++;
           }
-          return {id:q.id,q:q.q,correct,answered,correctPct:answered?Math.round(correct*100/answered):0,choices};
+          return {id:q.id,type:q.type,prompt:q.prompt||q.q||'',answered,graded,correct,correctPct:graded?Math.round(correct*100/graded):null,choices};
         });
       }
       const active=activeLiveTaskStudents(task.id),submittedById=new Map(subs.rows.map(s=>[String(s.student_id),s]));
@@ -171,7 +277,7 @@ function install(app){
       res.set('Cache-Control','no-store');res.json({task:publicTask(task,false),submission,serverNow:new Date().toISOString()});
     }catch(e){console.error('student live task current error',e);res.status(500).json({error:'Live task status is temporarily unavailable.'})}
   });
-  inheritedPost.call(app,'/api/student/live-tasks/:id/submit',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='student')return res.status(403).json({error:'Student access required.'});try{await ensureSchema();const q=await pool.query(`select lt.*,c.name as class_name,now() as server_now from live_tasks lt join classes c on c.id=lt.class_id and c.approval_status='approved' join enrollments e on e.class_id=lt.class_id and e.user_id=$2 where lt.id=$1`,[req.params.id,u.id]);if(!q.rowCount)return res.status(404).json({error:'Live task not found.'});const task=q.rows[0],existing=await pool.query('select 1 from live_task_submissions where task_id=$1 and student_id=$2',[task.id,u.id]);if(existing.rowCount)return res.status(409).json({error:'You already submitted this live task.'});const now=new Date(task.server_now),end=new Date(task.ends_at);if(now.getTime()>end.getTime()+30000)return res.status(409).json({error:'This live task has ended.'});const timedOut=now>end;let answers={},score=null,correctCount=null,totalCount=null,review=null;if(task.task_type==='mcq'){answers=req.body?.answers&&typeof req.body.answers==='object'?req.body.answers:{};const graded=gradeMcq(task.content,answers);score=graded.score;correctCount=graded.correct;totalCount=graded.total;review=graded.detail}else{const text=String(req.body?.text||'').trim().slice(0,10000);answers={text};if(!text&&!timedOut)return res.status(400).json({error:'Write your response before submitting.'})}await pool.query(`insert into live_task_submissions(task_id,student_id,answers,score,correct_count,total_count,timed_out,submitted_at) values($1,$2,$3::jsonb,$4,$5,$6,$7,now())`,[task.id,u.id,JSON.stringify(answers),score,correctCount,totalCount,timedOut]);res.status(201).json({ok:true,taskId:task.id,taskType:task.task_type,score,correctCount,totalCount,timedOut,review,message:timedOut?'Time ended. Your work was saved and marked late.':'Submitted on time.'})}catch(e){console.error('live task submission error',e);res.status(500).json({error:'Your live task could not be submitted.'})}});
+  inheritedPost.call(app,'/api/student/live-tasks/:id/submit',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='student')return res.status(403).json({error:'Student access required.'});try{await ensureSchema();const q=await pool.query(`select lt.*,c.name as class_name,now() as server_now from live_tasks lt join classes c on c.id=lt.class_id and c.approval_status='approved' join enrollments e on e.class_id=lt.class_id and e.user_id=$2 where lt.id=$1`,[req.params.id,u.id]);if(!q.rowCount)return res.status(404).json({error:'Live task not found.'});const task=q.rows[0],existing=await pool.query('select 1 from live_task_submissions where task_id=$1 and student_id=$2',[task.id,u.id]);if(existing.rowCount)return res.status(409).json({error:'You already submitted this live task.'});const now=new Date(task.server_now),end=new Date(task.ends_at);if(now.getTime()>end.getTime()+30000)return res.status(409).json({error:'This live task has ended.'});const timedOut=now>end;let answers={},score=null,correctCount=null,totalCount=null,review=null;if(task.task_type==='mcq'||task.task_type==='activity'){answers=req.body?.answers&&typeof req.body.answers==='object'?req.body.answers:{};const content=task.task_type==='mcq'?{...task.content,questions:(task.content?.questions||[]).map((q,i)=>({id:q.id||`q${i+1}`,type:'multiple_choice',prompt:q.q||q.prompt,options:q.options,answer:q.answer,explanation:q.explanation}))}:task.content;const graded=gradeActivity(content,answers);score=graded.score;correctCount=graded.correct;totalCount=graded.total;review=graded.detail}else{const text=String(req.body?.text||'').trim().slice(0,10000);answers={text};if(!text&&!timedOut)return res.status(400).json({error:'Write your response before submitting.'})}await pool.query(`insert into live_task_submissions(task_id,student_id,answers,score,correct_count,total_count,timed_out,submitted_at) values($1,$2,$3::jsonb,$4,$5,$6,$7,now())`,[task.id,u.id,JSON.stringify(answers),score,correctCount,totalCount,timedOut]);res.status(201).json({ok:true,taskId:task.id,taskType:task.task_type,score,correctCount,totalCount,timedOut,message:timedOut?'Time ended. Your work was saved and marked late.':'Submitted on time.'})}catch(e){console.error('live task submission error',e);res.status(500).json({error:'Your live task could not be submitted.'})}});
 }
 
 express.application.get=function liveInterventionGet(route,...handlers){install(this);return inheritedGet.call(this,route,...handlers)};
