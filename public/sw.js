@@ -2,7 +2,7 @@
    Resilient navigation policy: never turn a temporary upstream/network failure
    into Chrome's ERR_FAILED page when a previously installed EnglishGate PWA
    can still serve its application shell. */
-const CACHE_NAME = 'englishgate-pwa-v5';
+const CACHE_NAME = 'englishgate-pwa-v6';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -62,6 +62,19 @@ self.addEventListener('fetch', event => {
 
   // User/account data must always come from the network and must never be cached by the PWA.
   if (url.pathname.startsWith('/api/')) return;
+
+  // Password recovery is an account route, not the cached app shell.
+  // Never replace it with the generic reconnecting page or a cached index page.
+  if (url.pathname === '/forgot-password') {
+    event.respondWith((async () => {
+      try {
+        return await fetch(request, { cache: 'no-store' });
+      } catch (error) {
+        return new Response(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EnglishGate · Password help</title><style>body{font-family:system-ui,sans-serif;margin:0;background:#f8fafc;color:#0f172a;display:grid;min-height:100vh;place-items:center}.card{max-width:520px;margin:24px;padding:32px;background:white;border:1px solid #e2e8f0;border-radius:18px}h1{margin:0 0 12px;font-size:26px}p{line-height:1.55;color:#475569}a{display:inline-block;margin-top:10px;color:#2563eb;font-weight:700}</style></head><body><main class="card"><h1>Password recovery is temporarily unavailable</h1><p>EnglishGate could not reach the recovery service. Your account has not been changed. Check your connection and try again.</p><a href="/forgot-password">Try again</a></main></body></html>`, {status: 503, headers: {'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+      }
+    })());
+    return;
+  }
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
