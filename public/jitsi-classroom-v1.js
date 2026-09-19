@@ -66,7 +66,7 @@ async function mountMeet(parent,join,kind){
     parentNode:parent,
     width:'100%',height:'100%',
     userInfo:{displayName:join.displayName},
-    configOverwrite:{prejoinPageEnabled:false,disableDeepLinking:true,startWithAudioMuted:kind==='student',startWithVideoMuted:false}
+    configOverwrite:{prejoinPageEnabled:false,prejoinConfig:{enabled:false,hideDisplayName:true},disableDeepLinking:true,disableInviteFunctions:true,startWithAudioMuted:kind==='student',startWithVideoMuted:false}
   };
   const instance=new window.JitsiMeetExternalAPI(join.domain,options);
   if(kind==='teacher')teacherApi=instance;else studentApi=instance;
