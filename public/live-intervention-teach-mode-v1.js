@@ -272,7 +272,11 @@ function openMonitor(task,serverNow){
   tick();
   const poll=async()=>{
     if(token!==monitorToken)return;
-    try{currentResults=await api('/api/teacher/live-tasks/'+encodeURIComponent(task.id)+'/results');renderLiveSide(currentResults)}catch{}
+    try{
+      currentResults=await api('/api/teacher/live-tasks/'+encodeURIComponent(task.id)+'/results');
+      if(currentResults?.task?.endsAt){const serverMs=new Date(currentResults.serverNow||Date.now()).getTime(),offset=Date.now()-serverMs;liveEndLocal=new Date(currentResults.task.endsAt).getTime()+offset;activeTask={...activeTask,...currentResults.task}}
+      renderLiveSide(currentResults)
+    }catch{}
     if(token===monitorToken)setTimeout(poll,2000);
   };
   poll();
@@ -398,8 +402,27 @@ function renderLiveSide(r){
       <div class="eg-live-student-list">${sorted.length?sorted.map(s=>`<div class="eg-live-student-row is-${esc(s.status)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>${statusLabel(s.status)}${s.timedOut?' · late':''}</small></div>${s.status==='submitted'&&s.score!==null&&s.score!==undefined?'<b>'+Number(s.score)+'%</b>':''}</div>`).join(''):'<div class="eg-live-side-empty">Waiting for students to open the activity…</div>'}</div>
     </section>
     ${distribution}
-    <div class="eg-live-side-actions"><button class="eg-live-danger" type="button" data-end-live>End task</button></div>`;
+    <div class="eg-live-side-actions"><div class="eg-live-extend-time"><span>Extend time</span><button type="button" data-extend-live="1">+1 min</button><button type="button" data-extend-live="3">+3 min</button><button type="button" data-extend-live="5">+5 min</button></div><button class="eg-live-danger" type="button" data-end-live>End task</button></div>`;
+  qa('[data-extend-live]').forEach(b=>b.addEventListener('click',()=>extendTime(Number(b.dataset.extendLive)||1,b)));
   q('[data-end-live]')?.addEventListener('click',endTask);
+}
+
+async function extendTime(minutes,button){
+  if(!activeTask)return;
+  const buttons=qa('[data-extend-live]');buttons.forEach(b=>b.disabled=true);
+  const oldLabel=button?.textContent;if(button)button.textContent='Adding…';
+  try{
+    const r=await api('/api/teacher/live-tasks/'+encodeURIComponent(activeTask.id)+'/extend',{method:'PATCH',body:JSON.stringify({minutes})});
+    if(r?.task?.endsAt){
+      activeTask={...activeTask,...r.task};
+      const serverMs=new Date(r.serverNow||Date.now()).getTime();
+      const offset=Date.now()-serverMs;
+      liveEndLocal=new Date(r.task.endsAt).getTime()+offset;
+    }
+    renderLiveSide(currentResults);
+  }catch(e){
+    const status=promptElements().status;if(status)status.textContent=e.message;
+  }finally{buttons.forEach(b=>b.disabled=false);if(button&&oldLabel)button.textContent=oldLabel}
 }
 
 async function endTask(){
