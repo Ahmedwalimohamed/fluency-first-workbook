@@ -260,6 +260,16 @@ function install(app){
       });
     }catch(e){console.error('live task results error',e);res.status(500).json({error:'Live results are temporarily unavailable.'})}
   });
+  inheritedPatch.call(app,'/api/teacher/live-tasks/:id/extend',async(req,res)=>{
+    const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
+    try{
+      await ensureSchema();
+      const minutes=clamp(Number(req.body?.minutes)||0,1,30);
+      const q=await pool.query(`update live_tasks lt set ends_at=least(lt.ends_at+($3::int*interval '1 minute'),lt.starts_at+interval '120 minutes'),duration_seconds=extract(epoch from (least(lt.ends_at+($3::int*interval '1 minute'),lt.starts_at+interval '120 minutes')-lt.starts_at))::int from classes c where lt.class_id=c.id and lt.id=$1 and lt.teacher_id=$2 and lt.status='live' and lt.ends_at>now() returning lt.*,c.name as class_name`,[req.params.id,u.id,minutes]);
+      if(!q.rowCount)return res.status(409).json({error:'This live task has already ended or could not be found.'});
+      res.set('Cache-Control','no-store');res.json({ok:true,task:publicTask(q.rows[0],true),serverNow:new Date().toISOString()});
+    }catch(e){console.error('live task extend error',e);res.status(500).json({error:'The live task time could not be extended.'})}
+  });
   inheritedPatch.call(app,'/api/teacher/live-tasks/:id/close',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});try{await ensureSchema();const q=await pool.query("update live_tasks set status='closed',ends_at=least(ends_at,now()) where id=$1 and teacher_id=$2 returning id",[req.params.id,u.id]);if(!q.rowCount)return res.status(404).json({error:'Live task not found.'});res.json({ok:true})}catch(e){res.status(500).json({error:'The live task could not be closed.'})}});
   inheritedGet.call(app,'/api/student/live-task/current',async(req,res)=>{
     const u=sessionUser(req);if(!u||u.role!=='student')return res.status(403).json({error:'Student access required.'});
