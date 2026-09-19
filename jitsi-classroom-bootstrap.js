@@ -22,6 +22,28 @@ function ensureCookies(req){
 }
 function user(req){try{ensureCookies(req);return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}}
 function clean(v,max=120){return String(v??'').trim().slice(0,max)}
+function controlToken(u,session,role){
+  return jwt.sign({scope:'englishgate-jitsi',userId:String(u.id),role:String(role),classId:String(session.class_id),sessionId:String(session.id)},process.env.JWT_SECRET,{expiresIn:'8h'});
+}
+function scoped(req){
+  try{
+    const raw=String(req.headers?.['x-englishgate-jitsi-token']||'').trim();if(!raw)return null;
+    const p=jwt.verify(raw,process.env.JWT_SECRET);return p?.scope==='englishgate-jitsi'?p:null;
+  }catch{return null}
+}
+function teacherAuth(req,{classId=null,sessionId=null}={}){
+  const u=user(req);if(u?.role==='teacher')return {id:String(u.id),name:u.name,username:u.username};
+  const p=scoped(req);if(!p||p.role!=='teacher')return null;
+  if(classId&&String(p.classId)!==String(classId))return null;
+  if(sessionId&&String(p.sessionId)!==String(sessionId))return null;
+  return {id:String(p.userId),name:'Teacher',username:''};
+}
+function studentAuth(req,{sessionId=null}={}){
+  const u=user(req);if(u?.role==='student')return {id:String(u.id),name:u.name,username:u.username};
+  const p=scoped(req);if(!p||p.role!=='student')return null;
+  if(sessionId&&String(p.sessionId)!==String(sessionId))return null;
+  return {id:String(p.userId),name:'Student',username:''};
+}
 function domainHost(){
   const raw=clean(process.env.JITSI_DOMAIN,300).replace(/\/$/,'');
   if(!raw)return '';
@@ -62,7 +84,7 @@ function joinToken(session,u,moderator){
   return jwt.sign(payload,String(process.env.JITSI_APP_SECRET),{algorithm:'HS256',expiresIn:'2h'});
 }
 function publicSession(row){return {id:row.id,classId:row.class_id,roomName:row.room_name,status:row.status,startedAt:row.started_at,endedAt:row.ended_at||null}}
-function joinPayload(row,u,moderator){return {session:publicSession(row),domain:domainHost(),jwt:joinToken(row,u,moderator),displayName:String(u.name||u.username||'EnglishGate user'),moderator:Boolean(moderator)}}
+function joinPayload(row,u,moderator){return {session:publicSession(row),domain:domainHost(),jwt:joinToken(row,u,moderator),controlToken:controlToken(u,row,moderator?'teacher':'student'),displayName:String(u.name||u.username||'EnglishGate user'),moderator:Boolean(moderator)}}
 
 function install(app){
   if(installed.has(app))return;installed.add(app);
@@ -74,9 +96,8 @@ function install(app){
   });
 
   nativeGet.call(app,'/api/teacher/jitsi-session/current',async(req,res)=>{
-    const u=user(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
     try{
-      await ensureSchema();const classId=clean(req.query?.classId),c=await teacherClass(classId,u.id);
+      await ensureSchema();const classId=clean(req.query?.classId),u=teacherAuth(req,{classId});if(!u)return res.status(403).json({error:'Teacher access required.'});const c=await teacherClass(classId,u.id);
       if(!c)return res.status(404).json({error:'Class not found.'});
       const q=await pool.query(`select * from jitsi_class_sessions where class_id=$1 and teacher_id=$2 and status='active' order by started_at desc limit 1`,[classId,u.id]);
       res.set('Cache-Control','no-store');
@@ -105,7 +126,7 @@ function install(app){
   });
 
   nativePatch.call(app,'/api/teacher/jitsi-session/:id/end',async(req,res)=>{
-    const u=user(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
+    const u=teacherAuth(req,{sessionId:req.params.id});if(!u)return res.status(403).json({error:'Teacher access required.'});
     try{
       await ensureSchema();const q=await pool.query(`update jitsi_class_sessions set status='ended',ended_at=now() where id=$1 and teacher_id=$2 returning id`,[req.params.id,u.id]);
       if(!q.rowCount)return res.status(404).json({error:'Live classroom not found.'});
@@ -115,7 +136,7 @@ function install(app){
   });
 
   nativeGet.call(app,'/api/student/jitsi-session/current',async(req,res)=>{
-    const u=user(req);if(!u||u.role!=='student')return res.status(403).json({error:'Student access required.'});
+    const u=studentAuth(req);if(!u)return res.status(403).json({error:'Student access required.'});
     try{
       await ensureSchema();
       const q=await pool.query(`select s.* from jitsi_class_sessions s join classes c on c.id=s.class_id and coalesce(c.approval_status,'approved')='approved' join enrollments e on e.class_id=s.class_id and e.user_id=$1 where s.status='active' order by s.started_at desc limit 1`,[u.id]);
@@ -127,7 +148,7 @@ function install(app){
   });
 
   nativePost.call(app,'/api/jitsi-session/:id/presence',async(req,res)=>{
-    const u=user(req);if(!u||!['teacher','student'].includes(u.role))return res.status(403).json({error:'Live classroom access required.'});
+    const p=scoped(req),cookie=user(req),role=cookie?.role||p?.role,u=role==='teacher'?teacherAuth(req,{sessionId:req.params.id}):studentAuth(req,{sessionId:req.params.id});if(!u||!['teacher','student'].includes(role))return res.status(403).json({error:'Live classroom access required.'});u.role=role;
     try{
       await ensureSchema();
       const sessionQ=await pool.query(`select s.* from jitsi_class_sessions s where s.id=$1`,[req.params.id]);
@@ -149,7 +170,7 @@ function install(app){
   });
 
   nativeGet.call(app,'/api/teacher/jitsi-session/:id/attendance',async(req,res)=>{
-    const u=user(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
+    const u=teacherAuth(req,{sessionId:req.params.id});if(!u)return res.status(403).json({error:'Teacher access required.'});
     try{
       await ensureSchema();
       const own=await pool.query('select 1 from jitsi_class_sessions where id=$1 and teacher_id=$2',[req.params.id,u.id]);
