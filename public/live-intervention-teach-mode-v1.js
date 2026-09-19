@@ -3,7 +3,7 @@
 'use strict';
 
 let currentClass=null,currentDraft=null,activeTask=null,currentHost=null,currentResults=null;
-let currentQuestionIndex=0,monitorToken=0,liveEndLocal=0,currentAnnotationController=null,reviewStudentId=null;
+let currentQuestionIndex=0,monitorToken=0,liveEndLocal=0,currentAnnotationController=null,reviewStudentId=null,activeLiveView='questions';
 const revealedByTask=new Map();
 const annotationStates=new Map();
 
@@ -262,10 +262,13 @@ function openMonitor(task,serverNow){
   const offset=Date.now()-new Date(serverNow||Date.now()).getTime();
   liveEndLocal=new Date(task.endsAt).getTime()+offset;
   wirePrompt(null,{disabled:true,label:'Live now',placeholder:'Live task is running',status:(task.className||currentClass?.name||'Class')+' · activity in progress'});
+  activeLiveView='questions';reviewStudentId=null;
   setHtml(`<div class="eg-live-grid eg-live-active-grid">
+    <nav class="eg-live-left-tabs" data-active-tabs aria-label="Live Task views"></nav>
     <main class="eg-live-main-pane" data-active-main></main>
     <aside class="eg-live-side-pane" data-active-side></aside>
   </div>`);
+  renderActiveTabs();
   renderActiveQuestion();
   renderLiveSide(null);
   const token=++monitorToken;
@@ -280,11 +283,39 @@ function openMonitor(task,serverNow){
     try{
       currentResults=await api('/api/teacher/live-tasks/'+encodeURIComponent(task.id)+'/results');
       if(currentResults?.task?.endsAt){const serverMs=new Date(currentResults.serverNow||Date.now()).getTime(),offset=Date.now()-serverMs;liveEndLocal=new Date(currentResults.task.endsAt).getTime()+offset;activeTask={...activeTask,...currentResults.task}}
-      renderLiveSide(currentResults);if(reviewStudentId)renderSubmissionReview()
+      renderLiveSide(currentResults);renderActiveTabs();
+      if(activeLiveView==='submissions'){if(reviewStudentId)renderSubmissionReview();else renderSubmissionInbox()}
     }catch{}
     if(token===monitorToken)setTimeout(poll,2000);
   };
   poll();
+}
+
+function renderActiveTabs(){
+  const nav=q('[data-active-tabs]');if(!nav)return;
+  const count=Number(currentResults?.submittedCount||0);
+  nav.innerHTML=`<button type="button" data-active-view="questions" class="${activeLiveView==='questions'?'active':''}"><span class="eg-live-left-tab-icon">Q</span><strong>Questions</strong></button>
+    <button type="button" data-active-view="submissions" class="${activeLiveView==='submissions'?'active':''}"><span class="eg-live-left-tab-icon">✓</span><strong>Submissions</strong><b>${count}</b></button>`;
+  qa('[data-active-view]').forEach(b=>b.addEventListener('click',()=>showActiveView(b.dataset.activeView)));
+}
+function showActiveView(view){
+  activeLiveView=view==='submissions'?'submissions':'questions';
+  reviewStudentId=null;
+  renderActiveTabs();
+  if(activeLiveView==='submissions')renderSubmissionInbox();else renderActiveQuestion();
+}
+function renderSubmissionInbox(){
+  const main=q('[data-active-main]');if(!main||!activeTask)return;
+  currentAnnotationController?.destroy?.();currentAnnotationController=null;window.EnglishGateWhiteboard?.setLiveAnnotationApi?.(null);
+  const subs=Array.isArray(currentResults?.submissions)?[...currentResults.submissions]:[];
+  subs.sort((a,b)=>new Date(b.submittedAt||0)-new Date(a.submittedAt||0));
+  const roster=Number(currentResults?.rosterCount||classSize(currentClass)||0),submitted=Number(currentResults?.submittedCount||subs.length);
+  main.innerHTML=`<div class="eg-live-pane-head"><div><span class="eg-live-kicker">Live Task</span><h2>Submissions</h2></div><div class="eg-live-submission-summary"><strong>${submitted}/${roster}</strong><span>submitted</span></div></div>
+    <div class="eg-live-submissions-inbox">
+      <div class="eg-live-submissions-note"><strong>Student submissions</strong><span>Open a student to review the actual response. Individual answers may be visible if you are sharing your screen.</span></div>
+      ${subs.length?subs.map(sub=>`<button type="button" class="eg-live-inbox-row" data-inbox-student="${esc(sub.studentId)}"><div><strong>${esc(sub.name||sub.username||'Student')}</strong><small>${sub.timedOut?'Late · ':''}${sub.submittedAt?new Date(sub.submittedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'Submitted'}</small></div><span>${sub.score!==null&&sub.score!==undefined?Number(sub.score)+'%':'Review'}</span><b>Open →</b></button>`).join(''):`<div class="eg-live-empty-submissions"><strong>No submissions yet</strong><span>As students submit, their responses will appear here automatically.</span></div>`}
+    </div>`;
+  qa('[data-inbox-student]').forEach(b=>b.addEventListener('click',()=>openSubmissionReview(b.dataset.inboxStudent)));
 }
 
 function changeActiveQuestion(delta){
@@ -413,11 +444,11 @@ function renderSubmissionReview(){
   if(activeTask.taskType==='writing'){body=`<article class="eg-live-submission-writing"><span>Student writing</span><p>${esc(sub.answers?.text||'No response submitted.')}</p></article>`}
   else{body=`<div class="eg-live-submission-answers">${(activeTask.content?.questions||[]).map((item,i)=>{const raw=sub.answers?.[item.id],state=responseState(item,raw);return `<article class="eg-live-submission-answer ${state.cls}"><header><span>Q${i+1}</span><strong>${esc(item.prompt||'')}</strong><b>${state.label}</b></header><div>${responseText(item,raw)}</div></article>`}).join('')}</div>`}
   const submittedAt=sub.submittedAt?new Date(sub.submittedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';
-  main.innerHTML=`<div class="eg-live-pane-head eg-live-review-head"><div><span class="eg-live-kicker">Private submission review</span><h2>${esc(sub.name||sub.username||'Student')}</h2><p>${submittedAt?'Submitted '+esc(submittedAt):'Submitted'}${sub.timedOut?' · late':''}${sub.score!==null&&sub.score!==undefined?' · '+Number(sub.score)+'%':''}</p></div><button type="button" data-close-submission>← Back to live task</button></div>
+  main.innerHTML=`<div class="eg-live-pane-head eg-live-review-head"><div><span class="eg-live-kicker">Private submission review</span><h2>${esc(sub.name||sub.username||'Student')}</h2><p>${submittedAt?'Submitted '+esc(submittedAt):'Submitted'}${sub.timedOut?' · late':''}${sub.score!==null&&sub.score!==undefined?' · '+Number(sub.score)+'%':''}</p></div><button type="button" data-close-submission>← Back to submissions</button></div>
     <div class="eg-live-private-warning">Student answers are visible here. Use this view privately when screen sharing.</div>
     ${body}
     <div class="eg-live-submission-nav"><button type="button" data-prev-submission ${prev?'':'disabled'}>← Previous student</button><span>${idx+1} of ${ordered.length} submissions</span><button type="button" data-next-submission ${next?'':'disabled'}>Next student →</button></div>`;
-  q('[data-close-submission]')?.addEventListener('click',()=>{reviewStudentId=null;renderActiveQuestion()});
+  q('[data-close-submission]')?.addEventListener('click',()=>{reviewStudentId=null;activeLiveView='submissions';renderActiveTabs();renderSubmissionInbox()});
   q('[data-prev-submission]')?.addEventListener('click',()=>prev&&openSubmissionReview(prev.studentId,true));
   q('[data-next-submission]')?.addEventListener('click',()=>next&&openSubmissionReview(next.studentId,true));
 }
@@ -447,11 +478,10 @@ function renderLiveSide(r){
     <div class="eg-live-mini-metrics"><div><strong>${connected}</strong><span>active</span></div><div><strong>${working}</strong><span>working</span></div><div><strong>${submitted}/${roster}</strong><span>submitted</span></div></div>
     <section class="eg-live-students-block">
       <div class="eg-live-side-title"><strong>Students</strong><span>updates live</span></div>
-      <div class="eg-live-student-list">${sorted.length?sorted.map(s=>s.status==='submitted'?`<button type="button" class="eg-live-student-row eg-live-submission-row is-submitted ${String(reviewStudentId)===String(s.studentId)?'is-open':''}" data-review-student="${esc(s.studentId)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>Submitted${s.timedOut?' · late':''} · View response</small></div>${s.score!==null&&s.score!==undefined?'<b>'+Number(s.score)+'%</b>':'<b>Open</b>'}</button>`:`<div class="eg-live-student-row is-${esc(s.status)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>${statusLabel(s.status)}</small></div></div>`).join(''):'<div class="eg-live-side-empty">Waiting for students to open the activity…</div>'}</div>
+      <div class="eg-live-student-list">${sorted.length?sorted.map(s=>`<div class="eg-live-student-row is-${esc(s.status)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>${statusLabel(s.status)}${s.timedOut?' · late':''}</small></div>${s.status==='submitted'&&s.score!==null&&s.score!==undefined?'<b>'+Number(s.score)+'%</b>':''}</div>`).join(''):'<div class="eg-live-side-empty">Waiting for students to open the activity…</div>'}</div>
     </section>
     ${distribution}
     <div class="eg-live-side-actions"><div class="eg-live-extend-time"><span>Extend time</span><button type="button" data-extend-live="1">+1 min</button><button type="button" data-extend-live="3">+3 min</button><button type="button" data-extend-live="5">+5 min</button></div><button class="eg-live-danger" type="button" data-end-live>End task</button></div>`;
-  qa('[data-review-student]').forEach(b=>b.addEventListener('click',()=>openSubmissionReview(b.dataset.reviewStudent)));
   qa('[data-extend-live]').forEach(b=>b.addEventListener('click',()=>extendTime(Number(b.dataset.extendLive)||1,b)));
   q('[data-end-live]')?.addEventListener('click',endTask);
 }
