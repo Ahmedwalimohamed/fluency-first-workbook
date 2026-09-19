@@ -81,7 +81,7 @@ function joinToken(session,u,moderator){
     aud:appId,iss:appId,sub:host,room:session.room_name,
     context:{user:{id:String(u.id),name:String(u.name||u.username||'EnglishGate user'),moderator:Boolean(moderator)}}
   };
-  return jwt.sign(payload,String(process.env.JITSI_APP_SECRET),{algorithm:'HS256',expiresIn:'2h'});
+  return jwt.sign(payload,String(process.env.JITSI_APP_SECRET),{algorithm:'HS256',expiresIn:'15m'});
 }
 function publicSession(row){return {id:row.id,classId:row.class_id,roomName:row.room_name,status:row.status,startedAt:row.started_at,endedAt:row.ended_at||null}}
 function joinPayload(row,u,moderator){return {session:publicSession(row),domain:domainHost(),jwt:joinToken(row,u,moderator),controlToken:controlToken(u,row,moderator?'teacher':'student'),displayName:String(u.name||u.username||'EnglishGate user'),moderator:Boolean(moderator)}}
