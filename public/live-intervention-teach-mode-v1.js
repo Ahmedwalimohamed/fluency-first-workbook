@@ -4,6 +4,8 @@
 
 let currentClass=null,currentDraft=null,activeTask=null,currentHost=null,currentResults=null;
 let currentQuestionIndex=0,monitorToken=0,liveEndLocal=0,currentAnnotationController=null,reviewStudentId=null,activeLiveView='questions',viewingRecentTask=false;
+let teacherLiveToken='';
+try{teacherLiveToken=sessionStorage.getItem('englishgateTeacherLiveToken')||''}catch{}
 const revealedByTask=new Map();
 const annotationStates=new Map();
 
@@ -25,6 +27,11 @@ function revealSet(taskId){
   const id=String(taskId||'draft');
   if(!revealedByTask.has(id))revealedByTask.set(id,new Set());
   return revealedByTask.get(id);
+}
+function teacherLiveHeaders(){return teacherLiveToken?{'X-Live-Task-Token':teacherLiveToken}:{}}
+function rememberTeacherLiveToken(token){
+  teacherLiveToken=String(token||'');
+  try{if(teacherLiveToken)sessionStorage.setItem('englishgateTeacherLiveToken',teacherLiveToken);else sessionStorage.removeItem('englishgateTeacherLiveToken')}catch{}
 }
 function promptElements(){
   return {
@@ -77,7 +84,8 @@ async function openInWhiteboard(target){
   setHtml('<div class="eg-live-loading"><strong>Opening Live Task…</strong><span>Connecting to the current class.</span></div>');
   try{
     currentClass=await resolveTeachClass();
-    const active=await api('/api/teacher/live-tasks/current?classId='+encodeURIComponent(currentClass.id));
+    const active=await api('/api/teacher/live-tasks/current?classId='+encodeURIComponent(currentClass.id),{headers:teacherLiveHeaders()});
+    if(active?.teacherLiveToken)rememberTeacherLiveToken(active.teacherLiveToken);
     if(active?.task)return openMonitor(active.task,active.serverNow,false);
     if(active?.recentTask)return openMonitor(active.recentTask,active.serverNow,true);
     openBuilder();
@@ -249,7 +257,7 @@ async function launchDraft(){
     const r=await api('/api/teacher/live-tasks',{method:'POST',body:JSON.stringify({
       classId:currentClass.id,requestText:currentDraft.requestText,taskType:currentDraft.taskType,title,durationSeconds,content
     })});
-    currentDraft=null;openMonitor(r.task,r.serverNow);
+    if(r?.teacherLiveToken)rememberTeacherLiveToken(r.teacherLiveToken);currentDraft=null;openMonitor(r.task,r.serverNow);
   }catch(e){
     if(feedback){feedback.textContent=e.message;feedback.classList.add('is-error')}
     btn.disabled=false;btn.textContent='Send to students';
@@ -282,7 +290,7 @@ function openMonitor(task,serverNow,recent=false){
   const poll=async()=>{
     if(token!==monitorToken)return;
     try{
-      currentResults=await api('/api/teacher/live-tasks/'+encodeURIComponent(task.id)+'/results');
+      currentResults=await api('/api/teacher/live-tasks/'+encodeURIComponent(task.id)+'/results',{headers:teacherLiveHeaders()});
       if(currentResults?.task?.endsAt){const serverMs=new Date(currentResults.serverNow||Date.now()).getTime(),offset=Date.now()-serverMs;liveEndLocal=new Date(currentResults.task.endsAt).getTime()+offset;activeTask={...activeTask,...currentResults.task}}
       renderLiveSide(currentResults);renderActiveTabs();
       if(activeLiveView==='submissions'){if(reviewStudentId)renderSubmissionReview();else renderSubmissionInbox()}
@@ -493,7 +501,7 @@ async function extendTime(minutes,button){
   const buttons=qa('[data-extend-live]');buttons.forEach(b=>b.disabled=true);
   const oldLabel=button?.textContent;if(button)button.textContent='Adding…';
   try{
-    const r=await api('/api/teacher/live-tasks/'+encodeURIComponent(activeTask.id)+'/extend',{method:'PATCH',body:JSON.stringify({minutes})});
+    const r=await api('/api/teacher/live-tasks/'+encodeURIComponent(activeTask.id)+'/extend',{method:'PATCH',headers:teacherLiveHeaders(),body:JSON.stringify({minutes})});
     if(r?.task?.endsAt){
       activeTask={...activeTask,...r.task};
       const serverMs=new Date(r.serverNow||Date.now()).getTime();
@@ -508,7 +516,7 @@ async function extendTime(minutes,button){
 
 async function endTask(){
   if(!activeTask||!confirm('End this live task now?'))return;
-  try{await api('/api/teacher/live-tasks/'+encodeURIComponent(activeTask.id)+'/close',{method:'PATCH'});stopPolling();activeTask=null;openBuilder()}catch(e){
+  try{await api('/api/teacher/live-tasks/'+encodeURIComponent(activeTask.id)+'/close',{method:'PATCH',headers:teacherLiveHeaders()});stopPolling();activeTask=null;openBuilder()}catch(e){
     const status=promptElements().status;if(status)status.textContent=e.message;
   }
 }
