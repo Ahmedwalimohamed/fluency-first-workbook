@@ -9,6 +9,19 @@ const isTeacher=()=>window.session?.role==='teacher'||String(document.querySelec
 const fmt=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
 function classFromId(id){return (getDb()?.classes||[]).find(c=>c.id===id)||null}
 async function resolveTeachClass(){
+  // The TEACH lesson already stores its active class in the in-memory teacher context
+  // before this toolbar is rendered. Prefer that source so Live Task works immediately
+  // and does not depend on the per-class context mirror being populated first.
+  const localClassId=String(getDb()?.teacherContext?.classId||'').trim();
+  if(localClassId){
+    const localClass=classFromId(localClassId);
+    if(localClass){
+      if(localClass.approval_status&&localClass.approval_status!=='approved')throw new Error('This class is waiting for admin approval.');
+      return localClass;
+    }
+  }
+
+  // Fallback for resumed sessions / older clients that only have the server-side context.
   const r=await api('/api/teacher/class-contexts');
   const ctx=r?.contexts?.[0];
   if(!ctx?.classId)throw new Error('Open a class in TEACH mode first.');
