@@ -113,7 +113,7 @@ function studentPayload(task){
  return {answers};
 }
 
-async function submitStudent(task,automatic){async function submitStudent(task,automatic){
+async function submitStudent(task,automatic){
  if(studentSubmitting)return;studentSubmitting=true;const btn=$id('studentLiveSubmit'),msg=$id('studentLiveMessage');if(btn){btn.disabled=true;btn.textContent=automatic?'Time ended · saving…':'Submitting…'}
  try{const r=await api('/api/student/live-tasks/'+encodeURIComponent(task.id)+'/submit',{method:'POST',body:JSON.stringify(studentPayload(task))});clearStudentTimer();showStudentResult(task,r)}catch(e){studentSubmitting=false;if(msg)msg.innerHTML=`<div class="feedback bad">${esc(e.message)}</div>`;if(btn){btn.disabled=false;btn.textContent='Submit live task'}}
 }
@@ -131,7 +131,7 @@ function renderStudentExistingResult(task,sub){
  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${hasScore?`<div class="student-live-score"><strong>${Number(sub.score)}%</strong><span>${Number(sub.correctCount||0)} of ${Number(sub.totalCount||0)} auto-graded items correct</span></div>`:'<div class="student-live-score"><strong>Submitted</strong><span>Your response was sent to your teacher.</span></div>'}<button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
  $id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML=''};
 }
-function schedule(){function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;enhanceTeacherClasses()})}
+function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;enhanceTeacherClasses()})}
 function boot(){enhanceTeacherClasses();new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true});setTimeout(pollStudent,1500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
