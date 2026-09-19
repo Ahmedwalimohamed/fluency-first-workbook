@@ -296,7 +296,6 @@ function renderLiveSide(r){
     const max=Math.max(1,...choices),revealed=revealSet(activeTask.id).has(item.id),answer=Number(item.answer);
     distribution=`<section class="eg-live-response-block"><div class="eg-live-side-title"><strong>Responses · Q${currentQuestionIndex+1}</strong><span>${Number(stat?.answered||0)} answers</span></div>
       <div class="eg-live-choice-bars">${item.options.map((o,j)=>`<div class="eg-live-choice-row ${revealed&&j===answer?'is-correct':''}"><span>${String.fromCharCode(65+j)}</span><div><i style="width:${Math.round((Number(choices[j]||0)/max)*100)}%"></i></div><strong>${Number(choices[j]||0)}</strong></div>`).join('')}</div>
-      <div class="eg-live-understanding">${revealed&&stat?<><strong></strong></>:''}</div>
       ${revealed&&stat?`<div class="eg-live-understanding"><strong>${stat.correctPct}% correct</strong><span>Use this as one piece of classroom evidence, not a final mastery judgment.</span></div>`:''}
     </section>`;
   }
