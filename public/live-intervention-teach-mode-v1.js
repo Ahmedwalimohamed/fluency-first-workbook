@@ -49,21 +49,26 @@ function setPromptBusy(busy,status=''){
 }
 
 async function resolveTeachClass(){
-  const localClassId=String(getDb()?.teacherContext?.classId||'').trim();
-  if(localClassId){
-    const localClass=classFromId(localClassId);
-    if(localClass){
-      if(localClass.approval_status&&localClass.approval_status!=='approved')throw new Error('This class is waiting for admin approval.');
-      return localClass;
+  const candidates=[];
+  const dbClassId=String(getDb()?.teacherContext?.classId||'').trim();
+  if(dbClassId)candidates.push(dbClassId);
+  try{
+    if(typeof activeTeacherClassId!=='undefined'&&String(activeTeacherClassId||'').trim())candidates.push(String(activeTeacherClassId).trim());
+  }catch{}
+  try{
+    if(typeof teacherResumeContext==='function'){
+      const resumed=teacherResumeContext();
+      if(resumed?.c?.id)candidates.push(String(resumed.c.id).trim());
+      else if(resumed?.ctx?.classId)candidates.push(String(resumed.ctx.classId).trim());
     }
+  }catch{}
+  for(const classId of [...new Set(candidates.filter(Boolean))]){
+    const c=classFromId(classId);
+    if(!c)continue;
+    if(c.approval_status&&c.approval_status!=='approved')throw new Error('This class is waiting for admin approval.');
+    return c;
   }
-  const r=await api('/api/teacher/class-contexts');
-  const ctx=r?.contexts?.[0];
-  if(!ctx?.classId)throw new Error('Open a class in TEACH mode first.');
-  const c=classFromId(ctx.classId);
-  if(!c)throw new Error('The current teaching class could not be found.');
-  if(c.approval_status&&c.approval_status!=='approved')throw new Error('This class is waiting for admin approval.');
-  return c;
+  throw new Error('Open a class in TEACH mode first.');
 }
 
 async function openInWhiteboard(target){
