@@ -80,18 +80,22 @@ function clear(){
   boardClear();
 }
 function setMode(next){
-  mode=next==='live-task'?'live-task':'board';
+  mode=next==='live-task'?'live-task':next==='meet'?'meet':'board';
   if(!overlay)return;
   overlay.classList.toggle('is-live-task',mode==='live-task');
-  const board=overlay.querySelector('[data-wb-board-view]'),live=overlay.querySelector('[data-wb-live-view]'),command=overlay.querySelector('[data-wb-live-command]');
+  overlay.classList.toggle('is-meet',mode==='meet');
+  const board=overlay.querySelector('[data-wb-board-view]'),live=overlay.querySelector('[data-wb-live-view]'),meet=overlay.querySelector('[data-wb-meet-view]'),command=overlay.querySelector('[data-wb-live-command]'),tools=overlay.querySelector('.eg-whiteboard-tools');
   if(board)board.hidden=mode!=='board';
   if(live)live.hidden=mode!=='live-task';
+  if(meet)meet.hidden=mode!=='meet';
   if(command)command.hidden=mode!=='live-task';
+  if(tools)tools.hidden=mode==='meet';
   overlay.querySelectorAll('[data-wb-mode]').forEach(b=>b.classList.toggle('active',b.dataset.wbMode===mode));
   if(mode==='board'){liveAnnotationApi=null;requestAnimationFrame(boardResize)}
 }
 function showCanvas(){
   window.EnglishGateLiveTask?.stopPolling?.();
+  window.EnglishGateJitsi?.leaveTeacherView?.();
   setMode('board');
 }
 async function openLiveTask(){
@@ -105,15 +109,28 @@ async function openLiveTask(){
   }
   await window.EnglishGateLiveTask.openInWhiteboard(host);
 }
+async function openMeet(){
+  window.EnglishGateLiveTask?.stopPolling?.();
+  setMode('meet');
+  const host=overlay?.querySelector('#egWhiteboardMeetHost');
+  if(!host)return;
+  if(!window.EnglishGateJitsi?.openTeacher){
+    host.innerHTML='<div class="eg-jitsi-state"><strong>Loading Live Class…</strong><span>Please wait.</span></div>';
+    setTimeout(()=>window.EnglishGateJitsi?.openTeacher?.(host),250);
+    return;
+  }
+  await window.EnglishGateJitsi.openTeacher(host);
+}
 function close(){
   window.EnglishGateLiveTask?.stopPolling?.();
+  window.EnglishGateJitsi?.leaveTeacherView?.();
   if(overlay)overlay.hidden=true;
 }
 
 function open(){
   if(overlay){
     overlay.hidden=false;
-    if(mode==='live-task')openLiveTask();else{setMode('board');requestAnimationFrame(boardResize)}
+    if(mode==='live-task')openLiveTask();else if(mode==='meet')openMeet();else{setMode('board');requestAnimationFrame(boardResize)}
     return;
   }
   overlay=document.createElement('section');
@@ -125,7 +142,7 @@ function open(){
       <nav class="eg-whiteboard-tabs" aria-label="Board views">
         <button type="button" data-wb-close>Lesson</button>
         <button type="button" data-wb-mode="board" class="active">Whiteboard</button>
-        <button type="button" data-wb-mode="live-task"><span aria-hidden="true">⚡</span> Live Task</button>
+        <button type="button" data-wb-mode="live-task"><span aria-hidden="true">⚡</span> Live Task</button>\n        <button type="button" data-wb-mode="meet"><span aria-hidden="true">◉</span> Live Class</button>
       </nav>
       <div class="eg-whiteboard-tools" role="toolbar" aria-label="Annotation tools">
         <button type="button" data-wb-tool="pointer">Pointer</button>
@@ -176,7 +193,7 @@ function open(){
   overlay.querySelector('[data-wb-undo]').onclick=undo;
   overlay.querySelector('[data-wb-clear]').onclick=clear;
   overlay.querySelectorAll('[data-wb-close]').forEach(b=>b.onclick=close);
-  overlay.querySelectorAll('[data-wb-mode]').forEach(b=>b.onclick=()=>b.dataset.wbMode==='live-task'?openLiveTask():showCanvas);
+  overlay.querySelectorAll('[data-wb-mode]').forEach(b=>b.onclick=()=>b.dataset.wbMode==='live-task'?openLiveTask():b.dataset.wbMode==='meet'?openMeet():showCanvas);
   window.addEventListener('resize',()=>{if(mode==='board'&&!overlay.hidden)requestAnimationFrame(boardResize)},{passive:true});
   selectTool('pen');
 }
@@ -190,8 +207,9 @@ function inject(){
   });
 }
 window.EnglishGateWhiteboard={
-  open,setMode,showCanvas,
+  open,setMode,showCanvas,openMeet,
   getLiveTaskHost:()=>overlay?.querySelector('#egWhiteboardLiveTaskHost')||null,
+  getMeetHost:()=>overlay?.querySelector('#egWhiteboardMeetHost')||null,
   getLivePromptInput:()=>overlay?.querySelector('#egWhiteboardLivePrompt')||null,
   getLiveGenerateButton:()=>overlay?.querySelector('#egWhiteboardGenerateLive')||null,
   getLiveStatus:()=>overlay?.querySelector('#egWhiteboardLiveStatus')||null,
