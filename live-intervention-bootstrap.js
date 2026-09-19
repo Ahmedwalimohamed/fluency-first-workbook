@@ -342,4 +342,4 @@ express.application.get=function liveInterventionGet(route,...handlers){install(
 express.application.post=function liveInterventionPost(route,...handlers){install(this);return inheritedPost.call(this,route,...handlers)};
 express.application.patch=function liveInterventionPatch(route,...handlers){install(this);return inheritedPatch.call(this,route,...handlers)};
 
-require('./ai-content-editor-generate-v2-bootstrap.js');
+require('./jitsi-classroom-bootstrap.js');
