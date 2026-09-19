@@ -379,16 +379,16 @@ function responseText(item,raw){
   const type=item?.type||'multiple_choice';
   if(raw===null||raw===undefined||raw==='')return '<em>No response</em>';
   if(isChoice(type)){const i=Number(raw),letter=Number.isInteger(i)?String.fromCharCode(65+i):'',label=Number.isInteger(i)?item.options?.[i]:'';return esc((letter?letter+'. ':'')+(label||String(raw)))}
-  if(type==='matching'&&raw&&typeof raw==='object'&&!Array.isArray(raw))return Object.entries(raw).map(([a,b])=>\`<span>\${esc(a)} → \${esc(b)}</span>\`).join('');
-  if(type==='ordering'&&Array.isArray(raw))return raw.map((x,i)=>\`<span>\${i+1}. \${esc(x)}</span>\`).join('');
-  if(isSpeaking(type)&&raw&&typeof raw==='object')return \`<span>\${raw.done?'Completed':'Not completed'}\${raw.note?' · '+esc(raw.note):''}</span>\`;
+  if(type==='matching'&&raw&&typeof raw==='object'&&!Array.isArray(raw))return Object.entries(raw).map(([a,b])=>`<span>${esc(a)} → ${esc(b)}</span>`).join('');
+  if(type==='ordering'&&Array.isArray(raw))return raw.map((x,i)=>`<span>${i+1}. ${esc(x)}</span>`).join('');
+  if(isSpeaking(type)&&raw&&typeof raw==='object')return `<span>${raw.done?'Completed':'Not completed'}${raw.note?' · '+esc(raw.note):''}</span>`;
   return esc(typeof raw==='string'?raw:JSON.stringify(raw));
 }
 function responseState(item,raw){
   const type=item?.type||'multiple_choice';
   if(raw===null||raw===undefined||raw==='')return {label:'No response',cls:'is-empty'};
   if(isChoice(type)){const ok=Number(raw)===Number(item.answer);return {label:ok?'Correct':'Incorrect',cls:ok?'is-correct':'is-wrong'}}
-  if(isText(type)&&Array.isArray(item.acceptedAnswers)&&item.acceptedAnswers.length){const n=x=>String(x??'').trim().toLowerCase().replace(/\\s+/g,' '),ok=item.acceptedAnswers.some(a=>n(a)===n(raw));return {label:ok?'Correct':'Incorrect',cls:ok?'is-correct':'is-wrong'}}
+  if(isText(type)&&Array.isArray(item.acceptedAnswers)&&item.acceptedAnswers.length){const n=x=>String(x??'').trim().toLowerCase().replace(/\s+/g,' '),ok=item.acceptedAnswers.some(a=>n(a)===n(raw));return {label:ok?'Correct':'Incorrect',cls:ok?'is-correct':'is-wrong'}}
   if(type==='matching'&&raw&&typeof raw==='object'){const ok=(item.pairs||[]).every(p=>String(raw[p.left]??'')===String(p.right));return {label:ok?'Correct':'Incorrect',cls:ok?'is-correct':'is-wrong'}}
   if(type==='ordering'&&Array.isArray(raw)){const target=item.correctOrder||[],ok=raw.length===target.length&&raw.every((x,i)=>String(x)===String(target[i]));return {label:ok?'Correct':'Incorrect',cls:ok?'is-correct':'is-wrong'}}
   return {label:'Teacher review',cls:'is-review'};
@@ -405,13 +405,13 @@ function renderSubmissionReview(){
   if(!sub){reviewStudentId=null;renderActiveQuestion();return}
   const ordered=[...subs].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))),idx=ordered.findIndex(x=>String(x.studentId)===String(reviewStudentId)),prev=ordered[idx-1],next=ordered[idx+1];
   let body='';
-  if(activeTask.taskType==='writing'){body=\`<article class="eg-live-submission-writing"><span>Student writing</span><p>\${esc(sub.answers?.text||'No response submitted.')}</p></article>\`}
-  else{body=\`<div class="eg-live-submission-answers">\${(activeTask.content?.questions||[]).map((item,i)=>{const raw=sub.answers?.[item.id],state=responseState(item,raw);return \`<article class="eg-live-submission-answer \${state.cls}"><header><span>Q\${i+1}</span><strong>\${esc(item.prompt||'')}</strong><b>\${state.label}</b></header><div>\${responseText(item,raw)}</div></article>\`}).join('')}</div>\`}
+  if(activeTask.taskType==='writing'){body=`<article class="eg-live-submission-writing"><span>Student writing</span><p>${esc(sub.answers?.text||'No response submitted.')}</p></article>`}
+  else{body=`<div class="eg-live-submission-answers">${(activeTask.content?.questions||[]).map((item,i)=>{const raw=sub.answers?.[item.id],state=responseState(item,raw);return `<article class="eg-live-submission-answer ${state.cls}"><header><span>Q${i+1}</span><strong>${esc(item.prompt||'')}</strong><b>${state.label}</b></header><div>${responseText(item,raw)}</div></article>`}).join('')}</div>`}
   const submittedAt=sub.submittedAt?new Date(sub.submittedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';
-  main.innerHTML=\`<div class="eg-live-pane-head eg-live-review-head"><div><span class="eg-live-kicker">Private submission review</span><h2>\${esc(sub.name||sub.username||'Student')}</h2><p>\${submittedAt?'Submitted '+esc(submittedAt):'Submitted'}\${sub.timedOut?' · late':''}\${sub.score!==null&&sub.score!==undefined?' · '+Number(sub.score)+'%':''}</p></div><button type="button" data-close-submission>← Back to live task</button></div>
+  main.innerHTML=`<div class="eg-live-pane-head eg-live-review-head"><div><span class="eg-live-kicker">Private submission review</span><h2>${esc(sub.name||sub.username||'Student')}</h2><p>${submittedAt?'Submitted '+esc(submittedAt):'Submitted'}${sub.timedOut?' · late':''}${sub.score!==null&&sub.score!==undefined?' · '+Number(sub.score)+'%':''}</p></div><button type="button" data-close-submission>← Back to live task</button></div>
     <div class="eg-live-private-warning">Student answers are visible here. Use this view privately when screen sharing.</div>
-    \${body}
-    <div class="eg-live-submission-nav"><button type="button" data-prev-submission \${prev?'':'disabled'}>← Previous student</button><span>\${idx+1} of \${ordered.length} submissions</span><button type="button" data-next-submission \${next?'':'disabled'}>Next student →</button></div>\`;
+    ${body}
+    <div class="eg-live-submission-nav"><button type="button" data-prev-submission ${prev?'':'disabled'}>← Previous student</button><span>${idx+1} of ${ordered.length} submissions</span><button type="button" data-next-submission ${next?'':'disabled'}>Next student →</button></div>`;
   q('[data-close-submission]')?.addEventListener('click',()=>{reviewStudentId=null;renderActiveQuestion()});
   q('[data-prev-submission]')?.addEventListener('click',()=>prev&&openSubmissionReview(prev.studentId,true));
   q('[data-next-submission]')?.addEventListener('click',()=>next&&openSubmissionReview(next.studentId,true));
@@ -442,7 +442,7 @@ function renderLiveSide(r){
     <div class="eg-live-mini-metrics"><div><strong>${connected}</strong><span>active</span></div><div><strong>${working}</strong><span>working</span></div><div><strong>${submitted}/${roster}</strong><span>submitted</span></div></div>
     <section class="eg-live-students-block">
       <div class="eg-live-side-title"><strong>Students</strong><span>updates live</span></div>
-      <div class="eg-live-student-list">${sorted.length?sorted.map(s=>s.status==='submitted'?\`<button type="button" class="eg-live-student-row eg-live-submission-row is-submitted \${String(reviewStudentId)===String(s.studentId)?'is-open':''}" data-review-student="\${esc(s.studentId)}"><span class="eg-live-status-dot"></span><div><strong>\${esc(s.name)}</strong><small>Submitted\${s.timedOut?' · late':''} · View response</small></div>\${s.score!==null&&s.score!==undefined?'<b>'+Number(s.score)+'%</b>':'<b>Open</b>'}</button>\`:\`<div class="eg-live-student-row is-\${esc(s.status)}"><span class="eg-live-status-dot"></span><div><strong>\${esc(s.name)}</strong><small>\${statusLabel(s.status)}</small></div></div>\`).join(''):'<div class="eg-live-side-empty">Waiting for students to open the activity…</div>'}</div></div>
+      <div class="eg-live-student-list">${sorted.length?sorted.map(s=>s.status==='submitted'?`<button type="button" class="eg-live-student-row eg-live-submission-row is-submitted ${String(reviewStudentId)===String(s.studentId)?'is-open':''}" data-review-student="${esc(s.studentId)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>Submitted${s.timedOut?' · late':''} · View response</small></div>${s.score!==null&&s.score!==undefined?'<b>'+Number(s.score)+'%</b>':'<b>Open</b>'}</button>`:`<div class="eg-live-student-row is-${esc(s.status)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>${statusLabel(s.status)}</small></div></div>`).join(''):'<div class="eg-live-side-empty">Waiting for students to open the activity…</div>'}</div></div>
     </section>
     ${distribution}
     <div class="eg-live-side-actions"><div class="eg-live-extend-time"><span>Extend time</span><button type="button" data-extend-live="1">+1 min</button><button type="button" data-extend-live="3">+3 min</button><button type="button" data-extend-live="5">+5 min</button></div><button class="eg-live-danger" type="button" data-end-live>End task</button></div>`;
