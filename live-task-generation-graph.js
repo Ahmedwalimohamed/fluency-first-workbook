@@ -12,8 +12,13 @@ function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
 function clean(v,max=1000){return String(v??'').trim().replace(/\s+/g,' ').slice(0,max)}
 function titleCase(s){return clean(s,120).replace(/\b\w/g,c=>c.toUpperCase())}
 function parseCount(request){
-  const m=String(request||'').match(/\b(\d{1,2})\s*(?:questions?|items?|tasks?|mcqs?)\b/i);
-  return clamp(Number(m?.[1]||5),1,10);
+  const text=String(request||'');
+  const direct=text.match(/\b(\d{1,2})\s*(?:mcqs?|questions?|items?|prompts?|sentences?|activities?|tasks?)\b/i);
+  if(direct)return clamp(Number(direct[1]),1,10);
+  const nums=[...text.matchAll(/\b(\d{1,2})\b/g)].filter(m=>!/^\s*(?:minutes?|mins?|min)\b/i.test(text.slice((m.index||0)+m[0].length)));
+  if(nums.length)return clamp(Number(nums[0][1]),1,10);
+  if(/\b(?:a|an|one)\s+(?:matching|ordering|pair discussion|teacher[- ]?led speaking|individual speaking|speaking|live|quick)\s+(?:task|activity|check|prompt)\b/i.test(text)||/\bpair discussion\b/i.test(text))return 1;
+  return 5;
 }
 function parseMinutes(request,fallback=5){
   const m=String(request||'').match(/\b(\d{1,2})\s*(?:minutes?|mins?|min)\b/i);
@@ -22,7 +27,7 @@ function parseMinutes(request,fallback=5){
 function extractTopic(request){
   let raw=clean(request,400).replace(/(?:[,.!?]?\s*)\b\d{1,2}\s*(?:minutes?|mins?|min)\b[.!?]*/ig,'').trim();
   raw=raw.replace(/[.!?]+$/,'').trim();
-  const m=raw.match(/(?:about|on|for)\s+(.+)$/i);
+  const m=raw.match(/\b(?:about|on|for)\b\s+(.+)$/i);
   return clean(m?.[1]||raw.replace(/^(?:create|make|give|generate|prepare)\s+(?:me\s+)?/i,''),'120')||'the current lesson';
 }
 function inferRequestedTypes(request){
@@ -44,7 +49,10 @@ function inferRequestedTypes(request){
   if(/\bspeaking\b/.test(t)&&!hits.some(x=>SPEAKING_TYPES.has(x)))add('individual_speaking');
   return hits.length?hits:['multiple_choice'];
 }
-function isWritingRequest(request){return /\b(write|writing|paragraph|essay|journal|composition)\b/i.test(String(request||''))}
+function isWritingRequest(request){
+  const t=String(request||'');
+  return /\bwriting\s+(?:task|activity|prompt|assignment)\b/i.test(t)||/\bwrite\s+(?:a|an|the|\d+)?\s*(?:paragraph|essay|journal|composition|response)\b/i.test(t)||/\b(?:paragraph|essay|journal|composition)\s+(?:task|activity|prompt|assignment)\b/i.test(t);
+}
 
 function parseRequestNode(input){
   const request=clean(input.request,800);
