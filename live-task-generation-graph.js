@@ -28,7 +28,7 @@ function extractTopic(request){
   let raw=clean(request,400).replace(/(?:[,.!?]?\s*)\b\d{1,2}\s*(?:minutes?|mins?|min)\b[.!?]*/ig,'').trim();
   raw=raw.replace(/[.!?]+$/,'').trim();
   const m=raw.match(/\b(?:about|on|for)\b\s+(.+)$/i);
-  return clean(m?.[1]||raw.replace(/^(?:create|make|give|generate|prepare)\s+(?:me\s+)?/i,''),'120')||'the current lesson';
+  return clean(m?.[1]||raw.replace(/^(?:create|make|give|generate|prepare)\s+(?:me\s+)?/i,''),120)||'the current lesson';
 }
 function inferRequestedTypes(request){
   const t=String(request||'').toLowerCase();
@@ -118,7 +118,7 @@ async function aiGenerateNode(state){
       method:'POST',
       headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:process.env.LIVE_TASK_MODEL||'gpt-5-mini',
+        model:process.env.LIVE_TASK_MODEL||'gpt-5.6-luna',
         input:[
           {role:'system',content:[{type:'input_text',text:systemPrompt(state)}]},
           {role:'user',content:[{type:'input_text',text:userPrompt(state)}]}
