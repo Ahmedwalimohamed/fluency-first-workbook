@@ -86,7 +86,10 @@ async function submitStudent(task,automatic){
  try{const r=await api('/api/student/live-tasks/'+encodeURIComponent(task.id)+'/submit',{method:'POST',body:JSON.stringify(studentPayload(task))});clearStudentTimer();showStudentResult(task,r)}catch(e){studentSubmitting=false;if(msg)msg.innerHTML=`<div class="feedback bad">${esc(e.message)}</div>`;if(btn){btn.disabled=false;btn.textContent='Submit live task'}}
 }
 function showStudentResult(task,r){
- studentResultShowing=true;const root=ensureStudentRoot();let detail='';if(task.taskType==='mcq'){detail=`<div class="student-live-score"><strong>${r.score}%</strong><span>${r.correctCount} of ${r.totalCount} correct</span></div><div class="student-live-review">${(r.review||[]).map((x,i)=>`<div class="${x.correct?'good':'bad'}"><strong>Q${i+1}: ${x.correct?'Correct':'Review'}</strong>${x.explanation?`<span>${esc(x.explanation)}</span>`:''}</div>`).join('')}</div>`}else detail='<div class="student-live-score"><strong>Submitted</strong><span>Your writing was sent to your teacher.</span></div>';
+ studentResultShowing=true;const root=ensureStudentRoot();
+ const detail=task.taskType==='mcq'
+   ?`<div class="student-live-score"><strong>${r.score}%</strong><span>${r.correctCount} of ${r.totalCount} correct</span></div><div class="student-live-progress"><span>Your answers are submitted. The teacher controls when the correct answers are revealed.</span></div>`
+   :'<div class="student-live-score"><strong>Submitted</strong><span>Your writing was sent to your teacher.</span></div>';
  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${detail}<div class="feedback ${r.timedOut?'bad':'good'}">${esc(r.message||'Submitted.')}</div><button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
  $id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML='';studentTaskId=task.id};
 }
