@@ -99,6 +99,32 @@ async function submit(task,automatic){
   }
 }
 
+function mySubmissionHtml(task,answers){
+  if(!answers||typeof answers!=='object')return '';
+  if(task.taskType==='writing'){
+    const text=String(answers.text||'').trim();
+    if(!text)return '';
+    return `<div class="student-live-my-submission"><span>My submission</span><p>${esc(text)}</p></div>`;
+  }
+  const rows=(task.content?.questions||[]).map((q,i)=>{
+    const raw=answers[q.id];
+    if(raw===undefined||raw===null||raw==='')return '';
+    let value='';
+    if(q.type==='multiple_choice'||q.type==='true_false'){
+      const n=Number(raw),label=Number.isInteger(n)?q.options?.[n]:'';
+      value=(Number.isInteger(n)?String.fromCharCode(65+n)+'. ':'')+(label||String(raw));
+    }else if(q.type==='matching'&&raw&&typeof raw==='object'){
+      value=Object.entries(raw).map(([a,b])=>a+' → '+b).join('; ');
+    }else if(q.type==='ordering'&&Array.isArray(raw)){
+      value=raw.map((x,j)=>(j+1)+'. '+x).join(' | ');
+    }else if(raw&&typeof raw==='object'){
+      value=raw.note||'Completed';
+    }else value=String(raw);
+    return `<div><strong>Q${i+1}</strong><span>${esc(value)}</span></div>`;
+  }).filter(Boolean).join('');
+  return rows?`<div class="student-live-my-submission"><span>My submission</span><div class="student-live-my-answers">${rows}</div></div>`:'';
+}
+
 function resultDetail(score,correctCount,totalCount){
   const hasScore=score!==null&&score!==undefined&&Number.isFinite(Number(score));
   return hasScore
@@ -108,13 +134,13 @@ function resultDetail(score,correctCount,totalCount){
 function showResult(task,r){
   studentResultShowing=true;
   const root=ensureRoot();
-  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${resultDetail(r.score,r.correctCount,r.totalCount)}<div class="feedback ${r.timedOut?'bad':'good'}">${esc(r.message||'Submitted.')}</div><button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
+  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${resultDetail(r.score,r.correctCount,r.totalCount)}${mySubmissionHtml(task,r.answers)}<div class="feedback ${r.timedOut?'bad':'good'}">${esc(r.message||'Submitted.')}</div><button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
   $id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML='';studentTaskId=task.id};
 }
 function showExistingResult(task,sub){
   studentResultShowing=true;
   const root=ensureRoot();
-  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${resultDetail(sub.score,sub.correctCount,sub.totalCount)}<button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
+  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${resultDetail(sub.score,sub.correctCount,sub.totalCount)}${mySubmissionHtml(task,sub.answers)}<button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
   $id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML=''};
 }
 

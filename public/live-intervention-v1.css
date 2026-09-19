@@ -12,3 +12,12 @@
 .student-live-speaking-criteria{display:grid;gap:4px;padding:10px 12px;border-radius:10px;background:#f8fafc;color:#475569}
 .student-live-speaking-done{margin-top:2px!important;background:#f0fdf4!important;border-color:#bbf7d0!important}
 @media(max-width:600px){.student-live-match-row,.student-live-order-row{grid-template-columns:1fr}}
+
+.student-live-my-submission{width:100%;display:grid;gap:8px;text-align:left;border:1px solid #dbeafe;background:#f8fbff;border-radius:14px;padding:14px 16px}
+.student-live-my-submission>span{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:#2563eb}
+.student-live-my-submission>p{margin:0;white-space:pre-wrap;line-height:1.6;color:#0f172a}
+.student-live-my-answers{display:grid;gap:8px}
+.student-live-my-answers>div{display:grid;grid-template-columns:36px minmax(0,1fr);gap:8px;align-items:start;padding:8px 0;border-top:1px solid #e2e8f0}
+.student-live-my-answers>div:first-child{border-top:0}
+.student-live-my-answers strong{font-size:12px;color:#64748b}
+.student-live-my-answers span{font-size:13px;color:#0f172a;line-height:1.45}
