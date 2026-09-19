@@ -101,17 +101,16 @@ function install(app){
       if(!c)return res.status(404).json({error:'Class not found.'});
       const q=await pool.query(`select * from jitsi_class_sessions where class_id=$1 and teacher_id=$2 and status='active' order by started_at desc limit 1`,[classId,u.id]);
       res.set('Cache-Control','no-store');
-      if(!q.rowCount)return res.json({session:null,configured:configured()});
+      if(!q.rowCount)return res.json({session:null,configured:configured(),controlToken:controlToken(u,{id:'',class_id:classId},'teacher')});
       if(!configured())return res.status(503).json({error:'Jitsi is not configured on this EnglishGate deployment.'});
       res.json({...joinPayload(q.rows[0],u,true),configured:true});
     }catch(e){console.error('jitsi teacher current error',e);res.status(500).json({error:'Live classroom status is temporarily unavailable.'})}
   });
 
   nativePost.call(app,'/api/teacher/jitsi-session/start',async(req,res)=>{
-    const u=user(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});
     if(!configured())return res.status(503).json({error:'Jitsi is not configured yet. Add JITSI_DOMAIN, JITSI_APP_ID and JITSI_APP_SECRET.'});
     try{
-      await ensureSchema();const classId=clean(req.body?.classId),c=await teacherClass(classId,u.id);
+      await ensureSchema();const classId=clean(req.body?.classId),u=teacherAuth(req,{classId});if(!u)return res.status(403).json({error:'Teacher access required.'});const c=await teacherClass(classId,u.id);
       if(!c)return res.status(404).json({error:'Class not found.'});
       if(c.approval_status&&c.approval_status!=='approved')return res.status(409).json({error:'The class must be approved before starting a live class.'});
       const client=await pool.connect();try{
