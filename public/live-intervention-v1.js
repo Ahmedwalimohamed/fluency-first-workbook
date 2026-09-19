@@ -1,4 +1,4 @@
-/* EnglishGate Live Intervention — zero-fee template/question-bank workflow */
+/* EnglishGate Live Task student delivery + legacy compatibility */
 (function(){
 'use strict';
 let scheduled=false,currentDraft=null,monitorSeq=0,studentTaskId=null,studentTimer=null,studentSubmitting=false,studentResultShowing=false;
@@ -11,16 +11,7 @@ function classById(id){return (db()?.classes||[]).find(c=>c.id===id)}
 function fmt(sec){sec=Math.max(0,Math.ceil(sec));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
 
 function isTeacherClasses(){return role()==='teacher'&&String($id('pageTitle')?.textContent||'').trim()==='Classes'}
-function enhanceTeacherClasses(){
- if(!isTeacherClasses())return;
- document.querySelectorAll('[data-add-student-class]').forEach(add=>{
-   const classId=add.dataset.addStudentClass,actions=add.closest('.management-card-actions');if(!classId||!actions||actions.querySelector(`[data-live-task-class="${CSS.escape(classId)}"]`))return;
-   const c=classById(classId),btn=document.createElement('button');btn.type='button';btn.className='secondary-btn';btn.dataset.liveTaskClass=classId;btn.textContent='⚡ Live task';
-   if(c?.approval_status&&c.approval_status!=='approved'){btn.disabled=true;btn.title='Admin approval is required before live tasks can start.'}
-   else btn.addEventListener('click',()=>openForClass(classId));
-   actions.appendChild(btn);
- });
-}
+function enhanceTeacherClasses(){/* Live Task belongs inside TEACH → Whiteboard. */}
 async function openForClass(classId){
  const c=classById(classId);if(!c)return;
  if(c.approval_status&&c.approval_status!=='approved'){alert('This class is waiting for admin approval.');return}
@@ -70,33 +61,77 @@ async function pollStudent(){
  setTimeout(pollStudent,4000);
 }
 function clearStudentTimer(){if(studentTimer){clearInterval(studentTimer);studentTimer=null}}
+function renderStudentQuestion(q,i){
+ const type=q.type||'multiple_choice',legend=`<legend><span>${i+1}</span>${esc(q.prompt||'')}</legend>`;
+ if(type==='multiple_choice'||type==='true_false'){
+   return `<fieldset class="student-live-q">${legend}${(q.options||[]).map((o,j)=>`<label><input type="radio" name="live_${esc(q.id)}" value="${j}"><span>${esc(o)}</span></label>`).join('')}</fieldset>`;
+ }
+ if(['short_answer','fill_blank','sentence_correction','sentence_construction'].includes(type)){
+   const ph=type==='fill_blank'?'Type the missing word or phrase…':type==='sentence_correction'?'Write the corrected sentence…':'Type your answer…';
+   return `<fieldset class="student-live-q student-live-text-q">${legend}<textarea data-live-text-answer="${esc(q.id)}" rows="3" placeholder="${ph}"></textarea></fieldset>`;
+ }
+ if(type==='matching'){
+   return `<fieldset class="student-live-q student-live-matching">${legend}${(q.leftItems||[]).map((left,j)=>`<label class="student-live-match-row"><span>${esc(left)}</span><select data-live-match="${esc(q.id)}" data-left="${esc(left)}"><option value="">Choose match</option>${(q.rightOptions||[]).map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('')}</select></label>`).join('')}</fieldset>`;
+ }
+ if(type==='ordering'){
+   const items=q.items||[],n=items.length;
+   return `<fieldset class="student-live-q student-live-ordering">${legend}<p class="student-live-help">Choose the position for each item.</p>${items.map((item,j)=>`<label class="student-live-order-row"><span>${esc(item)}</span><select data-live-order="${esc(q.id)}" data-item="${esc(item)}"><option value="">Position</option>${Array.from({length:n},(_,k)=>`<option value="${k+1}">${k+1}</option>`).join('')}</select></label>`).join('')}</fieldset>`;
+ }
+ if(['teacher_speaking','individual_speaking','pair_discussion'].includes(type)){
+   return `<fieldset class="student-live-q student-live-speaking">${legend}<div class="student-live-speaking-criteria">${(q.successCriteria||[]).map(x=>`<span>• ${esc(x)}</span>`).join('')}</div><label class="student-live-speaking-done"><input type="checkbox" data-live-speaking="${esc(q.id)}"><span>I completed this speaking task</span></label><textarea data-live-speaking-note="${esc(q.id)}" rows="2" placeholder="Optional note…"></textarea></fieldset>`;
+ }
+ return `<fieldset class="student-live-q">${legend}<textarea data-live-text-answer="${esc(q.id)}" rows="3" placeholder="Type your response…"></textarea></fieldset>`;
+}
 function renderStudentTask(task,serverNow){
  clearStudentTimer();studentSubmitting=false;studentResultShowing=false;const root=ensureStudentRoot(),offset=Date.now()-new Date(serverNow||Date.now()).getTime(),endLocal=new Date(task.endsAt).getTime()+offset;
- const body=task.taskType==='mcq'?`<div class="student-live-questions">${task.content.questions.map((q,i)=>`<fieldset class="student-live-q"><legend><span>${i+1}</span>${esc(q.q)}</legend>${q.options.map((o,j)=>`<label><input type="radio" name="live_${esc(q.id)}" value="${j}"><span>${esc(o)}</span></label>`).join('')}</fieldset>`).join('')}</div>`:`<div class="student-live-writing"><p>${esc(task.content.instructions)}</p><textarea id="studentLiveWriting" rows="8" placeholder="Write your response here…"></textarea><small>Minimum ${Number(task.content.minWords)||0} words</small></div>`;
+ const body=task.taskType==='writing'
+   ?`<div class="student-live-writing"><p>${esc(task.content.instructions)}</p><textarea id="studentLiveWriting" rows="8" placeholder="Write your response here…"></textarea><small>Minimum ${Number(task.content.minWords)||0} words</small></div>`
+   :`<div class="student-live-questions">${(task.content.questions||[]).map(renderStudentQuestion).join('')}</div>`;
  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel"><header><div><span class="role-kicker">Live task · ${esc(task.className)}</span><h2>${esc(task.title)}</h2></div><div class="student-live-clock" id="studentLiveClock">00:00</div></header><div class="student-live-progress"><span>Complete and submit before the timer ends.</span></div>${body}<div class="student-live-submit"><div id="studentLiveMessage"></div><button class="primary-btn" type="button" id="studentLiveSubmit">Submit live task</button></div></section></div>`;
  $id('studentLiveSubmit').onclick=()=>submitStudent(task,false);
  let autoSent=false;const tick=()=>{const remain=(endLocal-Date.now())/1000,clock=$id('studentLiveClock');if(clock)clock.textContent=fmt(remain);if(remain<=0&&!autoSent){autoSent=true;submitStudent(task,true)}};tick();studentTimer=setInterval(tick,500);
 }
 function studentPayload(task){
  if(task.taskType==='writing')return {text:$id('studentLiveWriting')?.value||''};
- const answers={};for(const q of task.content.questions){const checked=document.querySelector(`input[name="live_${CSS.escape(q.id)}"]:checked`);if(checked)answers[q.id]=Number(checked.value)}return {answers};
+ const answers={};
+ for(const q of task.content.questions||[]){
+   const type=q.type||'multiple_choice';
+   if(type==='multiple_choice'||type==='true_false'){
+     const checked=document.querySelector(`input[name="live_${CSS.escape(q.id)}"]:checked`);if(checked)answers[q.id]=Number(checked.value);
+   }else if(['short_answer','fill_blank','sentence_correction','sentence_construction'].includes(type)){
+     const el=document.querySelector(`[data-live-text-answer="${CSS.escape(q.id)}"]`);if(el&&el.value.trim())answers[q.id]=el.value.trim();
+   }else if(type==='matching'){
+     const obj={};document.querySelectorAll(`[data-live-match="${CSS.escape(q.id)}"]`).forEach(el=>{if(el.value)obj[el.dataset.left]=el.value});if(Object.keys(obj).length)answers[q.id]=obj;
+   }else if(type==='ordering'){
+     const rows=[...document.querySelectorAll(`[data-live-order="${CSS.escape(q.id)}"]`)].map(el=>({item:el.dataset.item,pos:Number(el.value)})).filter(x=>Number.isInteger(x.pos)&&x.pos>0).sort((a,b)=>a.pos-b.pos);
+     if(rows.length)answers[q.id]=rows.map(x=>x.item);
+   }else if(['teacher_speaking','individual_speaking','pair_discussion'].includes(type)){
+     const done=document.querySelector(`[data-live-speaking="${CSS.escape(q.id)}"]`),note=document.querySelector(`[data-live-speaking-note="${CSS.escape(q.id)}"]`);
+     if(done?.checked)answers[q.id]={done:true,note:note?.value.trim()||''};
+   }
+ }
+ return {answers};
 }
-async function submitStudent(task,automatic){
+
+async function submitStudent(task,automatic){async function submitStudent(task,automatic){
  if(studentSubmitting)return;studentSubmitting=true;const btn=$id('studentLiveSubmit'),msg=$id('studentLiveMessage');if(btn){btn.disabled=true;btn.textContent=automatic?'Time ended · saving…':'Submitting…'}
  try{const r=await api('/api/student/live-tasks/'+encodeURIComponent(task.id)+'/submit',{method:'POST',body:JSON.stringify(studentPayload(task))});clearStudentTimer();showStudentResult(task,r)}catch(e){studentSubmitting=false;if(msg)msg.innerHTML=`<div class="feedback bad">${esc(e.message)}</div>`;if(btn){btn.disabled=false;btn.textContent='Submit live task'}}
 }
 function showStudentResult(task,r){
  studentResultShowing=true;const root=ensureStudentRoot();
- const detail=task.taskType==='mcq'
-   ?`<div class="student-live-score"><strong>${r.score}%</strong><span>${r.correctCount} of ${r.totalCount} correct</span></div><div class="student-live-progress"><span>Your answers are submitted. The teacher controls when the correct answers are revealed.</span></div>`
-   :'<div class="student-live-score"><strong>Submitted</strong><span>Your writing was sent to your teacher.</span></div>';
+ const hasScore=r.score!==null&&r.score!==undefined&&Number.isFinite(Number(r.score));
+ const detail=hasScore
+   ?`<div class="student-live-score"><strong>${Number(r.score)}%</strong><span>${Number(r.correctCount||0)} of ${Number(r.totalCount||0)} auto-graded items correct</span></div><div class="student-live-progress"><span>Your work is submitted. Correct answers remain teacher-controlled.</span></div>`
+   :'<div class="student-live-score"><strong>Submitted</strong><span>Your response was sent to your teacher.</span></div>';
  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${detail}<div class="feedback ${r.timedOut?'bad':'good'}">${esc(r.message||'Submitted.')}</div><button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
  $id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML='';studentTaskId=task.id};
 }
 function renderStudentExistingResult(task,sub){
- studentResultShowing=true;const root=ensureStudentRoot();root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${task.taskType==='mcq'?`<div class="student-live-score"><strong>${sub.score}%</strong><span>${sub.correctCount} of ${sub.totalCount} correct</span></div>`:'<div class="student-live-score"><strong>Submitted</strong><span>Your writing was sent to your teacher.</span></div>'}<button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;$id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML=''};
+ studentResultShowing=true;const root=ensureStudentRoot(),hasScore=sub.score!==null&&sub.score!==undefined&&Number.isFinite(Number(sub.score));
+ root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result"><span class="role-kicker">Live task complete</span><h2>${esc(task.title)}</h2>${hasScore?`<div class="student-live-score"><strong>${Number(sub.score)}%</strong><span>${Number(sub.correctCount||0)} of ${Number(sub.totalCount||0)} auto-graded items correct</span></div>`:'<div class="student-live-score"><strong>Submitted</strong><span>Your response was sent to your teacher.</span></div>'}<button class="primary-btn" id="closeStudentLiveResult" type="button">Return to lesson</button></section></div>`;
+ $id('closeStudentLiveResult').onclick=()=>{studentResultShowing=false;dismissed.add(task.id);root.innerHTML=''};
 }
-function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;enhanceTeacherClasses()})}
+function schedule(){function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;enhanceTeacherClasses()})}
 function boot(){enhanceTeacherClasses();new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true});setTimeout(pollStudent,1500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
