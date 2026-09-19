@@ -99,7 +99,7 @@ function renderTeacherError(c,msg){
 async function startTeacher(c){
   const btn=teacherHost?.querySelector('[data-jitsi-start]');if(btn){btn.disabled=true;btn.textContent='Starting…'}
   try{
-    const r=await api('/api/teacher/jitsi-session/start',{method:'POST',body:JSON.stringify({classId:c.id})});
+    const r=await api('/api/teacher/jitsi-session/start',{method:'POST',headers:headers(teacherControl),body:JSON.stringify({classId:c.id})});
     if(r?.controlToken)remember('teacher',r.controlToken);
     renderTeacherActive(r,c);
   }catch(e){renderTeacherError(c,e.message)}
