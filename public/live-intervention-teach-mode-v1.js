@@ -3,7 +3,7 @@
 'use strict';
 
 let currentClass=null,currentDraft=null,activeTask=null,currentHost=null,currentResults=null;
-let currentQuestionIndex=0,monitorToken=0,liveEndLocal=0,currentAnnotationController=null,reviewStudentId=null,activeLiveView='questions';
+let currentQuestionIndex=0,monitorToken=0,liveEndLocal=0,currentAnnotationController=null,reviewStudentId=null,activeLiveView='questions',viewingRecentTask=false;
 const revealedByTask=new Map();
 const annotationStates=new Map();
 
@@ -78,7 +78,8 @@ async function openInWhiteboard(target){
   try{
     currentClass=await resolveTeachClass();
     const active=await api('/api/teacher/live-tasks/current?classId='+encodeURIComponent(currentClass.id));
-    if(active?.task)return openMonitor(active.task,active.serverNow);
+    if(active?.task)return openMonitor(active.task,active.serverNow,false);
+    if(active?.recentTask)return openMonitor(active.recentTask,active.serverNow,true);
     openBuilder();
   }catch(e){
     setHtml('<div class="eg-live-loading"><strong>Live Task could not open</strong><span class="eg-live-error">'+esc(e.message)+'</span></div>');
@@ -87,7 +88,7 @@ async function openInWhiteboard(target){
 }
 
 function openBuilder(){
-  stopPolling();activeTask=null;currentResults=null;currentDraft=null;currentQuestionIndex=0;
+  stopPolling();activeTask=null;currentResults=null;currentDraft=null;currentQuestionIndex=0;viewingRecentTask=false;
   wirePrompt(generateFromPrompt,{disabled:false,label:'Generate',placeholder:'Create 5 questions about going to, 5 minutes',status:currentClass?.name||''});
   setHtml(`<div class="eg-live-grid eg-live-builder-grid">
     <main class="eg-live-main-pane">
@@ -255,13 +256,13 @@ async function launchDraft(){
   }
 }
 
-function openMonitor(task,serverNow){
-  stopPolling();activeTask=task;currentResults=null;
+function openMonitor(task,serverNow,recent=false){
+  stopPolling();activeTask=task;currentResults=null;viewingRecentTask=Boolean(recent);
   const total=task.taskType==='activity'?(task.content?.questions?.length||1):1;
   currentQuestionIndex=Math.max(0,Math.min(currentQuestionIndex,total-1));
   const offset=Date.now()-new Date(serverNow||Date.now()).getTime();
   liveEndLocal=new Date(task.endsAt).getTime()+offset;
-  wirePrompt(null,{disabled:true,label:'Live now',placeholder:'Live task is running',status:(task.className||currentClass?.name||'Class')+' · activity in progress'});
+  wirePrompt(null,{disabled:true,label:viewingRecentTask?'Ended':'Live now',placeholder:viewingRecentTask?'Previous live task results':'Live task is running',status:(task.className||currentClass?.name||'Class')+(viewingRecentTask?' · previous submissions':' · activity in progress')});
   activeLiveView='questions';reviewStudentId=null;
   setHtml(`<div class="eg-live-grid eg-live-active-grid">
     <nav class="eg-live-left-tabs" data-active-tabs aria-label="Live Task views"></nav>
@@ -275,7 +276,7 @@ function openMonitor(task,serverNow){
   const tick=()=>{
     if(token!==monitorToken)return;
     const clock=q('[data-live-timer]');if(clock)clock.textContent=fmt((liveEndLocal-Date.now())/1000);
-    if(Date.now()<liveEndLocal)setTimeout(tick,500);
+    if(!viewingRecentTask&&Date.now()<liveEndLocal)setTimeout(tick,500);
   };
   tick();
   const poll=async()=>{
@@ -286,7 +287,7 @@ function openMonitor(task,serverNow){
       renderLiveSide(currentResults);renderActiveTabs();
       if(activeLiveView==='submissions'){if(reviewStudentId)renderSubmissionReview();else renderSubmissionInbox()}
     }catch{}
-    if(token===monitorToken)setTimeout(poll,2000);
+    if(token===monitorToken)setTimeout(poll,viewingRecentTask?5000:2000);
   };
   poll();
 }
@@ -474,16 +475,17 @@ function renderLiveSide(r){
       </section>`;
     }
   }
-  side.innerHTML=`<div class="eg-live-livehead"><div><span class="eg-live-dot"></span><strong>LIVE</strong><small>${esc(activeTask.className||currentClass?.name||'Class')}</small></div><div class="eg-live-timer" data-live-timer>${fmt((liveEndLocal-Date.now())/1000)}</div></div>
+  side.innerHTML=`<div class="eg-live-livehead"><div><span class="eg-live-dot"></span><strong>${viewingRecentTask?'ENDED':'LIVE'}</strong><small>${esc(activeTask.className||currentClass?.name||'Class')}</small></div><div class="eg-live-timer" data-live-timer>${viewingRecentTask?'00:00':fmt((liveEndLocal-Date.now())/1000)}</div></div>
     <div class="eg-live-mini-metrics"><div><strong>${connected}</strong><span>active</span></div><div><strong>${working}</strong><span>working</span></div><div><strong>${submitted}/${roster}</strong><span>submitted</span></div></div>
     <section class="eg-live-students-block">
       <div class="eg-live-side-title"><strong>Students</strong><span>updates live</span></div>
       <div class="eg-live-student-list">${sorted.length?sorted.map(s=>`<div class="eg-live-student-row is-${esc(s.status)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>${statusLabel(s.status)}${s.timedOut?' · late':''}</small></div>${s.status==='submitted'&&s.score!==null&&s.score!==undefined?'<b>'+Number(s.score)+'%</b>':''}</div>`).join(''):'<div class="eg-live-side-empty">Waiting for students to open the activity…</div>'}</div>
     </section>
     ${distribution}
-    <div class="eg-live-side-actions"><div class="eg-live-extend-time"><span>Extend time</span><button type="button" data-extend-live="1">+1 min</button><button type="button" data-extend-live="3">+3 min</button><button type="button" data-extend-live="5">+5 min</button></div><button class="eg-live-danger" type="button" data-end-live>End task</button></div>`;
+    <div class="eg-live-side-actions">${viewingRecentTask?'<button class="eg-live-primary" type="button" data-new-live>New live task</button>':'<div class="eg-live-extend-time"><span>Extend time</span><button type="button" data-extend-live="1">+1 min</button><button type="button" data-extend-live="3">+3 min</button><button type="button" data-extend-live="5">+5 min</button></div><button class="eg-live-danger" type="button" data-end-live>End task</button>'}</div>`;
   qa('[data-extend-live]').forEach(b=>b.addEventListener('click',()=>extendTime(Number(b.dataset.extendLive)||1,b)));
   q('[data-end-live]')?.addEventListener('click',endTask);
+  q('[data-new-live]')?.addEventListener('click',()=>{viewingRecentTask=false;openBuilder()});
 }
 
 async function extendTime(minutes,button){
