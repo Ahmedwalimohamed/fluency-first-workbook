@@ -118,8 +118,8 @@ try{new vm.Script(lesson1Engine)}catch(e){fail('Lesson 1 engine syntax error: '+
 try{new vm.Script(grader)}catch(e){fail('Northstar Jev grader syntax error: '+e.message)}
 
 if(!app.includes('northstar:x.northstar||null'))fail('Runtime B2 lesson mapper does not expose Northstar metadata.');
-if(!index.includes('b2-northstar-workbook-v1.js?v=3'))fail('Northstar engine is not loaded in index.html with the current cache version.');
-if(index.indexOf('b2-northstar-workbook-v1.js?v=3')>index.indexOf('b2-lesson1-microflow-v3.js?v=3'))fail('Lesson 1 override must load after the generic Northstar engine.');
+if(!index.includes('b2-northstar-workbook-v1.js?v=4'))fail('Northstar engine is not loaded in index.html with the current cache version.');
+if(index.indexOf('b2-northstar-workbook-v1.js?v=4')>index.indexOf('b2-lesson1-microflow-v3.js?v=4'))fail('Lesson 1 override must load after the generic Northstar engine.');
 if(!standards.includes("require('./northstar-jev-grading-bootstrap.js')"))fail('Jev Northstar grading bootstrap is not in the server chain.');
 if(!grader.includes('/api/workbook-activities/grade-use'))fail('Jev Northstar USE grading route is missing.');
 if(!engine.includes("framework==='SEE_CHOOSE_CHANGE_USE_FIX'"))fail('Northstar renderer is not gated by the framework marker.');
@@ -129,6 +129,10 @@ if(!lesson1Engine.includes('const MIN_COMPREHENSION_QUESTIONS=3'))fail('Lesson 1
 if(!lesson1Engine.includes("questionCounts:{reading:READING_QUESTIONS.length,listening:LISTENING_QUESTIONS.length}"))fail('Lesson 1 comprehension question-count metadata is missing.');
 if(!engine.includes("repair.focus==='none'"))fail('Northstar FIX must allow a correct response to finish with no correction.');
 if(!lesson1Engine.includes("mode.type==='none'"))fail('Lesson 1 FIX must allow a correct response to finish with no correction.');
+if(!engine.includes('function arrangeChoices(options,correctIndex,seed)'))fail('Northstar multiple-choice renderer must distribute correct answer positions.');
+if(!lesson1Engine.includes('function arrangeChoices(options,correctIndex,seed)'))fail('Lesson 1 multiple-choice renderer must distribute correct answer positions.');
+if(!engine.includes('desired=Math.abs(Number(seed)||0)%n'))fail('Northstar answer-position rotation rule is missing.');
+if(!lesson1Engine.includes('desired=Math.abs(Number(seed)||0)%n'))fail('Lesson 1 answer-position rotation rule is missing.');
 if(!grader.includes("focus:'none'"))fail('Jev grader must return no correction when all checks pass.');
 if(!engine.includes("if(i===9)return renderFix"))fail('FIX is not the final Northstar stage.');
 if(!engine.includes('const REMEMBER_OFFSETS=[1,3,7]'))fail('Hidden REMEMBER must use +1, +3, +7 spaced retrieval opportunities.');
