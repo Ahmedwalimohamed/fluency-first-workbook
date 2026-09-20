@@ -9,7 +9,8 @@ const {
   buildDomainProfile,
   releaseFrom,
   issueSeverity,
-  MAJOR_REVIEW_MIN_EVIDENCE
+  MAJOR_REVIEW_MIN_EVIDENCE,
+  SUBTHRESHOLD_ADVISORY_CHECKS
 }=require('../semantic-qa-firewall.js');
 
 function lesson(overrides={}){
@@ -89,8 +90,15 @@ assert.equal(issueSeverity(meaningfulFail),'Major','Meaningful Jev fail evidence
 assert.equal(issueSeverity(weakPass),'Minor','Low-confidence pass should not make a lesson AMBER.');
 assert.equal(MAJOR_REVIEW_MIN_EVIDENCE,0.40);
 const trickReview={id:'no_trick_wording',critical:false,blocking:false,status:'REVIEW',review:true,rawChoice:'fail',evidence:0.65};
-assert.equal(issueSeverity(trickReview),'Minor','Sub-threshold holistic trick-wording concern must remain advisory unless it becomes a confident failure.');
-assert.equal(FIREWALL_VERSION,'jev-semantic-firewall-v3.2');
+assert.equal(issueSeverity(trickReview),'Minor','Sub-threshold holistic trick-wording concern must remain advisory.');
+const trickFail={id:'no_trick_wording',critical:false,blocking:true,status:'FAIL',review:false,rawChoice:'fail',evidence:0.80};
+assert.equal(issueSeverity(trickFail),'Major','Confident trick-wording failure must remain Major.');
+const brokenReview={id:'no_broken_activity',critical:true,blocking:false,status:'REVIEW',review:true,rawChoice:'fail',evidence:0.45};
+assert.equal(issueSeverity(brokenReview),'Minor','Sub-threshold holistic broken-activity concern must remain advisory without a concrete item failure.');
+const brokenFail={id:'no_broken_activity',critical:true,blocking:true,status:'FAIL',review:false,rawChoice:'fail',evidence:0.70};
+assert.equal(issueSeverity(brokenFail),'Critical','Confident broken-activity failure must remain Critical.');
+assert(SUBTHRESHOLD_ADVISORY_CHECKS.has('no_trick_wording')&&SUBTHRESHOLD_ADVISORY_CHECKS.has('no_broken_activity'));
+assert.equal(FIREWALL_VERSION,'jev-semantic-firewall-v3.3');
 assert.equal(LESSON_QUALITY_AUDIT_VERSION,'englishgate-lesson-quality-v1');
 
 console.log('LESSON QUALITY FIREWALL QA PASSED: deterministic checks, severity, six domains, and release-state logic are stable.');
