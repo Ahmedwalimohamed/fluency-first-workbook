@@ -16,3 +16,14 @@
 .ace-qa-failures p{margin:7px 0 0;color:#334155;line-height:1.45;font-size:.9rem}
 .ace-qa-failures small{display:block;margin-top:6px;color:#64748b}
 @media(max-width:700px){.ace-qa-title{display:grid}.ace-qa-title span{text-align:left}}
+
+
+/* Jev Semantic QA firewall v2 calibration states */
+.ace-qa-report.is-review{border-color:#fde68a;background:#fffbeb}
+.ace-qa-report.is-review .ace-qa-title strong{color:#92400e}
+.ace-qa-review-list article{border-color:#fde68a;background:#fffdf5}
+.ace-qa-review-list article>div b{color:#92400e}
+.ace-qa-review-list article>div span{color:#b45309}
+.ace-qa-review-details{margin-top:10px;border-top:1px solid #fed7aa;padding-top:10px}
+.ace-qa-review-details summary{cursor:pointer;font-weight:800;color:#92400e}
+.ace-qa-review-details .ace-qa-failures{margin-top:10px}
