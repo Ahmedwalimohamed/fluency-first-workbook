@@ -101,6 +101,22 @@ function install(app){
     try{
       await ensureSchema();
       const courseId=String(req.body?.courseId||'').trim().slice(0,80),lessonNumber=Number(req.body?.lessonNumber),targetPath=String(req.body?.targetPath||'').trim(),scope=String(req.body?.scope||'activity').trim().slice(0,30),instruction=String(req.body?.instruction||'').trim().slice(0,3000),source=req.body?.source,replacement=req.body?.replacement,summary=String(req.body?.summary||'AI content edit').slice(0,500);
+      const lessonQualityReport=req.body?.lessonQualityReport&&typeof req.body.lessonQualityReport==='object'?req.body.lessonQualityReport:null;
+      const approval=req.semanticQaApproval||null;
+      const selfAudit={
+        generator:req.body?.quality||{},
+        lessonQuality:lessonQualityReport,
+        approval:approval?{
+          qaVersion:approval.qaVersion||null,
+          qualityAuditVersion:approval.qualityAuditVersion||null,
+          qaModel:approval.qaModel||null,
+          releaseState:approval.releaseState||null,
+          contentHash:approval.contentHash||null,
+          totalChecks:Number(approval.totalChecks||0),
+          passed:Number(approval.passed||0),
+          review:Number(approval.review||0)
+        }:null
+      };
       if(!courseId||!Number.isInteger(lessonNumber)||lessonNumber<1||lessonNumber>500||!validPath(targetPath))return res.status(400).json({error:'Invalid content target.'});
       const problems=structuralProblems(source,replacement);if(problems.length)return res.status(400).json({error:'Edit failed structural validation.',problems});
       const size=JSON.stringify(replacement)?.length||0;if(!size||size>140000)return res.status(400).json({error:'Replacement content is invalid or too large.'});
@@ -110,7 +126,7 @@ function install(app){
         const current=await client.query('select id from content_patches where course_id=$1 and lesson_number=$2 and component=$3 and is_active=true order by created_at desc,id desc limit 1 for update',[courseId,lessonNumber,targetPath]);
         const parent=current.rows[0]?.id||null;
         if(parent)await client.query('update content_patches set is_active=false,rolled_back_at=now() where id=$1',[parent]);
-        const q=await client.query(`insert into content_patches(course_id,lesson_number,component,replacement,summary,self_audit,created_by,instruction,target_scope,before_snapshot,parent_patch_id) values($1,$2,$3,$4::jsonb,$5,$6::jsonb,$7,$8,$9,$10::jsonb,$11) returning id,created_at`,[courseId,lessonNumber,targetPath,JSON.stringify(replacement),summary,JSON.stringify(req.body?.quality||{}),String(admin.id||admin.username||'admin'),instruction,scope,JSON.stringify(clone(source)),parent]);
+        const q=await client.query(`insert into content_patches(course_id,lesson_number,component,replacement,summary,self_audit,created_by,instruction,target_scope,before_snapshot,parent_patch_id) values($1,$2,$3,$4::jsonb,$5,$6::jsonb,$7,$8,$9,$10::jsonb,$11) returning id,created_at`,[courseId,lessonNumber,targetPath,JSON.stringify(replacement),summary,JSON.stringify(selfAudit),String(admin.id||admin.username||'admin'),instruction,scope,JSON.stringify(clone(source)),parent]);
         await client.query('commit');
         res.set('Cache-Control','no-store');res.json({ok:true,patchId:q.rows[0].id,createdAt:q.rows[0].created_at,parentPatchId:parent});
       }catch(e){await client.query('rollback');throw e}finally{client.release()}
