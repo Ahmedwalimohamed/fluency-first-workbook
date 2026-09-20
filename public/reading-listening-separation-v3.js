@@ -146,9 +146,12 @@ function rebuildStages(l){
 }
 
 const coreWorkbook=typeof workbook==='function'?workbook:null;
+const coreFirstOpenStep=typeof firstOpenStep==='function'?firstOpenStep:null;
 if(coreWorkbook){
  workbook=function separatedWorkbook(){
-  const l=lesson();let intended=currentStep;
+  const l=lesson();
+  if(typeof isB2IntegratedLesson==='function'&&isB2IntegratedLesson(l))return coreWorkbook();
+  let intended=currentStep;
   const available=stepsFor(l);if(!available.includes(intended))intended=available[0]||'grammar';
   const scaffold=intended==='reading'?'listening':intended;
   currentStep=scaffold;coreWorkbook();currentStep=intended;
@@ -158,9 +161,10 @@ if(coreWorkbook){
  };
 }
 
-if(typeof firstOpenStep==='function'){
+if(coreFirstOpenStep){
  firstOpenStep=function separatedFirstOpenStep(sid,lid){
   const l=(typeof lessonById==='function'?lessonById(lid):null)||lesson();
+  if(typeof isB2IntegratedLesson==='function'&&isB2IntegratedLesson(l))return coreFirstOpenStep(sid,lid);
   return stepsFor(l).find(step=>!stepDone(sid,lid,step))||stepsFor(l).slice(-1)[0]||'grammar';
  };
 }
