@@ -128,7 +128,8 @@ async function generateFromPrompt(request){
   if(!request){if(status)status.textContent='Type what you want students to do.';return}
   setPromptBusy(true,'Preparing activity…');
   try{
-    const d=await api('/api/teacher/live-tasks/prepare',{method:'POST',body:JSON.stringify({classId:currentClass.id,request})});
+    const d=await api('/api/teacher/live-tasks/prepare',{method:'POST',headers:teacherLiveHeaders(),body:JSON.stringify({classId:currentClass.id,request})});
+    if(d?.teacherLiveToken)rememberTeacherLiveToken(d.teacherLiveToken);
     currentDraft=d;currentQuestionIndex=0;renderDraft();
     setPromptBusy(false,'Preview ready');
   }catch(e){
@@ -254,7 +255,7 @@ async function launchDraft(){
     const content=currentDraft.taskType==='writing'
       ?{topic:currentDraft.content.topic,instructions:currentDraft.content.instructions,minWords:currentDraft.content.minWords}
       :{topic:currentDraft.content.topic,tip:currentDraft.content.tip,questions:currentDraft.content.questions};
-    const r=await api('/api/teacher/live-tasks',{method:'POST',body:JSON.stringify({
+    const r=await api('/api/teacher/live-tasks',{method:'POST',headers:teacherLiveHeaders(),body:JSON.stringify({
       classId:currentClass.id,requestText:currentDraft.requestText,taskType:currentDraft.taskType,title,durationSeconds,content
     })});
     if(r?.teacherLiveToken)rememberTeacherLiveToken(r.teacherLiveToken);currentDraft=null;openMonitor(r.task,r.serverNow);
