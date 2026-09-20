@@ -81,6 +81,80 @@ const CHECKS=[
   ['correction_alignment','Progression','Correction or improvement tasks address actual target language or plausible learner errors rather than unrelated remediation.']
 ].map(([id,category,instructions,critical=false])=>({id,category,instructions,critical}));
 
+const FIREWALL_VERSION='jev-semantic-firewall-v2';
+const REVIEW_ONLY_CHECKS=new Set([
+  'distractors_plausible',
+  'distractors_parallel',
+  'no_answer_leakage',
+  'no_duplicate_instructions',
+  'no_duplicate_questions',
+  'no_recycled_examples',
+  'natural_language',
+  'real_world_plausibility',
+  'practice_to_production',
+  'skill_integration',
+  'correction_alignment'
+]);
+
+// These checks remain capable of blocking, but only when Jev is sufficiently certain.
+// Thresholds are intentionally stricter for broad or subjective judgments.
+const FAIL_THRESHOLDS={
+  cefr_lexical_load:0.65,
+  cefr_grammar_load:0.65,
+  cefr_reading_complexity:0.70,
+  cefr_listening_complexity:0.70,
+  cefr_instruction_load:0.70,
+  cefr_cognitive_demand:0.70,
+  cefr_output_demand:0.70,
+  cefr_independence:0.70,
+
+  objective_task_alignment:0.55,
+  question_answer_alignment:0.55,
+  answer_key_correctness:0.55,
+  reading_question_grounding:0.60,
+  listening_question_grounding:0.60,
+  grammar_target_alignment:0.65,
+  feedback_answer_alignment:0.60,
+
+  single_defensible_answer:0.60,
+  sufficient_evidence:0.55,
+  stem_unambiguous:0.60,
+  reference_clarity:0.65,
+  open_task_criteria:0.65,
+  no_hidden_assumptions:0.70,
+  no_trick_wording:0.70,
+
+  distractors_incorrect:0.60,
+  distractors_distinct:0.70,
+
+  reading_internal_coherence:0.60,
+  listening_internal_coherence:0.60,
+  speaker_consistency:0.65,
+  scenario_continuity:0.70,
+  chronology_consistency:0.70,
+  cross_component_consistency:0.60,
+  reading_listening_separation:0.60,
+
+  vocab_definition_accuracy:0.55,
+  vocab_definition_non_circular:0.70,
+  vocab_definition_accessible:0.70,
+  vocab_example_alignment:0.60,
+  vocab_task_alignment:0.55,
+
+  no_placeholders:0.60,
+  no_broken_activity:0.55
+};
+
+const CORROBORATION_CLUSTERS={
+  answer_integrity:['question_answer_alignment','answer_key_correctness','feedback_answer_alignment','single_defensible_answer','distractors_incorrect'],
+  source_grounding:['reading_question_grounding','listening_question_grounding','sufficient_evidence','cross_component_consistency','reading_listening_separation'],
+  vocabulary_integrity:['vocab_definition_accuracy','vocab_example_alignment','vocab_task_alignment'],
+  structural_integrity:['no_placeholders','no_broken_activity'],
+  cefr_core:['cefr_lexical_load','cefr_grammar_load']
+};
+const CORROBORATION_MIN_EVIDENCE=0.35;
+const LOW_CONFIDENCE_REVIEW_THRESHOLD=0.25;
+
 function sha(value){
   return crypto.createHash('sha256').update(typeof value==='string'?value:JSON.stringify(value)).digest('hex');
 }
@@ -102,39 +176,90 @@ function questions(){
   }
   return out;
 }
+function selectedProbability(answer,choice){
+  const value=Number(answer?.probabilities?.[choice]);
+  return Number.isFinite(value)&&value>=0&&value<=1?value:null;
+}
+function evidenceScore(answer,choice){
+  const confidence=Number(answer?.confidence);
+  const probability=selectedProbability(answer,choice);
+  const hasConfidence=Number.isFinite(confidence)&&confidence>=0&&confidence<=1;
+  if(probability!=null&&hasConfidence)return Math.min(probability,confidence);
+  if(probability!=null)return probability;
+  if(hasConfidence)return confidence;
+  return null;
+}
+function thresholdFor(check){
+  if(Number.isFinite(FAIL_THRESHOLDS[check.id]))return FAIL_THRESHOLDS[check.id];
+  return check.critical?0.60:0.70;
+}
 function normalizeAnswer(check,answer){
   const choice=String(answer?.choice||'').toLowerCase();
   const confidence=Number(answer?.confidence);
   const probabilities=answer?.probabilities&&typeof answer.probabilities==='object'?answer.probabilities:{};
-  let status='BLOCKED';
-  let reason='Jev did not return a valid decision.';
-  if(choice==='pass'&&Number.isFinite(confidence)&&confidence>=0.4){
-    status='PASS';
-    reason='Requirement passed.';
-  }else if(choice==='not_applicable'&&Number.isFinite(confidence)&&confidence>=0.4){
-    status='NOT_APPLICABLE';
-    reason='Check is not applicable to this lesson.';
-  }else if(choice==='fail'){
-    status='FAIL';
-    reason='Jev found a concrete violation.';
-  }else if((choice==='pass'||choice==='not_applicable')&&Number.isFinite(confidence)&&confidence<0.4){
-    status='LOW_CONFIDENCE';
-    reason='Jev decision confidence is too low to permit publication.';
-  }else if(choice){
-    status='BLOCKED';
-    reason='Jev returned an unsupported decision.';
-  }
-  return {
+  const selected=selectedProbability(answer,choice);
+  const evidence=evidenceScore(answer,choice);
+  const base={
     id:check.id,
     category:check.category,
     critical:check.critical,
     requirement:check.instructions,
-    status,
     choice,
+    rawChoice:choice,
     confidence:Number.isFinite(confidence)?confidence:null,
+    selectedProbability:selected,
+    evidence,
     probabilities,
-    reason
+    threshold:thresholdFor(check),
+    blocking:false,
+    review:false,
+    policy:REVIEW_ONLY_CHECKS.has(check.id)?'review-only':'threshold'
   };
+
+  if(!['pass','fail','not_applicable'].includes(choice)||evidence==null){
+    return {...base,status:'BLOCKED',blocking:true,reason:'Jev did not return a complete calibrated decision for this check.'};
+  }
+
+  if(choice==='pass'){
+    if(evidence<LOW_CONFIDENCE_REVIEW_THRESHOLD){
+      return {...base,status:'REVIEW',review:true,reason:'Jev leaned pass, but confidence is low enough to keep this as a review note.'};
+    }
+    return {...base,status:'PASS',reason:'Requirement passed.'};
+  }
+
+  if(choice==='not_applicable'){
+    if(evidence<LOW_CONFIDENCE_REVIEW_THRESHOLD){
+      return {...base,status:'REVIEW',review:true,reason:'Jev marked this not applicable with low confidence; keep it as a review note.'};
+    }
+    return {...base,status:'NOT_APPLICABLE',reason:'Check is not applicable to this lesson.'};
+  }
+
+  if(REVIEW_ONLY_CHECKS.has(check.id)){
+    return {...base,status:'REVIEW',review:true,reason:'Jev detected a possible issue, but Calibration v2 treats this check as advisory unless stronger integrity checks corroborate it.'};
+  }
+
+  if(evidence>=thresholdFor(check)){
+    return {...base,status:'FAIL',blocking:true,reason:'Jev found a sufficiently confident semantic failure.'};
+  }
+
+  return {...base,status:'REVIEW',review:true,reason:'Jev leaned fail, but evidence is below this check’s publication-blocking threshold.'};
+}
+function applyCorroboration(checks){
+  const byId=new Map(checks.map(x=>[x.id,x]));
+  for(const [cluster,ids] of Object.entries(CORROBORATION_CLUSTERS)){
+    const candidates=ids.map(id=>byId.get(id)).filter(x=>
+      x&&!x.blocking&&!REVIEW_ONLY_CHECKS.has(x.id)&&x.rawChoice==='fail'&&Number(x.evidence)>=CORROBORATION_MIN_EVIDENCE
+    );
+    if(candidates.length<2)continue;
+    for(const item of candidates){
+      item.status='CORROBORATED_FAIL';
+      item.blocking=true;
+      item.review=false;
+      item.corroboratedBy=cluster;
+      item.reason='Multiple related Jev checks independently indicate the same integrity problem.';
+    }
+  }
+  return checks;
 }
 function structuralChecks(payload){
   const issues=[];
@@ -180,12 +305,16 @@ async function runSemanticQa(payload){
   const structural=structuralChecks(payload);
   if(structural.some(x=>x.status==='FAIL'))return {
     pass:false,
+    decision:'BLOCK',
     model:null,
-    version:'jev-semantic-firewall-v1',
+    version:FIREWALL_VERSION,
     totalChecks:CHECKS.length+structural.length,
     passed:0,
+    notApplicable:0,
+    review:0,
     blocked:structural.length,
-    checks:structural,
+    criticalFailures:structural.filter(x=>x.critical).length,
+    checks:structural.map(x=>({...x,blocking:true,review:false})),
     usage:null
   };
   const state={
@@ -201,19 +330,24 @@ async function runSemanticQa(payload){
     lesson:payload.lesson
   };
   const data=await callJev(state);
-  const checks=CHECKS.map(check=>normalizeAnswer(check,data?.answers?.[check.id]));
-  const blocked=checks.filter(x=>!['PASS','NOT_APPLICABLE'].includes(x.status));
+  const checks=applyCorroboration(CHECKS.map(check=>normalizeAnswer(check,data?.answers?.[check.id])));
+  const blocked=checks.filter(x=>x.blocking);
+  const review=checks.filter(x=>x.review&&!x.blocking);
   const passed=checks.filter(x=>x.status==='PASS').length;
   const notApplicable=checks.filter(x=>x.status==='NOT_APPLICABLE').length;
+  const decision=blocked.length?'BLOCK':review.length?'PASS_WITH_REVIEW':'PASS';
   return {
     pass:blocked.length===0,
+    decision,
     model:String(data?.model||TYPE_SAFE_MODEL),
-    version:'jev-semantic-firewall-v1',
+    version:FIREWALL_VERSION,
     totalChecks:checks.length,
     passed,
     notApplicable,
+    review:review.length,
     blocked:blocked.length,
     criticalFailures:blocked.filter(x=>x.critical).length,
+    reviewCritical:review.filter(x=>x.critical).length,
     checks,
     usage:data?.usage||null
   };
@@ -231,7 +365,9 @@ function approvalToken({user,context,replacement,report}){
     qaVersion:report.version,
     qaModel:report.model,
     totalChecks:report.totalChecks,
-    passed:report.passed
+    passed:report.passed,
+    review:Number(report.review||0),
+    decision:String(report.decision||'PASS')
   },secret,{expiresIn:TOKEN_TTL_SECONDS});
 }
 function verifyApproval(req){
@@ -272,7 +408,7 @@ function installSemanticQaFirewall(app,{nativePost}){
       if(!report.pass){
         return res.status(422).json({
           ok:false,
-          error:`Semantic QA blocked publication: ${report.blocked} check${report.blocked===1?'':'s'} did not pass.`,
+          error:`Semantic QA blocked publication: ${report.blocked} calibrated blocker${report.blocked===1?'':'s'} remain${report.blocked===1?'s':''}${report.review?` and ${report.review} review note${report.review===1?'':'s'}`:''}.`,
           report
         });
       }
@@ -315,6 +451,10 @@ module.exports={
   installSemanticQaFirewall,
   runSemanticQa,
   CHECKS,
+  FIREWALL_VERSION,
+  REVIEW_ONLY_CHECKS,
+  FAIL_THRESHOLDS,
+  CORROBORATION_CLUSTERS,
   TYPE_SAFE_MODEL,
   TYPE_SAFE_URL
 };
