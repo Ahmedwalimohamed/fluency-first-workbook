@@ -59,8 +59,10 @@ for(let i=0;i<22;i++){
  const qs=Array.isArray(l.questions)?l.questions:[];
  qs.forEach((q,j)=>validChoice(q,`Lesson ${n}, question ${j+1}`));
  if(n>=2){
-  if(!qs.some(q=>String(q.tag||'').startsWith('reading:')))fail('Lesson '+n+': Northstar SEE needs at least one reading-tagged question.');
-  if(!qs.some(q=>String(q.tag||'').startsWith('listening:')))fail('Lesson '+n+': Northstar CHOOSE needs at least one listening-tagged question.');
+  const readingCount=qs.filter(q=>String(q.tag||'').startsWith('reading:')).length;
+  const listeningCount=qs.filter(q=>String(q.tag||'').startsWith('listening:')).length;
+  if(readingCount<3)fail('Lesson '+n+': Northstar SEE needs at least 3 reading-comprehension questions.');
+  if(listeningCount<3)fail('Lesson '+n+': Northstar CHOOSE needs at least 3 listening-comprehension questions.');
  }
  (l.grammarItems||[]).forEach((q,j)=>validChoice(q,`Lesson ${n}, grammar ${j+1}`));
  (l.vocabularyItems||[]).filter(q=>Array.isArray(q.options)).forEach((q,j)=>validChoice(q,`Lesson ${n}, vocabulary choice ${j+1}`));
@@ -71,6 +73,7 @@ for(let i=0;i<22;i++){
 
  if(n===1){
   if(l.northstarFramework!=='SEE_CHOOSE_CHANGE_USE_FIX')fail('Lesson 1: Northstar framework marker is missing.');
+  if(qs.filter(q=>String(q.tag||'').startsWith('reading:')).length<3)fail('Lesson 1: needs at least 3 reading-comprehension questions.');
   if((l.vocabularyItems||[]).length<4)fail('Lesson 1: needs at least 4 useful vocabulary items.');
   if((l.grammarItems||[]).length<3)fail('Lesson 1: needs at least 3 focused grammar items.');
  }else{
@@ -121,6 +124,12 @@ if(!standards.includes("require('./northstar-jev-grading-bootstrap.js')"))fail('
 if(!grader.includes('/api/workbook-activities/grade-use'))fail('Jev Northstar USE grading route is missing.');
 if(!engine.includes("framework==='SEE_CHOOSE_CHANGE_USE_FIX'"))fail('Northstar renderer is not gated by the framework marker.');
 if(!engine.includes("if(i===4)return renderListening"))fail('Dedicated Listening activity is missing from the Northstar sequence.');
+if(!engine.includes('const MIN_COMPREHENSION_QUESTIONS=3'))fail('Northstar renderer must show at least 3 Reading and 3 Listening questions.');
+if(!lesson1Engine.includes('const MIN_COMPREHENSION_QUESTIONS=3'))fail('Lesson 1 must show at least 3 Reading and 3 Listening questions.');
+if(!lesson1Engine.includes("questionCounts:{reading:READING_QUESTIONS.length,listening:LISTENING_QUESTIONS.length}"))fail('Lesson 1 comprehension question-count metadata is missing.');
+if(!engine.includes("repair.focus==='none'"))fail('Northstar FIX must allow a correct response to finish with no correction.');
+if(!lesson1Engine.includes("mode.type==='none'"))fail('Lesson 1 FIX must allow a correct response to finish with no correction.');
+if(!grader.includes("focus:'none'"))fail('Jev grader must return no correction when all checks pass.');
 if(!engine.includes("if(i===9)return renderFix"))fail('FIX is not the final Northstar stage.');
 if(!engine.includes('const REMEMBER_OFFSETS=[1,3,7]'))fail('Hidden REMEMBER must use +1, +3, +7 spaced retrieval opportunities.');
 if(!engine.includes("support==='low'"))fail('Northstar engine must explicitly fade support in later B2 lessons.');
