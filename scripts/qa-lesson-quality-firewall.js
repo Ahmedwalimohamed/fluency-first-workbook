@@ -88,7 +88,9 @@ assert.equal(issueSeverity(weakFail),'Minor','Weak Jev fail evidence must stay a
 assert.equal(issueSeverity(meaningfulFail),'Major','Meaningful Jev fail evidence must require review.');
 assert.equal(issueSeverity(weakPass),'Minor','Low-confidence pass should not make a lesson AMBER.');
 assert.equal(MAJOR_REVIEW_MIN_EVIDENCE,0.40);
-assert.equal(FIREWALL_VERSION,'jev-semantic-firewall-v3.1');
+const trickReview={id:'no_trick_wording',critical:false,blocking:false,status:'REVIEW',review:true,rawChoice:'fail',evidence:0.65};
+assert.equal(issueSeverity(trickReview),'Minor','Sub-threshold holistic trick-wording concern must remain advisory unless it becomes a confident failure.');
+assert.equal(FIREWALL_VERSION,'jev-semantic-firewall-v3.2');
 assert.equal(LESSON_QUALITY_AUDIT_VERSION,'englishgate-lesson-quality-v1');
 
 console.log('LESSON QUALITY FIREWALL QA PASSED: deterministic checks, severity, six domains, and release-state logic are stable.');
