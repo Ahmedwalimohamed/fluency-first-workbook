@@ -81,7 +81,36 @@ const CHECKS=[
   ['correction_alignment','Progression','Correction or improvement tasks address actual target language or plausible learner errors rather than unrelated remediation.']
 ].map(([id,category,instructions,critical=false])=>({id,category,instructions,critical}));
 
-const FIREWALL_VERSION='jev-semantic-firewall-v2.1';
+const FIREWALL_VERSION='jev-semantic-firewall-v3.0';
+const LESSON_QUALITY_AUDIT_VERSION='englishgate-lesson-quality-v1';
+const QUALITY_DOMAINS=['Alignment','Language Quality','Learning Progression','Assessment Validity','Authentic Use','Learner Experience'];
+const DOMAIN_BY_CATEGORY={
+  CEFR:'Language Quality',
+  Alignment:'Alignment',
+  Assessment:'Assessment Validity',
+  Distractors:'Assessment Validity',
+  Coherence:'Alignment',
+  Vocabulary:'Language Quality',
+  Quality:'Learner Experience',
+  Progression:'Learning Progression',
+  Structure:'Learner Experience'
+};
+const DOMAIN_BY_CHECK={
+  real_world_plausibility:'Authentic Use',
+  natural_language:'Language Quality',
+  open_task_criteria:'Authentic Use',
+  no_hidden_assumptions:'Assessment Validity',
+  no_trick_wording:'Assessment Validity',
+  scenario_continuity:'Alignment',
+  cross_component_consistency:'Alignment',
+  skill_integration:'Learning Progression',
+  practice_to_production:'Learning Progression',
+  scaffold_progression:'Learning Progression',
+  correction_alignment:'Learning Progression',
+  cefr_independence:'Learning Progression',
+  no_placeholders:'Learner Experience',
+  no_broken_activity:'Learner Experience'
+};
 const REVIEW_ONLY_CHECKS=new Set([
   'distractors_plausible',
   'distractors_parallel',
@@ -154,6 +183,112 @@ const CORROBORATION_CLUSTERS={
 };
 const CORROBORATION_MIN_EVIDENCE=0.35;
 const LOW_CONFIDENCE_REVIEW_THRESHOLD=0.25;
+
+
+function qualityDomain(check){
+  return DOMAIN_BY_CHECK[check.id]||DOMAIN_BY_CATEGORY[check.category]||'Learner Experience';
+}
+function issueSeverity(check){
+  if(check.critical)return 'Critical';
+  if(REVIEW_ONLY_CHECKS.has(check.id))return 'Minor';
+  if(check.rawChoice==='fail'||check.status==='FAIL'||check.status==='CORROBORATED_FAIL'||check.status==='BLOCKED')return 'Major';
+  if(check.review)return 'Minor';
+  return null;
+}
+function normalizeText(value){return String(value==null?'':value).toLowerCase().replace(/\s+/g,' ').trim()}
+function deterministicLessonChecks(payload){
+  const lesson=payload?.lesson;
+  if(!lesson||typeof lesson!=='object'||Array.isArray(lesson))return [];
+  const issues=[];
+  const push=(id,domain,severity,requirement,reason,path='lesson')=>issues.push({
+    id,category:'Deterministic',domain,severity,critical:severity==='Critical',source:'deterministic',
+    status:'FAIL',blocking:severity==='Critical',review:severity!=='Critical',
+    requirement,reason,path,repairEligible:severity!=='Minor'
+  });
+  const raw=JSON.stringify(lesson);
+  if(/lorem ipsum|\btodo\b|\btbd\b|placeholder text|replace me|insert (text|content|audio|image) here/i.test(raw)){
+    push('det_no_placeholders','Learner Experience','Critical','Learner-facing content must not contain placeholders or template residue.','Placeholder or unfinished template text was detected.')
+  }
+  const seen=new WeakSet();
+  function walk(node,path){
+    if(!node||typeof node!=='object'||seen.has(node))return;
+    seen.add(node);
+    if(Array.isArray(node)){node.forEach((x,i)=>walk(x,path+'['+i+']'));return}
+    if(Array.isArray(node.options)&&node.options.length){
+      const opts=node.options.map(x=>String(x));
+      const normalized=opts.map(normalizeText);
+      if(new Set(normalized).size!==normalized.length){
+        push('det_duplicate_options','Assessment Validity','Major','Selected-response options must be distinct.','Duplicate or equivalent answer options were detected.',path)
+      }
+      if(node.answer!==undefined&&node.answer!==null){
+        const ans=node.answer;
+        const valid=typeof ans==='number'
+          ?Number.isInteger(ans)&&ans>=0&&ans<opts.length
+          :normalized.includes(normalizeText(ans));
+        if(!valid){
+          push('det_answer_not_in_options','Assessment Validity','Critical','Every selected-response answer key must resolve to one available option.','An answer key does not match any available option.',path)
+        }
+      }
+    }
+    for(const [k,v] of Object.entries(node))walk(v,path+'.'+k)
+  }
+  walk(lesson,'lesson');
+
+  const northstar=lesson.northstar;
+  const framework=String(northstar?.framework||lesson.northstarFramework||'');
+  if(framework==='SEE_CHOOSE_CHANGE_USE_FIX'){
+    if(!String(lesson.readingText||'').trim())push('det_missing_reading','Alignment','Critical','Northstar SEE requires a reading source.','Reading source is missing.');
+    if(!String(lesson.audioScript||'').trim())push('det_missing_listening','Alignment','Critical','Northstar Listening requires a listening source.','Listening source is missing.');
+    const qs=Array.isArray(lesson.questions)?lesson.questions:[];
+    const readingCount=qs.filter(q=>String(q?.tag||'').startsWith('reading:')).length;
+    const listeningCount=qs.filter(q=>String(q?.tag||'').startsWith('listening:')).length;
+    if(readingCount&&readingCount<3)push('det_reading_depth','Learning Progression','Major','Northstar reading should provide at least three meaningful comprehension checks.','Fewer than three tagged reading-comprehension questions were found.');
+    if(Number(lesson.number)>=2&&listeningCount<3)push('det_listening_depth','Learning Progression','Major','Northstar listening should provide at least three meaningful comprehension checks.','Fewer than three tagged listening-comprehension questions were found.');
+    if(northstar){
+      if(!Array.isArray(northstar.change)||northstar.change.length!==2)push('det_change_structure','Learning Progression','Major','CHANGE should contain two guided transformations.','CHANGE does not contain exactly two guided transformations.');
+      if(!String(northstar.use?.prompt||'').trim())push('det_missing_use','Authentic Use','Critical','USE requires an independent communicative prompt.','Independent USE prompt is missing.');
+      if(!String(northstar.final?.task||'').trim())push('det_missing_final_task','Authentic Use','Critical','The lesson requires a final transfer task.','Final transfer task is missing.');
+    }
+  }
+  return issues;
+}
+function decorateCheck(check){
+  const domain=check.domain||qualityDomain(check);
+  const severity=check.severity||issueSeverity(check);
+  return {
+    ...check,
+    domain,
+    severity,
+    source:check.source||'jev',
+    repairEligible:Boolean(severity&&(severity==='Critical'||severity==='Major'))
+  };
+}
+function buildDomainProfile(checks){
+  const profile={};
+  for(const domain of QUALITY_DOMAINS){
+    const rows=checks.filter(x=>x.domain===domain);
+    const critical=rows.filter(x=>x.severity==='Critical'&&(x.status==='FAIL'||x.status==='CORROBORATED_FAIL'||x.status==='BLOCKED')).length;
+    const major=rows.filter(x=>x.severity==='Major'&&(x.status==='FAIL'||x.status==='CORROBORATED_FAIL'||x.status==='BLOCKED'||x.review)).length;
+    const minor=rows.filter(x=>x.severity==='Minor'&&x.review).length;
+    profile[domain]={
+      status:critical?'RED':major?'AMBER':'GREEN',
+      critical,major,minor,
+      passed:rows.filter(x=>x.status==='PASS').length,
+      reviewed:rows.filter(x=>x.review).length,
+      total:rows.length
+    };
+  }
+  return profile;
+}
+function releaseFrom(checks){
+  const critical=checks.filter(x=>x.severity==='Critical'&&(x.status==='FAIL'||x.status==='CORROBORATED_FAIL'||x.status==='BLOCKED'));
+  const major=checks.filter(x=>x.severity==='Major'&&(x.status==='FAIL'||x.status==='CORROBORATED_FAIL'||x.status==='BLOCKED'||x.review));
+  const minor=checks.filter(x=>x.severity==='Minor'&&x.review);
+  return {
+    releaseState:critical.length?'RED':major.length?'AMBER':'GREEN',
+    critical,major,minor
+  };
+}
 
 function sha(value){
   return crypto.createHash('sha256').update(typeof value==='string'?value:JSON.stringify(value)).digest('hex');
@@ -303,6 +438,7 @@ async function callJev(state){
 }
 async function runSemanticQa(payload){
   const structural=structuralChecks(payload);
+  const deterministic=deterministicLessonChecks(payload);
   if(structural.some(x=>x.status==='FAIL'))return {
     pass:false,
     decision:'BLOCK',
@@ -314,7 +450,16 @@ async function runSemanticQa(payload){
     review:0,
     blocked:structural.length,
     criticalFailures:structural.filter(x=>x.critical).length,
-    checks:structural.map(x=>({...x,blocking:true,review:false})),
+    releaseState:'RED',
+    auditVersion:LESSON_QUALITY_AUDIT_VERSION,
+    evaluatedAt:new Date().toISOString(),
+    contentHash:sha(payload?.lesson||{}),
+    domains:buildDomainProfile(structural.map(x=>decorateCheck({...x,blocking:true,review:false,severity:'Critical',source:'deterministic'}))),
+    critical:structural.length,
+    major:0,
+    minor:0,
+    checks:structural.map(x=>decorateCheck({...x,blocking:true,review:false,severity:'Critical',source:'deterministic'})),
+    repairPolicy:{maxAutomaticPasses:2,eligibleFindingIds:structural.map(x=>x.id)},
     usage:null
   };
   const state={
@@ -330,25 +475,41 @@ async function runSemanticQa(payload){
     lesson:payload.lesson
   };
   const data=await callJev(state);
-  const checks=applyCorroboration(CHECKS.map(check=>normalizeAnswer(check,data?.answers?.[check.id])));
-  const blocked=checks.filter(x=>x.blocking);
-  const review=checks.filter(x=>x.review&&!x.blocking);
+  const semanticChecks=applyCorroboration(CHECKS.map(check=>normalizeAnswer(check,data?.answers?.[check.id]))).map(decorateCheck);
+  const deterministicChecks=deterministic.map(decorateCheck);
+  const checks=[...deterministicChecks,...semanticChecks];
+  const release=releaseFrom(checks);
+  const blocked=release.critical;
+  const review=checks.filter(x=>x.review&&!blocked.includes(x));
   const passed=checks.filter(x=>x.status==='PASS').length;
   const notApplicable=checks.filter(x=>x.status==='NOT_APPLICABLE').length;
-  const decision=blocked.length?'BLOCK':review.length?'PASS_WITH_REVIEW':'PASS';
+  const decision=release.releaseState==='RED'?'BLOCK':release.releaseState==='AMBER'?'REVIEW_REQUIRED':'PASS';
   return {
-    pass:blocked.length===0,
+    pass:release.releaseState!=='RED',
+    publishable:release.releaseState==='GREEN',
+    releaseState:release.releaseState,
     decision,
     model:String(data?.model||TYPE_SAFE_MODEL),
     version:FIREWALL_VERSION,
+    auditVersion:LESSON_QUALITY_AUDIT_VERSION,
+    evaluatedAt:new Date().toISOString(),
+    contentHash:sha(payload.lesson),
     totalChecks:checks.length,
     passed,
     notApplicable,
     review:review.length,
     blocked:blocked.length,
-    criticalFailures:blocked.filter(x=>x.critical).length,
-    reviewCritical:review.filter(x=>x.critical).length,
+    criticalFailures:release.critical.length,
+    majorFindings:release.major.length,
+    minorFindings:release.minor.length,
+    domains:buildDomainProfile(checks),
     checks,
+    repairPolicy:{
+      maxAutomaticPasses:2,
+      eligibleFindingIds:checks.filter(x=>x.repairEligible&&(x.severity==='Critical'||x.severity==='Major')).map(x=>x.id),
+      preservePassingContent:true,
+      localizedRepairOnly:true
+    },
     usage:data?.usage||null
   };
 }
@@ -363,6 +524,9 @@ function approvalToken({user,context,replacement,report}){
     targetPath:String(context.targetPath||''),
     replacementHash:sha(replacement),
     qaVersion:report.version,
+    qualityAuditVersion:report.auditVersion,
+    contentHash:report.contentHash,
+    releaseState:report.releaseState,
     qaModel:report.model,
     totalChecks:report.totalChecks,
     passed:report.passed,
@@ -405,10 +569,19 @@ function installSemanticQaFirewall(app,{nativePost}){
       };
       const report=await runSemanticQa({context,lesson:body.lesson});
       res.set('Cache-Control','no-store');
-      if(!report.pass){
+      if(report.releaseState==='RED'){
         return res.status(422).json({
           ok:false,
-          error:`Semantic QA blocked publication: ${report.blocked} calibrated blocker${report.blocked===1?'':'s'} remain${report.blocked===1?'s':''}${report.review?` and ${report.review} review note${report.review===1?'':'s'}`:''}.`,
+          code:'LESSON_QUALITY_RED',
+          error:`Lesson Quality Firewall blocked publication: ${report.criticalFailures} critical finding${report.criticalFailures===1?'':'s'} remain.`,
+          report
+        });
+      }
+      if(report.releaseState==='AMBER'){
+        return res.status(409).json({
+          ok:false,
+          code:'LESSON_QUALITY_REVIEW_REQUIRED',
+          error:`Lesson requires human review before publication: ${report.majorFindings} major finding${report.majorFindings===1?'':'s'} remain.`,
           report
         });
       }
@@ -452,6 +625,9 @@ module.exports={
   runSemanticQa,
   CHECKS,
   FIREWALL_VERSION,
+  LESSON_QUALITY_AUDIT_VERSION,
+  QUALITY_DOMAINS,
+  deterministicLessonChecks,
   REVIEW_ONLY_CHECKS,
   FAIL_THRESHOLDS,
   CORROBORATION_CLUSTERS,
