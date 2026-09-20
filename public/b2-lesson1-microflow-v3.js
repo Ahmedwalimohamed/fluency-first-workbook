@@ -6,7 +6,8 @@
 
 const LESSON_ID='su-b2-l1';
 const TOTAL=10;
-const FLOW_VERSION='b2-l1-see-choose-change-use-fix-v2';
+const MIN_COMPREHENSION_QUESTIONS=3;
+const FLOW_VERSION='b2-l1-see-choose-change-use-fix-v3';
 const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX'];
 const STEPS=[
   {phase:'SEE',skill:'reading'},
@@ -19,6 +20,17 @@ const STEPS=[
   {phase:'USE',skill:'writing'},
   {phase:'USE',skill:'writing'},
   {phase:'FIX',skill:'grammar'}
+];
+
+const READING_QUESTIONS=[
+ {q:'What are Sara and Daniel mainly doing?',options:['Getting acquainted at a workshop','Planning a holiday','Discussing a customer complaint'],answer:0},
+ {q:'What kind of company does Sara work for?',options:['A logistics company','A university','A travel company'],answer:0},
+ {q:'How long has Sara worked there?',options:['Three years','Five years','Since last month'],answer:0}
+];
+const LISTENING_QUESTIONS=[
+ {q:'What is difficult for Sara?',options:['Explaining technical ideas to customers','Finding a logistics company','Attending professional workshops'],answer:0},
+ {q:'What is Daniel also trying to do?',options:['Make technical information easier to understand','Change jobs immediately','Organize the workshop'],answer:0},
+ {q:'What do Sara and Daniel have in common?',options:['Both are trying to explain technical information more clearly','Both work for the same logistics company','Both dislike digital projects'],answer:0}
 ];
 
 function el(id){return document.getElementById(id)}
@@ -39,7 +51,7 @@ function key(){
   return 'englishgate:'+FLOW_VERSION+':'+sid
 }
 function fresh(){
-  return {version:FLOW_VERSION,index:0,responses:{},results:{},attempts:{},saved:false,complete:false,share:false,updatedAt:new Date().toISOString()}
+  return {version:FLOW_VERSION,index:0,responses:{},results:{},attempts:{},subprogress:{},subresponses:{},saved:false,complete:false,share:false,updatedAt:new Date().toISOString()}
 }
 function read(){
   try{
@@ -109,6 +121,48 @@ function modelDialogue(){
     '</div>'
 }
 
+function renderQuestionSet(state,opts){
+  var items=(opts.items||[]).slice(0,MIN_COMPREHENSION_QUESTIONS);
+  if(!items.length)return;
+  state.subprogress=state.subprogress||{};state.subresponses=state.subresponses||{};
+  var key=String(opts.key||'questions'),pos=Math.max(0,Math.min(Number(state.subprogress[key]||0),items.length-1)),q=items[pos];
+  var before=(pos===0?String(opts.intro||''):'')+(typeof opts.before==='function'?opts.before(pos):String(opts.before||''));
+  var body=before+'<div class="micro-question-count">Question '+(pos+1)+' of '+items.length+'</div>'+
+    prompt(q.q,opts.sub)+choices(q.options)+'<div id="microFeedbackSlot"></div>';
+  el('content').innerHTML=shell(body,state);bindBack();
+  if(typeof opts.afterRender==='function')opts.afterRender();
+  Array.from(document.querySelectorAll('[data-choice]')).forEach(function(btn){
+    btn.onclick=function(){
+      if(el('microContinue'))return;
+      var ix=Number(btn.dataset.choice),value=q.options[ix],ok=ix===Number(q.answer);
+      state.subresponses[key+':'+pos]=value;setOK(state,state.index,ok);hit(state,state.index);write(state);
+      Array.from(document.querySelectorAll('[data-choice]')).forEach(function(b){b.disabled=true;b.classList.toggle('is-selected',b===btn)});
+      var last=pos===items.length-1;
+      el('microFeedbackSlot').innerHTML=feedback(ok,ok?'Correct.':'Try again.',ok?(opts.good||'You understood this part.'):(opts.bad||'Use the source and try again.'),ok?(last?'Next':'Next question'):'Try again');
+      el('microContinue').onclick=function(){
+        if(!ok)return renderQuestionSet(state,opts);
+        if(last){
+          setR(state,state.index,items.map(function(_,i){return String(state.subresponses[key+':'+i]||'')}).join(' | '));
+          setOK(state,state.index,true);delete state.subprogress[key];write(state);return next(state)
+        }
+        state.subprogress[key]=pos+1;write(state);renderQuestionSet(state,opts)
+      }
+    }
+  })
+}
+
+function renderReading(state){
+  return renderQuestionSet(state,{
+    key:'reading',
+    items:READING_QUESTIONS,
+    intro:prompt('Read for meaning.','Answer three short questions. One question appears at a time.'),
+    before:function(){return modelDialogue()},
+    sub:'Use the conversation as your source.',
+    good:'That answer is supported by the conversation.',
+    bad:'Check the conversation and try again.'
+  })
+}
+
 function listeningScript(){
   return "Sara: The digital projects are interesting, but explaining technical ideas to customers is still difficult for me. Daniel: I know the feeling. I am also trying to make technical information easier to understand.";
 }
@@ -117,22 +171,15 @@ function renderListening(state){
   var player=typeof liveAudioPlayerHtml==='function'
     ?liveAudioPlayerHtml(script,[{name:'Sara',gender:'female'},{name:'Daniel',gender:'male'}])
     :'<div class="feedback bad">Listening audio is unavailable on this device.</div>';
-  var body=prompt('Listen once for the main idea.','You can replay the audio. Open the transcript only after listening.')+
-    player+
-    prompt('What is difficult for Sara?')+
-    choices(['Explaining technical ideas to customers','Finding a logistics company','Attending professional workshops'])+
-    '<div id="microFeedbackSlot"></div>';
-  el('content').innerHTML=shell(body,state);bindBack();
-  if(typeof wireLiveAudioPlayers==='function')wireLiveAudioPlayers(document);
-  Array.from(document.querySelectorAll('[data-choice]')).forEach(function(btn){
-    btn.onclick=function(){
-      if(el('microContinue'))return;
-      var ix=Number(btn.dataset.choice),value=['Explaining technical ideas to customers','Finding a logistics company','Attending professional workshops'][ix],ok=ix===0;
-      setR(state,state.index,value);setOK(state,state.index,ok);hit(state,state.index);
-      Array.from(document.querySelectorAll('[data-choice]')).forEach(function(b){b.disabled=true;b.classList.toggle('is-selected',b===btn)});
-      el('microFeedbackSlot').innerHTML=feedback(ok,ok?'Correct.':'Try again.',ok?'Sara says explaining technical ideas to customers is still difficult.':'Listen for the problem Sara describes.','Next');
-      el('microContinue').onclick=function(){if(ok)next(state);else render(state)}
-    }
+  return renderQuestionSet(state,{
+    key:'listening',
+    items:LISTENING_QUESTIONS,
+    intro:prompt('Listen for meaning.','Answer three short questions. Replay the audio when you need to.'),
+    before:function(){return player},
+    sub:'Choose the answer supported by what you hear.',
+    good:'You caught the key information.',
+    bad:'Replay the audio and listen for the detail in the question.',
+    afterRender:function(){if(typeof wireLiveAudioPlayers==='function')wireLiveAudioPlayers(document)}
   })
 }
 
@@ -201,7 +248,7 @@ function renderMessage(state){
     setR(state,8,value);setOK(state,8,messageHasDetail(value)&&messageHasStay(value));hit(state,8);
     box.disabled=true;check.disabled=true;share.disabled=true;
     var strong=messageHasDetail(value)&&messageHasStay(value);
-    el('microFeedbackSlot').innerHTML=feedback(true,strong?'Your message has a clear purpose.':'Good first message.',strong?'You referred to the conversation and gave a reason to stay in touch.':'Keep it. The final step will help you improve one useful part.','Fix one thing');
+    el('microFeedbackSlot').innerHTML=feedback(true,strong?'Your message has a clear purpose.':'Good first message.',strong?'You referred to the conversation and gave a reason to stay in touch.':'Keep it. The final check will only correct something if it actually needs correction.','Check result');
     el('microContinue').onclick=function(){next(state)}
   }
 }
@@ -213,10 +260,19 @@ function repairMode(state){
   if(!messageHasDetail(message)&&!messageHasStay(message))return {type:'detailstay',source:message};
   if(!messageHasDetail(message))return {type:'detail',source:message};
   if(!messageHasStay(message))return {type:'stay',source:message};
-  return {type:'polish',source:message}
+  return {type:'none',source:message}
 }
 function renderRepair(state){
   var mode=repairMode(state),prior=String(getR(state,9)||''),title,sub,help,placeholder,validate;
+  if(mode.type==='none'){
+    var original=String(getR(state,8)||'').trim();
+    var body=prompt('No correction needed.','Your duration sentence and follow-up message already meet the lesson target.')+
+      '<div class="micro-help"><strong>Your message</strong><span>'+esc(original)+'</span></div>'+
+      action('Finish lesson','microFinish',false);
+    el('content').innerHTML=shell(body,state);bindBack();
+    el('microFinish').onclick=function(){setR(state,9,original);setOK(state,9,true);finish(state)};
+    return
+  }
   if(mode.type==='duration'){
     title='Fix your duration sentence.';
     sub='Your meaning is clear. Now use present perfect with for or since.';
@@ -271,15 +327,7 @@ function renderRepair(state){
 function render(state){
   if(state.complete){renderDone(state);return}
   var i=state.index;
-  if(i===0)return renderChoice(state,{
-    before:modelDialogue(),
-    q:'What are Sara and Daniel mainly doing?',
-    sub:'Read the short conversation and choose one answer.',
-    options:['Getting acquainted at a workshop','Planning a holiday','Discussing a customer complaint'],
-    answer:0,
-    good:'They are meeting for the first time and learning about each other.',
-    bad:'Look at how they introduce themselves and ask about work.'
-  });
+  if(i===0)return renderReading(state);
   if(i===1)return renderChoice(state,{
     before:'<div class="micro-scene">'+speaker('Sara','What brought you to the workshop?')+'</div>',
     q:'Which answer sounds natural?',
@@ -417,6 +465,7 @@ window.ENGLISHGATE_B2_L1_MICROFLOW={
   framework:'SEE_CHOOSE_CHANGE_USE_FIX',
   total:TOTAL,
   phases:PHASES.slice(),
+  questionCounts:{reading:READING_QUESTIONS.length,listening:LISTENING_QUESTIONS.length},
   reset:function(){render(reset())},
   logic:{reasonRelevant:reasonRelevant,durationCorrect:durationCorrect,useRelevant:useRelevant,messageValid:messageValid,messageHasDetail:messageHasDetail,messageHasStay:messageHasStay}
 };
