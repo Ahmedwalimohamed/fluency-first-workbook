@@ -42,6 +42,63 @@ function crossQuestions(){
   final_independence:q('Does Lesson 22 function as a substantially independent human-graded B2 exit task rather than another heavily scaffolded practice lesson?')
  }
 }
+
+function itemDiagnosticQuestions(items){
+ const criteria={
+  pass:'The item is clear, complete, non-tricky, and can be completed as intended by a B2 adult EFL learner.',
+  fail:'There is a concrete wording, answerability, completeness, or task-logic problem that could confuse or block the learner.',
+  review:'The item is usable, but there is a localized concern worth checking.'
+ };
+ const out={};
+ items.forEach((item,i)=>{
+  out['item_'+i]={
+   type:'choice',
+   instructions:'Evaluate ONLY item '+i+' in state.items. Is it clear, complete, non-tricky, and structurally usable for the stated learning purpose? Do not penalize obviously wrong distractors merely for being wrong; fail only for a concrete learner-facing defect.',
+   criteria
+  };
+ });
+ return out;
+}
+function diagnosticItems(lesson){
+ const items=[];
+ const add=(kind,label,value)=>items.push({kind,label,value});
+ (lesson.grammarItems||[]).forEach((x,i)=>add('grammar','grammar '+(i+1),x));
+ (lesson.writing?.builder||[]).forEach((x,i)=>add('writing-builder','writing builder '+(i+1),x));
+ (lesson.northstar?.change||[]).forEach((x,i)=>add('change','CHANGE '+(i+1),x));
+ if(lesson.northstar?.use)add('use','USE',lesson.northstar.use);
+ if(lesson.northstar?.final)add('final','FINAL',lesson.northstar.final);
+ if(lesson.northstar?.fix)add('fix','FIX',lesson.northstar.fix);
+ if(lesson.northstar?.retrieval)add('retrieval','RETRIEVAL',lesson.northstar.retrieval);
+ return items;
+}
+async function auditLessonItems(lesson){
+ const items=diagnosticItems(lesson);
+ const questions=itemDiagnosticQuestions(items);
+ const data=await callJev({
+  task:'EnglishGate B2 item-level diagnostic',
+  targetLevel:'B2',
+  lessonNumber:Number(lesson.number),
+  lessonTitle:String(lesson.title||''),
+  outcome:String(lesson.outcome||''),
+  grammarFocus:String(lesson.grammarFocus||''),
+  rules:[
+   'Diagnose the supplied item itself, not the lesson globally.',
+   'A wrong distractor is expected in multiple choice and is not a defect by itself.',
+   'A fail requires a concrete learner-facing wording, answerability, completeness, or task-logic defect.',
+   'Repeated framework language is intentional and is not automatically a defect.'
+  ],
+  items
+ },questions);
+ const findings=[];
+ items.forEach((item,i)=>{
+  const d=selectedEvidence(data?.answers?.['item_'+i]);
+  if(d.choice!=='pass'||Number(d.evidence)<0.60){
+   findings.push({index:i,kind:item.kind,label:item.label,...d,item:item.value});
+  }
+ });
+ return {model:String(data?.model||TYPE_SAFE_MODEL),findings};
+}
+
 async function auditCourseCrossLesson(lessons){
  const compact=lessons.filter(l=>Number(l.number)>=2).map(l=>({
   number:l.number,title:l.title,support:l.northstar?.support,mission:l.northstar?.mission,
@@ -91,6 +148,14 @@ async function main(){
      lesson
     });
     console.log('JEV_NORTHSTAR_LESSON '+JSON.stringify({lessonNumber:lesson.number,title:lesson.title,releaseState:report.releaseState,decision:report.decision,blocked:report.blocked,criticalFailures:report.criticalFailures,majorFindings:report.majorFindings,minorFindings:report.minorFindings,majorIssues:(report.checks||[]).filter(x=>x.severity==='Major'&&(x.status==='FAIL'||x.status==='CORROBORATED_FAIL'||x.status==='BLOCKED'||x.review)).map(x=>({id:x.id,domain:x.domain,status:x.status,choice:x.choice,evidence:x.evidence,requirement:x.requirement,reason:x.reason})),reviewIssues:(report.checks||[]).filter(x=>x.review).map(x=>({id:x.id,domain:x.domain,severity:x.severity,status:x.status,choice:x.choice,evidence:x.evidence,requirement:x.requirement,reason:x.reason})),domains:report.domains,model:report.model,version:report.version,auditVersion:report.auditVersion,contentHash:report.contentHash}));
+    if(report.releaseState==='AMBER'&&Number(lesson.number)===7){
+      try{
+        const diag=await auditLessonItems(lesson);
+        console.log('JEV_NORTHSTAR_ITEM_DIAG '+JSON.stringify({lessonNumber:lesson.number,title:lesson.title,...diag}));
+      }catch(e){
+        console.error('JEV_NORTHSTAR_ITEM_DIAG_ERROR '+JSON.stringify({lessonNumber:lesson.number,error:String(e?.message||e).slice(0,500)}));
+      }
+    }
     return {lessonNumber:lesson.number,title:lesson.title,report}
    }catch(e){
     const error=String(e?.message||e).slice(0,800);
