@@ -114,7 +114,10 @@ function install(app){
           contentHash:approval.contentHash||null,
           totalChecks:Number(approval.totalChecks||0),
           passed:Number(approval.passed||0),
-          review:Number(approval.review||0)
+          review:Number(approval.review||0),
+          humanReviewAccepted:Boolean(approval.humanReviewAccepted),
+          reviewedBy:approval.humanReviewAccepted?String(approval.sub||'admin'):null,
+          reviewedAt:approval.humanReviewAccepted?new Date().toISOString():null
         }:null
       };
       if(!courseId||!Number.isInteger(lessonNumber)||lessonNumber<1||lessonNumber>500||!validPath(targetPath))return res.status(400).json({error:'Invalid content target.'});
