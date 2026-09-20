@@ -2,6 +2,10 @@
 
 const crypto=require('crypto');
 const jwt=require('jsonwebtoken');
+const fs=require('fs');
+const path=require('path');
+const {Pool}=require('pg');
+const b2AuditPool=new Pool({connectionString:process.env.DATABASE_URL});
 const TYPE_SAFE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const TYPE_SAFE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
 const TOKEN_TTL_SECONDS=Math.max(120,Math.min(1800,Number(process.env.SEMANTIC_QA_TOKEN_TTL_SECONDS)||600));
@@ -385,9 +389,99 @@ function verifyApproval(req){
   if(decoded.replacementHash!==sha(req.body?.replacement))return {ok:false,error:'The proposed content changed after QA. Run Jev QA again.'};
   return {ok:true,decoded};
 }
-function installSemanticQaFirewall(app,{nativePost}){
+function installSemanticQaFirewall(app,{nativePost,nativeGet}){
   if(installed.has(app))return;
   installed.add(app);
+
+  if(nativeGet){
+    nativeGet.call(app,'/api/semantic-qa/internal-b2-calibration',async(req,res)=>{
+      const expected=String(process.env.SEMANTIC_B2_AUDIT_NONCE||'');
+      const supplied=String(req.query?.nonce||'');
+      const ok=expected&&supplied&&expected.length===supplied.length&&crypto.timingSafeEqual(Buffer.from(expected),Buffer.from(supplied));
+      if(!ok)return res.status(404).json({error:'Not found.'});
+      res.set('Cache-Control','no-store');
+      try{
+        const raw=fs.readFileSync(path.join(__dirname,'public','speakup-b2-blueprint.js'),'utf8').trim();
+        const prefix='window.SPEAKUP_B2_BLUEPRINT=';
+        if(!raw.startsWith(prefix))throw new Error('B2 blueprint format not recognised.');
+        const json=raw.slice(prefix.length).replace(/;\s*$/,'');
+        const lessons=JSON.parse(json);
+        const patchRows=await b2AuditPool.query("select id,course_id,lesson_number,component,replacement from content_patches where is_active=true and course_id='speakup-b2' order by created_at,id");
+        function segs(p){return String(p||'').split('.').filter(Boolean)}
+        function specificity(p){return p==='lesson'?0:Math.max(1,segs(p).length)}
+        function setPath(root,target,value){
+          if(target==='lesson'){
+            const keys=['title','outcome','expressions','vocabulary','vocabularyItems','readingText','audioScript','questions','grammarItems','grammarFocus','grammarRule','writing','review','performance','foundation','b2Lift','pronunciation','mediation','functions','discourse','chunks','interactionExpressions'];
+            for(const k of keys)delete root[k];
+            for(const k of keys)if(value&&Object.prototype.hasOwnProperty.call(value,k))root[k]=JSON.parse(JSON.stringify(value[k]));
+            return true;
+          }
+          const parts=segs(target);if(!parts.length||parts.some(x=>['__proto__','prototype','constructor'].includes(x)))return false;
+          let cur=root;
+          for(let i=0;i<parts.length-1;i++){
+            const k=/^\d+$/.test(parts[i])?Number(parts[i]):parts[i];
+            if(cur?.[k]==null)return false;
+            cur=cur[k];
+          }
+          const last=/^\d+$/.test(parts.at(-1))?Number(parts.at(-1)):parts.at(-1);
+          if(cur==null)return false;
+          cur[last]=JSON.parse(JSON.stringify(value));
+          return true;
+        }
+        const patches=(patchRows.rows||[]).slice().sort((a,b)=>specificity(a.component)-specificity(b.component)||Number(a.id||0)-Number(b.id||0));
+        let appliedPatches=0;
+        for(const p of patches){
+          const lesson=lessons.find(x=>Number(x.number)===Number(p.lesson_number));
+          if(lesson&&setPath(lesson,String(p.component||''),p.replacement))appliedPatches++;
+        }
+        const start=Math.max(0,Number(req.query?.start)||0);
+        const limit=Math.max(1,Math.min(2,Number(req.query?.limit)||1));
+        const selected=lessons.slice(start,start+limit);
+        const results=[];
+        for(const lesson of selected){
+          const report=await runSemanticQa({
+            context:{
+              targetLevel:'B2',
+              courseId:'speakup-b2',
+              lessonNumber:Number(lesson.number)||0,
+              targetPath:'lesson',
+              lessonTitle:String(lesson.title||''),
+              learningOutcome:String(lesson.outcome||''),
+              audience:'adult English learners'
+            },
+            lesson
+          });
+          results.push({
+            lessonNumber:Number(lesson.number)||0,
+            lessonTitle:String(lesson.title||''),
+            decision:String(report.decision||''),
+            pass:Boolean(report.pass),
+            passed:Number(report.passed||0),
+            notApplicable:Number(report.notApplicable||0),
+            review:Number(report.review||0),
+            blocked:Number(report.blocked||0),
+            criticalFailures:Number(report.criticalFailures||0),
+            blockingChecks:(report.checks||[]).filter(x=>x.blocking).map(x=>({id:x.id,category:x.category,status:x.status,evidence:x.evidence,confidence:x.confidence,corroboratedBy:x.corroboratedBy||null})),
+            reviewChecks:(report.checks||[]).filter(x=>x.review&&!x.blocking).map(x=>({id:x.id,category:x.category,status:x.status,evidence:x.evidence,confidence:x.confidence}))
+          });
+        }
+        const nextStart=start+selected.length;
+        res.json({
+          ok:true,
+          version:FIREWALL_VERSION,
+          totalLessons:lessons.length,
+          appliedPatches,
+          start,
+          completed:selected.length,
+          nextStart:nextStart<lessons.length?nextStart:null,
+          results
+        });
+      }catch(e){
+        console.error('B2 calibration audit failed',e.message);
+        res.status(500).json({error:'B2 calibration audit failed.',detail:String(e.message||e).slice(0,400)});
+      }
+    });
+  }
 
   nativePost.call(app,'/api/semantic-qa/lesson',async(req,res)=>{
     const user=adminSession(req);
