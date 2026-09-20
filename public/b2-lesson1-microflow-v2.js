@@ -20,8 +20,9 @@ function words(value){var s=String(value||'').trim();return s?s.split(/\s+/).fil
 function norm(value){return String(value||'').toLowerCase().replace(/[’]/g,"'").replace(/[^a-z0-9'?]+/g,' ').replace(/\s+/g,' ').trim()}
 function preview(){return typeof isWorkbookPreview==='function'&&isWorkbookPreview()}
 function learnerName(){
+  if(preview())return 'Alex';
   var n=String(session&&session.name||'').trim();
-  return n?n.split(/\s+/)[0]:'there'
+  return n?n.split(/\s+/)[0]:'Alex'
 }
 function key(){return 'englishgate:'+FLOW_VERSION+':'+(session&&session.id?session.id:'preview')}
 function fresh(){
@@ -53,9 +54,9 @@ function detectOccupation(text){
   if(/\b(bank|banking|finance|accountant|accounting|cashier|loan|credit)\b/.test(t))return 'finance';
   if(/\b(student|study|university|college|course|degree)\b/.test(t))return 'student';
   if(/\b(engineer|engineering|construction|architect|developer|software|it|technology|tech)\b/.test(t))return 'technical';
-  if(/\b(business|company|shop|store|entrepreneur|sales|marketing|customer)\b/.test(t))return 'business';
   if(/\b(doctor|nurse|clinic|hospital|health|medical|pharmacy)\b/.test(t))return 'health';
-  if(/\b(manager|management|admin|administrator|office|operations|project)\b/.test(t))return 'management';
+  if(/\b(manager|management|admin|administrator|office|operations|project|supervisor|coordinate|coordinator)\b/.test(t))return 'management';
+  if(/\b(business|company|shop|store|entrepreneur|sales|marketing|customer)\b/.test(t))return 'business';
   return 'general';
 }
 function occupationFollowUp(type){
