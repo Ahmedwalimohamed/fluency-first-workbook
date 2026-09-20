@@ -45,3 +45,7 @@
 .ace-qa-failures article.blocking{border-color:#fecaca;background:#fff}
 @media(max-width:760px){.ace-quality-domains{grid-template-columns:1fr 1fr}}
 @media(max-width:460px){.ace-quality-domains{grid-template-columns:1fr}}
+
+.ace-selected-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.ace-grade-lesson{min-height:38px;padding:8px 12px;font-size:.8rem;font-weight:800}
+@media(max-width:700px){.ace-selected-actions{width:100%;justify-content:stretch}.ace-selected-actions>*{flex:1}.ace-grade-lesson{width:100%}}
