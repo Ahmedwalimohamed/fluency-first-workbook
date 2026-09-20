@@ -283,8 +283,12 @@ async function main(){
   console.log('JEV_AUDIT_SUMMARY '+JSON.stringify(summary));
   await pool.end();
 }
-main().catch(async e=>{
-  console.error('JEV_AUDIT_FATAL '+JSON.stringify({error:String(e.message||e),stack:String(e.stack||'').slice(0,1600)}));
-  try{await pool.end()}catch{}
-  process.exit(2);
-});
+module.exports={main};
+
+if(require.main===module){
+  main().catch(async e=>{
+    console.error('JEV_AUDIT_FATAL '+JSON.stringify({error:String(e.message||e),stack:String(e.stack||'').slice(0,1600)}));
+    try{await pool.end()}catch{}
+    process.exit(2);
+  });
+}
