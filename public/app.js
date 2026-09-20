@@ -1621,7 +1621,7 @@ function workbook(){
  const firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id));
  const stageButtons=steps.map((step,i)=>{
   const key=workbookCompletionKey(l,step),done=workbookStepDone(sid,l,step);
-  const allowed=preview||i===0||i<=firstOpen||(key&&completed.includes(key));
+  const allowed=preview||i===0||step===currentStep||i<=firstOpen||(key&&completed.includes(key));
   return `<button class="eg-stage ${step===currentStep?'is-current':''} ${done?'is-done':''}" data-workbook-stage="${allowed?step:''}" ${allowed?'':'disabled'} ${step===currentStep?'aria-current="step"':''}><span>${done?'✓':i+1}</span><strong>${escapeHtml(workbookStageLabel(l,step).toLowerCase())}</strong></button>`;
  }).join('');
  const c=session?.role==='student'?studentClass(sid):null,live=session?.role==='student'?liveBookForClass(c):null,canRevise=Boolean(live?.lessons?.some(x=>x.number===l.number));
