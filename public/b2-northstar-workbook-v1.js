@@ -105,6 +105,13 @@ function weakKey(lessonId){return 'englishgate:northstar:weak:'+sid()+':'+lesson
 function markWeak(lessonId){
  try{localStorage.setItem(weakKey(lessonId),new Date().toISOString())}catch{}
 }
+function rememberOffsetForNumber(n){
+ const lessonNumber=Number(n)||0;
+ const available=REMEMBER_OFFSETS.filter(offset=>lessonNumber-offset>=1);
+ if(!available.length)return null;
+ const desired=REMEMBER_OFFSETS[(Math.max(2,lessonNumber)-2)%REMEMBER_OFFSETS.length];
+ return available.includes(desired)?desired:available[0]
+}
 function rememberCandidate(l){
  const n=Number(l.number)||0;
  const candidates=REMEMBER_OFFSETS.filter(offset=>n-offset>=1).map(offset=>{
@@ -119,8 +126,8 @@ function rememberCandidate(l){
  }
  const weak=candidates.find(x=>x.weak);
  if(weak)return weak;
- const desired=REMEMBER_OFFSETS[(Math.max(2,n)-2)%REMEMBER_OFFSETS.length];
- return candidates.find(x=>x.offset===desired)||candidates[0]
+ const planned=rememberOffsetForNumber(n);
+ return candidates.find(x=>x.offset===planned)||candidates[0]
 }
 
 function renderChoice(l,s,opts){
@@ -411,5 +418,5 @@ if(previousWorkbook){
  }
 }
 
-window.ENGLISHGATE_B2_NORTHSTAR={version:FLOW_VERSION,total:TOTAL,phases:PHASES.slice(),rememberOffsets:REMEMBER_OFFSETS.slice(),uiDecisionContract:'jev-ui-v1',uiModes:['source','decision','compose','repair']};
+window.ENGLISHGATE_B2_NORTHSTAR={version:FLOW_VERSION,total:TOTAL,phases:PHASES.slice(),rememberOffsets:REMEMBER_OFFSETS.slice(),rememberOffsetForNumber,uiDecisionContract:'jev-ui-v1',uiModes:['source','decision','compose','repair']};
 })();
