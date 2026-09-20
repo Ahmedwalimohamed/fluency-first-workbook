@@ -123,7 +123,7 @@ async function generateListeningAudio(input,speakerProfiles=[]){
  const chunks=splitTtsText(input),buffers=await mapLimit(chunks,2,chunk=>requestSpeechWav(chunk,OPENAI_TTS_VOICE,'Speak in clear, warm, natural conversational English for an English learner. Use realistic pacing, meaningful pauses, and natural emphasis. Do not sound like an announcement or a robot.'));
  return{buffer:mergeWav(buffers,80),contentType:'audio/wav',mode:'single',speakers:[]};
 }
-function sendGeneratedAudio(res,audio){res.set('Content-Type',audio.contentType);res.set('Cache-Control','private, max-age=3600');res.set('X-EnglishGate-Audio-Mode',audio.mode);return res.send(audio.buffer)}
+function sendGeneratedAudio(res,audio){res.set('Content-Type',audio.contentType);res.set('Cache-Control','private, max-age=3600');res.set('X-EnglishGate-Audio-Provider','openai');res.set('X-EnglishGate-Audio-Model',OPENAI_TTS_MODEL);res.set('X-EnglishGate-Audio-Mode',audio.mode);return res.send(audio.buffer)}
 
 const teacherPronunciationServerCache=new Map();
 async function generateTeacherPronunciation(word){
@@ -379,7 +379,7 @@ app.post('/api/audio',auth,async(req,res)=>{
  const input=String(req.body.text||'').trim(),speakers=normalizeSpeakerProfiles(req.body.speakers);
  if(!lessonId||input.length<5||input.length>12000)return res.status(400).json({error:'Invalid listening audio request.'});
  if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'Natural listening audio is unavailable.'});
- const key=crypto.createHash('sha256').update('v3|'+lessonId+'|'+input+'|'+JSON.stringify(speakers)).digest('hex');
+ const key=crypto.createHash('sha256').update('v4-openai-only|'+lessonId+'|'+input+'|'+JSON.stringify(speakers)).digest('hex');
  try{
   if(audioCache.has(key))return sendGeneratedAudio(res,audioCache.get(key));
   const audio=await generateListeningAudio(input,speakers);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
