@@ -76,4 +76,4 @@ express.application.post=function standardsAwarePost(route,...handlers){
   install(this);
   return nativePost.call(this,route,...handlers);
 };
-require('./public-assets-bootstrap.js');
+require('./northstar-jev-grading-bootstrap.js');
