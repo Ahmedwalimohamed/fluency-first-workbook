@@ -259,8 +259,8 @@ function installSemanticQaFirewall(app,{nativePost,nativeGet}){
 
   if(nativeGet){
     nativeGet.call(app,'/api/semantic-qa/internal-library-audit',async(req,res)=>{
-      const expected=String(process.env.SEMANTIC_AUDIT_RUN_TOKEN||'');
-      const supplied=String(req.query?.token||'');
+      const expected=String(process.env.SEMANTIC_AUDIT_NONCE||'');
+      const supplied=String(req.query?.nonce||'');
       const tokenOk=expected&&supplied&&expected.length===supplied.length&&crypto.timingSafeEqual(Buffer.from(expected),Buffer.from(supplied));
       if(!tokenOk)return res.status(404).json({error:'Not found.'});
       res.set('Cache-Control','no-store');
