@@ -120,8 +120,8 @@ try{new vm.Script(lesson1Engine)}catch(e){fail('Lesson 1 engine syntax error: '+
 try{new vm.Script(grader)}catch(e){fail('Northstar Jev grader syntax error: '+e.message)}
 
 if(!app.includes('northstar:x.northstar||null'))fail('Runtime B2 lesson mapper does not expose Northstar metadata.');
-if(!index.includes('b2-northstar-workbook-v1.js?v=6'))fail('Northstar engine is not loaded in index.html with the current cache version.');
-if(index.indexOf('b2-northstar-workbook-v1.js?v=6')>index.indexOf('b2-lesson1-microflow-v3.js?v=6'))fail('Lesson 1 override must load after the generic Northstar engine.');
+if(!index.includes('b2-northstar-workbook-v1.js?v=7'))fail('Northstar engine is not loaded in index.html with the current cache version.');
+if(index.indexOf('b2-northstar-workbook-v1.js?v=7')>index.indexOf('b2-lesson1-microflow-v3.js?v=6'))fail('Lesson 1 override must load after the generic Northstar engine.');
 if(!standards.includes("require('./northstar-jev-grading-bootstrap.js')"))fail('Jev Northstar grading bootstrap is not in the server chain.');
 if(!grader.includes('/api/workbook-activities/grade-use'))fail('Jev Northstar USE grading route is missing.');
 if(!engine.includes("framework==='SEE_CHOOSE_CHANGE_USE_FIX'"))fail('Northstar renderer is not gated by the framework marker.');
