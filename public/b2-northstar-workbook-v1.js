@@ -4,7 +4,8 @@
 (function(){
 'use strict';
 
-const FLOW_VERSION='b2-northstar-v1';
+const FLOW_VERSION='b2-northstar-v1.1';
+const REMEMBER_OFFSETS=[1,3,7];
 const TOTAL=10;
 const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX'];
 const STEPS=[
@@ -82,6 +83,27 @@ function firstChoiceVocab(l){
 }
 function grammarItem(l){return (l.grammar?.items||[]).find(x=>Array.isArray(x.options)&&x.options.length>=3&&x.answer!==undefined)||null}
 function choiceIndex(q){return Math.max(0,(q.options||[]).findIndex(x=>String(x)===String(q.answer)))}
+function weakKey(lessonId){return 'englishgate:northstar:weak:'+sid()+':'+lessonId}
+function markWeak(lessonId){
+ try{localStorage.setItem(weakKey(lessonId),new Date().toISOString())}catch{}
+}
+function rememberCandidate(l){
+ const n=Number(l.number)||0;
+ const candidates=REMEMBER_OFFSETS.filter(offset=>n-offset>=1).map(offset=>{
+  const from=n-offset;
+  const prior=typeof lessonById==='function'?lessonById('su-b2-l'+from):null;
+  const q=prior?grammarItem(prior):null;
+  return q?{offset,from,q,weak:(()=>{try{return Boolean(localStorage.getItem(weakKey(prior.id)))}catch{return false}})()}:null
+ }).filter(Boolean);
+ if(!candidates.length){
+  const r=l.northstar?.retrieval;
+  return r?{offset:1,from:Number(r.from)||Math.max(1,n-1),q:{q:r.prompt,options:r.options,answer:r.answer},weak:false}:null
+ }
+ const weak=candidates.find(x=>x.weak);
+ if(weak)return weak;
+ const desired=REMEMBER_OFFSETS[(Math.max(2,n)-2)%REMEMBER_OFFSETS.length];
+ return candidates.find(x=>x.offset===desired)||candidates[0]
+}
 
 function renderChoice(l,s,opts){
  const body=(opts.before||'')+prompt(opts.q,opts.sub)+choices(opts.options||[])+'<div id="northstarFeedback"></div>';
@@ -91,6 +113,7 @@ function renderChoice(l,s,opts){
    if(el('northstarContinue'))return;
    const ix=Number(btn.dataset.choice),value=opts.options[ix],ok=ix===opts.answer;
    setR(l,s,s.index,value);setOK(l,s,s.index,ok);hit(l,s,s.index);
+   if(!ok&&opts.memoryId)markWeak(opts.memoryId);
    Array.from(document.querySelectorAll('[data-choice]')).forEach(b=>{b.disabled=true;b.classList.toggle('is-selected',b===btn)});
    el('northstarFeedback').innerHTML=feedback(ok,ok?'Correct.':'Try again.',ok?(opts.good||'That meaning fits the context.'):(opts.bad||'Look at the context and try once more.'),ok?'Next':'Try again');
    el('northstarContinue').onclick=()=>ok?next(l,s):render(l,s)
@@ -128,12 +151,22 @@ function renderSee(l,s){
  })
 }
 function renderRetrieval(l,s){
- const r=l.northstar?.retrieval;
- return renderChoice(l,s,{q:r.prompt,sub:'Choose the response that sounds natural.',options:r.options,answer:Math.max(0,r.options.indexOf(r.answer)),good:'That earlier language is still useful here.',bad:'Choose the form that sounds natural and communicates the meaning clearly.'})
+ const item=rememberCandidate(l);
+ if(!item)return renderGrammar(l,s);
+ const q=item.q;
+ return renderChoice(l,s,{
+  q:q.q,
+  sub:'Choose the response that sounds natural.',
+  options:q.options,
+  answer:choiceIndex(q),
+  good:'That earlier language is still useful here.',
+  bad:'Choose the form that sounds natural and communicates the meaning clearly.',
+  memoryId:'su-b2-l'+item.from
+ })
 }
 function renderGrammar(l,s){
  const q=grammarItem(l);
- return renderChoice(l,s,{q:q.q,sub:l.grammar?.rule||'',options:q.options,answer:choiceIndex(q),good:'This form matches the meaning.',bad:'Use the short rule above, then try again.'})
+ return renderChoice(l,s,{q:q.q,sub:l.grammar?.rule||'',options:q.options,answer:choiceIndex(q),good:'This form matches the meaning.',bad:'Use the short rule above, then try again.',memoryId:l.id})
 }
 function renderVocab(l,s){
  const q=firstChoiceVocab(l);
@@ -161,12 +194,22 @@ function renderListening(l,s){
 function renderChange(l,s,which){
  const x=l.northstar.change[which];
  const support=String(l.northstar.support||'');
- const help=support==='low'?'':x.starter;
- return renderOpen(l,s,{q:x.prompt,sub:'Keep the useful pattern, but make the meaning yours.',model:x.model,help,placeholder:x.starter||'Type your sentence…',minWords:5,feedbackTitle:'Good change.'})
+ let model=x.model,help='',placeholder='Type your sentence…',before='';
+ if(support==='high'){
+  help=x.starter;placeholder=x.starter||placeholder
+ }else if(support==='medium-high'){
+  help=which===0?x.starter:'';placeholder=x.starter||placeholder
+ }else if(support==='medium'){
+  placeholder='Make the pattern true for you…'
+ }else if(support==='low'){
+  model='';before=helpBox('Model: '+x.model,'Need to see the model?');placeholder='Use the pattern independently…'
+ }
+ return renderOpen(l,s,{before,q:x.prompt,sub:support==='low'?'Use the lesson language independently.':'Keep the useful pattern, but make the meaning yours.',model,help,placeholder,minWords:5,feedbackTitle:'Good change.'})
 }
 function renderUse(l,s){
- const x=l.northstar.use||{};
- return renderOpen(l,s,{q:x.prompt,sub:'Keep it short and useful.',help:String(l.northstar.support)==='low'?'':x.help,placeholder:'Type what you would say…',minWords:Number(l.number)>=12?8:6,rows:3,button:'Use my English',feedbackTitle:'That communicates.'})
+ const x=l.northstar.use||{},support=String(l.northstar.support||'');
+ const help=(support==='high'||support==='medium-high')?x.help:'';
+ return renderOpen(l,s,{q:x.prompt,sub:'Keep it short and useful.',help,placeholder:'Type what you would say…',minWords:Number(l.number)>=12?8:6,rows:3,button:'Use my English',feedbackTitle:'That communicates.'})
 }
 function finalResponse(s){return String(getR(s,9)||getR(s,8)||'').trim()}
 function renderFinal(l,s){
@@ -310,5 +353,5 @@ if(previousWorkbook){
  }
 }
 
-window.ENGLISHGATE_B2_NORTHSTAR={version:FLOW_VERSION,total:TOTAL,phases:PHASES.slice()};
+window.ENGLISHGATE_B2_NORTHSTAR={version:FLOW_VERSION,total:TOTAL,phases:PHASES.slice(),rememberOffsets:REMEMBER_OFFSETS.slice()};
 })();
