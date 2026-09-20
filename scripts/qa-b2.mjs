@@ -39,6 +39,7 @@ function expectedRange(n){
 }
 
 const blueprint=loadWindowScript('public/speakup-b2-blueprint.js','SPEAKUP_B2_BLUEPRINT');
+const northstarRuntime=loadWindowScript('public/b2-northstar-workbook-v1.js','ENGLISHGATE_B2_NORTHSTAR');
 const liveBooks=loadWindowScript('public/live-books.js','LIVE_BOOKS');
 const live=liveBooks?.['speakup-b2'];
 if(!Array.isArray(blueprint)||blueprint.length!==22)fail('Blueprint must contain exactly 22 B2 lessons.');
@@ -156,7 +157,20 @@ if(/purple|#5b2c8d/i.test(premiumUi))fail('Premium B2 UI must not introduce purp
 if(!grader.includes("focus:'none'"))fail('Jev grader must return no correction when all checks pass.');
 if(!engine.includes("if(i===9)return renderFix"))fail('FIX is not the final Northstar stage.');
 if(!engine.includes('const REMEMBER_OFFSETS=[1,3,7]'))fail('Hidden REMEMBER must use +1, +3, +7 spaced retrieval opportunities.');
+if(!northstarRuntime||typeof northstarRuntime.rememberOffsetForNumber!=='function')fail('Northstar runtime must expose its spaced-retrieval schedule for QA.');
+else{
+ const schedule=Array.from({length:21},(_,i)=>i+2).map(n=>({n,offset:northstarRuntime.rememberOffsetForNumber(n)}));
+ const used=new Set(schedule.map(x=>x.offset));
+ for(const offset of [1,3,7])if(!used.has(offset))fail('Runtime REMEMBER schedule never uses +'+offset+' retrieval.');
+ for(const [lesson,expected] of [[6,3],[10,7],[12,3],[13,7],[18,3],[19,7],[21,3],[22,7]]){
+  const actual=northstarRuntime.rememberOffsetForNumber(lesson);
+  if(actual!==expected)fail(`Lesson ${lesson}: expected runtime REMEMBER +${expected}, found +${actual}.`);
+ }
+}
+if(!engine.includes('const weak=candidates.find(x=>x.weak);')||!engine.includes('if(weak)return weak;'))fail('Hidden REMEMBER must prioritise previously weak grammar before the scheduled offset.');
 if(!engine.includes("support==='low'"))fail('Northstar engine must explicitly fade support in later B2 lessons.');
+if(!engine.includes("model='';before=helpBox('Model: '+x.model,'Need to see the model?')"))fail('Low-support CHANGE must hide the model behind optional reveal.');
+if(!engine.includes("const help=(support==='high'||support==='medium-high')?x.help:'';"))fail('USE help must disappear by medium/low support.');
 
 const server=fs.readFileSync(new URL('server.js',ROOT),'utf8');
 for(const marker of ['b2_upgrade_notice_version','curriculum:b2-living-standard-v1'])if(!server.includes(marker))fail('Student migration protection missing: '+marker);
