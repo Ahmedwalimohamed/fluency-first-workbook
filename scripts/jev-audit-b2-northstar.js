@@ -36,7 +36,7 @@ function crossQuestions(){
  }});
  return {
   progression:q('Across Lessons 2–22, does learner independence generally increase from high support to low support without a sudden unreasonable jump in output or cognitive demand?'),
-  retrieval:q('Does the hidden REMEMBER chain meaningfully recycle useful language from the immediately previous lesson instead of using unrelated review items or explicit review labeling?'),
+  retrieval:q('Does the hidden REMEMBER system provide meaningful spaced retrieval from prior lessons at +1, +3, and +7 opportunities, prioritising previously weak grammar when available, without exposing review-system meta language to learners?'),
   variety:q('Do the missions, CHANGE prompts, USE tasks, and final-task formats have enough real variation that the course does not feel like the same AI template with nouns replaced?'),
   mission_alignment:q('Across the course, does each final USE task plausibly demonstrate its stated real-world mission?'),
   final_independence:q('Does Lesson 22 function as a substantially independent human-graded B2 exit task rather than another heavily scaffolded practice lesson?')
@@ -54,6 +54,8 @@ async function auditCourseCrossLesson(lessons){
  const data=await callJev({
   task:'EnglishGate B2 Northstar cross-lesson curriculum audit',
   targetLevel:'B2',framework:'SEE → CHOOSE → CHANGE → USE → FIX with hidden REMEMBER',
+  runtimeRememberOffsets:[1,3,7],
+  supportFading:{high:'visible model + starter',mediumHigh:'visible model + reduced starter',medium:'visible model without starter',low:'independent CHANGE with optional model reveal; USE has no starter'},
   rules:[
    'The learner-facing experience should stay simple for adult EFL learners.',
    'Difficulty should come from language and independence, not interface complexity.',
