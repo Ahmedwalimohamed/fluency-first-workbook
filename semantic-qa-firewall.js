@@ -2,6 +2,9 @@
 
 const crypto=require('crypto');
 const jwt=require('jsonwebtoken');
+const {Pool}=require('pg');
+const {buildBooks,applyPatches}=require('./englishgate-library-loader.js');
+const auditPool=new Pool({connectionString:process.env.DATABASE_URL});
 
 const TYPE_SAFE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const TYPE_SAFE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
@@ -250,9 +253,60 @@ function verifyApproval(req){
   if(decoded.replacementHash!==sha(req.body?.replacement))return {ok:false,error:'The proposed content changed after QA. Run Jev QA again.'};
   return {ok:true,decoded};
 }
-function installSemanticQaFirewall(app,{nativePost}){
+function installSemanticQaFirewall(app,{nativePost,nativeGet}){
   if(installed.has(app))return;
   installed.add(app);
+
+  if(nativeGet){
+    nativeGet.call(app,'/api/semantic-qa/internal-library-audit',async(req,res)=>{
+      const expected=String(process.env.SEMANTIC_AUDIT_RUN_TOKEN||'');
+      const supplied=String(req.query?.token||'');
+      const tokenOk=expected&&supplied&&expected.length===supplied.length&&crypto.timingSafeEqual(Buffer.from(expected),Buffer.from(supplied));
+      if(!tokenOk)return res.status(404).json({error:'Not found.'});
+      res.set('Cache-Control','no-store');
+      try{
+        const built=buildBooks();
+        const patchRows=await auditPool.query('select id,course_id,lesson_number,component,replacement from content_patches where is_active=true order by created_at,id');
+        const appliedPatches=applyPatches(built.books,patchRows.rows||[]);
+        const inventory=built.books.map(b=>({id:String(b.id||''),title:String(b.title||b.id||''),level:String(b.level||''),lessons:Array.isArray(b.lessons)?b.lessons.length:0})).sort((a,b)=>a.id.localeCompare(b.id));
+        if(String(req.query?.mode||'')==='inventory'){
+          return res.json({ok:true,inventory,appliedPatches,loader:{evaluated:built.evaluated,errors:built.errors}});
+        }
+        const courseId=String(req.query?.courseId||'').trim();
+        const book=built.books.find(b=>String(b.id)===courseId);
+        if(!book)return res.status(404).json({error:'Course not found.',inventory});
+        const start=Math.max(0,Number(req.query?.start)||0);
+        const limit=Math.max(1,Math.min(3,Number(req.query?.limit)||1));
+        const selected=book.lessons.slice(start,start+limit);
+        const results=[];
+        for(const lesson of selected){
+          const started=Date.now();
+          try{
+            const report=await runSemanticQa({context:{
+              targetLevel:String(book.level||''),
+              courseId:String(book.id||''),
+              lessonNumber:Number(lesson.number)||0,
+              targetPath:'lesson',
+              lessonTitle:String(lesson.title||''),
+              learningOutcome:String(lesson.outcome||''),
+              audience:String(book.audience||'adult English learners')
+            },lesson});
+            const blockers=(report.checks||[]).filter(x=>!['PASS','NOT_APPLICABLE'].includes(x.status)).map(x=>({
+              id:x.id,category:x.category,status:x.status,critical:Boolean(x.critical),confidence:x.confidence
+            }));
+            results.push({courseId:String(book.id),level:String(book.level||''),lessonNumber:Number(lesson.number)||0,lessonTitle:String(lesson.title||''),pass:Boolean(report.pass),passed:Number(report.passed||0),notApplicable:Number(report.notApplicable||0),blocked:Number(report.blocked||0),criticalFailures:Number(report.criticalFailures||0),blockers,model:report.model,durationMs:Date.now()-started});
+          }catch(e){
+            results.push({courseId:String(book.id),level:String(book.level||''),lessonNumber:Number(lesson.number)||0,lessonTitle:String(lesson.title||''),pass:false,technicalError:String(e.message||e).slice(0,500),durationMs:Date.now()-started});
+          }
+        }
+        const nextStart=start+selected.length;
+        res.json({ok:true,course:{id:String(book.id),title:String(book.title||book.id),level:String(book.level||''),totalLessons:book.lessons.length},start,limit,completed:selected.length,nextStart:nextStart<book.lessons.length?nextStart:null,appliedPatches,loaderErrors:built.errors,results});
+      }catch(e){
+        console.error('internal library semantic audit error',e.message);
+        res.status(500).json({error:'Internal semantic audit failed.',detail:String(e.message||e).slice(0,500)});
+      }
+    });
+  }
 
   nativePost.call(app,'/api/semantic-qa/lesson',async(req,res)=>{
     const user=adminSession(req);
