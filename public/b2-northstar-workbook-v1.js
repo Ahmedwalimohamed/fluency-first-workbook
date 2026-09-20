@@ -7,6 +7,7 @@
 const FLOW_VERSION='b2-northstar-v1.1';
 const REMEMBER_OFFSETS=[1,3,7];
 const TOTAL=10;
+const MIN_COMPREHENSION_QUESTIONS=3;
 const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX'];
 const STEPS=[
  {phase:'SEE',skill:'reading'},
@@ -30,7 +31,7 @@ function words(v){const s=String(v||'').trim();return s?s.split(/\s+/).filter(Bo
 function preview(){return typeof isWorkbookPreview==='function'&&isWorkbookPreview()}
 function sid(){return typeof session!=='undefined'&&session&&session.id?session.id:'preview'}
 function key(l){return 'englishgate:'+FLOW_VERSION+':'+sid()+':'+l.id}
-function fresh(l){return{version:FLOW_VERSION,lessonId:l.id,index:0,responses:{},results:{},attempts:{},repair:null,complete:false,saved:false,share:false,updatedAt:new Date().toISOString()}}
+function fresh(l){return{version:FLOW_VERSION,lessonId:l.id,index:0,responses:{},results:{},attempts:{},subprogress:{},subresponses:{},repair:null,complete:false,saved:false,share:false,updatedAt:new Date().toISOString()}}
 function read(l){
  try{const x=JSON.parse(localStorage.getItem(key(l))||'null');return x&&x.version===FLOW_VERSION&&x.lessonId===l.id?Object.assign(fresh(l),x):fresh(l)}
  catch{return fresh(l)}
@@ -75,9 +76,10 @@ function readingHtml(text){
  const parts=String(text||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
  return '<article class="northstar-reading"><span>Read</span>'+parts.map(x=>'<p>'+esc(x)+'</p>').join('')+'</article>'
 }
-function firstTaggedQuestion(l,prefix){
- return (l.listening?.questions||[]).find(q=>String(q.tag||'').startsWith(prefix))||null
+function taggedQuestions(l,prefix){
+ return (l.listening?.questions||[]).filter(q=>String(q.tag||'').startsWith(prefix)).slice(0,MIN_COMPREHENSION_QUESTIONS)
 }
+function firstTaggedQuestion(l,prefix){return taggedQuestions(l,prefix)[0]||null}
 function firstChoiceVocab(l){
  return (l.vocabulary?.items||[]).find(x=>Array.isArray(x.options)&&x.options.length>=3&&x.answer!==undefined)||null
 }
@@ -120,6 +122,36 @@ function renderChoice(l,s,opts){
   }
  })
 }
+function renderChoiceSet(l,s,opts){
+ const items=(opts.questions||[]).slice(0,MIN_COMPREHENSION_QUESTIONS);
+ if(!items.length)return renderOpen(l,s,{before:opts.before||'',q:opts.emptyQuestion||'What is the main idea?',minWords:4});
+ const key=String(opts.key||phaseAt(s.index));
+ s.subprogress=s.subprogress||{};s.subresponses=s.subresponses||{};
+ const pos=Math.max(0,Math.min(Number(s.subprogress[key]||0),items.length-1));
+ const q=items[pos],before=(pos===0?String(opts.intro||''):'')+(typeof opts.before==='function'?opts.before(pos):String(opts.before||''));
+ const body=before+'<div class="micro-question-count">Question '+(pos+1)+' of '+items.length+'</div>'+prompt(q.q,opts.sub)+choices(q.options||[])+'<div id="northstarFeedback"></div>';
+ el('content').innerHTML=shell(l,s,body);bindBack();
+ if(typeof opts.afterRender==='function')opts.afterRender();
+ Array.from(document.querySelectorAll('[data-choice]')).forEach(btn=>{
+  btn.onclick=()=>{
+   if(el('northstarContinue'))return;
+   const ix=Number(btn.dataset.choice),value=(q.options||[])[ix],ok=ix===choiceIndex(q);
+   s.subresponses[key+':'+pos]=value;setOK(l,s,s.index,ok);hit(l,s,s.index);write(l,s);
+   Array.from(document.querySelectorAll('[data-choice]')).forEach(b=>{b.disabled=true;b.classList.toggle('is-selected',b===btn)});
+   const last=pos===items.length-1;
+   el('northstarFeedback').innerHTML=feedback(ok,ok?'Correct.':'Try again.',ok?(opts.good||'You understood this part.'):(opts.bad||'Use the source and try again.'),ok?(last?'Next':'Next question'):'Try again');
+   el('northstarContinue').onclick=()=>{
+    if(!ok)return renderChoiceSet(l,s,opts);
+    if(last){
+     setR(l,s,s.index,items.map((_,i)=>String(s.subresponses[key+':'+i]||'')).join(' | '));
+     setOK(l,s,s.index,true);delete s.subprogress[key];write(l,s);return next(l,s)
+    }
+    s.subprogress[key]=pos+1;write(l,s);renderChoiceSet(l,s,opts)
+   }
+  }
+ })
+}
+
 function renderOpen(l,s,opts){
  const prior=String(getR(s,s.index)||'');
  const body=(opts.before||'')+prompt(opts.q,opts.sub)+
@@ -141,13 +173,16 @@ function renderOpen(l,s,opts){
  }
 }
 function renderSee(l,s){
- const q=firstTaggedQuestion(l,'reading:')||(l.listening?.questions||[])[0];
- if(!q)return renderOpen(l,s,{before:readingHtml(l.listening?.readingText||''),q:'What is the main idea?',minWords:4});
- return renderChoice(l,s,{
-  before:prompt(l.northstar.mission,'Read first. The lesson will help you do this in English.')+readingHtml(l.listening?.readingText||''),
-  q:q.q,options:q.options,answer:choiceIndex(q),
+ const qs=taggedQuestions(l,'reading:');
+ return renderChoiceSet(l,s,{
+  key:'reading',
+  questions:qs,
+  intro:prompt(l.northstar.mission,'Read first. The lesson will help you do this in English.'),
+  before:()=>readingHtml(l.listening?.readingText||''),
+  sub:'Use the reading as your source.',
   good:'You understood the key idea from the reading.',
-  bad:'Use the reading as your source.'
+  bad:'Check the reading and try again.',
+  emptyQuestion:'What is the main idea?'
  })
 }
 function renderRetrieval(l,s){
@@ -173,22 +208,18 @@ function renderVocab(l,s){
  return renderChoice(l,s,{q:q.q,sub:'Choose the meaning or use that fits this context.',options:q.options,answer:choiceIndex(q),good:'Right. Keep this word available for later use.',bad:'Use the sentence context rather than guessing from the word alone.'})
 }
 function renderListening(l,s){
- const q=firstTaggedQuestion(l,'listening:')||(l.listening?.questions||[]).find(x=>x!==firstTaggedQuestion(l,'reading:'));
- const script=String(l.listening?.audioScript||'').trim();
+ const qs=taggedQuestions(l,'listening:'),script=String(l.listening?.audioScript||'').trim();
  const player=typeof liveAudioPlayerHtml==='function'?liveAudioPlayerHtml(script,[]):'<div class="feedback bad">Listening audio is unavailable.</div>';
- const body=prompt('Listen first.','Listen for meaning. Replay if needed; open the transcript only after listening.')+player+
-  prompt(q.q)+choices(q.options)+'<div id="northstarFeedback"></div>';
- el('content').innerHTML=shell(l,s,body);bindBack();
- if(typeof wireLiveAudioPlayers==='function')wireLiveAudioPlayers(document);
- Array.from(document.querySelectorAll('[data-choice]')).forEach(btn=>{
-  btn.onclick=()=>{
-   if(el('northstarContinue'))return;
-   const ix=Number(btn.dataset.choice),ok=ix===choiceIndex(q);
-   setR(l,s,s.index,q.options[ix]);setOK(l,s,s.index,ok);hit(l,s,s.index);
-   Array.from(document.querySelectorAll('[data-choice]')).forEach(b=>{b.disabled=true;b.classList.toggle('is-selected',b===btn)});
-   el('northstarFeedback').innerHTML=feedback(ok,ok?'Correct.':'Try again.',ok?'You caught the key information from the audio.':'Replay and listen for the information the question asks for.',ok?'Next':'Try again');
-   el('northstarContinue').onclick=()=>ok?next(l,s):render(l,s)
-  }
+ return renderChoiceSet(l,s,{
+  key:'listening',
+  questions:qs,
+  intro:prompt('Listen first.','Listen for meaning. Replay if needed; open the transcript only after listening.'),
+  before:()=>player,
+  sub:'Choose the answer supported by what you hear.',
+  good:'You caught the key information from the audio.',
+  bad:'Replay and listen for the information the question asks for.',
+  afterRender:()=>{if(typeof wireLiveAudioPlayers==='function')wireLiveAudioPlayers(document)},
+  emptyQuestion:'What is the main idea?'
  })
 }
 function renderChange(l,s,which){
@@ -229,7 +260,7 @@ function renderFinal(l,s){
  check.onclick=()=>{
   const value=box.value.trim();const n=words(value);if(n<min||n>max)return;
   setR(l,s,8,value);setOK(l,s,8,true);hit(l,s,8);box.disabled=true;check.disabled=true;share.disabled=true;
-  el('northstarFeedback').innerHTML=feedback(true,'Response complete.',x.noAutomatedCorrection?'Your final response will be reviewed by a person. Do a short self-check next.':'Jev will choose one high-value improvement—not a list of corrections.','Fix one thing');
+  el('northstarFeedback').innerHTML=feedback(true,'Response complete.',x.noAutomatedCorrection?'Your final response will be reviewed by a person. Do a short self-check next.':'Jev will check whether anything actually needs improving. If it is already correct, you will keep it as it is.','Fix one thing');
   el('northstarContinue').onclick=()=>next(l,s)
  }
 }
@@ -248,12 +279,20 @@ async function requestRepair(l,s){
   if(!res.ok)throw new Error('Jev repair unavailable');
   const data=await res.json();return data.repair
  }catch{
-  return {focus:'fallback',title:'Improve one useful part.',prompt:x.fix.target+' Model: '+x.fix.model}
+  return {focus:'unavailable',title:'Automated feedback unavailable.',prompt:'Your response is saved. Finish without an invented correction.',needsCorrection:false}
  }
 }
 async function renderFix(l,s){
  if(!s.repair){s.repair=await requestRepair(l,s);write(l,s)}
  const repair=s.repair||{},original=String(getR(s,8)||'');
+ if(repair.focus==='none'||repair.needsCorrection===false){
+  const body=prompt(repair.title||'No correction needed.',repair.prompt||'Your response already meets the lesson target.')+
+   '<div class="northstar-model"><small>Your response</small><div class="northstar-final-preview">'+esc(original)+'</div></div>'+
+   action('Finish lesson','northstarNoFix',false);
+  el('content').innerHTML=shell(l,s,body);bindBack();
+  el('northstarNoFix').onclick=()=>{setR(l,s,9,original);setOK(l,s,9,true);finish(l,s)};
+  return
+ }
  if(l.northstar.final?.noAutomatedCorrection){
   const body=prompt(repair.title||'Do one final self-check.',repair.prompt||l.northstar.fix.target)+
    '<div class="northstar-model"><small>Your response</small><div class="northstar-final-preview">'+esc(original)+'</div></div>'+
