@@ -81,7 +81,7 @@ const CHECKS=[
   ['correction_alignment','Progression','Correction or improvement tasks address actual target language or plausible learner errors rather than unrelated remediation.']
 ].map(([id,category,instructions,critical=false])=>({id,category,instructions,critical}));
 
-const FIREWALL_VERSION='jev-semantic-firewall-v3.2';
+const FIREWALL_VERSION='jev-semantic-firewall-v3.3';
 const LESSON_QUALITY_AUDIT_VERSION='englishgate-lesson-quality-v1';
 const QUALITY_DOMAINS=['Alignment','Language Quality','Learning Progression','Assessment Validity','Authentic Use','Learner Experience'];
 const DOMAIN_BY_CATEGORY={
@@ -115,7 +115,6 @@ const REVIEW_ONLY_CHECKS=new Set([
   'distractors_plausible',
   'distractors_parallel',
   'no_answer_leakage',
-  'no_trick_wording',
   'no_duplicate_instructions',
   'no_duplicate_questions',
   'no_recycled_examples',
@@ -185,6 +184,7 @@ const CORROBORATION_CLUSTERS={
 const CORROBORATION_MIN_EVIDENCE=0.35;
 const LOW_CONFIDENCE_REVIEW_THRESHOLD=0.25;
 const MAJOR_REVIEW_MIN_EVIDENCE=0.40;
+const SUBTHRESHOLD_ADVISORY_CHECKS=new Set(['no_trick_wording','no_broken_activity']);
 
 
 function qualityDomain(check){
@@ -196,6 +196,7 @@ function issueSeverity(check){
   if(actualFailure)return check.critical?'Critical':'Major';
   if(REVIEW_ONLY_CHECKS.has(check.id))return 'Minor';
   if(check.review){
+    if(SUBTHRESHOLD_ADVISORY_CHECKS.has(check.id))return 'Minor';
     if(check.rawChoice==='fail'&&Number.isFinite(evidence)&&evidence>=MAJOR_REVIEW_MIN_EVIDENCE)return 'Major';
     return 'Minor';
   }
@@ -649,6 +650,7 @@ module.exports={
   releaseFrom,
   issueSeverity,
   MAJOR_REVIEW_MIN_EVIDENCE,
+  SUBTHRESHOLD_ADVISORY_CHECKS,
   REVIEW_ONLY_CHECKS,
   FAIL_THRESHOLDS,
   CORROBORATION_CLUSTERS,
