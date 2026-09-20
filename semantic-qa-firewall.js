@@ -81,7 +81,7 @@ const CHECKS=[
   ['correction_alignment','Progression','Correction or improvement tasks address actual target language or plausible learner errors rather than unrelated remediation.']
 ].map(([id,category,instructions,critical=false])=>({id,category,instructions,critical}));
 
-const FIREWALL_VERSION='jev-semantic-firewall-v3.0';
+const FIREWALL_VERSION='jev-semantic-firewall-v3.1';
 const LESSON_QUALITY_AUDIT_VERSION='englishgate-lesson-quality-v1';
 const QUALITY_DOMAINS=['Alignment','Language Quality','Learning Progression','Assessment Validity','Authentic Use','Learner Experience'];
 const DOMAIN_BY_CATEGORY={
