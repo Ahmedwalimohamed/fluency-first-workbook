@@ -37,7 +37,7 @@ const CHECKS=[
   ['single_defensible_answer','Assessment','For questions that accept one correct answer, only one option is defensibly correct.',true],
   ['sufficient_evidence','Assessment','Each question provides enough information for a learner to answer without guessing because essential context is missing.',true],
   ['stem_unambiguous','Assessment','Question stems are clear and have one reasonable interpretation in context.',true],
-  ['reference_clarity','Assessment','Pronouns, references, labels, and deictic words such as this/that/they clearly refer to identifiable content.'],
+  ['reference_clarity','Assessment','Pronouns, references, labels, and deictic words such as this/that/they are clear enough for the learner to identify the intended referent from the supplied local context. Only fail when ambiguity materially prevents a defensible answer; do not fail harmless natural-language references.'],
   ['open_task_criteria','Assessment','Open speaking/writing tasks make the expected communicative outcome sufficiently clear to a learner.'],
   ['no_hidden_assumptions','Assessment','Questions do not depend on hidden cultural, factual, or teacher-only assumptions not supplied in the lesson.'],
   ['no_trick_wording','Assessment','Questions assess the intended language skill rather than confusing learners with avoidable trick wording.'],
@@ -46,14 +46,14 @@ const CHECKS=[
   ['distractors_plausible','Distractors','Multiple-choice distractors are plausible enough to test understanding rather than being obviously absurd.'],
   ['distractors_incorrect','Distractors','Distractors are genuinely incorrect under a reasonable reading of the question.',true],
   ['distractors_distinct','Distractors','Answer choices are meaningfully distinct rather than duplicates or near-duplicates.'],
-  ['distractors_parallel','Distractors','Answer choices use reasonably parallel grammatical form and level so form alone does not reveal the answer.'],
-  ['no_answer_leakage','Distractors','The correct answer is not leaked by wording, length, grammar agreement, formatting, or repetition from the stem/passage.'],
+  ['distractors_parallel','Distractors','For meaning/content questions, answer choices use reasonably parallel grammatical form and level so form alone does not reveal the answer. Do NOT flag grammar-form questions when differences in grammatical form are intentionally what the learner must discriminate.'],
+  ['no_answer_leakage','Distractors','The correct answer is not unintentionally revealed by wording, length, grammar agreement, formatting, or nearby repetition. Do NOT treat intentional metalinguistic prompts such as “Match X to its meaning”, “Which sentence uses X correctly?”, or questions that explicitly name the target grammar/vocabulary item as answer leakage when naming the item is required by the task.'],
 
   // Reading/listening coherence
-  ['reading_internal_coherence','Coherence','Reading text is internally coherent, logically ordered, and free from contradictions or broken references.',true],
+  ['reading_internal_coherence','Coherence','Reading text has no concrete internal contradiction, impossible sequence, or broken reference that would make comprehension unreliable. Do not fail merely because the text is dense, nuanced, or stylistically varied at the target CEFR level.',true],
   ['listening_internal_coherence','Coherence','Listening dialogue/script is internally coherent and sounds like a possible spoken interaction.',true],
   ['speaker_consistency','Coherence','Speaker identity, role, facts, and point of view remain consistent across listening/dialogue turns.'],
-  ['scenario_continuity','Coherence','Scenario details remain consistent across instructions, texts, questions, examples, and follow-up tasks.'],
+  ['scenario_continuity','Coherence','When multiple components explicitly share the same named scenario, their facts must not contradict one another. Different practice items may use different examples or mini-contexts; do NOT require every component in a lesson to reuse one scenario.'],
   ['chronology_consistency','Coherence','Time references and event order are internally consistent.'],
   ['cross_component_consistency','Coherence','Reading, listening, vocabulary, grammar, and writing components do not contradict one another on shared facts.',true],
   ['reading_listening_separation','Coherence','Reading and listening questions refer to the correct source text and are not accidentally mismatched or swapped.',true],
@@ -62,12 +62,12 @@ const CHECKS=[
   ['vocab_definition_accuracy','Vocabulary','Each vocabulary definition accurately matches the target word or expression in the lesson context.',true],
   ['vocab_definition_non_circular','Vocabulary','Vocabulary definitions do not define a word using the same word, a trivial morphological variant, or an equally opaque synonym.'],
   ['vocab_definition_accessible','Vocabulary','Vocabulary definitions are easier to understand than the target item and suitable for the target CEFR level.'],
-  ['vocab_example_alignment','Vocabulary','Vocabulary example sentences use the target item with the intended meaning and natural grammar.',true],
+  ['vocab_example_alignment','Vocabulary','If the lesson contains explicit vocabulary example sentences, each example uses its target item with the intended meaning and natural grammar. If there are no explicit vocabulary examples separate from questions/definitions, choose not_applicable rather than fail or infer a missing example.',true],
   ['vocab_task_alignment','Vocabulary','Vocabulary questions and answer choices test the same meaning or use that the lesson teaches.',true],
 
   // Duplication / quality
   ['no_duplicate_instructions','Quality','The lesson does not repeat the same learner-facing instruction unnecessarily across adjacent items or sections.'],
-  ['no_duplicate_questions','Quality','The lesson does not contain duplicate or near-duplicate questions that test the same thing with trivial wording changes.'],
+  ['no_duplicate_questions','Quality','The lesson does not repeat the same underlying question, answer, and learning target with only trivial wording changes. Reusing a consistent question FRAME across different vocabulary words, grammar targets, source-text details, or communicative decisions is intentional instructional consistency and is NOT duplication.'],
   ['no_recycled_examples','Quality','Examples are not repeatedly recycled with only superficial noun/name substitutions.'],
   ['no_placeholders','Quality','There is no placeholder, TODO, developer note, template residue, lorem ipsum, or unfinished learner-facing content.',true],
   ['no_broken_activity','Quality','No activity is structurally broken, nonsensical, incomplete, or impossible to complete as written.',true],
@@ -81,7 +81,7 @@ const CHECKS=[
   ['correction_alignment','Progression','Correction or improvement tasks address actual target language or plausible learner errors rather than unrelated remediation.']
 ].map(([id,category,instructions,critical=false])=>({id,category,instructions,critical}));
 
-const FIREWALL_VERSION='jev-semantic-firewall-v2';
+const FIREWALL_VERSION='jev-semantic-firewall-v2.1';
 const REVIEW_ONLY_CHECKS=new Set([
   'distractors_plausible',
   'distractors_parallel',
