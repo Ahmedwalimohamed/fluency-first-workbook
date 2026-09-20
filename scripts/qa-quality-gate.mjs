@@ -28,7 +28,7 @@ must(index, 'question-nav-fix.js', 'Question navigation');
 must(index, 'question-context-home-v2.js', 'Question Home/exit');
 must(index, 'englishgate-heading-hierarchy-v1.css', 'Heading hierarchy');
 must(index, 'vocabulary-fluency-first-v1.js?v=2', 'Vocabulary fluency-first cache version');
-must(index, 'app.js?v=openai-listening-only-v1', 'OpenAI-only listening cache version');
+must(index, 'app.js?v=b2-premium-shell-v2', 'OpenAI-only listening cache version');
 must(app, "X-EnglishGate-Audio-Provider", 'Learner listening provider verification');
 must(app, "Ready · OpenAI natural voice", 'Learner listening OpenAI status');
 mustNot(app, "Ready · browser voice", 'Learner listening browser fallback');
