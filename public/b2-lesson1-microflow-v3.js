@@ -484,6 +484,8 @@ window.ENGLISHGATE_B2_L1_MICROFLOW={
   total:TOTAL,
   phases:PHASES.slice(),
   questionCounts:{reading:READING_QUESTIONS.length,listening:LISTENING_QUESTIONS.length},
+  uiDecisionContract:'jev-ui-v1',
+  uiModes:['source','decision','compose','repair'],
   reset:function(){render(reset())},
   logic:{reasonRelevant:reasonRelevant,durationCorrect:durationCorrect,useRelevant:useRelevant,messageValid:messageValid,messageHasDetail:messageHasDetail,messageHasStay:messageHasStay}
 };
