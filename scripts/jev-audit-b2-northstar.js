@@ -101,25 +101,58 @@ async function auditLessonItems(lesson){
  return {model:String(data?.model||TYPE_SAFE_MODEL),findings};
 }
 
+function runtimeRememberPlan(n){
+ const offsets=[1,3,7],lessonNumber=Number(n)||0;
+ const available=offsets.filter(offset=>lessonNumber-offset>=1);
+ if(!available.length)return {availableOffsets:[],scheduledOffset:null,scheduledFrom:null};
+ const desired=offsets[(Math.max(2,lessonNumber)-2)%offsets.length];
+ const scheduledOffset=available.includes(desired)?desired:available[0];
+ return {availableOffsets:available,scheduledOffset,scheduledFrom:lessonNumber-scheduledOffset}
+}
+function runtimeSupportPolicy(support){
+ const s=String(support||'');
+ if(s==='high')return {changeModel:'visible',changeStarter:'visible',useHelp:'visible'};
+ if(s==='medium-high')return {changeModel:'visible',changeStarter:'reduced',useHelp:'visible'};
+ if(s==='medium')return {changeModel:'visible',changeStarter:'hidden',useHelp:'hidden'};
+ return {changeModel:'optional reveal',changeStarter:'hidden',useHelp:'hidden'}
+}
+
 async function auditCourseCrossLesson(lessons){
- const compact=lessons.filter(l=>Number(l.number)>=2).map(l=>({
-  number:l.number,title:l.title,support:l.northstar?.support,mission:l.northstar?.mission,
-  change:(l.northstar?.change||[]).map(x=>({model:x.model,prompt:x.prompt})),
-  use:l.northstar?.use?.prompt,final:l.northstar?.final,
-  retrieval:l.northstar?.retrieval,grammar:l.grammarFocus,
-  readingWords:String(l.readingText||'').trim().split(/\s+/).filter(Boolean).length,
-  listeningWords:String(l.audioScript||'').trim().split(/\s+/).filter(Boolean).length
- }));
+ const compact=lessons.filter(l=>Number(l.number)>=2).map(l=>{
+  const n=Number(l.number),remember=runtimeRememberPlan(n),support=String(l.northstar?.support||'');
+  return {
+   number:n,title:l.title,support,mission:l.northstar?.mission,
+   runtimeSupport:runtimeSupportPolicy(support),
+   change:(l.northstar?.change||[]).map(x=>({model:x.model,prompt:x.prompt})),
+   use:l.northstar?.use?.prompt,final:l.northstar?.final,
+   rememberRuntime:{...remember,weakGrammarPriority:true,learnerLabelHidden:true},
+   fallbackRetrieval:l.northstar?.retrieval,grammar:l.grammarFocus,
+   readingWords:String(l.readingText||'').trim().split(/\s+/).filter(Boolean).length,
+   listeningWords:String(l.audioScript||'').trim().split(/\s+/).filter(Boolean).length
+  }
+ });
  const data=await callJev({
   task:'EnglishGate B2 Northstar cross-lesson curriculum audit',
   targetLevel:'B2',framework:'SEE → CHOOSE → CHANGE → USE → FIX with hidden REMEMBER',
   runtimeRememberOffsets:[1,3,7],
-  supportFading:{high:'visible model + starter',mediumHigh:'visible model + reduced starter',medium:'visible model without starter',low:'independent CHANGE with optional model reveal; USE has no starter'},
+  runtimeRememberPolicy:{
+   schedule:'Cycle +1, +3, +7 when those prior lessons exist; if the learner previously missed grammar in an eligible prior lesson, that weak grammar takes priority.',
+   fallback:'northstar.retrieval is only a +1 fallback when the runtime cannot resolve a prior grammar item. Do not treat fallbackRetrieval as the normal spacing schedule.',
+   learnerFacingMetaLanguage:false
+  },
+  supportFading:{
+   high:'CHANGE model + starter visible; USE help visible',
+   mediumHigh:'CHANGE model visible with reduced starter support; USE help visible',
+   medium:'CHANGE model visible but starter hidden; USE help hidden',
+   low:'CHANGE model hidden behind optional reveal; starter hidden; USE help hidden'
+  },
   rules:[
    'The learner-facing experience should stay simple for adult EFL learners.',
    'Difficulty should come from language and independence, not interface complexity.',
    'Repeated framework rhythm is intentional; near-identical content/task templates are not.',
-   'Lesson 22 is a human-graded exit task and must not receive automated correction.'
+   'Lesson 22 is a human-graded exit task and must not receive automated correction.',
+   'For retrieval, evaluate rememberRuntime as the actual learner runtime. fallbackRetrieval is not the normal schedule.',
+   'For progression, evaluate runtimeSupport together with task demands; do not infer visible scaffolding merely because blueprint models/starters are stored as authoring metadata.'
   ],
   lessons:compact
  },crossQuestions());
