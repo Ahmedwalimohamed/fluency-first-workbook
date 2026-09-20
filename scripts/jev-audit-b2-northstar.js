@@ -90,7 +90,7 @@ async function main(){
      },
      lesson
     });
-    console.log('JEV_NORTHSTAR_LESSON '+JSON.stringify({lessonNumber:lesson.number,title:lesson.title,decision:report.decision,blocked:report.blocked,review:report.review,criticalFailures:report.criticalFailures,model:report.model,version:report.version}));
+    console.log('JEV_NORTHSTAR_LESSON '+JSON.stringify({lessonNumber:lesson.number,title:lesson.title,releaseState:report.releaseState,decision:report.decision,blocked:report.blocked,criticalFailures:report.criticalFailures,majorFindings:report.majorFindings,minorFindings:report.minorFindings,domains:report.domains,model:report.model,version:report.version,auditVersion:report.auditVersion,contentHash:report.contentHash}));
     return {lessonNumber:lesson.number,title:lesson.title,report}
    }catch(e){
     const error=String(e?.message||e).slice(0,800);
@@ -101,11 +101,18 @@ async function main(){
   for(const x of settled){if(x.error)errors.push(x);else results.push(x)}
  }
  const blocked=results.filter(x=>!x.report.pass);
- const review=results.filter(x=>x.report.pass&&x.report.decision==='PASS_WITH_REVIEW');
+ const review=results.filter(x=>x.report.releaseState==='AMBER');
  const cross=await auditCourseCrossLesson(lessons);
  const summary={
   lessonsAudited:results.length,errors:errors.length,blockedLessons:blocked.map(x=>x.lessonNumber),
-  reviewLessons:review.map(x=>x.lessonNumber),cross,completedAt:new Date().toISOString()
+  amberLessons:review.map(x=>x.lessonNumber),
+  greenLessons:results.filter(x=>x.report.releaseState==='GREEN').map(x=>x.lessonNumber),
+  releaseCounts:{
+    green:results.filter(x=>x.report.releaseState==='GREEN').length,
+    amber:results.filter(x=>x.report.releaseState==='AMBER').length,
+    red:results.filter(x=>x.report.releaseState==='RED').length
+  },
+  cross,completedAt:new Date().toISOString()
  };
  console.log('JEV_NORTHSTAR_SUMMARY '+JSON.stringify(summary));
  if(errors.length||blocked.length||cross.blocked)process.exit(2)
