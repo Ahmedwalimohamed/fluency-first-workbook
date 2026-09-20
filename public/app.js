@@ -527,7 +527,7 @@ function installNavigationScrollReset(){
  window.addEventListener('pageshow',scheduleAppScrollReset);
 }
 installNavigationScrollReset();
-function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})}catch{el.focus()}scheduleAppScrollReset()} function setWorkbookDesignMode(on){document.body.classList.toggle('workbook-design-mode',Boolean(on))} async function renderPage(){
+function focusWithoutScroll(el){if(!el)return;try{el.focus({preventScroll:true})}catch{el.focus()}scheduleAppScrollReset()} function setWorkbookDesignMode(on){const active=Boolean(on);document.body.classList.toggle('workbook-design-mode',active);if(!active)document.body.classList.remove('b2-premium-workbook-mode')} async function renderPage(){
  const teacherLive=session?.role==='teacher'&&currentPage==='teacher-live-lesson';
  document.body.classList.toggle('teacher-live-active',teacherLive);
  if(!teacherLive){teacherPresentationMode=false;document.body.classList.remove('teacher-presentation-mode');document.getElementById('teacherSpotlightOverlay')?.remove()}else document.body.classList.toggle('teacher-presentation-mode',teacherPresentationMode);
