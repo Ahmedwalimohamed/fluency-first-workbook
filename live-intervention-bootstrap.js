@@ -86,13 +86,15 @@ function signStudentLiveToken(studentId){
   return jwt.sign({scope:'live-task-student',studentId:String(studentId)},process.env.JWT_SECRET,{expiresIn:'8h'});
 }
 function teacherLiveAuth(req,{classId=null,taskId=null}={}){
+  const t=liveScopedUser(req,'live-task-teacher');
+  if(t?.teacherId){
+    const classOk=!classId||String(t.classId)===String(classId);
+    const taskOk=!taskId||String(t.taskId)===String(taskId);
+    if(classOk&&taskOk)return {teacherId:String(t.teacherId),token:t};
+  }
   const u=sessionUser(req);
   if(u?.role==='teacher')return {teacherId:String(u.id),cookie:true};
-  const t=liveScopedUser(req,'live-task-teacher');
-  if(!t?.teacherId)return null;
-  if(classId&&String(t.classId)!==String(classId))return null;
-  if(taskId&&String(t.taskId)!==String(taskId))return null;
-  return {teacherId:String(t.teacherId),token:t};
+  return null;
 }
 function studentLiveAuth(req){
   const u=sessionUser(req);
@@ -240,13 +242,44 @@ function gradeActivity(taskContent,answers){
 
 function install(app){
   if(installed.has(app))return;installed.add(app);
-  inheritedPost.call(app,'/api/teacher/live-tasks/prepare',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});try{await ensureSchema();const classId=cleanText(req.body?.classId,100),c=await ownedApprovedClass(classId,u.id);if(!c)return res.status(404).json({error:'Class not found.'});if(c.approval_status!=='approved')return res.status(409).json({error:'The class must be approved before you can launch a live task.'});const task=await runLiveTaskGraph({request:req.body?.request,classInfo:c,lessonContext:req.body?.lessonContext});res.set('Cache-Control','no-store');res.json({ok:true,class:{id:c.id,name:c.name},...task})}catch(e){console.error('live task prepare error',e);res.status(e.status||500).json({error:e.status?e.message:'The live task could not be prepared.'})}});
-  inheritedPost.call(app,'/api/teacher/live-tasks',async(req,res)=>{const u=sessionUser(req);if(!u||u.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});try{await ensureSchema();const classId=cleanText(req.body?.classId,100),c=await ownedApprovedClass(classId,u.id);if(!c)return res.status(404).json({error:'Class not found.'});if(c.approval_status!=='approved')return res.status(409).json({error:'The class must be approved before you can launch a live task.'});const task=validateLaunch(req.body),client=await pool.connect();try{await client.query('begin');await client.query("update live_tasks set status='closed',ends_at=least(ends_at,now()) where class_id=$1 and status='live'",[classId]);const id='lt_'+crypto.randomUUID(),q=await client.query(`insert into live_tasks(id,class_id,teacher_id,title,task_type,request_text,duration_seconds,content,status,starts_at,ends_at) values($1,$2,$3,$4,$5,$6,$7,$8::jsonb,'live',now(),now()+($7::int*interval '1 second')) returning *`,[id,classId,u.id,task.title,task.taskType,task.requestText,task.durationSeconds,JSON.stringify(task.content)]);await client.query('commit');res.status(201).json({ok:true,task:publicTask({...q.rows[0],class_name:c.name},true),teacherLiveToken:signTeacherLiveToken(u.id,classId,q.rows[0].id),serverNow:new Date().toISOString()})}catch(e){await client.query('rollback');throw e}finally{client.release()}}catch(e){console.error('live task launch error',e);res.status(e.status||500).json({error:e.status?e.message:'The live task could not be launched.'})}});
+  inheritedPost.call(app,'/api/teacher/live-tasks/prepare',async(req,res)=>{
+    try{
+      await ensureSchema();
+      const classId=cleanText(req.body?.classId,100),auth=teacherLiveAuth(req,{classId});
+      if(!auth)return res.status(403).json({error:'Teacher access required.'});
+      const c=await ownedApprovedClass(classId,auth.teacherId);
+      if(!c)return res.status(404).json({error:'Class not found.'});
+      if(c.approval_status!=='approved')return res.status(409).json({error:'The class must be approved before you can launch a live task.'});
+      const task=await runLiveTaskGraph({request:req.body?.request,classInfo:c,lessonContext:req.body?.lessonContext});
+      res.set('Cache-Control','no-store');
+      res.json({ok:true,class:{id:c.id,name:c.name},teacherLiveToken:signTeacherLiveToken(auth.teacherId,classId,''),...task});
+    }catch(e){console.error('live task prepare error',e);res.status(e.status||500).json({error:e.status?e.message:'The live task could not be prepared.'})}
+  });
+  inheritedPost.call(app,'/api/teacher/live-tasks',async(req,res)=>{
+    try{
+      await ensureSchema();
+      const classId=cleanText(req.body?.classId,100),auth=teacherLiveAuth(req,{classId});
+      if(!auth)return res.status(403).json({error:'Teacher access required.'});
+      const c=await ownedApprovedClass(classId,auth.teacherId);
+      if(!c)return res.status(404).json({error:'Class not found.'});
+      if(c.approval_status!=='approved')return res.status(409).json({error:'The class must be approved before you can launch a live task.'});
+      const task=validateLaunch(req.body),client=await pool.connect();
+      try{
+        await client.query('begin');
+        await client.query("update live_tasks set status='closed',ends_at=least(ends_at,now()) where class_id=$1 and status='live'",[classId]);
+        const id='lt_'+crypto.randomUUID(),q=await client.query(`insert into live_tasks(id,class_id,teacher_id,title,task_type,request_text,duration_seconds,content,status,starts_at,ends_at) values($1,$2,$3,$4,$5,$6,$7,$8::jsonb,'live',now(),now()+($7::int*interval '1 second')) returning *`,[id,classId,auth.teacherId,task.title,task.taskType,task.requestText,task.durationSeconds,JSON.stringify(task.content)]);
+        await client.query('commit');
+        res.status(201).json({ok:true,task:publicTask({...q.rows[0],class_name:c.name},true),teacherLiveToken:signTeacherLiveToken(auth.teacherId,classId,q.rows[0].id),serverNow:new Date().toISOString()});
+      }catch(e){await client.query('rollback');throw e}finally{client.release()}
+    }catch(e){console.error('live task launch error',e);res.status(e.status||500).json({error:e.status?e.message:'The live task could not be launched.'})}
+  });
   inheritedGet.call(app,'/api/teacher/live-tasks/current',async(req,res)=>{
     try{
       await ensureSchema();
       const classId=cleanText(req.query?.classId,100),auth=teacherLiveAuth(req,{classId});
       if(!auth)return res.status(403).json({error:'Teacher access required.'});
+      const c=await ownedApprovedClass(classId,auth.teacherId);
+      if(!c)return res.status(404).json({error:'Class not found.'});
       const active=await pool.query(`select lt.*,c.name as class_name from live_tasks lt join classes c on c.id=lt.class_id where lt.class_id=$1 and lt.teacher_id=$2 and lt.status='live' and lt.ends_at>now() order by lt.starts_at desc limit 1`,[classId,auth.teacherId]);
       let recent=null,row=active.rows[0]||null;
       if(!row){
@@ -254,7 +287,7 @@ function install(app){
         if(recentQ.rowCount){row=recentQ.rows[0];recent=publicTask(row,true)}
       }
       res.set('Cache-Control','no-store');
-      res.json({task:active.rowCount?publicTask(active.rows[0],true):null,recentTask:recent,teacherLiveToken:row?signTeacherLiveToken(auth.teacherId,classId,row.id):null,serverNow:new Date().toISOString()});
+      res.json({task:active.rowCount?publicTask(active.rows[0],true):null,recentTask:recent,teacherLiveToken:signTeacherLiveToken(auth.teacherId,classId,row?.id||''),serverNow:new Date().toISOString()});
     }catch(e){console.error('current live task error',e);res.status(500).json({error:'Live task status is temporarily unavailable.'})}
   });
   inheritedGet.call(app,'/api/teacher/live-tasks/:id/results',async(req,res)=>{
