@@ -384,6 +384,7 @@ function renderDone(l,s){
  el('northstarRestart').onclick=()=>{const ns=fresh(l);write(l,ns);render(l,ns)}
 }
 function leave(){
+ document.body.classList.remove('b2-premium-workbook-mode');
  if(typeof setWorkbookDesignMode==='function')setWorkbookDesignMode(false);
  if(preview()){if(typeof returnToWorkbookLessons==='function')returnToWorkbookLessons();return}
  if(typeof currentPage!=='undefined')currentPage='course';
@@ -391,6 +392,7 @@ function leave(){
  if(typeof studentCourse==='function')studentCourse()
 }
 function northstarWorkbook(l){
+ document.body.classList.add('b2-premium-workbook-mode');
  if(typeof setWorkbookDesignMode==='function')setWorkbookDesignMode(true);
  if(typeof title==='function')title('Workbook','Lesson '+l.number);
  const s=read(l);render(l,s);
