@@ -85,6 +85,14 @@ function firstChoiceVocab(l){
 }
 function grammarItem(l){return (l.grammar?.items||[]).find(x=>Array.isArray(x.options)&&x.options.length>=3&&x.answer!==undefined)||null}
 function choiceIndex(q){return Math.max(0,(q.options||[]).findIndex(x=>String(x)===String(q.answer)))}
+function arrangeChoices(options,correctIndex,seed){
+ const list=Array.isArray(options)?options.slice():[],n=list.length;
+ if(n<2)return{options:list,answer:Math.max(0,Math.min(Number(correctIndex)||0,n-1))};
+ const original=Math.max(0,Math.min(Number(correctIndex)||0,n-1)),desired=Math.abs(Number(seed)||0)%n,correct=list[original],others=list.filter((_,i)=>i!==original),out=new Array(n);
+ out[desired]=correct;let oi=0;
+ for(let i=0;i<n;i++)if(i!==desired)out[i]=others[oi++];
+ return{options:out,answer:desired}
+}
 function weakKey(lessonId){return 'englishgate:northstar:weak:'+sid()+':'+lessonId}
 function markWeak(lessonId){
  try{localStorage.setItem(weakKey(lessonId),new Date().toISOString())}catch{}
@@ -108,12 +116,13 @@ function rememberCandidate(l){
 }
 
 function renderChoice(l,s,opts){
- const body=(opts.before||'')+prompt(opts.q,opts.sub)+choices(opts.options||[])+'<div id="northstarFeedback"></div>';
+ const arranged=arrangeChoices(opts.options||[],opts.answer,(Number(l.number)||0)+Number(s.index||0));
+ const body=(opts.before||'')+prompt(opts.q,opts.sub)+choices(arranged.options)+'<div id="northstarFeedback"></div>';
  el('content').innerHTML=shell(l,s,body);bindBack();
  Array.from(document.querySelectorAll('[data-choice]')).forEach(btn=>{
   btn.onclick=()=>{
    if(el('northstarContinue'))return;
-   const ix=Number(btn.dataset.choice),value=opts.options[ix],ok=ix===opts.answer;
+   const ix=Number(btn.dataset.choice),value=arranged.options[ix],ok=ix===arranged.answer;
    setR(l,s,s.index,value);setOK(l,s,s.index,ok);hit(l,s,s.index);
    if(!ok&&opts.memoryId)markWeak(opts.memoryId);
    Array.from(document.querySelectorAll('[data-choice]')).forEach(b=>{b.disabled=true;b.classList.toggle('is-selected',b===btn)});
@@ -128,14 +137,14 @@ function renderChoiceSet(l,s,opts){
  const key=String(opts.key||phaseAt(s.index));
  s.subprogress=s.subprogress||{};s.subresponses=s.subresponses||{};
  const pos=Math.max(0,Math.min(Number(s.subprogress[key]||0),items.length-1));
- const q=items[pos],before=(pos===0?String(opts.intro||''):'')+(typeof opts.before==='function'?opts.before(pos):String(opts.before||''));
- const body=before+'<div class="micro-question-count">Question '+(pos+1)+' of '+items.length+'</div>'+prompt(q.q,opts.sub)+choices(q.options||[])+'<div id="northstarFeedback"></div>';
+ const q=items[pos],arranged=arrangeChoices(q.options||[],choiceIndex(q),(Number(l.number)||0)+Number(s.index||0)+pos),before=(pos===0?String(opts.intro||''):'')+(typeof opts.before==='function'?opts.before(pos):String(opts.before||''));
+ const body=before+'<div class="micro-question-count">Question '+(pos+1)+' of '+items.length+'</div>'+prompt(q.q,opts.sub)+choices(arranged.options)+'<div id="northstarFeedback"></div>';
  el('content').innerHTML=shell(l,s,body);bindBack();
  if(typeof opts.afterRender==='function')opts.afterRender();
  Array.from(document.querySelectorAll('[data-choice]')).forEach(btn=>{
   btn.onclick=()=>{
    if(el('northstarContinue'))return;
-   const ix=Number(btn.dataset.choice),value=(q.options||[])[ix],ok=ix===choiceIndex(q);
+   const ix=Number(btn.dataset.choice),value=arranged.options[ix],ok=ix===arranged.answer;
    s.subresponses[key+':'+pos]=value;setOK(l,s,s.index,ok);hit(l,s,s.index);write(l,s);
    Array.from(document.querySelectorAll('[data-choice]')).forEach(b=>{b.disabled=true;b.classList.toggle('is-selected',b===btn)});
    const last=pos===items.length-1;
