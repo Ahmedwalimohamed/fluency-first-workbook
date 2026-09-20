@@ -14,7 +14,7 @@ function evidence(answer){
 async function main(){
  const key=String(process.env.TYPESAFE_API_KEY||'').trim();
  if(!key){console.warn('JEV_UI_AUDIT_SKIPPED: TYPESAFE_API_KEY is not configured.');return}
- const css=read('public/englishgate-b2-premium-v2.css');
+ const css=read('public/englishgate-b2-premium-v3.css');
  const engine=read('public/b2-northstar-workbook-v1.js');
  const lesson1=read('public/b2-lesson1-microflow-v3.js');
  const index=read('public/index.html');
@@ -23,7 +23,7 @@ async function main(){
   task:'EnglishGate B2 premium learning UI release audit',
   audience:'adult B2 EFL learners, mobile-first',
   designRead:'premium professional EdTech product; calm, clear, focused; not a marketing landing page',
-  tasteDials:{designVariance:7,motionIntensity:5,visualDensity:4},
+  tasteDials:{designVariance:7,motionIntensity:3,visualDensity:4},
   jevUiModes:['source','decision','compose','repair'],
   rules:[
    'The interface must make the current learning action obvious within seconds.',
@@ -37,7 +37,7 @@ async function main(){
    'Source, decision, compose, and repair stages must differ structurally, not merely through color or width.'
   ],
   implementation:{
-   premiumStylesLoaded:index.includes('englishgate-b2-premium-v2.css?v=1'),
+   premiumStylesLoaded:index.includes('englishgate-b2-premium-v3.css?v=1'),
    uiContractGeneric:engine.includes("uiDecisionContract:'jev-ui-v1'"),
    uiContractLesson1:lesson1.includes("uiDecisionContract:'jev-ui-v1'"),
    immersiveShellClass:engine.includes("classList.add('b2-premium-workbook-mode')")&&lesson1.includes("classList.add('b2-premium-workbook-mode')"),
@@ -46,10 +46,10 @@ async function main(){
    hasDecisionLayout:css.includes('[data-ui-mode="decision"]'),
    hasComposeLayout:css.includes('[data-ui-mode="compose"]'),
    hasRepairLayout:css.includes('[data-ui-mode="repair"]'),
-   sourceSplitStructure:css.includes('grid-template-columns:minmax(0,1.18fr) minmax(360px,.82fr)'),
-   composeDeskStructure:css.includes('grid-template-columns:minmax(300px,.78fr) minmax(480px,1.22fr)'),
-   repairDeskStructure:css.includes('grid-template-columns:minmax(320px,.9fr) minmax(420px,1.1fr)'),
-   decisionFocusWidth:css.includes('max-width:780px'),
+   sourceSplitStructure:css.includes('grid-template-columns:minmax(0,1.16fr) minmax(360px,.84fr)'),
+   composeDeskStructure:css.includes('grid-template-columns:minmax(290px,.76fr) minmax(480px,1.24fr)'),
+   repairDeskStructure:css.includes('grid-template-columns:minmax(310px,.9fr) minmax(420px,1.1fr)'),
+   decisionFocusWidth:css.includes('max-width:760px'),
    hasReducedMotion:css.includes('@media(prefers-reduced-motion:reduce)'),
    hasFocusVisible:css.includes(':focus-visible'),
    hasMobileBreakpoints:css.includes('@media(max-width:899px)')&&css.includes('@media(max-width:520px)'),
