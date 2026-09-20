@@ -109,6 +109,7 @@ for(let i=0;i<22;i++){
 
 const engine=fs.readFileSync(new URL('public/b2-northstar-workbook-v1.js',ROOT),'utf8');
 const lesson1Engine=fs.readFileSync(new URL('public/b2-lesson1-microflow-v3.js',ROOT),'utf8');
+const premiumUi=fs.readFileSync(new URL('public/englishgate-b2-premium-v1.css',ROOT),'utf8');
 const app=fs.readFileSync(new URL('public/app.js',ROOT),'utf8');
 const index=fs.readFileSync(new URL('public/index.html',ROOT),'utf8');
 const standards=fs.readFileSync(new URL('standards-audit-bootstrap.js',ROOT),'utf8');
@@ -118,8 +119,8 @@ try{new vm.Script(lesson1Engine)}catch(e){fail('Lesson 1 engine syntax error: '+
 try{new vm.Script(grader)}catch(e){fail('Northstar Jev grader syntax error: '+e.message)}
 
 if(!app.includes('northstar:x.northstar||null'))fail('Runtime B2 lesson mapper does not expose Northstar metadata.');
-if(!index.includes('b2-northstar-workbook-v1.js?v=4'))fail('Northstar engine is not loaded in index.html with the current cache version.');
-if(index.indexOf('b2-northstar-workbook-v1.js?v=4')>index.indexOf('b2-lesson1-microflow-v3.js?v=4'))fail('Lesson 1 override must load after the generic Northstar engine.');
+if(!index.includes('b2-northstar-workbook-v1.js?v=5'))fail('Northstar engine is not loaded in index.html with the current cache version.');
+if(index.indexOf('b2-northstar-workbook-v1.js?v=5')>index.indexOf('b2-lesson1-microflow-v3.js?v=5'))fail('Lesson 1 override must load after the generic Northstar engine.');
 if(!standards.includes("require('./northstar-jev-grading-bootstrap.js')"))fail('Jev Northstar grading bootstrap is not in the server chain.');
 if(!grader.includes('/api/workbook-activities/grade-use'))fail('Jev Northstar USE grading route is missing.');
 if(!engine.includes("framework==='SEE_CHOOSE_CHANGE_USE_FIX'"))fail('Northstar renderer is not gated by the framework marker.');
@@ -133,6 +134,14 @@ if(!engine.includes('function arrangeChoices(options,correctIndex,seed)'))fail('
 if(!lesson1Engine.includes('function arrangeChoices(options,correctIndex,seed)'))fail('Lesson 1 multiple-choice renderer must distribute correct answer positions.');
 if(!engine.includes('desired=Math.abs(Number(seed)||0)%n'))fail('Northstar answer-position rotation rule is missing.');
 if(!lesson1Engine.includes('desired=Math.abs(Number(seed)||0)%n'))fail('Lesson 1 answer-position rotation rule is missing.');
+if(!index.includes('englishgate-b2-premium-v1.css?v=1'))fail('Premium B2 learning UI stylesheet is not loaded.');
+if(!engine.includes("uiDecisionContract:'jev-ui-v1'"))fail('Generic Northstar Jev UI decision contract is missing.');
+if(!lesson1Engine.includes("uiDecisionContract:'jev-ui-v1'"))fail('Lesson 1 Jev UI decision contract is missing.');
+for(const mode of ['source','decision','compose','repair']){
+ if(!premiumUi.includes('[data-ui-mode="'+mode+'"]'))fail('Premium B2 UI is missing '+mode+' treatment.');
+}
+if(!premiumUi.includes('@media(prefers-reduced-motion:reduce)'))fail('Premium B2 UI must respect reduced-motion settings.');
+if(/purple|#5b2c8d/i.test(premiumUi))fail('Premium B2 UI must not introduce purple AI styling.');
 if(!grader.includes("focus:'none'"))fail('Jev grader must return no correction when all checks pass.');
 if(!engine.includes("if(i===9)return renderFix"))fail('FIX is not the final Northstar stage.');
 if(!engine.includes('const REMEMBER_OFFSETS=[1,3,7]'))fail('Hidden REMEMBER must use +1, +3, +7 spaced retrieval opportunities.');
