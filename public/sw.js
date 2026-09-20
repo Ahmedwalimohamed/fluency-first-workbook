@@ -2,7 +2,7 @@
    Resilient navigation policy: never turn a temporary upstream/network failure
    into Chrome's ERR_FAILED page when a previously installed EnglishGate PWA
    can still serve its application shell. */
-const CACHE_NAME = 'englishgate-pwa-v6';
+const CACHE_NAME = 'englishgate-pwa-v7';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -10,11 +10,12 @@ const APP_SHELL = [
   '/favicon.svg',
   '/manifest.webmanifest',
   '/pwa.css',
-  '/pwa.js',
+  '/pwa.js?v=2',
   '/pwa-icon-192.svg',
   '/pwa-icon-512.svg',
   '/pwa-maskable.svg',
-  '/app.js',
+  '/app.js?v=b2-integrated-workbook-engine-v2',
+  '/b2-integrated-workbook-v2.css?v=3',
   '/mobile-activity-focus.js',
   '/mobile-form-fix.css',
   '/question-nav-fix.css',
@@ -99,6 +100,25 @@ self.addEventListener('fetch', event => {
   if (!isStatic) return;
 
   event.respondWith((async () => {
+    const isCodeAsset = request.destination === 'style' || request.destination === 'script' || /\.(?:css|js)$/i.test(url.pathname);
+
+    // Code assets are network-first so deployed UI changes reach existing users
+    // instead of being hidden indefinitely behind an old PWA cache.
+    if (isCodeAsset) {
+      try {
+        const response = await fetch(request, { cache: 'no-cache' });
+        if (response && response.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(request, response.clone());
+        }
+        return response;
+      } catch (error) {
+        const cached = await caches.match(request);
+        return cached || new Response('', {status: 503, statusText: 'Temporarily unavailable'});
+      }
+    }
+
+    // Images/fonts remain cache-first for fast repeat loads and offline resilience.
     const cached = await caches.match(request);
     if (cached) return cached;
     try {
@@ -109,7 +129,6 @@ self.addEventListener('fetch', event => {
       }
       return response;
     } catch (error) {
-      // A normal HTTP response avoids the FetchEvent network-error state shown by Chrome.
       return new Response('', {status: 503, statusText: 'Temporarily unavailable'});
     }
   })());

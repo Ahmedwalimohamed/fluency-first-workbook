@@ -85,7 +85,19 @@ function syncNetworkStatus(){
 async function registerServiceWorker(){
   if(!('serviceWorker' in navigator)) return;
   try{
-    const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+    let reloadingForUpdate = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if(reloadingForUpdate) return;
+      const key = 'englishgate:pwa-controller-v7';
+      if(sessionStorage.getItem(key)==='reloaded') return;
+      reloadingForUpdate = true;
+      sessionStorage.setItem(key,'reloaded');
+      window.location.reload();
+    });
+
+    // Version the worker URL so an existing installation cannot stay pinned
+    // to an older cache policy after a production release.
+    const registration = await navigator.serviceWorker.register('/sw.js?v=7', { scope: '/' });
     registration.update().catch(()=>{});
   }catch(error){
     console.warn('EnglishGate PWA service worker registration failed:', error);
