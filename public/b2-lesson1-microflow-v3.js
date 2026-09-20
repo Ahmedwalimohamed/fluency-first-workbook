@@ -33,6 +33,15 @@ const LISTENING_QUESTIONS=[
  {q:'What do Sara and Daniel have in common?',options:['Both are trying to explain technical information more clearly','Both work for the same logistics company','Both dislike digital projects'],answer:0}
 ];
 
+function arrangeChoices(options,correctIndex,seed){
+  var list=Array.isArray(options)?options.slice():[],n=list.length;
+  if(n<2)return{options:list,answer:Math.max(0,Math.min(Number(correctIndex)||0,n-1))};
+  var original=Math.max(0,Math.min(Number(correctIndex)||0,n-1)),desired=Math.abs(Number(seed)||0)%n,correct=list[original],others=list.filter(function(_,i){return i!==original}),out=new Array(n),oi=0;
+  out[desired]=correct;
+  for(var i=0;i<n;i++)if(i!==desired)out[i]=others[oi++];
+  return{options:out,answer:desired}
+}
+
 function el(id){return document.getElementById(id)}
 function esc(value){
   if(typeof escapeHtml==='function')return escapeHtml(String(value==null?'':value));
@@ -125,16 +134,16 @@ function renderQuestionSet(state,opts){
   var items=(opts.items||[]).slice(0,MIN_COMPREHENSION_QUESTIONS);
   if(!items.length)return;
   state.subprogress=state.subprogress||{};state.subresponses=state.subresponses||{};
-  var key=String(opts.key||'questions'),pos=Math.max(0,Math.min(Number(state.subprogress[key]||0),items.length-1)),q=items[pos];
+  var key=String(opts.key||'questions'),pos=Math.max(0,Math.min(Number(state.subprogress[key]||0),items.length-1)),q=items[pos],arranged=arrangeChoices(q.options,q.answer,Number(state.index||0)+pos);
   var before=(pos===0?String(opts.intro||''):'')+(typeof opts.before==='function'?opts.before(pos):String(opts.before||''));
   var body=before+'<div class="micro-question-count">Question '+(pos+1)+' of '+items.length+'</div>'+
-    prompt(q.q,opts.sub)+choices(q.options)+'<div id="microFeedbackSlot"></div>';
+    prompt(q.q,opts.sub)+choices(arranged.options)+'<div id="microFeedbackSlot"></div>';
   el('content').innerHTML=shell(body,state);bindBack();
   if(typeof opts.afterRender==='function')opts.afterRender();
   Array.from(document.querySelectorAll('[data-choice]')).forEach(function(btn){
     btn.onclick=function(){
       if(el('microContinue'))return;
-      var ix=Number(btn.dataset.choice),value=q.options[ix],ok=ix===Number(q.answer);
+      var ix=Number(btn.dataset.choice),value=arranged.options[ix],ok=ix===arranged.answer;
       state.subresponses[key+':'+pos]=value;setOK(state,state.index,ok);hit(state,state.index);write(state);
       Array.from(document.querySelectorAll('[data-choice]')).forEach(function(b){b.disabled=true;b.classList.toggle('is-selected',b===btn)});
       var last=pos===items.length-1;
