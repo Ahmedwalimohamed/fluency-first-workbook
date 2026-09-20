@@ -79,6 +79,13 @@ function setOK(state,i,value){state.results[String(i)]=Boolean(value);write(stat
 function hit(state,i){var k=String(i);state.attempts[k]=Number(state.attempts[k]||0)+1;write(state);return state.attempts[k]}
 
 function phaseFor(index){return STEPS[Math.max(0,Math.min(index,TOTAL-1))].phase}
+function uiModeFor(index){
+  var step=STEPS[Math.max(0,Math.min(index,TOTAL-1))]||{};
+  if(step.phase==='SEE'||step.skill==='listening')return 'source';
+  if(step.phase==='CHOOSE')return 'decision';
+  if(step.phase==='CHANGE'||step.phase==='USE')return 'compose';
+  return 'repair'
+}
 function phaseStrip(state){
   var current=phaseFor(state.index);
   var currentIx=PHASES.indexOf(current);
@@ -87,13 +94,14 @@ function phaseStrip(state){
   }).join('')+'</div>'
 }
 function shell(body,state){
-  var pct=state.complete?100:Math.round((state.index/TOTAL)*100);
-  return '<div class="b2-microflow">'+
+  var pct=state.complete?100:Math.round((state.index/TOTAL)*100),phase=phaseFor(state.index),step=STEPS[Math.max(0,Math.min(TOTAL-1,state.index))]||{},mode=uiModeFor(state.index);
+  return '<div class="b2-microflow" data-ui-mode="'+mode+'" data-phase="'+String(phase).toLowerCase()+'" data-skill="'+String(step.skill||'').toLowerCase()+'" data-step="'+(Number(state.index)+1)+'">'+
     '<div class="micro-top"><button class="ghost-btn" id="microBack" type="button">← Lessons</button>'+
       '<div class="micro-title"><small>B2 · Lesson 1</small><strong>Getting Acquainted</strong></div>'+
       '<span class="micro-preview">'+(preview()?'Preview':'Workbook')+'</span></div>'+
     phaseStrip(state)+
-    '<div class="micro-progress" aria-hidden="true"><span style="width:'+pct+'%"></span></div>'+
+    '<div class="micro-progress-meta"><span>'+esc(phase)+'</span><span>Step '+(Number(state.index)+1)+' of '+TOTAL+'</span></div>'+
+    '<div class="micro-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div>'+
     '<main class="micro-stage">'+body+'</main></div>'
 }
 function speaker(name,text,you){
@@ -193,12 +201,13 @@ function renderListening(state){
 }
 
 function renderChoice(state,opts){
-  var body=(opts.before||'')+prompt(opts.q,opts.sub)+choices(opts.options)+'<div id="microFeedbackSlot"></div>';
+  var arranged=arrangeChoices(opts.options,opts.answer,Number(state.index||0));
+  var body=(opts.before||'')+prompt(opts.q,opts.sub)+choices(arranged.options)+'<div id="microFeedbackSlot"></div>';
   el('content').innerHTML=shell(body,state);bindBack();
   Array.from(document.querySelectorAll('[data-choice]')).forEach(function(btn){
     btn.onclick=function(){
       if(el('microContinue'))return;
-      var ix=Number(btn.dataset.choice),value=opts.options[ix],ok=ix===opts.answer;
+      var ix=Number(btn.dataset.choice),value=arranged.options[ix],ok=ix===arranged.answer;
       setR(state,state.index,value);setOK(state,state.index,ok);hit(state,state.index);
       Array.from(document.querySelectorAll('[data-choice]')).forEach(function(b){b.disabled=true;b.classList.toggle('is-selected',b===btn)});
       el('microFeedbackSlot').innerHTML=feedback(ok,ok?(opts.goodTitle||'Correct.'):(opts.badTitle||'Try again.'),ok?opts.good:opts.bad,ok?'Next':'Try again');
