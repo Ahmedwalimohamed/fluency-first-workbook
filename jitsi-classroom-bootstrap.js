@@ -6,7 +6,6 @@ const {Pool}=require('pg');
 const nativeGet=express.application.get;
 const nativePost=express.application.post;
 const nativePatch=express.application.patch;
-const nativeUse=express.application.use;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 let schemaPromise=null;
@@ -88,8 +87,6 @@ function joinPayload(row,u,moderator){return {session:publicSession(row),domain:
 
 function install(app){
   if(installed.has(app))return;installed.add(app);
-  nativeUse.call(app,(req,res,next)=>{ensureCookies(req);next()});
-
   nativeGet.call(app,'/api/jitsi/status',(req,res)=>{
     const u=user(req);if(!u)return res.status(401).json({error:'Please sign in again.'});
     res.set('Cache-Control','no-store').json({configured:configured(),domain:configured()?domainHost():null});
@@ -183,6 +180,4 @@ function install(app){
 express.application.get=function jitsiGet(route,...handlers){install(this);return nativeGet.call(this,route,...handlers)};
 express.application.post=function jitsiPost(route,...handlers){install(this);return nativePost.call(this,route,...handlers)};
 express.application.patch=function jitsiPatch(route,...handlers){install(this);return nativePatch.call(this,route,...handlers)};
-express.application.use=function jitsiUse(...handlers){install(this);return nativeUse.call(this,...handlers)};
-
 require('./ai-content-editor-generate-v2-bootstrap.js');
