@@ -86,6 +86,10 @@ async function openInWhiteboard(target){
     currentClass=await resolveTeachClass();
     const active=await api('/api/teacher/live-tasks/current?classId='+encodeURIComponent(currentClass.id),{headers:teacherLiveHeaders()});
     if(active?.teacherLiveToken)rememberTeacherLiveToken(active.teacherLiveToken);
+    if(active?.class?.id){
+      const canonical=classFromId(active.class.id);
+      currentClass=canonical||{...currentClass,id:active.class.id,name:active.class.name||currentClass.name};
+    }
     if(active?.task)return openMonitor(active.task,active.serverNow,false);
     if(active?.recentTask)return openMonitor(active.recentTask,active.serverNow,true);
     openBuilder();
@@ -130,6 +134,10 @@ async function generateFromPrompt(request){
   try{
     const d=await api('/api/teacher/live-tasks/prepare',{method:'POST',headers:teacherLiveHeaders(),body:JSON.stringify({classId:currentClass.id,request})});
     if(d?.teacherLiveToken)rememberTeacherLiveToken(d.teacherLiveToken);
+    if(d?.class?.id){
+      const canonical=classFromId(d.class.id);
+      currentClass=canonical||{...currentClass,id:d.class.id,name:d.class.name||currentClass.name};
+    }
     currentDraft=d;currentQuestionIndex=0;renderDraft();
     setPromptBusy(false,'Preview ready');
   }catch(e){
