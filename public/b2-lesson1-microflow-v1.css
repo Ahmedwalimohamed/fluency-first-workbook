@@ -29,3 +29,17 @@
 .b2-microflow .micro-help strong{font-size:.76rem;color:#475569;text-transform:uppercase;letter-spacing:.05em}
 .b2-microflow .micro-help span{color:#334155;line-height:1.5}
 @media(max-width:700px){.b2-microflow .micro-framework{gap:4px}.b2-microflow .micro-framework span{min-height:28px;padding:5px 2px;font-size:.6rem;letter-spacing:0}}
+
+/* B2 Northstar shared surfaces */
+.b2-northstar-flow .northstar-reading{display:grid;gap:10px;max-height:42vh;overflow:auto;padding:16px 17px;border:1px solid var(--m-line);border-radius:16px;background:#fff}
+.b2-northstar-flow .northstar-reading>span{color:var(--m-blue);font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.b2-northstar-flow .northstar-reading p{margin:0;color:#334155;font-size:.98rem;line-height:1.65}
+.b2-northstar-flow .northstar-model{display:grid;gap:6px;padding:13px 15px;border:1px solid #dbe4ee;border-radius:13px;background:#f8fafc}
+.b2-northstar-flow .northstar-model small{color:#64748b;font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.b2-northstar-flow .northstar-model strong{font-size:1rem;line-height:1.5;color:#0f172a}
+.b2-northstar-flow .northstar-help{border:1px solid #dbe4ee;border-radius:13px;background:#fff;overflow:hidden}
+.b2-northstar-flow .northstar-help summary{cursor:pointer;padding:11px 14px;color:#2563eb;font-size:.85rem;font-weight:850}
+.b2-northstar-flow .northstar-help>div{padding:0 14px 13px;color:#475569;line-height:1.5}
+.b2-northstar-flow .northstar-final-preview{white-space:pre-wrap;color:#334155;line-height:1.6}
+.b2-northstar-flow .live-audio-player{margin:0}
+@media(max-width:700px){.b2-northstar-flow .northstar-reading{max-height:38vh;padding:14px}.b2-northstar-flow .northstar-reading p{font-size:.95rem}}
