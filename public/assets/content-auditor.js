@@ -6,8 +6,10 @@ const esc=v=>typeof escapeHtml==='function'?escapeHtml(String(v??'')):String(v??
 const attr=v=>esc(v).replace(/"/g,'&quot;');
 const EDITABLE=['title','outcome','expressions','vocabulary','reading','listening','grammar','writing','review','performance'];
 const LABELS={vocabulary:'Vocabulary',reading:'Reading',listening:'Listening & Reading',grammar:'Grammar',writing:'Writing',expressions:'Expressions',review:'Review',performance:'Speaking / Performance',outcome:'Learning outcome'};
-const state=window.__aiContentEditorState=window.__aiContentEditorState||{courseId:'',lessonNumber:1,scope:'activity',activity:'',questionIndex:0,instruction:'',proposal:null,proposalContext:null,qaReport:null,message:''};
+const state=window.__aiContentEditorState=window.__aiContentEditorState||{courseId:'',lessonNumber:1,scope:'activity',activity:'',questionIndex:0,instruction:'',proposal:null,proposalContext:null,qaReport:null,qaApprovalToken:null,qaNeedsHumanReview:false,message:''};
 if(!Object.prototype.hasOwnProperty.call(state,'qaReport'))state.qaReport=null;
+if(!Object.prototype.hasOwnProperty.call(state,'qaApprovalToken'))state.qaApprovalToken=null;
+if(!Object.prototype.hasOwnProperty.call(state,'qaNeedsHumanReview'))state.qaNeedsHumanReview=false;
 
 function books(){return window.EnglishGateContentPatches?.books?.()||[]}
 function book(){return books().find(b=>String(b.id)===String(state.courseId))||books()[0]||null}
@@ -109,13 +111,13 @@ function shortItem(x,i){
 function pretty(v){return typeof v==='string'?v:JSON.stringify(v,null,2)}
 function previewBox(titleText,value,kind){return `<article class="ace-preview ${kind}"><header><span>${esc(titleText)}</span></header><pre>${esc(pretty(value))}</pre></article>`}
 function activePatch(t){return t?window.EnglishGateContentPatches?.get?.(state.courseId,state.lessonNumber,t.path):null}
-function clearProposal(){state.proposal=null;state.proposalContext=null;state.qaReport=null;state.message=''}
+function clearProposal(){state.proposal=null;state.proposalContext=null;state.qaReport=null;state.qaApprovalToken=null;state.qaNeedsHumanReview=false;state.message=''}
 
 async function generate(){
  const t=target(),l=lesson(),b=book(),btn=$('aceGenerate');if(!t||!l||!b)return;
  const instruction=String($('acePrompt')?.value||'').trim();state.instruction=instruction;
  if(instruction.length<3){state.message='Write what you want AI to change.';render();return}
- btn.disabled=true;btn.textContent='Creating preview…';
+ btn.disabled=true;btn.textContent='Creating preview…';state.qaApprovalToken=null;state.qaNeedsHumanReview=false;
  try{
   const r=await fetch('/api/content-editor/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({courseId:b.id,lessonNumber:l.number,targetPath:t.path,scope:state.scope,instruction,source:t.source,lessonContext:{id:l.id,title:l.title,outcome:l.outcome,level:b.level}})}),data=await r.json();
   if(!r.ok)throw new Error(data?.detail||data?.error||'AI edit failed');
@@ -139,26 +141,47 @@ async function gradeCurrentLesson(){
   render();
  }catch(e){state.message=e.message;render()}
 }
+async function publishApproved(token,humanReviewAccepted){
+ const p=state.proposal,c=state.proposalContext;if(!p||!c||!token)return;
+ const publishBtn=$('aceApproveReview')||$('aceApply');if(publishBtn){publishBtn.disabled=true;publishBtn.textContent='Publishing…'}
+ const r=await fetch('/api/content-editor/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+  ...c,replacement:p.replacement,summary:p.summary,quality:p.quality,lessonQualityReport:state.qaReport,
+  semanticQaToken:token,humanReviewAccepted:Boolean(humanReviewAccepted)
+ })}),data=await r.json();
+ if(!r.ok)throw new Error(data?.problems?.join(' ')||data?.error||'Publish failed');
+ await window.EnglishGateContentPatches?.reload?.();
+ state.proposal=null;state.proposalContext=null;state.qaReport=null;state.qaApprovalToken=null;state.qaNeedsHumanReview=false;
+ state.message=humanReviewAccepted
+  ?'Published after explicit Admin review of the AMBER findings. The decision and exact audit evidence were saved with this version.'
+  :'Published. Lesson Quality Firewall is GREEN and the exact audit evidence was saved with this version.';
+ render();
+}
 async function apply(){
  const p=state.proposal,c=state.proposalContext,btn=$('aceApply'),l=lesson(),b=book();if(!p||!c||!l||!b)return;
  const candidate=candidateLesson(l,c.targetPath,p.replacement);
- btn.disabled=true;btn.textContent='Running Jev QA…';state.message='';state.qaReport=null;
+ btn.disabled=true;btn.textContent='Running Jev QA…';state.message='';state.qaReport=null;state.qaApprovalToken=null;state.qaNeedsHumanReview=false;
  try{
   const qr=await fetch('/api/semantic-qa/lesson',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
    courseId:b.id,lessonNumber:l.number,targetPath:c.targetPath,level:b.level,lessonTitle:l.title,learningOutcome:l.outcome,audience:b.audience||'adult English learners',
    lesson:candidate,replacement:p.replacement
   })});
   const qd=await qr.json();state.qaReport=qd?.report||null;
-  if(!qr.ok||!qd?.ok){
-   state.message=qd?.error||'Semantic QA blocked publication.';
+  if(qd?.code==='LESSON_QUALITY_REVIEW_REQUIRED'&&qd?.semanticQaToken){
+   state.qaApprovalToken=qd.semanticQaToken;state.qaNeedsHumanReview=true;
+   state.message='AMBER: review the Major findings below. You may fix them, re-run Jev, or explicitly approve this reviewed version.';
    render();return;
   }
-  const publishBtn=$('aceApply');if(publishBtn){publishBtn.disabled=true;publishBtn.textContent='Publishing…'}
-  const r=await fetch('/api/content-editor/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...c,replacement:p.replacement,summary:p.summary,quality:p.quality,lessonQualityReport:state.qaReport,semanticQaToken:qd.semanticQaToken})}),data=await r.json();
-  if(!r.ok)throw new Error(data?.problems?.join(' ')||data?.error||'Publish failed');
-  await window.EnglishGateContentPatches?.reload?.();
-  state.proposal=null;state.proposalContext=null;state.qaReport=null;state.message='Published. Lesson Quality Firewall is GREEN and the exact audit evidence was saved with this version. You can undo it at any time.';render();
+  if(!qr.ok||!qd?.ok){
+   state.message=qd?.error||'Lesson Quality Firewall blocked publication.';
+   render();return;
+  }
+  state.qaApprovalToken=qd.semanticQaToken;
+  await publishApproved(qd.semanticQaToken,false);
  }catch(e){state.message=e.message;render()}
+}
+async function approveAmber(){
+ if(!state.qaNeedsHumanReview||!state.qaApprovalToken)return;
+ try{await publishApproved(state.qaApprovalToken,true)}catch(e){state.message=e.message;render()}
 }
 async function undo(){
  const t=target(),b=book(),l=lesson();if(!t||!b||!l)return;
@@ -191,7 +214,7 @@ function render(){
    ${!p&&state.qaReport?qaReportHtml(state.qaReport):''}
    <div class="ace-prompt-card"><label for="acePrompt">What should AI change?</label><textarea id="acePrompt" rows="4" placeholder="Example: Make these reading questions direct comprehension questions. Keep them at A2 level.">${esc(state.instruction)}</textarea><div class="ace-prompt-examples"><button type="button" data-ace-example="Make the questions direct, text-grounded comprehension questions. Keep the same CEFR level.">Fix reading questions</button><button type="button" data-ace-example="Make this simpler and clearer for the current CEFR level without changing the learning objective.">Simplify</button><button type="button" data-ace-example="Improve the distractors so they are plausible but only one answer is clearly correct.">Improve answer choices</button><button type="button" data-ace-example="Fix everything pedagogically weak in this selected content using CEFR and ESL best practices. Preserve what is already good.">Fix weaknesses</button></div><button class="primary-btn ace-generate" id="aceGenerate" type="button">✦ Generate preview</button></div>
   </section>
-  ${p?`<section class="ace-result"><div class="ace-result-head"><div><span class="ace-kicker">AI proposed edit</span><h2>${esc(p.summary||'Proposed change')}</h2>${Array.isArray(p.changes)&&p.changes.length?`<p>${p.changes.map(esc).join(' · ')}</p>`:''}</div>${problems.length?'<span class="ace-warning-badge">Needs review</span>':'<span class="ace-ready-badge">Ready to apply</span>'}</div><div class="ace-compare">${previewBox('Before',state.proposalContext?.source,'before')}${previewBox('After',p.replacement,'after')}</div>${problems.length?`<div class="ace-warnings"><strong>Check before applying</strong>${problems.map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}${qaReportHtml(state.qaReport)}<div class="ace-result-actions"><button class="ghost-btn" id="aceEditPrompt" type="button">Edit prompt</button><button class="ghost-btn" id="aceRegenerate" type="button">Regenerate</button><button class="ghost-btn" id="aceCancel" type="button">Cancel</button><button class="primary-btn" id="aceApply" type="button" ${problems.length?'disabled':''}>Run Jev QA & Publish</button></div></section>`:''}
+  ${p?`<section class="ace-result"><div class="ace-result-head"><div><span class="ace-kicker">AI proposed edit</span><h2>${esc(p.summary||'Proposed change')}</h2>${Array.isArray(p.changes)&&p.changes.length?`<p>${p.changes.map(esc).join(' · ')}</p>`:''}</div>${problems.length?'<span class="ace-warning-badge">Needs review</span>':'<span class="ace-ready-badge">Ready to apply</span>'}</div><div class="ace-compare">${previewBox('Before',state.proposalContext?.source,'before')}${previewBox('After',p.replacement,'after')}</div>${problems.length?`<div class="ace-warnings"><strong>Check before applying</strong>${problems.map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}${qaReportHtml(state.qaReport)}<div class="ace-result-actions"><button class="ghost-btn" id="aceEditPrompt" type="button">Edit prompt</button><button class="ghost-btn" id="aceRegenerate" type="button">Regenerate</button><button class="ghost-btn" id="aceCancel" type="button">Cancel</button><button class="primary-btn" id="aceApply" type="button" ${problems.length?'disabled':''}>${state.qaNeedsHumanReview?'Re-run Jev QA':'Run Jev QA & Publish'}</button>${state.qaNeedsHumanReview?'<button class="primary-btn ace-amber-approve" id="aceApproveReview" type="button">Approve AMBER & Publish</button>':''}</div></section>`:''}
  </section>`;
  $('aceCourse').onchange=e=>{state.courseId=e.target.value;state.lessonNumber=1;state.activity='';state.questionIndex=0;clearProposal();render()};
  $('aceLesson').onchange=e=>{state.lessonNumber=Number(e.target.value);state.activity='';state.questionIndex=0;clearProposal();render()};
@@ -204,9 +227,10 @@ function render(){
  if($('aceUndo'))$('aceUndo').onclick=undo;
  document.querySelectorAll('[data-ace-example]').forEach(btn=>btn.onclick=()=>{state.instruction=btn.dataset.aceExample;$('acePrompt').value=state.instruction;$('acePrompt').focus()});
  if($('aceApply'))$('aceApply').onclick=apply;
+ if($('aceApproveReview'))$('aceApproveReview').onclick=approveAmber;
  if($('aceRegenerate'))$('aceRegenerate').onclick=generate;
- if($('aceCancel'))$('aceCancel').onclick=()=>{state.proposal=null;state.proposalContext=null;render()};
- if($('aceEditPrompt'))$('aceEditPrompt').onclick=()=>{state.proposal=null;state.proposalContext=null;render();setTimeout(()=>$('acePrompt')?.focus(),0)};
+ if($('aceCancel'))$('aceCancel').onclick=()=>{clearProposal();render()};
+ if($('aceEditPrompt'))$('aceEditPrompt').onclick=()=>{clearProposal();render();setTimeout(()=>$('acePrompt')?.focus(),0)};
 }
 window.contentAuditor=render;
 window.aiContentEditor=render;
