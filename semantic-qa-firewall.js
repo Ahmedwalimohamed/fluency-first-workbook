@@ -115,6 +115,7 @@ const REVIEW_ONLY_CHECKS=new Set([
   'distractors_plausible',
   'distractors_parallel',
   'no_answer_leakage',
+  'no_trick_wording',
   'no_duplicate_instructions',
   'no_duplicate_questions',
   'no_recycled_examples',
