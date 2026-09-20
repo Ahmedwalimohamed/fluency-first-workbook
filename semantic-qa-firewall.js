@@ -221,10 +221,12 @@ function deterministicLessonChecks(payload){
         push('det_duplicate_options','Assessment Validity','Major','Selected-response options must be distinct.','Duplicate or equivalent answer options were detected.',path)
       }
       if(node.answer!==undefined&&node.answer!==null){
-        const ans=node.answer;
-        const valid=typeof ans==='number'
-          ?Number.isInteger(ans)&&ans>=0&&ans<opts.length
-          :normalized.includes(normalizeText(ans));
+        const ans=node.answer,asText=String(ans).trim();
+        const answerIsOption=normalized.includes(normalizeText(ans));
+        const numericIndex=(typeof ans==='number'&&Number.isInteger(ans))||(!answerIsOption&&/^\d+$/.test(asText));
+        const valid=numericIndex
+          ?Number(asText)>=0&&Number(asText)<opts.length
+          :answerIsOption;
         if(!valid){
           push('det_answer_not_in_options','Assessment Validity','Critical','Every selected-response answer key must resolve to one available option.','An answer key does not match any available option.',path)
         }
@@ -242,7 +244,7 @@ function deterministicLessonChecks(payload){
     const qs=Array.isArray(lesson.questions)?lesson.questions:[];
     const readingCount=qs.filter(q=>String(q?.tag||'').startsWith('reading:')).length;
     const listeningCount=qs.filter(q=>String(q?.tag||'').startsWith('listening:')).length;
-    if(readingCount&&readingCount<3)push('det_reading_depth','Learning Progression','Major','Northstar reading should provide at least three meaningful comprehension checks.','Fewer than three tagged reading-comprehension questions were found.');
+    if(readingCount<3)push('det_reading_depth','Learning Progression','Major','Northstar reading should provide at least three meaningful comprehension checks.','Fewer than three tagged reading-comprehension questions were found.');
     if(Number(lesson.number)>=2&&listeningCount<3)push('det_listening_depth','Learning Progression','Major','Northstar listening should provide at least three meaningful comprehension checks.','Fewer than three tagged listening-comprehension questions were found.');
     if(northstar){
       if(!Array.isArray(northstar.change)||northstar.change.length!==2)push('det_change_structure','Learning Progression','Major','CHANGE should contain two guided transformations.','CHANGE does not contain exactly two guided transformations.');
