@@ -527,6 +527,7 @@ function approvalToken({user,context,replacement,report}){
     qualityAuditVersion:report.auditVersion,
     contentHash:report.contentHash,
     releaseState:report.releaseState,
+    reportHash:sha(report),
     qaModel:report.model,
     totalChecks:report.totalChecks,
     passed:report.passed,
@@ -547,6 +548,8 @@ function verifyApproval(req){
   ];
   for(const [k,v] of fields){if(decoded[k]!==v)return {ok:false,error:'The lesson changed after QA. Run Jev QA again.'}}
   if(decoded.replacementHash!==sha(req.body?.replacement))return {ok:false,error:'The proposed content changed after QA. Run Jev QA again.'};
+  const lessonQualityReport=req.body?.lessonQualityReport;
+  if(!lessonQualityReport||decoded.reportHash!==sha(lessonQualityReport))return {ok:false,error:'The lesson-quality evidence changed after QA. Run Jev QA again.'};
   return {ok:true,decoded};
 }
 function installSemanticQaFirewall(app,{nativePost}){
@@ -628,6 +631,8 @@ module.exports={
   LESSON_QUALITY_AUDIT_VERSION,
   QUALITY_DOMAINS,
   deterministicLessonChecks,
+  buildDomainProfile,
+  releaseFrom,
   REVIEW_ONLY_CHECKS,
   FAIL_THRESHOLDS,
   CORROBORATION_CLUSTERS,
