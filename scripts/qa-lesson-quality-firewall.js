@@ -7,7 +7,9 @@ const {
   FIREWALL_VERSION,
   LESSON_QUALITY_AUDIT_VERSION,
   buildDomainProfile,
-  releaseFrom
+  releaseFrom,
+  issueSeverity,
+  MAJOR_REVIEW_MIN_EVIDENCE
 }=require('../semantic-qa-firewall.js');
 
 function lesson(overrides={}){
@@ -79,7 +81,14 @@ const profile=buildDomainProfile(sampleChecks);
 assert.equal(profile['Language Quality'].status,'AMBER','Domain profile must expose AMBER.');
 assert.deepEqual(Object.keys(profile),QUALITY_DOMAINS,'All six quality domains must always be present.');
 
-assert.equal(FIREWALL_VERSION,'jev-semantic-firewall-v3.0');
+const weakFail={id:'weak',critical:true,blocking:false,status:'REVIEW',review:true,rawChoice:'fail',evidence:0.30};
+const meaningfulFail={id:'meaningful',critical:true,blocking:false,status:'REVIEW',review:true,rawChoice:'fail',evidence:0.50};
+const weakPass={id:'weak-pass',critical:true,blocking:false,status:'REVIEW',review:true,rawChoice:'pass',evidence:0.20};
+assert.equal(issueSeverity(weakFail),'Minor','Weak Jev fail evidence must stay advisory.');
+assert.equal(issueSeverity(meaningfulFail),'Major','Meaningful Jev fail evidence must require review.');
+assert.equal(issueSeverity(weakPass),'Minor','Low-confidence pass should not make a lesson AMBER.');
+assert.equal(MAJOR_REVIEW_MIN_EVIDENCE,0.40);
+assert.equal(FIREWALL_VERSION,'jev-semantic-firewall-v3.1');
 assert.equal(LESSON_QUALITY_AUDIT_VERSION,'englishgate-lesson-quality-v1');
 
 console.log('LESSON QUALITY FIREWALL QA PASSED: deterministic checks, severity, six domains, and release-state logic are stable.');
