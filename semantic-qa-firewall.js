@@ -189,9 +189,11 @@ function qualityDomain(check){
   return DOMAIN_BY_CHECK[check.id]||DOMAIN_BY_CATEGORY[check.category]||'Learner Experience';
 }
 function issueSeverity(check){
-  if(check.critical)return 'Critical';
+  const actualFailure=Boolean(check.blocking)||check.status==='FAIL'||check.status==='CORROBORATED_FAIL'||check.status==='BLOCKED';
+  if(check.critical&&actualFailure)return 'Critical';
+  if(check.critical&&check.review)return 'Major';
   if(REVIEW_ONLY_CHECKS.has(check.id))return 'Minor';
-  if(check.rawChoice==='fail'||check.status==='FAIL'||check.status==='CORROBORATED_FAIL'||check.status==='BLOCKED')return 'Major';
+  if(check.rawChoice==='fail'||actualFailure)return 'Major';
   if(check.review)return 'Minor';
   return null;
 }
