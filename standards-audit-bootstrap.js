@@ -76,4 +76,16 @@ express.application.post=function standardsAwarePost(route,...handlers){
   install(this);
   return nativePost.call(this,route,...handlers);
 };
+if(process.env.RUN_JEV_B2_AUDIT_ON_START==='1'){
+  setTimeout(()=>{
+    try{
+      require('./scripts/jev-audit-b2-source-alignment.js').main().catch(e=>{
+        console.error('JEV_AUDIT_STARTUP_ERROR '+JSON.stringify({error:String(e.message||e).slice(0,800)}));
+      });
+    }catch(e){
+      console.error('JEV_AUDIT_STARTUP_ERROR '+JSON.stringify({error:String(e.message||e).slice(0,800)}));
+    }
+  },5000);
+}
+
 require('./public-assets-bootstrap.js');
