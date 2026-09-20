@@ -305,7 +305,7 @@ function render(state){
     good:'The question uses something Sara just said.',
     bad:'Choose the question that connects directly to her last idea.'
   });
-  if(i===7)return renderOpen(state,{
+  if(i===5)return renderOpen(state,{
     before:'<div class="micro-scene">'+speaker('Sara','What brought you here?')+'</div>',
     q:'Change the model so it is true for you.',
     sub:'One short sentence is enough.',
@@ -316,7 +316,7 @@ function render(state){
     feedbackTitle:'Good.',
     feedback:'You changed a useful model into your own English.'
   });
-  if(i===5)return renderOpen(state,{
+  if(i===6)return renderOpen(state,{
     before:'<div class="micro-scene">'+speaker('Sara',"I've worked at my company for three years.")+'</div>',
     q:'Change the model so it is true for you.',
     sub:'Use your job, studies or main activity. Try for or since.',
@@ -329,7 +329,7 @@ function render(state){
     feedback:'Your sentence connects a past starting point to now.',
     softFeedback:'Your idea is useful. We will repair the grammar once at the end.'
   });
-  if(i===6)return renderOpen(state,{
+  if(i===7)return renderOpen(state,{
     before:'<div class="micro-scene">'+speaker('Sara','Nice. Tell me a little about what you do.')+'</div>',
     q:'Reply in 1–2 sentences.',
     sub:'Say what you do and add one useful detail.',
