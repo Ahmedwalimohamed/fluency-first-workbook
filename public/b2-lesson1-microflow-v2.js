@@ -425,6 +425,18 @@ if(previousFirstOpen){
 
 window.ENGLISHGATE_B2_L1_MICROFLOW={
   version:FLOW_VERSION,total:TOTAL,reset:function(){render(reset())},
-  logic:{detectOccupation:detectOccupation,occupationFollowUp:occupationFollowUp,questionTopic:questionTopic,answerSaraQuestion:answerSaraQuestion,questionRelevant:questionRelevant}
+  logic:{
+    detectOccupation:detectOccupation,
+    occupationFollowUp:occupationFollowUp,
+    questionTopic:questionTopic,
+    answerSaraQuestion:answerSaraQuestion,
+    strategyOptions:strategyOptions,
+    branchQuestion:branchQuestion,
+    reasonRelevant:reasonRelevant,
+    occupationRelevant:occupationRelevant,
+    questionRelevant:questionRelevant,
+    meaningfulAnswer:meaningfulAnswer,
+    durationCorrect:durationCorrect
+  }
 };
 })();
