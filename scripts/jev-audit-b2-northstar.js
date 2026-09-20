@@ -35,8 +35,11 @@ function crossQuestions(){
   review:'The direction is acceptable but there is a localized concern worth human review.'
  }});
  return {
-  progression:q('Across Lessons 2–22, does learner independence generally increase from high support to low support without a sudden unreasonable jump in output or cognitive demand?'),
-  retrieval:q('Does the hidden REMEMBER system provide meaningful spaced retrieval from prior lessons at +1, +3, and +7 opportunities, prioritising previously weak grammar when available, without exposing review-system meta language to learners?'),
+  progression_scaffold_fade:q('Does runtimeSupport show a coherent fade from high → medium-high → medium → low, with starters/help actually disappearing and low-support CHANGE using only optional model reveal?'),
+  progression_task_demand:q('Across Lessons 2–22, do tasks generally require increasing independence, explanation, justification, synthesis, or transfer? Judge genre-appropriate shorter tasks by cognitive/communicative demand rather than word count alone.'),
+  retrieval_spacing:q('Does rememberRuntime implement genuine spaced retrieval using +1, +3, and +7 opportunities as those prior lessons become available?'),
+  retrieval_weak_priority:q('Does the runtime retrieval policy prioritise previously weak eligible grammar before the normal scheduled offset?'),
+  retrieval_task_quality:q('Are the retrieval prompts meaningful prior-language checks with complete options/answers, while keeping REMEMBER scheduling meta language hidden from learners?'),
   variety:q('Do the missions, CHANGE prompts, USE tasks, and final-task formats have enough real variation that the course does not feel like the same AI template with nouns replaced?'),
   mission_alignment:q('Across the course, does each final USE task plausibly demonstrate its stated real-world mission?'),
   final_independence:q('Does Lesson 22 function as a substantially independent human-graded B2 exit task rather than another heavily scaffolded practice lesson?')
@@ -163,7 +166,18 @@ async function auditCourseCrossLesson(lessons){
   if(status==='BLOCK')blocked++;if(status==='REVIEW')review++;
   findings[id]={...d,status}
  }
- return {blocked,review,findings,model:String(data?.model||TYPE_SAFE_MODEL)}
+ const aggregate=(ids)=>{
+  const rows=ids.map(id=>findings[id]).filter(Boolean);
+  const status=rows.some(x=>x.status==='BLOCK')?'BLOCK':rows.some(x=>x.status==='REVIEW')?'REVIEW':'PASS';
+  const evidence=rows.length?Math.min(...rows.map(x=>Number.isFinite(Number(x.evidence))?Number(x.evidence):1)):null;
+  return {status,evidence,parts:ids.reduce((o,id)=>(o[id]=findings[id],o),{})}
+ };
+ return {
+  blocked,review,findings,
+  progression:aggregate(['progression_scaffold_fade','progression_task_demand']),
+  retrieval:aggregate(['retrieval_spacing','retrieval_weak_priority','retrieval_task_quality']),
+  model:String(data?.model||TYPE_SAFE_MODEL)
+ }
 }
 async function main(){
  const lessons=loadBlueprint();
