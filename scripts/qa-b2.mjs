@@ -109,7 +109,7 @@ for(let i=0;i<22;i++){
 
 const engine=fs.readFileSync(new URL('public/b2-northstar-workbook-v1.js',ROOT),'utf8');
 const lesson1Engine=fs.readFileSync(new URL('public/b2-lesson1-microflow-v3.js',ROOT),'utf8');
-const premiumUi=fs.readFileSync(new URL('public/englishgate-b2-premium-v2.css',ROOT),'utf8');
+const premiumUi=fs.readFileSync(new URL('public/englishgate-b2-premium-v3.css',ROOT),'utf8');
 const app=fs.readFileSync(new URL('public/app.js',ROOT),'utf8');
 const index=fs.readFileSync(new URL('public/index.html',ROOT),'utf8');
 const standards=fs.readFileSync(new URL('standards-audit-bootstrap.js',ROOT),'utf8');
@@ -134,7 +134,7 @@ if(!engine.includes('function arrangeChoices(options,correctIndex,seed)'))fail('
 if(!lesson1Engine.includes('function arrangeChoices(options,correctIndex,seed)'))fail('Lesson 1 multiple-choice renderer must distribute correct answer positions.');
 if(!engine.includes('desired=Math.abs(Number(seed)||0)%n'))fail('Northstar answer-position rotation rule is missing.');
 if(!lesson1Engine.includes('desired=Math.abs(Number(seed)||0)%n'))fail('Lesson 1 answer-position rotation rule is missing.');
-if(!index.includes('englishgate-b2-premium-v2.css?v=1'))fail('Premium B2 learning UI stylesheet is not loaded.');
+if(!index.includes('englishgate-b2-premium-v3.css?v=1'))fail('Premium B2 learning UI stylesheet is not loaded.');
 if(!engine.includes("uiDecisionContract:'jev-ui-v1'"))fail('Generic Northstar Jev UI decision contract is missing.');
 if(!lesson1Engine.includes("uiDecisionContract:'jev-ui-v1'"))fail('Lesson 1 Jev UI decision contract is missing.');
 for(const mode of ['source','decision','compose','repair']){
