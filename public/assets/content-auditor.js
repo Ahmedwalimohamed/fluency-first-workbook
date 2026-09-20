@@ -51,21 +51,37 @@ function candidateLesson(l,path,replacement){
 function qaReportHtml(report){
  if(!report)return '';
  const checks=Array.isArray(report.checks)?report.checks:[];
- const blocked=checks.filter(x=>Boolean(x.blocking));
- const review=checks.filter(x=>Boolean(x.review)&&!x.blocking);
+ const release=String(report.releaseState||'').toUpperCase()||(report.pass?'GREEN':'RED');
+ const domains=report.domains&&typeof report.domains==='object'?report.domains:{};
+ const critical=checks.filter(x=>String(x.severity)==='Critical'&&(x.status==='FAIL'||x.status==='CORROBORATED_FAIL'||x.status==='BLOCKED'));
+ const major=checks.filter(x=>String(x.severity)==='Major'&&(x.status==='FAIL'||x.status==='CORROBORATED_FAIL'||x.status==='BLOCKED'||x.review));
+ const minor=checks.filter(x=>String(x.severity)==='Minor'&&x.review);
+ const unresolved=release==='RED'?critical:release==='AMBER'?major:minor;
  const metric=x=>{
   const p=Number(x.selectedProbability),c=Number(x.confidence),e=Number(x.evidence);
   if(Number.isFinite(e))return `Evidence: ${Math.round(e*100)}%`;
   if(Number.isFinite(p))return `Decision probability: ${Math.round(p*100)}%`;
   if(Number.isFinite(c))return `Jev confidence: ${Math.round(c*100)}%`;
-  return '';
+  return x.source==='deterministic'?'Deterministic check':'';
  };
- const cards=(items,kind)=>items.slice(0,14).map(x=>`<article class="${kind}"><div><b>${esc(x.category||'QA')}</b><span>${esc(x.status||kind.toUpperCase())}</span></div><p>${esc(x.requirement||x.id||'Semantic check')}</p>${metric(x)?`<small>${esc(metric(x))}${x.corroboratedBy?` · corroborated: ${esc(x.corroboratedBy)}`:''}</small>`:''}</article>`).join('');
- if(report.pass){
-  const mode=review.length?'is-review':'is-pass';
-  return `<div class="ace-qa-report ${mode}"><div class="ace-qa-title"><strong>${review.length?'Semantic QA passed with review notes':'Semantic QA firewall passed'}</strong><span>${Number(report.passed||0)} passed · ${Number(report.notApplicable||0)} not applicable · ${review.length} review · ${Number(report.totalChecks||0)} checks</span></div><p>${review.length?'No calibrated blocker remains. Review notes are advisory and do not stop publication.':'Jev approved this exact candidate for publication.'}</p>${review.length?`<div class="ace-qa-failures ace-qa-review-list">${cards(review,'review')}</div>${review.length>14?`<small>+${review.length-14} more review notes</small>`:''}`:''}</div>`;
- }
- return `<div class="ace-qa-report is-blocked"><div class="ace-qa-title"><strong>Publication blocked by Semantic QA</strong><span>${blocked.length} blocker${blocked.length===1?'':'s'} · ${review.length} review · ${Number(report.totalChecks||checks.length)} total</span></div><div class="ace-qa-failures">${cards(blocked,'blocking')}</div>${blocked.length>14?`<small>+${blocked.length-14} more blocking checks</small>`:''}${review.length?`<details class="ace-qa-review-details"><summary>${review.length} additional review note${review.length===1?'':'s'}</summary><div class="ace-qa-failures ace-qa-review-list">${cards(review,'review')}</div></details>`:''}</div>`;
+ const domainCards=Object.entries(domains).map(([name,d])=>`<article class="ace-domain-card is-${String(d?.status||'GREEN').toLowerCase()}"><span>${esc(name)}</span><strong>${esc(d?.status||'GREEN')}</strong><small>${Number(d?.critical||0)} critical · ${Number(d?.major||0)} major · ${Number(d?.minor||0)} minor</small></article>`).join('');
+ const cards=(items,kind)=>items.slice(0,16).map(x=>`<article class="${kind}"><div><b>${esc(x.domain||x.category||'QA')}</b><span>${esc(x.severity||x.status||kind.toUpperCase())}</span></div><p>${esc(x.requirement||x.id||'Quality check')}</p><small>${esc(x.reason||'')}${metric(x)?` · ${esc(metric(x))}`:''}${x.path?` · ${esc(x.path)}`:''}</small></article>`).join('');
+ const mode=release==='GREEN'?'is-pass':release==='AMBER'?'is-review':'is-blocked';
+ const title=release==='GREEN'?'GREEN · Ready to publish':release==='AMBER'?'AMBER · Human review required':'RED · Publication blocked';
+ const body=release==='GREEN'
+  ?'No Critical or Major lesson-quality issue remains. Minor findings can be reviewed without unnecessary rewriting.'
+  :release==='AMBER'
+   ?'One or more Major findings need human review. EnglishGate will not auto-publish this candidate.'
+   :'A Critical lesson-quality failure is present. Publication remains blocked.';
+ const meta=`${Number(report.criticalFailures||report.critical||0)} critical · ${Number(report.majorFindings||report.major||0)} major · ${Number(report.minorFindings||report.minor||0)} minor · ${Number(report.totalChecks||checks.length)} checks`;
+ return `<div class="ace-qa-report ${mode}" data-release="${attr(release)}">
+   <div class="ace-qa-title"><strong>${title}</strong><span>${esc(meta)}</span></div>
+   <p>${esc(body)}</p>
+   ${domainCards?`<div class="ace-quality-domains">${domainCards}</div>`:''}
+   ${unresolved.length?`<div class="ace-qa-failures ${release==='GREEN'?'ace-qa-review-list':''}">${cards(unresolved,release==='RED'?'blocking':'review')}</div>`:''}
+   ${unresolved.length>16?`<small>+${unresolved.length-16} more findings</small>`:''}
+   <div class="ace-audit-meta"><span>${esc(report.auditVersion||report.version||'')}</span><span>${report.model?`Jev ${esc(report.model)}`:''}</span><span>${report.contentHash?`Content ${esc(String(report.contentHash).slice(0,10))}`:''}</span></div>
+  </div>`;
 }
 function ensureSelection(){
  const bs=books();if(!bs.length)return;
