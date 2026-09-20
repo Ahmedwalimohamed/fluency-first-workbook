@@ -346,6 +346,12 @@ function microWorkbook(){
   if(typeof setWorkbookDesignMode==='function')setWorkbookDesignMode(true);
   if(typeof title==='function')title('Workbook','Lesson 1');
   var state=read();render(state);
+  if(state.complete&&!state.saved&&!preview()&&session&&session.role==='student'){
+    saveEvidence(state).then(function(){renderDone(state)}).catch(function(e){
+      var slot=document.getElementById('microSaveStatus');
+      if(slot)slot.textContent='Your lesson is complete on this device. Progress sync needs another try: '+e.message
+    })
+  }
   if(typeof resetAppScroll==='function')resetAppScroll()
 }
 
