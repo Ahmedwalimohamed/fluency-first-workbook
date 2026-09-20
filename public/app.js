@@ -269,6 +269,44 @@ const BOOK_PACKS={'career-fluency':CAREER_FLUENCY_BOOK,'speakup-a2-b1':SPEAKUP_A
 let COURSE=CAREER_FLUENCY_BOOK,activeBookId='career-fluency';
 const WORKBOOK_STEPS=['vocabulary','listening','grammar','writing'];
 const WORKBOOK_LABELS={vocabulary:'Vocabulary',listening:'Listening & Reading',grammar:'Grammar',writing:'Writing'};
+const B2_INTEGRATED_STEPS=['scenario','understand','interact','produce','improve'];
+const B2_INTEGRATED_LABELS={scenario:'Scenario',understand:'Understand',interact:'Interact',produce:'Produce',improve:'Improve'};
+const B2_INTEGRATED_COMPLETION={understand:'listening',interact:'vocabulary',produce:'writing',improve:'grammar'};
+function isB2IntegratedLesson(l){return l?.id==='su-b2-l1'&&Boolean(l?.scenario&&l?.interact&&l?.improve)}
+function workbookStepsForLesson(l){return isB2IntegratedLesson(l)?B2_INTEGRATED_STEPS:WORKBOOK_STEPS}
+function workbookStageLabel(l,step){return isB2IntegratedLesson(l)?B2_INTEGRATED_LABELS[step]||cap(step):WORKBOOK_LABELS[step]||cap(step)}
+function workbookCompletionKey(l,step){return isB2IntegratedLesson(l)?B2_INTEGRATED_COMPLETION[step]||null:step}
+function workbookStepDone(sid,l,step){
+ if(isWorkbookPreview())return false;
+ if(step==='scenario'&&isB2IntegratedLesson(l))return skillCompletionFor(sid,l.id).length>0;
+ const key=workbookCompletionKey(l,step);return key?skillCompletionFor(sid,l.id).includes(key):false
+}
+function b2EvidenceKey(){return 'englishgate:b2-l1:evidence:'+(session?.id||'preview')}
+function readB2Evidence(){try{return JSON.parse(localStorage.getItem(b2EvidenceKey())||'{}')||{}}catch{return{}}}
+function saveB2Evidence(patch){try{localStorage.setItem(b2EvidenceKey(),JSON.stringify({...readB2Evidence(),...patch}))}catch{}}
+function b2WordCount(text){const v=String(text||'').trim();return v?v.split(/\s+/).filter(Boolean).length:0}
+function b2AdaptiveFollowUp(value){
+ const t=String(value||'').toLowerCase();
+ if(/bank|banking|finance|account/.test(t))return'What do you mainly do there?';
+ if(/engineer|engineering/.test(t))return'What made you choose engineering?';
+ if(/business|company|shop|store|entrepreneur/.test(t))return'What kind of customers do you usually work with?';
+ if(/teacher|teach|school|education/.test(t))return'What do you teach, and what do you enjoy most about it?';
+ if(/student|study|university|college/.test(t))return'What made you choose that subject or course?';
+ return'What part of that is most important or interesting to you?'
+}
+function b2DetectedImprove(){
+ const e=readB2Evidence(),text=[...(e.interact||[]),e.message,e.followUp].filter(Boolean).join(' '),clean=String(text||'').replace(/\s+/g,' ').trim();
+ let m=clean.match(/\b(I|we|he|she)\s+(work|study|live)\b[^.!?]{0,60}\bsince\s+(\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(year|month|week|day)s?\b/i);
+ if(m){
+  const unit=String(m[4]).toLowerCase(),num=m[3],verb=String(m[2]).toLowerCase(),part=verb==='work'?'worked':verb==='study'?'studied':'lived';
+  return{kind:'duration',snippet:m[0],model:`I've ${part} here for ${num} ${unit}${String(num)==='one'?'':'s'}.`,explanation:'The situation started in the past and continues now. Use present perfect + for with a length of time.'}
+ }
+ m=clean.match(/\bI am work(?:ing)?\b[^.!?]*/i);
+ if(m)return{kind:'work-form',snippet:m[0],model:'I work in … / I am working on …',explanation:'Use “I work” for your usual job. Use “I am working on” for a current task or project.'};
+ const first=(e.interact||[]).find(x=>b2WordCount(x)>=3)||e.followUp||e.message||'I work in education.';
+ return{kind:'interaction',snippet:first,model:'Add one specific detail, then ask a related follow-up question.',explanation:'Your English becomes more conversational when you extend your answer and give the other person something useful to respond to.'}
+}
+
 const LEARNING_LADDER=[
  {key:'recognize',label:'Recognize',goal:'I can recognize the target language or idea.'},
  {key:'build',label:'Build',goal:'I can build a correct response with support.'},
@@ -1562,19 +1600,34 @@ function listeningLocked(lid){return Boolean(getDB().listeningLocks?.[session.id
 async function loadListeningPrep(l){const box=$('listeningTranscript');if(!box)return;try{const r=await api(`/api/listening/${l.id}/prep`);if(r.locked){await refreshState();renderActivity();return}box.innerHTML=dialogueTranscriptHtml(r.script,'is-workbook')}catch(e){box.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
 async function lockListeningScript(l){const btn=$('readyForQuestions'),msg=$('listeningGateMessage');if(!btn)return;btn.disabled=true;btn.textContent='Locking script…';try{await api(`/api/listening/${l.id}/lock`,{method:'POST'});await refreshState();renderActivity()}catch(e){btn.disabled=false;btn.textContent='Done reading & listening — start questions';if(msg)msg.innerHTML=`<div class="feedback bad">${escapeHtml(e.message)}</div>`}}
 function isWorkbookPreview(){return (session?.role==='admin'&&currentPage==='admin-workbook-view')||(session?.role==='teacher'&&currentPage==='teacher-workbook-view')}
-function firstOpenStep(sid,lid){return WORKBOOK_STEPS.find(step=>!skillCompletionFor(sid,lid).includes(step))||WORKBOOK_STEPS[WORKBOOK_STEPS.length-1]}
+function firstOpenStep(sid,lid){
+ const l=lessonById(lid);
+ if(isB2IntegratedLesson(l)){
+  const done=skillCompletionFor(sid,lid);
+  if(!done.length)return 'scenario';
+  if(!done.includes('listening'))return 'understand';
+  if(!done.includes('vocabulary'))return 'interact';
+  if(!done.includes('writing'))return 'produce';
+  if(!done.includes('grammar'))return 'improve';
+  return 'improve'
+ }
+ return WORKBOOK_STEPS.find(step=>!skillCompletionFor(sid,lid).includes(step))||WORKBOOK_STEPS[WORKBOOK_STEPS.length-1]
+}
 function workbook(){
  setWorkbookDesignMode(true);
- const sid=session.id,l=lesson(),steps=WORKBOOK_STEPS,idx=Math.max(0,steps.indexOf(currentStep)),preview=isWorkbookPreview();
- const completed=preview?[]:skillCompletionFor(sid,l.id),firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id));
+ const sid=session.id,l=lesson(),steps=workbookStepsForLesson(l),idx=Math.max(0,steps.indexOf(currentStep)),preview=isWorkbookPreview();
+ if(!steps.includes(currentStep))currentStep=firstOpenStep(sid,l.id);
+ const activeIdx=Math.max(0,steps.indexOf(currentStep)),completed=preview?[]:skillCompletionFor(sid,l.id);
+ const firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id));
  const stageButtons=steps.map((step,i)=>{
-  const allowed=preview||completed.includes(step)||i<=firstOpen,done=!preview&&completed.includes(step);
-  return `<button class="eg-stage ${step===currentStep?'is-current':''} ${done?'is-done':''}" data-workbook-stage="${allowed?step:''}" ${allowed?'':'disabled'} ${step===currentStep?'aria-current="step"':''}><span>${done?'✓':i+1}</span><strong>${escapeHtml(WORKBOOK_LABELS[step].toLowerCase())}</strong></button>`;
+  const key=workbookCompletionKey(l,step),done=workbookStepDone(sid,l,step);
+  const allowed=preview||i===0||step===currentStep||i<=firstOpen||(key&&completed.includes(key));
+  return `<button class="eg-stage ${step===currentStep?'is-current':''} ${done?'is-done':''}" data-workbook-stage="${allowed?step:''}" ${allowed?'':'disabled'} ${step===currentStep?'aria-current="step"':''}><span>${done?'✓':i+1}</span><strong>${escapeHtml(workbookStageLabel(l,step).toLowerCase())}</strong></button>`;
  }).join('');
  const c=session?.role==='student'?studentClass(sid):null,live=session?.role==='student'?liveBookForClass(c):null,canRevise=Boolean(live?.lessons?.some(x=>x.number===l.number));
  const backLabel=preview?'← Workbooks':'← Lessons',goal=l.outcome||`Practise the language from Lesson ${l.number} and check your understanding.`;
  title('Workbook','Lesson '+l.number);
- $('content').innerHTML=`<section class="eg-lesson eg-workbook lesson-book-workbook ${preview?'admin-preview-workbook':''}">
+ $('content').innerHTML=`<section class="eg-lesson eg-workbook lesson-book-workbook ${preview?'admin-preview-workbook':''} ${isB2IntegratedLesson(l)?'b2-integrated-workbook':''}">
   <header class="eg-lesson-header">
    <button class="ghost-btn" id="backWorkbookLessons">${backLabel}</button>
    ${englishGateLogo('englishgate-logo-lesson')}
@@ -1584,15 +1637,14 @@ function workbook(){
   </header>
   <div class="eg-lesson-layout">
    <aside class="eg-stage-list">
-    <p class="eg-label">Workbook stages</p>
+    <p class="eg-label">${isB2IntegratedLesson(l)?'Real-life activity':'Workbook stages'}</p>
     <nav aria-label="Workbook stages">${stageButtons}</nav>
     <details class="eg-goal"><summary>Practice goal</summary><p>${escapeHtml(goal)}</p></details>
    </aside>
    <div class="eg-teaching-surface eg-workbook-teaching-surface">
-    ${l.scenario?`<section class="eg-workbook-scenario"><span class="eg-skill-kicker">Real-life scenario</span><h2>${escapeHtml(l.scenario.title||l.title)}</h2><p>${escapeHtml(l.scenario.context||"")}</p><strong>${escapeHtml(l.scenario.learnerGoal||l.outcome||"")}</strong></section>`:""}
     <header class="eg-stage-heading">
-     <p class="eg-label">Workbook stage ${idx+1} of ${steps.length}</p>
-     <h2 id="workbookStageTitle" tabindex="-1">${escapeHtml(WORKBOOK_LABELS[currentStep].toLowerCase())}</h2>
+     <p class="eg-label">${isB2IntegratedLesson(l)?'Connected activity':'Workbook stage'} ${activeIdx+1} of ${steps.length}</p>
+     <h2 id="workbookStageTitle" tabindex="-1">${escapeHtml(workbookStageLabel(l,currentStep))}</h2>
     </header>
     <article id="activityPanel" class="eg-stage-content eg-workbook-stage-content" aria-labelledby="workbookStageTitle"></article>
     <footer class="eg-lesson-footer eg-workbook-footer" id="workbookStageFooter"></footer>
@@ -1605,19 +1657,79 @@ function workbook(){
  renderActivity();
  resetAppScroll();
 }
+
+function b2ScenarioActivity(l){
+ const x=l.scenario||{};
+ return `<div class="b2-flow-page b2-scenario-page"><section class="b2-scenario-hero"><span class="eg-skill-kicker">Real-life scenario</span><h1>${escapeHtml(x.title||l.title)}</h1><p>${escapeHtml(x.context||'')}</p><div class="b2-goal-card"><small>Your goal</small><strong>${escapeHtml(x.learnerGoal||l.outcome||'')}</strong></div><span class="b2-time">${escapeHtml(x.estimatedMinutes||'20–25')} minutes</span></section><div class="skill-action-row"><button class="primary-btn" id="b2StartScenario">Start conversation →</button></div></div>`
+}
+function b2UnderstandActivity(l){
+ const qs=(l.listening?.questions||[]).slice(0,5),script=String(l.listening?.audioScript||'').trim();
+ return `<div class="b2-flow-page b2-understand-page">
+  <header class="eg-skill-hero"><div><span class="eg-skill-kicker">Understand</span><h1>Listen to the conversation. Show what you understood.</h1><p>Use meaning, context, intention and inference—not isolated grammar rules.</p></div><span class="eg-question-count">${qs.length} questions</span></header>
+  <section class="b2-conversation-source"><div class="eg-reading-article"><span class="eg-skill-kicker">Coffee-break conversation</span>${dialogueTranscriptHtml(l.listening?.readingText||script,'is-workbook')}</div>
+   <div class="eg-audio-card"><small>Natural conversation</small><button id="playAudio" class="play-btn" title="Play or pause audio" aria-label="Play or pause audio">▶</button><button id="restartAudio" class="audio-icon-btn" title="Restart audio" aria-label="Restart audio">↺</button><select id="audioSpeed" class="audio-speed" aria-label="Playback speed"><option value="0.85">0.85×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option></select><span id="audioStatus" class="muted">Listen once for meaning. Replay for detail.</span><input id="audioSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Audio progress"><span id="audioCurrent" hidden>0:00</span><span id="audioDuration" hidden>0:00</span></div>
+  </section>
+  <div class="activity-question-list">${qs.map((q,i)=>`<article class="guided-question"><div class="question-stage"><span>Question ${i+1}</span></div><p>${escapeHtml(q.q)}</p>${radio('b2u'+i,q.options,q.answer,q.tag)}</article>`).join('')}</div>
+  <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn" id="b2CheckUnderstand">Check understanding</button><button class="secondary-btn done-activity-btn" id="doneActivity" disabled>Continue →</button></div>
+ </div>`
+}
+function b2InteractActivity(l){
+ const saved=readB2Evidence().interact||[],follow=b2AdaptiveFollowUp(saved[0]||'');
+ const prompts=[
+  l.interact?.opening||'Nice to meet you. Tell me a little about yourself.',
+  follow,
+  'Can you give me one example or tell me a little more about that?',
+  'What are you hoping to learn or improve this year?',
+  "It was good talking to you. Before we go back inside, what would you like to ask me?"
+ ].slice(0,5);
+ return `<div class="b2-flow-page b2-interact-page"><header class="eg-skill-hero"><div><span class="eg-skill-kicker">Interact</span><h1>You're meeting someone for the first time. Speak naturally.</h1><p>Use the microphone if your browser supports it, or type what you would say. The follow-up reacts to your first answer.</p></div><span class="eg-question-count">${prompts.length} turns</span></header>
+  <div class="b2-conversation-turns">${prompts.map((p,i)=>`<article class="b2-turn-card"><span>Turn ${i+1}</span><strong data-b2-prompt="${i}">${escapeHtml(p)}</strong><textarea data-b2-turn="${i}" rows="3" placeholder="Speak or type your response…">${escapeHtml(saved[i]||'')}</textarea><button class="ghost-btn b2-mic-btn" type="button" data-b2-mic="${i}">Use microphone</button></article>`).join('')}</div>
+  <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn" id="b2FinishInteract">Finish conversation</button><button class="secondary-btn done-activity-btn" id="doneActivity" disabled>Continue →</button></div></div>`
+}
+function b2ProduceActivity(l){
+ const e=readB2Evidence(),message=e.message||'',follow=e.followUp||'';
+ return `<div class="b2-flow-page b2-produce-page"><header class="eg-skill-hero"><div><span class="eg-skill-kicker">Produce</span><h1>Follow up after the workshop.</h1><p>Write messages a real person could actually send.</p></div><span class="eg-question-count">2 tasks</span></header>
+  <article class="b2-message-task"><span>Task 1</span><strong>Send Sara a WhatsApp message after meeting her.</strong><p>Greet her, remind her where you met, mention something specific from your conversation, give a reason for staying in touch, and end naturally.</p><textarea id="b2Message" rows="7" placeholder="60–90 words…">${escapeHtml(message)}</textarea><small id="b2MessageCount">0 words · target 60–90</small></article>
+  <article class="b2-message-reply"><span>Sara replied</span><blockquote>Hi! Great to hear from you. You mentioned that English is becoming more important in your work. What situations do you actually need it for most?</blockquote><textarea id="b2FollowUp" rows="6" placeholder="Reply in 40–70 words…">${escapeHtml(follow)}</textarea><small id="b2FollowUpCount">0 words · target 40–70</small></article>
+  <fieldset class="writing-share-choice"><legend>Share your first message to My Writings?</legend><div class="writing-share-options"><label><input type="radio" name="b2-community-share" value="yes"><span><strong>Yes</strong><small>Other EnglishGate students can read it.</small></span></label><label><input type="radio" name="b2-community-share" value="no" checked><span><strong>No</strong><small>Keep it private.</small></span></label></div></fieldset>
+  <div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn" id="b2SaveProduce">Save response</button><button class="secondary-btn done-activity-btn" id="doneActivity" disabled>Continue →</button></div></div>`
+}
+function b2ImproveActivity(l){
+ const x=b2DetectedImprove();
+ if(x.kind==='duration')return `<div class="b2-flow-page b2-improve-page"><header class="eg-skill-hero"><div><span class="eg-skill-kicker">Improve</span><h1>Improve something from your English today.</h1><p>This practice comes from language you actually used.</p></div><span class="eg-question-count">5 items</span></header><div class="b2-detected-error"><small>From your response</small><strong>“${escapeHtml(x.snippet)}”</strong><p>${escapeHtml(x.explanation)}</p><b>Better: ${escapeHtml(x.model)}</b></div><div class="activity-question-list">
+  <article class="guided-question"><p>1. Which part needs improvement?</p>${radio('b2i0',['since three years','I','company'],'since three years','improve:notice')}</article>
+  <article class="guided-question"><p>2. Complete: “I ___ at this company for three years.”</p>${radio('b2i1',['have worked','work','am work'],'have worked','improve:correct')}</article>
+  <article class="guided-question"><p>3. Complete: “I've been working here ___ 2023.”</p>${radio('b2i2',['since','for','during'],'since','improve:complete')}</article>
+  <article class="guided-question"><p>4. How long have you been doing your current job, course, or main activity?</p>${openEvidence('b2i3','',7,'improve:apply')}</article>
+  <article class="guided-question"><p>5. Say it again in your own words without copying the model.</p>${openEvidence('b2i4','',7,'improve:reproduce')}</article></div><div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn" id="b2CheckImprove">Check improvement</button><button class="secondary-btn done-activity-btn" id="doneActivity" disabled>Finish lesson →</button></div></div>`;
+ return `<div class="b2-flow-page b2-improve-page"><header class="eg-skill-hero"><div><span class="eg-skill-kicker">Improve</span><h1>Make your conversation stronger.</h1><p>No high-impact grammar pattern was detected, so EnglishGate is improving how you extend and maintain the conversation.</p></div><span class="eg-question-count">5 items</span></header><div class="b2-detected-error"><small>From your response</small><strong>“${escapeHtml(x.snippet)}”</strong><p>${escapeHtml(x.explanation)}</p></div><div class="activity-question-list">
+  <article class="guided-question"><p>1. Add one specific detail to your original idea.</p>${openEvidence('b2i0','',6,'improve:detail')}</article>
+  <article class="guided-question"><p>2. Give one reason or example.</p>${openEvidence('b2i1','',6,'improve:example')}</article>
+  <article class="guided-question"><p>3. Write a natural follow-up question connected to the same topic.</p>${openEvidence('b2i2','',5,'improve:question')}</article>
+  <article class="guided-question"><p>4. Rewrite your answer as two connected sentences.</p>${openEvidence('b2i3','',10,'improve:apply')}</article>
+  <article class="guided-question"><p>5. Give your final natural response without looking back.</p>${openEvidence('b2i4','',10,'improve:reproduce')}</article></div><div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn" id="b2CheckImprove">Check improvement</button><button class="secondary-btn done-activity-btn" id="doneActivity" disabled>Finish lesson →</button></div></div>`
+}
 function renderActivity(){
  document.body.classList.remove('student-question-focus-mode');
  const p=$('activityPanel'),l=lesson();
- if(currentStep==='vocabulary')p.innerHTML=vocabActivity(l);
- if(currentStep==='listening')p.innerHTML=listeningActivity(l);
- if(currentStep==='grammar')p.innerHTML=grammarActivity(l);
- if(currentStep==='writing')p.innerHTML=writingActivity(l);
+ if(isB2IntegratedLesson(l)){
+  if(currentStep==='scenario')p.innerHTML=b2ScenarioActivity(l);
+  if(currentStep==='understand')p.innerHTML=b2UnderstandActivity(l);
+  if(currentStep==='interact')p.innerHTML=b2InteractActivity(l);
+  if(currentStep==='produce')p.innerHTML=b2ProduceActivity(l);
+  if(currentStep==='improve')p.innerHTML=b2ImproveActivity(l);
+ }else{
+  if(currentStep==='vocabulary')p.innerHTML=vocabActivity(l);
+  if(currentStep==='listening')p.innerHTML=listeningActivity(l);
+  if(currentStep==='grammar')p.innerHTML=grammarActivity(l);
+  if(currentStep==='writing')p.innerHTML=writingActivity(l);
+ }
  const row=p.querySelector('.skill-action-row'),footer=$('workbookStageFooter');
  if(row&&footer){
-  row.insertAdjacentHTML('afterbegin','<button class="ghost-btn eg-previous-btn" id="previousActivity">← Previous</button><button class="ghost-btn eg-hint-btn" id="activityHint">Hint</button>');
+  if(!isB2IntegratedLesson(l))row.insertAdjacentHTML('afterbegin','<button class="ghost-btn eg-previous-btn" id="previousActivity">← Previous</button><button class="ghost-btn eg-hint-btn" id="activityHint">Hint</button>');
   while(row.firstChild)footer.appendChild(row.firstChild);
   row.remove();
- }else if(footer){
+ }else if(footer&&!isB2IntegratedLesson(l)){
   footer.innerHTML='<button class="ghost-btn eg-previous-btn" id="previousActivity">← Previous</button><button class="ghost-btn eg-hint-btn" id="activityHint">Hint</button>';
  }
  wireActivity(l);
@@ -2282,6 +2394,8 @@ function activityDoneButton(l){
  return `<button class="secondary-btn done-activity-btn" id="doneActivity" ${done?'':'disabled'}>Done →</button>`;
 }
 function advanceAfterDone(){
+ const l=lesson();
+ if(isB2IntegratedLesson(l)){b2NextStep(l);return}
  if(!skillCompletionFor(session.id,activeLessonId).includes(currentStep))return;
  const i=WORKBOOK_STEPS.indexOf(currentStep);
  if(i<WORKBOOK_STEPS.length-1){currentStep=WORKBOOK_STEPS[i+1];workbook();return}
@@ -2561,10 +2675,104 @@ function wireStudentQuestionFlow(){
  sync();
 }
 
-function wireActivity(l){wireMcqCards();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();if(!isWorkbookPreview())restoreActivityDraft();wireStudentQuestionFlow();if(!isWorkbookPreview())wireActivityDrafting()
+
+function b2NextStep(l){
+ const steps=workbookStepsForLesson(l),i=steps.indexOf(currentStep);
+ if(i<steps.length-1){currentStep=steps[i+1];workbook();return}
+ currentPage='home';renderNav();studentHome()
+}
+function b2PreviousStep(l){
+ const steps=workbookStepsForLesson(l),i=steps.indexOf(currentStep);
+ if(i>0){currentStep=steps[i-1];workbook();return}
+ setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()
+}
+function wireB2SpeechButtons(){
+ document.querySelectorAll('[data-b2-mic]').forEach(btn=>{
+  const idx=Number(btn.dataset.b2Mic),box=document.querySelector('[data-b2-turn="'+idx+'"]');
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){btn.hidden=true;return}
+  btn.onclick=()=>{const rec=new SR();rec.lang='en-US';rec.interimResults=false;rec.maxAlternatives=1;btn.disabled=true;btn.textContent='Listening…';rec.onresult=e=>{const text=e.results?.[0]?.[0]?.transcript||'';if(box){box.value=text;box.dispatchEvent(new Event('input',{bubbles:true}))}};rec.onerror=()=>{};rec.onend=()=>{btn.disabled=false;btn.textContent='Use microphone'};rec.start()}
+ })
+}
+async function finishB2Understand(l){
+ const qs=(l.listening?.questions||[]).slice(0,5),feedback=$('activityFeedback'),groups=qs.map((_,i)=>'b2u'+i);
+ const selected=groups.map(g=>document.querySelector('input[name="'+g+'"]:checked'));
+ if(selected.some(x=>!x)){feedback.innerHTML='<div class="feedback bad">Answer all '+qs.length+' questions first.</div>';return}
+ const correct=selected.filter(x=>x.value===x.dataset.answer).length,score=Math.round(correct/qs.length*100);
+ if(!isWorkbookPreview()){await recordAttempt(session.id,l.id,'listening',score,qs.map(q=>q.tag).filter(Boolean).slice(0,8));await markDone(session.id,l.id,'listening');await refreshState()}
+ feedback.innerHTML='<div class="performance-result '+(score>=70?'good':'bad')+'"><div class="performance-score"><strong>'+score+'%</strong><span>Understanding</span></div><p>'+correct+' of '+qs.length+' evidence points demonstrated. Review the conversation if needed, then continue.</p></div>';
+ $('doneActivity').disabled=false
+}
+async function finishB2Interact(l){
+ const boxes=[...document.querySelectorAll('[data-b2-turn]')],answers=boxes.map(x=>x.value.trim()),feedback=$('activityFeedback');
+ if(answers.some(x=>b2WordCount(x)<3)){feedback.innerHTML='<div class="feedback bad">Respond to all 5 turns with at least a short meaningful answer.</div>';return}
+ const richer=answers.filter(x=>b2WordCount(x)>=7).length,score=Math.min(100,60+richer*8);
+ saveB2Evidence({interact:answers});
+ if(!isWorkbookPreview()){await recordAttempt(session.id,l.id,'vocabulary',score,['conversation:responds','conversation:extends','conversation:follow-up','speaking:relevance','speaking:fluency']);await markDone(session.id,l.id,'vocabulary');await refreshState()}
+ feedback.innerHTML='<div class="performance-result good"><div class="performance-score"><strong>'+score+'%</strong><span>Interaction evidence</span></div><p>You completed all 5 turns. EnglishGate will use your responses again in Improve.</p></div>';
+ $('doneActivity').disabled=false
+}
+async function finishB2Produce(l){
+ const message=$('b2Message')?.value.trim()||'',followUp=$('b2FollowUp')?.value.trim()||'',a=b2WordCount(message),b=b2WordCount(followUp),feedback=$('activityFeedback');
+ if(a<60||a>90){feedback.innerHTML='<div class="feedback bad">Your first message has '+a+' words. Keep it between 60 and 90 words.</div>';return}
+ if(b<40||b>70){feedback.innerHTML='<div class="feedback bad">Your reply has '+b+' words. Keep it between 40 and 70 words.</div>';return}
+ const publish=document.querySelector('input[name="b2-community-share"]:checked')?.value==='yes',content='Message to Sara:\n'+message+'\n\nReply to Sara:\n'+followUp;
+ saveB2Evidence({message,followUp});
+ if(!isWorkbookPreview()){
+  await api('/api/writing/'+encodeURIComponent(l.id),{method:'PUT',body:JSON.stringify({content,publishToCommunity:publish})});
+  await recordAttempt(session.id,l.id,'writing',100,['writing:real-life-message','writing:interactive-follow-up','writing:task-completion']);
+  await refreshState()
+ }
+ feedback.innerHTML='<div class="performance-result good"><div class="performance-score"><strong>Saved</strong><span>Real-life writing</span></div><p>Your message and follow-up response are saved. Improve will now use your own language.</p></div>';
+ $('doneActivity').disabled=false
+}
+async function finishB2Improve(l){
+ const feedback=$('activityFeedback'),open=[...document.querySelectorAll('[data-open="1"]')],groups=[...new Set([...document.querySelectorAll('input[type=radio]')].map(x=>x.name))];
+ const openDone=open.filter(x=>b2WordCount(x.value)>=Number(x.dataset.min||1)).length,mcqDone=groups.filter(g=>document.querySelector('input[name="'+g+'"]:checked')).length,total=open.length+groups.length;
+ if(openDone+mcqDone<total){feedback.innerHTML='<div class="feedback bad">Complete all '+total+' improvement items first.</div>';return}
+ let correct=openDone;groups.forEach(g=>{const c=document.querySelector('input[name="'+g+'"]:checked');if(c&&c.value===c.dataset.answer)correct++});
+ const score=Math.round(correct/Math.max(1,total)*100);
+ if(!isWorkbookPreview()){await recordAttempt(session.id,l.id,'grammar',score,['improve:personalized','improve:reapply','conversation:repair']);await markDone(session.id,l.id,'grammar');await refreshState()}
+ feedback.innerHTML='<div class="performance-result '+(score>=70?'good':'bad')+'"><div class="performance-score"><strong>'+score+'%</strong><span>Improved</span></div><p>You used today’s evidence to improve and apply the language again.</p></div>';
+ $('doneActivity').disabled=false
+}
+function wireB2IntegratedActivity(l){
+ wireMcqCards();
+ const steps=workbookStepsForLesson(l),idx=steps.indexOf(currentStep);
+ if(isWorkbookPreview()){
+  if($('b2StartScenario'))$('b2StartScenario').onclick=()=>b2NextStep(l);
+  ['b2CheckUnderstand','b2FinishInteract','b2SaveProduce','b2CheckImprove'].forEach(id=>{if($(id)){$(id).textContent=idx===steps.length-1?'Finish preview':'Next →';$(id).onclick=()=>b2NextStep(l)}});
+  if($('doneActivity'))$('doneActivity').hidden=true;
+ }else{
+  if($('b2StartScenario'))$('b2StartScenario').onclick=()=>b2NextStep(l);
+  if($('b2CheckUnderstand'))$('b2CheckUnderstand').onclick=()=>finishB2Understand(l).catch(e=>$('activityFeedback').innerHTML='<div class="feedback bad">'+escapeHtml(e.message)+'</div>');
+  if($('b2FinishInteract'))$('b2FinishInteract').onclick=()=>finishB2Interact(l).catch(e=>$('activityFeedback').innerHTML='<div class="feedback bad">'+escapeHtml(e.message)+'</div>');
+  if($('b2SaveProduce'))$('b2SaveProduce').onclick=()=>finishB2Produce(l).catch(e=>$('activityFeedback').innerHTML='<div class="feedback bad">'+escapeHtml(e.message)+'</div>');
+  if($('b2CheckImprove'))$('b2CheckImprove').onclick=()=>finishB2Improve(l).catch(e=>$('activityFeedback').innerHTML='<div class="feedback bad">'+escapeHtml(e.message)+'</div>');
+  if($('doneActivity'))$('doneActivity').onclick=()=>b2NextStep(l)
+ }
+ if(currentStep==='understand'){if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l)}
+ if(currentStep==='interact'){
+  wireB2SpeechButtons();
+  const first=document.querySelector('[data-b2-turn="0"]'),follow=document.querySelector('[data-b2-prompt="1"]');
+  if(first&&follow)first.addEventListener('input',()=>{follow.textContent=b2AdaptiveFollowUp(first.value)})
+ }
+ if(currentStep==='produce'){
+  const message=$('b2Message'),follow=$('b2FollowUp'),sync=()=>{if($('b2MessageCount'))$('b2MessageCount').textContent=b2WordCount(message?.value)+' words · target 60–90';if($('b2FollowUpCount'))$('b2FollowUpCount').textContent=b2WordCount(follow?.value)+' words · target 40–70'};
+  message?.addEventListener('input',sync);follow?.addEventListener('input',sync);sync()
+ }
+ const footer=$('workbookStageFooter');
+ if(footer&&currentStep!=='scenario'){
+  const prev=document.createElement('button');prev.className='ghost-btn eg-previous-btn';prev.type='button';prev.textContent='← Previous';prev.onclick=()=>b2PreviousStep(l);footer.prepend(prev)
+ }
+}
+function wireActivity(l){
+ if(isB2IntegratedLesson(l)){wireB2IntegratedActivity(l);return}
+ wireMcqCards();wireVocabRecycle();if(currentStep==='writing')wireWritingCore();if(!isWorkbookPreview())restoreActivityDraft();wireStudentQuestionFlow();if(!isWorkbookPreview())wireActivityDrafting()
  if($('previousActivity'))$('previousActivity').onclick=()=>{const idx=WORKBOOK_STEPS.indexOf(currentStep);if(idx>0){currentStep=WORKBOOK_STEPS[idx-1];workbook();return}if(isWorkbookPreview()){setWorkbookDesignMode(false);returnToWorkbookLessons();return}setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse()};
  if($('activityHint'))$('activityHint').onclick=()=>{const hints={vocabulary:'Look at meaning and context before choosing the word.',listening:'Listen once for the main idea, then replay for detail.',grammar:'Read the whole sentence and decide the meaning before the form.',writing:isA1EarlyWriting(l)?'Build one short sentence, join two simple ideas, fix one small mistake, then put two sentences in order.':'Build the sentence, connect the ideas, correct the error, then check paragraph order before you write.'};showModal('<div class="section-head"><div><span class="role-kicker">Hint</span><h3>'+escapeHtml(WORKBOOK_LABELS[currentStep])+'</h3></div><button class="icon-btn" data-close>×</button></div><p>'+escapeHtml(hints[currentStep]||'Use the lesson context to guide your answer.')+'</p>');document.querySelector('[data-close]').onclick=closeModal};
- if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});wireWritingIntegrity();if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone}
+ if($('playAudio'))$('playAudio').onclick=()=>playListening(l);wireAudioControls(l);document.querySelectorAll('.writing-response,.writing-final-response').forEach(t=>{const update=()=>{const n=t.value.trim()?t.value.trim().split(/\s+/).length:0,key=t.dataset.countKey||t.dataset.writing,c=document.querySelector(`[data-count="${key}"]`),max=Number(t.dataset.max||0);if(c)c.textContent=max?`${n} words · target ${t.dataset.min}–${max}`:`${n} words · minimum ${t.dataset.min}`};t.oninput=update;update()});wireWritingIntegrity();if(isWorkbookPreview()){if($('boostActivity'))$('boostActivity').hidden=true;const steps=WORKBOOK_STEPS,idx=steps.indexOf(currentStep),ready=readyLessons(COURSE),advance=()=>{if(idx<steps.length-1){currentStep=steps[idx+1];workbook();return}const li=ready.findIndex(x=>x.id===activeLessonId);if(li>=0&&li<ready.length-1){activeLessonId=ready[li+1].id;currentStep='vocabulary';workbook()}else{returnToWorkbookLessons()}};if($('checkActivity')){$('checkActivity').textContent=idx===steps.length-1?'Finish preview':'Next skill →';$('checkActivity').onclick=advance}if($('saveWriting')){$('saveWriting').textContent='Finish preview';$('saveWriting').onclick=advance}return}if($('boostActivity'))$('boostActivity').onclick=()=>startBoost(l);if($('checkActivity'))$('checkActivity').onclick=checkCurrent;if($('saveWriting'))$('saveWriting').onclick=()=>saveWriting(l);if($('doneActivity'))$('doneActivity').onclick=advanceAfterDone
+}
 function wireWritingIntegrity(){
  if(session?.role!=='student'||isWorkbookPreview())return;
  const box=document.querySelector('.writing-final-response'),status=$('writingIntegrityStatus');if(!box||box.dataset.integrityWired==='1')return;
