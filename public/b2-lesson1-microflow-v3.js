@@ -5,11 +5,12 @@
 'use strict';
 
 const LESSON_ID='su-b2-l1';
-const TOTAL=9;
-const FLOW_VERSION='b2-l1-see-choose-change-use-fix-v1';
+const TOTAL=10;
+const FLOW_VERSION='b2-l1-see-choose-change-use-fix-v2';
 const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX'];
 const STEPS=[
   {phase:'SEE',skill:'reading'},
+  {phase:'CHOOSE',skill:'listening'},
   {phase:'CHOOSE',skill:'listening'},
   {phase:'CHOOSE',skill:'vocabulary'},
   {phase:'CHOOSE',skill:'listening'},
@@ -108,6 +109,33 @@ function modelDialogue(){
     '</div>'
 }
 
+function listeningScript(){
+  return "Sara: The digital projects are interesting, but explaining technical ideas to customers is still difficult for me. Daniel: I know the feeling. I am also trying to make technical information easier to understand.";
+}
+function renderListening(state){
+  var script=listeningScript();
+  var player=typeof liveAudioPlayerHtml==='function'
+    ?liveAudioPlayerHtml(script,[{name:'Sara',gender:'female'},{name:'Daniel',gender:'male'}])
+    :'<div class="feedback bad">Listening audio is unavailable on this device.</div>';
+  var body=prompt('Listen once for the main idea.','You can replay the audio. Open the transcript only after listening.')+
+    player+
+    prompt('What is difficult for Sara?')+
+    choices(['Explaining technical ideas to customers','Finding a logistics company','Attending professional workshops'])+
+    '<div id="microFeedbackSlot"></div>';
+  el('content').innerHTML=shell(body,state);bindBack();
+  if(typeof wireLiveAudioPlayers==='function')wireLiveAudioPlayers(document);
+  Array.from(document.querySelectorAll('[data-choice]')).forEach(function(btn){
+    btn.onclick=function(){
+      if(el('microContinue'))return;
+      var ix=Number(btn.dataset.choice),value=['Explaining technical ideas to customers','Finding a logistics company','Attending professional workshops'][ix],ok=ix===0;
+      setR(state,state.index,value);setOK(state,state.index,ok);hit(state,state.index);
+      Array.from(document.querySelectorAll('[data-choice]')).forEach(function(b){b.disabled=true;b.classList.toggle('is-selected',b===btn)});
+      el('microFeedbackSlot').innerHTML=feedback(ok,ok?'Correct.':'Try again.',ok?'Sara says explaining technical ideas to customers is still difficult.':'Listen for the problem Sara describes.','Next');
+      el('microContinue').onclick=function(){if(ok)next(state);else render(state)}
+    }
+  })
+}
+
 function renderChoice(state,opts){
   var body=(opts.before||'')+prompt(opts.q,opts.sub)+choices(opts.options)+'<div id="microFeedbackSlot"></div>';
   el('content').innerHTML=shell(body,state);bindBack();
@@ -157,7 +185,7 @@ function messageHasDetail(value){return /digital|project|customer|logistics|work
 function messageHasStay(value){return /stay in touch|keep in touch|speak soon|hear how|share|contact|message/i.test(value)}
 
 function renderMessage(state){
-  var prior=String(getR(state,7)||'');
+  var prior=String(getR(state,8)||'');
   var body='<div class="micro-scene">'+speaker('Sara','It was nice meeting you today. Keep in touch!')+'</div>'+
     prompt('Send Sara a short follow-up message.','40–60 words. Mention one thing from your conversation and give one natural reason to stay in touch.')+
     '<div class="micro-help"><strong>Useful starters</strong><span>Hi Sara, it was great meeting you… · I enjoyed hearing about… · It would be good to stay in touch because…</span></div>'+
@@ -170,7 +198,7 @@ function renderMessage(state){
   function sync(){var n=words(box.value);counter.textContent=n+' / 40–60 words';check.disabled=!(n>=40&&n<=60)}box.oninput=sync;share.onchange=function(){state.share=share.checked;write(state)};sync();
   check.onclick=function(){
     var value=box.value.trim();if(!messageValid(value))return;
-    setR(state,7,value);setOK(state,7,messageHasDetail(value)&&messageHasStay(value));hit(state,7);
+    setR(state,8,value);setOK(state,8,messageHasDetail(value)&&messageHasStay(value));hit(state,8);
     box.disabled=true;check.disabled=true;share.disabled=true;
     var strong=messageHasDetail(value)&&messageHasStay(value);
     el('microFeedbackSlot').innerHTML=feedback(true,strong?'Your message has a clear purpose.':'Good first message.',strong?'You referred to the conversation and gave a reason to stay in touch.':'Keep it. The final step will help you improve one useful part.','Fix one thing');
@@ -179,8 +207,8 @@ function renderMessage(state){
 }
 
 function repairMode(state){
-  var duration=String(getR(state,5)||'');
-  var message=String(getR(state,7)||'');
+  var duration=String(getR(state,6)||'');
+  var message=String(getR(state,8)||'');
   if(!durationCorrect(duration))return {type:'duration',source:duration};
   if(!messageHasDetail(message)&&!messageHasStay(message))return {type:'detailstay',source:message};
   if(!messageHasDetail(message))return {type:'detail',source:message};
@@ -188,7 +216,7 @@ function repairMode(state){
   return {type:'polish',source:message}
 }
 function renderRepair(state){
-  var mode=repairMode(state),prior=String(getR(state,8)||''),title,sub,help,placeholder,validate;
+  var mode=repairMode(state),prior=String(getR(state,9)||''),title,sub,help,placeholder,validate;
   if(mode.type==='duration'){
     title='Fix your duration sentence.';
     sub='Your meaning is clear. Now use present perfect with for or since.';
@@ -227,12 +255,12 @@ function renderRepair(state){
   function sync(){check.disabled=!validate(box.value)}box.oninput=sync;sync();
   check.onclick=function(){
     var value=box.value.trim();if(!validate(value))return;
-    setR(state,8,value);setOK(state,8,true);hit(state,8);
-    if(mode.type==='duration')setOK(state,5,true);
+    setR(state,9,value);setOK(state,9,true);hit(state,9);
+    if(mode.type==='duration')setOK(state,6,true);
     if(mode.type==='detailstay'||mode.type==='detail'||mode.type==='stay'||mode.type==='polish'){
-      var message=String(getR(state,7)||'').trim();
-      if(message&&value&&!message.includes(value)){setR(state,7,message+' '+value)}
-      setOK(state,7,true)
+      var message=String(getR(state,8)||'').trim();
+      if(message&&value&&!message.includes(value)){setR(state,8,message+' '+value)}
+      setOK(state,8,true)
     }
     box.disabled=true;check.disabled=true;
     el('microFeedbackSlot').innerHTML=feedback(true,'Fixed.','You improved one important part instead of correcting everything at once.','Finish lesson');
@@ -260,7 +288,8 @@ function render(state){
     good:'It gives Sara one clear reason.',
     bad:'Choose the complete answer that explains why you came.'
   });
-  if(i===2)return renderChoice(state,{
+  if(i===2)return renderListening(state);
+  if(i===3)return renderChoice(state,{
     before:'<div class="micro-scene">'+speaker('Sara','I coordinate some of our digital projects.')+'</div>',
     q:'What does “coordinate” mean here?',
     options:['Organize people and tasks so they work together','Do every technical task alone','Only answer customer complaints'],
@@ -268,7 +297,7 @@ function render(state){
     good:'Right. Sara helps people and tasks work together.',
     bad:'Use the work context around the word.'
   });
-  if(i===3)return renderChoice(state,{
+  if(i===4)return renderChoice(state,{
     before:'<div class="micro-scene">'+speaker('Sara',"I've worked there for three years. I'm still learning the project side of the job.")+'</div>',
     q:'Which question keeps the conversation moving?',
     options:['What kind of projects are you working on?','Do you work?','How old is the company building?'],
@@ -276,7 +305,7 @@ function render(state){
     good:'The question uses something Sara just said.',
     bad:'Choose the question that connects directly to her last idea.'
   });
-  if(i===4)return renderOpen(state,{
+  if(i===7)return renderOpen(state,{
     before:'<div class="micro-scene">'+speaker('Sara','What brought you here?')+'</div>',
     q:'Change the model so it is true for you.',
     sub:'One short sentence is enough.',
@@ -312,8 +341,8 @@ function render(state){
     feedbackTitle:'That works.',
     feedback:'Sara now knows what you do and one useful detail.'
   });
-  if(i===7)return renderMessage(state);
-  if(i===8)return renderRepair(state)
+  if(i===8)return renderMessage(state);
+  if(i===9)return renderRepair(state)
 }
 
 function next(state){state.index=Math.min(TOTAL-1,state.index+1);write(state);render(state);if(typeof resetAppScroll==='function')resetAppScroll()}
@@ -333,7 +362,7 @@ async function saveEvidence(state){
     if(typeof recordAttempt==='function')await recordAttempt(session.id,l.id,skill,scoreFor(state,skill),tags.slice(0,10));
     if(typeof markDone==='function')await markDone(session.id,l.id,skill)
   }
-  var message=String(getR(state,7)||'').trim();
+  var message=String(getR(state,8)||'').trim();
   if(message&&typeof api==='function')await api('/api/writing/'+encodeURIComponent(l.id),{method:'PUT',body:JSON.stringify({content:message,publishToCommunity:Boolean(state.share)})});
   if(typeof refreshState==='function')await refreshState();
   state.saved=true;write(state)
