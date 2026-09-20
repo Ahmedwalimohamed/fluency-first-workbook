@@ -122,6 +122,23 @@ async function generate(){
   state.proposal=data.proposal;state.proposalContext={courseId:b.id,lessonNumber:l.number,targetPath:t.path,scope:state.scope,source:t.source,instruction};state.qaReport=null;state.message='';render();
  }catch(e){state.message=e.message;render()}
 }
+async function gradeCurrentLesson(){
+ const l=lesson(),b=book(),btn=$('aceGradeLesson');if(!l||!b)return;
+ const candidate=clone(l);
+ state.qaReport=null;state.message='';
+ if(btn){btn.disabled=true;btn.textContent='Grading lesson…'}
+ try{
+  const r=await fetch('/api/semantic-qa/lesson',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+   courseId:b.id,lessonNumber:l.number,targetPath:'lesson',level:b.level,lessonTitle:l.title,learningOutcome:l.outcome,audience:b.audience||'adult English learners',
+   lesson:candidate,replacement:candidate
+  })});
+  const data=await r.json();state.qaReport=data?.report||null;
+  if(!state.qaReport)throw new Error(data?.error||'Lesson grading could not complete.');
+  const release=String(state.qaReport.releaseState||'').toUpperCase();
+  state.message=release==='GREEN'?'Lesson grade: GREEN — ready to publish.':release==='AMBER'?'Lesson grade: AMBER — human review required.':'Lesson grade: RED — critical issue blocks publication.';
+  render();
+ }catch(e){state.message=e.message;render()}
+}
 async function apply(){
  const p=state.proposal,c=state.proposalContext,btn=$('aceApply'),l=lesson(),b=book();if(!p||!c||!l||!b)return;
  const candidate=candidateLesson(l,c.targetPath,p.replacement);
@@ -159,7 +176,7 @@ function render(){
  const acts=state.scope==='question'?questionActivities(l):activities(l),coll=state.scope==='question'?questionCollection(l,state.activity):null,t=target(),patch=activePatch(t),p=state.proposal;
  const problems=Array.isArray(p?.problems)?p.problems:[];
  $('content').innerHTML=`<section class="ace-shell">
-  <header class="ace-hero"><div><span class="ace-kicker">EnglishGate · Admin</span><h1>Edit with AI</h1><p>Select the content, describe the change, preview it, then publish. Nothing reaches students until the Jev Semantic QA firewall passes.</p></div><div class="ace-safety"><span>Preview first</span><span>Jev QA gated</span><span>Undo anytime</span></div></header>
+  <header class="ace-hero"><div><span class="ace-kicker">EnglishGate · Admin</span><h1>Edit with AI</h1><p>Select the content, describe the change, preview it, then publish. Grade any lesson on demand, edit only what needs improvement, and publish only when the Lesson Quality Firewall is GREEN.</p></div><div class="ace-safety"><span>Preview first</span><span>Lesson graded</span><span>Jev QA gated</span><span>Undo anytime</span></div></header>
   ${state.message?`<div class="ace-message">${esc(state.message)}</div>`:''}
   <section class="ace-workspace">
    <div class="ace-controls">
@@ -169,8 +186,9 @@ function render(){
     ${state.scope!=='lesson'?`<label>Area<select id="aceActivity">${acts.map(k=>`<option value="${attr(k)}" ${k===state.activity?'selected':''}>${esc(LABELS[k]||k)}</option>`).join('')}</select></label>`:''}
     ${state.scope==='question'&&coll?`<label>Question<select id="aceQuestion">${coll.items.map((x,i)=>`<option value="${i}" ${i===Number(state.questionIndex)?'selected':''}>${esc(shortItem(x,i))}</option>`).join('')}</select></label>`:''}
    </div>
-   <div class="ace-selected"><div><span>Selected</span><strong>${esc(b?.title||'')} · Lesson ${Number(l?.number||0)} · ${esc(t?.label||'Content')}</strong></div>${patch?`<button class="ace-undo" id="aceUndo" type="button">↶ Undo active edit</button>`:'<small>Using original course content</small>'}</div>
+   <div class="ace-selected"><div><span>Selected</span><strong>${esc(b?.title||'')} · Lesson ${Number(l?.number||0)} · ${esc(t?.label||'Content')}</strong></div><div class="ace-selected-actions">${patch?`<button class="ace-undo" id="aceUndo" type="button">↶ Undo active edit</button>`:'<small>Using original course content</small>'}<button class="ghost-btn ace-grade-lesson" id="aceGradeLesson" type="button">Grade current lesson</button></div></div>
    <div class="ace-source"><span>Current content</span><pre>${esc(pretty(t?.source))}</pre></div>
+   ${!p&&state.qaReport?qaReportHtml(state.qaReport):''}
    <div class="ace-prompt-card"><label for="acePrompt">What should AI change?</label><textarea id="acePrompt" rows="4" placeholder="Example: Make these reading questions direct comprehension questions. Keep them at A2 level.">${esc(state.instruction)}</textarea><div class="ace-prompt-examples"><button type="button" data-ace-example="Make the questions direct, text-grounded comprehension questions. Keep the same CEFR level.">Fix reading questions</button><button type="button" data-ace-example="Make this simpler and clearer for the current CEFR level without changing the learning objective.">Simplify</button><button type="button" data-ace-example="Improve the distractors so they are plausible but only one answer is clearly correct.">Improve answer choices</button><button type="button" data-ace-example="Fix everything pedagogically weak in this selected content using CEFR and ESL best practices. Preserve what is already good.">Fix weaknesses</button></div><button class="primary-btn ace-generate" id="aceGenerate" type="button">✦ Generate preview</button></div>
   </section>
   ${p?`<section class="ace-result"><div class="ace-result-head"><div><span class="ace-kicker">AI proposed edit</span><h2>${esc(p.summary||'Proposed change')}</h2>${Array.isArray(p.changes)&&p.changes.length?`<p>${p.changes.map(esc).join(' · ')}</p>`:''}</div>${problems.length?'<span class="ace-warning-badge">Needs review</span>':'<span class="ace-ready-badge">Ready to apply</span>'}</div><div class="ace-compare">${previewBox('Before',state.proposalContext?.source,'before')}${previewBox('After',p.replacement,'after')}</div>${problems.length?`<div class="ace-warnings"><strong>Check before applying</strong>${problems.map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}${qaReportHtml(state.qaReport)}<div class="ace-result-actions"><button class="ghost-btn" id="aceEditPrompt" type="button">Edit prompt</button><button class="ghost-btn" id="aceRegenerate" type="button">Regenerate</button><button class="ghost-btn" id="aceCancel" type="button">Cancel</button><button class="primary-btn" id="aceApply" type="button" ${problems.length?'disabled':''}>Run Jev QA & Publish</button></div></section>`:''}
@@ -182,6 +200,7 @@ function render(){
  if($('aceQuestion'))$('aceQuestion').onchange=e=>{state.questionIndex=Number(e.target.value);clearProposal();render()};
  $('acePrompt').oninput=e=>{state.instruction=e.target.value};
  $('aceGenerate').onclick=generate;
+ if($('aceGradeLesson'))$('aceGradeLesson').onclick=gradeCurrentLesson;
  if($('aceUndo'))$('aceUndo').onclick=undo;
  document.querySelectorAll('[data-ace-example]').forEach(btn=>btn.onclick=()=>{state.instruction=btn.dataset.aceExample;$('acePrompt').value=state.instruction;$('acePrompt').focus()});
  if($('aceApply'))$('aceApply').onclick=apply;
