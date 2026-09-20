@@ -81,7 +81,7 @@ const CHECKS=[
   ['correction_alignment','Progression','Correction or improvement tasks address actual target language or plausible learner errors rather than unrelated remediation.']
 ].map(([id,category,instructions,critical=false])=>({id,category,instructions,critical}));
 
-const FIREWALL_VERSION='jev-semantic-firewall-v2';
+const FIREWALL_VERSION='jev-semantic-firewall-v2.1';
 const REVIEW_ONLY_CHECKS=new Set([
   'distractors_plausible',
   'distractors_parallel',
