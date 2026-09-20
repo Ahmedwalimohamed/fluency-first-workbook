@@ -193,13 +193,13 @@ async function undo(){
 }
 function render(){
  ensureSelection();
- if(typeof title==='function')title('Content','AI Content Editor');
+ if(typeof title==='function')title('Content','Lesson Quality & AI Editor');
  const bs=books(),b=book(),l=lesson();
  if(!bs.length){$('content').innerHTML='<section class="ace-shell"><div class="empty-state"><h3>No editable course content found</h3><p>EnglishGate could not find the lesson library.</p></div></section>';return}
  const acts=state.scope==='question'?questionActivities(l):activities(l),coll=state.scope==='question'?questionCollection(l,state.activity):null,t=target(),patch=activePatch(t),p=state.proposal;
  const problems=Array.isArray(p?.problems)?p.problems:[];
  $('content').innerHTML=`<section class="ace-shell">
-  <header class="ace-hero"><div><span class="ace-kicker">EnglishGate · Admin</span><h1>Edit with AI</h1><p>Select the content, describe the change, preview it, then publish. Grade any lesson on demand, edit only what needs improvement, and publish only when the Lesson Quality Firewall is GREEN.</p></div><div class="ace-safety"><span>Preview first</span><span>Lesson graded</span><span>Jev QA gated</span><span>Undo anytime</span></div></header>
+  <header class="ace-hero"><div><span class="ace-kicker">EnglishGate · Admin</span><h1>Lesson Quality & AI Editor</h1><p>Select the content, describe the change, preview it, then publish. Grade any lesson on demand, edit only what needs improvement, and publish only when the Lesson Quality Firewall is GREEN.</p></div><div class="ace-safety"><span>Preview first</span><span>Lesson graded</span><span>Jev QA gated</span><span>Undo anytime</span></div></header>
   ${state.message?`<div class="ace-message">${esc(state.message)}</div>`:''}
   <section class="ace-workspace">
    <div class="ace-controls">
@@ -238,7 +238,7 @@ function install(){
  try{
   if(typeof NAV!=='undefined'&&Array.isArray(NAV.admin)){
    const found=NAV.admin.find(x=>x[0]===PAGE);
-   if(found){found[1]='✦';found[2]='AI Content Editor'}else NAV.admin.splice(2,0,[PAGE,'✦','AI Content Editor']);
+   if(found){found[1]='✦';found[2]='Lesson Quality'}else NAV.admin.splice(2,0,[PAGE,'✦','Lesson Quality']);
   }
   if(typeof renderAdmin==='function'&&!window.__aiContentEditorInstalled){const prev=renderAdmin;renderAdmin=function(){if(currentPage===PAGE)return render();return prev()};window.__aiContentEditorInstalled=true}
  }catch(e){console.error('AI Content Editor install failed',e)}
