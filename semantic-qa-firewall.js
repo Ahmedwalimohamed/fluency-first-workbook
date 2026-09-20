@@ -183,6 +183,7 @@ const CORROBORATION_CLUSTERS={
 };
 const CORROBORATION_MIN_EVIDENCE=0.35;
 const LOW_CONFIDENCE_REVIEW_THRESHOLD=0.25;
+const MAJOR_REVIEW_MIN_EVIDENCE=0.40;
 
 
 function qualityDomain(check){
@@ -190,11 +191,13 @@ function qualityDomain(check){
 }
 function issueSeverity(check){
   const actualFailure=Boolean(check.blocking)||check.status==='FAIL'||check.status==='CORROBORATED_FAIL'||check.status==='BLOCKED';
-  if(check.critical&&actualFailure)return 'Critical';
-  if(check.critical&&check.review)return 'Major';
+  const evidence=Number(check.evidence);
+  if(actualFailure)return check.critical?'Critical':'Major';
   if(REVIEW_ONLY_CHECKS.has(check.id))return 'Minor';
-  if(check.rawChoice==='fail'||actualFailure)return 'Major';
-  if(check.review)return 'Minor';
+  if(check.review){
+    if(check.rawChoice==='fail'&&Number.isFinite(evidence)&&evidence>=MAJOR_REVIEW_MIN_EVIDENCE)return 'Major';
+    return 'Minor';
+  }
   return null;
 }
 function normalizeText(value){return String(value==null?'':value).toLowerCase().replace(/\s+/g,' ').trim()}
@@ -643,6 +646,8 @@ module.exports={
   deterministicLessonChecks,
   buildDomainProfile,
   releaseFrom,
+  issueSeverity,
+  MAJOR_REVIEW_MIN_EVIDENCE,
   REVIEW_ONLY_CHECKS,
   FAIL_THRESHOLDS,
   CORROBORATION_CLUSTERS,
