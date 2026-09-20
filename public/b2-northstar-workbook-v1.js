@@ -42,18 +42,26 @@ function getR(s,i){return s.responses[String(i)]}
 function setOK(l,s,i,v){s.results[String(i)]=Boolean(v);write(l,s)}
 function hit(l,s,i){const k=String(i);s.attempts[k]=Number(s.attempts[k]||0)+1;write(l,s)}
 function phaseAt(i){return STEPS[Math.max(0,Math.min(TOTAL-1,i))].phase}
+function uiModeAt(i){
+ const step=STEPS[Math.max(0,Math.min(TOTAL-1,i))]||{};
+ if(step.phase==='SEE'||step.skill==='listening')return 'source';
+ if(step.phase==='CHOOSE')return 'decision';
+ if(step.phase==='CHANGE'||step.phase==='USE')return 'compose';
+ return 'repair'
+}
 function phaseStrip(s){
  const current=phaseAt(s.index),ci=PHASES.indexOf(current);
  return '<div class="micro-framework northstar-framework" aria-label="Lesson flow">'+PHASES.map((p,i)=>'<span class="'+(i<ci?'is-done':i===ci?'is-current':'')+'">'+(i<ci?'✓ ':'')+p+'</span>').join('')+'</div>'
 }
 function shell(l,s,body){
- const pct=s.complete?100:Math.round(s.index/TOTAL*100);
- return '<div class="b2-microflow b2-northstar-flow">'+
+ const pct=s.complete?100:Math.round(s.index/TOTAL*100),phase=phaseAt(s.index),step=STEPS[Math.max(0,Math.min(TOTAL-1,s.index))]||{},mode=uiModeAt(s.index);
+ return '<div class="b2-microflow b2-northstar-flow" data-ui-mode="'+mode+'" data-phase="'+String(phase).toLowerCase()+'" data-skill="'+String(step.skill||'').toLowerCase()+'" data-step="'+(Number(s.index)+1)+'">'+
   '<div class="micro-top"><button class="ghost-btn" id="northstarBack" type="button">← Lessons</button>'+
   '<div class="micro-title"><small>B2 · Lesson '+Number(l.number)+'</small><strong>'+esc(l.title)+'</strong></div>'+
   '<span class="micro-preview">'+(preview()?'Preview':'Workbook')+'</span></div>'+
   phaseStrip(s)+
-  '<div class="micro-progress" aria-hidden="true"><span style="width:'+pct+'%"></span></div>'+
+  '<div class="micro-progress-meta"><span>'+esc(phase)+'</span><span>Step '+(Number(s.index)+1)+' of '+TOTAL+'</span></div>'+
+  '<div class="micro-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div>'+
   '<main class="micro-stage">'+body+'</main></div>'
 }
 function bindBack(){const b=el('northstarBack');if(b)b.onclick=leave}
@@ -401,5 +409,5 @@ if(previousWorkbook){
  }
 }
 
-window.ENGLISHGATE_B2_NORTHSTAR={version:FLOW_VERSION,total:TOTAL,phases:PHASES.slice(),rememberOffsets:REMEMBER_OFFSETS.slice()};
+window.ENGLISHGATE_B2_NORTHSTAR={version:FLOW_VERSION,total:TOTAL,phases:PHASES.slice(),rememberOffsets:REMEMBER_OFFSETS.slice(),uiDecisionContract:'jev-ui-v1',uiModes:['source','decision','compose','repair']};
 })();
