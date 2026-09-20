@@ -122,6 +122,8 @@ if(!grader.includes('/api/workbook-activities/grade-use'))fail('Jev Northstar US
 if(!engine.includes("framework==='SEE_CHOOSE_CHANGE_USE_FIX'"))fail('Northstar renderer is not gated by the framework marker.');
 if(!engine.includes("if(i===4)return renderListening"))fail('Dedicated Listening activity is missing from the Northstar sequence.');
 if(!engine.includes("if(i===9)return renderFix"))fail('FIX is not the final Northstar stage.');
+if(!engine.includes('const REMEMBER_OFFSETS=[1,3,7]'))fail('Hidden REMEMBER must use +1, +3, +7 spaced retrieval opportunities.');
+if(!engine.includes("support==='low'"))fail('Northstar engine must explicitly fade support in later B2 lessons.');
 
 const server=fs.readFileSync(new URL('server.js',ROOT),'utf8');
 for(const marker of ['b2_upgrade_notice_version','curriculum:b2-living-standard-v1'])if(!server.includes(marker))fail('Student migration protection missing: '+marker);
