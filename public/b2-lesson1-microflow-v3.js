@@ -449,6 +449,7 @@ function renderDone(state){
   el('content').innerHTML=shell(body,state);bindBack();el('microExit').onclick=leave;el('microRestart').onclick=function(){render(reset())}
 }
 function leave(){
+  document.body.classList.remove('b2-premium-workbook-mode');
   if(typeof setWorkbookDesignMode==='function')setWorkbookDesignMode(false);
   if(preview()){if(typeof returnToWorkbookLessons==='function')returnToWorkbookLessons();return}
   if(typeof currentPage!=='undefined')currentPage='course';
@@ -456,6 +457,7 @@ function leave(){
   if(typeof studentCourse==='function')studentCourse()
 }
 function microWorkbook(){
+  document.body.classList.add('b2-premium-workbook-mode');
   if(typeof setWorkbookDesignMode==='function')setWorkbookDesignMode(true);
   if(typeof title==='function')title('Workbook','Lesson 1');
   var state=read();render(state);
