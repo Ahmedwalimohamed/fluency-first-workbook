@@ -385,7 +385,7 @@ let teacherPresentationMode=false;
 function getDB(){return apiDB||{version:10,assignments:[],books:[],users:[],classes:[],profiles:{},attempts:[],completion:{},writing:{},listeningLocks:{},certificates:[]}}
 function saveDB(db){apiDB=db}
 function $(id){return document.getElementById(id)} function lesson(id=activeLessonId){return lessonById(id)||COURSE.lessons[0]} function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
-async function api(path,options={}){const opts={credentials:'include',headers:{'Content-Type':'application/json',...(options.headers||{})},...options};const res=await fetch(path,opts);let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.error||'Request failed');return data}
+async function api(path,options={}){const opts={credentials:'include',...options,headers:{'Content-Type':'application/json',...(options.headers||{})}};const res=await fetch(path,opts);let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.error||'Request failed');return data}
 async function refreshState(){apiDB=await api('/api/state');syncActiveBook();if(session?.role==='student'){const p=getDB().profiles?.[session.id];session.hasProfilePhoto=Boolean(p?.hasPhoto||session.hasProfilePhoto);session.profilePhotoUrl=p?.photoUrl||session.profilePhotoUrl||null;updateStudentTicker()}return apiDB}
 function studentPhoto(id=session?.id){const p=getDB().profiles?.[id];if(p?.hasPhoto&&p.photoUrl)return p.photoUrl;return id===session?.id&&session?.hasProfilePhoto?session.profilePhotoUrl:null}
 function avatarInner(photo,name){return photo?'<img src="'+escapeAttr(photo)+'" alt="">':escapeHtml((name||'?').trim().charAt(0).toUpperCase()||'?')}
