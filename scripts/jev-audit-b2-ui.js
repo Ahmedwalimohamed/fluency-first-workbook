@@ -14,7 +14,7 @@ function evidence(answer){
 async function main(){
  const key=String(process.env.TYPESAFE_API_KEY||'').trim();
  if(!key){console.warn('JEV_UI_AUDIT_SKIPPED: TYPESAFE_API_KEY is not configured.');return}
- const css=read('public/englishgate-b2-premium-v1.css');
+ const css=read('public/englishgate-b2-premium-v2.css');
  const engine=read('public/b2-northstar-workbook-v1.js');
  const lesson1=read('public/b2-lesson1-microflow-v3.js');
  const index=read('public/index.html');
@@ -32,16 +32,24 @@ async function main(){
    'Writing and repair stages must reduce distraction and give the response area visual priority.',
    'No purple AI-gradient aesthetic, cartoon styling, excessive glass, or decorative motion.',
    'Motion must respect prefers-reduced-motion and must not be required to understand the task.',
-   'The interface must feel credible for adult professional learners, not like a children learning game.'
+   'The interface must feel credible for adult professional learners, not like a children learning game.',
+   'The B2 lesson should behave as one immersive product surface rather than a premium card nested inside legacy dashboard chrome.',
+   'Source, decision, compose, and repair stages must differ structurally, not merely through color or width.'
   ],
   implementation:{
-   premiumStylesLoaded:index.includes('englishgate-b2-premium-v1.css?v=1'),
+   premiumStylesLoaded:index.includes('englishgate-b2-premium-v2.css?v=1'),
    uiContractGeneric:engine.includes("uiDecisionContract:'jev-ui-v1'"),
    uiContractLesson1:lesson1.includes("uiDecisionContract:'jev-ui-v1'"),
+   immersiveShellClass:engine.includes("classList.add('b2-premium-workbook-mode')")&&lesson1.includes("classList.add('b2-premium-workbook-mode')"),
+   legacyChromeSuppressed:css.includes('body.b2-premium-workbook-mode .sidebar')&&css.includes('body.b2-premium-workbook-mode .topbar')&&css.includes('display:none!important'),
    hasSourceLayout:css.includes('[data-ui-mode="source"]'),
    hasDecisionLayout:css.includes('[data-ui-mode="decision"]'),
    hasComposeLayout:css.includes('[data-ui-mode="compose"]'),
    hasRepairLayout:css.includes('[data-ui-mode="repair"]'),
+   sourceSplitStructure:css.includes('grid-template-columns:minmax(0,1.18fr) minmax(360px,.82fr)'),
+   composeDeskStructure:css.includes('grid-template-columns:minmax(300px,.78fr) minmax(480px,1.22fr)'),
+   repairDeskStructure:css.includes('grid-template-columns:minmax(320px,.9fr) minmax(420px,1.1fr)'),
+   decisionFocusWidth:css.includes('max-width:780px'),
    hasReducedMotion:css.includes('@media(prefers-reduced-motion:reduce)'),
    hasFocusVisible:css.includes(':focus-visible'),
    hasMobileBreakpoints:css.includes('@media(max-width:899px)')&&css.includes('@media(max-width:520px)'),
@@ -62,7 +70,9 @@ async function main(){
   adult_professional:question('Does the described implementation plausibly feel like a premium adult professional EdTech product rather than a children learning game or generic AI-generated interface?'),
   stage_focus:question('Do the source, decision, compose, and repair UI modes appropriately change emphasis for the learning task without adding unnecessary interface complexity?'),
   mobile_accessibility:question('Does the implementation include enough evidence of mobile simplification, focus visibility, and reduced-motion support to be safe for a mobile-first learning product?'),
-  anti_slop:question('Does the implementation avoid the common AI-design failure modes named in the rules, including purple AI styling, excessive decoration, and treating every screen identically?')
+  anti_slop:question('Does the implementation avoid the common AI-design failure modes named in the rules, including purple AI styling, excessive decoration, and treating every screen identically?'),
+  shell_cohesion:question('Does the implementation make the B2 workbook feel like one cohesive immersive product experience instead of a redesigned card embedded in legacy application chrome?'),
+  mode_distinction:question('Are source, decision, compose, and repair stages structurally distinct enough that the interface emphasis matches the learner job in each stage?')
  };
 
  const controller=new AbortController();
