@@ -554,7 +554,9 @@ function verifyApproval(req){
   if(decoded.replacementHash!==sha(req.body?.replacement))return {ok:false,error:'The proposed content changed after QA. Run Jev QA again.'};
   const lessonQualityReport=req.body?.lessonQualityReport;
   if(!lessonQualityReport||decoded.reportHash!==sha(lessonQualityReport))return {ok:false,error:'The lesson-quality evidence changed after QA. Run Jev QA again.'};
-  return {ok:true,decoded};
+  if(decoded.releaseState==='RED')return {ok:false,error:'A RED lesson-quality result cannot be overridden. Fix the critical finding and run QA again.'};
+  if(decoded.releaseState==='AMBER'&&req.body?.humanReviewAccepted!==true)return {ok:false,error:'This AMBER lesson requires explicit human review approval before publication.'};
+  return {ok:true,decoded:{...decoded,humanReviewAccepted:decoded.releaseState==='AMBER'&&req.body?.humanReviewAccepted===true}};
 }
 function installSemanticQaFirewall(app,{nativePost}){
   if(installed.has(app))return;
@@ -585,11 +587,15 @@ function installSemanticQaFirewall(app,{nativePost}){
         });
       }
       if(report.releaseState==='AMBER'){
+        const token=approvalToken({user,context,replacement:body.replacement,report});
         return res.status(409).json({
           ok:false,
           code:'LESSON_QUALITY_REVIEW_REQUIRED',
+          requiresHumanReview:true,
           error:`Lesson requires human review before publication: ${report.majorFindings} major finding${report.majorFindings===1?'':'s'} remain.`,
-          report
+          report,
+          semanticQaToken:token,
+          expiresInSeconds:TOKEN_TTL_SECONDS
         });
       }
       const token=approvalToken({user,context,replacement:body.replacement,report});
