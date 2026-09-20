@@ -20,7 +20,7 @@
     "qa:community": "node scripts/qa-community.mjs",
     "qa:cefr": "node scripts/qa-cefr.mjs",
     "qa:ladder": "node scripts/qa-learning-ladder.mjs",
-    "qa:b2:jev": "node scripts/jev-audit-b2-northstar.js",
+    "qa:b2:jev": "node scripts/jev-audit-b2-ui.js && node scripts/jev-audit-b2-northstar.js",
     "qa:b2:ui:jev": "node scripts/jev-audit-b2-ui.js"
   },
   "engines": {
