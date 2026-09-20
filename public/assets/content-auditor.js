@@ -51,11 +51,21 @@ function candidateLesson(l,path,replacement){
 function qaReportHtml(report){
  if(!report)return '';
  const checks=Array.isArray(report.checks)?report.checks:[];
- const blocked=checks.filter(x=>!['PASS','NOT_APPLICABLE'].includes(x.status));
+ const blocked=checks.filter(x=>Boolean(x.blocking));
+ const review=checks.filter(x=>Boolean(x.review)&&!x.blocking);
+ const metric=x=>{
+  const p=Number(x.selectedProbability),c=Number(x.confidence),e=Number(x.evidence);
+  if(Number.isFinite(e))return `Evidence: ${Math.round(e*100)}%`;
+  if(Number.isFinite(p))return `Decision probability: ${Math.round(p*100)}%`;
+  if(Number.isFinite(c))return `Jev confidence: ${Math.round(c*100)}%`;
+  return '';
+ };
+ const cards=(items,kind)=>items.slice(0,14).map(x=>`<article class="${kind}"><div><b>${esc(x.category||'QA')}</b><span>${esc(x.status||kind.toUpperCase())}</span></div><p>${esc(x.requirement||x.id||'Semantic check')}</p>${metric(x)?`<small>${esc(metric(x))}${x.corroboratedBy?` · corroborated: ${esc(x.corroboratedBy)}`:''}</small>`:''}</article>`).join('');
  if(report.pass){
-  return `<div class="ace-qa-report is-pass"><div class="ace-qa-title"><strong>Semantic QA firewall passed</strong><span>${Number(report.passed||0)} passed · ${Number(report.notApplicable||0)} not applicable · ${Number(report.totalChecks||0)} checks</span></div><p>Jev approved this exact candidate for publication.</p></div>`;
+  const mode=review.length?'is-review':'is-pass';
+  return `<div class="ace-qa-report ${mode}"><div class="ace-qa-title"><strong>${review.length?'Semantic QA passed with review notes':'Semantic QA firewall passed'}</strong><span>${Number(report.passed||0)} passed · ${Number(report.notApplicable||0)} not applicable · ${review.length} review · ${Number(report.totalChecks||0)} checks</span></div><p>${review.length?'No calibrated blocker remains. Review notes are advisory and do not stop publication.':'Jev approved this exact candidate for publication.'}</p>${review.length?`<div class="ace-qa-failures ace-qa-review-list">${cards(review,'review')}</div>${review.length>14?`<small>+${review.length-14} more review notes</small>`:''}`:''}</div>`;
  }
- return `<div class="ace-qa-report is-blocked"><div class="ace-qa-title"><strong>Publication blocked by Semantic QA</strong><span>${blocked.length} blocking check${blocked.length===1?'':'s'} · ${Number(report.totalChecks||checks.length)} total</span></div><div class="ace-qa-failures">${blocked.slice(0,14).map(x=>`<article><div><b>${esc(x.category||'QA')}</b><span>${esc(x.status||'BLOCKED')}</span></div><p>${esc(x.requirement||x.id||'Semantic check failed')}</p>${Number.isFinite(Number(x.confidence))?`<small>Jev confidence: ${Math.round(Number(x.confidence)*100)}%</small>`:''}</article>`).join('')}</div>${blocked.length>14?`<small>+${blocked.length-14} more blocking checks</small>`:''}</div>`;
+ return `<div class="ace-qa-report is-blocked"><div class="ace-qa-title"><strong>Publication blocked by Semantic QA</strong><span>${blocked.length} blocker${blocked.length===1?'':'s'} · ${review.length} review · ${Number(report.totalChecks||checks.length)} total</span></div><div class="ace-qa-failures">${cards(blocked,'blocking')}</div>${blocked.length>14?`<small>+${blocked.length-14} more blocking checks</small>`:''}${review.length?`<details class="ace-qa-review-details"><summary>${review.length} additional review note${review.length===1?'':'s'}</summary><div class="ace-qa-failures ace-qa-review-list">${cards(review,'review')}</div></details>`:''}</div>`;
 }
 function ensureSelection(){
  const bs=books();if(!bs.length)return;
