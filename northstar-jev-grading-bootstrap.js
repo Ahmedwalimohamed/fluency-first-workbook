@@ -7,7 +7,7 @@ const nativePost=express.application.post;
 const installed=new WeakSet();
 const TYPE_SAFE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const TYPE_SAFE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
-const VERSION='jev-b2-northstar-fix-v1';
+const VERSION='jev-b2-northstar-fix-v2';
 
 function studentSession(req){
   try{
@@ -93,9 +93,10 @@ function repairFrom(decisions,state){
     prompt:`Add one natural sentence using a relevant word or chunk from: ${state.targetVocabulary.join(', ')}.`
   };
   return {
-    focus:'polish',
-    title:'Strengthen one line.',
-    prompt:'Choose one sentence and make it more specific or useful without making the response longer than necessary.'
+    focus:'none',
+    title:'No correction needed.',
+    prompt:'Your response already completes the task clearly and meets the lesson targets.',
+    needsCorrection:false
   }
 }
 async function grade(body){
