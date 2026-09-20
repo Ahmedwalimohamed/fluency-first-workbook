@@ -451,7 +451,7 @@ function installSemanticQaFirewall(app,{nativePost,nativeGet}){
             },
             lesson
           });
-          results.push({
+          const result={
             lessonNumber:Number(lesson.number)||0,
             lessonTitle:String(lesson.title||''),
             decision:String(report.decision||''),
@@ -463,7 +463,9 @@ function installSemanticQaFirewall(app,{nativePost,nativeGet}){
             criticalFailures:Number(report.criticalFailures||0),
             blockingChecks:(report.checks||[]).filter(x=>x.blocking).map(x=>({id:x.id,category:x.category,status:x.status,evidence:x.evidence,confidence:x.confidence,corroboratedBy:x.corroboratedBy||null})),
             reviewChecks:(report.checks||[]).filter(x=>x.review&&!x.blocking).map(x=>({id:x.id,category:x.category,status:x.status,evidence:x.evidence,confidence:x.confidence}))
-          });
+          };
+          results.push(result);
+          console.log('B2_JEV_CALIBRATION '+JSON.stringify(result));
         }
         const nextStart=start+selected.length;
         res.json({
