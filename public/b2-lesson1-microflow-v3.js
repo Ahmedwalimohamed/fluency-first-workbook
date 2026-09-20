@@ -149,7 +149,7 @@ function reasonRelevant(value){
 }
 function durationCorrect(value){
   var t=norm(value);
-  var hasPresentPerfect=/\b(i|we|you|they)\s+(have|'ve)\s+[a-z]+(?:ed|en|n|t)?\b/.test(t)||/\b(i|we|you|they)\s+(have|'ve)\s+been\s+\w+ing\b/.test(t)||/\b(he|she|it)\s+(has|'s)\s+/.test(t);
+  var hasPresentPerfect=/\b(?:i|we|you|they)(?:\s+have|'ve)\s+[a-z]+\b/.test(t)||/\b(?:i|we|you|they)(?:\s+have|'ve)\s+been\s+\w+ing\b/.test(t)||/\b(?:he|she|it)(?:\s+has|'s)\s+[a-z]+\b/.test(t);
   var hasFor=/\bfor\s+(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|several|many|a|an)\b/.test(t);
   var hasSince=/\bsince\s+(?:19|20)\d{2}\b/.test(t)||/\bsince\s+(january|february|march|april|may|june|july|august|september|october|november|december|school|college|university|childhood|last year)\b/.test(t);
   return hasPresentPerfect&&(hasFor||hasSince)
