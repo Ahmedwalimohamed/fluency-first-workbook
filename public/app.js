@@ -395,12 +395,63 @@ function applyStudentAvatar(){
  const photo=studentPhoto(session.id),btn=$('studentProfileBtn');
  if(btn){btn.innerHTML=avatarInner(photo,session.name);btn.classList.toggle('has-photo',Boolean(photo));btn.setAttribute('aria-label','Open profile for '+session.name)}
 }
-function init(){if('scrollRestoration' in history)history.scrollRestoration='manual';$('loginForm').addEventListener('submit',e=>{e.preventDefault();login($('username').value.trim(),$('password').value)});$('forgotPasswordBtn')?.addEventListener('click',openForgotPassword);$('logoutBtn').addEventListener('click',logout);$('menuBtn').addEventListener('click',()=>document.querySelector('.sidebar').classList.toggle('open'));hydratePersonalLogin()} document.addEventListener('DOMContentLoaded',init);
+async function init(){
+ if('scrollRestoration' in history)history.scrollRestoration='manual';
+ $('loginForm').addEventListener('submit',e=>{e.preventDefault();login($('username').value.trim(),$('password').value)});
+ $('forgotPasswordBtn')?.addEventListener('click',openForgotPassword);
+ $('logoutBtn').addEventListener('click',logout);
+ $('menuBtn').addEventListener('click',()=>document.querySelector('.sidebar').classList.toggle('open'));
+ await hydratePersonalLogin();
+ await restoreAuthenticatedSession();
+}
+document.addEventListener('DOMContentLoaded',init);
 async function hydratePersonalLogin(){if(!personalAccessToken)return;try{const r=await api('/api/auth/access?token='+encodeURIComponent(personalAccessToken));personalAccessStudent=r.student||null;if(personalAccessStudent?.username){$('username').value=personalAccessStudent.username;$('username').readOnly=true;$('username').setAttribute('aria-label','Your EnglishGate username')}}catch{personalAccessToken=null;personalAccessStudent=null;const u=new URL(window.location.href);u.searchParams.delete('access');history.replaceState({},'',u.pathname+(u.searchParams.toString()?'?'+u.searchParams.toString():'')+u.hash)}}
-async function login(username,password){$('loginError').textContent='';try{const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username,password})});session=r.user;await refreshState();if(session.role==='teacher'){await ensureLiveBooks();restoreTeacherContextFromState();}$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('app').classList.remove('student-mode','teacher-mode','admin-mode');$('app').classList.add(session.role+'-mode');$('sidebarName').textContent=session.name;$('sidebarRole').textContent=session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'Student';$('sidebarAvatar').textContent=session.name[0];currentPage=session.role==='admin'?'admin-home':session.role==='teacher'?'teacher-home':'home';if(session.role==='student'&&openAssignmentFromUrl()){renderNav();renderPage();setTimeout(maybeShowB2UpgradeNotice,0);return}renderNav();renderPage();if(session.role==='student')setTimeout(maybeShowB2UpgradeNotice,0)}catch(e){$('loginError').textContent=e.message||'Username or password is incorrect.'}}
+function defaultPageForRole(role){return role==='admin'?'admin-home':role==='teacher'?'teacher-home':'home'}
+function savedPageForRole(role){
+ try{
+  const saved=sessionStorage.getItem('englishgateCurrentPage:'+role);
+  return Array.isArray(NAV[role])&&NAV[role].some(([id])=>id===saved)?saved:null;
+ }catch{return null}
+}
+function rememberCurrentPage(){
+ if(!session?.role)return;
+ try{sessionStorage.setItem('englishgateCurrentPage:'+session.role,currentPage)}catch{}
+}
+async function enterAuthenticatedApp(user,{restorePage=false}={}){
+ session=user;
+ await refreshState();
+ if(session.role==='teacher'){await ensureLiveBooks();restoreTeacherContextFromState()}
+ $('loginScreen').classList.add('hidden');
+ $('app').classList.remove('hidden');
+ $('app').classList.remove('student-mode','teacher-mode','admin-mode');
+ $('app').classList.add(session.role+'-mode');
+ $('sidebarName').textContent=session.name||session.username||'User';
+ $('sidebarRole').textContent=session.role==='admin'?'System Admin':session.role==='teacher'?'Teacher':'Student';
+ $('sidebarAvatar').textContent=(session.name||session.username||'?').charAt(0).toUpperCase();
+ currentPage=restorePage?savedPageForRole(session.role)||defaultPageForRole(session.role):defaultPageForRole(session.role);
+ if(session.role==='student'&&openAssignmentFromUrl()){renderNav();renderPage();rememberCurrentPage();setTimeout(maybeShowB2UpgradeNotice,0);return}
+ renderNav();renderPage();rememberCurrentPage();
+ if(session.role==='student')setTimeout(maybeShowB2UpgradeNotice,0);
+}
+async function restoreAuthenticatedSession(){
+ try{
+  const r=await api('/api/me');
+  if(!r?.user)return;
+  await enterAuthenticatedApp(r.user,{restorePage:true});
+ }catch{
+  // No valid session cookie: remain on the normal sign-in screen.
+ }
+}
+async function login(username,password){
+ $('loginError').textContent='';
+ try{
+  const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username,password})});
+  await enterAuthenticatedApp(r.user,{restorePage:false});
+ }catch(e){$('loginError').textContent=e.message||'Username or password is incorrect.'}
+}
 function openForgotPassword(){if(!personalAccessToken){showModal(`<div class="section-head"><div><span class="role-kicker">Password help</span><h3>Use your personal login link</h3><p class="muted">Open the EnglishGate login link that was sent to your WhatsApp, then tap <strong>Forgot password?</strong> again. You do not need to enter a username or phone number.</p></div><button class="icon-btn" data-close>×</button></div><div class="feedback good">Your personal link tells EnglishGate which registered WhatsApp number should receive the new password.</div>`);document.querySelector('[data-close]').onclick=closeModal;return}const who=personalAccessStudent?.name?` for <strong>${escapeHtml(personalAccessStudent.name)}</strong>`:'';showModal(`<div class="section-head"><div><span class="role-kicker">Password help</span><h3>Get a new password</h3><p class="muted">EnglishGate will send a new password${who} to the WhatsApp number already registered on this account.</p></div><button class="icon-btn" data-close>×</button></div><form id="forgotPasswordForm" class="form-grid"><button class="primary-btn" type="submit">Send new password</button></form><div id="forgotPasswordResult"></div>`);document.querySelector('[data-close]').onclick=closeModal;$('forgotPasswordForm').onsubmit=async e=>{e.preventDefault();const btn=e.submitter||$('forgotPasswordForm').querySelector('button[type="submit"]'),result=$('forgotPasswordResult');btn.disabled=true;btn.textContent='Sending…';try{await api('/api/auth/forgot-password',{method:'POST',body:JSON.stringify({accessToken:personalAccessToken})});$('forgotPasswordForm').classList.add('hidden');result.innerHTML='<div class="feedback good"><strong>New password sent.</strong><br>Check your registered WhatsApp number, then sign in with the password you received.</div>'}catch(err){btn.disabled=false;btn.textContent='Send new password';result.innerHTML=`<div class="feedback bad">${escapeHtml(err.message)}</div>`}}}
-async function logout(){try{await api('/api/auth/logout',{method:'POST'})}catch{}session=null;apiDB=null;$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value=''}
-function renderNav(){document.body.classList.toggle('student-live-focus',session?.role==='student'&&currentPage==='student-live-lesson');const items=NAV[session.role],html=items.map(([id,icon,label])=>`<button class="nav-btn ${currentPage===id?'active':''}" data-page="${id}"><span class="nav-icon">${icon}</span>${label}</button>`).join('');if(session.role==='student'){$('sideNav').innerHTML='';$('studentTopNav').innerHTML=html;$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.remove('hidden');applyStudentAvatar()}else{$('sideNav').innerHTML=html;$('studentTopNav').innerHTML='';$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.add('hidden')}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{currentPage=b.dataset.page;document.querySelector('.sidebar').classList.remove('open');renderNav();renderPage()});$('studentProfileBtn').onclick=()=>{currentPage='profile';renderNav();renderPage()};resetAppScroll()}
+async function logout(){const role=session?.role;try{await api('/api/auth/logout',{method:'POST'})}catch{}if(role){try{sessionStorage.removeItem('englishgateCurrentPage:'+role)}catch{}}session=null;apiDB=null;$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value=''}
+function renderNav(){document.body.classList.toggle('student-live-focus',session?.role==='student'&&currentPage==='student-live-lesson');const items=NAV[session.role],html=items.map(([id,icon,label])=>`<button class="nav-btn ${currentPage===id?'active':''}" data-page="${id}"><span class="nav-icon">${icon}</span>${label}</button>`).join('');if(session.role==='student'){$('sideNav').innerHTML='';$('studentTopNav').innerHTML=html;$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.remove('hidden');applyStudentAvatar()}else{$('sideNav').innerHTML=html;$('studentTopNav').innerHTML='';$('bottomNav').innerHTML=html;$('studentProfileBtn').classList.add('hidden')}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{currentPage=b.dataset.page;rememberCurrentPage();document.querySelector('.sidebar').classList.remove('open');renderNav();renderPage()});$('studentProfileBtn').onclick=()=>{currentPage='profile';rememberCurrentPage();renderNav();renderPage()};resetAppScroll()}
 function englishGateLogo(){return ''} function title(e,h){$('pageEyebrow').textContent=e;$('pageTitle').textContent=h} function progress(v){return `<div class="progress"><span style="width:${Math.max(0,Math.min(100,v))}%"></span></div>`} 
 try{if('scrollRestoration' in history)history.scrollRestoration='manual'}catch{}
 function resetAppScroll(){
