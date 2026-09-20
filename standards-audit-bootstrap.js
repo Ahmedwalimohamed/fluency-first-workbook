@@ -3,7 +3,6 @@ const jwt=require('jsonwebtoken');
 const {installSemanticQaFirewall}=require('./semantic-qa-firewall.js');
 
 const nativePost=express.application.post;
-const nativeGet=express.application.get;
 const installed=new WeakSet();
 
 function adminSession(req){
@@ -60,7 +59,7 @@ async function runAudit(body){
 }
 function install(app){
   if(installed.has(app))return;installed.add(app);
-  installSemanticQaFirewall(app,{nativePost,nativeGet});
+  installSemanticQaFirewall(app,{nativePost});
   nativePost.call(app,'/api/content-audit',async(req,res)=>{
     if(!adminSession(req))return res.status(403).json({error:'Admin access required.'});
     try{
