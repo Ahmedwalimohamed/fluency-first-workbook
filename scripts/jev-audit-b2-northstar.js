@@ -62,6 +62,8 @@ function itemDiagnosticQuestions(items){
 function diagnosticItems(lesson){
  const items=[];
  const add=(kind,label,value)=>items.push({kind,label,value});
+ (lesson.vocabularyItems||[]).forEach((x,i)=>add('vocabulary','vocabulary '+(i+1),x));
+ (lesson.questions||[]).forEach((x,i)=>add(String(x?.tag||'').startsWith('listening:')?'listening-question':'reading-question','source question '+(i+1),x));
  (lesson.grammarItems||[]).forEach((x,i)=>add('grammar','grammar '+(i+1),x));
  (lesson.writing?.builder||[]).forEach((x,i)=>add('writing-builder','writing builder '+(i+1),x));
  (lesson.northstar?.change||[]).forEach((x,i)=>add('change','CHANGE '+(i+1),x));
