@@ -1,0 +1,593 @@
+/* EnglishGate B2 Lesson 1 — organized integrated flow v2
+   Scope: only .b2-integrated-workbook so no other lesson is changed. */
+
+.b2-integrated-workbook{
+  --b2-ink:#0f172a;
+  --b2-muted:#64748b;
+  --b2-line:#e2e8f0;
+  --b2-soft:#f8fafc;
+  --b2-blue:#2563eb;
+  --b2-blue-dark:#17369f;
+  --b2-blue-soft:#eff6ff;
+  width:min(1180px,100%);
+  margin:0 auto;
+}
+
+/* 1. Make this a single, intentional learning flow instead of the old
+   left-sidebar workbook layout. */
+.b2-integrated-workbook .eg-lesson-layout{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:14px!important;
+}
+.b2-integrated-workbook .eg-stage-list{
+  position:static!important;
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:14px!important;
+  border:1px solid var(--b2-line)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:0 8px 24px rgba(15,23,42,.045)!important;
+}
+.b2-integrated-workbook .eg-stage-list>.eg-label,
+.b2-integrated-workbook .eg-stage-list>.eg-goal{
+  display:none!important;
+}
+.b2-integrated-workbook .eg-stage-list nav{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:8px!important;
+  width:100%!important;
+}
+.b2-integrated-workbook .eg-stage{
+  position:relative;
+  width:100%!important;
+  min-width:0!important;
+  min-height:54px!important;
+  margin:0!important;
+  padding:9px 10px!important;
+  display:grid!important;
+  grid-template-columns:30px minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:8px!important;
+  border:1px solid var(--b2-line)!important;
+  border-radius:13px!important;
+  background:var(--b2-soft)!important;
+  color:var(--b2-muted)!important;
+  box-shadow:none!important;
+  text-align:left!important;
+}
+.b2-integrated-workbook .eg-stage>span{
+  width:30px!important;
+  height:30px!important;
+  min-width:30px!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:999px!important;
+  background:#e9eef5!important;
+  color:#475569!important;
+  font-size:.76rem!important;
+  font-weight:900!important;
+}
+.b2-integrated-workbook .eg-stage strong{
+  min-width:0;
+  color:#475569!important;
+  font-size:.78rem!important;
+  line-height:1.18!important;
+  font-weight:850!important;
+  text-transform:none!important;
+  white-space:normal!important;
+}
+.b2-integrated-workbook .eg-stage.is-current{
+  border-color:#9bbcff!important;
+  background:var(--b2-blue-soft)!important;
+  box-shadow:inset 0 0 0 1px rgba(37,99,235,.08)!important;
+}
+.b2-integrated-workbook .eg-stage.is-current>span{
+  background:var(--b2-blue)!important;
+  color:#fff!important;
+}
+.b2-integrated-workbook .eg-stage.is-current strong{
+  color:var(--b2-blue-dark)!important;
+}
+.b2-integrated-workbook .eg-stage.is-done{
+  border-color:#cbd5e1!important;
+  background:#fff!important;
+}
+.b2-integrated-workbook .eg-stage.is-done>span{
+  background:#0f766e!important;
+  color:#fff!important;
+}
+.b2-integrated-workbook .eg-stage:disabled{
+  opacity:.5!important;
+  cursor:not-allowed!important;
+}
+
+/* 2. Remove duplicate nested-card styling from the legacy teaching surface. */
+.b2-integrated-workbook .eg-workbook-teaching-surface{
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.b2-integrated-workbook .eg-stage-heading{
+  min-height:0!important;
+  margin:0 0 10px!important;
+  padding:4px 2px 8px!important;
+  border:0!important;
+  background:transparent!important;
+}
+.b2-integrated-workbook .eg-stage-heading .eg-label{
+  margin:0 0 3px!important;
+  color:var(--b2-muted)!important;
+  font-size:.72rem!important;
+  font-weight:800!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+}
+.b2-integrated-workbook .eg-stage-heading h2{
+  margin:0!important;
+  color:var(--b2-ink)!important;
+  font-size:1.08rem!important;
+  line-height:1.25!important;
+}
+.b2-integrated-workbook .eg-workbook-stage-content{
+  min-height:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+.b2-integrated-workbook .b2-flow-page{
+  display:grid!important;
+  gap:16px!important;
+  width:100%!important;
+  max-width:100%!important;
+}
+
+/* 3. One consistent stage hero. */
+.b2-integrated-workbook .b2-flow-page .eg-skill-hero,
+.b2-integrated-workbook .b2-scenario-hero{
+  margin:0!important;
+  padding:24px 26px!important;
+  border:1px solid #d9e3f0!important;
+  border-radius:20px!important;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%)!important;
+  box-shadow:0 10px 30px rgba(15,23,42,.05)!important;
+}
+.b2-integrated-workbook .b2-flow-page .eg-skill-hero{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+  gap:20px!important;
+}
+.b2-integrated-workbook .eg-skill-kicker{
+  display:inline-flex!important;
+  width:max-content!important;
+  margin:0 0 8px!important;
+  padding:5px 9px!important;
+  border-radius:999px!important;
+  background:#e8f0ff!important;
+  color:var(--b2-blue-dark)!important;
+  font-size:.7rem!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+}
+.b2-integrated-workbook .b2-flow-page .eg-skill-hero h1,
+.b2-integrated-workbook .b2-scenario-hero h1{
+  margin:0!important;
+  max-width:760px!important;
+  color:var(--b2-ink)!important;
+  font-size:clamp(1.55rem,3vw,2.15rem)!important;
+  line-height:1.12!important;
+  letter-spacing:-.025em!important;
+}
+.b2-integrated-workbook .b2-flow-page .eg-skill-hero p,
+.b2-integrated-workbook .b2-scenario-hero>p{
+  margin:9px 0 0!important;
+  max-width:72ch!important;
+  color:#475569!important;
+  font-size:.98rem!important;
+  line-height:1.68!important;
+}
+.b2-integrated-workbook .eg-question-count,
+.b2-integrated-workbook .b2-time{
+  flex:0 0 auto!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:34px!important;
+  padding:7px 10px!important;
+  border:1px solid var(--b2-line)!important;
+  border-radius:999px!important;
+  background:#fff!important;
+  color:var(--b2-muted)!important;
+  font-size:.72rem!important;
+  font-weight:850!important;
+  white-space:nowrap!important;
+}
+
+/* Scenario */
+.b2-integrated-workbook .b2-scenario-hero{
+  display:grid!important;
+  gap:14px!important;
+}
+.b2-integrated-workbook .b2-goal-card{
+  display:grid!important;
+  gap:5px!important;
+  max-width:820px!important;
+  margin:2px 0 0!important;
+  padding:15px 17px!important;
+  border:1px solid #cfe0ff!important;
+  border-radius:14px!important;
+  background:#f2f7ff!important;
+}
+.b2-integrated-workbook .b2-goal-card small{
+  color:#60728c!important;
+  font-size:.68rem!important;
+  font-weight:850!important;
+  letter-spacing:.06em!important;
+  text-transform:uppercase!important;
+}
+.b2-integrated-workbook .b2-goal-card strong{
+  color:#17315f!important;
+  font-size:.98rem!important;
+  line-height:1.5!important;
+}
+
+/* Understand */
+.b2-integrated-workbook .b2-conversation-source{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.6fr) minmax(270px,.7fr)!important;
+  gap:14px!important;
+  align-items:start!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+.b2-integrated-workbook .b2-conversation-source>.eg-reading-article,
+.b2-integrated-workbook .b2-conversation-source>.eg-audio-card{
+  margin:0!important;
+  border:1px solid var(--b2-line)!important;
+  border-radius:17px!important;
+  background:#fff!important;
+  box-shadow:0 7px 22px rgba(15,23,42,.04)!important;
+}
+.b2-integrated-workbook .b2-conversation-source>.eg-reading-article{
+  padding:20px!important;
+}
+.b2-integrated-workbook .b2-conversation-source>.eg-audio-card{
+  position:sticky!important;
+  top:78px!important;
+  padding:18px!important;
+}
+
+/* Questions are visually one ordered sequence, not separate floating worksheets. */
+.b2-integrated-workbook .activity-question-list{
+  display:grid!important;
+  gap:10px!important;
+  width:100%!important;
+  max-width:860px!important;
+  margin:0 auto!important;
+}
+.b2-integrated-workbook .guided-question{
+  margin:0!important;
+  padding:18px!important;
+  border:1px solid var(--b2-line)!important;
+  border-radius:16px!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+.b2-integrated-workbook .guided-question .question-stage{
+  margin:0 0 7px!important;
+}
+.b2-integrated-workbook .guided-question .question-stage span{
+  color:var(--b2-muted)!important;
+  font-size:.7rem!important;
+  font-weight:850!important;
+  letter-spacing:.04em!important;
+}
+.b2-integrated-workbook .guided-question>p{
+  margin:0 0 13px!important;
+  color:var(--b2-ink)!important;
+  font-size:1rem!important;
+  line-height:1.5!important;
+  font-weight:750!important;
+}
+
+/* Interact */
+.b2-integrated-workbook .b2-conversation-turns{
+  position:relative!important;
+  display:grid!important;
+  gap:10px!important;
+  max-width:860px!important;
+  margin:0 auto!important;
+  padding-left:18px!important;
+}
+.b2-integrated-workbook .b2-conversation-turns::before{
+  content:"";
+  position:absolute;
+  left:6px;
+  top:18px;
+  bottom:18px;
+  width:2px;
+  border-radius:999px;
+  background:#dbe5f1;
+}
+.b2-integrated-workbook .b2-turn-card{
+  position:relative!important;
+  display:grid!important;
+  gap:9px!important;
+  margin:0!important;
+  padding:17px!important;
+  border:1px solid var(--b2-line)!important;
+  border-radius:16px!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+.b2-integrated-workbook .b2-turn-card::before{
+  content:"";
+  position:absolute;
+  left:-18px;
+  top:23px;
+  width:12px;
+  height:12px;
+  border:3px solid #fff;
+  border-radius:999px;
+  background:var(--b2-blue);
+  box-shadow:0 0 0 1px #bdd0ee;
+}
+.b2-integrated-workbook .b2-turn-card>span,
+.b2-integrated-workbook .b2-message-task>span,
+.b2-integrated-workbook .b2-message-reply>span,
+.b2-integrated-workbook .b2-detected-error small{
+  color:#718096!important;
+  font-size:.68rem!important;
+  font-weight:900!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+}
+.b2-integrated-workbook .b2-turn-card>strong{
+  color:var(--b2-ink)!important;
+  font-size:1rem!important;
+  line-height:1.45!important;
+}
+.b2-integrated-workbook .b2-turn-card textarea,
+.b2-integrated-workbook .b2-message-task textarea,
+.b2-integrated-workbook .b2-message-reply textarea{
+  width:100%!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:12px 13px!important;
+  border:1px solid #cbd5e1!important;
+  border-radius:11px!important;
+  background:#fff!important;
+  color:var(--b2-ink)!important;
+  font:inherit!important;
+  line-height:1.5!important;
+  resize:vertical!important;
+}
+.b2-integrated-workbook .b2-turn-card textarea:focus,
+.b2-integrated-workbook .b2-message-task textarea:focus,
+.b2-integrated-workbook .b2-message-reply textarea:focus{
+  outline:3px solid rgba(37,99,235,.12)!important;
+  border-color:#7aa5ee!important;
+}
+.b2-integrated-workbook .b2-mic-btn{
+  justify-self:start!important;
+  min-height:38px!important;
+}
+
+/* Produce */
+.b2-integrated-workbook .b2-message-task,
+.b2-integrated-workbook .b2-message-reply{
+  display:grid!important;
+  gap:10px!important;
+  width:100%!important;
+  max-width:860px!important;
+  margin:0 auto!important;
+  padding:20px!important;
+  border:1px solid var(--b2-line)!important;
+  border-radius:17px!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+.b2-integrated-workbook .b2-message-task>strong{
+  color:var(--b2-ink)!important;
+  font-size:1.03rem!important;
+}
+.b2-integrated-workbook .b2-message-task>p{
+  margin:0!important;
+  color:#475569!important;
+  line-height:1.55!important;
+}
+.b2-integrated-workbook .b2-message-reply blockquote{
+  margin:0!important;
+  padding:14px 16px!important;
+  border:1px solid #dce7f5!important;
+  border-left:4px solid var(--b2-blue)!important;
+  border-radius:0 12px 12px 0!important;
+  background:#f8fbff!important;
+  color:#334155!important;
+  line-height:1.58!important;
+}
+.b2-integrated-workbook .writing-share-choice{
+  width:100%!important;
+  max-width:860px!important;
+  margin:0 auto!important;
+}
+
+/* Improve */
+.b2-integrated-workbook .b2-detected-error{
+  display:grid!important;
+  gap:7px!important;
+  width:100%!important;
+  max-width:860px!important;
+  margin:0 auto!important;
+  padding:18px!important;
+  border:1px solid #cfe0f3!important;
+  border-radius:16px!important;
+  background:#f8fbff!important;
+  box-shadow:none!important;
+}
+.b2-integrated-workbook .b2-detected-error strong{
+  color:var(--b2-ink)!important;
+  font-size:1rem!important;
+}
+.b2-integrated-workbook .b2-detected-error p{
+  margin:0!important;
+  color:#475569!important;
+  line-height:1.55!important;
+}
+.b2-integrated-workbook .b2-detected-error b{
+  color:#166534!important;
+  line-height:1.5!important;
+}
+
+/* Feedback + actions */
+.b2-integrated-workbook #activityFeedback{
+  width:100%!important;
+  max-width:860px!important;
+  margin:0 auto!important;
+}
+.b2-integrated-workbook .eg-workbook-footer{
+  position:sticky!important;
+  bottom:0!important;
+  z-index:9!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:9px!important;
+  min-height:66px!important;
+  margin:8px 0 0!important;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important;
+  border:1px solid var(--b2-line)!important;
+  border-radius:16px!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 -4px 20px rgba(15,23,42,.055)!important;
+  backdrop-filter:blur(12px)!important;
+}
+.b2-integrated-workbook .eg-workbook-footer:empty{
+  display:none!important;
+}
+.b2-integrated-workbook .eg-workbook-footer button{
+  min-height:44px!important;
+}
+
+/* Keep the lesson header compact so the activity starts above the fold. */
+.b2-integrated-workbook>.eg-lesson-header{
+  margin-bottom:12px!important;
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+.b2-integrated-workbook>.eg-lesson-header h1{
+  font-size:1.16rem!important;
+}
+.b2-integrated-workbook>.eg-lesson-header p{
+  margin-bottom:2px!important;
+  font-size:.72rem!important;
+}
+
+/* Mobile: progress becomes one clean horizontal strip; content stays single-column. */
+@media(max-width:820px){
+  .b2-integrated-workbook{
+    width:100%!important;
+  }
+  .b2-integrated-workbook .eg-stage-list{
+    padding:10px!important;
+    border-radius:14px!important;
+  }
+  .b2-integrated-workbook .eg-stage-list nav{
+    display:flex!important;
+    gap:7px!important;
+    overflow-x:auto!important;
+    overscroll-behavior-x:contain!important;
+    scroll-snap-type:x proximity!important;
+    scrollbar-width:none!important;
+    padding:1px 0 3px!important;
+  }
+  .b2-integrated-workbook .eg-stage-list nav::-webkit-scrollbar{
+    display:none!important;
+  }
+  .b2-integrated-workbook .eg-stage{
+    flex:0 0 132px!important;
+    min-height:48px!important;
+    grid-template-columns:27px minmax(0,1fr)!important;
+    padding:8px!important;
+    scroll-snap-align:start!important;
+  }
+  .b2-integrated-workbook .eg-stage>span{
+    width:27px!important;
+    height:27px!important;
+    min-width:27px!important;
+  }
+  .b2-integrated-workbook .eg-stage strong{
+    font-size:.73rem!important;
+  }
+  .b2-integrated-workbook .b2-flow-page .eg-skill-hero,
+  .b2-integrated-workbook .b2-scenario-hero{
+    padding:18px!important;
+    border-radius:16px!important;
+  }
+  .b2-integrated-workbook .b2-flow-page .eg-skill-hero{
+    display:grid!important;
+    gap:12px!important;
+  }
+  .b2-integrated-workbook .eg-question-count,
+  .b2-integrated-workbook .b2-time{
+    justify-self:start!important;
+  }
+  .b2-integrated-workbook .b2-conversation-source{
+    grid-template-columns:1fr!important;
+  }
+  .b2-integrated-workbook .b2-conversation-source>.eg-audio-card{
+    position:static!important;
+  }
+  .b2-integrated-workbook .guided-question,
+  .b2-integrated-workbook .b2-turn-card,
+  .b2-integrated-workbook .b2-message-task,
+  .b2-integrated-workbook .b2-message-reply,
+  .b2-integrated-workbook .b2-detected-error{
+    padding:15px!important;
+    border-radius:14px!important;
+  }
+  .b2-integrated-workbook .b2-conversation-turns{
+    padding-left:14px!important;
+  }
+  .b2-integrated-workbook .b2-conversation-turns::before{
+    left:4px!important;
+  }
+  .b2-integrated-workbook .b2-turn-card::before{
+    left:-15px!important;
+    width:10px!important;
+    height:10px!important;
+  }
+  .b2-integrated-workbook .eg-workbook-footer{
+    bottom:calc(66px + env(safe-area-inset-bottom))!important;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    padding:9px!important;
+    border-radius:14px!important;
+  }
+  .b2-integrated-workbook .eg-workbook-footer button{
+    width:100%!important;
+  }
+}
+
+@media(max-width:480px){
+  .b2-integrated-workbook .b2-flow-page .eg-skill-hero h1,
+  .b2-integrated-workbook .b2-scenario-hero h1{
+    font-size:1.42rem!important;
+  }
+  .b2-integrated-workbook .b2-flow-page .eg-skill-hero p,
+  .b2-integrated-workbook .b2-scenario-hero>p{
+    font-size:.93rem!important;
+    line-height:1.55!important;
+  }
+  .b2-integrated-workbook .guided-question>p{
+    font-size:.96rem!important;
+  }
+}
