@@ -143,10 +143,7 @@ function renderOpen(state,opts){
   }
 }
 
-function reasonRelevant(value){
-  var t=norm(value);
-  return words(value)>=4&&(/because|want|learn|improve|practice|meet|network|workshop|english|digital|skill|career|work/.test(t))
-}
+function reasonRelevant(value){return words(value)>=4}
 function durationCorrect(value){
   var t=norm(value);
   var hasPresentPerfect=/\b(?:i|we|you|they)(?:\s+have|'ve)\s+[a-z]+\b/.test(t)||/\b(?:i|we|you|they)(?:\s+have|'ve)\s+been\s+\w+ing\b/.test(t)||/\b(?:he|she|it)(?:\s+has|'s)\s+[a-z]+\b/.test(t);
@@ -154,26 +151,23 @@ function durationCorrect(value){
   var hasSince=/\bsince\s+(?:19|20)\d{2}\b/.test(t)||/\bsince\s+(january|february|march|april|may|june|july|august|september|october|november|december|school|college|university|childhood|last year)\b/.test(t);
   return hasPresentPerfect&&(hasFor||hasSince)
 }
-function useRelevant(value){
-  var t=norm(value);
-  return words(value)>=7&&(/work|study|student|teach|teacher|bank|business|manage|manager|project|school|university|company|sales|health|clinic|engineer|job|role|course/.test(t))
-}
-function messageValid(value){var n=words(value);return n>=45&&n<=75}
+function useRelevant(value){var t=norm(value);return words(value)>=5&&/\bi\b/.test(t)}
+function messageValid(value){var n=words(value);return n>=40&&n<=60}
 function messageHasDetail(value){return /digital|project|customer|logistics|workshop|coordinate|technology/i.test(value)}
 function messageHasStay(value){return /stay in touch|keep in touch|speak soon|hear how|share|contact|message/i.test(value)}
 
 function renderMessage(state){
   var prior=String(getR(state,7)||'');
   var body='<div class="micro-scene">'+speaker('Sara','It was nice meeting you today. Keep in touch!')+'</div>'+
-    prompt('Send Sara a short follow-up message.','45–75 words. Mention one thing from your conversation and give one natural reason to stay in touch.')+
+    prompt('Send Sara a short follow-up message.','40–60 words. Mention one thing from your conversation and give one natural reason to stay in touch.')+
     '<div class="micro-help"><strong>Useful starters</strong><span>Hi Sara, it was great meeting you… · I enjoyed hearing about… · It would be good to stay in touch because…</span></div>'+
     '<div class="micro-input">'+inputBox('microInput','Hi Sara, it was great meeting you at the workshop…',5)+'</div>'+
-    '<div class="micro-counter" id="microCounter">0 / 45–75 words</div>'+
+    '<div class="micro-counter" id="microCounter">0 / 40–60 words</div>'+
     '<label class="micro-share"><input id="microShare" type="checkbox"> Share this later in My Writings</label>'+
     action('Check message','microCheck',true)+'<div id="microFeedbackSlot"></div>';
   el('content').innerHTML=shell(body,state);bindBack();
   var box=el('microInput'),check=el('microCheck'),counter=el('microCounter'),share=el('microShare');box.value=prior;share.checked=Boolean(state.share);
-  function sync(){var n=words(box.value);counter.textContent=n+' / 45–75 words';check.disabled=!(n>=45&&n<=75)}box.oninput=sync;share.onchange=function(){state.share=share.checked;write(state)};sync();
+  function sync(){var n=words(box.value);counter.textContent=n+' / 40–60 words';check.disabled=!(n>=40&&n<=60)}box.oninput=sync;share.onchange=function(){state.share=share.checked;write(state)};sync();
   check.onclick=function(){
     var value=box.value.trim();if(!messageValid(value))return;
     setR(state,7,value);setOK(state,7,messageHasDetail(value)&&messageHasStay(value));hit(state,7);
@@ -188,6 +182,7 @@ function repairMode(state){
   var duration=String(getR(state,5)||'');
   var message=String(getR(state,7)||'');
   if(!durationCorrect(duration))return {type:'duration',source:duration};
+  if(!messageHasDetail(message)&&!messageHasStay(message))return {type:'detailstay',source:message};
   if(!messageHasDetail(message))return {type:'detail',source:message};
   if(!messageHasStay(message))return {type:'stay',source:message};
   return {type:'polish',source:message}
@@ -200,6 +195,12 @@ function renderRepair(state){
     help='I\'ve worked here for three years. / I\'ve studied English since 2023.';
     placeholder=mode.source||"I've worked here for three years.";
     validate=durationCorrect;
+  }else if(mode.type==='detailstay'){
+    title='Add one useful sentence.';
+    sub='Mention Sara’s project and give a reason to stay in touch in the same sentence.';
+    help="I'd like to stay in touch and hear how your digital project develops.";
+    placeholder="I'd like to stay in touch and hear…";
+    validate=function(v){return words(v)>=9&&messageHasDetail(v)&&messageHasStay(v)}
   }else if(mode.type==='detail'){
     title='Make your message more specific.';
     sub='Add one sentence that shows you remember what Sara told you.';
@@ -228,7 +229,7 @@ function renderRepair(state){
     var value=box.value.trim();if(!validate(value))return;
     setR(state,8,value);setOK(state,8,true);hit(state,8);
     if(mode.type==='duration')setOK(state,5,true);
-    if(mode.type==='detail'||mode.type==='stay'||mode.type==='polish'){
+    if(mode.type==='detailstay'||mode.type==='detail'||mode.type==='stay'||mode.type==='polish'){
       var message=String(getR(state,7)||'').trim();
       if(message&&value&&!message.includes(value)){setR(state,7,message+' '+value)}
       setOK(state,7,true)
