@@ -137,10 +137,10 @@ async function apply(){
    render();return;
   }
   const publishBtn=$('aceApply');if(publishBtn){publishBtn.disabled=true;publishBtn.textContent='Publishing…'}
-  const r=await fetch('/api/content-editor/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...c,replacement:p.replacement,summary:p.summary,quality:p.quality,semanticQaToken:qd.semanticQaToken})}),data=await r.json();
+  const r=await fetch('/api/content-editor/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...c,replacement:p.replacement,summary:p.summary,quality:p.quality,lessonQualityReport:state.qaReport,semanticQaToken:qd.semanticQaToken})}),data=await r.json();
   if(!r.ok)throw new Error(data?.problems?.join(' ')||data?.error||'Publish failed');
   await window.EnglishGateContentPatches?.reload?.();
-  state.proposal=null;state.proposalContext=null;state.qaReport=null;state.message='Published. Jev Semantic QA passed before students received this version. You can undo it at any time.';render();
+  state.proposal=null;state.proposalContext=null;state.qaReport=null;state.message='Published. Lesson Quality Firewall is GREEN and the exact audit evidence was saved with this version. You can undo it at any time.';render();
  }catch(e){state.message=e.message;render()}
 }
 async function undo(){
