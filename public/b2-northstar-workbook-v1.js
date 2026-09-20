@@ -49,7 +49,7 @@ function shell(l,s,body){
  return '<div class="b2-microflow b2-northstar-flow">'+
   '<div class="micro-top"><button class="ghost-btn" id="northstarBack" type="button">← Lessons</button>'+
   '<div class="micro-title"><small>B2 · Lesson '+Number(l.number)+'</small><strong>'+esc(l.title)+'</strong></div>'+
-  '<span class="micro-preview">'+(preview()?'Preview':esc(l.northstar?.support||'Workbook'))+'</span></div>'+
+  '<span class="micro-preview">'+(preview()?'Preview':'Workbook')+'</span></div>'+
   phaseStrip(s)+
   '<div class="micro-progress" aria-hidden="true"><span style="width:'+pct+'%"></span></div>'+
   '<main class="micro-stage">'+body+'</main></div>'
@@ -129,7 +129,7 @@ function renderSee(l,s){
 }
 function renderRetrieval(l,s){
  const r=l.northstar?.retrieval;
- return renderChoice(l,s,{q:r.prompt,sub:'Use what you already know. No review label needed.',options:r.options,answer:Math.max(0,r.options.indexOf(r.answer)),good:'That earlier language is still useful here.',bad:'Choose the form that sounds natural and communicates the meaning clearly.'})
+ return renderChoice(l,s,{q:r.prompt,sub:'Choose the response that sounds natural.',options:r.options,answer:Math.max(0,r.options.indexOf(r.answer)),good:'That earlier language is still useful here.',bad:'Choose the form that sounds natural and communicates the meaning clearly.'})
 }
 function renderGrammar(l,s){
  const q=grammarItem(l);
