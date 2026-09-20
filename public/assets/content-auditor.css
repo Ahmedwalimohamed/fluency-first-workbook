@@ -27,3 +27,21 @@
 .ace-qa-review-details{margin-top:10px;border-top:1px solid #fed7aa;padding-top:10px}
 .ace-qa-review-details summary{cursor:pointer;font-weight:800;color:#92400e}
 .ace-qa-review-details .ace-qa-failures{margin-top:10px}
+
+
+/* Lesson Quality Firewall v3 */
+.ace-quality-domains{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ace-domain-card{display:grid;gap:3px;padding:11px 12px;border:1px solid #e2e8f0;border-radius:11px;background:#fff}
+.ace-domain-card>span{font-size:.72rem;font-weight:800;color:#475569}
+.ace-domain-card>strong{font-size:.88rem;letter-spacing:.04em}
+.ace-domain-card>small{font-size:.68rem;color:#64748b;line-height:1.35}
+.ace-domain-card.is-green{border-color:#bbf7d0;background:#f7fef9}.ace-domain-card.is-green>strong{color:#166534}
+.ace-domain-card.is-amber{border-color:#fde68a;background:#fffdf5}.ace-domain-card.is-amber>strong{color:#92400e}
+.ace-domain-card.is-red{border-color:#fecaca;background:#fff8f8}.ace-domain-card.is-red>strong{color:#991b1b}
+.ace-audit-meta{display:flex;flex-wrap:wrap;gap:6px 12px;padding-top:2px;color:#64748b;font-size:.68rem}
+.ace-qa-failures article.review{border-color:#fde68a;background:#fffdf5}
+.ace-qa-failures article.review>div b{color:#92400e}
+.ace-qa-failures article.review>div span{color:#b45309}
+.ace-qa-failures article.blocking{border-color:#fecaca;background:#fff}
+@media(max-width:760px){.ace-quality-domains{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.ace-quality-domains{grid-template-columns:1fr}}
