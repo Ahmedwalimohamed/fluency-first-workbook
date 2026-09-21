@@ -105,7 +105,14 @@ for(let i=0;i<22;i++){
   for(const marker of ['CAN-DO GOAL:','PRONUNCIATION FOCUS','MEDIATION MOVE']){
    if(!String(liveLesson.content||'').includes(marker))fail(`Lesson ${n}: live lesson missing "${marker}".`);
   }
-  if(String(liveLesson.content||'').includes('B2 LIFT'))fail(`Lesson ${n}: B2 LIFT must not appear in the Live lesson.`);
+  const liveText=String(liveLesson.content||'');
+  if(liveText.includes('B2 LIFT'))fail(`Lesson ${n}: B2 LIFT must not appear in the Live lesson.`);
+  for(const marker of ['FLUENCY START','FLUENCY USE','TALK AFTER READING','FLUENCY RULE','FLUENCY EXIT']){
+   if(!liveText.includes(marker))fail(`Lesson ${n}: fluency-first Live lesson missing "${marker}".`);
+  }
+  if(n!==22&&!liveText.includes('MAKE IT PERSONAL — SPEAK FIRST'))fail(`Lesson ${n}: language focus must personalise through speaking first.`);
+  if(/Make It Personal — write/i.test(liveText))fail(`Lesson ${n}: Live lesson must not return to writing-first personalisation.`);
+  if(/Write their names below:/i.test(liveText))fail(`Lesson ${n}: speaking challenge must not require note-taking before interaction.`);
  }
 }
 
