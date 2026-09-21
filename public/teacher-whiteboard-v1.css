@@ -835,3 +835,32 @@ body.teacher-live-active .teacher-whiteboard-btn{display:inline-flex!important;a
     justify-self:end;
   }
 }
+
+
+/* Live Task Jev intelligence + governed classroom workflow */
+.eg-live-mini-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+.eg-live-student-row.is-ready .eg-live-status-dot{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.10)}
+.eg-live-student-row.is-partial .eg-live-status-dot{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.10)}
+.eg-live-student-row.is-needs_help .eg-live-status-dot{background:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.10)}
+.eg-live-student-row.is-review .eg-live-status-dot{background:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.10)}
+.eg-live-phase-card{display:grid;gap:8px;padding:12px 0;border-bottom:1px solid #e2e8f0}
+.eg-live-phase-track{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.eg-live-phase-track span{position:relative;min-width:0;padding:6px 3px;border-radius:7px;background:#f1f5f9;color:#94a3b8;text-align:center;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+.eg-live-phase-track span.is-done{background:#ecfdf5;color:#15803d}
+.eg-live-phase-track span.is-current{background:#eff6ff;color:#1d4ed8;box-shadow:inset 0 0 0 1px #bfdbfe}
+.eg-live-intelligence-card{display:grid;gap:7px;margin:2px 0 12px;padding:12px;border:1px solid #dbeafe;border-radius:11px;background:#f8fbff}
+.eg-live-intelligence-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.eg-live-intelligence-head>span{font-size:9px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;color:#2563eb}
+.eg-live-intelligence-head>small{font-size:9px;color:#64748b;text-transform:capitalize}
+.eg-live-intelligence-card>strong{font-size:13px;color:#0f172a;line-height:1.25}
+.eg-live-intelligence-card>p{margin:0;font-size:10px;line-height:1.45;color:#475569}
+.eg-live-intelligence-card>button{justify-self:start;border:1px solid #bfdbfe;border-radius:8px;background:#fff;color:#1d4ed8;padding:7px 9px;font:800 10px system-ui,sans-serif;cursor:pointer}
+.eg-live-intelligence-card>button:hover{background:#eff6ff}
+.eg-live-intelligence-rule{font-size:8px!important;color:#94a3b8!important}
+.eg-live-intelligence-card.is-reteach{border-color:#fecaca;background:#fffafa}
+.eg-live-intelligence-card.is-reteach .eg-live-intelligence-head>span{color:#b91c1c}
+.eg-live-intelligence-card.is-check_again{border-color:#fde68a;background:#fffdf5}
+.eg-live-intelligence-card.is-check_again .eg-live-intelligence-head>span{color:#b45309}
+.eg-live-intelligence-card.is-continue{border-color:#bbf7d0;background:#f7fef9}
+.eg-live-intelligence-card.is-continue .eg-live-intelligence-head>span{color:#15803d}
+@media(max-width:1180px){.eg-live-mini-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
