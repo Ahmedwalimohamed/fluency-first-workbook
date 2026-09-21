@@ -419,10 +419,43 @@ function renderActiveQuestion(){
   bindAnnotationCanvas(main.querySelector('[data-annotation-surface]'),main.querySelector('[data-annotation-canvas]'),activeTask.id+':'+item.id);
 }
 
-function statusLabel(status){
+function statusLabel(status,signal){
+  if(signal==='ready')return 'Ready';
+  if(signal==='partial')return 'Partial understanding';
+  if(signal==='needs_help')return 'Needs help';
+  if(signal==='review')return 'Needs teacher review';
   if(status==='submitted')return 'Submitted';
   if(status==='working')return 'Working';
   return 'Waiting';
+}
+function decisionText(action){
+  return ({
+    continue:{title:'Class looks ready to continue',body:'Enough evidence is strong. Move on when your own classroom judgment agrees.'},
+    reteach:{title:'Re-explain before moving on',body:'The class evidence suggests a shared misunderstanding. Model the idea again, then check it.'},
+    check_again:{title:'Run one more quick check',body:'Understanding is mixed or uncertain. Confirm it with another short example or question.'},
+    wait:{title:'Give learners more time',body:'There is not enough evidence yet. Keep collecting responses before judging the class.'}
+  })[action]||{title:'Keep teaching',body:'Use the live evidence as one input to your classroom decision.'};
+}
+function classroomPhase(r){
+  if(viewingRecentTask)return 'record';
+  if(activeTask?.taskType==='activity'){
+    const item=activeTask.content?.questions?.[currentQuestionIndex];
+    if(item&&revealSet(activeTask.id).has(item.id))return 'discuss';
+  }
+  if(Number(r?.submittedCount||0)>0&&r?.classroomDecision)return 'triage';
+  return 'collect';
+}
+function phaseHtml(r){
+  const current=classroomPhase(r),steps=[['assign','Assign'],['collect','Collect'],['triage','Triage'],['discuss','Discuss'],['record','Record']];
+  const at=Math.max(0,steps.findIndex(x=>x[0]===current));
+  return `<section class="eg-live-phase-card"><div class="eg-live-side-title"><strong>Live workflow</strong><span>${esc(current.toUpperCase())}</span></div><div class="eg-live-phase-track">${steps.map((x,i)=>`<span class="${i<at?'is-done':i===at?'is-current':''}">${esc(x[1])}</span>`).join('')}</div></section>`;
+}
+function intelligenceHtml(r){
+  const d=r?.classroomDecision;if(!d)return '';
+  const copy=decisionText(d.nextAction),label=d.source==='jev'?'Jev classroom signal':'Classroom signal';
+  const confidence=d.confidence===null||d.confidence===undefined?'':` · ${Math.round(Number(d.confidence)*100)}% confidence`;
+  const actionLabel=d.nextAction==='continue'?'Next question':d.nextAction==='wait'?'Add 1 minute':'Review submissions';
+  return `<section class="eg-live-intelligence-card is-${esc(d.nextAction||'check_again')}"><div class="eg-live-intelligence-head"><span>${esc(label)}</span><small>${esc(d.understanding||'insufficient')}${esc(confidence)}</small></div><strong>${esc(copy.title)}</strong><p>${esc(copy.body)}</p><button type="button" data-intel-action="${esc(d.nextAction||'check_again')}">${esc(actionLabel)}</button><small class="eg-live-intelligence-rule">Aggregated class evidence only · teacher decides</small></section>`;
 }
 function submissionByStudent(id){return (currentResults?.submissions||[]).find(s=>String(s.studentId)===String(id))||null}
 function responseText(item,raw){
@@ -470,8 +503,11 @@ function renderSubmissionReview(){
 function renderLiveSide(r){
   const side=q('[data-active-side]');if(!side||!activeTask)return;
   const students=Array.isArray(r?.students)?r.students:[];
-  const working=Number(r?.workingCount||0),submitted=Number(r?.submittedCount||0),connected=Number(r?.connectedCount||submitted+working),roster=Number(r?.rosterCount||classSize(currentClass));
-  const sorted=[...students].sort((a,b)=>({working:0,submitted:1,waiting:2}[a.status]??3)-({working:0,submitted:1,waiting:2}[b.status]??3)||String(a.name).localeCompare(String(b.name)));
+  const working=Number(r?.workingCount||0),submitted=Number(r?.submittedCount||0),roster=Number(r?.rosterCount||classSize(currentClass));
+  const ready=Number(r?.readyCount??students.filter(x=>x.signal==='ready').length);
+  const partial=Number(r?.partialCount??students.filter(x=>x.signal==='partial').length);
+  const needsHelp=Number(r?.needsHelpCount??students.filter(x=>x.signal==='needs_help').length);
+  const sorted=[...students].sort((a,b)=>({needs_help:0,partial:1,review:2,working:3,ready:4,waiting:5}[a.signal||a.status]??6)-({needs_help:0,partial:1,review:2,working:3,ready:4,waiting:5}[b.signal||b.status]??6)||String(a.name).localeCompare(String(b.name)));
   let distribution='';
   if(activeTask.taskType==='activity'){
     const item=activeTask.content.questions[currentQuestionIndex],stat=(r?.questionStats||[]).find(x=>x.id===item.id)||(r?.questionStats||[])[currentQuestionIndex];
@@ -480,7 +516,7 @@ function renderLiveSide(r){
       const choices=stat?.choices||[],max=Math.max(1,...choices),answer=Number(item.answer);
       distribution=`<section class="eg-live-response-block"><div class="eg-live-side-title"><strong>Responses · Q${currentQuestionIndex+1}</strong><span>${Number(stat?.answered||0)} answers</span></div>
         <div class="eg-live-choice-bars">${(item.options||[]).map((o,j)=>`<div class="eg-live-choice-row ${revealed&&j===answer?'is-correct':''}"><span>${String.fromCharCode(65+j)}</span><div><i style="width:${Math.round((Number(choices[j]||0)/max)*100)}%"></i></div><strong>${Number(choices[j]||0)}</strong></div>`).join('')}</div>
-        ${revealed&&stat?.correctPct!==null&&stat?.correctPct!==undefined?`<div class="eg-live-understanding"><strong>${stat.correctPct}% correct</strong><span>Use this as one piece of classroom evidence, not a final mastery judgment.</span></div>`:''}
+        ${revealed&&stat?.correctPct!==null&&stat?.correctPct!==undefined?`<div class="eg-live-understanding"><strong>${stat.correctPct}% correct</strong><span>Use this as classroom evidence, not a final mastery judgment.</span></div>`:''}
       </section>`;
     }else{
       distribution=`<section class="eg-live-response-block"><div class="eg-live-side-title"><strong>Responses · Q${currentQuestionIndex+1}</strong><span>${Number(stat?.answered||0)} answers</span></div>
@@ -489,16 +525,27 @@ function renderLiveSide(r){
     }
   }
   side.innerHTML=`<div class="eg-live-livehead"><div><span class="eg-live-dot"></span><strong>${viewingRecentTask?'ENDED':'LIVE'}</strong><small>${esc(activeTask.className||currentClass?.name||'Class')}</small></div><div class="eg-live-timer" data-live-timer>${viewingRecentTask?'00:00':fmt((liveEndLocal-Date.now())/1000)}</div></div>
-    <div class="eg-live-mini-metrics"><div><strong>${connected}</strong><span>active</span></div><div><strong>${working}</strong><span>working</span></div><div><strong>${submitted}/${roster}</strong><span>submitted</span></div></div>
+    ${phaseHtml(r)}
+    ${intelligenceHtml(r)}
+    <div class="eg-live-mini-metrics"><div><strong>${ready}</strong><span>ready</span></div><div><strong>${partial}</strong><span>partial</span></div><div><strong>${needsHelp}</strong><span>need help</span></div><div><strong>${working}</strong><span>working</span></div></div>
     <section class="eg-live-students-block">
-      <div class="eg-live-side-title"><strong>Students</strong><span>updates live</span></div>
-      <div class="eg-live-student-list">${sorted.length?sorted.map(s=>`<div class="eg-live-student-row is-${esc(s.status)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>${statusLabel(s.status)}${s.timedOut?' · late':''}</small></div>${s.status==='submitted'&&s.score!==null&&s.score!==undefined?'<b>'+Number(s.score)+'%</b>':''}</div>`).join(''):'<div class="eg-live-side-empty">Waiting for students to open the activity…</div>'}</div>
+      <div class="eg-live-side-title"><strong>Students</strong><span>${submitted}/${roster} submitted</span></div>
+      <div class="eg-live-student-list">${sorted.length?sorted.map(s=>`<div class="eg-live-student-row is-${esc(s.signal||s.status)}"><span class="eg-live-status-dot"></span><div><strong>${esc(s.name)}</strong><small>${statusLabel(s.status,s.signal)}${s.timedOut?' · late':''}</small></div>${s.status==='submitted'&&s.score!==null&&s.score!==undefined?'<b>'+Number(s.score)+'%</b>':''}</div>`).join(''):'<div class="eg-live-side-empty">Waiting for students to open the activity…</div>'}</div>
     </section>
     ${distribution}
     <div class="eg-live-side-actions">${viewingRecentTask?'<button class="eg-live-primary" type="button" data-new-live>New live task</button>':'<div class="eg-live-extend-time"><span>Extend time</span><button type="button" data-extend-live="1">+1 min</button><button type="button" data-extend-live="3">+3 min</button><button type="button" data-extend-live="5">+5 min</button></div><button class="eg-live-danger" type="button" data-end-live>End task</button>'}</div>`;
   qa('[data-extend-live]').forEach(b=>b.addEventListener('click',()=>extendTime(Number(b.dataset.extendLive)||1,b)));
   q('[data-end-live]')?.addEventListener('click',endTask);
   q('[data-new-live]')?.addEventListener('click',()=>{viewingRecentTask=false;openBuilder()});
+  q('[data-intel-action]')?.addEventListener('click',e=>{
+    const action=e.currentTarget.dataset.intelAction;
+    if(action==='wait')return extendTime(1,e.currentTarget);
+    if(action==='continue'){
+      const total=activeTask.taskType==='activity'?(activeTask.content?.questions?.length||1):1;
+      if(currentQuestionIndex<total-1)return changeActiveQuestion(1);
+    }
+    showActiveView('submissions');
+  });
 }
 
 async function extendTime(minutes,button){
