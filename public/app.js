@@ -1110,46 +1110,63 @@ function renderLiveListeningContent(lines){
 function englishGateDeviceSpeechAvailable(){
  return typeof window!=='undefined'&&'speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='undefined'
 }
+function englishGateDeviceDialogueTurns(input){
+ const text=String(input||'').replace(/\s+/g,' ').trim(),re=/(?:^|(?<=[.!?])\s+)([A-Z][A-Za-z'’-]{1,24}(?:\s+[A-Z][A-Za-z'’-]{1,24})?):\s*/g,matches=[...text.matchAll(re)];
+ if(matches.length<2)return[];
+ const turns=[];
+ for(let i=0;i<matches.length;i++){const speaker=matches[i][1].trim(),a=(matches[i].index||0)+matches[i][0].length,b=i+1<matches.length?(matches[i+1].index||text.length):text.length,body=text.slice(a,b).trim();if(body)turns.push({speaker,text:body})}
+ return new Set(turns.map(x=>x.speaker.toLowerCase())).size>=2?turns:[]
+}
+const ENGLISHGATE_FEMALE_NAMES=new Set(['amina','hodan','maryan','rahma','sahra','muna','fatima','fadumo','asha','hawa','nura','noor','layla','leyla','zainab','zahra','halima','khadra','deqa','ifrah','yasmin','samira','najma','ubax','amran','saado','suad','ikram','farhia','ilhan','asma','hibo','iqra','raqiya','hinda','nimco','nimo','sagal','anisa','nasra','sara','sarah','emma','anna','maria','jane','linda']);
+const ENGLISHGATE_MALE_NAMES=new Set(['yusuf','abdi','khalid','hassan','ahmed','mohamed','ali','omar','abdisalan','abdishakur','mahad','mustafe','ibrahim','ismail','abdirahman','hamza','bashir','jama','said','abdirizak','faisal','farhan','nasir','zakaria','abdullahi','bilal','farah','daniel','david','john','michael','james','adam']);
+function englishGateSpeakerGender(name,index=0){
+ const n=String(name||'').toLowerCase().replace(/[^a-z ]+/g,' ').trim(),first=n.split(/\s+/).pop()||n;
+ if(ENGLISHGATE_FEMALE_NAMES.has(first)||/\b(woman|girl|mother|sister|wife|female)\b/.test(n))return'female';
+ if(ENGLISHGATE_MALE_NAMES.has(first)||/\b(man|boy|father|brother|husband|male)\b/.test(n))return'male';
+ return index%2===0?'female':'male'
+}
 function englishGateDeviceSpeechText(text){
  return String(text||'').split(/\n+/).map(line=>line.replace(/^\s*[\p{L}][\p{L}\p{M} .’'\-]{0,48}:\s*/u,'').trim()).filter(Boolean).join(' … ')
 }
-function englishGateDeviceVoice(){
+function englishGateDeviceVoice(gender='female',used=new Set()){
  if(!englishGateDeviceSpeechAvailable())return null;
  const voices=window.speechSynthesis.getVoices?.()||[],english=voices.filter(v=>/^en(?:-|_)/i.test(String(v.lang||'')));
- const preferred=[/natural/i,/premium/i,/enhanced/i,/samantha/i,/ava/i,/jenny/i,/aria/i,/serena/i,/daniel/i,/google.*english/i];
- for(const re of preferred){const v=english.find(x=>re.test(String(x.name||'')));if(v)return v}
- return english.find(v=>/^en-US/i.test(String(v.lang||'')))||english[0]||voices[0]||null
+ const female=[/emma/i,/samantha/i,/ava/i,/jenny/i,/aria/i,/serena/i,/zira/i,/female/i,/woman/i];
+ const male=[/andrew/i,/daniel/i,/david/i,/guy/i,/mark/i,/male/i,/man/i];
+ const preferred=gender==='male'?male:female;
+ for(const re of preferred){const v=english.find(x=>!used.has(x.name)&&re.test(String(x.name||'')));if(v)return v}
+ return english.find(v=>!used.has(v.name)&&/^en-US/i.test(String(v.lang||'')))||english.find(v=>!used.has(v.name))||english[0]||voices[0]||null
 }
-function createEnglishGateDeviceSpeechAudio(text){
+function createEnglishGateDeviceSpeechAudio(text,speakerProfiles=[]){
  if(!englishGateDeviceSpeechAvailable())throw new Error('No device speech voice is available.');
- const spoken=englishGateDeviceSpeechText(text);
- if(!spoken)throw new Error('Listening text is unavailable.');
- let utterance=null,intentional=false;
+ const turns=englishGateDeviceDialogueTurns(text),profiles=new Map((Array.isArray(speakerProfiles)?speakerProfiles:[]).map(x=>[String(x?.name||x?.speaker||'').toLowerCase(),x])),used=new Set(),voiceBySpeaker=new Map();
+ if(turns.length)[...new Set(turns.map(x=>x.speaker))].forEach((speaker,i)=>{const profile=profiles.get(speaker.toLowerCase()),gender=['female','male'].includes(String(profile?.gender||'').toLowerCase())?String(profile.gender).toLowerCase():englishGateSpeakerGender(speaker,i),voice=englishGateDeviceVoice(gender,used);if(voice)used.add(voice.name);voiceBySpeaker.set(speaker,{gender,voice})});
+ const queue=turns.length?turns:[{speaker:'Narrator',text:englishGateDeviceSpeechText(text)}];
+ if(!queue[0]?.text)throw new Error('Listening text is unavailable.');
+ let current=-1,utterance=null,intentional=false;
  const audio={
-  _englishGateDeviceSpeech:true,paused:true,currentTime:0,duration:NaN,playbackRate:1,
+  _englishGateDeviceSpeech:true,_englishGateMultiSpeaker:turns.length>0,paused:true,currentTime:0,duration:NaN,playbackRate:1,
   onloadedmetadata:null,ontimeupdate:null,onplay:null,onpause:null,onended:null,onerror:null,
   load(){setTimeout(()=>{if(typeof this.onloadedmetadata==='function')this.onloadedmetadata()},0)},
   play(){
    try{
-    if(utterance&&window.speechSynthesis.paused){
-     window.speechSynthesis.resume();this.paused=false;if(typeof this.onplay==='function')this.onplay();return Promise.resolve()
-    }
-    intentional=true;window.speechSynthesis.cancel();intentional=false;
-    const u=new SpeechSynthesisUtterance(spoken);utterance=u;
-    u.lang='en-US';u.rate=Math.max(.65,Math.min(1.7,Number(this.playbackRate)||1));u.pitch=1;u.volume=1;
-    const voice=englishGateDeviceVoice();if(voice)u.voice=voice;
-    u.onstart=()=>{this.paused=false;this.currentTime=0;if(typeof this.onplay==='function')this.onplay()};
-    u.onend=()=>{this.paused=true;this.currentTime=0;utterance=null;if(typeof this.onended==='function')this.onended()};
-    u.onerror=e=>{const code=String(e?.error||'');if(intentional||/interrupted|canceled/i.test(code))return;this.paused=true;utterance=null;if(typeof this.onerror==='function')this.onerror(e)};
-    window.speechSynthesis.speak(u);this.paused=false;if(typeof this.onplay==='function')this.onplay();return Promise.resolve()
+    if(utterance&&window.speechSynthesis.paused){window.speechSynthesis.resume();this.paused=false;if(typeof this.onplay==='function')this.onplay();return Promise.resolve()}
+    if(utterance&&window.speechSynthesis.speaking)return Promise.resolve();
+    if(current<0||current>=queue.length)current=0;
+    const speakNext=()=>{
+     if(current>=queue.length){this.paused=true;current=-1;utterance=null;if(typeof this.onended==='function')this.onended();return}
+     const turn=queue[current],u=new SpeechSynthesisUtterance(turn.text);utterance=u;u.lang='en-US';u.rate=Math.max(.65,Math.min(1.7,Number(this.playbackRate)||1));u.pitch=1;u.volume=1;
+     const planned=voiceBySpeaker.get(turn.speaker);u.voice=planned?.voice||englishGateDeviceVoice(planned?.gender||'female');
+     u.onstart=()=>{this.paused=false;if(typeof this.onplay==='function')this.onplay()};
+     u.onend=()=>{current++;utterance=null;speakNext()};
+     u.onerror=e=>{const code=String(e?.error||'');if(intentional||/interrupted|canceled/i.test(code))return;this.paused=true;utterance=null;if(typeof this.onerror==='function')this.onerror(e)};
+     window.speechSynthesis.speak(u)
+    };
+    speakNext();this.paused=false;return Promise.resolve()
    }catch(e){this.paused=true;if(typeof this.onerror==='function')this.onerror(e);return Promise.reject(e)}
   },
-  pause(){
-   if(utterance&&window.speechSynthesis.speaking&&!window.speechSynthesis.paused){window.speechSynthesis.pause();this.paused=true;if(typeof this.onpause==='function')this.onpause()}
-  },
-  restart(){
-   intentional=true;try{window.speechSynthesis.cancel()}catch{}intentional=false;utterance=null;this.paused=true;this.currentTime=0
-  }
+  pause(){if(utterance&&window.speechSynthesis.speaking&&!window.speechSynthesis.paused){window.speechSynthesis.pause();this.paused=true;if(typeof this.onpause==='function')this.onpause()}},
+  restart(){intentional=true;try{window.speechSynthesis.cancel()}catch{}intentional=false;utterance=null;current=0;this.paused=true;this.currentTime=0}
  };
  return audio
 }
@@ -1171,7 +1188,7 @@ async function ensureLiveLessonAudio(player){
  }
  if(!url){
   if(!englishGateDeviceSpeechAvailable())throw serverError||new Error('Listening audio is unavailable.');
-  const fallback=createEnglishGateDeviceSpeechAudio(text);player._liveAudio=fallback;return fallback
+  const fallback=createEnglishGateDeviceSpeechAudio(text,speakers);player._liveAudio=fallback;return fallback
  }
  const audio=new Audio(url);audio.preload='metadata';player._liveAudio=audio;return audio
 }
@@ -2497,7 +2514,7 @@ async function ensureLessonAudio(l){
   }catch(e){serverError=e}
  }
  if(url)activeAudio=new Audio(url);
- else if(englishGateDeviceSpeechAvailable())activeAudio=createEnglishGateDeviceSpeechAudio(text);
+ else if(englishGateDeviceSpeechAvailable())activeAudio=createEnglishGateDeviceSpeechAudio(text,l.listening?.speakers||[]);
  else throw serverError||new Error('Listening audio is unavailable.');
  activeAudioLessonKey=key;
  activeAudio.preload='auto';
