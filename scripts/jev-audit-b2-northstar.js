@@ -42,6 +42,9 @@ function crossQuestions(){
   retrieval_task_quality:q('Are the retrieval prompts meaningful prior-language checks with complete options/answers, while keeping REMEMBER scheduling meta language hidden from learners?'),
   variety:q('Do the missions, CHANGE prompts, USE tasks, and final-task formats have enough real variation that the course does not feel like the same AI template with nouns replaced?'),
   mission_alignment:q('Across the course, does each final USE task plausibly demonstrate its stated real-world mission?'),
+  audio_dialogue_coverage:q('For every lesson whose audioScript is a dialogue with two or more labelled speakers, does the runtime route that script through the shared multi-speaker audio path rather than a lesson-specific single-voice path?'),
+  audio_voice_identity:q('Does the shared workbook audio architecture preserve stable speaker identity and distinguish female and male speakers across OpenAI, Edge fallback, and device speech fallback?'),
+  audio_no_single_voice_fallback:q('When a listening script is a dialogue, are all configured fallbacks prevented from collapsing the conversation into one voice?'),
   final_independence:q('Does Lesson 22 function as a substantially independent human-graded B2 exit task rather than another heavily scaffolded practice lesson?')
  }
 }
@@ -131,9 +134,19 @@ async function auditCourseCrossLesson(lessons){
    rememberRuntime:{...remember,weakGrammarPriority:true,learnerLabelHidden:true},
    fallbackRetrieval:l.northstar?.retrieval,grammar:l.grammarFocus,
    readingWords:String(l.readingText||'').trim().split(/\s+/).filter(Boolean).length,
-   listeningWords:String(l.audioScript||'').trim().split(/\s+/).filter(Boolean).length
+   listeningWords:String(l.audioScript||'').trim().split(/\s+/).filter(Boolean).length,
+   audioScript:String(l.audioScript||'').slice(0,2400)
   }
  });
+ const runtimeAudio={
+  workbookEntry:'ensureLessonAudio(l) always posts l.listening.audioScript/text and l.listening.speakers to /api/audio; if server audio is unavailable it calls createEnglishGateDeviceSpeechAudio(text,speakers).',
+  northstarEntry:'B2 Northstar listening uses liveAudioPlayerHtml(script,[]) and wireLiveAudioPlayers; that shared player posts to the same /api/audio and uses the same device fallback.',
+  serverDialogueDetection:'dialogueTurns(input) detects two or more labelled speakers and speakerVoicePlan assigns one stable gender/voice per speaker.',
+  openai:'generateListeningAudio splits dialogue into turns and generates each turn with its assigned female/male voice before merging.',
+  edge:'generateEdgeListeningAudio splits dialogue into turns and uses EDGE_TTS_FEMALE_VOICE or EDGE_TTS_MALE_VOICE for every turn before concatenating.',
+  device:'createEnglishGateDeviceSpeechAudio parses dialogue turns, creates a stable voiceBySpeaker map, and speaks turns sequentially.',
+  singleNarration:'Only scripts without two labelled speakers use the single narrator path.'
+ };
  const data=await callJev({
   task:'EnglishGate B2 Northstar cross-lesson curriculum audit',
   targetLevel:'B2',framework:'SEE → CHOOSE → CHANGE → USE → FIX with hidden REMEMBER',
@@ -157,7 +170,8 @@ async function auditCourseCrossLesson(lessons){
    'For retrieval, evaluate rememberRuntime as the actual learner runtime. fallbackRetrieval is not the normal schedule.',
    'For progression, evaluate runtimeSupport together with task demands; do not infer visible scaffolding merely because blueprint models/starters are stored as authoring metadata.'
   ],
-  lessons:compact
+  lessons:compact,
+  runtimeAudio
  },crossQuestions());
  const findings={};let blocked=0,review=0;
  for(const id of Object.keys(crossQuestions())){
@@ -176,6 +190,7 @@ async function auditCourseCrossLesson(lessons){
   blocked,review,findings,
   progression:aggregate(['progression_scaffold_fade','progression_task_demand']),
   retrieval:aggregate(['retrieval_spacing','retrieval_weak_priority','retrieval_task_quality']),
+  audio:aggregate(['audio_dialogue_coverage','audio_voice_identity','audio_no_single_voice_fallback']),
   model:String(data?.model||TYPE_SAFE_MODEL)
  }
 }
