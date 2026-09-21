@@ -807,4 +807,11 @@ app.use((req,res)=>{if(req.path.startsWith('/api/'))return res.status(404).json(
 app.use((err,req,res,next)=>{console.error('request error',err);if(res.headersSent)return next(err);res.status(500).json({error:'Server error'})});
 
 async function authSelfCheck(){for(const [username,password,label,deletable] of [[process.env.SYSTEM_ADMIN_USERNAME||'admin',process.env.SYSTEM_ADMIN_PASSWORD,'system admin',true],[process.env.TEACHER_USERNAME||'teacher',process.env.TEACHER_PASSWORD,'teacher',true],[process.env.DEMO_STUDENT_USERNAME,process.env.DEMO_STUDENT_PASSWORD,'demo student',true]]){if(!username||!password)continue;if(deletable&&(await pool.query('select 1 from deleted_seed_accounts where lower(username)=lower($1)',[username])).rowCount)continue;const q=await pool.query('select password_hash from users where lower(username)=lower($1)',[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))throw new Error(`Auth self-check failed for ${label}`);console.log(`Auth self-check passed for ${label}`)}}
-initDb().then(authSelfCheck).then(()=>app.listen(port,()=>console.log(`Fluency First listening on ${port}`))).catch(e=>{console.error(e);process.exit(1)});
+async function audioStartupSelfCheck(){
+ if(process.env.AUDIO_STARTUP_SELF_TEST!=='1')return;
+ try{
+  const buffer=await requestSpeechWav('Audio ready.',OPENAI_TTS_VOICE,'Speak this short phrase naturally and clearly.');
+  console.log(`AUDIO SELF-CHECK PASSED provider=openai model=${OPENAI_TTS_MODEL} bytes=${buffer.length}`)
+ }catch(e){console.error('AUDIO SELF-CHECK FAILED:',e.message)}
+}
+initDb().then(authSelfCheck).then(audioStartupSelfCheck).then(()=>app.listen(port,()=>console.log(`Fluency First listening on ${port}`))).catch(e=>{console.error(e);process.exit(1)});
