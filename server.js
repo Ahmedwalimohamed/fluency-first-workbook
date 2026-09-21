@@ -20,6 +20,8 @@ LISTENING_SCRIPTS["su-a2b1-l1"]="On the first day of a new training course, Amin
 const OPENAI_TTS_MODEL=process.env.OPENAI_TTS_MODEL||'gpt-4o-mini-tts';
 const OPENAI_TTS_VOICE=process.env.OPENAI_TTS_VOICE||'coral';
 const EDGE_TTS_VOICE=process.env.EDGE_TTS_VOICE||'en-US-EmmaMultilingualNeural';
+const EDGE_TTS_FEMALE_VOICE=process.env.EDGE_TTS_FEMALE_VOICE||'en-US-EmmaMultilingualNeural';
+const EDGE_TTS_MALE_VOICE=process.env.EDGE_TTS_MALE_VOICE||'en-US-AndrewMultilingualNeural';
 const EDGE_TTS_ENABLED=process.env.EDGE_TTS_ENABLED==='1';
 const OPENAI_TTS_FEMALE_VOICES=String(process.env.OPENAI_TTS_FEMALE_VOICES||'coral,nova,shimmer').split(',').map(x=>x.trim()).filter(Boolean);
 const OPENAI_TTS_MALE_VOICES=String(process.env.OPENAI_TTS_MALE_VOICES||'onyx,echo,ash').split(',').map(x=>x.trim()).filter(Boolean);
@@ -133,26 +135,39 @@ function edgeListeningText(input){
  if(!turns.length)return String(input||'').replace(/\s+/g,' ').trim();
  return turns.map(turn=>String(turn.text||'').trim()).filter(Boolean).join(' ... ');
 }
+async function requestEdgeSpeech(input,voice){
+ const text=String(input||'').trim();if(!text)throw new Error('Edge TTS received an empty segment');
+ const tts=new EdgeTTS(text,voice,{rate:'-4%',volume:'+0%',pitch:'+0Hz'});
+ const result=await promiseTimeout(tts.synthesize(),12000,'Edge TTS timed out');
+ const buffer=Buffer.from(await result.audio.arrayBuffer());
+ if(!buffer.length)throw new Error('Edge TTS returned no audio');
+ return buffer;
+}
 async function promiseTimeout(promise,ms,label){
  let timer;
  try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label||'Operation timed out')),ms)})])}
  finally{if(timer)clearTimeout(timer)}
 }
-async function generateEdgeListeningAudio(input){
+async function generateEdgeListeningAudio(input,speakerProfiles=[]){
+ const turns=dialogueTurns(input);
+ if(turns.length){
+  const plan=speakerVoicePlan(turns,speakerProfiles),segments=[];
+  for(const turn of turns)for(const chunk of splitTtsText(turn.text))segments.push({...turn,text:chunk,...plan[turn.speaker]});
+  const buffers=await mapLimit(segments,2,seg=>requestEdgeSpeech(seg.text,seg.gender==='female'?EDGE_TTS_FEMALE_VOICE:EDGE_TTS_MALE_VOICE));
+  // Edge returns MP3 segments; concatenate them in dialogue order. Browsers decode sequential MP3 frames as one stream.
+  return{buffer:Buffer.concat(buffers),contentType:'audio/mpeg',mode:'dialogue',speakers:Object.entries(plan).map(([speaker,x])=>({speaker,gender:x.gender,voice:x.gender==='female'?EDGE_TTS_FEMALE_VOICE:EDGE_TTS_MALE_VOICE})),provider:'edge',model:'edge-neural'};
+ }
  const text=edgeListeningText(input);
  if(!text)throw new Error('Edge TTS received an empty listening script');
- const tts=new EdgeTTS(text,EDGE_TTS_VOICE,{rate:'-4%',volume:'+0%',pitch:'+0Hz'});
- const result=await promiseTimeout(tts.synthesize(),12000,'Edge TTS timed out');
- const buffer=Buffer.from(await result.audio.arrayBuffer());
- if(!buffer.length)throw new Error('Edge TTS returned no audio');
- return{buffer,contentType:'audio/mpeg',mode:dialogueTurns(input).length?'dialogue-fallback':'single-fallback',speakers:[],provider:'edge',model:'edge-neural',voice:EDGE_TTS_VOICE};
+ const buffer=await requestEdgeSpeech(text,EDGE_TTS_VOICE);
+ return{buffer,contentType:'audio/mpeg',mode:'single-fallback',speakers:[],provider:'edge',model:'edge-neural',voice:EDGE_TTS_VOICE};
 }
 async function generateListeningAudioWithFallback(input,speakerProfiles=[]){
  try{return await generateListeningAudio(input,speakerProfiles)}
  catch(openaiError){
   if(!EDGE_TTS_ENABLED)throw openaiError;
   console.warn('OpenAI TTS unavailable; using Edge neural fallback:',String(openaiError?.message||openaiError).slice(0,220));
-  try{return await generateEdgeListeningAudio(input)}
+  try{return await generateEdgeListeningAudio(input,speakerProfiles)}
   catch(edgeError){
    const e=new Error('Both listening audio providers failed. OpenAI: '+String(openaiError?.message||openaiError).slice(0,140)+'; Edge: '+String(edgeError?.message||edgeError).slice(0,140));
    e.status=502;throw e
