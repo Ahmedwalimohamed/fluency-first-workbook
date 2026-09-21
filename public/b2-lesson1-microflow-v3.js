@@ -9,6 +9,7 @@ const TOTAL=10;
 const MIN_COMPREHENSION_QUESTIONS=3;
 const FLOW_VERSION='b2-l1-see-choose-change-use-fix-v3';
 const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX'];
+var activeState=null,reviewingComplete=false;
 const STEPS=[
   {phase:'SEE',skill:'reading'},
   {phase:'CHOOSE',skill:'listening'},
@@ -100,6 +101,7 @@ function shell(body,state){
       '<div class="micro-title"><small>B2 · Lesson 1</small><strong>Getting Acquainted</strong></div>'+
       '<span class="micro-preview">'+(preview()?'Preview':'Workbook')+'</span></div>'+
     phaseStrip(state)+
+    '<div class="micro-history-nav"><button class="ghost-btn" id="microPrevious" type="button"'+((state.index<=0||(state.complete&&!reviewingComplete))?' hidden':'')+'>← Previous activity</button></div>'+
     '<div class="micro-progress-meta"><span>'+esc(phase)+'</span><span>Step '+(Number(state.index)+1)+' of '+TOTAL+'</span></div>'+
     '<div class="micro-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div>'+
     '<main class="micro-stage">'+body+'</main></div>'
@@ -126,7 +128,14 @@ function action(label,id,disabled){
 function inputBox(id,placeholder,rows){
   return '<textarea id="'+id+'" rows="'+(rows||2)+'" placeholder="'+esc(placeholder||'Type here…')+'"></textarea>'
 }
-function bindBack(){var b=el('microBack');if(b)b.onclick=leave}
+function bindBack(){
+  var b=el('microBack');if(b)b.onclick=leave;
+  var p=el('microPrevious');
+  if(p&&activeState){
+    p.hidden=activeState.index<=0||(activeState.complete&&!reviewingComplete);
+    p.onclick=function(){previous(activeState)}
+  }
+}
 
 function modelDialogue(){
   return '<div class="micro-scene">'+
@@ -343,7 +352,8 @@ function renderRepair(state){
 }
 
 function render(state){
-  if(state.complete){renderDone(state);return}
+  activeState=state;
+  if(state.complete&&!reviewingComplete){renderDone(state);return}
   var i=state.index;
   if(i===0)return renderReading(state);
   if(i===1)return renderChoice(state,{
@@ -411,6 +421,12 @@ function render(state){
   if(i===9)return renderRepair(state)
 }
 
+function previous(state){
+  if(!state||state.index<=0)return;
+  if(state.complete)reviewingComplete=true;
+  state.index=Math.max(0,state.index-1);write(state);render(state);
+  if(typeof resetAppScroll==='function')resetAppScroll()
+}
 function next(state){state.index=Math.min(TOTAL-1,state.index+1);write(state);render(state);if(typeof resetAppScroll==='function')resetAppScroll()}
 function scoreFor(state,skill){
   var indexes=STEPS.map(function(x,i){return x.skill===skill?i:-1}).filter(function(i){return i>=0});
@@ -438,6 +454,7 @@ async function finish(state){
   try{await saveEvidence(state);renderDone(state)}catch(e){var slot=el('microSaveStatus');if(slot)slot.textContent='Lesson complete on this device. Progress sync needs another try: '+String(e&&e.message||e)}
 }
 function renderDone(state){
+  activeState=state;reviewingComplete=false;
   var skills=['reading','listening','vocabulary','grammar','writing'];
   var overall=Math.round(skills.reduce(function(n,s){return n+scoreFor(state,s)},0)/skills.length);
   var body='<div class="micro-complete"><div class="micro-complete-mark">✓</div><small>Lesson complete</small>'+
@@ -445,8 +462,8 @@ function renderDone(state){
     '<p>You followed the same simple rhythm: see it, choose it, change it, use it, fix it.</p>'+
     '<div class="micro-summary"><div><strong>'+TOTAL+'</strong><span>short actions</span></div><div><strong>'+overall+'%</strong><span>practice evidence</span></div><div><strong>1</strong><span>real follow-up message</span></div></div>'+
     '<p class="micro-save-status" id="microSaveStatus">'+(preview()?'Preview only — nothing was saved.':state.saved?'Progress saved.':'Saving progress…')+'</p>'+
-    '<div class="micro-finish-actions"><button class="primary-btn" id="microExit" type="button">Back to lessons</button><button class="ghost-btn" id="microRestart" type="button">Practise again</button></div></div>';
-  el('content').innerHTML=shell(body,state);bindBack();el('microExit').onclick=leave;el('microRestart').onclick=function(){render(reset())}
+    '<div class="micro-finish-actions"><button class="primary-btn" id="microExit" type="button">Back to lessons</button><button class="ghost-btn" id="microReview" type="button">Review activities</button><button class="ghost-btn" id="microRestart" type="button">Practise again</button></div></div>';
+  el('content').innerHTML=shell(body,state);bindBack();el('microExit').onclick=leave;el('microReview').onclick=function(){reviewingComplete=true;render(state);if(typeof resetAppScroll==='function')resetAppScroll()};el('microRestart').onclick=function(){reviewingComplete=false;render(reset())}
 }
 function leave(){
   document.body.classList.remove('b2-premium-workbook-mode');
@@ -457,6 +474,7 @@ function leave(){
   if(typeof studentCourse==='function')studentCourse()
 }
 function microWorkbook(){
+  reviewingComplete=false;
   document.body.classList.add('b2-premium-workbook-mode');
   if(typeof setWorkbookDesignMode==='function')setWorkbookDesignMode(true);
   if(typeof title==='function')title('Workbook','Lesson 1');
