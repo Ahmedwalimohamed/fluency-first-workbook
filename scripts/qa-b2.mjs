@@ -113,6 +113,7 @@ for(let i=0;i<22;i++){
   if(n!==22&&!liveText.includes('MAKE IT PERSONAL — SPEAK FIRST'))fail(`Lesson ${n}: language focus must personalise through speaking first.`);
   if(/Make It Personal — write/i.test(liveText))fail(`Lesson ${n}: Live lesson must not return to writing-first personalisation.`);
   if(/Write their names below:/i.test(liveText))fail(`Lesson ${n}: speaking challenge must not require note-taking before interaction.`);
+  if(/\bHOMEWORK\b/i.test(liveText))fail(`Lesson ${n}: B2 Live lesson must not include homework; follow-up practice belongs in the workbook.`);
  }
 }
 
