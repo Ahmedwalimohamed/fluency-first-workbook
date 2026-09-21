@@ -1107,19 +1107,71 @@ function renderLiveListeningContent(lines){
  const after=lines.slice(end).join('\n');
  return renderLiveContent(before)+liveAudioPlayerHtml(script,speakerMeta.speakers)+(after?renderLiveContent(after):'')
 }
+function englishGateDeviceSpeechAvailable(){
+ return typeof window!=='undefined'&&'speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='undefined'
+}
+function englishGateDeviceSpeechText(text){
+ return String(text||'').split(/\n+/).map(line=>line.replace(/^\s*[\p{L}][\p{L}\p{M} .’'\-]{0,48}:\s*/u,'').trim()).filter(Boolean).join(' … ')
+}
+function englishGateDeviceVoice(){
+ if(!englishGateDeviceSpeechAvailable())return null;
+ const voices=window.speechSynthesis.getVoices?.()||[],english=voices.filter(v=>/^en(?:-|_)/i.test(String(v.lang||'')));
+ const preferred=[/natural/i,/premium/i,/enhanced/i,/samantha/i,/ava/i,/jenny/i,/aria/i,/serena/i,/daniel/i,/google.*english/i];
+ for(const re of preferred){const v=english.find(x=>re.test(String(x.name||'')));if(v)return v}
+ return english.find(v=>/^en-US/i.test(String(v.lang||'')))||english[0]||voices[0]||null
+}
+function createEnglishGateDeviceSpeechAudio(text){
+ if(!englishGateDeviceSpeechAvailable())throw new Error('No device speech voice is available.');
+ const spoken=englishGateDeviceSpeechText(text);
+ if(!spoken)throw new Error('Listening text is unavailable.');
+ let utterance=null,intentional=false;
+ const audio={
+  _englishGateDeviceSpeech:true,paused:true,currentTime:0,duration:NaN,playbackRate:1,
+  onloadedmetadata:null,ontimeupdate:null,onplay:null,onpause:null,onended:null,onerror:null,
+  load(){setTimeout(()=>{if(typeof this.onloadedmetadata==='function')this.onloadedmetadata()},0)},
+  play(){
+   try{
+    if(utterance&&window.speechSynthesis.paused){
+     window.speechSynthesis.resume();this.paused=false;if(typeof this.onplay==='function')this.onplay();return Promise.resolve()
+    }
+    intentional=true;window.speechSynthesis.cancel();intentional=false;
+    const u=new SpeechSynthesisUtterance(spoken);utterance=u;
+    u.lang='en-US';u.rate=Math.max(.65,Math.min(1.7,Number(this.playbackRate)||1));u.pitch=1;u.volume=1;
+    const voice=englishGateDeviceVoice();if(voice)u.voice=voice;
+    u.onstart=()=>{this.paused=false;this.currentTime=0;if(typeof this.onplay==='function')this.onplay()};
+    u.onend=()=>{this.paused=true;this.currentTime=0;utterance=null;if(typeof this.onended==='function')this.onended()};
+    u.onerror=e=>{const code=String(e?.error||'');if(intentional||/interrupted|canceled/i.test(code))return;this.paused=true;utterance=null;if(typeof this.onerror==='function')this.onerror(e)};
+    window.speechSynthesis.speak(u);this.paused=false;if(typeof this.onplay==='function')this.onplay();return Promise.resolve()
+   }catch(e){this.paused=true;if(typeof this.onerror==='function')this.onerror(e);return Promise.reject(e)}
+  },
+  pause(){
+   if(utterance&&window.speechSynthesis.speaking&&!window.speechSynthesis.paused){window.speechSynthesis.pause();this.paused=true;if(typeof this.onpause==='function')this.onpause()}
+  },
+  restart(){
+   intentional=true;try{window.speechSynthesis.cancel()}catch{}intentional=false;utterance=null;this.paused=true;this.currentTime=0
+  }
+ };
+ return audio
+}
 async function ensureLiveLessonAudio(player){
  const text=String(player?.dataset?.audioText||'').trim();let speakers=[];
  try{speakers=JSON.parse(player?.dataset?.audioSpeakers||'[]')}catch{}
  if(!text)throw new Error('Listening audio is unavailable.');
  const key=liveAudioKey(text+'|'+JSON.stringify(speakers));
  if(player._liveAudio)return player._liveAudio;
- let url=liveAudioUrls[key];
+ let url=liveAudioUrls[key],serverError=null;
  if(!url){
-  const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text,speakers})});
-  if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const body=await res.json();if(body?.error)message=body.error}catch{}throw new Error(message)}
-  {const provider=String(res.headers.get('X-EnglishGate-Audio-Provider')||'').toLowerCase();if(!['openai','edge'].includes(provider))throw new Error('Listening audio provider could not be verified.');}
-  const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
-  url=URL.createObjectURL(blob);liveAudioUrls[key]=url
+  try{
+   const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text,speakers})});
+   if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const body=await res.json();if(body?.error)message=body.error}catch{}throw new Error(message)}
+   {const provider=String(res.headers.get('X-EnglishGate-Audio-Provider')||'').toLowerCase();if(!['openai','edge'].includes(provider))throw new Error('Listening audio provider could not be verified.');}
+   const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
+   url=URL.createObjectURL(blob);liveAudioUrls[key]=url
+  }catch(e){serverError=e}
+ }
+ if(!url){
+  if(!englishGateDeviceSpeechAvailable())throw serverError||new Error('Listening audio is unavailable.');
+  const fallback=createEnglishGateDeviceSpeechAudio(text);player._liveAudio=fallback;return fallback
  }
  const audio=new Audio(url);audio.preload='metadata';player._liveAudio=audio;return audio
 }
@@ -1137,7 +1189,7 @@ function wireLiveAudioPlayers(root=document){
   const bind=audio=>{
    audio.playbackRate=Number(speed?.value)||1;
    audio.onloadedmetadata=()=>sync(audio);audio.ontimeupdate=()=>sync(audio);
-   audio.onplay=()=>{player.dataset.audioState='ready';if(status)status.textContent='Playing · natural voice';sync(audio)};
+   audio.onplay=()=>{player.dataset.audioState='ready';if(status)status.textContent=audio._englishGateDeviceSpeech?'Playing · device voice':'Playing · natural voice';sync(audio)};
    audio.onpause=()=>{if(status&&audio.currentTime<audio.duration)status.textContent='Paused';sync(audio)};
    audio.onended=()=>{if(status)status.textContent='Finished';sync(audio)};
    audio.onerror=()=>fail('Audio playback failed. Tap retry.');
@@ -1148,8 +1200,8 @@ function wireLiveAudioPlayers(root=document){
    if(play)play.disabled=true;if(restart)restart.disabled=true;if(seek)seek.disabled=false;if(status)status.textContent='Preparing natural audio…';
    return ensureLiveLessonAudio(player).then(audio=>{
     bind(audio);audio.load();player.dataset.audioState='ready';
-    if(status)status.textContent='Ready · natural voice';
-    if(play){play.disabled=false;play.textContent='▶'}if(restart)restart.disabled=false;
+    if(status)status.textContent=audio._englishGateDeviceSpeech?'Ready · device voice':'Ready · natural voice';
+    if(play){play.disabled=false;play.textContent='▶'}if(restart)restart.disabled=false;if(seek)seek.disabled=Boolean(audio._englishGateDeviceSpeech);
     return audio
    }).catch(e=>{fail(e.message||'Natural listening voice is temporarily unavailable. Tap retry.');return null})
   };
@@ -1165,7 +1217,7 @@ function wireLiveAudioPlayers(root=document){
   if(restart)restart.onclick=()=>{
    const audio=player._liveAudio;if(!audio){if(status)status.textContent='Audio is still preparing…';return}
    if(activeLiveLessonAudio&&activeLiveLessonAudio!==audio)activeLiveLessonAudio.pause();activeLiveLessonAudio=audio;
-   audio.currentTime=0;audio.playbackRate=Number(speed?.value)||1;
+   if(typeof audio.restart==='function')audio.restart();else audio.currentTime=0;audio.playbackRate=Number(speed?.value)||1;
    const promise=audio.play();if(promise?.catch)promise.catch(()=>fail('Audio playback failed. Tap retry.'));
    sync(audio)
   };
@@ -2434,19 +2486,24 @@ async function ensureLessonAudio(l){
  const key=audioLessonKey(l,text);
  if(activeAudio&&activeAudioLessonKey===key)return activeAudio;
  if(activeAudio){activeAudio.pause();activeAudio=null;activeAudioLessonKey=null}
- let url=audioCache[key];
+ let url=audioCache[key],serverError=null;
  if(!url){
-  const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text,speakers:l.listening?.speakers||[]})});
-  if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const e=await res.json();if(e?.error)message=e.error}catch{}throw new Error(message)}
-  {const provider=String(res.headers.get('X-EnglishGate-Audio-Provider')||'').toLowerCase();if(!['openai','edge'].includes(provider))throw new Error('Listening audio provider could not be verified.');}
-  const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
-  url=URL.createObjectURL(blob);audioCache[key]=url;
+  try{
+   const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text,speakers:l.listening?.speakers||[]})});
+   if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const e=await res.json();if(e?.error)message=e.error}catch{}throw new Error(message)}
+   {const provider=String(res.headers.get('X-EnglishGate-Audio-Provider')||'').toLowerCase();if(!['openai','edge'].includes(provider))throw new Error('Listening audio provider could not be verified.');}
+   const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
+   url=URL.createObjectURL(blob);audioCache[key]=url;
+  }catch(e){serverError=e}
  }
- activeAudio=new Audio(url);activeAudioLessonKey=key;
+ if(url)activeAudio=new Audio(url);
+ else if(englishGateDeviceSpeechAvailable())activeAudio=createEnglishGateDeviceSpeechAudio(text);
+ else throw serverError||new Error('Listening audio is unavailable.');
+ activeAudioLessonKey=key;
  activeAudio.preload='auto';
  activeAudio.onloadedmetadata=syncAudioUi;
  activeAudio.ontimeupdate=syncAudioUi;
- activeAudio.onplay=syncAudioUi;
+ activeAudio.onplay=()=>{syncAudioUi();const status=$('audioStatus');if(status)status.textContent=activeAudio._englishGateDeviceSpeech?'Playing · device voice':'Playing · natural voice'};
  activeAudio.onpause=syncAudioUi;
  activeAudio.onended=()=>{syncAudioUi();const status=$('audioStatus');if(status)status.textContent='Finished. Replay when you are ready.'};
  activeAudio.onerror=()=>{const status=$('audioStatus');if(status)status.textContent='Audio playback failed. Try again.'};
@@ -2471,7 +2528,7 @@ function playListening(l){
 function restartListening(l){
  const status=$('audioStatus');
  if(!workbookAudioReady(l)){if(status)status.textContent='Audio is still preparing…';return}
- activeAudio.currentTime=0;const speed=$('audioSpeed');if(speed)activeAudio.playbackRate=Number(speed.value)||1;
+ if(typeof activeAudio.restart==='function')activeAudio.restart();else activeAudio.currentTime=0;const speed=$('audioSpeed');if(speed)activeAudio.playbackRate=Number(speed.value)||1;
  const promise=activeAudio.play();if(promise?.catch)promise.catch(()=>setWorkbookAudioError('Audio playback failed. Tap retry.'));
  if(status)status.textContent='Playing from the beginning · natural voice';syncAudioUi()
 }
@@ -2482,8 +2539,8 @@ function wireAudioControls(l,retry=false){
  if(play){play.onclick=()=>playListening(l);play.dataset.audioState='loading';play.disabled=true;play.textContent='▶'}
  if(restart)restart.disabled=true;if(seek)seek.disabled=false;if(status)status.textContent='Preparing natural audio…';
  ensureLessonAudio(l).then(audio=>{
-  audio.load();if(play){play.dataset.audioState='ready';play.disabled=false;play.textContent='▶'}if(restart)restart.disabled=false;
-  if(status)status.textContent='Ready · natural voice';syncAudioUi()
+  audio.load();if(play){play.dataset.audioState='ready';play.disabled=false;play.textContent='▶'}if(restart)restart.disabled=false;if(seek)seek.disabled=Boolean(audio._englishGateDeviceSpeech);
+  if(status)status.textContent=audio._englishGateDeviceSpeech?'Ready · device voice':'Ready · natural voice';syncAudioUi()
  }).catch(e=>setWorkbookAudioError(e.message||'Natural listening voice is temporarily unavailable. Tap retry.'));
  if(speed)speed.onchange=()=>{if(workbookAudioReady(l))activeAudio.playbackRate=Number(speed.value)||1};
  if(seek)seek.oninput=()=>{if(workbookAudioReady(l)&&Number.isFinite(activeAudio.duration)&&activeAudio.duration>0){activeAudio.currentTime=(Number(seek.value)/100)*activeAudio.duration;syncAudioUi()}};
