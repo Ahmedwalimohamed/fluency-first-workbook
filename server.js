@@ -7,6 +7,7 @@ const cookieParser=require('cookie-parser');
 const helmet=require('helmet');
 const rateLimit=require('express-rate-limit');
 const {Pool}=require('pg');
+const {EdgeTTS}=require('@travisvn/edge-tts');
 
 const app=express();
 const port=process.env.PORT||3000;
@@ -18,6 +19,7 @@ const BOOK_SEEDS=[{"id":"career-fluency","title":"English Communication & Career
 LISTENING_SCRIPTS["su-a2b1-l1"]="On the first day of a new training course, Amina sits next to Yusuf. Amina lives in Borama and works in a small office. Her hometown is Hargeisa. She enjoys reading and walking in the evening. Yusuf is a university student. He likes football and photography. They ask each other simple questions about work, hometowns, and hobbies. Before the lesson starts, Amina introduces Yusuf to another student and says that he is friendly and outgoing.";
 const OPENAI_TTS_MODEL=process.env.OPENAI_TTS_MODEL||'gpt-4o-mini-tts';
 const OPENAI_TTS_VOICE=process.env.OPENAI_TTS_VOICE||'coral';
+const EDGE_TTS_VOICE=process.env.EDGE_TTS_VOICE||'en-US-EmmaMultilingualNeural';
 const OPENAI_TTS_FEMALE_VOICES=String(process.env.OPENAI_TTS_FEMALE_VOICES||'coral,nova,shimmer').split(',').map(x=>x.trim()).filter(Boolean);
 const OPENAI_TTS_MALE_VOICES=String(process.env.OPENAI_TTS_MALE_VOICES||'onyx,echo,ash').split(',').map(x=>x.trim()).filter(Boolean);
 const audioCache=new Map();
@@ -120,12 +122,44 @@ async function generateListeningAudio(input,speakerProfiles=[]){
   const plan=speakerVoicePlan(turns,speakerProfiles),segments=[];
   for(const turn of turns)for(const chunk of splitTtsText(turn.text))segments.push({...turn,text:chunk,...plan[turn.speaker]});
   const buffers=await mapLimit(segments,3,seg=>requestSpeechWav(seg.text,seg.voice,`Speak as ${seg.speaker}, an adult ${seg.gender==='female'?'woman':'man'}, in a natural English conversation for language learners. Use a distinct, realistic conversational voice, clear pronunciation, warm tone, and natural pacing. Do not say the speaker name.`));
-  return{buffer:mergeWav(buffers,135),contentType:'audio/wav',mode:'dialogue',speakers:Object.entries(plan).map(([speaker,x])=>({speaker,gender:x.gender,voice:x.voice}))};
+  return{buffer:mergeWav(buffers,135),contentType:'audio/wav',mode:'dialogue',speakers:Object.entries(plan).map(([speaker,x])=>({speaker,gender:x.gender,voice:x.voice})),provider:'openai',model:OPENAI_TTS_MODEL};
  }
  const chunks=splitTtsText(input),buffers=await mapLimit(chunks,2,chunk=>requestSpeechWav(chunk,OPENAI_TTS_VOICE,'Speak in clear, warm, natural conversational English for an English learner. Use realistic pacing, meaningful pauses, and natural emphasis. Do not sound like an announcement or a robot.'));
- return{buffer:mergeWav(buffers,80),contentType:'audio/wav',mode:'single',speakers:[]};
+ return{buffer:mergeWav(buffers,80),contentType:'audio/wav',mode:'single',speakers:[],provider:'openai',model:OPENAI_TTS_MODEL};
 }
-function sendGeneratedAudio(res,audio){res.set('Content-Type',audio.contentType);res.set('Cache-Control','private, max-age=3600');res.set('X-EnglishGate-Audio-Provider','openai');res.set('X-EnglishGate-Audio-Model',OPENAI_TTS_MODEL);res.set('X-EnglishGate-Audio-Mode',audio.mode);return res.send(audio.buffer)}
+function edgeListeningText(input){
+ const turns=dialogueTurns(input);
+ if(!turns.length)return String(input||'').replace(/\s+/g,' ').trim();
+ return turns.map(turn=>String(turn.text||'').trim()).filter(Boolean).join(' ... ');
+}
+async function generateEdgeListeningAudio(input){
+ const text=edgeListeningText(input);
+ if(!text)throw new Error('Edge TTS received an empty listening script');
+ const tts=new EdgeTTS(text,EDGE_TTS_VOICE,{rate:'-4%',volume:'+0%',pitch:'+0Hz'});
+ const result=await tts.synthesize();
+ const buffer=Buffer.from(await result.audio.arrayBuffer());
+ if(!buffer.length)throw new Error('Edge TTS returned no audio');
+ return{buffer,contentType:'audio/mpeg',mode:dialogueTurns(input).length?'dialogue-fallback':'single-fallback',speakers:[],provider:'edge',model:'edge-neural',voice:EDGE_TTS_VOICE};
+}
+async function generateListeningAudioWithFallback(input,speakerProfiles=[]){
+ try{return await generateListeningAudio(input,speakerProfiles)}
+ catch(openaiError){
+  console.warn('OpenAI TTS unavailable; using Edge neural fallback:',String(openaiError?.message||openaiError).slice(0,220));
+  try{return await generateEdgeListeningAudio(input)}
+  catch(edgeError){
+   const e=new Error('Both listening audio providers failed. OpenAI: '+String(openaiError?.message||openaiError).slice(0,140)+'; Edge: '+String(edgeError?.message||edgeError).slice(0,140));
+   e.status=502;throw e
+  }
+ }
+}
+function sendGeneratedAudio(res,audio){
+ res.set('Content-Type',audio.contentType);
+ res.set('Cache-Control','private, max-age=3600');
+ res.set('X-EnglishGate-Audio-Provider',audio.provider||'openai');
+ res.set('X-EnglishGate-Audio-Model',audio.model||OPENAI_TTS_MODEL);
+ res.set('X-EnglishGate-Audio-Mode',audio.mode||'single');
+ return res.send(audio.buffer)
+}
 
 const teacherPronunciationServerCache=new Map();
 async function generateTeacherPronunciation(word){
@@ -380,8 +414,8 @@ app.get('/api/audio/health',async(req,res)=>{
  const expected=String(process.env.AUDIO_HEALTH_TOKEN||''),provided=String(req.query.token||'');
  if(!expected||provided!==expected)return res.status(404).json({ok:false});
  try{
-  const buffer=await requestSpeechWav('Audio ready.',OPENAI_TTS_VOICE,'Speak this short phrase naturally and clearly.');
-  return res.json({ok:Boolean(buffer?.length),provider:'openai',model:OPENAI_TTS_MODEL,bytes:buffer?.length||0})
+  const audio=await generateListeningAudioWithFallback('Audio ready.');
+  return res.json({ok:Boolean(audio?.buffer?.length),provider:audio.provider,model:audio.model,bytes:audio?.buffer?.length||0})
  }catch(e){
   console.error('Audio health error:',e.message);
   return res.status(e.status||502).json({ok:false,error:String(e.message||e).slice(0,220)})
@@ -392,11 +426,10 @@ app.post('/api/audio',auth,async(req,res)=>{
  const lessonId=String(req.body.lessonId||'').trim();
  const input=String(req.body.text||'').trim(),speakers=normalizeSpeakerProfiles(req.body.speakers);
  if(!lessonId||input.length<5||input.length>12000)return res.status(400).json({error:'Invalid listening audio request.'});
- if(!(process.env.OPENAI_TTS_API_KEY||process.env.OPENAI_API_KEY))return res.status(503).json({error:'Natural listening audio is unavailable.'});
- const key=crypto.createHash('sha256').update('v4-openai-only|'+lessonId+'|'+input+'|'+JSON.stringify(speakers)).digest('hex');
+ const key=crypto.createHash('sha256').update('v5-provider-fallback|'+lessonId+'|'+input+'|'+JSON.stringify(speakers)).digest('hex');
  try{
   if(audioCache.has(key))return sendGeneratedAudio(res,audioCache.get(key));
-  const audio=await generateListeningAudio(input,speakers);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
+  const audio=await generateListeningAudioWithFallback(input,speakers);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
  }catch(e){console.error('TTS request error',e);return res.status(502).json({error:'Natural listening audio could not be generated.'})}
 });
 
@@ -404,11 +437,10 @@ app.get('/api/audio/:lessonId',auth,async(req,res)=>{
  const lessonId=String(req.params.lessonId||'');
  const input=LISTENING_SCRIPTS[lessonId];
  if(!input)return res.status(404).json({error:'Listening topic not found.'});
- if(!(process.env.OPENAI_TTS_API_KEY||process.env.OPENAI_API_KEY))return res.status(503).json({error:'Natural listening audio is not configured.'});
- const key='legacy-v2:'+lessonId;
+ const key='legacy-v3:'+lessonId;
  try{
   if(audioCache.has(key))return sendGeneratedAudio(res,audioCache.get(key));
-  const audio=await generateListeningAudio(input);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
+  const audio=await generateListeningAudioWithFallback(input);audioCache.set(key,audio);return sendGeneratedAudio(res,audio)
  }catch(e){console.error('TTS request error',e);return res.status(502).json({error:'Natural listening audio could not be generated.'})}
 });
 
@@ -810,8 +842,8 @@ async function authSelfCheck(){for(const [username,password,label,deletable] of 
 async function audioStartupSelfCheck(){
  if(process.env.AUDIO_STARTUP_SELF_TEST!=='1')return;
  try{
-  const buffer=await requestSpeechWav('Audio ready.',OPENAI_TTS_VOICE,'Speak this short phrase naturally and clearly.');
-  console.log(`AUDIO SELF-CHECK PASSED provider=openai model=${OPENAI_TTS_MODEL} bytes=${buffer.length}`)
+  const audio=await generateListeningAudioWithFallback('Audio ready.');
+  console.log(`AUDIO SELF-CHECK PASSED provider=${audio.provider} model=${audio.model} bytes=${audio.buffer.length}`)
  }catch(e){console.error('AUDIO SELF-CHECK FAILED:',e.message)}
 }
 initDb().then(authSelfCheck).then(audioStartupSelfCheck).then(()=>app.listen(port,()=>console.log(`Fluency First listening on ${port}`))).catch(e=>{console.error(e);process.exit(1)});
