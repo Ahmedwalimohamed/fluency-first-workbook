@@ -132,11 +132,16 @@ function edgeListeningText(input){
  if(!turns.length)return String(input||'').replace(/\s+/g,' ').trim();
  return turns.map(turn=>String(turn.text||'').trim()).filter(Boolean).join(' ... ');
 }
+async function promiseTimeout(promise,ms,label){
+ let timer;
+ try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label||'Operation timed out')),ms)})])}
+ finally{if(timer)clearTimeout(timer)}
+}
 async function generateEdgeListeningAudio(input){
  const text=edgeListeningText(input);
  if(!text)throw new Error('Edge TTS received an empty listening script');
  const tts=new EdgeTTS(text,EDGE_TTS_VOICE,{rate:'-4%',volume:'+0%',pitch:'+0Hz'});
- const result=await tts.synthesize();
+ const result=await promiseTimeout(tts.synthesize(),12000,'Edge TTS timed out');
  const buffer=Buffer.from(await result.audio.arrayBuffer());
  if(!buffer.length)throw new Error('Edge TTS returned no audio');
  return{buffer,contentType:'audio/mpeg',mode:dialogueTurns(input).length?'dialogue-fallback':'single-fallback',speakers:[],provider:'edge',model:'edge-neural',voice:EDGE_TTS_VOICE};
@@ -846,4 +851,9 @@ async function audioStartupSelfCheck(){
   console.log(`AUDIO SELF-CHECK PASSED provider=${audio.provider} model=${audio.model} bytes=${audio.buffer.length}`)
  }catch(e){console.error('AUDIO SELF-CHECK FAILED:',e.message)}
 }
-initDb().then(authSelfCheck).then(audioStartupSelfCheck).then(()=>app.listen(port,()=>console.log(`Fluency First listening on ${port}`))).catch(e=>{console.error(e);process.exit(1)});
+initDb().then(authSelfCheck).then(()=>{
+ app.listen(port,()=>{
+  console.log(`Fluency First listening on ${port}`);
+  setTimeout(()=>audioStartupSelfCheck(),250)
+ })
+}).catch(e=>{console.error(e);process.exit(1)});
