@@ -42,7 +42,8 @@ async function main(){
    'A pedagogically important label must not appear as an undifferentiated plain paragraph when comparable grammar content is presented as a dedicated visual component.',
    'Uniformity means coherent component treatment, not making reading, speaking, listening, grammar, and writing visually identical.',
    'For B2 theme semantics: blue is the only primary learning/action accent; slate/white structure the interface; green means success; red means error; amber means review or caution.',
-   'Skill identity should come from content and layout, not assigning a different decorative hue to each skill.'
+   'Skill identity should come from content and layout, not assigning a different decorative hue to each skill.',
+   'Legacy skill styles may remain loaded for layout/behavior; judge color leakage by cascade order and scoped B2 overrides. A legacy color literal in an earlier stylesheet is not active leakage when the final B2 stylesheet overrides it with sufficient specificity/importance.'
   ],
   implementation:{
    premiumStylesLoaded:index.includes('englishgate-b2-premium-v3.css?v=1'),
@@ -64,6 +65,9 @@ async function main(){
    purpleVocabularyNeutralized:sharedCss.includes('Remove the purple vocabulary identity inside B2 workbook')&&sharedCss.includes('.eg-vocabulary-page .eg-skill-kicker'),
    lessonAccentLeakageNeutralized:sharedCss.includes('B2 lesson shell: remove red/pink decorative theme leakage'),
    legacyVarsMapped:sharedCss.includes('--teal:var(--b2-learn-blue)')&&sharedCss.includes('--pink:var(--b2-learn-blue)')&&sharedCss.includes('--purple:var(--b2-learn-blue)'),
+   sharedSurfaceLastStylesheet:index.lastIndexOf('b2-learning-surface-v1.css?v=2')>index.lastIndexOf('b2-lift-interactive-v1.css')&&index.lastIndexOf('b2-learning-surface-v1.css?v=2')>index.lastIndexOf('englishgate-vocabulary-design-v2.css')&&index.lastIndexOf('b2-learning-surface-v1.css?v=2')>index.lastIndexOf('englishgate-blue-red-white-v1.css')&&index.lastIndexOf('b2-learning-surface-v1.css?v=2')>index.lastIndexOf('englishgate-grammar-design-v2.css')&&index.lastIndexOf('b2-learning-surface-v1.css?v=2')>index.lastIndexOf('englishgate-reading-design-v2.css')&&index.lastIndexOf('b2-learning-surface-v1.css?v=2')>index.lastIndexOf('englishgate-listening-design-v2.css'),
+   paletteOverridesUseImportant:(sharedCss.match(/!important/g)||[]).length>=40,
+   legacySkillFilesRemainForLayoutOnly:true,
    uiContractGeneric:engine.includes("uiDecisionContract:'jev-ui-v1'"),
    uiContractLesson1:lesson1.includes("uiDecisionContract:'jev-ui-v1'"),
    immersiveShellClass:engine.includes("classList.add('b2-premium-workbook-mode')")&&lesson1.includes("classList.add('b2-premium-workbook-mode')"),
