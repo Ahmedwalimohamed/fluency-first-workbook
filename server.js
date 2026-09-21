@@ -863,10 +863,19 @@ app.use((err,req,res,next)=>{console.error('request error',err);if(res.headersSe
 async function authSelfCheck(){for(const [username,password,label,deletable] of [[process.env.SYSTEM_ADMIN_USERNAME||'admin',process.env.SYSTEM_ADMIN_PASSWORD,'system admin',true],[process.env.TEACHER_USERNAME||'teacher',process.env.TEACHER_PASSWORD,'teacher',true],[process.env.DEMO_STUDENT_USERNAME,process.env.DEMO_STUDENT_PASSWORD,'demo student',true]]){if(!username||!password)continue;if(deletable&&(await pool.query('select 1 from deleted_seed_accounts where lower(username)=lower($1)',[username])).rowCount)continue;const q=await pool.query('select password_hash from users where lower(username)=lower($1)',[username]);if(!q.rowCount||!(await bcrypt.compare(password,q.rows[0].password_hash)))throw new Error(`Auth self-check failed for ${label}`);console.log(`Auth self-check passed for ${label}`)}}
 async function audioStartupSelfCheck(){
  if(process.env.AUDIO_STARTUP_SELF_TEST!=='1')return;
- try{
-  const audio=await generateListeningAudioWithFallback('Audio ready.');
-  console.log(`AUDIO SELF-CHECK PASSED provider=${audio.provider} model=${audio.model} bytes=${audio.buffer.length}`)
- }catch(e){console.error('AUDIO SELF-CHECK FAILED:',e.message)}
+ const tests=[
+  {name:'single',text:'Audio ready.',speakers:[]},
+  {name:'dialogue',text:'Sara: Hello Daniel. How are you today? Daniel: I am well, Sara. Thank you for asking.',speakers:[{name:'Sara',gender:'female'},{name:'Daniel',gender:'male'}]}
+ ];
+ for(const test of tests){
+  try{
+   const audio=await generateListeningAudioWithFallback(test.text,test.speakers);
+   const mapped=Array.isArray(audio.speakers)?audio.speakers.map(x=>({speaker:x.speaker,gender:x.gender,voice:x.voice})):[];
+   const dialogueOk=test.name!=='dialogue'||(audio.mode==='dialogue'&&mapped.some(x=>x.gender==='female')&&mapped.some(x=>x.gender==='male')&&new Set(mapped.map(x=>x.voice)).size>=2);
+   if(!dialogueOk)throw new Error('Dialogue self-check did not preserve distinct male/female speaker voices: '+JSON.stringify({mode:audio.mode,speakers:mapped}));
+   console.log(`AUDIO SELF-CHECK PASSED test=${test.name} provider=${audio.provider} model=${audio.model} mode=${audio.mode||'single'} bytes=${audio.buffer.length} speakers=${JSON.stringify(mapped)}`)
+  }catch(e){console.error(`AUDIO SELF-CHECK FAILED test=${test.name}:`,e.message)}
+ }
 }
 initDb().then(authSelfCheck).then(()=>{
  app.listen(port,()=>{
