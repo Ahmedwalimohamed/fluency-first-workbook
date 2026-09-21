@@ -41,7 +41,9 @@ function inferRequestedTypes(request){
   if(/fill(?:-| )?in(?:-| )?the(?:-| )?blank|fill blank|gap fill|gap-fill/.test(t))add('fill_blank');
   if(/sentence correction|correct (?:the )?sentence|error correction|fix (?:the )?sentence/.test(t))add('sentence_correction');
   if(/matching|match (?:the|these|words|items)/.test(t))add('matching');
-  if(/ordering|put .* in order|reorder|sequence/.test(t))add('ordering');
+  // Treat role-play as speaking. Do not confuse real-world phrases such as "ordering food" with an ordering-question type.
+  if(/role[- ]?play|roleplay|role[- ]?play cards?|scenario cards?/.test(t))add('pair_discussion');
+  if(/ordering\s+(?:task|activity|question|exercise)|put .* in (?:the correct )?order|reorder|sequence (?:these|the|items|steps)/.test(t))add('ordering');
   if(/sentence construction|build (?:a|the) sentence|make (?:a|the) sentence|unscramble/.test(t))add('sentence_construction');
   if(/teacher[- ]?led speaking|whole class speaking/.test(t))add('teacher_speaking');
   if(/individual speaking|speaking prompt|oral response|speak individually/.test(t))add('individual_speaking');
@@ -137,8 +139,30 @@ async function aiGenerateNode(state){
   }
 }
 
-function fallbackQuestion(type,topic,index){
+function roleplayFallback(topic,index){
+  const label=topic||'the lesson topic',n=index+1,t=String(label).toLowerCase();
+  const food=[
+    {prompt:'Role-play: Customer A orders a main dish and a drink. Server B asks one follow-up question, confirms the order, and responds politely.',criteria:['Customer makes a clear, polite order','Server asks a natural follow-up question','Server confirms the order accurately']},
+    {prompt:'Role-play: Customer A wants to order but has a food allergy. Server B explains which option is suitable and checks the customer’s choice.',criteria:['Customer explains the allergy clearly','Server gives a relevant option','Both speakers use polite restaurant language']},
+    {prompt:'Role-play: Customer A orders an item that is unavailable. Server B apologizes and recommends an alternative. Customer decides what to order.',criteria:['Server apologizes and offers an alternative','Customer responds and makes a new choice','Conversation reaches a clear order']},
+    {prompt:'Role-play: Customer A receives the wrong order. Explain the problem politely. Server B checks the order, apologizes, and offers a solution.',criteria:['Customer explains the problem politely','Server checks and responds appropriately','Both speakers agree on a solution']},
+    {prompt:'Role-play: Customer A asks for the bill and notices an item they did not order. Server B checks the bill and resolves the problem politely.',criteria:['Customer asks about the bill clearly','Server responds professionally','The issue is resolved through natural dialogue']}
+  ];
+  if(/food|restaurant|cafe|café|meal|menu|dish/.test(t)){
+    const x=food[index%food.length];return {id:'q'+n,type:'pair_discussion',prompt:x.prompt,successCriteria:x.criteria};
+  }
+  const generic=[
+    `Role-play a realistic situation about ${label}. Partner A starts the conversation with a clear goal. Partner B asks one useful follow-up question before responding.`,
+    `Role-play a small problem connected to ${label}. Partner A explains the problem. Partner B clarifies one detail and suggests a practical solution.`,
+    `Role-play a decision about ${label}. Each partner gives one preference and one reason, then agree on what to do next.`,
+    `Role-play a request connected to ${label}. Partner A makes the request politely. Partner B asks for clarification and gives a clear response.`,
+    `Role-play a follow-up conversation about ${label}. Refer to one earlier detail, ask a natural question, and finish with a clear next step.`
+  ];
+  return {id:'q'+n,type:'pair_discussion',prompt:generic[index%generic.length],successCriteria:['Both partners contribute','Uses language that fits the situation','Conversation reaches a clear outcome']};
+}
+function fallbackQuestion(type,topic,index,request=''){
   const label=topic||'the lesson topic',n=index+1;
+  if(type==='pair_discussion'&&/role[- ]?play|roleplay|scenario cards?/i.test(String(request)))return roleplayFallback(label,index);
   if(type==='multiple_choice')return {id:'q'+n,type,prompt:`Which option best demonstrates ${label}?`,options:[`A correct example of ${label}`,`An incorrect example of ${label}`,`An unrelated example`],answer:0,explanation:`Review why the first example matches ${label}.`};
   if(type==='true_false')return {id:'q'+n,type,prompt:`True or False: This statement correctly uses ${label}.`,options:['True','False'],answer:0,explanation:`Teacher should review the statement before sending.`};
   if(type==='short_answer')return {id:'q'+n,type,prompt:`Give a short example that shows ${label}.`,acceptedAnswers:[],explanation:'Open response for teacher review.'};
@@ -156,7 +180,7 @@ function fallbackNode(state){
   if(state.plan.taskType==='writing'){
     return {...state,fallback:{title:'Writing · '+titleCase(state.topic),topic:state.topic,instructions:`Write a clear response about ${state.topic}. Use complete sentences and check your work before submitting.`,minWords:50}};
   }
-  return {...state,fallback:{title:'Live Check · '+titleCase(state.topic),topic:state.topic,tip:'Review the generated activity before sending it to students.',questions:state.plan.types.map((t,i)=>fallbackQuestion(t,state.topic,i))}};
+  return {...state,fallback:{title:'Live Check · '+titleCase(state.topic),topic:state.topic,tip:'Review the generated activity before sending it to students.',questions:state.plan.types.map((t,i)=>fallbackQuestion(t,state.topic,i,state.request))}};
 }
 function arrayClean(v,maxItems=10,maxLen=220){return Array.isArray(v)?v.slice(0,maxItems).map(x=>clean(x,maxLen)).filter(Boolean):[]}
 function normalizeType(v,fallback='multiple_choice'){const t=clean(v,40).toLowerCase().replace(/[ -]+/g,'_');return SUPPORTED_TYPES.includes(t)?t:fallback}
@@ -201,7 +225,7 @@ function validateNode(state){
   let questions=Array.isArray(raw?.questions)?raw.questions:[];
   const planned=state.plan.types;
   if(questions.length<planned.length){
-    questions=[...questions,...planned.slice(questions.length).map((t,i)=>fallbackQuestion(t,state.topic,questions.length+i))];
+    questions=[...questions,...planned.slice(questions.length).map((t,i)=>fallbackQuestion(t,state.topic,questions.length+i,state.request))];
   }
   questions=questions.slice(0,planned.length).map((x,i)=>sanitizeQuestion(x,i,planned[i]));
   return {...state,result:{taskType:'activity',title:clean(raw?.title,100)||('Live Check · '+titleCase(state.topic)),durationSeconds:state.durationSeconds,content:{topic:clean(raw?.topic,120)||state.topic,tip:clean(raw?.tip,400),questions}}};
@@ -210,6 +234,13 @@ function qualityGateNode(state){
   const r=state.result;
   if(!r||!r.content)throw Object.assign(new Error('The activity graph produced no usable activity.'),{status:422});
   if(r.taskType==='activity'&&(!Array.isArray(r.content.questions)||!r.content.questions.length))throw Object.assign(new Error('The activity graph produced no questions.'),{status:422});
+  if(r.taskType==='activity'){
+    const placeholder=/^(?:Part|Item|Match)\s*\d+$/i;
+    for(const q of r.content.questions){
+      if(q.type==='ordering'&&Array.isArray(q.items)&&q.items.some(x=>placeholder.test(String(x).trim())))throw Object.assign(new Error('The activity generator produced placeholder ordering content. Review is required before launch.'),{status:422});
+      if(q.type==='matching'&&Array.isArray(q.pairs)&&q.pairs.some(p=>placeholder.test(String(p.left).trim())||placeholder.test(String(p.right).trim())))throw Object.assign(new Error('The activity generator produced placeholder matching content. Review is required before launch.'),{status:422});
+    }
+  }
   return {...state,quality:{approved:true,source:state.ai?'ai':'fallback'}};
 }
 
