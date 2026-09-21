@@ -40,7 +40,9 @@ async function main(){
    'Source, decision, compose, and repair stages must differ structurally, not merely through color or width.',
    'Live lessons and workbook activities must share a recognizable design system: typography hierarchy, border language, radius family, spacing rhythm, and restrained accent color.',
    'A pedagogically important label must not appear as an undifferentiated plain paragraph when comparable grammar content is presented as a dedicated visual component.',
-   'Uniformity means coherent component treatment, not making reading, speaking, listening, grammar, and writing visually identical.'
+   'Uniformity means coherent component treatment, not making reading, speaking, listening, grammar, and writing visually identical.',
+   'For B2 theme semantics: blue is the only primary learning/action accent; slate/white structure the interface; green means success; red means error; amber means review or caution.',
+   'Skill identity should come from content and layout, not assigning a different decorative hue to each skill.'
   ],
   implementation:{
    premiumStylesLoaded:index.includes('englishgate-b2-premium-v3.css?v=1'),
@@ -54,6 +56,14 @@ async function main(){
    livePromptColorNormalized:sharedCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+1)')&&sharedCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+2)')&&sharedCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+3)'),
    grammarUsesSharedTokens:sharedCss.includes('.grammar-book-section')&&sharedCss.includes('var(--b2-learn-line)'),
    workbookUsesSharedTokens:sharedCss.includes('.b2-microflow .micro-stage')&&sharedCss.includes('.b2-northstar-flow .northstar-reading'),
+   canonicalPrimary:sharedCss.includes('--b2-learn-blue:#2563eb'),
+   semanticSuccess:sharedCss.includes('--b2-learn-success:#16a34a'),
+   semanticError:sharedCss.includes('--b2-learn-error:#dc2626'),
+   semanticReview:sharedCss.includes('--b2-learn-review:#d97706'),
+   legacyGreenGrammarNeutralized:sharedCss.includes('Neutralize the legacy green Grammar Lesson theme')&&sharedCss.includes('.grammar-book-hero'),
+   purpleVocabularyNeutralized:sharedCss.includes('Remove the purple vocabulary identity inside B2 workbook')&&sharedCss.includes('.eg-vocabulary-page .eg-skill-kicker'),
+   lessonAccentLeakageNeutralized:sharedCss.includes('B2 lesson shell: remove red/pink decorative theme leakage'),
+   legacyVarsMapped:sharedCss.includes('--teal:var(--b2-learn-blue)')&&sharedCss.includes('--pink:var(--b2-learn-blue)')&&sharedCss.includes('--purple:var(--b2-learn-blue)'),
    uiContractGeneric:engine.includes("uiDecisionContract:'jev-ui-v1'"),
    uiContractLesson1:lesson1.includes("uiDecisionContract:'jev-ui-v1'"),
    immersiveShellClass:engine.includes("classList.add('b2-premium-workbook-mode')")&&lesson1.includes("classList.add('b2-premium-workbook-mode')"),
@@ -91,7 +101,11 @@ async function main(){
   mode_distinction:question('Are source, decision, compose, and repair stages structurally distinct enough that the interface emphasis matches the learner job in each stage?'),
   live_lesson_consistency:question('Do the B2 Live lessons now give important Fluency First, pronunciation, mediation, mission, prompt, vocabulary and reading elements deliberate visual hierarchy instead of mixing rich grammar cards with otherwise plain text?'),
   workbook_consistency:question('Does the B2 workbook use a coherent family of surfaces, borders, radii, inputs, choices, source cards and feedback components while still differentiating source, decision, compose and repair jobs?'),
-  cross_surface_consistency:question('Do the B2 Live lessons and workbook now plausibly feel like two parts of the same EnglishGate product through shared visual tokens and hierarchy, without flattening all learning modes into identical cards?')
+  cross_surface_consistency:question('Do the B2 Live lessons and workbook now plausibly feel like two parts of the same EnglishGate product through shared visual tokens and hierarchy, without flattening all learning modes into identical cards?'),
+  palette_coherence:question('Does B2 now use one coherent palette across Live lessons and workbook, rather than mixing legacy teal/pink/gold, purple vocabulary, green grammar, and blue learning accents?'),
+  semantic_color_discipline:question('Are green, red, and amber reserved primarily for semantic states such as success, error, and review while blue remains the primary learning/action accent?'),
+  skill_color_coherence:question('Do Grammar, Vocabulary, Reading, Listening, Fluency and Workbook stages now feel related through a shared blue/slate palette rather than having separate decorative skill identities?'),
+  legacy_palette_leakage:question('Is there enough implementation evidence that legacy green grammar, purple vocabulary, pink/teal bullets, and red decorative lesson accents are neutralized within the B2 boundary?')
  };
 
  const controller=new AbortController();
