@@ -376,6 +376,18 @@ app.post('/api/teacher/example-sentence',auth,teacherOnly,teacherExampleLimiter,
  catch(e){console.error('Teacher example sentence error:',e.message);return res.status(e.status||502).json({error:'Could not create an example right now.'})}
 });
 
+app.get('/api/audio/health',async(req,res)=>{
+ const expected=String(process.env.AUDIO_HEALTH_TOKEN||''),provided=String(req.query.token||'');
+ if(!expected||provided!==expected)return res.status(404).json({ok:false});
+ try{
+  const buffer=await requestSpeechWav('Audio ready.',OPENAI_TTS_VOICE,'Speak this short phrase naturally and clearly.');
+  return res.json({ok:Boolean(buffer?.length),provider:'openai',model:OPENAI_TTS_MODEL,bytes:buffer?.length||0})
+ }catch(e){
+  console.error('Audio health error:',e.message);
+  return res.status(e.status||502).json({ok:false,error:String(e.message||e).slice(0,220)})
+ }
+});
+
 app.post('/api/audio',auth,async(req,res)=>{
  const lessonId=String(req.body.lessonId||'').trim();
  const input=String(req.body.text||'').trim(),speakers=normalizeSpeakerProfiles(req.body.speakers);
