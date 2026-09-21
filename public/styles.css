@@ -6030,3 +6030,15 @@ img,video,canvas,svg{max-width:100%}
  .b2-conversation-source{grid-template-columns:1fr}
  .b2-scenario-hero,.b2-conversation-source,.b2-turn-card,.b2-message-task,.b2-message-reply,.b2-detected-error{padding:16px;border-radius:14px}
 }
+
+/* Workbook QA fixes: no n/n counters, admin bypass, reading questions stay attached to source */
+.eg-workbook .eg-question-count,
+.eg-workbook .student-question-flow-copy>[data-question-flow-label],
+.eg-workbook .runner-meta>span:last-child:has([data-runner-current]){display:none!important}
+.eg-workbook.admin-preview-workbook .eg-admin-preview-prev{margin-right:auto}
+.eg-workbook.admin-preview-workbook .eg-admin-preview-next{margin-left:auto}
+.eg-reading-listening-page .eg-reading-connected{display:flex!important;flex-direction:column!important;gap:0!important}
+.eg-reading-listening-page .eg-reading-connected>.eg-reading-article,
+.eg-reading-listening-page .eg-reading-connected>.eg-task-panel{width:100%!important;max-width:none!important;position:static!important}
+.eg-reading-listening-page .eg-reading-connected>.eg-reading-article{border-radius:16px 16px 0 0!important;border-bottom:0!important;margin:0!important}
+.eg-reading-listening-page .eg-reading-connected>.eg-task-panel{box-sizing:border-box;border:1px solid #dce4e7!important;border-top:1px solid #e8edef!important;border-radius:0 0 16px 16px!important;margin:0!important;padding:20px 24px 24px!important;background:#fbfcfd!important}
