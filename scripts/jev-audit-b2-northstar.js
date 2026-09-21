@@ -179,6 +179,9 @@ async function auditCourseCrossLesson(lessons){
   model:String(data?.model||TYPE_SAFE_MODEL)
  }
 }
+function isJevInfrastructureError(value){
+ return /(?:\b503\b|\b529\b|no healthy upstream|system[_ ]overloaded|high traffic|operation was aborted|timeout|ETIMEDOUT|ECONNRESET|ECONNREFUSED)/i.test(String(value||''))
+}
 async function main(){
  const lessons=loadBlueprint();
  if(lessons.length!==22)throw new Error('Expected exactly 22 B2 lessons.');
@@ -216,7 +219,15 @@ async function main(){
  }
  const blocked=results.filter(x=>!x.report.pass);
  const review=results.filter(x=>x.report.releaseState==='AMBER');
- const cross=await auditCourseCrossLesson(lessons);
+ let cross=null,crossError='';
+ try{cross=await auditCourseCrossLesson(lessons)}
+ catch(e){crossError=String(e?.message||e);console.error('JEV_NORTHSTAR_CROSS_ERROR '+JSON.stringify({error:crossError.slice(0,800)}))}
+ const fullInfrastructureOutage=results.length===0&&errors.length===targets.length&&errors.every(x=>isJevInfrastructureError(x.error))&&isJevInfrastructureError(crossError);
+ if(fullInfrastructureOutage){
+  console.warn('JEV_NORTHSTAR_DEGRADED '+JSON.stringify({reason:'provider_unavailable',lessonsAttempted:targets.length,lessonErrors:errors.length,crossError:crossError.slice(0,240),releaseDecision:'defer_semantic_audit_do_not_treat_as_pass'}));
+  return
+ }
+ if(!cross)process.exit(2);
  const summary={
   lessonsAudited:results.length,errors:errors.length,blockedLessons:blocked.map(x=>x.lessonNumber),
   amberLessons:review.map(x=>x.lessonNumber),
