@@ -2626,7 +2626,14 @@ function wireStudentQuestionFlow(){
   const stageNode=q.querySelector('.question-stage span');
   if(stage)stage.textContent=stageNode?stageNode.textContent.trim():'';
   if(bar)bar.style.width=(((furthest+1)/questions.length)*100)+'%';
-  if(back){back.hidden=index===0;back.disabled=index===0}
+  const previousActivity=$('previousActivity'),canPreviousActivity=Boolean(previousActivity&&!previousActivity.disabled);
+  if(back){
+   const atFirst=index===0;
+   back.hidden=atFirst&&!canPreviousActivity;
+   back.disabled=atFirst&&!canPreviousActivity;
+   back.textContent=atFirst&&canPreviousActivity?'← Activity':'←';
+   back.setAttribute('aria-label',atFirst&&canPreviousActivity?'Previous activity':'Previous question')
+  }
   const last=index===questions.length-1,choice=isChoice(q),inlineCheck=Boolean(q.querySelector('[data-writing-core-check]'));
   continueBtn.hidden=false;
   continueBtn.textContent=last?(submit?.id==='saveWriting'?'Check & save writing':'Check answers'):'Next';
@@ -2653,7 +2660,14 @@ function wireStudentQuestionFlow(){
   const i=questions.indexOf(card);if(i<0||i>furthest||i===index)return;
   index=i;sync();
  };
- back.onclick=()=>move(index-1,{unlock:false});
+ back.onclick=()=>{
+  if(index===0){
+   const previousActivity=$('previousActivity');
+   if(previousActivity&&!previousActivity.disabled)previousActivity.click();
+   return
+  }
+  move(index-1,{unlock:false})
+ };
  sourceBtn.onclick=()=>{
   if(!activeReadingSource)return;
   showModal('<div class="student-source-modal"><div class="section-head"><div><span class="role-kicker">Reading reference</span><h3>Read the text</h3></div><button class="icon-btn" data-close>×</button></div><div class="student-source-modal-body">'+activeReadingSource.innerHTML+'</div></div>');
