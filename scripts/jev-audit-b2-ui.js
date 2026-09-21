@@ -46,9 +46,9 @@ async function main(){
   ],
   implementation:{
    premiumStylesLoaded:index.includes('englishgate-b2-premium-v3.css?v=1'),
-   sharedSurfaceCssLoaded:index.includes('b2-learning-surface-v1.css?v=1'),
+   sharedSurfaceCssLoaded:index.includes('b2-learning-surface-v1.css?v=2'),
    sharedSurfaceJsLoaded:index.includes('b2-learning-surface-v1.js?v=1'),
-   sharedSurfaceLoadsAfterPremium:index.indexOf('b2-learning-surface-v1.css?v=1')>index.indexOf('englishgate-b2-premium-v3.css?v=1'),
+   sharedSurfaceLoadsAfterPremium:index.indexOf('b2-learning-surface-v1.css?v=2')>index.indexOf('englishgate-b2-premium-v3.css?v=1'),
    sharedDesignTokens:['--b2-learn-line','--b2-learn-radius','--b2-learn-blue-soft'].every(x=>sharedCss.includes(x)),
    liveFluencyLabels:['FLUENCY START','FLUENCY USE','TALK AFTER READING','MAKE IT PERSONAL — SPEAK FIRST','FLUENCY RULE','FLUENCY EXIT','PRONUNCIATION FOCUS','MEDIATION MOVE'].every(x=>liveBooks.includes(x)&&sharedJs.includes(x)),
    liveMissionHeadingsDecorated:sharedJs.includes("return'mission'")&&sharedJs.includes('isUpperLabel'),
