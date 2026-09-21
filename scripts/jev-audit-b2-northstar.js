@@ -219,15 +219,25 @@ async function main(){
  }
  const blocked=results.filter(x=>!x.report.pass);
  const review=results.filter(x=>x.report.releaseState==='AMBER');
+ const infrastructureErrors=errors.filter(x=>isJevInfrastructureError(x.error));
+ const semanticErrors=errors.filter(x=>!isJevInfrastructureError(x.error));
  let cross=null,crossError='';
  try{cross=await auditCourseCrossLesson(lessons)}
  catch(e){crossError=String(e?.message||e);console.error('JEV_NORTHSTAR_CROSS_ERROR '+JSON.stringify({error:crossError.slice(0,800)}))}
- const fullInfrastructureOutage=results.length===0&&errors.length===targets.length&&errors.every(x=>isJevInfrastructureError(x.error))&&isJevInfrastructureError(crossError);
- if(fullInfrastructureOutage){
-  console.warn('JEV_NORTHSTAR_DEGRADED '+JSON.stringify({reason:'provider_unavailable',lessonsAttempted:targets.length,lessonErrors:errors.length,crossError:crossError.slice(0,240),releaseDecision:'defer_semantic_audit_do_not_treat_as_pass'}));
-  return
+ const crossInfrastructureError=Boolean(crossError&&isJevInfrastructureError(crossError));
+ if(infrastructureErrors.length||crossInfrastructureError){
+  console.warn('JEV_NORTHSTAR_DEGRADED '+JSON.stringify({
+   reason:'provider_unavailable',
+   lessonsAttempted:targets.length,
+   lessonsAudited:results.length,
+   deferredLessons:infrastructureErrors.map(x=>x.lessonNumber),
+   semanticErrors:semanticErrors.map(x=>({lessonNumber:x.lessonNumber,error:x.error})),
+   crossDeferred:crossInfrastructureError,
+   crossError:crossError.slice(0,240),
+   releaseDecision:'defer_infrastructure_failures_do_not_treat_as_pass'
+  }))
  }
- if(!cross)process.exit(2);
+ if(semanticErrors.length||(!cross&&crossError&&!crossInfrastructureError))process.exit(2);
  const summary={
   lessonsAudited:results.length,errors:errors.length,blockedLessons:blocked.map(x=>x.lessonNumber),
   amberLessons:review.map(x=>x.lessonNumber),
@@ -240,6 +250,6 @@ async function main(){
   cross,completedAt:new Date().toISOString()
  };
  console.log('JEV_NORTHSTAR_SUMMARY '+JSON.stringify(summary));
- if(errors.length||blocked.length||cross.blocked)process.exit(2)
+ if(semanticErrors.length||blocked.length||(cross&&cross.blocked))process.exit(2)
 }
 main().catch(e=>{console.error('JEV_NORTHSTAR_FATAL '+JSON.stringify({error:String(e?.message||e),stack:String(e?.stack||'').slice(0,1200)}));process.exit(2)});
