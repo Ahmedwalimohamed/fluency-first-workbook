@@ -1117,7 +1117,7 @@ async function ensureLiveLessonAudio(player){
  if(!url){
   const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text,speakers})});
   if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const body=await res.json();if(body?.error)message=body.error}catch{}throw new Error(message)}
-  if(String(res.headers.get('X-EnglishGate-Audio-Provider')||'').toLowerCase()!=='openai')throw new Error('Listening audio provider could not be verified.');
+  {const provider=String(res.headers.get('X-EnglishGate-Audio-Provider')||'').toLowerCase();if(!['openai','edge'].includes(provider))throw new Error('Listening audio provider could not be verified.');}
   const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
   url=URL.createObjectURL(blob);liveAudioUrls[key]=url
  }
@@ -1130,43 +1130,43 @@ function wireLiveAudioPlayers(root=document){
   const fmt=value=>{const n=Number.isFinite(value)?Math.max(0,value):0,m=Math.floor(n/60),s=Math.floor(n%60);return m+':'+String(s).padStart(2,'0')};
   const sync=audio=>{if(current)current.textContent=fmt(audio.currentTime);if(duration)duration.textContent=fmt(audio.duration);if(seek&&Number.isFinite(audio.duration)&&audio.duration>0)seek.value=String(audio.currentTime/audio.duration*100);if(play)play.textContent=audio.paused?'▶':'❚❚'};
   const fail=message=>{
-   player.dataset.audioState='error';player.dataset.audioError=message||'Natural OpenAI voice is temporarily unavailable.';
+   player.dataset.audioState='error';player.dataset.audioError=message||'Natural listening voice is temporarily unavailable.';
    if(status)status.textContent=player.dataset.audioError;
    if(play){play.disabled=false;play.textContent='↻'}if(restart)restart.disabled=true;if(seek)seek.disabled=true
   };
   const bind=audio=>{
    audio.playbackRate=Number(speed?.value)||1;
    audio.onloadedmetadata=()=>sync(audio);audio.ontimeupdate=()=>sync(audio);
-   audio.onplay=()=>{player.dataset.audioState='ready';if(status)status.textContent='Playing · OpenAI natural voice';sync(audio)};
+   audio.onplay=()=>{player.dataset.audioState='ready';if(status)status.textContent='Playing · natural voice';sync(audio)};
    audio.onpause=()=>{if(status&&audio.currentTime<audio.duration)status.textContent='Paused';sync(audio)};
    audio.onended=()=>{if(status)status.textContent='Finished';sync(audio)};
-   audio.onerror=()=>fail('OpenAI audio playback failed. Tap retry.');
+   audio.onerror=()=>fail('Audio playback failed. Tap retry.');
    return audio
   };
   const prime=()=>{
    player.dataset.audioState='loading';player._liveAudio=null;
-   if(play)play.disabled=true;if(restart)restart.disabled=true;if(seek)seek.disabled=false;if(status)status.textContent='Preparing OpenAI audio…';
+   if(play)play.disabled=true;if(restart)restart.disabled=true;if(seek)seek.disabled=false;if(status)status.textContent='Preparing natural audio…';
    return ensureLiveLessonAudio(player).then(audio=>{
     bind(audio);audio.load();player.dataset.audioState='ready';
-    if(status)status.textContent='Ready · OpenAI natural voice';
+    if(status)status.textContent='Ready · natural voice';
     if(play){play.disabled=false;play.textContent='▶'}if(restart)restart.disabled=false;
     return audio
-   }).catch(e=>{fail(e.message||'Natural OpenAI voice is temporarily unavailable. Tap retry.');return null})
+   }).catch(e=>{fail(e.message||'Natural listening voice is temporarily unavailable. Tap retry.');return null})
   };
   player._audioPriming=prime();
   if(play)play.onclick=()=>{
    if(player.dataset.audioState==='error'){player._audioPriming=prime();return}
-   const audio=player._liveAudio;if(!audio){if(status)status.textContent='OpenAI audio is still preparing…';return}
+   const audio=player._liveAudio;if(!audio){if(status)status.textContent='Audio is still preparing…';return}
    if(activeLiveLessonAudio&&activeLiveLessonAudio!==audio)activeLiveLessonAudio.pause();activeLiveLessonAudio=audio;
    audio.playbackRate=Number(speed?.value)||1;
-   if(audio.paused){const promise=audio.play();if(promise?.catch)promise.catch(()=>fail('OpenAI audio playback failed. Tap retry.'))}else audio.pause();
+   if(audio.paused){const promise=audio.play();if(promise?.catch)promise.catch(()=>fail('Audio playback failed. Tap retry.'))}else audio.pause();
    sync(audio)
   };
   if(restart)restart.onclick=()=>{
-   const audio=player._liveAudio;if(!audio){if(status)status.textContent='OpenAI audio is still preparing…';return}
+   const audio=player._liveAudio;if(!audio){if(status)status.textContent='Audio is still preparing…';return}
    if(activeLiveLessonAudio&&activeLiveLessonAudio!==audio)activeLiveLessonAudio.pause();activeLiveLessonAudio=audio;
    audio.currentTime=0;audio.playbackRate=Number(speed?.value)||1;
-   const promise=audio.play();if(promise?.catch)promise.catch(()=>fail('OpenAI audio playback failed. Tap retry.'));
+   const promise=audio.play();if(promise?.catch)promise.catch(()=>fail('Audio playback failed. Tap retry.'));
    sync(audio)
   };
   if(speed)speed.onchange=()=>{const audio=player._liveAudio;if(audio)audio.playbackRate=Number(speed.value)||1};
@@ -2438,7 +2438,7 @@ async function ensureLessonAudio(l){
  if(!url){
   const res=await fetch('/api/audio',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonId:key,text,speakers:l.listening?.speakers||[]})});
   if(!res.ok){let message='Natural listening audio is unavailable. Try again.';try{const e=await res.json();if(e?.error)message=e.error}catch{}throw new Error(message)}
-  if(String(res.headers.get('X-EnglishGate-Audio-Provider')||'').toLowerCase()!=='openai')throw new Error('Listening audio provider could not be verified.');
+  {const provider=String(res.headers.get('X-EnglishGate-Audio-Provider')||'').toLowerCase();if(!['openai','edge'].includes(provider))throw new Error('Listening audio provider could not be verified.');}
   const blob=await res.blob();if(!blob.type.startsWith('audio/'))throw new Error('Natural listening audio is unavailable. Try again.');
   url=URL.createObjectURL(blob);audioCache[key]=url;
  }
@@ -2458,33 +2458,33 @@ function setWorkbookAudioError(message){
  const play=$('playAudio'),restart=$('restartAudio'),seek=$('audioSeek'),status=$('audioStatus');
  if(play){play.dataset.audioState='error';play.disabled=false;play.textContent='↻'}
  if(restart)restart.disabled=true;if(seek)seek.disabled=true;
- if(status)status.textContent=message||'Natural OpenAI voice is temporarily unavailable. Tap retry.'
+ if(status)status.textContent=message||'Natural listening voice is temporarily unavailable. Tap retry.'
 }
 function playListening(l){
  const btn=$('playAudio'),status=$('audioStatus');if(!btn)return;
  if(btn.dataset.audioState==='error'){wireAudioControls(l,true);return}
- if(!workbookAudioReady(l)){if(status)status.textContent='OpenAI audio is still preparing…';return}
+ if(!workbookAudioReady(l)){if(status)status.textContent='Audio is still preparing…';return}
  const speed=$('audioSpeed');if(speed)activeAudio.playbackRate=Number(speed.value)||1;
- if(activeAudio.paused){const promise=activeAudio.play();if(promise?.catch)promise.catch(()=>setWorkbookAudioError('OpenAI audio playback failed. Tap retry.'))}else{activeAudio.pause();if(status)status.textContent='Paused'}
+ if(activeAudio.paused){const promise=activeAudio.play();if(promise?.catch)promise.catch(()=>setWorkbookAudioError('Audio playback failed. Tap retry.'))}else{activeAudio.pause();if(status)status.textContent='Paused'}
  syncAudioUi();
 }
 function restartListening(l){
  const status=$('audioStatus');
- if(!workbookAudioReady(l)){if(status)status.textContent='OpenAI audio is still preparing…';return}
+ if(!workbookAudioReady(l)){if(status)status.textContent='Audio is still preparing…';return}
  activeAudio.currentTime=0;const speed=$('audioSpeed');if(speed)activeAudio.playbackRate=Number(speed.value)||1;
- const promise=activeAudio.play();if(promise?.catch)promise.catch(()=>setWorkbookAudioError('OpenAI audio playback failed. Tap retry.'));
- if(status)status.textContent='Playing from the beginning · OpenAI natural voice';syncAudioUi()
+ const promise=activeAudio.play();if(promise?.catch)promise.catch(()=>setWorkbookAudioError('Audio playback failed. Tap retry.'));
+ if(status)status.textContent='Playing from the beginning · natural voice';syncAudioUi()
 }
 function wireAudioControls(l,retry=false){
  const seek=$('audioSeek'),speed=$('audioSpeed'),restart=$('restartAudio'),play=$('playAudio'),status=$('audioStatus');
  if(retry&&activeAudio){try{activeAudio.pause()}catch{}activeAudio=null;activeAudioLessonKey=null}
  if(restart)restart.onclick=()=>restartListening(l);
  if(play){play.onclick=()=>playListening(l);play.dataset.audioState='loading';play.disabled=true;play.textContent='▶'}
- if(restart)restart.disabled=true;if(seek)seek.disabled=false;if(status)status.textContent='Preparing OpenAI audio…';
+ if(restart)restart.disabled=true;if(seek)seek.disabled=false;if(status)status.textContent='Preparing natural audio…';
  ensureLessonAudio(l).then(audio=>{
   audio.load();if(play){play.dataset.audioState='ready';play.disabled=false;play.textContent='▶'}if(restart)restart.disabled=false;
-  if(status)status.textContent='Ready · OpenAI natural voice';syncAudioUi()
- }).catch(e=>setWorkbookAudioError(e.message||'Natural OpenAI voice is temporarily unavailable. Tap retry.'));
+  if(status)status.textContent='Ready · natural voice';syncAudioUi()
+ }).catch(e=>setWorkbookAudioError(e.message||'Natural listening voice is temporarily unavailable. Tap retry.'));
  if(speed)speed.onchange=()=>{if(workbookAudioReady(l))activeAudio.playbackRate=Number(speed.value)||1};
  if(seek)seek.oninput=()=>{if(workbookAudioReady(l)&&Number.isFinite(activeAudio.duration)&&activeAudio.duration>0){activeAudio.currentTime=(Number(seek.value)/100)*activeAudio.duration;syncAudioUi()}};
 }
