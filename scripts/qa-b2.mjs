@@ -102,9 +102,10 @@ for(let i=0;i<22;i++){
  if(liveLesson&&liveLesson.number!==n)fail('Lesson '+n+': live-book number mismatch.');
  if(liveLesson&&liveLesson.title!==l.title)fail('Lesson '+n+': live-book/workbook topic mismatch.');
  if(liveLesson){
-  for(const marker of ['CAN-DO GOAL:','B2 LIFT','PRONUNCIATION FOCUS','MEDIATION MOVE']){
+  for(const marker of ['CAN-DO GOAL:','PRONUNCIATION FOCUS','MEDIATION MOVE']){
    if(!String(liveLesson.content||'').includes(marker))fail(`Lesson ${n}: live lesson missing "${marker}".`);
   }
+  if(String(liveLesson.content||'').includes('B2 LIFT'))fail(`Lesson ${n}: B2 LIFT must not appear in the Live lesson.`);
  }
 }
 
