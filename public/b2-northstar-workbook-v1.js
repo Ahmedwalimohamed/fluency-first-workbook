@@ -9,6 +9,7 @@ const REMEMBER_OFFSETS=[1,3,7];
 const TOTAL=10;
 const MIN_COMPREHENSION_QUESTIONS=3;
 const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX'];
+let activeLesson=null,activeState=null,reviewingComplete=false;
 const STEPS=[
  {phase:'SEE',skill:'reading'},
  {phase:'CHOOSE',skill:'grammar'},
@@ -60,11 +61,19 @@ function shell(l,s,body){
   '<div class="micro-title"><small>B2 · Lesson '+Number(l.number)+'</small><strong>'+esc(l.title)+'</strong></div>'+
   '<span class="micro-preview">'+(preview()?'Preview':'Workbook')+'</span></div>'+
   phaseStrip(s)+
+  '<div class="micro-history-nav"><button class="ghost-btn" id="northstarPrevious" type="button"'+((s.index<=0||(s.complete&&!reviewingComplete))?' hidden':'')+'>← Previous activity</button></div>'+
   '<div class="micro-progress-meta"><span>'+esc(phase)+'</span><span>Step '+(Number(s.index)+1)+' of '+TOTAL+'</span></div>'+
   '<div class="micro-progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div>'+
   '<main class="micro-stage">'+body+'</main></div>'
 }
-function bindBack(){const b=el('northstarBack');if(b)b.onclick=leave}
+function bindBack(){
+ const b=el('northstarBack');if(b)b.onclick=leave;
+ const p=el('northstarPrevious');
+ if(p&&activeLesson&&activeState){
+  p.hidden=activeState.index<=0||(activeState.complete&&!reviewingComplete);
+  p.onclick=()=>previous(activeLesson,activeState)
+ }
+}
 function prompt(title,sub){
  return '<div class="micro-prompt"><h1>'+esc(title)+'</h1>'+(sub?'<p>'+esc(sub)+'</p>':'')+'</div>'
 }
@@ -342,7 +351,8 @@ async function renderFix(l,s){
  }
 }
 function render(l,s){
- if(s.complete){renderDone(l,s);return}
+ activeLesson=l;activeState=s;
+ if(s.complete&&!reviewingComplete){renderDone(l,s);return}
  const i=s.index;
  if(i===0)return renderSee(l,s);
  if(i===1)return renderRetrieval(l,s);
@@ -354,6 +364,12 @@ function render(l,s){
  if(i===7)return renderUse(l,s);
  if(i===8)return renderFinal(l,s);
  if(i===9)return renderFix(l,s)
+}
+function previous(l,s){
+ if(!l||!s||s.index<=0)return;
+ if(s.complete)reviewingComplete=true;
+ s.index=Math.max(0,s.index-1);write(l,s);render(l,s);
+ if(typeof resetAppScroll==='function')resetAppScroll()
 }
 function next(l,s){s.index=Math.min(TOTAL-1,s.index+1);write(l,s);render(l,s);if(typeof resetAppScroll==='function')resetAppScroll()}
 function scoreFor(s,skill){
@@ -380,15 +396,17 @@ async function finish(l,s){
  try{await saveEvidence(l,s);renderDone(l,s)}catch(e){const slot=el('northstarSaveStatus');if(slot)slot.textContent='Lesson complete on this device. Progress sync needs another try: '+String(e?.message||e)}
 }
 function renderDone(l,s){
+ activeLesson=l;activeState=s;reviewingComplete=false;
  const body='<div class="micro-complete"><div class="micro-complete-mark">✓</div><small>Lesson complete</small>'+
   '<h1>'+esc(l.northstar.mission)+'</h1>'+
   '<p>You saw useful English, chose meaning, changed the pattern, used it independently, and improved one important part.</p>'+
   '<div class="micro-summary"><div><strong>'+TOTAL+'</strong><span>short actions</span></div><div><strong>'+scoreFor(s,'listening')+'%</strong><span>listening evidence</span></div><div><strong>1</strong><span>real final task</span></div></div>'+
   '<p class="micro-save-status" id="northstarSaveStatus">'+(preview()?'Preview only — nothing was saved.':s.saved?'Progress saved.':'Saving progress…')+'</p>'+
-  '<div class="micro-finish-actions"><button class="primary-btn" id="northstarExit" type="button">Back to lessons</button><button class="ghost-btn" id="northstarRestart" type="button">Practise again</button></div></div>';
+  '<div class="micro-finish-actions"><button class="primary-btn" id="northstarExit" type="button">Back to lessons</button><button class="ghost-btn" id="northstarReview" type="button">Review activities</button><button class="ghost-btn" id="northstarRestart" type="button">Practise again</button></div></div>';
  el('content').innerHTML=shell(l,s,body);bindBack();
  el('northstarExit').onclick=leave;
- el('northstarRestart').onclick=()=>{const ns=fresh(l);write(l,ns);render(l,ns)}
+ el('northstarReview').onclick=()=>{reviewingComplete=true;render(l,s);if(typeof resetAppScroll==='function')resetAppScroll()};
+ el('northstarRestart').onclick=()=>{reviewingComplete=false;const ns=fresh(l);write(l,ns);render(l,ns)}
 }
 function leave(){
  document.body.classList.remove('b2-premium-workbook-mode');
@@ -399,6 +417,7 @@ function leave(){
  if(typeof studentCourse==='function')studentCourse()
 }
 function northstarWorkbook(l){
+ reviewingComplete=false;
  document.body.classList.add('b2-premium-workbook-mode');
  if(typeof setWorkbookDesignMode==='function')setWorkbookDesignMode(true);
  if(typeof title==='function')title('Workbook','Lesson '+l.number);
