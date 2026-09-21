@@ -74,9 +74,11 @@ function speakerVoicePlan(turns,speakerProfiles=[]){
  return plan;
 }
 async function requestSpeechWav(input,voice,instructions){
+ const apiKey=process.env.OPENAI_TTS_API_KEY||process.env.OPENAI_API_KEY;
+ if(!apiKey){const e=new Error('OpenAI TTS key is not configured');e.status=503;throw e}
  const body={model:OPENAI_TTS_MODEL,voice,input,response_format:'wav'};
  if(String(OPENAI_TTS_MODEL).startsWith('gpt-4o-mini-tts'))body.instructions=instructions;
- const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
  if(!r.ok){const detail=await r.text();const e=new Error('OpenAI TTS '+r.status+': '+detail.slice(0,500));e.status=r.status;throw e}
  return Buffer.from(await r.arrayBuffer());
 }
@@ -378,7 +380,7 @@ app.post('/api/audio',auth,async(req,res)=>{
  const lessonId=String(req.body.lessonId||'').trim();
  const input=String(req.body.text||'').trim(),speakers=normalizeSpeakerProfiles(req.body.speakers);
  if(!lessonId||input.length<5||input.length>12000)return res.status(400).json({error:'Invalid listening audio request.'});
- if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'Natural listening audio is unavailable.'});
+ if(!(process.env.OPENAI_TTS_API_KEY||process.env.OPENAI_API_KEY))return res.status(503).json({error:'Natural listening audio is unavailable.'});
  const key=crypto.createHash('sha256').update('v4-openai-only|'+lessonId+'|'+input+'|'+JSON.stringify(speakers)).digest('hex');
  try{
   if(audioCache.has(key))return sendGeneratedAudio(res,audioCache.get(key));
@@ -390,7 +392,7 @@ app.get('/api/audio/:lessonId',auth,async(req,res)=>{
  const lessonId=String(req.params.lessonId||'');
  const input=LISTENING_SCRIPTS[lessonId];
  if(!input)return res.status(404).json({error:'Listening topic not found.'});
- if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'Natural listening audio is ready, but OPENAI_API_KEY has not yet been added to Railway.'});
+ if(!(process.env.OPENAI_TTS_API_KEY||process.env.OPENAI_API_KEY))return res.status(503).json({error:'Natural listening audio is not configured.'});
  const key='legacy-v2:'+lessonId;
  try{
   if(audioCache.has(key))return sendGeneratedAudio(res,audioCache.get(key));
