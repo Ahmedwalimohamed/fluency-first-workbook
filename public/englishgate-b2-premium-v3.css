@@ -854,3 +854,13 @@ body.b2-premium-workbook-mode .app.student-mode .content{
     scroll-behavior:auto!important;
   }
 }
+
+
+/* Student history navigation: finished activities remain reviewable without resetting progress. */
+.b2-microflow .micro-history-nav{display:flex;align-items:center;justify-content:flex-start;max-width:1180px;width:min(1180px,calc(100% - 40px));margin:8px auto 0}
+.b2-microflow .micro-history-nav button{min-height:44px;padding:0 14px}
+.b2-microflow .micro-history-nav button[hidden]{display:none!important}
+@media(max-width:640px){
+  .b2-microflow .micro-history-nav{width:calc(100% - 24px);margin-top:6px}
+  .b2-microflow .micro-history-nav button{width:100%}
+}
