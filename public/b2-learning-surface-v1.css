@@ -258,3 +258,299 @@
   .classroom-stage-content *,
   .b2-microflow *{scroll-behavior:auto!important;transition-duration:.001ms!important;animation-duration:.001ms!important}
 }
+
+
+/* =========================================================
+   B2 THEME COHERENCE v2
+   Canonical semantic palette:
+   blue = learning/action; slate = structure; green = success;
+   red = error; amber = review. No skill-specific decorative hues.
+   ========================================================= */
+:root{
+  --b2-learn-blue:#2563eb;
+  --b2-learn-blue-dark:#1d4ed8;
+  --b2-learn-blue-soft:#eff6ff;
+  --b2-learn-blue-line:#bfdbfe;
+  --b2-learn-ink:#0f172a;
+  --b2-learn-text:#334155;
+  --b2-learn-muted:#64748b;
+  --b2-learn-surface:#ffffff;
+  --b2-learn-soft:#f8fafc;
+  --b2-learn-line:#e2e8f0;
+  --b2-learn-line-strong:#cbd5e1;
+  --b2-learn-success:#16a34a;
+  --b2-learn-success-soft:#f0fdf4;
+  --b2-learn-error:#dc2626;
+  --b2-learn-error-soft:#fef2f2;
+  --b2-learn-review:#d97706;
+  --b2-learn-review-soft:#fffbeb;
+}
+
+/* Map legacy design variables to the B2 palette only. */
+.student-live-book,
+.teacher-live-book,
+.admin-live-book,
+.classroom-player,
+body.b2-premium-workbook-mode{
+  --navy:var(--b2-learn-blue);
+  --navy-2:var(--b2-learn-blue-dark);
+  --teal:var(--b2-learn-blue);
+  --teal-soft:var(--b2-learn-blue-soft);
+  --pink:var(--b2-learn-blue);
+  --gold:var(--b2-learn-review);
+  --purple:var(--b2-learn-blue);
+  --green:var(--b2-learn-success);
+  --text:var(--b2-learn-text);
+  --muted:var(--b2-learn-muted);
+  --border:var(--b2-learn-line);
+  --bg:var(--b2-learn-soft);
+  --card:var(--b2-learn-surface);
+
+  --eg-blue:var(--b2-learn-blue);
+  --eg-blue-2:var(--b2-learn-blue-dark);
+  --eg-blue-soft:var(--b2-learn-blue-soft);
+  --eg-red:var(--b2-learn-error);
+  --eg-red-soft:var(--b2-learn-error-soft);
+  --eg-ink:var(--b2-learn-ink);
+  --eg-ink-2:var(--b2-learn-text);
+  --eg-border:var(--b2-learn-line);
+  --eg-muted:var(--b2-learn-muted);
+
+  --eg-vocab-primary:var(--b2-learn-blue);
+  --eg-vocab-accent:var(--b2-learn-blue);
+  --eg-vocab-text:var(--b2-learn-ink);
+  --eg-vocab-muted:var(--b2-learn-muted);
+  --eg-vocab-border:var(--b2-learn-line);
+  --eg-vocab-bg:var(--b2-learn-soft);
+
+  --eg-g-primary:var(--b2-learn-blue);
+  --eg-g-text:var(--b2-learn-ink);
+  --eg-g-muted:var(--b2-learn-muted);
+  --eg-g-border:var(--b2-learn-line);
+
+  --eg-read-primary:var(--b2-learn-blue);
+  --eg-read-text:var(--b2-learn-ink);
+  --eg-read-muted:var(--b2-learn-muted);
+  --eg-read-border:var(--b2-learn-line);
+
+  --eg-li-primary:var(--b2-learn-blue);
+  --eg-li-primary-dark:var(--b2-learn-blue-dark);
+  --eg-li-text:var(--b2-learn-ink);
+  --eg-li-muted:var(--b2-learn-muted);
+  --eg-li-border:var(--b2-learn-line);
+}
+
+/* B2 lesson shell: remove red/pink decorative theme leakage. */
+.app.student-mode .student-live-book .eg-lesson-header,
+.teacher-live-book .eg-lesson-header,
+.admin-live-book .eg-lesson-header{
+  background:linear-gradient(180deg,#fff 0%,var(--b2-learn-soft) 100%)!important;
+}
+.app.student-mode .student-live-book .eg-stage.is-current,
+.teacher-live-book .eg-stage.is-current,
+.admin-live-book .eg-stage.is-current,
+.teacher-presentation-stage.is-current{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:var(--b2-learn-blue-soft)!important;
+  color:var(--b2-learn-blue-dark)!important;
+  box-shadow:none!important;
+}
+.app.student-mode .student-live-book .eg-goal,
+.teacher-live-book .eg-goal,
+.admin-live-book .eg-goal{
+  border-left-color:var(--b2-learn-blue)!important;
+  background:var(--b2-learn-soft)!important;
+  color:var(--b2-learn-text)!important;
+}
+.student-live-book .live-book-bullet:before,
+.teacher-live-book .live-book-bullet:before,
+.admin-live-book .live-book-bullet:before,
+.classroom-player .live-book-bullet:before{
+  color:var(--b2-learn-blue)!important;
+}
+
+/* Neutralize the legacy green Grammar Lesson theme. */
+.eg-stage.grammar-lesson-stage,
+.teacher-presentation-stage.grammar-lesson-stage{
+  border-color:var(--b2-learn-line)!important;
+  background:#fff!important;
+}
+.eg-stage.grammar-lesson-stage:hover,
+.teacher-presentation-stage.grammar-lesson-stage:hover{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:#f8fbff!important;
+}
+.eg-stage.grammar-lesson-stage.is-current,
+.teacher-presentation-stage.grammar-lesson-stage.is-current{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:var(--b2-learn-blue-soft)!important;
+  box-shadow:none!important;
+}
+.eg-stage.grammar-lesson-stage>span:first-child{
+  background:var(--b2-learn-blue-soft)!important;
+  color:var(--b2-learn-blue-dark)!important;
+}
+.grammar-book-hero{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:linear-gradient(180deg,#fff 0%,#f8fbff 100%)!important;
+}
+.grammar-live-kicker{
+  background:var(--b2-learn-blue-soft)!important;
+  color:var(--b2-learn-blue-dark)!important;
+}
+.grammar-book-hero h2,
+.grammar-book-hero h3,
+.grammar-book-section h3,
+.grammar-book-section h4{color:var(--b2-learn-ink)!important}
+.grammar-book-hero p,
+.grammar-book-section p,
+.grammar-confidence label,
+.grammar-about-fields label{color:var(--b2-learn-text)!important}
+.grammar-book-hero p{border-top-color:var(--b2-learn-line)!important}
+.grammar-notice-examples strong{
+  border-left-color:var(--b2-learn-blue)!important;
+  background:var(--b2-learn-blue-soft)!important;
+  color:var(--b2-learn-text)!important;
+}
+.grammar-remember>span,
+.grammar-challenge>b{color:var(--b2-learn-blue-dark)!important}
+.grammar-remember th{
+  background:var(--b2-learn-soft)!important;
+  color:var(--b2-learn-text)!important;
+}
+.grammar-remember th,
+.grammar-remember td{border-color:var(--b2-learn-line)!important}
+.grammar-live-option>span{
+  background:var(--b2-learn-soft)!important;
+  color:var(--b2-learn-muted)!important;
+}
+.grammar-live-option:hover:not(:disabled){
+  border-color:var(--b2-learn-blue-line)!important;
+  background:#f8fbff!important;
+}
+.grammar-live-option.is-correct{
+  border-color:#86efac!important;
+  background:var(--b2-learn-success-soft)!important;
+  color:#166534!important;
+}
+.grammar-live-option.is-correct>span{
+  background:var(--b2-learn-success)!important;
+  color:#fff!important;
+}
+.grammar-live-option.is-wrong{
+  border-color:#fecaca!important;
+  background:var(--b2-learn-error-soft)!important;
+  color:#991b1b!important;
+}
+.grammar-live-option.is-wrong>span{
+  background:var(--b2-learn-error)!important;
+  color:#fff!important;
+}
+.is-good,.grammar-live-feedback.is-good{color:#166534!important}
+.is-bad,.grammar-live-feedback.is-bad{color:#991b1b!important}
+.grammar-fix-item>b{color:#991b1b!important}
+.grammar-fix-item input,
+.grammar-about-fields input,
+.grammar-challenge textarea{
+  border-color:var(--b2-learn-line-strong)!important;
+  color:var(--b2-learn-text)!important;
+}
+.grammar-challenge{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:#f8fbff!important;
+}
+.grammar-quick-check{
+  border-color:var(--b2-learn-line)!important;
+  background:#fff!important;
+}
+
+/* Remove the purple vocabulary identity inside B2 workbook. */
+body.b2-premium-workbook-mode .eg-vocabulary-page .eg-skill-kicker,
+body.b2-premium-workbook-mode .eg-vocab-reference .eg-panel-heading small,
+body.b2-premium-workbook-mode .eg-vocabulary-page .eg-task-panel-head small,
+body.b2-premium-workbook-mode .eg-vocabulary-page .vocab-core-card .question-stage span,
+body.b2-premium-workbook-mode .eg-vocabulary-page .guided-question .question-stage span,
+body.b2-premium-workbook-mode .vocab-question-meta span:first-child{
+  color:var(--b2-learn-blue-dark)!important;
+}
+body.b2-premium-workbook-mode .eg-vocabulary-page .eg-question-count,
+body.b2-premium-workbook-mode .eg-vocab-reference-card>span:first-child{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:var(--b2-learn-blue-soft)!important;
+  color:var(--b2-learn-blue-dark)!important;
+}
+body.b2-premium-workbook-mode .eg-vocabulary-page .eg-tip-card{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:#f8fbff!important;
+  color:var(--b2-learn-text)!important;
+}
+body.b2-premium-workbook-mode .eg-vocabulary-page .mcq-picker label:hover,
+body.b2-premium-workbook-mode .eg-vocabulary-page .mcq-option:hover,
+body.b2-premium-workbook-mode .eg-vocabulary-page label:has(input[type="radio"]):hover,
+body.b2-premium-workbook-mode .eg-vocabulary-page label:has(input[type="checkbox"]):hover{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:#f8fbff!important;
+}
+body.b2-premium-workbook-mode .eg-vocabulary-page .mcq-picker label:has(input:checked),
+body.b2-premium-workbook-mode .eg-vocabulary-page .mcq-option:has(input:checked),
+body.b2-premium-workbook-mode .eg-vocabulary-page label:has(input[type="radio"]:checked),
+body.b2-premium-workbook-mode .eg-vocabulary-page label:has(input[type="checkbox"]:checked){
+  border-color:#93c5fd!important;
+  background:var(--b2-learn-blue-soft)!important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.07)!important;
+}
+body.b2-premium-workbook-mode .eg-vocabulary-page .core-exact-entry button{
+  border-color:var(--b2-learn-blue-line)!important;
+  color:var(--b2-learn-blue-dark)!important;
+}
+body.b2-premium-workbook-mode .vocab-progress-track>span{
+  background:var(--b2-learn-blue)!important;
+}
+
+/* Northstar workbook: one accent across all learning stages. */
+body.b2-premium-workbook-mode .b2-microflow{
+  --eg-blue:var(--b2-learn-blue);
+  --eg-blue-soft:var(--b2-learn-blue-soft);
+  --eg-ink:var(--b2-learn-ink);
+  --eg-text:var(--b2-learn-text);
+  --eg-muted:var(--b2-learn-muted);
+  --eg-line:var(--b2-learn-line);
+  --eg-line-strong:var(--b2-learn-line-strong);
+  --eg-soft:var(--b2-learn-soft);
+}
+body.b2-premium-workbook-mode .b2-microflow .micro-stage::before{
+  border-color:var(--b2-learn-blue-line)!important;
+  background:var(--b2-learn-blue-soft)!important;
+  color:var(--b2-learn-blue-dark)!important;
+}
+body.b2-premium-workbook-mode .b2-microflow .primary-btn,
+body.b2-premium-workbook-mode .b2-microflow .micro-action button{
+  background:var(--b2-learn-blue)!important;
+  color:#fff!important;
+}
+body.b2-premium-workbook-mode .b2-microflow button.is-selected>span{
+  border-color:var(--b2-learn-blue)!important;
+  background:var(--b2-learn-blue)!important;
+  color:#fff!important;
+}
+body.b2-premium-workbook-mode .b2-microflow textarea:focus,
+body.b2-premium-workbook-mode .b2-microflow input:focus{
+  border-color:#93c5fd!important;
+  outline-color:rgba(37,99,235,.12)!important;
+}
+
+/* Semantic colors are reserved for state, not decoration. */
+.student-live-book .feedback.good,
+.teacher-live-book .feedback.good,
+.admin-live-book .feedback.good,
+body.b2-premium-workbook-mode .feedback.good,
+body.b2-premium-workbook-mode .is-good{
+  color:#166534!important;
+}
+.student-live-book .feedback.bad,
+.teacher-live-book .feedback.bad,
+.admin-live-book .feedback.bad,
+body.b2-premium-workbook-mode .feedback.bad,
+body.b2-premium-workbook-mode .is-bad{
+  color:#991b1b!important;
+}
