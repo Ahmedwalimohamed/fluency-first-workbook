@@ -1,0 +1,260 @@
+/* EnglishGate B2 shared learning surface v1
+   One visual language for Live lessons + Northstar workbook.
+   Content types remain distinct; hierarchy, spacing, borders and accents stay coherent. */
+:root{
+  --b2-learn-ink:#0f172a;
+  --b2-learn-text:#334155;
+  --b2-learn-muted:#64748b;
+  --b2-learn-blue:#2563eb;
+  --b2-learn-blue-soft:#eff6ff;
+  --b2-learn-blue-line:#bfdbfe;
+  --b2-learn-surface:#ffffff;
+  --b2-learn-soft:#f8fafc;
+  --b2-learn-line:#dbe4ee;
+  --b2-learn-success:#16a34a;
+  --b2-learn-radius:14px;
+  --b2-learn-gap:16px;
+}
+
+/* ---------- LIVE LESSON: shared hierarchy ---------- */
+.eg-stage-content,
+.classroom-stage-content{
+  color:var(--b2-learn-text);
+}
+
+.eg-stage-content .b2-learning-label,
+.classroom-stage-content .b2-learning-label{
+  display:flex;
+  align-items:center;
+  width:fit-content;
+  max-width:100%;
+  margin:24px 0 10px;
+  padding:7px 10px;
+  border:1px solid var(--b2-learn-blue-line);
+  border-radius:9px;
+  background:var(--b2-learn-blue-soft);
+  color:#1d4ed8;
+  font-size:.76rem;
+  line-height:1.2;
+  font-weight:850;
+  letter-spacing:.065em;
+  text-transform:uppercase;
+}
+
+.eg-stage-content .b2-learning-label.is-mission,
+.classroom-stage-content .b2-learning-label.is-mission{
+  width:100%;
+  padding:13px 15px;
+  border-left:4px solid var(--b2-learn-blue);
+  background:#f8fbff;
+  color:var(--b2-learn-ink);
+  font-size:.98rem;
+  letter-spacing:.025em;
+}
+
+.eg-stage-content .b2-learning-label.is-pronunciation,
+.eg-stage-content .b2-learning-label.is-mediation,
+.classroom-stage-content .b2-learning-label.is-pronunciation,
+.classroom-stage-content .b2-learning-label.is-mediation{
+  border-color:var(--b2-learn-line);
+  background:var(--b2-learn-soft);
+  color:#475569;
+}
+
+.eg-stage-content .b2-learning-callout-copy,
+.classroom-stage-content .b2-learning-callout-copy{
+  max-width:75ch;
+  margin:0 0 18px!important;
+  padding:14px 16px;
+  border:1px solid var(--b2-learn-line);
+  border-radius:var(--b2-learn-radius);
+  background:var(--b2-learn-surface);
+  color:var(--b2-learn-text);
+  line-height:1.65;
+}
+
+.eg-stage-content .live-book-section,
+.eg-stage-content .live-book-subhead:not(.b2-learning-label),
+.classroom-stage-content .live-book-section,
+.classroom-stage-content .live-book-subhead:not(.b2-learning-label){
+  border-color:var(--b2-learn-blue-line);
+  color:var(--b2-learn-ink);
+}
+
+.eg-stage-content .live-book-subhead:not(.b2-learning-label),
+.classroom-stage-content .live-book-subhead:not(.b2-learning-label){
+  padding:9px 11px;
+  border:1px solid var(--b2-learn-line);
+  border-left:3px solid var(--b2-learn-blue);
+  border-radius:9px;
+  background:var(--b2-learn-soft);
+  text-transform:none;
+  letter-spacing:.015em;
+  font-weight:800;
+}
+
+/* Prompts should feel like one family, not alternating unrelated pastel cards. */
+.eg-stage-content .live-prompt-grid .live-prompt-row,
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+1),
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+2),
+.eg-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+3),
+.classroom-stage-content .live-prompt-grid .live-prompt-row,
+.classroom-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+1),
+.classroom-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+2),
+.classroom-stage-content .live-prompt-grid .live-prompt-row:nth-child(3n+3){
+  border:1px solid var(--b2-learn-line);
+  border-radius:var(--b2-learn-radius);
+  background:var(--b2-learn-surface);
+  box-shadow:none;
+}
+
+.eg-stage-content .live-prompt-row>span,
+.classroom-stage-content .live-prompt-row>span{
+  border:1px solid #c7d7fe;
+  background:#eef4ff;
+  color:#1d4ed8;
+}
+
+.eg-stage-content .live-book-bullet,
+.classroom-stage-content .live-book-bullet{
+  border:1px solid #e3eaf2;
+  border-radius:11px;
+  background:var(--b2-learn-soft);
+}
+.eg-stage-content .live-book-bullet:before,
+.classroom-stage-content .live-book-bullet:before{color:var(--b2-learn-blue)}
+
+.eg-stage-content .live-vocab-row,
+.classroom-stage-content .live-vocab-row,
+.eg-stage-content .live-check-row,
+.classroom-stage-content .live-check-row{
+  border-color:var(--b2-learn-line);
+  border-radius:var(--b2-learn-radius);
+  background:var(--b2-learn-surface);
+  box-shadow:none;
+}
+
+.eg-stage-content .live-reading-paragraph,
+.classroom-stage-content .live-reading-paragraph{
+  max-width:75ch;
+  padding:18px 20px;
+  border:1px solid var(--b2-learn-line);
+  border-radius:var(--b2-learn-radius);
+  background:var(--b2-learn-soft);
+  color:#25364d;
+  line-height:1.75;
+}
+
+/* ---------- LANGUAGE FOCUS / GRAMMAR ---------- */
+.grammar-live-lesson,
+.grammar-book-format{
+  --grammar-blue:var(--b2-learn-blue);
+  color:var(--b2-learn-text);
+}
+.grammar-book-section,
+.grammar-reading-card,
+.grammar-read-question,
+.grammar-remember,
+.grammar-live-question,
+.grammar-fix-item,
+.grammar-challenge,
+.grammar-confidence{
+  border-color:var(--b2-learn-line)!important;
+  border-radius:var(--b2-learn-radius)!important;
+  box-shadow:none!important;
+}
+.grammar-book-section,
+.grammar-reading-card,
+.grammar-read-question,
+.grammar-live-question,
+.grammar-fix-item,
+.grammar-challenge,
+.grammar-confidence{background:var(--b2-learn-surface)!important}
+.grammar-remember{background:var(--b2-learn-soft)!important}
+.grammar-book-number{
+  background:var(--b2-learn-blue-soft)!important;
+  color:#1d4ed8!important;
+}
+.grammar-live-option{
+  border-color:var(--b2-learn-line)!important;
+  border-radius:11px!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+.grammar-live-option:hover{border-color:#93b4fd!important;background:#f8fbff!important}
+
+/* ---------- WORKBOOK: same visual tokens ---------- */
+.b2-microflow .micro-stage{
+  border-color:var(--b2-learn-line)!important;
+  border-radius:16px!important;
+  background:var(--b2-learn-surface)!important;
+  box-shadow:none!important;
+}
+.b2-northstar-flow .northstar-reading,
+.b2-microflow .micro-scene,
+.b2-microflow .live-audio-player,
+.b2-microflow .micro-help,
+.b2-northstar-flow .northstar-model,
+.b2-northstar-flow .northstar-help,
+.b2-microflow .micro-input{
+  border-color:var(--b2-learn-line)!important;
+  border-radius:var(--b2-learn-radius)!important;
+  box-shadow:none!important;
+}
+.b2-northstar-flow .northstar-reading,
+.b2-microflow .micro-help,
+.b2-northstar-flow .northstar-model,
+.b2-northstar-flow .northstar-help,
+.b2-microflow .micro-input{
+  background:var(--b2-learn-soft)!important;
+}
+.b2-microflow .micro-choices button{
+  border-color:var(--b2-learn-line)!important;
+  border-radius:12px!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+.b2-microflow .micro-choices button:hover{
+  border-color:#93b4fd!important;
+  background:#f8fbff!important;
+}
+.b2-microflow .micro-choices button.is-selected{
+  border-color:#7890df!important;
+  background:#f2f5ff!important;
+}
+.b2-microflow .micro-input textarea,
+.b2-microflow .micro-input input{
+  border-color:#cbd5e1!important;
+  border-radius:11px!important;
+  background:#fff!important;
+}
+.b2-microflow .micro-feedback{
+  border-radius:11px!important;
+  box-shadow:none!important;
+}
+
+/* The phase label is the same hierarchy device used by Live lesson learning labels. */
+.b2-microflow .micro-stage::before{
+  padding:6px 9px;
+  border:1px solid var(--b2-learn-blue-line);
+  border-radius:8px;
+  background:var(--b2-learn-blue-soft);
+  color:#1d4ed8!important;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:760px){
+  .eg-stage-content .b2-learning-label,
+  .classroom-stage-content .b2-learning-label{margin-top:16px;font-size:.68rem}
+  .eg-stage-content .b2-learning-label.is-mission,
+  .classroom-stage-content .b2-learning-label.is-mission{padding:11px 12px;font-size:.88rem}
+  .eg-stage-content .b2-learning-callout-copy,
+  .classroom-stage-content .b2-learning-callout-copy{padding:12px 13px;margin-bottom:13px!important}
+  .eg-stage-content .live-reading-paragraph,
+  .classroom-stage-content .live-reading-paragraph{padding:14px 15px}
+}
+@media(prefers-reduced-motion:reduce){
+  .eg-stage-content *,
+  .classroom-stage-content *,
+  .b2-microflow *{scroll-behavior:auto!important;transition-duration:.001ms!important;animation-duration:.001ms!important}
+}
