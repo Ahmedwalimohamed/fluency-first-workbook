@@ -108,10 +108,14 @@ function enhance(){
  const nav=makeNav(root);
  const inner=$('.student-question-bottom-inner',nav);
 
- back.hidden=false;
+ const q=currentQuestion(root),atFirst=Number(q?.dataset.flowIndex||0)===0;
+ const previousSkill=$('#previousActivity');
+ const canPreviousSkill=Boolean(previousSkill&&!previousSkill.disabled);
+ back.hidden=atFirst&&!canPreviousSkill;
+ back.disabled=atFirst&&!canPreviousSkill;
  back.classList.add('student-question-nav-back');
- back.textContent='← Back';
- back.setAttribute('aria-label','Previous question');
+ back.textContent=atFirst&&canPreviousSkill?'← Previous activity':'← Back';
+ back.setAttribute('aria-label',atFirst&&canPreviousSkill?'Previous activity':'Previous question');
 
  next.hidden=false;
  next.classList.add('student-question-nav-next');
@@ -129,7 +133,6 @@ function enhance(){
  if(hint&&hint.parentElement!==inner)inner.appendChild(hint);
  if(next.parentElement!==inner)inner.appendChild(next);
 
- const previousSkill=$('#previousActivity');
  if(previousSkill&&!previousSkill.hidden)previousSkill.hidden=true;
 
  syncNavigationState(root);
