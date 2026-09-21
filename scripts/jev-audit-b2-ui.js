@@ -15,6 +15,9 @@ async function main(){
  const key=String(process.env.TYPESAFE_API_KEY||'').trim();
  if(!key){console.warn('JEV_UI_AUDIT_SKIPPED: TYPESAFE_API_KEY is not configured.');return}
  const css=read('public/englishgate-b2-premium-v3.css');
+ const sharedCss=read('public/b2-learning-surface-v1.css');
+ const sharedJs=read('public/b2-learning-surface-v1.js');
+ const liveBooks=read('public/live-books.js');
  const engine=read('public/b2-northstar-workbook-v1.js');
  const lesson1=read('public/b2-lesson1-microflow-v3.js');
  const index=read('public/index.html');
@@ -34,10 +37,23 @@ async function main(){
    'Motion must respect prefers-reduced-motion and must not be required to understand the task.',
    'The interface must feel credible for adult professional learners, not like a children learning game.',
    'The B2 lesson should behave as one immersive product surface rather than a premium card nested inside legacy dashboard chrome.',
-   'Source, decision, compose, and repair stages must differ structurally, not merely through color or width.'
+   'Source, decision, compose, and repair stages must differ structurally, not merely through color or width.',
+   'Live lessons and workbook activities must share a recognizable design system: typography hierarchy, border language, radius family, spacing rhythm, and restrained accent color.',
+   'A pedagogically important label must not appear as an undifferentiated plain paragraph when comparable grammar content is presented as a dedicated visual component.',
+   'Uniformity means coherent component treatment, not making reading, speaking, listening, grammar, and writing visually identical.'
   ],
   implementation:{
    premiumStylesLoaded:index.includes('englishgate-b2-premium-v3.css?v=1'),
+   sharedSurfaceCssLoaded:index.includes('b2-learning-surface-v1.css?v=1'),
+   sharedSurfaceJsLoaded:index.includes('b2-learning-surface-v1.js?v=1'),
+   sharedSurfaceLoadsAfterPremium:index.indexOf('b2-learning-surface-v1.css?v=1')>index.indexOf('englishgate-b2-premium-v3.css?v=1'),
+   sharedDesignTokens:['--b2-learn-line','--b2-learn-radius','--b2-learn-blue-soft'].every(x=>sharedCss.includes(x)),
+   liveFluencyLabels:['FLUENCY START','FLUENCY USE','TALK AFTER READING','MAKE IT PERSONAL — SPEAK FIRST','FLUENCY RULE','FLUENCY EXIT','PRONUNCIATION FOCUS','MEDIATION MOVE'].every(x=>liveBooks.includes(x)&&sharedJs.includes(x)),
+   liveMissionHeadingsDecorated:sharedJs.includes("return'mission'")&&sharedJs.includes('isUpperLabel'),
+   liveInstructionCopyCard:sharedCss.includes('.b2-learning-callout-copy'),
+   livePromptColorNormalized:sharedCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+1)')&&sharedCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+2)')&&sharedCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+3)'),
+   grammarUsesSharedTokens:sharedCss.includes('.grammar-book-section')&&sharedCss.includes('var(--b2-learn-line)'),
+   workbookUsesSharedTokens:sharedCss.includes('.b2-microflow .micro-stage')&&sharedCss.includes('.b2-northstar-flow .northstar-reading'),
    uiContractGeneric:engine.includes("uiDecisionContract:'jev-ui-v1'"),
    uiContractLesson1:lesson1.includes("uiDecisionContract:'jev-ui-v1'"),
    immersiveShellClass:engine.includes("classList.add('b2-premium-workbook-mode')")&&lesson1.includes("classList.add('b2-premium-workbook-mode')"),
@@ -72,7 +88,10 @@ async function main(){
   mobile_accessibility:question('Does the implementation include enough evidence of mobile simplification, focus visibility, and reduced-motion support to be safe for a mobile-first learning product?'),
   anti_slop:question('Does the implementation avoid the common AI-design failure modes named in the rules, including purple AI styling, excessive decoration, and treating every screen identically?'),
   shell_cohesion:question('Does the implementation make the B2 workbook feel like one cohesive immersive product experience instead of a redesigned card embedded in legacy application chrome?'),
-  mode_distinction:question('Are source, decision, compose, and repair stages structurally distinct enough that the interface emphasis matches the learner job in each stage?')
+  mode_distinction:question('Are source, decision, compose, and repair stages structurally distinct enough that the interface emphasis matches the learner job in each stage?'),
+  live_lesson_consistency:question('Do the B2 Live lessons now give important Fluency First, pronunciation, mediation, mission, prompt, vocabulary and reading elements deliberate visual hierarchy instead of mixing rich grammar cards with otherwise plain text?'),
+  workbook_consistency:question('Does the B2 workbook use a coherent family of surfaces, borders, radii, inputs, choices, source cards and feedback components while still differentiating source, decision, compose and repair jobs?'),
+  cross_surface_consistency:question('Do the B2 Live lessons and workbook now plausibly feel like two parts of the same EnglishGate product through shared visual tokens and hierarchy, without flattening all learning modes into identical cards?')
  };
 
  const controller=new AbortController();
