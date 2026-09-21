@@ -20,6 +20,7 @@ LISTENING_SCRIPTS["su-a2b1-l1"]="On the first day of a new training course, Amin
 const OPENAI_TTS_MODEL=process.env.OPENAI_TTS_MODEL||'gpt-4o-mini-tts';
 const OPENAI_TTS_VOICE=process.env.OPENAI_TTS_VOICE||'coral';
 const EDGE_TTS_VOICE=process.env.EDGE_TTS_VOICE||'en-US-EmmaMultilingualNeural';
+const EDGE_TTS_ENABLED=process.env.EDGE_TTS_ENABLED==='1';
 const OPENAI_TTS_FEMALE_VOICES=String(process.env.OPENAI_TTS_FEMALE_VOICES||'coral,nova,shimmer').split(',').map(x=>x.trim()).filter(Boolean);
 const OPENAI_TTS_MALE_VOICES=String(process.env.OPENAI_TTS_MALE_VOICES||'onyx,echo,ash').split(',').map(x=>x.trim()).filter(Boolean);
 const audioCache=new Map();
@@ -149,6 +150,7 @@ async function generateEdgeListeningAudio(input){
 async function generateListeningAudioWithFallback(input,speakerProfiles=[]){
  try{return await generateListeningAudio(input,speakerProfiles)}
  catch(openaiError){
+  if(!EDGE_TTS_ENABLED)throw openaiError;
   console.warn('OpenAI TTS unavailable; using Edge neural fallback:',String(openaiError?.message||openaiError).slice(0,220));
   try{return await generateEdgeListeningAudio(input)}
   catch(edgeError){
