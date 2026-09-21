@@ -120,6 +120,9 @@ for(let i=0;i<22;i++){
 const engine=fs.readFileSync(new URL('public/b2-northstar-workbook-v1.js',ROOT),'utf8');
 const lesson1Engine=fs.readFileSync(new URL('public/b2-lesson1-microflow-v3.js',ROOT),'utf8');
 const premiumUi=fs.readFileSync(new URL('public/englishgate-b2-premium-v3.css',ROOT),'utf8');
+
+const b2LearningCss=fs.readFileSync(new URL('public/b2-learning-surface-v1.css',ROOT),'utf8');
+const b2LearningJs=fs.readFileSync(new URL('public/b2-learning-surface-v1.js',ROOT),'utf8');
 const app=fs.readFileSync(new URL('public/app.js',ROOT),'utf8');
 const index=fs.readFileSync(new URL('public/index.html',ROOT),'utf8');
 const standards=fs.readFileSync(new URL('standards-audit-bootstrap.js',ROOT),'utf8');
@@ -129,6 +132,16 @@ try{new vm.Script(lesson1Engine)}catch(e){fail('Lesson 1 engine syntax error: '+
 try{new vm.Script(grader)}catch(e){fail('Northstar Jev grader syntax error: '+e.message)}
 
 if(!app.includes('northstar:x.northstar||null'))fail('Runtime B2 lesson mapper does not expose Northstar metadata.');
+if(!index.includes('b2-learning-surface-v1.css?v=1'))fail('Unified B2 learning surface CSS is not loaded.');
+if(!index.includes('b2-learning-surface-v1.js?v=1'))fail('Unified B2 learning surface decorator is not loaded.');
+if(index.indexOf('b2-learning-surface-v1.css?v=1')<index.indexOf('englishgate-b2-premium-v3.css?v=1'))fail('Unified B2 learning surface CSS must load after the premium B2 CSS so it can normalize legacy visual rules.');
+for(const label of ['FLUENCY START','FLUENCY USE','TALK AFTER READING','MAKE IT PERSONAL — SPEAK FIRST','FLUENCY RULE','FLUENCY EXIT','PRONUNCIATION FOCUS','MEDIATION MOVE']){
+ if(!b2LearningJs.includes(label))fail('Unified B2 learning surface is missing label coverage for '+label+'.');
+}
+for(const token of ['--b2-learn-line','--b2-learn-radius','.b2-learning-label','.b2-learning-callout-copy','.grammar-book-section','.b2-microflow .micro-stage']){
+ if(!b2LearningCss.includes(token))fail('Unified B2 learning surface CSS is missing '+token+'.');
+}
+if(!b2LearningCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+1)')||!b2LearningCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+2)')||!b2LearningCss.includes('.live-prompt-grid .live-prompt-row:nth-child(3n+3)'))fail('Unified B2 learning surface must neutralize legacy alternating prompt-card colors.');
 if(!index.includes('b2-northstar-workbook-v1.js?v=7'))fail('Northstar engine is not loaded in index.html with the current cache version.');
 if(index.indexOf('b2-northstar-workbook-v1.js?v=7')>index.indexOf('b2-lesson1-microflow-v3.js?v=6'))fail('Lesson 1 override must load after the generic Northstar engine.');
 if(!standards.includes("require('./northstar-jev-grading-bootstrap.js')"))fail('Jev Northstar grading bootstrap is not in the server chain.');
