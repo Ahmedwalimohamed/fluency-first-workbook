@@ -11,6 +11,10 @@ const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 let schemaPromise=null;
 const liveTaskPresence=new Map();
+const liveTaskIntelligenceCache=new Map();
+const TYPE_SAFE_LIVE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
+const TYPE_SAFE_LIVE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
+const LIVE_INTELLIGENCE_VERSION='live-task-jev-v1';
 const LIVE_TASK_ACTIVE_MS=15000;
 function touchLiveTaskPresence(taskId,studentId){
   const id=String(taskId||'');if(!id||!studentId)return;
@@ -240,6 +244,95 @@ function gradeActivity(taskContent,answers){
   return {correct,total:graded,answered,score:graded?Math.round(correct*100/graded):null,detail};
 }
 
+function jevChoice(data,id,allowed){
+  const a=data?.answers?.[id],choice=String(a?.choice||'').toLowerCase();
+  if(!allowed.includes(choice))return null;
+  const confidence=Number(a?.probabilities?.[choice]??a?.confidence);
+  return {choice,confidence:Number.isFinite(confidence)&&confidence>=0&&confidence<=1?confidence:null};
+}
+function deterministicClassroomDecision(rosterCount,subs,avg){
+  const submittedCount=subs.length,responseRate=rosterCount?submittedCount/rosterCount:0;
+  let understanding='insufficient',nextAction='wait';
+  if(submittedCount>=2&&avg!==null&&avg!==undefined){
+    if(avg>=80)understanding='strong';
+    else if(avg>=60)understanding='mixed';
+    else understanding='weak';
+  }
+  if(responseRate<0.5)nextAction='wait';
+  else if(avg===null||avg===undefined)nextAction='check_again';
+  else if(avg<60)nextAction='reteach';
+  else if(avg<80)nextAction='check_again';
+  else nextAction='continue';
+  return {source:'rules',understanding,nextAction,confidence:null,responseRate:Math.round(responseRate*100),version:LIVE_INTELLIGENCE_VERSION};
+}
+async function classroomIntelligence(task,rosterCount,subs,avg,questionStats){
+  const fallback=deterministicClassroomDecision(rosterCount,subs,avg);
+  const apiKey=String(process.env.TYPESAFE_API_KEY||'').trim();
+  if(!apiKey||!subs.length)return {...fallback,jevAvailable:Boolean(apiKey)};
+  const snapshot=JSON.stringify({
+    taskId:task.id,submitted:subs.length,avg,
+    stats:(questionStats||[]).map(x=>[x.id,x.answered,x.correctPct])
+  });
+  const cached=liveTaskIntelligenceCache.get(snapshot);
+  if(cached)return cached;
+  const state={
+    task:'EnglishGate live classroom teaching decision',
+    taskType:task.task_type,
+    title:cleanText(task.title,120),
+    topic:cleanText(task.content?.topic,120),
+    rosterCount,
+    submittedCount:subs.length,
+    responseRate:rosterCount?Math.round(subs.length*100/rosterCount):0,
+    averageAutoGradedScore:avg,
+    questionEvidence:(questionStats||[]).map(x=>({id:x.id,type:x.type,answered:x.answered,graded:x.graded,correctPct:x.correctPct})),
+    rules:[
+      'Use only the aggregated class evidence provided.',
+      'Do not infer anything about named learners because no learner identity is provided.',
+      'Prefer wait when too few learners have responded.',
+      'Prefer reteach when there is broad evidence of misunderstanding.',
+      'Prefer check_again when understanding is mixed or evidence is inconclusive.',
+      'Prefer continue only when the evidence is sufficiently strong.',
+      'This is advisory. The teacher remains in control.'
+    ]
+  };
+  const questions={
+    understanding:{type:'choice',instructions:'Classify the current class understanding from the evidence.',criteria:{
+      strong:'Most available evidence shows the class is succeeding and there is enough participation to trust the signal.',
+      mixed:'The evidence shows a meaningful mix of success and difficulty.',
+      weak:'The available evidence shows broad misunderstanding or low success.',
+      insufficient:'There is not enough evidence yet to judge class understanding.'
+    }},
+    next_action:{type:'choice',instructions:'Choose the safest next teaching action from the current evidence.',criteria:{
+      continue:'Enough learners have responded and the evidence is strong enough to move forward.',
+      reteach:'The class evidence indicates a broad misunderstanding that merits another explanation or model.',
+      check_again:'Understanding is mixed, open-ended, or uncertain, so another quick check is the safest next step.',
+      wait:'Too few learners have responded or learners still need time before judging.'
+    }}
+  };
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),2500);
+  try{
+    const r=await fetch(TYPE_SAFE_LIVE_URL,{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({state,model:TYPE_SAFE_LIVE_MODEL,questions}),signal:controller.signal});
+    if(!r.ok)throw new Error('Jev '+r.status);
+    const data=await r.json();
+    const u=jevChoice(data,'understanding',['strong','mixed','weak','insufficient']);
+    const a=jevChoice(data,'next_action',['continue','reteach','check_again','wait']);
+    if(!u||!a)throw new Error('Incomplete Jev live-task decision');
+    const result={
+      source:'jev',jevAvailable:true,understanding:u.choice,nextAction:a.choice,
+      confidence:a.confidence??u.confidence??null,responseRate:fallback.responseRate,
+      model:String(data?.model||TYPE_SAFE_LIVE_MODEL),version:LIVE_INTELLIGENCE_VERSION
+    };
+    liveTaskIntelligenceCache.set(snapshot,result);
+    if(liveTaskIntelligenceCache.size>300)liveTaskIntelligenceCache.delete(liveTaskIntelligenceCache.keys().next().value);
+    return result;
+  }catch{
+    const result={...fallback,jevAvailable:true};
+    liveTaskIntelligenceCache.set(snapshot,result);
+    if(liveTaskIntelligenceCache.size>300)liveTaskIntelligenceCache.delete(liveTaskIntelligenceCache.keys().next().value);
+    return result;
+  }finally{clearTimeout(timeout)}
+}
+
 function install(app){
   if(installed.has(app))return;installed.add(app);
   inheritedPost.call(app,'/api/teacher/live-tasks/prepare',async(req,res)=>{
@@ -319,19 +412,29 @@ function install(app){
       const active=activeLiveTaskStudents(task.id),submittedById=new Map(subs.rows.map(s=>[String(s.student_id),s]));
       const students=roster.rows.map(st=>{
         const sub=submittedById.get(String(st.id));
+        const status=sub?'submitted':active.has(String(st.id))?'working':'waiting';
+        let signal=status;
+        if(sub){
+          const score=sub.score===null||sub.score===undefined?null:Number(sub.score);
+          signal=score===null||!Number.isFinite(score)?'review':score>=80?'ready':score>=50?'partial':'needs_help';
+        }
         return {
-          studentId:st.id,name:st.name,username:st.username,
-          status:sub?'submitted':active.has(String(st.id))?'working':'waiting',
+          studentId:st.id,name:st.name,username:st.username,status,signal,
           score:sub?.score??null,timedOut:Boolean(sub?.timed_out),submittedAt:sub?.submitted_at||null
         };
       });
+      const classroomDecision=await classroomIntelligence(task,roster.rowCount,subs.rows,avg,questionStats);
       res.set('Cache-Control','no-store');
       res.json({
         ok:true,task:publicTask(task,true),serverNow:new Date().toISOString(),
         rosterCount:roster.rowCount,connectedCount:students.filter(x=>x.status!=='waiting').length,
         workingCount:students.filter(x=>x.status==='working').length,
         submittedCount:subs.rowCount,remainingCount:Math.max(0,roster.rowCount-subs.rowCount),
-        lateCount:subs.rows.filter(x=>x.timed_out).length,averageScore:avg,questionStats,students,
+        readyCount:students.filter(x=>x.signal==='ready').length,
+        partialCount:students.filter(x=>x.signal==='partial').length,
+        needsHelpCount:students.filter(x=>x.signal==='needs_help').length,
+        reviewCount:students.filter(x=>x.signal==='review').length,
+        lateCount:subs.rows.filter(x=>x.timed_out).length,averageScore:avg,questionStats,students,classroomDecision,
         submissions:subs.rows.map(s=>({studentId:s.student_id,name:s.name,username:s.username,answers:s.answers,score:s.score,correctCount:s.correct_count,totalCount:s.total_count,timedOut:s.timed_out,submittedAt:s.submitted_at}))
       });
     }catch(e){console.error('live task results error',e);res.status(500).json({error:'Live results are temporarily unavailable.'})}
