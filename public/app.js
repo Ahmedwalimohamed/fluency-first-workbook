@@ -1732,13 +1732,18 @@ function workbook(){
      <h2 id="workbookStageTitle" tabindex="-1">${escapeHtml(workbookStageLabel(l,currentStep))}</h2>
     </header>
     <article id="activityPanel" class="eg-stage-content eg-workbook-stage-content" aria-labelledby="workbookStageTitle"></article>
-    <footer class="eg-lesson-footer eg-workbook-footer" id="workbookStageFooter"></footer>
+    <footer class="eg-lesson-footer eg-workbook-footer" id="workbookStageFooter">${preview?`<button class="ghost-btn eg-admin-preview-prev" id="adminPreviewPrevious">← Previous activity</button><button class="primary-btn eg-admin-preview-next" id="adminPreviewNext">Next activity →</button>`:'' }</footer>
    </div>
   </div>
  </section>`;
  $('backWorkbookLessons').onclick=()=>{setWorkbookDesignMode(false);if(preview){returnToWorkbookLessons();return}currentPage='course';renderNav();studentCourse()};
  if($('reviseLessonFromWorkbook'))$('reviseLessonFromWorkbook').onclick=()=>{activeStudentLiveLessonNumber=l.number;activeStudentSectionIndex=0;currentPage='student-live-lesson';renderNav();studentLiveLesson()};
  document.querySelectorAll('[data-workbook-stage]').forEach(btn=>{if(!btn.dataset.workbookStage)return;btn.onclick=()=>{currentStep=btn.dataset.workbookStage;workbook();setTimeout(()=>focusWithoutScroll($('workbookStageTitle')),0)}});
+ if(preview){
+  const move=delta=>{const now=steps.indexOf(currentStep),next=now+delta;if(next>=0&&next<steps.length){currentStep=steps[next];workbook();return}const ready=readyLessons(COURSE),li=ready.findIndex(x=>x.id===activeLessonId),target=ready[li+(delta>0?1:-1)];if(target){activeLessonId=target.id;currentStep=delta>0?workbookStepsForLesson(target)[0]:workbookStepsForLesson(target).at(-1);workbook();return}returnToWorkbookLessons()};
+  if($('adminPreviewPrevious'))$('adminPreviewPrevious').onclick=()=>move(-1);
+  if($('adminPreviewNext'))$('adminPreviewNext').onclick=()=>move(1);
+ }
  renderActivity();
  resetAppScroll();
 }
