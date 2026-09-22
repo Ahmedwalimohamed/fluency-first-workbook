@@ -10,7 +10,7 @@ const nativeGet=express.application.get;
 const nativePost=express.application.post;
 const installed=new WeakSet();
 const BOOK_ID='speakup-a1-gold';
-const VERSION='englishgate-a1-gold-v1.2-batch-b';
+const VERSION='englishgate-a1-gold-v1.3-batch-c';
 const TYPE_SAFE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const TYPE_SAFE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
 
@@ -157,6 +157,84 @@ const LESSONS={
    {match:/\bi listen radio\b/i,focus:'listen_to',original:'I listen radio.',model:'I listen to the radio.'},
    {match:/\bi watch videos in my phone\b/i,focus:'on_my_phone',original:'I watch videos in my phone.',model:'I watch videos on my phone.'},
    {match:/\bi read news at morning\b/i,focus:'time_preposition',original:'I read news at morning.',model:'I read the news in the morning.'}
+  ]
+ },
+ 'a1-gold-l12':{
+  title:'Sports & Fitness',
+  canDo:'Talk about exercise frequency and use two simple schedules to find a time to be active together.',
+  opening:'Hi. How often do you exercise?',
+  keys:['routine','frequency','availability','arrangement'],required:['frequency','arrangement'],minimumKeys:4,minimumQuestions:2,
+  prompts:{routine:'Tell me one activity you do.',frequency:'How often do you do it?',availability:'Ask when I am free.',arrangement:'Use our schedules to suggest one time and activity we can do together.'},
+  detect:l=>({routine:/\b(i (?:walk|run|exercise|go running|go to the gym|play sport))\b/.test(l),frequency:/\b(often|once a week|twice a week|times a week|every (?:day|week))\b/.test(l),availability:/\b(are you free|what time are you free|when are you free)\b/.test(l),arrangement:/\b(let(?:'s| us)|meet|together|we can)\b/.test(l)}),
+  repairs:[
+   {match:/\bi exercise two time a week\b/i,focus:'frequency',original:'I exercise two time a week.',model:'I exercise twice a week.'},
+   {match:/\bhow many often do you exercise\b/i,focus:'frequency_question',original:'How many often do you exercise?',model:'How often do you exercise?'},
+   {match:/\byou free saturday\b/i,focus:'availability_question',original:'You free Saturday?',model:'Are you free on Saturday?'}
+  ]
+ },
+ 'a1-gold-l13':{
+  title:'City & Countryside',
+  canDo:'Describe a simple place and ask for or give the location of basic services.',
+  opening:'You have Map A and I have Map B. Ask me about a missing place.',
+  keys:['existence','location','mapQuestion','mapTransfer'],required:['location','mapQuestion','mapTransfer'],minimumKeys:4,minimumQuestions:2,
+  prompts:{existence:'Tell me one place that exists on your map.',location:'Give one location using near, next to, opposite, or behind.',mapQuestion:'Ask me where one missing place is.',mapTransfer:'Use my answer to complete one missing place, then tell me its location.'},
+  detect:l=>({existence:/\bthere (?:is|are)\b/.test(l),location:/\b(near|next to|opposite|behind)\b/.test(l),mapQuestion:/\b(where is|is there|where are)\b/.test(l),mapTransfer:/\b(bank|market|pharmacy|school|station|hospital|centre)\b[^.!?]*\b(near|next to|opposite|behind)\b/.test(l)}),
+  repairs:[
+   {match:/\bthere are a bank near here\b/i,focus:'there_is_are',original:'There are a bank near here.',model:'There is a bank near here.'},
+   {match:/\bwhere the bank is\b/i,focus:'location_question',original:'Where the bank is?',model:'Where is the bank?'},
+   {match:/\bbank next market\b/i,focus:'place_phrase',original:'Bank next market.',model:'The bank is next to the market.'}
+  ]
+ },
+ 'a1-gold-l14':{
+  title:'Dreams & Ambitions',
+  canDo:'State one concrete future goal, one planned action, and one simple reason.',
+  opening:'What is one goal you have for your English, work, or study?',
+  keys:['goal','plan','reason'],required:['goal','plan','reason'],minimumKeys:3,minimumQuestions:1,
+  prompts:{goal:'Tell me one goal using “I want to…” or “My goal is…”.',plan:'What are you going to do next?',reason:'Why is this goal important? Use because.'},
+  detect:l=>({goal:/\b(i want to|my goal is|i hope to)\b/.test(l),plan:/\b(i am going to|i'm going to|i plan to)\b/.test(l),reason:/\bbecause\b/.test(l)}),
+  repairs:[
+   {match:/\bi want improve my english\b/i,focus:'want_to',original:'I want improve my English.',model:'I want to improve my English.'},
+   {match:/\bi am going to studying every day\b/i,focus:'going_to_base',original:'I am going to studying every day.',model:'I am going to study every day.'},
+   {match:/\bi learn english because for work\b/i,focus:'because_reason',original:'I learn English because for work.',model:'I want to learn English because I need it for work.'}
+  ]
+ },
+ 'a1-gold-l15':{
+  title:'Crime & Safety',
+  canDo:'Report a simple lost or missing-item problem and ask an appropriate person for help.',
+  opening:'Hello. I am at the Help Desk. What is the problem?',
+  keys:['problem','itemDetails','lastPlace','help'],required:['problem','lastPlace','help'],minimumKeys:4,minimumQuestions:1,
+  prompts:{problem:'Report what is lost or missing.',itemDetails:'Tell me one identifying detail such as colour or type.',lastPlace:'Where did you last have it?',help:'Ask me for help.'},
+  detect:l=>({problem:/\b(i lost my|my .+ is missing|i have a problem)\b/.test(l),itemDetails:/\b(black|blue|white|red|small|large|phone|bag|card|wallet)\b/.test(l),lastPlace:/\b(it was at|last had|at the (?:station|market|school|office|hospital|bus station))\b/.test(l),help:/\b(can you help me|please help me|i need help)\b/.test(l)}),
+  repairs:[
+   {match:/\bi lose my phone yesterday\b/i,focus:'functional_past_chunk',original:'I lose my phone yesterday.',model:'I lost my phone.'},
+   {match:/\bmy bag missing\b/i,focus:'be_missing',original:'My bag missing.',model:'My bag is missing.'},
+   {match:/\byou can help me\b/i,focus:'help_request',original:'You can help me?',model:'Can you help me, please?'}
+  ]
+ },
+ 'a1-gold-l16':{
+  title:'Science & Everyday Life',
+  canDo:'Give and follow a short sequence of safe everyday instructions.',
+  opening:'We have different missing steps. Tell me your first step, then ask me for a missing step.',
+  keys:['firstStep','sequence','missingStep','finalStep'],required:['sequence','missingStep','finalStep'],minimumKeys:4,minimumQuestions:2,
+  prompts:{firstStep:'Give the first instruction.',sequence:'Give a next or then step.',missingStep:'Ask me what comes next or what the missing step is.',finalStep:'Finish the process using finally.'},
+  detect:l=>({firstStep:/\bfirst\b[^.!?]*\b(turn on|open|add|choose|press)\b/.test(l),sequence:/\b(next|then)\b[^.!?]*\b(open|add|choose|press|close|turn on|wait)\b/.test(l),missingStep:/\b(what comes next|what is the missing step|what is step|and after that)\b/.test(l),finalStep:/\bfinally\b[^.!?]*\b(open|close|press|wait|turn on|add)\b/.test(l)}),
+  repairs:[
+   {match:/\bfirst, turning on the phone\b/i,focus:'imperative',original:'First, turning on the phone.',model:'First, turn on the phone.'},
+   {match:/\bfinally after open app\b/i,focus:'sequence_marker',original:'Finally after open app.',model:'Finally, open the class page.'},
+   {match:/\bwhat next\b/i,focus:'sequence_question',original:'What next?',model:'What comes next?'}
+  ]
+ },
+ 'a1-gold-l17':{
+  title:'Arts & Entertainment',
+  canDo:'Express a simple opinion, give a reason, and choose an entertainment option with another person.',
+  opening:'We want to choose something to watch or listen to. What do you prefer?',
+  keys:['preference','reason','adaptation','choice'],required:['reason','adaptation','choice'],minimumKeys:4,minimumQuestions:1,
+  prompts:{preference:'Tell me which option you prefer.',reason:'Why do you like it?',adaptation:'Your first choice is full. Respond and change the plan.',choice:'Choose a second option with me.'},
+  detect:l=>({preference:/\b(i like|i prefer|my favourite|i do not like|i don't like)\b/.test(l),reason:/\bbecause\b/.test(l),adaptation:/\b(full|unavailable|choose another|another option|what about)\b/.test(l),choice:/\b(let(?:'s| us)|good idea|we can|i choose|i prefer the)\b/.test(l)}),
+  repairs:[
+   {match:/\bi like film because funny\b/i,focus:'because_reason',original:'I like film because funny.',model:'I like the film because it is funny.'},
+   {match:/\bwhy you like it\b/i,focus:'why_question',original:'Why you like it?',model:'Why do you like it?'},
+   {match:/\bit full\. choose other\b/i,focus:'adaptation',original:'It full. Choose other.',model:'It is full. Let us choose another.'}
   ]
  }
 };
