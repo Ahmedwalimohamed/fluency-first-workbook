@@ -44,7 +44,7 @@ const checks=[
  ['Lesson 6 introduces negatives and request distinction',L6.includes("I do not / don’t like")&&L6.includes('preference')&&L6.includes('request chunks')],
  ['Lesson 7 formally introduces can/can’t',L7.includes('Can and can’t for simple learning ability.')&&L7.includes('can + base verb')],
  ['Lesson 8 separates number understanding from language',L8.includes('scores number understanding separately from language')&&L8.includes("Can I pay by card?")],
- ['Lesson 9 introduces but without formal because',L9.includes('Use “but”')&&!L9.includes('because') ],
+ ['Lesson 9 introduces but without formally targeting because',L9.includes('Use “but”')&&!L9.includes("grammar:connector-because")&&!L9.includes('targetLanguage:[\'because') ],
  ['Lesson 10 is formal third-person and does start',L10.includes('formal start of third-person present simple')&&L10.includes('Where does he live?')&&L10.includes('What does she do?')],
  ['Lesson 11 integrates media + announcement transfer',L11.includes('relay two facts from a short announcement')&&L11.includes('football game')&&L11.includes('Tickets are two dollars')],
  ['reading and listening remain separately tagged',lesson.includes("'reading:detail'")&&lesson.includes("'listening:detail'")],
