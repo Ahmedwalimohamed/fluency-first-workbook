@@ -76,4 +76,5 @@ express.application.post=function standardsAwarePost(route,...handlers){
   install(this);
   return nativePost.call(this,route,...handlers);
 };
+require('./ptest-learner-state-bootstrap.js');
 require('./northstar-jev-grading-bootstrap.js');
