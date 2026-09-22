@@ -6052,3 +6052,13 @@ img,video,canvas,svg{max-width:100%}
 .report-work-cell.is-not-started small{color:#94a3b8}
 .report-source-note{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
 @media(max-width:760px){.student-work-report .performance-detail-table{overflow-x:auto}.report-work-cell{min-width:108px}}
+
+.report-work-button{appearance:none;width:100%;border:0;background:transparent;text-align:left;font:inherit;color:inherit;padding:8px;border-radius:10px;cursor:pointer;transition:background .15s ease,box-shadow .15s ease}
+.report-work-button:hover,.report-work-button:focus-visible{background:#f8fafc;box-shadow:0 0 0 2px #dbeafe;outline:0}
+.report-work-button .score-chip{pointer-events:none}
+.report-work-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.report-work-button small{display:block;margin-top:5px}
+.report-writing-evidence{white-space:pre-wrap;line-height:1.7}
+.report-attempt-detail{align-items:flex-start}
+.report-attempt-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.report-attempt-tags:empty{display:none}
