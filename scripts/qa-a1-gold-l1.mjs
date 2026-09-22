@@ -77,7 +77,10 @@ const checks=[
  ['Fix & Improve persistence retained',backend.includes('a1_gold_fix_evidence')&&runtime.includes('Fix & Improve')],
  ['360 report includes separated reading/listening evidence',backend.includes('workbookActivityStates')&&backend.includes('workbookActivityAttempts')&&runtime.includes('Reading attempts')&&runtime.includes('Listening attempts')],
  ['Gold lesson IDs remain isolated from legacy progress',lesson.includes("const BOOK_ID='speakup-a1-gold'")&&ids.every(id=>lesson.includes(id))],
- ['course publishes both stage checkpoints in course data',lesson.includes('stageCheckpoints:lessons.filter(x=>x.stageCheckpoint)')&&lesson.includes('a1-stage-3-my-community')&&lesson.includes('a1-stage-4-independent-a1')]
+ ['course publishes both stage checkpoints in course data',lesson.includes('stageCheckpoints:lessons.filter(x=>x.stageCheckpoint)')&&lesson.includes('a1-stage-3-my-community')&&lesson.includes('a1-stage-4-independent-a1')],
+ ['Gold v1.0 freeze metadata is explicit',lesson.includes("VERSION='englishgate-a1-gold-v1.0-frozen'")&&lesson.includes("goldFreeze:{status:'frozen'")&&lesson.includes("productionActivation:false")],
+ ['backend frozen version matches curriculum',backend.includes("VERSION='englishgate-a1-gold-v1.0-frozen'")],
+ ['whole-level regression is wired into startup',server.length>0&&read('standards-audit-bootstrap.js').includes("scripts/qa-a1-whole-level.mjs")]
 ];
 
 let failed=0;
