@@ -176,15 +176,18 @@ function install(app){
     });
     const pass=deterministicPass&&jevPass(jev),jevStatus=jev.available?(pass?'pass':'fail'):'pending';
     const mastery=pass?'MASTERED':deterministicPass&&!jev.available?'PARTIAL_MASTERY':'REVIEW_REQUIRED';
-    const repairs=commonRepairs(transcript);
+    const repairs=commonRepairs(transcript),savedRepairs=[];
     const client=await pool.connect();
     try{
       await client.query('begin');
       await client.query('update a1_gold_speaking_sessions set status=$1,jev_status=$2,jev_result=$3::jsonb,mastery_state=$4,updated_at=now() where id=$5',[pass?'completed':'needs_review',jevStatus,JSON.stringify(jev),mastery,id]);
-      for(const repair of repairs)await client.query('insert into a1_gold_fix_evidence(student_id,lesson_id,source_session_id,focus,original_text,model_text) values($1,$2,$3,$4,$5,$6)',[user.id,LESSON_ID,id,repair.focus,repair.original,repair.model]);
+      for(const repair of repairs){
+        const saved=await client.query('insert into a1_gold_fix_evidence(student_id,lesson_id,source_session_id,focus,original_text,model_text) values($1,$2,$3,$4,$5,$6) returning id',[user.id,LESSON_ID,id,repair.focus,repair.original,repair.model]);
+        savedRepairs.push({...repair,id:saved.rows[0].id});
+      }
       await client.query('commit');
     }catch(e){await client.query('rollback');throw e}finally{client.release()}
-    res.json({ok:true,masteryState:mastery,deterministicPass,jevStatus,repairs,evidence:{personalDetails:Number(row.personal_details||0),relevantQuestions:Number(row.relevant_questions||0),functions:row.functions||{}},version:VERSION});
+    res.json({ok:true,masteryState:mastery,deterministicPass,jevStatus,repairs:savedRepairs,evidence:{personalDetails:Number(row.personal_details||0),relevantQuestions:Number(row.relevant_questions||0),functions:row.functions||{}},version:VERSION});
   });
 
   nativePost.call(app,'/api/a1-gold/fix-retry',async(req,res)=>{
