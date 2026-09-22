@@ -1101,6 +1101,7 @@ app.get('/a1-foundation-phase2.js',(req,res)=>sendFreshFile(res,'a1-foundation-p
 app.get('/a1-foundation-phase3.js',(req,res)=>sendFreshFile(res,'a1-foundation-phase3.js','application/javascript'));
 app.get('/a1-foundation-phase4.js',(req,res)=>sendFreshFile(res,'a1-foundation-phase4.js','application/javascript'));
 app.get('/a1-foundation-standard.js',(req,res)=>sendFreshFile(res,'a1-foundation-standard.js','application/javascript'));
+app.get('/a1-gold-lesson1-v1.js',(req,res)=>sendFreshFile(res,'a1-gold-lesson1-v1.js','application/javascript'));
 app.get('/a2-living-standard.js',(req,res)=>sendFreshFile(res,'a2-living-standard.js','application/javascript'));
 app.get('/cefr-live-books.js',(req,res)=>sendFreshFile(res,'cefr-live-books.js','application/javascript'));
 app.get('/live-books.js',(req,res)=>sendFreshFile(res,'live-books.js','application/javascript'));
