@@ -719,7 +719,8 @@ app.get('/api/performance-decision/:studentId',auth,async(req,res)=>{
 
 app.post('/api/writing-grade',auth,studentOnly,async(req,res)=>{
  try{
-  const text=String(req.body?.text||'').trim(),task=String(req.body?.task||'').trim(),lessonId=String(req.body?.lessonId||'');\n  if(!requireB2LearningLesson(lessonId,res))return;
+  const text=String(req.body?.text||'').trim(),task=String(req.body?.task||'').trim(),lessonId=String(req.body?.lessonId||'');
+  if(!requireB2LearningLesson(lessonId,res))return;
   if(!isAuthenticWritingText(text))return res.status(400).json({error:'Write your real-life response before checking it.'});
   if(!task)return res.status(400).json({error:'Writing task is missing.'});
   const grade=await gradeWritingWithJev({lessonId,task,text,level:req.body?.level,minWords:req.body?.minWords,maxWords:req.body?.maxWords});
