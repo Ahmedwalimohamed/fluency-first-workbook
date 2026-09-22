@@ -82,7 +82,7 @@ function userFrom(req){
   try{return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}
 }
 function activityId(lessonId,type){return `${String(lessonId).trim()}:${type}`}
-function b2LessonOnly(lessonId){return /^su-b2-l\d+$/.test(String(lessonId||''))||(process.env.A1_PREVIEW_MODE==='1'&&/^a1-gold-l(?:[1-9]|1[0-7])$/.test(String(lessonId||'')))}
+function b2LessonOnly(lessonId){return /^su-b2-l\d+$/.test(String(lessonId||''))||(process.env.A1_PREVIEW_MODE==='1'&&/^a1-gold-l(?:[1-9]|1\d|2[0-2])$/.test(String(lessonId||'')))}
 function cleanType(value){const type=String(value||'').trim().toLowerCase();return TYPES.has(type)?type:null}
 async function ensureActivity(lessonId,type,title='',instructions=''){
   const id=activityId(lessonId,type);
