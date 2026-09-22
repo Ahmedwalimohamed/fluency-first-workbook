@@ -437,7 +437,7 @@ app.post('/api/teacher/example-sentence',auth,teacherOnly,teacherExampleLimiter,
  catch(e){console.error('Teacher example sentence error:',e.message);return res.status(e.status||502).json({error:'Could not create an example right now.'})}
 });
 
-app.get('/api/a1-preview-health',async(req,res)=>{
+app.get('/api/a1_preview_health',async(req,res)=>{
  if(process.env.A1_PREVIEW_MODE!=='1')return res.status(404).json({ok:false});
  try{
   const rows=(await pool.query("select id,status from books order by id")).rows;
