@@ -4,7 +4,14 @@
 const VERSION='englishgate-a1-gold-v1.4-batch-d';
 const BOOK_ID='speakup-a1-gold';
 
-function q(id,text,options,answer,tag,feedback=''){return{id,q:text,options,answer,tag,feedback}}
+function q(id,text,options,answer,tag,feedback=''){
+ const list=Array.isArray(options)?[...options]:[];
+ if(list.length>1&&list.includes(answer)){
+  const m=String(id||'').match(/(\d+)$/),shift=((Number(m?.[1]||1)-1)%list.length+list.length)%list.length;
+  if(shift)list.push(...list.splice(0,shift));
+ }
+ return{id,q:text,options:list,answer,tag,feedback}
+}
 function vq(id,entry,distractors){return q(id,`What does “${entry.word}” mean?`,[entry.meaning,...distractors],entry.meaning,'vocabulary:meaning',`${entry.word}: ${entry.meaning}. Example: ${entry.example}`)}
 function entry(word,meaning,example){return{word,meaning,example}}
 function lesson(spec){
