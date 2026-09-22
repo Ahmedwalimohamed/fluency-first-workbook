@@ -54,6 +54,8 @@ const checks=[
  ['Lesson 15 stays safety/help focused',L15.includes('Report a simple lost or missing-item problem')&&L15.includes('Do not give your password')],
  ['Lesson 16 requires missing-step process information gap',L16.includes('different missing process steps')&&L16.includes('First, Next, Then, Finally')&&L16.includes('What comes next?')],
  ['Lesson 17 requires reason plus changed-condition adaptation',L17.includes('first choice becomes unavailable')&&L17.includes('because it is funny')&&L17.includes('Let us choose another')],
+ ['My Community checkpoint follows Lesson 17',L17.includes("id:'a1-stage-3-my-community'")&&L17.includes("domains:['UNDERSTAND','RESPOND','INITIATE','PRODUCE','ADAPT']")&&lesson.includes('stageCheckpoints:lessons.filter(x=>x.stageCheckpoint)')],
+ ['checkpoint uses integrated communication missions',L17.includes('Use two schedules to arrange a fitness meet-up.')&&L17.includes('Use a map to ask for and give directions')&&L17.includes('Report a missing item and ask for help.')&&L17.includes('Reconstruct a short safe process')&&L17.includes('adapt when the first choice changes.')],
  ['Batch C increases dialogue/interdependence',L12.includes("speakers:[{name:'Amina'")&&L13.includes("speakers:[{name:'Visitor'")&&L14.includes("speakers:[{name:'Ali'")&&L15.includes("speakers:[{name:'Officer'")&&L16.includes("speakers:[{name:'Muna'")&&L17.includes("speakers:[{name:'Sahra'")],
  ['reading and listening remain separately tagged',lesson.includes("'reading:detail'")&&lesson.includes("'listening:detail'")],
  ['every implemented lesson preserves copy/paste block',(lesson.match(/copyPasteDisabled:true/g)||[]).length>=17],
