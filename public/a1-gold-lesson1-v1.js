@@ -30,6 +30,15 @@ function choice(name,q,options,answer,tag){
 function openField(name,q,placeholder,tag){
  return '<article class="guided-question a1-gold-question"><div class="question-stage"><span>'+esc(tag.replace(/[-_:]+/g,' '))+'</span></div><p>'+esc(q)+'</p><div class="open-evidence"><textarea name="'+attr(name)+'" data-a1-open="1" data-tag="'+attr(tag)+'" rows="3" placeholder="'+attr(placeholder||'Type your answer…')+'"></textarea></div></article>'
 }
+function balancedOptions(options,answer,index){
+ const distractors=options.filter(function(x){return x!==answer}).slice(0,2),out=distractors.slice();
+ out.splice(Math.max(0,Math.min(out.length,index%3)),0,answer);
+ return out
+}
+function questionCount(text){
+ const value=String(text||''),punctuation=(value.match(/\?/g)||[]).length,forms=(value.match(/\b(?:what(?:'s| is)?|where|when|who|how|why|do you|are you|can you|is your)\b/gi)||[]).length;
+ return Math.max(punctuation,forms)
+}
 function stageShell(kicker,title,description,body,buttonLabel){
  return '<div class="eg-skill-page a1-gold-stage"><header class="eg-skill-hero"><div><span class="eg-skill-kicker">'+esc(kicker)+'</span><h1>'+esc(title)+'</h1><p>'+esc(description)+'</p></div></header>'+body+
  '<div id="activityFeedback"></div><div class="skill-action-row"><button class="primary-btn" id="a1CheckStage">'+esc(buttonLabel||'Check activity')+'</button><button class="secondary-btn done-activity-btn" id="doneActivity" disabled>Continue →</button></div></div>'
@@ -332,14 +341,20 @@ async function saveChoiceStage(l,skill){
  if(!evidence.length||evidence.some(function(x){return !x.studentAnswer})){
   feedback.innerHTML='<div class="feedback bad">Answer every question first.</div>';return
  }
- const correct=evidence.filter(function(x){return x.correct}).length,score=Math.round(correct/evidence.length*100);
+ const correct=evidence.filter(function(x){return x.correct}).length,score=Math.round(correct/evidence.length*100),passScore=skill==='review'?100:70,passed=score>=passScore;
+ const cards=Array.prototype.slice.call(document.querySelectorAll('#activityPanel .guided-question'));
+ evidence.forEach(function(row,i){
+  const card=cards[i];if(!card)return;
+  const prior=card.querySelector('.a1-item-feedback');if(prior)prior.remove();
+  card.insertAdjacentHTML('beforeend','<div class="a1-item-feedback feedback '+(row.correct?'good':'bad')+'">'+(row.correct?'Correct.':'Review: '+esc(row.correctAnswer))+'</div>')
+ });
  if(!isWorkbookPreview()){
-  await recordAttempt(session.id,l.id,skill,score,['curriculum:a1-gold-v1','a1:lesson1',skill+':transfer-evidence'],evidence);
-  await markDone(session.id,l.id,skill);
+  await recordAttempt(session.id,l.id,skill,score,['curriculum:a1-gold-v1','a1:lesson1',passed?'retry:passed':'retry:needed'],evidence);
+  if(passed)await markDone(session.id,l.id,skill);
   await refreshState()
  }
- feedback.innerHTML='<div class="performance-result '+(score>=70?'good':'bad')+'"><div class="performance-score"><strong>'+score+'%</strong><span>'+esc(A1_GOLD_LABELS[skill]||skill)+'</span></div><p>'+correct+' of '+evidence.length+' evidence points demonstrated. Review any missed item, then continue.</p></div>';
- $('doneActivity').disabled=false
+ feedback.innerHTML='<div class="performance-result '+(passed?'good':'bad')+'"><div class="performance-score"><strong>'+score+'%</strong><span>'+esc(A1_GOLD_LABELS[skill]||skill)+'</span></div><p>'+correct+' of '+evidence.length+' evidence points demonstrated. '+(passed?'You can continue.':'Correct the missed items and check again.')+'</p></div>';
+ $('doneActivity').disabled=!passed
 }
 function vocabHtml(l){
  const qs=[
@@ -350,10 +365,10 @@ function vocabHtml(l){
   ['A person who helps people learn is a ___.',['student','teacher','city'],'teacher'],
   ['I enjoy football. I ___ football.',['live','like','work'],'like']
  ];
- return stageShell('Vocabulary','Words for meeting someone','Use each word inside a real introduction.',qs.map(function(x,i){const opts=i%3===0?[x[1][1],x[2],x[1][2]]:i%3===1?[x[2],x[1][0],x[1][2]]:[x[1][0],x[1][1],x[2]];return choice('a1v'+i,x[0],Array.from(new Set(opts)).slice(0,3),x[2],'vocabulary:context')}).join(''),'Check vocabulary')
+ return stageShell('Vocabulary','Words for meeting someone','Use each word inside a real introduction.',qs.map(function(x,i){return choice('a1v'+i,x[0],balancedOptions(x[1],x[2],i),x[2],'vocabulary:context')}).join(''),'Check vocabulary')
 }
 function languageHtml(l){
- return stageShell('Language','Build a clear introduction','Choose the form that communicates the meaning accurately.',l.grammar.items.map(function(q,i){return choice('a1g'+i,q.q,q.options,q.answer,q.tag)}).join(''),'Check language')
+ return stageShell('Language','Build a clear introduction','Choose the form that communicates the meaning accurately.',l.grammar.items.map(function(q,i){return choice('a1g'+i,q.q,balancedOptions(q.options,q.answer,i),q.answer,q.tag)}).join(''),'Check language')
 }
 function readingHtml(){
  const text="Hi. My name is Hamza. I'm from Somalia. I live in Hargeisa. I'm a driver. I work for a small company. I like football and coffee.";
@@ -363,7 +378,7 @@ function readingHtml(){
   ["What does he do?",['He is a teacher.','He is a driver.','He is a student.'],'He is a driver.'],
   ["What does he like?",['Football and coffee','Reading and walking','Music and tea'],'Football and coffee']
  ];
- return stageShell('Reading','Meet Hamza','Read a short real-life profile and find explicit personal information.','<section class="eg-reading-article"><span class="eg-skill-kicker">Profile</span><p>'+esc(text)+'</p></section><div class="activity-question-list">'+qs.map(function(x,i){return choice('a1r'+i,x[0],x[1],x[2],'reading:detail')}).join('')+'</div>','Check reading')
+ return stageShell('Reading','Meet Hamza','Read a short real-life profile and find explicit personal information.','<section class="eg-reading-article"><span class="eg-skill-kicker">Profile</span><p>'+esc(text)+'</p></section><div class="activity-question-list">'+qs.map(function(x,i){return choice('a1r'+i,x[0],balancedOptions(x[1],x[2],i),x[2],'reading:detail')}).join('')+'</div>','Check reading')
 }
 function listeningHtml(l){
  const qs=[
@@ -373,7 +388,7 @@ function listeningHtml(l){
   ["What does she like?",['Reading and walking','Football and coffee','Music and running'],'Reading and walking']
  ];
  const source='<section class="eg-audio-card"><small>Natural A1 listening</small><button id="playAudio" class="play-btn" title="Play or pause audio" aria-label="Play or pause audio">▶</button><button id="restartAudio" class="audio-icon-btn" title="Restart audio" aria-label="Restart audio">↺</button><select id="audioSpeed" class="audio-speed" aria-label="Playback speed"><option value="0.85">0.85×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option></select><span id="audioStatus" class="muted">Listen first for meaning. Replay for detail.</span><input id="audioSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Audio progress"></section>';
- return stageShell('Listening','Listen to Maryan introduce herself','The transcript stays hidden while you answer. Focus on name, place, work, and interests.',source+'<div class="activity-question-list">'+qs.map(function(x,i){return choice('a1l'+i,x[0],x[1],x[2],'listening:detail')}).join('')+'</div>','Check listening')
+ return stageShell('Listening','Listen to Maryan introduce herself','The transcript stays hidden while you answer. Focus on name, place, work, and interests.',source+'<div class="activity-question-list">'+qs.map(function(x,i){return choice('a1l'+i,x[0],balancedOptions(x[1],x[2],i),x[2],'listening:detail')}).join('')+'</div>','Check listening')
 }
 function writingHtml(l){
  const saved=isWorkbookPreview()?'':writingFor(session.id,l.id);
@@ -410,17 +425,20 @@ async function saveWriting(l){
  const box=$('a1WritingText'),feedback=$('activityFeedback'),text=String(box&&box.value||'').trim(),count=wc(text);
  if(count<20){feedback.innerHTML='<div class="feedback bad">Write at least 20 words so your introduction includes enough real information. You have '+count+' words.</div>';return}
  if(count>50){feedback.innerHTML='<div class="feedback bad">Keep this A1 introduction concise. Aim for 20–40 words; you have '+count+'.</div>';return}
- let grade={score:75,feedback:{strength:'Your introduction communicates personal information.',improve:'Review the target language, then read your message once more.'},fallback:true};
+ let grade={score:65,feedback:{strength:'Your introduction communicates personal information.',improve:'Jev feedback is temporarily unavailable; review the target language, then read your message once more.'},fallback:true};
  if(!isWorkbookPreview()){
   try{grade=await api('/api/writing-grade',{method:'POST',body:JSON.stringify({lessonId:l.id,task:l.writing.task,text:text,level:'A1',minWords:20,maxWords:40})})}catch(e){}
   await api('/api/writing/'+encodeURIComponent(l.id),{method:'PUT',body:JSON.stringify({content:text,publishToCommunity:Boolean($('a1ShareWriting')&&$('a1ShareWriting').checked)})});
   const evidence=[{index:1,question:l.writing.task,studentAnswer:text,correctAnswer:'Authentic A1 introduction: name + place + work/study + interest',correct:null,tag:'writing:real-life-introduction'}];
-  await recordAttempt(session.id,l.id,'writing',Math.max(0,Math.min(100,Math.round(Number(grade.score)||75))),['curriculum:a1-gold-v1','writing:authentic','writing:jev-'+(grade.fallback?'fallback':'checked')],evidence);
+  const writingScore=Math.max(0,Math.min(100,Math.round(Number(grade.score)||65)));
+  await recordAttempt(session.id,l.id,'writing',writingScore,['curriculum:a1-gold-v1','writing:authentic','writing:jev-'+(grade.fallback?'fallback':'checked')],evidence);
+  if(writingScore>=60)await markDone(session.id,l.id,'writing');
   await refreshState()
  }
  saveA1Evidence({writing:text,writingFeedback:grade.feedback||null});
- feedback.innerHTML='<div class="performance-result good"><div class="performance-score"><strong>'+Math.round(Number(grade.score)||75)+'%</strong><span>Writing evidence</span></div><p>'+esc((grade.feedback&&grade.feedback.strength)||'Your introduction is saved.')+'</p><p>'+esc((grade.feedback&&grade.feedback.improve)||'Review it once, then continue.')+'</p></div>';
- $('doneActivity').disabled=false
+ const finalWritingScore=Math.round(Number(grade.score)||65),writingPassed=finalWritingScore>=60;
+ feedback.innerHTML='<div class="performance-result '+(writingPassed?'good':'bad')+'"><div class="performance-score"><strong>'+finalWritingScore+'%</strong><span>Writing evidence</span></div><p>'+esc((grade.feedback&&grade.feedback.strength)||'Your introduction is saved.')+'</p><p>'+esc((grade.feedback&&grade.feedback.improve)||'Review it once, then continue.')+'</p></div>';
+ $('doneActivity').disabled=!writingPassed
 }
 function speakingEvidence(prompts,answers){
  return answers.map(function(a,i){return{index:i+1,question:prompts[i],studentAnswer:a,correctAnswer:'Meaningful A1 spoken response',correct:null,tag:i===4?'speaking:initiate-questions':'speaking:turn'}})
@@ -428,20 +446,22 @@ function speakingEvidence(prompts,answers){
 async function evaluateSpeaking(l){
  const boxes=Array.prototype.slice.call(document.querySelectorAll('[data-a1-speaking]')),answers=boxes.map(function(x){return x.value.trim()}),feedback=$('activityFeedback');
  if(answers.some(function(x){return wc(x)<1})){feedback.innerHTML='<div class="feedback bad">Respond to all five turns first.</div>';return}
- const qCount=(answers[4].match(/\?/g)||[]).length;
+ const qCount=questionCount(answers[4]);
  if(qCount<2){feedback.innerHTML='<div class="feedback bad">In the final turn, ask Sarah two questions. This proves you can initiate the conversation too.</div>';return}
- let result={score:75,status:'A1_FUNCTIONAL',feedback:{strength:'You completed the conversation.',improve:'Keep your questions short and clear.'},fallback:true};
+ let result={score:65,status:'A1_FUNCTIONAL',feedback:{strength:'You completed the conversation.',improve:'Jev feedback is temporarily unavailable; keep your questions short and clear.'},fallback:true};
  if(!isWorkbookPreview()){
   try{result=await api('/api/a1/speaking/evaluate',{method:'POST',body:JSON.stringify({lessonId:l.id,responses:answers})})}catch(e){}
-  await recordAttempt(session.id,l.id,'speaking',Math.max(0,Math.min(100,Math.round(Number(result.score)||75))),['curriculum:a1-gold-v1','speaking:transfer','speaking:'+(result.status||'functional').toLowerCase()],speakingEvidence([
+  const speakingScore=Math.max(0,Math.min(100,Math.round(Number(result.score)||65)));
+  await recordAttempt(session.id,l.id,'speaking',speakingScore,['curriculum:a1-gold-v1','speaking:transfer','speaking:'+(result.status||'functional').toLowerCase()],speakingEvidence([
    "Hi. I'm Sarah. Nice to meet you.",'Where do you live?','What do you do?','What do you like?','Ask Sarah two questions.'
   ],answers));
-  await markDone(session.id,l.id,'speaking');
+  if(speakingScore>=60&&result.status!=='A1_DEVELOPING')await markDone(session.id,l.id,'speaking');
   await refreshState()
  }
  saveA1Evidence({speaking:answers,speakingStatus:result.status,speakingFeedback:result.feedback||null});
- feedback.innerHTML='<div class="performance-result '+(Number(result.score)>=60?'good':'bad')+'"><div class="performance-score"><strong>'+Math.round(Number(result.score)||75)+'%</strong><span>'+esc(result.status||'Speaking evidence')+'</span></div><p>'+esc((result.feedback&&result.feedback.strength)||'You completed the exchange.')+'</p><p>'+esc((result.feedback&&result.feedback.improve)||'Review one form, then continue.')+'</p></div>';
- $('doneActivity').disabled=false
+ const finalSpeakingScore=Math.round(Number(result.score)||65),speakingPassed=finalSpeakingScore>=60&&result.status!=='A1_DEVELOPING';
+ feedback.innerHTML='<div class="performance-result '+(speakingPassed?'good':'bad')+'"><div class="performance-score"><strong>'+finalSpeakingScore+'%</strong><span>'+esc(result.status||'Speaking evidence')+'</span></div><p>'+esc((result.feedback&&result.feedback.strength)||'You completed the exchange.')+'</p><p>'+esc((result.feedback&&result.feedback.improve)||'Review one form, then continue.')+'</p></div>';
+ $('doneActivity').disabled=!speakingPassed
 }
 function wireMics(){
  document.querySelectorAll('[data-a1-mic]').forEach(function(btn){
