@@ -9,6 +9,7 @@ const a1p2=fs.readFileSync('public/a1-foundation-phase2.js','utf8');
 const a1p3=fs.readFileSync('public/a1-foundation-phase3.js','utf8');
 const a1p4=fs.readFileSync('public/a1-foundation-phase4.js','utf8');
 const a1=fs.readFileSync('public/a1-foundation-standard.js','utf8');
+const a1gold=fs.readFileSync('public/a1-gold-lesson1-v1.js','utf8');
 const a2=fs.readFileSync('public/a2-living-standard.js','utf8');
 const server=fs.readFileSync('server.js','utf8');
 const index=fs.readFileSync('public/index.html','utf8');
@@ -17,11 +18,12 @@ let errors=[];
 if(!server.includes("app.get('/cefr-levels.js'"))errors.push('CEFR asset routes: /cefr-levels.js is not served');
 if(!server.includes("app.get('/cefr-live-books.js'"))errors.push('CEFR asset routes: /cefr-live-books.js is not served');
 ['a1-foundation-phase1.js','a1-foundation-phase2.js','a1-foundation-phase3.js','a1-foundation-phase4.js','a1-foundation-standard.js'].forEach(file=>{if(!server.includes("app.get('/"+file+"'"))errors.push('A1 Foundation: /'+file+' is not served')});
+if(!server.includes("app.get('/a1-gold-lesson1-v1.js'"))errors.push('A1 Gold: /a1-gold-lesson1-v1.js is not served');
 if(!server.includes("app.get('/a2-living-standard.js'"))errors.push('A2 Living Standard: /a2-living-standard.js is not served');
 
 try{new Function(cefr)}catch(e){errors.push('cefr-levels.js syntax: '+e.message)}
 try{new Function(live)}catch(e){errors.push('cefr-live-books.js syntax: '+e.message)}
-[[a1p1,'a1-foundation-phase1.js'],[a1p2,'a1-foundation-phase2.js'],[a1p3,'a1-foundation-phase3.js'],[a1p4,'a1-foundation-phase4.js'],[a1,'a1-foundation-standard.js']].forEach(([code,name])=>{try{new Function(code)}catch(e){errors.push(name+' syntax: '+e.message)}});
+[[a1p1,'a1-foundation-phase1.js'],[a1p2,'a1-foundation-phase2.js'],[a1p3,'a1-foundation-phase3.js'],[a1p4,'a1-foundation-phase4.js'],[a1,'a1-foundation-standard.js'],[a1gold,'a1-gold-lesson1-v1.js']].forEach(([code,name])=>{try{new Function(code)}catch(e){errors.push(name+' syntax: '+e.message)}});
 try{new Function(a2)}catch(e){errors.push('a2-living-standard.js syntax: '+e.message)}
 
 const syllabusMatch=app.match(/const SPEAKUP_A2_B1_SYLLABUS=(\[[\s\S]*?\]);\nconst SPEAKUP_B2_SYLLABUS/);
@@ -34,6 +36,8 @@ else{
 if(!index.includes('cefr-levels.js')||!index.includes('cefr-live-books.js'))errors.push('CEFR modules are not loaded by index.html');
 const a1p1Index=index.indexOf('a1-foundation-phase1.js'),a1p2Index=index.indexOf('a1-foundation-phase2.js'),a1p3Index=index.indexOf('a1-foundation-phase3.js'),a1p4Index=index.indexOf('a1-foundation-phase4.js'),a1Index=index.indexOf('a1-foundation-standard.js'),a2Index=index.indexOf('a2-living-standard.js'),cefrIndex=index.indexOf('cefr-levels.js'),liveIndex=index.indexOf('cefr-live-books.js');
 if([a1p1Index,a1p2Index,a1p3Index,a1p4Index,a1Index,a2Index,cefrIndex,liveIndex].some(x=>x<0)||!(cefrIndex<a1p1Index&&a1p1Index<a1p2Index&&a1p2Index<a1p3Index&&a1p3Index<a1p4Index&&a1p4Index<a1Index&&a1Index<a2Index&&a2Index<liveIndex))errors.push('A1/A2 standard modules are not loaded in the required order');
+const a1GoldIndex=index.indexOf('a1-gold-lesson1-v1.js'),a1EarlyVocabIndex=index.indexOf('a1-early-vocab-renderer.js');
+if(a1GoldIndex<0||a1EarlyVocabIndex<0||a1GoldIndex<a1EarlyVocabIndex||a1GoldIndex<liveIndex)errors.push('A1 Gold: runtime override must load after legacy A1/live-book patches');
 if(!cefr.includes('BOOK_PACKS[book.id]=book'))errors.push('Standalone workbooks are not registered in BOOK_PACKS');
 if(!live.includes("const LEVELS=['A1','A2','B1','C1']"))errors.push('Live CEFR level registry is incomplete');
 const topicMatch=app.match(/const TOPIC_LIBRARY=(\{[\s\S]*?\});\nconst CAREER_LESSON_SPECS/);
@@ -113,7 +117,14 @@ try{
   if(new Set(scripts).size!==44)errors.push('A1 Foundation: all 44 listening scripts must be distinct');
  }
 }catch(e){errors.push('A1 Foundation validation failed: '+e.message)}
-if(!server.includes('{"id":"speakup-a1","title":"A1 Beginner","level":"A1","audience":"Beginner","status":"ready","total_lessons":44'))errors.push('A1 Foundation: backend book seed must expose 44 lessons');
+if(!server.includes('{"id":"speakup-a1","title":"A1 Beginner","level":"A1","audience":"Beginner","status":"pilot","total_lessons":22'))errors.push('A1 Gold: backend book seed must expose the 22-lesson pilot');
+if(!a1gold.includes("A1_CURRICULUM_VERSION='ENGLISHGATE_A1_GOLD_v1.0'"))errors.push('A1 Gold: frozen curriculum version is missing');
+if(!a1gold.includes('totalLessons:22')||!a1gold.includes("id:'su-a1-l1'")||!a1gold.includes('ready:true')||!a1gold.includes("status:'LOCKED_IMPLEMENTATION'"))errors.push('A1 Gold: 22-lesson runtime migration contract is incomplete');
+if(!a1gold.includes("['vocabulary','grammar','reading','listening','writing','speaking','review']"))errors.push('A1 Gold: seven-stage workbook contract is missing');
+if(!server.includes("['vocabulary','grammar','reading','listening','writing','speaking','review'].includes(skill)"))errors.push('A1 Gold: backend attempt skills are incomplete');
+if(!server.includes("['vocabulary','grammar','reading','listening','writing','speaking','review'].includes(step)"))errors.push('A1 Gold: backend completion steps are incomplete');
+if(!server.includes("app.post('/api/a1/speaking/evaluate'"))errors.push('A1 Gold: Jev speaking evaluation endpoint is missing');
+if(!server.includes('LISTENING_SCRIPTS["su-a1-l1"]'))errors.push('A1 Gold: Lesson 1 listening source is missing');
 if(!app.includes("slice(0,12).map(readingQuestionAsShort)"))errors.push('Reading workbook must preserve up to 12 comprehension checks while converting reading items to short answer');
 if(!app.includes('function shortAnswerEvidence')||!app.includes('function shortAnswerMatches')||!app.includes("tag.startsWith('reading:')||tag.startsWith('listening-reading:')"))errors.push('Reading workbook must render every reading comprehension question as a typed short answer');
 if(!app.includes('const A1_EARLY_WRITING_MODELS=')||!app.includes("early?'Sentence Order':'Paragraph Ordering'")||!app.includes("early?'Tap the two sentences in the natural order.'"))errors.push('A1 Foundation: Lessons 1–10 must use the simplified writing progression instead of paragraph ordering');
