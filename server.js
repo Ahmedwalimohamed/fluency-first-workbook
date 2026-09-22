@@ -294,8 +294,12 @@ async function initDb(){
  if(tid)await pool.query("update users set school_id=coalesce(school_id,'school_iou_borama') where id=$1",[tid]);
  const seedClassWasDeleted=(await pool.query('select 1 from deleted_seed_classes where id=$1',['c1'])).rowCount>0;
  if(!seedClassWasDeleted){await pool.query(`insert into classes(id,name,level,course_id,teacher_id) values('c1','Fluency Foundations','A2+ → B1','career-fluency',$1) on conflict(id) do update set teacher_id=excluded.teacher_id`,[tid]);if(tid)await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',['c1',tid]);}
+ if(process.env.A1_PREVIEW_MODE==='1'&&tid){
+  await pool.query(`insert into classes(id,name,level,course_id,teacher_id) values('a1_preview_class','A1 Gold Preview','A1','speakup-a1-gold',$1) on conflict(id) do update set name=excluded.name,level=excluded.level,course_id=excluded.course_id,teacher_id=excluded.teacher_id`,[tid]);
+  await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',['a1_preview_class',tid]);
+ }
  const demo=process.env.DEMO_STUDENT_USERNAME,demoPass=process.env.DEMO_STUDENT_PASSWORD;
- if(demo&&demoPass&&!(await pool.query('select 1 from deleted_seed_accounts where lower(username)=lower($1)',[demo])).rowCount){let s=await pool.query('select id,role from users where lower(username)=lower($1)',[demo]);let sid;if(!s.rowCount){sid='s_'+crypto.randomUUID();await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[sid,demo,await bcrypt.hash(demoPass,12),'student',process.env.DEMO_STUDENT_NAME||'Raqiya Ibrahim']);await pool.query('insert into profiles(user_id,points,base) values($1,0,$2::jsonb)',[sid,JSON.stringify({vocabulary:60,grammar:60,listening:60,writing:60})]);}else{if(s.rows[0].role!=='student')throw new Error('DEMO_STUDENT_USERNAME is already used by a non-student account');sid=s.rows[0].id;await pool.query('update users set password_hash=$1,name=$2 where id=$3',[await bcrypt.hash(demoPass,12),process.env.DEMO_STUDENT_NAME||'Raqiya Ibrahim',sid]);}await pool.query('insert into profiles(user_id) values($1) on conflict do nothing',[sid]);if(!seedClassWasDeleted)await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',['c1',sid]);}
+ if(demo&&demoPass&&!(await pool.query('select 1 from deleted_seed_accounts where lower(username)=lower($1)',[demo])).rowCount){let s=await pool.query('select id,role from users where lower(username)=lower($1)',[demo]);let sid;if(!s.rowCount){sid='s_'+crypto.randomUUID();await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[sid,demo,await bcrypt.hash(demoPass,12),'student',process.env.DEMO_STUDENT_NAME||'Raqiya Ibrahim']);await pool.query('insert into profiles(user_id,points,base) values($1,0,$2::jsonb)',[sid,JSON.stringify({vocabulary:60,grammar:60,listening:60,writing:60})]);}else{if(s.rows[0].role!=='student')throw new Error('DEMO_STUDENT_USERNAME is already used by a non-student account');sid=s.rows[0].id;await pool.query('update users set password_hash=$1,name=$2 where id=$3',[await bcrypt.hash(demoPass,12),process.env.DEMO_STUDENT_NAME||'Raqiya Ibrahim',sid]);}await pool.query('insert into profiles(user_id) values($1) on conflict do nothing',[sid]);if(!seedClassWasDeleted)await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',['c1',sid]);if(process.env.A1_PREVIEW_MODE==='1')await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',['a1_preview_class',sid]);}
  const missingLoginTokens=await pool.query("select id from users where role='student' and (login_token is null or login_token='')");
  for(const row of missingLoginTokens.rows){await pool.query('update users set login_token=$1 where id=$2',[newLoginToken(),row.id]);}
 }
@@ -594,7 +598,9 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
 });
 
 function b2LearningLesson(lessonId){return /^su-b2-l\d+$/.test(String(lessonId||''))}
-function requireB2LearningLesson(lessonId,res){if(b2LearningLesson(lessonId))return true;res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is currently active.'});return false}
+function a1PreviewLearningLesson(lessonId){return process.env.A1_PREVIEW_MODE==='1'&&String(lessonId||'')==='a1-gold-l1'}
+function operationalLearningLesson(lessonId){return b2LearningLesson(lessonId)||a1PreviewLearningLesson(lessonId)}
+function requireB2LearningLesson(lessonId,res){if(operationalLearningLesson(lessonId))return true;res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is active outside the isolated A1 preview.'});return false}
 function cleanAttemptEvidence(value){
  if(!Array.isArray(value))return[];
  return value.slice(0,24).map((x,i)=>{
@@ -981,7 +987,7 @@ app.put('/api/teacher/context',auth,teacherOnly,async(req,res)=>{
 app.post('/api/teacher/assignments',auth,teacherOnly,async(req,res)=>{
  const classId=String(req.body.classId||'').trim(),bookId=String(req.body.bookId||'').trim(),lessonId=String(req.body.lessonId||'').trim(),lessonTitle=String(req.body.lessonTitle||'').trim(),lessonNumber=Number(req.body.lessonNumber),allowed=['vocabulary','listening','grammar','writing'],skills=Array.isArray(req.body.skills)?req.body.skills.filter(x=>allowed.includes(x)):[];
  if(!classId||!bookId||!lessonId||!lessonTitle||!Number.isInteger(lessonNumber)||lessonNumber<1||skills.length<1)return res.status(400).json({error:'Invalid workbook assignment.'});
- if(bookId!=='speakup-b2'||!b2LearningLesson(lessonId))return res.status(423).json({error:'Only B2 Upper Intermediate is active for assignments.'});
+ if(!((bookId==='speakup-b2'&&b2LearningLesson(lessonId))||(process.env.A1_PREVIEW_MODE==='1'&&bookId==='speakup-a1-gold'&&a1PreviewLearningLesson(lessonId))))return res.status(423).json({error:'This book is inactive for assignments.'});
  const owns=await pool.query('select id,course_id from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);
  if(!owns.rowCount)return res.status(403).json({error:'You cannot assign work to this class.'});
  if(owns.rows[0].course_id!==bookId)return res.status(400).json({error:'The lesson book does not match this class.'});
