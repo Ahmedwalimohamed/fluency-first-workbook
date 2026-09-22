@@ -436,6 +436,16 @@ app.post('/api/teacher/example-sentence',auth,teacherOnly,teacherExampleLimiter,
  catch(e){console.error('Teacher example sentence error:',e.message);return res.status(e.status||502).json({error:'Could not create an example right now.'})}
 });
 
+app.get('/api/a1-preview-health',async(req,res)=>{
+ if(process.env.A1_PREVIEW_MODE!=='1')return res.status(404).json({ok:false});
+ try{
+  const rows=(await pool.query("select id,status from books order by id")).rows;
+  const byId=Object.fromEntries(rows.map(r=>[r.id,r.status]));
+  const ok=byId['speakup-b2']==='ready'&&byId['speakup-a1-gold']==='pilot'&&rows.every(r=>r.id==='speakup-b2'||r.id==='speakup-a1-gold'||r.status==='inactive');
+  res.status(ok?200:503).json({ok,mode:'a1-lesson-1-preview',books:{b2:byId['speakup-b2']||null,a1Gold:byId['speakup-a1-gold']||null},inactiveCount:rows.filter(r=>r.status==='inactive').length});
+ }catch(e){res.status(503).json({ok:false,error:'preview database not ready'})}
+});
+
 app.get('/api/audio/health',async(req,res)=>{
  const expected=String(process.env.AUDIO_HEALTH_TOKEN||''),provided=String(req.query.token||'');
  if(!expected||provided!==expected)return res.status(404).json({ok:false});
