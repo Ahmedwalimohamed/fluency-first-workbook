@@ -222,8 +222,10 @@ function install(app){
     const attempts=(await pool.query('select id,skill,score,tags,evidence,at from attempts where student_id=$1 and lesson_id=$2 order by at desc',[studentId,lessonId])).rows;
     const completion=(await pool.query('select step,completed_at from completion where student_id=$1 and lesson_id=$2 order by completed_at',[studentId,lessonId])).rows;
     const writing=(await pool.query('select content,score,updated_at from writing_samples where student_id=$1 and lesson_id=$2',[studentId,lessonId])).rows[0]||null;
+    const workbookActivityStates=(await pool.query('select activity_id,activity_type,status,current_question,responses,started_at,last_activity_at,submitted_at,completed_at from workbook_activity_state where student_id=$1 and lesson_id=$2 order by activity_type',[studentId,lessonId])).rows;
+    const workbookActivityAttempts=(await pool.query('select attempt_id,activity_id,activity_type,score,max_score,percentage,correct_count,incorrect_count,responses,status,started_at,submitted_at,created_at from workbook_activity_attempts where student_id=$1 and lesson_id=$2 order by submitted_at desc',[studentId,lessonId])).rows;
     res.set('Cache-Control','no-store');
-    res.json({studentId,lessonId,version:VERSION,speaking,fixes,attempts,completion,writing});
+    res.json({studentId,lessonId,version:VERSION,speaking,fixes,attempts,completion,writing,workbookActivityStates,workbookActivityAttempts});
   });
 }
 
