@@ -864,3 +864,37 @@ body.b2-premium-workbook-mode .app.student-mode .content{
   .b2-microflow .micro-history-nav{width:calc(100% - 24px);margin-top:6px}
   .b2-microflow .micro-history-nav button{width:100%}
 }
+
+/* Jev-guided reading hierarchy: mission supports; question leads */
+.b2-northstar-flow[data-phase="see"] .micro-stage{
+  grid-template-columns:minmax(0,1.18fr) minmax(320px,.82fr);
+  column-gap:32px;
+  align-items:start;
+}
+.b2-northstar-flow[data-phase="see"] .micro-stage::before,
+.b2-northstar-flow[data-phase="see"] .northstar-reading-goal,
+.b2-northstar-flow[data-phase="see"] .micro-question-count,
+.b2-northstar-flow[data-phase="see"] .micro-prompt,
+.b2-northstar-flow[data-phase="see"] .micro-choices,
+.b2-northstar-flow[data-phase="see"] #northstarFeedback{grid-column:2}
+.b2-northstar-flow[data-phase="see"] .northstar-reading{grid-column:1;grid-row:1 / span 6}
+.b2-northstar-flow[data-phase="see"] .northstar-reading-goal{
+  display:flex;align-items:baseline;gap:8px;margin:0;padding:0 0 2px;color:#64748b;font-size:.86rem;line-height:1.45
+}
+.b2-northstar-flow[data-phase="see"] .northstar-reading-goal small{
+  flex:0 0 auto;color:#3157d5;font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase
+}
+.b2-northstar-flow[data-phase="see"] .northstar-reading-goal span{font-weight:650}
+.b2-northstar-flow[data-phase="see"] .micro-prompt h1{max-width:22ch;font-size:clamp(1.45rem,2.25vw,2rem)}
+.b2-northstar-flow[data-phase="see"] .micro-question-count{margin-top:2px}
+@media(max-width:820px){
+ .b2-northstar-flow[data-phase="see"] .micro-stage{display:grid;grid-template-columns:1fr;gap:15px}
+ .b2-northstar-flow[data-phase="see"] .micro-stage::before,
+ .b2-northstar-flow[data-phase="see"] .northstar-reading-goal,
+ .b2-northstar-flow[data-phase="see"] .northstar-reading,
+ .b2-northstar-flow[data-phase="see"] .micro-question-count,
+ .b2-northstar-flow[data-phase="see"] .micro-prompt,
+ .b2-northstar-flow[data-phase="see"] .micro-choices,
+ .b2-northstar-flow[data-phase="see"] #northstarFeedback{grid-column:1;grid-row:auto}
+ .b2-northstar-flow[data-phase="see"] .northstar-reading{max-height:none}
+}
