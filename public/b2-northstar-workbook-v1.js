@@ -210,11 +210,11 @@ function renderSee(l,s){
  return renderChoiceSet(l,s,{
   key:'reading',
   questions:qs,
-  intro:prompt(l.northstar.mission,'Read first. The lesson will help you do this in English.'),
+  intro:'<div class="northstar-reading-goal"><small>Goal</small><span>'+esc(l.northstar.mission)+'</span></div>',
   before:()=>readingHtml(l.listening?.readingText||''),
-  sub:'Use the reading as your source.',
+  sub:'',
   good:'You understood the key idea from the reading.',
-  bad:'Check the reading and try again.',
+  bad:'Look back at the part of the reading that explains this idea, then try again.',
   emptyQuestion:'What is the main idea?'
  })
 }
