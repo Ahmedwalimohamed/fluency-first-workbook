@@ -10,7 +10,7 @@ const nativeGet=express.application.get;
 const nativePost=express.application.post;
 const installed=new WeakSet();
 const BOOK_ID='speakup-a1-gold';
-const VERSION='englishgate-a1-gold-v1.1-batch-a';
+const VERSION='englishgate-a1-gold-v1.2-batch-b';
 const TYPE_SAFE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const TYPE_SAFE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
 
@@ -79,7 +79,86 @@ const LESSONS={
    {match:/\bi feeling tired\b/i,focus:'feel_adjective',original:'I feeling tired.',model:'I feel tired.'},
    {match:/\bhow\s+you\s+feel\b/i,focus:'question_form',original:'How you feel?',model:'How do you feel?'}
   ]
- }
+
+ },
+ 'a1-gold-l6':{
+  title:'Food & Culture',
+  canDo:'Say what food you like and order a simple meal or drink.',
+  opening:'Hello. What would you like?',
+  keys:['preference','request','order','alternative'],required:['request'],minimumKeys:3,minimumQuestions:1,
+  prompts:{preference:'What food or drink do you like?',request:'Please order one food or drink.',order:'What else would you like?',alternative:'Sorry, your first drink is unavailable. Choose another.'},
+  detect:l=>({preference:/\bi (?:like|do not like|don't like)\b/.test(l),request:/\b(i would like|i'd like|can i have)\b/.test(l),order:/\b(rice|meat|vegetables|tea|coffee|water|breakfast)\b/.test(l),alternative:/\b(water|coffee|tea|another|instead|okay|ok)\b/.test(l)}),
+  repairs:[
+   {match:/\bi no like coffee\b/i,focus:'negative_preference',original:'I no like coffee.',model:"I don't like coffee."},
+   {match:/\bi like tea please\b/i,focus:'preference_vs_request',original:'I like tea please.',model:"I'd like tea, please."},
+   {match:/\bcan i water\b/i,focus:'request_chunk',original:'Can I water?',model:'Can I have water, please?'}
+  ]
+ },
+ 'a1-gold-l7':{
+  title:'Education & Learning',
+  canDo:'Say what you can do in English and ask for help when you do not understand.',
+  opening:'Hi. What can you do in English?',
+  keys:['ability','difficulty','repair'],required:['repair'],minimumKeys:3,minimumQuestions:1,
+  prompts:{ability:'Tell me one thing you can do in English.',difficulty:'What is difficult for you?',repair:'I will give you a new instruction. Ask for help or repetition if you need it.'},
+  detect:l=>({ability:/\bi can (?:read|write|speak|listen|understand)\b/.test(l),difficulty:/\bi (?:cannot|can't|do not|don't) (?:understand|read|write|speak|listen)\b/.test(l),repair:/\b(can you repeat|can you help me|what does .+ mean|i don't understand)\b/.test(l)}),
+  repairs:[
+   {match:/\bi can to read\b/i,focus:'can_base_verb',original:'I can to read.',model:'I can read.'},
+   {match:/\bi no understand\b/i,focus:'repair_statement',original:'I no understand.',model:"I don't understand."},
+   {match:/\byou repeat\b/i,focus:'repair_question',original:'You repeat?',model:'Can you repeat that?'}
+  ]
+ },
+ 'a1-gold-l8':{
+  title:'Money & Business',
+  canDo:'Ask a price, understand a simple amount, and pay for an item.',
+  opening:'Hello. This notebook is on sale today.',
+  keys:['price','decision','payment'],required:['price'],minimumKeys:3,minimumQuestions:2,
+  prompts:{price:'Ask me the price.',decision:'Tell me if you want the item.',payment:'Ask or tell me how you want to pay.'},
+  detect:l=>({price:/\b(how much|dollars?|price)\b/.test(l),decision:/\b(i(?:'ll| will) take it|i want to buy|no thank you|no, thank you)\b/.test(l),payment:/\b(pay by card|pay cash|card|cash)\b/.test(l)}),
+  repairs:[
+   {match:/\bhow much this\b/i,focus:'price_question',original:'How much this?',model:'How much is this?'},
+   {match:/\bi pay card\b/i,focus:'payment_question',original:'I pay card.',model:'Can I pay by card?'},
+   {match:/\bi take\b/i,focus:'transaction_chunk',original:'I take.',model:"I'll take it."}
+  ]
+ },
+ 'a1-gold-l9':{
+  title:'Environment & Climate',
+  canDo:'Describe today’s weather and say a simple weather preference.',
+  opening:"Hi. What's the weather like today?",
+  keys:['condition','preference','contrast'],required:['condition'],minimumKeys:2,minimumQuestions:1,
+  prompts:{condition:'Describe the weather today.',preference:'Do you like this weather?',contrast:'Can you describe two weather conditions together?'},
+  detect:l=>({condition:/\bit(?:'s| is) (?:hot|cold|sunny|rainy|raining|windy|dry|warm)\b/.test(l),preference:/\bi (?:like|do not like|don't like)\b[^.!?]*weather\b/.test(l),contrast:/\b(?:but|and)\b[^.!?]*(?:sunny|windy|hot|cold|rainy|dry)\b/.test(l)}),
+  repairs:[
+   {match:/\bit hot today\b/i,focus:'it_is',original:'It hot today.',model:'It is hot today.'},
+   {match:/\bi not like hot weather\b/i,focus:'negative_preference',original:'I not like hot weather.',model:"I don't like hot weather."},
+   {match:/\bwhat weather like\b/i,focus:'weather_question',original:'What weather like?',model:"What's the weather like?"}
+  ]
+ },
+ 'a1-gold-l10':{
+  title:'Relationships & Family',
+  canDo:'Introduce a family member or friend and give basic information about that person.',
+  opening:'Hi. Tell me about one family member or friend.',
+  keys:['relation','place','role','interest'],required:['relation'],minimumKeys:3,minimumQuestions:1,
+  prompts:{relation:'Who is this person?',place:'Where does this person live?',role:'What does this person do?',interest:'What does this person like?'},
+  detect:l=>({relation:/\b(this is my|my) (?:mother|father|brother|sister|husband|wife|friend)\b/.test(l),place:/\b(?:he|she) lives in\b/.test(l),role:/\b(?:he|she) (?:is a|works at|works in|studies)\b/.test(l),interest:/\b(?:he|she) likes\b/.test(l)}),
+  repairs:[
+   {match:/\bshe live borama\b/i,focus:'third_person_form',original:'She live Borama.',model:'She lives in Borama.'},
+   {match:/\bwhere does she lives\b/i,focus:'does_base_verb',original:'Where does she lives?',model:'Where does she live?'},
+   {match:/\bhe name is ali\b/i,focus:'possessive',original:'He name is Ali.',model:'His name is Ali.'}
+  ]
+ },
+ 'a1-gold-l11':{
+  title:'Media & News',
+  canDo:'Talk about simple media habits and understand key information in a short public announcement.',
+  opening:'Hi. What do you watch, read, or listen to?',
+  keys:['habit','sourceTime','transfer'],required:['habit','transfer'],minimumKeys:3,minimumQuestions:1,
+  prompts:{habit:'Tell me one media habit.',sourceTime:'What device, source, or time do you use?',transfer:'Announcement: There is a football game on Saturday at four in the afternoon. Tickets are two dollars. Tell me two key facts.'},
+  detect:l=>({habit:/\bi (?:watch|read|listen to)\b/.test(l),sourceTime:/\b(on my phone|online|radio|tv|in the morning|in the evening|at night)\b/.test(l),transfer:/\b(football|game)\b[^.!?]*(?:four|4|two|2|dollars?|saturday)|(?:four|4)[^.!?]*(?:two|2|dollars?)/.test(l)}),
+  repairs:[
+   {match:/\bi listen radio\b/i,focus:'listen_to',original:'I listen radio.',model:'I listen to the radio.'},
+   {match:/\bi watch videos in my phone\b/i,focus:'on_my_phone',original:'I watch videos in my phone.',model:'I watch videos on my phone.'},
+   {match:/\bi read news at morning\b/i,focus:'time_preposition',original:'I read news at morning.',model:'I read the news in the morning.'}
+  ]
+
 };
 
 function session(req){try{return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}}
