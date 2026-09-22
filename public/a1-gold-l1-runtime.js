@@ -23,7 +23,7 @@ function appendTurn(role,text){
 function injectSpeaking(){
   if(session?.role!=='student')return;
   let current;try{current=lesson()}catch{return}
-  if(current?.id!==LESSON_ID||document.getElementById('a1GoldSpeaking'))return;
+  if(current?.id!==LESSON_ID||currentStep!=='writing'||document.getElementById('a1GoldSpeaking'))return;
   const host=document.querySelector('.eg-workbook-teaching-surface')||document.getElementById('content');if(!host)return;
   const wrap=document.createElement('div');wrap.innerHTML=speakingCard();host.appendChild(wrap.firstElementChild);
   let speakingSessionId='',ready=false;
@@ -60,7 +60,19 @@ function injectSpeaking(){
 function renderFixes(items){
   const host=document.getElementById('a1GoldFixPanel');if(!host)return;
   if(!items.length){host.innerHTML='<div class="feedback good"><strong>Fix & Improve:</strong> No priority correction was detected in this transfer.</div>';return}
-  host.innerHTML=`<div class="section-head"><div><span class="role-kicker">Fix & Improve</span><h4>Repair your highest-value forms</h4></div></div>`+items.map(x=>`<div class="guided-question"><p><s>${esc(x.original||'')}</s></p><strong>${esc(x.model||'')}</strong></div>`).join('');
+  host.innerHTML=`<div class="section-head"><div><span class="role-kicker">Fix & Improve</span><h4>Repair your highest-value forms</h4><p>Read the model, then type the corrected sentence yourself.</p></div></div>`+items.map(x=>`<div class="guided-question" data-a1-fix="${Number(x.id)}"><p><s>${esc(x.original||'')}</s></p><strong>${esc(x.model||'')}</strong><input type="text" data-a1-fix-input placeholder="Type the corrected sentence"><button class="secondary-btn" type="button" data-a1-fix-retry>Check retry</button><div data-a1-fix-result></div></div>`).join('');
+  host.querySelectorAll('[data-a1-fix]').forEach(card=>{
+    const button=card.querySelector('[data-a1-fix-retry]'),input=card.querySelector('[data-a1-fix-input]'),result=card.querySelector('[data-a1-fix-result]');
+    button.onclick=async()=>{
+      const retry=input.value.trim();if(!retry)return;
+      button.disabled=true;
+      try{
+        const r=await api('/api/a1-gold/fix-retry',{method:'POST',body:JSON.stringify({id:Number(card.dataset.a1Fix),retry})});
+        result.innerHTML=r.resolved?'<div class="feedback good">Repair confirmed.</div>':`<div class="feedback bad">Try again. Model: ${esc(r.model)}</div>`;
+        if(r.resolved){input.disabled=true;button.disabled=true}else button.disabled=false;
+      }catch(e){result.innerHTML=`<div class="feedback bad">${esc(e.message)}</div>`;button.disabled=false}
+    };
+  });
 }
 
 async function injectReportEvidence(){
