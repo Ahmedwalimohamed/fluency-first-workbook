@@ -1,7 +1,10 @@
 const express=require('express');
 const jwt=require('jsonwebtoken');
 const {execFileSync}=require('child_process');
-const {installSemanticQaFirewall}=require('./semantic-qa-firewall.js');\n\n// A1 Gold pilot release gate: production starts through this bootstrap on Railway.\nexecFileSync(process.execPath,['scripts/qa-a1-gold-l1.mjs'],{stdio:'inherit'});
+const {installSemanticQaFirewall}=require('./semantic-qa-firewall.js');
+
+// A1 Gold pilot release gate: production starts through this bootstrap on Railway.
+execFileSync(process.execPath,['scripts/qa-a1-gold-l1.mjs'],{stdio:'inherit'});
 
 const nativePost=express.application.post;
 const installed=new WeakSet();
