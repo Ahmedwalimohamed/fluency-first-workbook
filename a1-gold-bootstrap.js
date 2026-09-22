@@ -10,7 +10,7 @@ const nativeGet=express.application.get;
 const nativePost=express.application.post;
 const installed=new WeakSet();
 const BOOK_ID='speakup-a1-gold';
-const VERSION='englishgate-a1-gold-v1.4-batch-d';
+const VERSION='englishgate-a1-gold-v1.0-frozen';
 const TYPE_SAFE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const TYPE_SAFE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
 
