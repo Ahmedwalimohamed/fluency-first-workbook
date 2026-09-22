@@ -581,7 +581,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
  res.json({students,rankingMethod:'45% recorded activity average, 35% workbook completion, 20% practice consistency'});
 });
 
-function cleanAttemptEvidence(value){
+function b2LearningLesson(lessonId){return /^su-b2-l\d+$/.test(String(lessonId||''))}\nfunction requireB2LearningLesson(lessonId,res){if(b2LearningLesson(lessonId))return true;res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is currently active.'});return false}\nfunction cleanAttemptEvidence(value){
  if(!Array.isArray(value))return[];
  return value.slice(0,24).map((x,i)=>{
   const correct=x?.correct===true?true:x?.correct===false?false:null;
@@ -597,14 +597,14 @@ function cleanAttemptEvidence(value){
 }
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{
  const {lessonId,skill,score,tags=[],evidence=[]}=req.body;
- if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});
+ if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});\n if(!requireB2LearningLesson(lessonId,res))return;
  const safeTags=Array.isArray(tags)?tags.map(x=>String(x).slice(0,120)).slice(0,9):[],safeEvidence=cleanAttemptEvidence(evidence);
  if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');
  await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags,evidence) values($1,$2,$3,$4,$5,$6::jsonb)',[req.user.id,lessonId,skill,score,safeTags,JSON.stringify(safeEvidence)]);
  await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);
  res.json({ok:true,evidenceSaved:safeEvidence.length})
 });
-app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,certificate:issued.certificate||null})});
+app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});if(!requireB2LearningLesson(lessonId,res))return;const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,certificate:issued.certificate||null})});
 
 const WRITING_GRADE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const WRITING_GRADE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
@@ -715,14 +715,14 @@ app.get('/api/performance-decision/:studentId',auth,async(req,res)=>{
 
 app.post('/api/writing-grade',auth,studentOnly,async(req,res)=>{
  try{
-  const text=String(req.body?.text||'').trim(),task=String(req.body?.task||'').trim(),lessonId=String(req.body?.lessonId||'');
+  const text=String(req.body?.text||'').trim(),task=String(req.body?.task||'').trim(),lessonId=String(req.body?.lessonId||'');\n  if(!requireB2LearningLesson(lessonId,res))return;
   if(!isAuthenticWritingText(text))return res.status(400).json({error:'Write your real-life response before checking it.'});
   if(!task)return res.status(400).json({error:'Writing task is missing.'});
   const grade=await gradeWritingWithJev({lessonId,task,text,level:req.body?.level,minWords:req.body?.minWords,maxWords:req.body?.maxWords});
   res.set('Cache-Control','no-store');res.json({ok:true,...grade});
  }catch(e){console.error('writing grade error',e.message);res.status(503).json({error:'Writing feedback is temporarily unavailable. Your response can still be saved.'})}
 });
-app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||''),publishToCommunity=req.body.publishToCommunity===true;if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before saving.'});const previous=await pool.query('select content,published_to_community from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score,published_to_community) values($1,$2,$3,null,$4) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,published_to_community=excluded.published_to_community,updated_at=now()`,[req.user.id,lessonId,content,publishToCommunity]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,completed:Boolean(done.rowCount),publishedToCommunity:publishToCommunity,certificate:issued.certificate||null})});
+app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||''),publishToCommunity=req.body.publishToCommunity===true;if(!requireB2LearningLesson(lessonId,res))return;if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before saving.'});const previous=await pool.query('select content,published_to_community from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score,published_to_community) values($1,$2,$3,null,$4) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,published_to_community=excluded.published_to_community,updated_at=now()`,[req.user.id,lessonId,content,publishToCommunity]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,completed:Boolean(done.rowCount),publishedToCommunity:publishToCommunity,certificate:issued.certificate||null})});
 function authenticWritingText(raw){
  const text=String(raw||'').trim();if(!text)return'';
  const looksJson=/^[\[{]/.test(text);
@@ -964,7 +964,7 @@ app.put('/api/teacher/context',auth,teacherOnly,async(req,res)=>{
 
 app.post('/api/teacher/assignments',auth,teacherOnly,async(req,res)=>{
  const classId=String(req.body.classId||'').trim(),bookId=String(req.body.bookId||'').trim(),lessonId=String(req.body.lessonId||'').trim(),lessonTitle=String(req.body.lessonTitle||'').trim(),lessonNumber=Number(req.body.lessonNumber),allowed=['vocabulary','listening','grammar','writing'],skills=Array.isArray(req.body.skills)?req.body.skills.filter(x=>allowed.includes(x)):[];
- if(!classId||!bookId||!lessonId||!lessonTitle||!Number.isInteger(lessonNumber)||lessonNumber<1||skills.length<1)return res.status(400).json({error:'Invalid workbook assignment.'});
+ if(!classId||!bookId||!lessonId||!lessonTitle||!Number.isInteger(lessonNumber)||lessonNumber<1||skills.length<1)return res.status(400).json({error:'Invalid workbook assignment.'});\n if(bookId!=='speakup-b2'||!b2LearningLesson(lessonId))return res.status(423).json({error:'Only B2 Upper Intermediate is active for assignments.'});
  const owns=await pool.query('select id,course_id from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);
  if(!owns.rowCount)return res.status(403).json({error:'You cannot assign work to this class.'});
  if(owns.rows[0].course_id!==bookId)return res.status(400).json({error:'The lesson book does not match this class.'});
