@@ -74,6 +74,7 @@ const schemaReady=(async()=>{
     from completion where step='listening'
     on conflict(legacy_key) do nothing
   `);
+  await pool.query("create table if not exists books(id text primary key,title text not null,level text not null,audience text not null default '',status text not null default 'queued',total_lessons int not null default 0,activity_model text not null default '',created_at timestamptz default now())");
   await pool.query("update books set activity_model='Grammar · Reading · Listening · Vocabulary · Writing' where activity_model ilike '%Listening%Reading%' or activity_model ilike '%Reading%Listening%'");
 })().catch(e=>{console.error('Reading/Listening separation schema error:',e);throw e});
 
