@@ -14,7 +14,7 @@ try{new Function(server)}catch(e){failures.push('Server syntax after A1 Gold cha
 
 must(runtime.includes("A1_CURRICULUM_VERSION='ENGLISHGATE_A1_GOLD_v1.0'"),'Frozen A1 curriculum version missing');
 must(runtime.includes("totalLessons:22"),'A1 Gold must expose 22 lessons');
-must(runtime.includes("id:'su-a1-l1'")&&runtime.includes("ready:true"),'A1 Lesson 1 must be enabled');
+must(runtime.includes("id:'a1g-v1-l1'")&&runtime.includes("ready:true"),'A1 Lesson 1 must be enabled');
 must(runtime.includes("status:'LOCKED_IMPLEMENTATION'")&&runtime.includes("ready:false"),'A1 Lessons 2–22 must remain locked during Lesson 1 pilot');
 must(runtime.includes("['vocabulary','grammar','reading','listening','writing','speaking','review']"),'A1 seven-stage workbook contract missing');
 must(runtime.includes("window.LIVE_BOOKS['speakup-a1']"),'A1 Gold Live lesson override missing');
@@ -27,7 +27,7 @@ must(goldIndex>index.indexOf('cefr-live-books.js'),'A1 Gold must load after lega
 must(goldIndex>=0&&goldIndex<index.indexOf('pwa.js'),'A1 Gold runtime must load before PWA bootstrap');
 
 must(server.includes("app.get('/a1-gold-lesson1-v1.js'"),'Server must explicitly serve the A1 Gold runtime');
-must(server.includes('LISTENING_SCRIPTS["su-a1-l1"]'),'A1 Lesson 1 listening source missing');
+must(server.includes('LISTENING_SCRIPTS["a1g-v1-l1"]'),'A1 Lesson 1 listening source missing');
 must(server.includes("app.post('/api/a1/speaking/evaluate'"),'Jev speaking evaluation endpoint missing');
 must(server.includes("['vocabulary','grammar','reading','listening','writing','speaking','review'].includes(skill)"),'Attempt API does not accept all A1 Gold skills');
 must(server.includes("['vocabulary','grammar','reading','listening','writing','speaking','review'].includes(step)"),'Completion API does not accept all A1 Gold stages');
