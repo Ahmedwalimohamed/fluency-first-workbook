@@ -291,6 +291,7 @@ async function initDb(){
  const teacherWasDeleted=(await pool.query('select 1 from deleted_seed_accounts where lower(username)=lower($1)',[tUser])).rowCount>0;
  let tid=null;
  if(!teacherWasDeleted){const t=await pool.query('select id,role from users where lower(username)=lower($1)',[tUser]);if(!t.rowCount){tid='t_'+crypto.randomUUID();await pool.query('insert into users(id,username,password_hash,role,name) values($1,$2,$3,$4,$5)',[tid,tUser,await bcrypt.hash(tPass,12),'teacher',process.env.TEACHER_NAME||'Teacher Ahmed']);}else{if(t.rows[0].role!=='teacher')throw new Error('TEACHER_USERNAME is already used by a non-teacher account');tid=t.rows[0].id;await pool.query('update users set password_hash=$1,name=$2 where id=$3',[await bcrypt.hash(tPass,12),process.env.TEACHER_NAME||'Teacher Ahmed',tid]);}}
+ if(tid)await pool.query("update users set school_id=coalesce(school_id,'school_iou_borama') where id=$1",[tid]);
  const seedClassWasDeleted=(await pool.query('select 1 from deleted_seed_classes where id=$1',['c1'])).rowCount>0;
  if(!seedClassWasDeleted){await pool.query(`insert into classes(id,name,level,course_id,teacher_id) values('c1','Fluency Foundations','A2+ → B1','career-fluency',$1) on conflict(id) do update set teacher_id=excluded.teacher_id`,[tid]);if(tid)await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',['c1',tid]);}
  const demo=process.env.DEMO_STUDENT_USERNAME,demoPass=process.env.DEMO_STUDENT_PASSWORD;
