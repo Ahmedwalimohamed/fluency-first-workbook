@@ -329,8 +329,13 @@ async function ensureSchema(){
   );
  `);
 }
-function hasQuestion(text){const t=String(text||'').trim();return /\?/.test(t)||/^(what|where|who|how|do|are|is|can|when)\b/i.test(t)}
-function detect(config,text){const l=String(text||'').toLowerCase();return {...config.detect(l),question:hasQuestion(text)}}
+function questionCount(text){
+ const t=String(text||'').trim();if(!t)return 0;
+ const marked=(t.match(/\?/g)||[]).length;if(marked)return Math.min(8,marked);
+ return /^(what|where|who|why|how|do|does|are|is|can|when|which)\b/i.test(t)?1:0;
+}
+function hasQuestion(text){return questionCount(text)>0}
+function detect(config,text){const l=String(text||'').toLowerCase(),qc=questionCount(text);return {...config.detect(l),question:qc>0,questionCount:qc}}
 function evidenceCount(config,functions){return config.keys.filter(k=>bool(functions[k])).length}
 function deterministicReady(config,functions,questions){
  const count=evidenceCount(config,functions);
@@ -397,7 +402,7 @@ function install(app){
   if(row.status!=='in_progress')return res.status(409).json({error:'This speaking session is already complete.'});
   const transcript=Array.isArray(row.transcript)?row.transcript:[],turn=detect(config,text),old=row.functions&&typeof row.functions==='object'?row.functions:{},functions={...old};
   for(const key of config.keys)functions[key]=bool(old[key])||bool(turn[key]);
-  const relevantQuestions=Math.min(20,Number(row.relevant_questions||0)+(turn.question?1:0)),details=evidenceCount(config,functions);
+  const relevantQuestions=Math.min(20,Number(row.relevant_questions||0)+Number(turn.questionCount||0)),details=evidenceCount(config,functions);
   transcript.push({role:'student',text,at:new Date().toISOString()});
   const minimum=deterministicReady(config,functions,relevantQuestions),message=minimum?'Great. You completed the A1 speaking goal. We can check your transfer evidence.':nextPrompt(config,functions,relevantQuestions);
   transcript.push({role:'ai',text:message,at:new Date().toISOString()});
