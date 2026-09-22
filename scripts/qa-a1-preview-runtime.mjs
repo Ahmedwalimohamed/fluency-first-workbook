@@ -109,5 +109,5 @@ try{
  const failed=results.filter(x=>x.status==='FAIL');
  console.log(`A1 LESSONS 1-11 RUNTIME QA: ${results.filter(x=>x.status==='PASS').length} PASS, ${failed.length} FAIL`);
  process.exitCode=failed.length?1:0;
-}catch(e){console.error('A1 Lessons 1-11 runtime QA error:',e.message);process.exitCode=1}
+}catch(e){console.error('A1 Lessons 1-11 runtime QA error:',e.message);const tail=childLogs.split(/\n/).slice(-80).join('\n').replace(/Bearer\s+[A-Za-z0-9._-]+/gi,'Bearer [redacted]');if(tail)console.error('A1 preview child startup tail:\n'+tail);process.exitCode=1}
 finally{cleanup(child)}
