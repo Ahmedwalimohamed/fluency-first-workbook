@@ -422,6 +422,7 @@ function currentQuestionEvidence(){
  }).filter(Boolean)
 }
 function bookMeta(id){return getDB().books?.find(b=>b.id===id)||null}
+function bookOperational(id){const b=bookMeta(id);return Boolean(b&&['ready','pilot'].includes(b.status))}
 function studentClass(sid){const u=getDB().users.find(x=>x.id===sid);return getDB().classes.find(c=>u?.classIds?.includes(c.id))||null}
 function bookIdForStudent(sid){const c=studentClass(sid);return c?.bookId||c?.course_id||'career-fluency'}
 function courseForStudent(sid){return BOOK_PACKS[bookIdForStudent(sid)]||CAREER_FLUENCY_BOOK}
@@ -585,16 +586,18 @@ function resolveBookKey(c){
 }
 function liveBookForClass(c){
  if(!c)return null;
- const id=resolveBookKey(c),books=LIVE_BOOK_CACHE||window.LIVE_BOOKS||{};
+ const id=resolveBookKey(c);if(!bookOperational(id))return null;
+ const books=LIVE_BOOK_CACHE||window.LIVE_BOOKS||{};
  return books[id]||null;
 }
 function workbookForClass(c){
  if(!c)return null;
- return BOOK_PACKS[resolveBookKey(c)]||null;
+ const id=resolveBookKey(c);if(!bookOperational(id))return null;
+ return BOOK_PACKS[id]||null;
 }
 function openAssignmentFromUrl(){
  const id=new URLSearchParams(window.location.search).get('assignment');if(!id)return false;
- const a=(getDB().assignments||[]).find(x=>x.id===id);if(!a)return false;
+ const a=(getDB().assignments||[]).find(x=>x.id===id);if(!a||!bookOperational(a.bookId))return false;
  if(!setActiveBook(a.bookId))return false;activeLessonId=a.lessonId;currentStep=firstOpenStep(session.id,a.lessonId);currentPage='workbook';return true;
 }
 
@@ -1600,7 +1603,14 @@ function maybeShowB2UpgradeNotice(){
  $('b2UpgradeReview').onclick=()=>{closeModal();acknowledgeB2UpgradeNotice();currentPage='course';renderNav();studentCourse()}
 }
 function studentHome(){
- const sid=session.id;setActiveBook(bookIdForStudent(sid));
+ const sid=session.id,assignedBookId=bookIdForStudent(sid),assignedBook=bookMeta(assignedBookId);
+ if(!bookOperational(assignedBookId)){
+  title('EnglishGate','Home');
+  $('content').innerHTML=`<section class="course-shell"><div class="empty-state"><span class="pill">Course inactive</span><h2>${escapeHtml(assignedBook?.title||'Your current course')} is temporarily inactive.</h2><p>Your learning history and reports are محفوظ. EnglishGate currently has B2 Upper Intermediate active for teaching and study.</p><button class="ghost-btn" id="inactiveProgressBtn">View my saved progress</button></div></section>`;
+  if($('inactiveProgressBtn'))$('inactiveProgressBtn').onclick=()=>{currentPage='progress';renderNav();studentProgress()};
+  return
+ }
+ setActiveBook(assignedBookId);
  const book=bookMeta(activeBookId)||{title:COURSE.title||COURSE.moduleTitle,level:COURSE.level},available=readyLessons(COURSE),next=available.find(l=>skillCompletionFor(sid,l.id).length<WORKBOOK_STEPS.length),completed=completedActivityCount(sid),total=available.length*WORKBOOK_STEPS.length;
  const step=next?firstOpenStep(sid,next.id):null,pct=total?Math.round(completed/total*100):0;
  const recent=attempts(sid).slice().sort((a,b)=>new Date(b.at)-new Date(a.at)).filter(a=>available.some(l=>l.id===a.lessonId)).slice(0,3);
@@ -1660,7 +1670,9 @@ function studentHome(){
  document.querySelectorAll('[data-recent-lesson]').forEach(btn=>btn.onclick=()=>{const lessonId=btn.dataset.recentLesson;if(!lessonId)return;activeLessonId=lessonId;currentStep=firstOpenStep(sid,lessonId);currentPage='workbook';renderNav();workbook()});
 }
 function studentCourse(){
- const sid=session.id;setActiveBook(bookIdForStudent(sid));
+ const sid=session.id,assignedBookId=bookIdForStudent(sid),assignedBook=bookMeta(assignedBookId);
+ if(!bookOperational(assignedBookId)){title('EnglishGate Workbook','My Book');$('content').innerHTML=`<section class="course-shell"><button class="back-link" id="courseHome">← Home</button><div class="empty-state"><span class="pill">Course inactive</span><h3>${escapeHtml(assignedBook?.title||'This book')} is not currently available for learning.</h3><p>Your existing progress is preserved. Only B2 Upper Intermediate is active right now.</p></div></section>`;$('courseHome').onclick=()=>{currentPage='home';renderNav();studentHome()};return}
+ setActiveBook(assignedBookId);
  const b=bookMeta(activeBookId)||{title:COURSE.title||COURSE.moduleTitle,level:COURSE.level,totalLessons:COURSE.totalLessons||COURSE.lessons.length};
  title('EnglishGate Workbook','My Book');
  $('content').innerHTML=`<section class="course-shell"><button class="back-link" id="courseHome">← Home</button><div class="course-intro"><div><span class="pill teal">${escapeHtml(b.level||'')}</span><h1>${escapeHtml(b.title)}</h1><p>Revise the class book first, then complete the workbook activities.</p></div><div class="course-overall"><strong>${completionPct(sid)}%</strong><span>Book progress</span>${progress(completionPct(sid))}</div></div><div class="course-path student-course-list">${COURSE.lessons.map(l=>{
@@ -1750,7 +1762,9 @@ function firstOpenStep(sid,lid){
 }
 function workbook(){
  setWorkbookDesignMode(true);
- const sid=session.id,l=lesson(),steps=workbookStepsForLesson(l),idx=Math.max(0,steps.indexOf(currentStep)),preview=isWorkbookPreview();
+ const sid=session.id,preview=isWorkbookPreview();
+ if(session?.role==='student'&&!bookOperational(bookIdForStudent(sid))){setWorkbookDesignMode(false);currentPage='course';renderNav();studentCourse();return}
+ const l=lesson(),steps=workbookStepsForLesson(l),idx=Math.max(0,steps.indexOf(currentStep));
  if(!steps.includes(currentStep))currentStep=firstOpenStep(sid,l.id);
  const activeIdx=Math.max(0,steps.indexOf(currentStep)),completed=preview?[]:skillCompletionFor(sid,l.id);
  const firstOpen=preview?steps.length-1:steps.indexOf(firstOpenStep(sid,l.id));
@@ -3806,7 +3820,7 @@ async function leaderboard(teacher=false){
  }catch(e){content.innerHTML=`<section class="professional-leaderboard"><div class="feedback bad">Could not load the leaderboard: ${escapeHtml(e.message)}</div></section>`}
 }
 function adminTestApp(){
- const books=(getDB().books||[]).filter(b=>BOOK_PACKS[b.id]||['ready','pilot'].includes(b.status));
+ const books=(getDB().books||[]).filter(b=>['ready','pilot'].includes(b.status)&&BOOK_PACKS[b.id]);
  title('System Admin','Test app');
  $('content').innerHTML=`<section class="role-page-head"><div><span class="role-kicker">Admin QA mode</span><h1>Test the learning experience</h1><p>Open any available lesson book or workbook directly. Admin testing does not require class enrollment and workbook preview answers are not saved as student work.</p></div></section><div class="feedback good"><strong>Safe preview:</strong> Use this area to test navigation, activities, listening audio, lesson stages and workbook presentation without changing a student's progress.</div><div class="book-card-grid">${books.map(b=>{const pack=BOOK_PACKS[b.id],live=(LIVE_BOOK_CACHE||window.LIVE_BOOKS||{})[b.id];return `<article class="book-card"><div class="book-card-top"><span class="pill teal">${escapeHtml(b.level||'')}</span><span class="book-status ${escapeAttr(b.status||'ready')}">Test</span></div><div class="book-cover-mini"><span>EnglishGate</span><strong>${escapeHtml(b.title)}</strong><small>${b.totalLessons||pack?.lessons?.length||0} lessons</small></div><div class="book-card-actions">${live||['ready','pilot'].includes(b.status)?`<button class="primary-btn" data-admin-test-live="${escapeAttr(b.id)}">Test lesson book</button>`:''}${pack?`<button class="ghost-btn" data-admin-test-workbook="${escapeAttr(b.id)}">Test workbook</button>`:''}</div></article>`}).join('')||'<div class="empty-state"><h3>No testable books</h3><p>Books will appear here when their lesson or workbook content is available.</p></div>'}</div>`;
  ensureLiveBooks().then(()=>{});
@@ -3822,7 +3836,7 @@ function adminBooks(){
       ${books.map(b=>{
         const pack=BOOK_PACKS[b.id],readyCount=pack?readyLessons(pack).length:0,canUse=['ready','pilot'].includes(b.status)&&Boolean(pack);
         return `<article class="book-card">
-          <div class="book-card-top"><span class="pill teal">${escapeHtml(b.level)}</span><span class="book-status ${b.status}">${b.status==='pilot'?'Pilot':b.status==='ready'?'Ready':'Queued'}</span></div>
+          <div class="book-card-top"><span class="pill teal">${escapeHtml(b.level)}</span><span class="book-status ${b.status}">${b.status==='pilot'?'Pilot':b.status==='ready'?'Ready':b.status==='inactive'?'Inactive':'Queued'}</span></div>
           <div class="book-cover-mini"><span>EnglishGate</span><strong>${escapeHtml(b.title)}</strong><small>${b.totalLessons} lessons</small></div>
           <p>${escapeHtml(b.audience||'')}</p>
           <div class="book-card-meta"><span>${readyCount}/${b.totalLessons} digital lessons ready</span><span>Vocabulary · Listening & Reading · Grammar · Writing</span></div>
