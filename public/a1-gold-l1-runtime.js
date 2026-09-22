@@ -6,7 +6,14 @@ const BATCH_A={
  'a1-gold-l2':{title:'Work & Careers',mission:'Talk about your work or study',instruction:'Say what you do, where you work or study, one thing you do there, and ask one relevant question.',minDetails:3,minQuestions:1},
  'a1-gold-l3':{title:'Travel & Adventure',mission:'Get your travel information',instruction:'Ask for a ticket, give the destination, get time or price information, respond to a simple change, and ask at least two questions.',minDetails:3,minQuestions:2},
  'a1-gold-l4':{title:'Technology & Social Media',mission:'Talk about technology you use',instruction:'Say the device, purpose, and frequency, then ask one relevant question.',minDetails:3,minQuestions:1},
- 'a1-gold-l5':{title:'Health & Wellbeing',mission:'Say how you feel',instruction:'Say how you feel, one problem or need or healthy habit, and ask one relevant question.',minDetails:2,minQuestions:1}
+ 'a1-gold-l5':{title:'Health & Wellbeing',mission:'Say how you feel',instruction:'Say how you feel, one problem or need or healthy habit, and ask one relevant question.',minDetails:2,minQuestions:1},
+
+ 'a1-gold-l6':{title:'Food & Culture',mission:'Order food and a drink',instruction:'Say one preference, make a polite order, respond to an unavailable item, and ask one useful question.',minDetails:3,minQuestions:1},
+ 'a1-gold-l7':{title:'Education & Learning',mission:'Use English and repair a problem',instruction:'Say what you can do, one difficulty, and use a help or repetition phrase.',minDetails:3,minQuestions:1},
+ 'a1-gold-l8':{title:'Money & Business',mission:'Complete a simple purchase',instruction:'Ask the price, decide whether to buy, and handle payment with at least two useful questions.',minDetails:3,minQuestions:2},
+ 'a1-gold-l9':{title:'Environment & Climate',mission:'Talk about today’s weather',instruction:'Describe the weather, say a preference, and ask one relevant weather question.',minDetails:2,minQuestions:1},
+ 'a1-gold-l10':{title:'Relationships & Family',mission:'Introduce another person',instruction:'Describe a family member, friend, or fictional person with at least three details and ask one reciprocal question.',minDetails:3,minQuestions:1},
+ 'a1-gold-l11':{title:'Media & News',mission:'Share a media habit and announcement',instruction:'Describe a media habit with source or time, then relay two key facts from a short announcement.',minDetails:3,minQuestions:1}
 };
 function cfg(id){return BATCH_A[String(id||'')]||null}
 function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
