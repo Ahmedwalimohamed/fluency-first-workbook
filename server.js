@@ -270,7 +270,8 @@ async function initDb(){
  await pool.query("create table if not exists books(id text primary key,title text not null,level text not null,audience text not null default '',status text not null default 'queued',total_lessons int not null default 0,activity_model text not null default '',created_at timestamptz default now())");
  for(const b of BOOK_SEEDS){if((await pool.query('select 1 from deleted_seed_books where id=$1',[b.id])).rowCount)continue;await pool.query("insert into books(id,title,level,audience,status,total_lessons,activity_model) values($1,$2,$3,$4,$5,$6,$7) on conflict(id) do update set title=excluded.title,level=excluded.level,audience=excluded.audience,status=excluded.status,total_lessons=excluded.total_lessons,activity_model=excluded.activity_model",[b.id,b.title,b.level,b.audience,b.status,b.total_lessons,b.activity_model]);}
  // B2_ONLY_ACTIVE: preserve every book and its history, but only B2 is operational for classes and learners.
- await pool.query("update books set status=case when id='speakup-b2' then 'ready' else 'inactive' end");
+ if(process.env.A1_PREVIEW_MODE==='1') await pool.query("update books set status=case when id='speakup-b2' then 'ready' when id='speakup-a1-gold' then 'pilot' else 'inactive' end");
+ else await pool.query("update books set status=case when id='speakup-b2' then 'ready' else 'inactive' end");
 
  // LEGACY_SPEAKUP_B2_CLASS_REPAIR: restore the existing SpeakUp B2 class to its original B2 book.
  // This intentionally updates only the classes row. It does not alter users, enrollments, assignments, attempts, completion, writing, profiles, or teacher context.
