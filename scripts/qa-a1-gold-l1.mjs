@@ -72,6 +72,7 @@ const checks=[
  ['backend has twenty-two governed speaking configs',ids.every(id=>backend.includes("'"+id+"':{"))],
  ['backend Jev gate remains generic by can-do',backend.includes("canDo:config.canDo")&&backend.includes("targetLevel:'A1'")],
  ['backend mastery requires deterministic + Jev',backend.includes('deterministicPass&&jevPass(jev)')],
+ ['speaking evidence counts multiple question acts per turn',backend.includes('function questionCount(text)')&&backend.includes('Number(turn.questionCount||0)')],
  ['runtime has twenty-two transfer configs',ids.every(id=>runtime.includes("'"+id+"':{"))],
  ['Fix & Improve persistence retained',backend.includes('a1_gold_fix_evidence')&&runtime.includes('Fix & Improve')],
  ['360 report includes separated reading/listening evidence',backend.includes('workbookActivityStates')&&backend.includes('workbookActivityAttempts')&&runtime.includes('Reading attempts')&&runtime.includes('Listening attempts')],
