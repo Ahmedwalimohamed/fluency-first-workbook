@@ -257,6 +257,7 @@ async function initDb(){
  await pool.query("alter table users add column if not exists login_token text");
  await pool.query("alter table profiles add column if not exists profile_photo text");
  await pool.query("alter table profiles add column if not exists profile_photo_updated_at timestamptz");
+ await pool.query("alter table attempts add column if not exists evidence jsonb not null default '[]'::jsonb");
  await pool.query("alter table profiles add column if not exists job_title text");
  await pool.query("alter table profiles add column if not exists b2_upgrade_notice_version text");
  await pool.query("alter table profiles add column if not exists b2_upgrade_notice_seen_at timestamptz");
@@ -486,7 +487,7 @@ app.get('/api/state',auth,async(req,res)=>{
  const profRows=profileIds.length?(await pool.query('select user_id,points,base,(profile_photo is not null) as has_photo,job_title,b2_upgrade_notice_version,b2_upgrade_notice_seen_at from profiles where user_id=any($1::text[])',[profileIds])).rows:[];
  const profiles={};profRows.forEach(p=>profiles[p.user_id]={points:p.points,base:p.base,hasPhoto:Boolean(p.has_photo),photoUrl:p.has_photo?'/api/profile-photo/'+encodeURIComponent(p.user_id):null,jobTitle:p.job_title||'',b2UpgradeNoticeVersion:p.b2_upgrade_notice_version||null,b2UpgradeNoticeSeenAt:p.b2_upgrade_notice_seen_at||null});
  const evidenceIds=req.user.role==='admin'?studentIds:ownStudent;
- const atRows=evidenceIds.length?(await pool.query('select id,student_id,lesson_id,skill,score,tags,at from attempts where student_id=any($1::text[]) order by at',[evidenceIds])).rows:[];
+ const atRows=evidenceIds.length?(await pool.query('select id,student_id,lesson_id,skill,score,tags,evidence,at from attempts where student_id=any($1::text[]) order by at',[evidenceIds])).rows:[];
  const cRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,step from completion where student_id=any($1::text[])',[evidenceIds])).rows:[];
  const wRows=evidenceIds.length?(await pool.query('select student_id,lesson_id,content,score from writing_samples where student_id=any($1::text[])',[evidenceIds])).rows:[];
  const lockRows=evidenceIds.length?(await pool.query('select student_id,lesson_id from listening_locks where student_id=any($1::text[])',[evidenceIds])).rows:[];
@@ -501,7 +502,7 @@ app.get('/api/state',auth,async(req,res)=>{
  const certificateIds=req.user.role==='student'?[req.user.id]:studentIds;
  const certificateRows=certificateIds.length?(await pool.query('select * from level_certificates where student_id=any($1::text[]) order by issued_at desc',[certificateIds])).rows:[];
  const certificates=certificateRows.map(certificateDto);
- res.json({version:10,assignments:assignmentRows.map(a=>({id:a.id,classId:a.class_id,bookId:a.book_id,lessonId:a.lesson_id,lessonNumber:a.lesson_number,lessonTitle:a.lesson_title,skills:a.skills,createdAt:a.created_at})),books:bookRows.map(b=>({id:b.id,title:b.title,level:b.level,audience:b.audience,status:b.status,totalLessons:b.total_lessons,activityModel:b.activity_model})),users,classes:classes.map(c=>({...c,bookId:c.course_id})),profiles,attempts:atRows.map(a=>({id:String(a.id),studentId:a.student_id,lessonId:a.lesson_id,skill:a.skill,score:a.score,tags:a.tags,at:a.at})),completion,writing,writingScores,listeningLocks,teacherContext,certificates});
+ res.json({version:10,assignments:assignmentRows.map(a=>({id:a.id,classId:a.class_id,bookId:a.book_id,lessonId:a.lesson_id,lessonNumber:a.lesson_number,lessonTitle:a.lesson_title,skills:a.skills,createdAt:a.created_at})),books:bookRows.map(b=>({id:b.id,title:b.title,level:b.level,audience:b.audience,status:b.status,totalLessons:b.total_lessons,activityModel:b.activity_model})),users,classes:classes.map(c=>({...c,bookId:c.course_id})),profiles,attempts:atRows.map(a=>({id:String(a.id),studentId:a.student_id,lessonId:a.lesson_id,skill:a.skill,score:a.score,tags:a.tags,evidence:Array.isArray(a.evidence)?a.evidence:[],at:a.at})),completion,writing,writingScores,listeningLocks,teacherContext,certificates});
 });
 
 app.post('/api/certificates/claim',auth,studentOnly,async(req,res)=>{
@@ -578,7 +579,29 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
  res.json({students,rankingMethod:'45% recorded activity average, 35% workbook completion, 20% practice consistency'});
 });
 
-app.post('/api/attempts',auth,studentOnly,async(req,res)=>{const {lessonId,skill,score,tags=[]}=req.body;if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});const safeTags=Array.isArray(tags)?tags.slice(0,9):[];if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,lessonId,skill,score,safeTags]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);res.json({ok:true})});
+function cleanAttemptEvidence(value){
+ if(!Array.isArray(value))return[];
+ return value.slice(0,24).map((x,i)=>{
+  const correct=x?.correct===true?true:x?.correct===false?false:null;
+  return {
+   index:Number.isInteger(Number(x?.index))?Math.max(1,Math.min(99,Number(x.index))):i+1,
+   question:String(x?.question||'').trim().slice(0,700),
+   studentAnswer:String(x?.studentAnswer||'').trim().slice(0,1200),
+   correctAnswer:String(x?.correctAnswer||'').trim().slice(0,1200),
+   correct,
+   tag:String(x?.tag||'').trim().slice(0,120)
+  }
+ }).filter(x=>x.question||x.studentAnswer||x.correctAnswer)
+}
+app.post('/api/attempts',auth,studentOnly,async(req,res)=>{
+ const {lessonId,skill,score,tags=[],evidence=[]}=req.body;
+ if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});
+ const safeTags=Array.isArray(tags)?tags.map(x=>String(x).slice(0,120)).slice(0,9):[],safeEvidence=cleanAttemptEvidence(evidence);
+ if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');
+ await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags,evidence) values($1,$2,$3,$4,$5,$6::jsonb)',[req.user.id,lessonId,skill,score,safeTags,JSON.stringify(safeEvidence)]);
+ await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);
+ res.json({ok:true,evidenceSaved:safeEvidence.length})
+});
 app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,certificate:issued.certificate||null})});
 
 const WRITING_GRADE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
@@ -615,6 +638,79 @@ async function gradeWritingWithJev({lessonId,task,text,level,minWords,maxWords})
   return {score,dimensions,feedback,version:WRITING_GRADE_VERSION};
  }finally{clearTimeout(timer)}
 }
+
+const PERFORMANCE_DECISION_VERSION='englishgate-student-performance-v1';
+function averageNumbers(values){const nums=values.map(Number).filter(Number.isFinite);return nums.length?Math.round(nums.reduce((a,b)=>a+b,0)/nums.length):null}
+function decisionAnswer(data,id,allowed){
+ const a=data?.answers?.[id],choice=String(a?.choice||'').toLowerCase();
+ if(!allowed.includes(choice))return null;
+ const confidence=Number(a?.probabilities?.[choice]??a?.confidence);
+ return {choice,confidence:Number.isFinite(confidence)&&confidence>=0&&confidence<=1?confidence:null}
+}
+async function performanceStateFor(studentId){
+ const ctx=await currentCertificateContext(studentId),prefix=ctx?LEVEL_CERTIFICATE_PREFIXES[ctx.course_id]:null,params=[studentId],filter=prefix?' and lesson_id like $2':'';
+ if(prefix)params.push(prefix+'%');
+ const rows=(await pool.query(`select lesson_id,skill,score,tags,evidence,at from attempts where student_id=$1${filter} and skill in ('vocabulary','listening','grammar','writing') order by at`,params)).rows;
+ const completionParams=[studentId],completionFilter=prefix?' and lesson_id like $2':'';
+ if(prefix)completionParams.push(prefix+'%');
+ const completionRows=(await pool.query(`select lesson_id,step from completion where student_id=$1${completionFilter} and step in ('vocabulary','listening','grammar','writing')`,completionParams)).rows;
+ const latest=new Map();rows.forEach(r=>latest.set(r.lesson_id+'|'+r.skill,r));
+ const latestRows=[...latest.values()].sort((a,b)=>new Date(a.at)-new Date(b.at));
+ const skillAverages={};for(const skill of ['vocabulary','listening','grammar','writing'])skillAverages[skill]=averageNumbers(latestRows.filter(r=>r.skill===skill).map(r=>r.score));
+ const totalActivities=Math.max(1,Number(ctx?.total_lessons||0)*4||latestRows.length||1),completion=Math.min(100,Math.round(completionRows.length/totalActivities*100)),overall=averageNumbers(Object.values(skillAverages));
+ let trendDelta=null;if(latestRows.length>=4){const n=Math.min(4,Math.floor(latestRows.length/2)),recent=latestRows.slice(-n).map(r=>r.score),previous=latestRows.slice(-(n*2),-n).map(r=>r.score);if(previous.length===n)trendDelta=averageNumbers(recent)-averageNumbers(previous)}
+ const wrongTags={};for(const r of rows){for(const e of Array.isArray(r.evidence)?r.evidence:[]){if(e?.correct===false&&e?.tag)wrongTags[e.tag]=(wrongTags[e.tag]||0)+1}}
+ const recurrentErrors=Object.entries(wrongTags).filter(([,count])=>count>=2).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([tag,count])=>({tag,count}));
+ const prioritySkill=Object.entries(skillAverages).filter(([,v])=>Number.isFinite(v)).sort((a,b)=>a[1]-b[1])[0]?.[0]||'none';
+ return {studentId,bookId:ctx?.course_id||'',level:ctx?.level||'',completion,overall,activeLessons:new Set([...latestRows.map(r=>r.lesson_id),...completionRows.map(r=>r.lesson_id)]).size,totalAttempts:rows.length,scoredActivities:latestRows.length,skillAverages,trendDelta,retries:Math.max(0,rows.length-latestRows.length),recurrentErrors,prioritySkill}
+}
+function fallbackPerformanceDecision(state){
+ const evidence=state.scoredActivities>=12?'strong':state.scoredActivities>=5?'moderate':'weak';
+ const status=state.scoredActivities<3?'insufficient_data':(Number(state.overall)<60?'intervention':Number(state.overall)<72||state.completion<35?'watch':'on_track');
+ const trend=state.trendDelta===null?'insufficient_data':state.trendDelta>=6?'improving':state.trendDelta<=-6?'declining':'stable';
+ const persistence=state.recurrentErrors.length?'recurring':state.retries>0?'one_off':'unclear';
+ const urgency=status==='intervention'?'high':status==='watch'?'medium':'low';
+ const nextAction=status==='insufficient_data'?'continue':urgency==='high'?'teacher_review':state.recurrentErrors.length?'review_activity':status==='watch'?'retry_lesson':'continue';
+ return {source:'rules',version:PERFORMANCE_DECISION_VERSION,status:{choice:status,confidence:null},trend:{choice:trend,confidence:null},evidence:{choice:evidence,confidence:null},priority:{choice:state.prioritySkill||'none',confidence:null},persistence:{choice:persistence,confidence:null},urgency:{choice:urgency,confidence:null},nextAction:{choice:nextAction,confidence:null}}
+}
+async function performanceDecisionWithJev(state){
+ const fallback=fallbackPerformanceDecision(state),apiKey=String(process.env.TYPESAFE_API_KEY||'').trim();
+ if(!apiKey||state.scoredActivities<2)return fallback;
+ const mk=(instructions,criteria)=>({type:'choice',instructions,criteria});
+ const questions={
+  status:mk('Classify the learner overall. Treat insufficient evidence as insufficient_data rather than guessing.',{on_track:'Evidence shows broadly successful progress with no urgent concern.',watch:'There is enough evidence to monitor a meaningful weakness or uneven progress.',intervention:'There is enough evidence of persistent low performance or decline needing direct teacher attention.',insufficient_data:'There is not enough evidence to make a reliable learner-status decision.'}),
+  trend:mk('Classify the recent performance trend from the supplied numeric evidence only.',{improving:'Recent performance is meaningfully better than earlier comparable performance.',stable:'Recent performance is broadly similar to earlier performance.',declining:'Recent performance is meaningfully worse than earlier comparable performance.',insufficient_data:'There is not enough comparable evidence to judge a trend.'}),
+  evidence:mk('Judge how strong the evidence base is for performance decisions.',{strong:'Many scored activities across multiple skills support a reliable judgement.',moderate:'There is useful evidence, but coverage or volume is still incomplete.',weak:'There is too little scored evidence for a confident judgement.'}),
+  priority:mk('Choose the skill that most needs attention, considering both low performance and persistence. Choose none when evidence is inadequate or no skill stands out.',{vocabulary:'Vocabulary is the clearest priority.',listening:'Listening and reading is the clearest priority.',grammar:'Grammar is the clearest priority.',writing:'Writing is the clearest priority.',none:'No reliable priority skill can be selected.'}),
+  persistence:mk('Judge whether weaknesses look recurring rather than a single isolated result.',{recurring:'The evidence contains repeated weakness or repeated incorrect patterns.',one_off:'The concern appears isolated or has recovered on later evidence.',unclear:'There is not enough evidence to judge persistence.'}),
+  urgency:mk('Choose the level of teacher attention warranted by the evidence.',{low:'Normal progress; routine monitoring is enough.',medium:'A real weakness should be reviewed soon, but immediate intervention is not required.',high:'Persistent low performance or decline warrants direct teacher review.'}),
+  next_action:mk('Choose the single most useful next action supported by the evidence.',{continue:'Continue the planned workbook sequence.',review_activity:'Review the weakest recurring activity and its question evidence.',retry_lesson:'Retry the affected lesson after targeted review.',teacher_review:'A teacher should inspect the learner evidence and intervene directly.'})
+ };
+ const safeState={purpose:'Decide student progress status from recorded EnglishGate evidence',completion:state.completion,overall:state.overall,activeLessons:state.activeLessons,totalAttempts:state.totalAttempts,scoredActivities:state.scoredActivities,skillAverages:state.skillAverages,trendDelta:state.trendDelta,retries:state.retries,recurrentErrors:state.recurrentErrors,prioritySkillByRawScore:state.prioritySkill,rules:['Use only supplied recorded evidence.','Do not infer intelligence, motivation, personality, or background.','When evidence is sparse, choose insufficient_data or weak rather than guessing.','Repeated errors matter more than one isolated low score.']};
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),3500);
+ try{
+  const r=await fetch(WRITING_GRADE_URL,{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({state:safeState,model:WRITING_GRADE_MODEL,questions}),signal:controller.signal});
+  if(!r.ok)return fallback;
+  const data=await r.json(),status=decisionAnswer(data,'status',['on_track','watch','intervention','insufficient_data']),trend=decisionAnswer(data,'trend',['improving','stable','declining','insufficient_data']),evidence=decisionAnswer(data,'evidence',['strong','moderate','weak']),priority=decisionAnswer(data,'priority',['vocabulary','listening','grammar','writing','none']),persistence=decisionAnswer(data,'persistence',['recurring','one_off','unclear']),urgency=decisionAnswer(data,'urgency',['low','medium','high']),nextAction=decisionAnswer(data,'next_action',['continue','review_activity','retry_lesson','teacher_review']);
+  if(!status||!trend||!evidence||!priority||!persistence||!urgency||!nextAction)return fallback;
+  return {source:'jev',version:PERFORMANCE_DECISION_VERSION,status,trend,evidence,priority,persistence,urgency,nextAction}
+ }catch{return fallback}finally{clearTimeout(timer)}
+}
+async function canViewStudentPerformance(user,studentId){
+ if(user.role==='admin')return true;
+ if(user.role==='student')return user.id===studentId;
+ if(user.role!=='teacher')return false;
+ const q=await pool.query(`select 1 from enrollments e join classes c on c.id=e.class_id where e.user_id=$1 and c.teacher_id=$2 limit 1`,[studentId,user.id]);
+ return Boolean(q.rowCount)
+}
+app.get('/api/performance-decision/:studentId',auth,async(req,res)=>{
+ const studentId=String(req.params.studentId||'');
+ if(!(await canViewStudentPerformance(req.user,studentId)))return res.status(404).json({error:'Student not found.'});
+ const u=await pool.query("select 1 from users where id=$1 and role='student'",[studentId]);if(!u.rowCount)return res.status(404).json({error:'Student not found.'});
+ const state=await performanceStateFor(studentId),decision=await performanceDecisionWithJev(state);
+ res.set('Cache-Control','no-store');res.json({ok:true,state,decision})
+});
+
 app.post('/api/writing-grade',auth,studentOnly,async(req,res)=>{
  try{
   const text=String(req.body?.text||'').trim(),task=String(req.body?.task||'').trim(),lessonId=String(req.body?.lessonId||'');
