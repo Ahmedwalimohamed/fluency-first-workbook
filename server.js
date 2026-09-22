@@ -600,7 +600,8 @@ function cleanAttemptEvidence(value){
 }
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{
  const {lessonId,skill,score,tags=[],evidence=[]}=req.body;
- if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});\n if(!requireB2LearningLesson(lessonId,res))return;
+ if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});
+ if(!requireB2LearningLesson(lessonId,res))return;
  const safeTags=Array.isArray(tags)?tags.map(x=>String(x).slice(0,120)).slice(0,9):[],safeEvidence=cleanAttemptEvidence(evidence);
  if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');
  await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags,evidence) values($1,$2,$3,$4,$5,$6::jsonb)',[req.user.id,lessonId,skill,score,safeTags,JSON.stringify(safeEvidence)]);
@@ -967,7 +968,8 @@ app.put('/api/teacher/context',auth,teacherOnly,async(req,res)=>{
 
 app.post('/api/teacher/assignments',auth,teacherOnly,async(req,res)=>{
  const classId=String(req.body.classId||'').trim(),bookId=String(req.body.bookId||'').trim(),lessonId=String(req.body.lessonId||'').trim(),lessonTitle=String(req.body.lessonTitle||'').trim(),lessonNumber=Number(req.body.lessonNumber),allowed=['vocabulary','listening','grammar','writing'],skills=Array.isArray(req.body.skills)?req.body.skills.filter(x=>allowed.includes(x)):[];
- if(!classId||!bookId||!lessonId||!lessonTitle||!Number.isInteger(lessonNumber)||lessonNumber<1||skills.length<1)return res.status(400).json({error:'Invalid workbook assignment.'});\n if(bookId!=='speakup-b2'||!b2LearningLesson(lessonId))return res.status(423).json({error:'Only B2 Upper Intermediate is active for assignments.'});
+ if(!classId||!bookId||!lessonId||!lessonTitle||!Number.isInteger(lessonNumber)||lessonNumber<1||skills.length<1)return res.status(400).json({error:'Invalid workbook assignment.'});
+ if(bookId!=='speakup-b2'||!b2LearningLesson(lessonId))return res.status(423).json({error:'Only B2 Upper Intermediate is active for assignments.'});
  const owns=await pool.query('select id,course_id from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);
  if(!owns.rowCount)return res.status(403).json({error:'You cannot assign work to this class.'});
  if(owns.rows[0].course_id!==bookId)return res.status(400).json({error:'The lesson book does not match this class.'});
