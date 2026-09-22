@@ -88,7 +88,7 @@ async function registerServiceWorker(){
     let reloadingForUpdate = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if(reloadingForUpdate) return;
-      const key = 'englishgate:pwa-controller-v7';
+      const key = 'englishgate:pwa-controller-v8';
       if(sessionStorage.getItem(key)==='reloaded') return;
       reloadingForUpdate = true;
       sessionStorage.setItem(key,'reloaded');
@@ -97,7 +97,7 @@ async function registerServiceWorker(){
 
     // Version the worker URL so an existing installation cannot stay pinned
     // to an older cache policy after a production release.
-    const registration = await navigator.serviceWorker.register('/sw.js?v=7', { scope: '/' });
+    const registration = await navigator.serviceWorker.register('/sw.js?v=8', { scope: '/' });
     registration.update().catch(()=>{});
   }catch(error){
     console.warn('EnglishGate PWA service worker registration failed:', error);
