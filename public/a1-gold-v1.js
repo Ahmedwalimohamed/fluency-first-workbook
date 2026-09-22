@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 
-const VERSION='englishgate-a1-gold-v1.3-batch-c';
+const VERSION='englishgate-a1-gold-v1.4-batch-d';
 const BOOK_ID='speakup-a1-gold';
 
 function q(id,text,options,answer,tag,feedback=''){return{id,q:text,options,answer,tag,feedback}}
@@ -1164,7 +1164,332 @@ const L17=lesson({
   passRule:'Complete the communication missions with understandable meaning, relevant questions, and enough independence; no large MCQ score can substitute for communication evidence.'
  }
 });
-const lessons=[L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17];
+
+const l18v=[
+ entry('country','a nation such as Somalia or Kenya','Somalia is my country.'),
+ entry('language','a system people use to communicate','I speak Somali and some English.'),
+ entry('abroad','in another country','I want to study abroad.'),
+ entry('visitor','a person who comes to a place for a short time','The visitor is from Kenya.'),
+ entry('international','involving more than one country','This is an international event.'),
+ entry('place','an area or location','This is a good place to visit.'),
+ entry('world','all countries and people on Earth','English connects people around the world.'),
+ entry('visit','go to a place for a short time','I want to visit Hargeisa.')
+];
+const L18=lesson({
+ id:'a1-gold-l18',number:18,title:'Global Connections',
+ outcome:'Introduce yourself to an international visitor, talk about languages and places, and adapt when one detail changes.',
+ readingSkill:'Compare two short international profiles and find useful personal information.',
+ communicationGoal:'Exchange identity, language, place, and visit information with less scaffolding.',
+ realWorldSituation:'You meet a visitor at an international event and need to introduce yourself, ask questions, and help with one changed detail.',
+ vocab:l18v,recycled:['name','live','work','study','travel','speak','city','friend'],
+ vocabItems:[
+  vq('A1L18_V01',l18v[0],['a language','a nation']),
+  vq('A1L18_V02',l18v[1],['a system for communication','a place to pay']),
+  vq('A1L18_V03',l18v[3],['a person visiting briefly','a person selling food']),
+  vq('A1L18_V04',l18v[7],['go to a place briefly','live permanently']),
+  q('A1L18_V05','Complete: I speak Somali and some ___.',['English','country','visitor'],'English','vocabulary:use','Use a language name.'),
+  q('A1L18_V06','Complete: I want to ___ Nairobi next year.',['visit','world','international'],'visit','vocabulary:use','Use “visit + place”.')
+ ],
+ targetLanguage:['I am from…','I live in…','I speak Somali and some English.','Can you speak English?','What country are you from?','What place do you want to visit?','I want to visit… because…','Sorry, the meeting place changed.','Okay. Where is the new place?'],
+ chunks:['I speak…','some English','What country are you from?','I want to visit…','Where is the new place?'],
+ interactionExpressions:['What country are you from?','What languages do you speak?','What place do you want to visit?','Where is the new place?'],
+ functions:['introduce self internationally','talk about language ability','talk about a place to visit','ask reciprocal questions','adapt to changed location'],
+ grammarFocus:'Recycle be, can, want to, and because for international introductions.',
+ grammarRule:'Use familiar A1 structures together. The challenge is independent exchange and adaptation, not new grammar.',
+ grammarItems:[
+  q('A1L18_G01','Choose the language sentence.',['I speak Somali and some English.','I speaking Somali and English some.','I speaks Somali.'],'I speak Somali and some English.','grammar:recycle-present','Use simple present with I.'),
+  q('A1L18_G02','Choose the ability question.',['Can you speak English?','Do you can speak English?','Can you speaking English?'],'Can you speak English?','grammar:can-recycle','Use can + base verb.'),
+  q('A1L18_G03','Choose the visit sentence.',['I want to visit Kenya because my friend lives there.','I want visit Kenya because friend there.','I wanting to visit Kenya.'],'I want to visit Kenya because my friend lives there.','grammar:want-because','Recycle want to + reason.'),
+  q('A1L18_G04','Choose the origin question.',['What country are you from?','What country you from?','Where country do you from?'],'What country are you from?','grammar:question','Use be in the origin question.'),
+  q('A1L18_G05','The meeting place changed. What should you ask?',['Where is the new place?','How much is the country?','What time language?'],'Where is the new place?','grammar:adaptation','Ask for the changed information.')
+ ],
+ readingText:'VISITOR PROFILES\nAmina — Somaliland — lives in Borama — speaks Somali and English — wants to visit Nairobi.\nDavid — Kenya — lives in Nairobi — speaks Swahili and English — wants to visit Hargeisa.',
+ audioScript:'David: Hi. I am David from Kenya. What country are you from? Amina: I am from Somaliland. I live in Borama. David: What languages do you speak? Amina: Somali and some English. I want to visit Nairobi because my friend lives there. David: Great. Our meeting place changed from the library to the community centre. Amina: Okay. Where is the community centre?',
+ speakers:[{name:'David',gender:'male',voice:'onyx'},{name:'Amina',gender:'female',voice:'nova'}],
+ readingQuestions:[
+  q('A1L18_R01','Where does David live?',['Nairobi','Borama','Hargeisa'],'Nairobi','reading:profile','David’s profile says Nairobi.'),
+  q('A1L18_R02','What languages does Amina speak?',['Somali and English','Arabic only','Swahili only'],'Somali and English','reading:profile','Amina’s profile lists Somali and English.'),
+  q('A1L18_R03','What place does David want to visit?',['Hargeisa','Nairobi','London'],'Hargeisa','reading:profile','David wants to visit Hargeisa.')
+ ],
+ listeningQuestions:[
+  q('A1L18_L01','Where is David from?',['Kenya','Somaliland','Ethiopia'],'Kenya','listening:detail','David says he is from Kenya.'),
+  q('A1L18_L02','Why does Amina want to visit Nairobi?',['Her friend lives there','She needs a bank','The weather is cold'],'Her friend lives there','listening:reason','She says her friend lives there.'),
+  q('A1L18_L03','What changed?',['The meeting place','The ticket price','The language'],'The meeting place','listening:constraint','The meeting place changed.'),
+  q('A1L18_L04','Where is the new meeting place?',['The community centre','The library','The airport'],'The community centre','listening:detail','The new place is the community centre.')
+ ],
+ writing:{task:'Write a short international introduction. Say where you are from or live, what languages you speak, one place you want to visit, and one simple reason.',minWords:40,maxWords:60,humanGraded:false,checkpoint:false,realWorldSurface:'international introduction',copyPasteDisabled:true},
+ foundation:'Combine identity, language, travel, and reasons with less support.',
+ performance:'Profile information gap: you and your partner have different visitor cards. Exchange country, language, city, and visit information. Then the meeting place changes; ask for the new location.',
+ pronunciation:'Practise: What country are you from? What languages do you speak? Where is the new place?',
+ mediation:'Read one visitor profile and introduce that person to a partner using only essential details.',
+ reviewKeywords:'country · language · abroad · visitor · international · place · world · visit',
+ reviewMission:'Complete an international introduction and adapt when the meeting place changes.',
+ masteryGoal:'exchange_international_profile_and_adapt_location',
+ minimumSpeakingEvidence:{personalDetails:4,relevantQuestions:2,maintainsExchange:true},
+ fixAndImprove:[{pattern:'I can speaking English.',model:'I can speak English.',focus:'can + base verb'},{pattern:'What country you from?',model:'What country are you from?',focus:'origin question'},{pattern:'I want visit Kenya.',model:'I want to visit Kenya.',focus:'want to'}]
+});
+
+const l19v=[
+ entry('size','how big or small something is','What size do you need?'),
+ entry('colour','the appearance such as red, blue, or black','What colour do you want?'),
+ entry('small','not large','I need a small size.'),
+ entry('large','big in size','Do you have a large one?'),
+ entry('try','test something to see if it is suitable','Can I try this?'),
+ entry('available','ready to be bought or used','Blue is available today.'),
+ entry('receipt','a paper or digital record of payment','Here is your receipt.'),
+ entry('change','money returned after paying too much cash','Your change is two dollars.')
+];
+const L19=lesson({
+ id:'a1-gold-l19',number:19,title:'Shopping & Services',
+ outcome:'Ask about a product, choose size or colour, pay, and adapt when the preferred option is unavailable.',
+ readingSkill:'Use a product listing and receipt to find price, size, colour, and payment details.',
+ communicationGoal:'Complete a simple service transaction under one changed condition.',
+ realWorldSituation:'You need to buy an item, but your first colour or size is not available.',
+ vocab:l19v,recycled:['price','pay','cash','card','cheap','expensive','customer','want'],
+ vocabItems:[
+  vq('A1L19_V01',l19v[0],['how big or small something is','how much something costs']),
+  vq('A1L19_V02',l19v[4],['test something for suitability','pay by card']),
+  vq('A1L19_V03',l19v[5],['ready to be bought','not working']),
+  vq('A1L19_V04',l19v[6],['a payment record','a colour']),
+  q('A1L19_V05','Complete: Do you have this in a large ___.',['size','receipt','change'],'size','vocabulary:use','Use “size”.'),
+  q('A1L19_V06','Complete: Blue is not ___.',['available','small','receipt'],'available','vocabulary:use','Use “available” for an option you can get.')
+ ],
+ targetLanguage:['How much is this?','Do you have this in blue?','What size do you need?','I need a large size.','Can I try this?','Sorry, blue is not available.','Do you have black?','I will take it.','Can I pay by card?','Can I have a receipt, please?'],
+ chunks:['Do you have this in…?','What size…?','Can I try…?','not available','I will take it.'],
+ interactionExpressions:['Do you have this in blue?','What size do you have?','Can I pay by card?','Can I have a receipt?'],
+ functions:['ask about product','choose size and colour','adapt to unavailable option','pay','request receipt'],
+ grammarFocus:'Recycle request and transaction language with do you have / can I.',
+ grammarRule:'Use short service questions to complete the transaction. When one option is unavailable, ask for another.',
+ grammarItems:[
+  q('A1L19_G01','Choose the colour question.',['Do you have this in blue?','You have blue this?','Does you blue have?'],'Do you have this in blue?','grammar:service-question','Use “Do you have this in…?”'),
+  q('A1L19_G02','Choose the try-on request.',['Can I try this?','Can I trying this?','I can try this? please'],'Can I try this?','grammar:can-request','Use can + base verb.'),
+  q('A1L19_G03','Blue is unavailable. Choose the best next question.',['Do you have black?','How often is blue?','Where does blue work?'],'Do you have black?','grammar:adaptation','Ask for another option.'),
+  q('A1L19_G04','Choose the payment question.',['Can I pay by card?','Can I pay with carding?','Do I paying card?'],'Can I pay by card?','grammar:payment','Recycle the payment question.'),
+  q('A1L19_G05','Choose the receipt request.',['Can I have a receipt, please?','I receipt please can?','Do receipt me?'],'Can I have a receipt, please?','grammar:request','Use the familiar can-I-have request.')
+ ],
+ readingText:'PRODUCT LIST\nEveryday Shirt — $12\nSizes: Small / Medium / Large\nColours: Black / Blue\nBlue Large: NOT AVAILABLE\nBlack Large: AVAILABLE\n\nRECEIPT\n1 Everyday Shirt — Black Large — $12\nPaid by card — Total $12',
+ audioScript:'Assistant: Hello. Can I help you? Customer: Yes. How much is this shirt? Assistant: Twelve dollars. Customer: Do you have it in blue, large? Assistant: Sorry, blue large is not available. Customer: Do you have black, large? Assistant: Yes. Customer: Great. I will take it. Can I pay by card? Assistant: Yes. Here is your receipt.',
+ speakers:[{name:'Assistant',gender:'female',voice:'nova'},{name:'Customer',gender:'male',voice:'onyx'}],
+ readingQuestions:[
+  q('A1L19_R01','How much is the shirt?',['$12','$20','$2'],'$12','reading:price','The listing says $12.'),
+  q('A1L19_R02','Which large colour is unavailable?',['Blue','Black','Red'],'Blue','reading:constraint','Blue Large is marked not available.'),
+  q('A1L19_R03','How did the customer pay?',['By card','By cash','No payment'],'By card','reading:receipt','The receipt says paid by card.')
+ ],
+ listeningQuestions:[
+  q('A1L19_L01','What item does the customer want?',['A shirt','A phone','A ticket'],'A shirt','listening:detail','The customer asks about the shirt.'),
+  q('A1L19_L02','What preferred option is unavailable?',['Blue large','Black large','Small black'],'Blue large','listening:constraint','The assistant says blue large is unavailable.'),
+  q('A1L19_L03','What does the customer choose instead?',['Black large','Blue small','No item'],'Black large','listening:adaptation','The customer asks for black large.'),
+  q('A1L19_L04','How does the customer pay?',['By card','By cash','With a ticket'],'By card','listening:payment','The customer asks to pay by card.')
+ ],
+ writing:{task:'Write a short product enquiry. Ask about an item, price, size or colour, and one payment or availability question.',minWords:30,maxWords:50,humanGraded:false,checkpoint:false,realWorldSurface:'product enquiry',copyPasteDisabled:true},
+ foundation:'Make the learner manage a complete service exchange, including an unavailable first choice.',
+ performance:'Role-play a shop transaction. Ask price, size or colour, react when the first choice is unavailable, select an alternative, pay, and request a receipt.',
+ pronunciation:'Practise: Do you have this in blue? Can I try this? Can I have a receipt, please?',
+ mediation:'Read the listing for a partner and tell them which option is available and how much it costs.',
+ reviewKeywords:'size · colour · small · large · try · available · receipt · change',
+ reviewMission:'Complete a purchase and adapt when the preferred option is unavailable.',
+ masteryGoal:'complete_service_transaction_with_alternative',
+ minimumSpeakingEvidence:{personalDetails:4,relevantQuestions:3,maintainsExchange:true},
+ fixAndImprove:[{pattern:'You have blue this?',model:'Do you have this in blue?',focus:'service question'},{pattern:'Can I trying this?',model:'Can I try this?',focus:'can + base verb'},{pattern:'I pay card.',model:'Can I pay by card?',focus:'payment question'}]
+});
+
+const l20v=[
+ entry('room','a part of a building with walls','My room is small.'),
+ entry('kitchen','a room where food is prepared','I cook in the kitchen.'),
+ entry('bedroom','a room for sleeping','There are two bedrooms.'),
+ entry('living room','a room for sitting and relaxing','We sit in the living room.'),
+ entry('cook','prepare food','I cook dinner in the evening.'),
+ entry('clean','make something not dirty','I clean my room on Saturday.'),
+ entry('wake up','stop sleeping','I wake up at six.'),
+ entry('home','the place where you live','I go home after work.')
+];
+const L20=lesson({
+ id:'a1-gold-l20',number:20,title:'Home & Daily Life',
+ outcome:'Describe a home and daily routine, and give a visitor the practical information they need.',
+ readingSkill:'Use a home plan and routine schedule to locate rooms and times.',
+ communicationGoal:'Combine there is/are, routine time, and household actions in a practical exchange.',
+ realWorldSituation:'A visitor is coming to your home and needs simple information about the home and your routine.',
+ vocab:l20v,recycled:['family','morning','evening','sleep','there is','there are','near','next to'],
+ vocabItems:[
+  vq('A1L20_V01',l20v[1],['a room for cooking','a place for buses']),
+  vq('A1L20_V02',l20v[2],['a room for sleeping','a room for shopping']),
+  vq('A1L20_V03',l20v[4],['prepare food','go to sleep']),
+  vq('A1L20_V04',l20v[6],['stop sleeping','start shopping']),
+  q('A1L20_V05','Complete: I ___ dinner in the kitchen.',['cook','home','bedroom'],'cook','vocabulary:use','Use “cook” for preparing food.'),
+  q('A1L20_V06','Complete: I ___ at six in the morning.',['wake up','living room','cleaning'],'wake up','vocabulary:use','Use “wake up” for ending sleep.')
+ ],
+ targetLanguage:['There is a kitchen next to the living room.','There are two bedrooms.','I wake up at six.','I cook in the evening.','I clean my room on Saturday.','What time do you get home?','Where is the bathroom?','It is next to the bedroom.','I usually get home at five, but today I am late.'],
+ chunks:['There is…','There are…','I wake up at…','What time do you…?','today I am late'],
+ interactionExpressions:['Where is the…?','What time do you get home?','Is there a…?'],
+ functions:['describe home','describe routine','ask location','ask routine time','adapt to changed timing'],
+ grammarFocus:'Recycle there is/are, simple present routines, time phrases, and but.',
+ grammarRule:'Use familiar home and routine language together. The learner should provide useful information rather than complete isolated grammar items only.',
+ grammarItems:[
+  q('A1L20_G01','Complete: There ___ two bedrooms.',['are','is','am'],'are','grammar:there-are','Use there are with more than one.'),
+  q('A1L20_G02','Complete: I wake up ___ six.',['at','in','on'],'at','grammar:time','Use at + clock time.'),
+  q('A1L20_G03','Choose the routine sentence.',['I clean my room on Saturday.','I cleans my room Saturday.','I am clean my room Saturday.'],'I clean my room on Saturday.','grammar:routine','Use simple present with I.'),
+  q('A1L20_G04','Choose the time question.',['What time do you get home?','What time you get home?','What time does you home?'],'What time do you get home?','grammar:question','Use do with you.'),
+  q('A1L20_G05','Choose the changed-time sentence.',['I usually get home at five, but today I am late.','I usually home five because late today.','I gets home five but today late.'],'I usually get home at five, but today I am late.','grammar:contrast','Recycle but for a changed routine.')
+ ],
+ readingText:'HOME + ROUTINE CARD\nHome plan: Living room next to Kitchen. Two Bedrooms. Bathroom next to Bedroom 1.\nWeekday routine: Wake up 6:00 a.m. — Work 8:00 a.m. — Home 5:00 p.m. — Cook 6:30 p.m. — Sleep 10:30 p.m.',
+ audioScript:'Visitor: What time do you usually get home? Host: At five, but today I am late. I will be home at six. Visitor: Okay. Is there a bathroom near the living room? Host: It is next to Bedroom 1. Visitor: And where is the kitchen? Host: Next to the living room.',
+ speakers:[{name:'Visitor',gender:'female',voice:'nova'},{name:'Host',gender:'male',voice:'onyx'}],
+ readingQuestions:[
+  q('A1L20_R01','How many bedrooms are there?',['Two','One','Three'],'Two','reading:home-plan','The card says two bedrooms.'),
+  q('A1L20_R02','What time does the weekday routine say Home?',['5:00 p.m.','6:30 p.m.','10:30 p.m.'],'5:00 p.m.','reading:time','Home is listed at 5:00 p.m.'),
+  q('A1L20_R03','What room is next to the living room?',['The kitchen','The bathroom only','The bank'],'The kitchen','reading:location','The plan says the kitchen is next to the living room.')
+ ],
+ listeningQuestions:[
+  q('A1L20_L01','What changed today?',['The host will get home later','The visitor bought a shirt','The kitchen moved'],'The host will get home later','listening:constraint','The host says today he is late.'),
+  q('A1L20_L02','What time will the host be home today?',['6:00 p.m.','5:00 p.m.','10:30 p.m.'],'6:00 p.m.','listening:time','He says he will be home at six.'),
+  q('A1L20_L03','Where is the bathroom?',['Next to Bedroom 1','At the market','Inside the kitchen'],'Next to Bedroom 1','listening:location','The host says it is next to Bedroom 1.')
+ ],
+ writing:{task:'Write a short home-and-routine message for a visitor. Describe one or two rooms, one routine time, and one practical detail the visitor should know.',minWords:40,maxWords:60,humanGraded:false,checkpoint:false,realWorldSurface:'home and routine message',copyPasteDisabled:true},
+ foundation:'Combine home description and routine information in one practical message.',
+ performance:'Visitor role-play: answer questions about rooms and routine times. Then one time changes; give the visitor the updated information clearly.',
+ pronunciation:'Practise: There are two bedrooms. What time do you get home? Today I am late.',
+ mediation:'Read a home/routine card and give a visitor only the room and timing information they need.',
+ reviewKeywords:'room · kitchen · bedroom · living room · cook · clean · wake up · home',
+ reviewMission:'Help a visitor understand your home and routine, then update one changed time.',
+ masteryGoal:'describe_home_routine_and_update_time',
+ minimumSpeakingEvidence:{personalDetails:4,relevantQuestions:1,maintainsExchange:true},
+ fixAndImprove:[{pattern:'There is two bedrooms.',model:'There are two bedrooms.',focus:'there are'},{pattern:'I wake up in six.',model:'I wake up at six.',focus:'time preposition'},{pattern:'What time you get home?',model:'What time do you get home?',focus:'question form'}]
+});
+
+const l21v=[
+ entry('free','available and not busy','Are you free on Saturday?'),
+ entry('meet','come together with someone','Let us meet at the café.'),
+ entry('event','an organised activity','The event starts at seven.'),
+ entry('weekend','Saturday and Sunday','I am free this weekend.'),
+ entry('early','before the expected time','Can we meet early?'),
+ entry('late','after the expected time','I will be late.'),
+ entry('together','with another person or people','Let us study together.'),
+ entry('invite','ask someone to come to an event','I want to invite my friend.')
+];
+const L21=lesson({
+ id:'a1-gold-l21',number:21,title:'Plans & Events',
+ outcome:'Invite someone, compare availability, arrange a time and place, and adapt when the plan changes.',
+ readingSkill:'Use a simple chat and calendar to find availability and event details.',
+ communicationGoal:'Reach a workable plan using an availability information gap and a changed constraint.',
+ realWorldSituation:'You and a friend want to attend an event together, but you have different free times and the original event time changes.',
+ vocab:l21v,recycled:['tomorrow','time','place','going to','can','cannot','let us'],
+ vocabItems:[
+  vq('A1L21_V01',l21v[0],['available and not busy','very expensive']),
+  vq('A1L21_V02',l21v[2],['an organised activity','a room at home']),
+  vq('A1L21_V03',l21v[3],['Saturday and Sunday','every morning']),
+  vq('A1L21_V04',l21v[7],['ask someone to come','pay for something']),
+  q('A1L21_V05','Complete: Are you ___ on Saturday?',['free','late event','invite'],'free','vocabulary:use','Use “free” for availability.'),
+  q('A1L21_V06','Complete: Let us ___ at the café.',['meet','event','early is'],'meet','vocabulary:use','Use “meet” for coming together.')
+ ],
+ targetLanguage:['Are you free on Saturday?','I can meet in the afternoon.','I cannot meet at three.','Let us meet at five.','Where should we meet?','The event starts at seven.','I am going to invite Amina.','Sorry, the event now starts at eight.','Okay. Let us meet at seven-thirty.'],
+ chunks:['Are you free…?','I can meet…','I cannot meet…','Let us meet…','Where should we meet?'],
+ interactionExpressions:['Are you free on…?','What time can you meet?','Where should we meet?','Can we meet later?'],
+ functions:['invite','compare availability','arrange time','arrange place','adapt to changed event time'],
+ grammarFocus:'Recycle can/cannot, let us, going to, and time phrases for arrangements.',
+ grammarRule:'The goal is to reach a plan. Ask, answer, propose, and adapt when the time changes.',
+ grammarItems:[
+  q('A1L21_G01','Choose the availability question.',['Are you free on Saturday?','Do you free Saturday?','Are Saturday you free?'],'Are you free on Saturday?','grammar:availability','Use are you free + time.'),
+  q('A1L21_G02','Choose the unavailable-time sentence.',['I cannot meet at three.','I cannot to meet three.','I no can meeting three.'],'I cannot meet at three.','grammar:can-negative','Use cannot + base verb.'),
+  q('A1L21_G03','Choose the suggestion.',['Let us meet at five.','Let us meeting at five.','We let meet five.'],'Let us meet at five.','grammar:lets','Use let us + base verb.'),
+  q('A1L21_G04','Choose the invitation plan.',['I am going to invite Amina.','I going invite Amina.','I am going inviting Amina.'],'I am going to invite Amina.','grammar:going-to-recycle','Use going to + base verb.'),
+  q('A1L21_G05','The event moves from 7:00 to 8:00. Choose a useful response.',['Okay. Let us meet at seven-thirty.','The event is blue.','I meet yesterday.'],'Okay. Let us meet at seven-thirty.','grammar:adaptation','Update the plan using the new time.')
+ ],
+ readingText:'SATURDAY PLAN\nAmina: free 2:00–5:00 p.m.; busy after 5:00.\nHassan: busy 2:00–3:30 p.m.; free 3:30–7:30 p.m.\nCommunity Event: Town Hall — originally 6:00 p.m.\nUPDATE: Event now starts at 7:00 p.m.',
+ audioScript:'Amina: Are you free on Saturday? Hassan: I can meet after three-thirty. Amina: I am free until five. Let us meet at four. Hassan: Good. Where should we meet? Amina: At the town hall. Hassan: The message says the event now starts at seven. Amina: I cannot stay that late. Hassan: Okay. Let us go to the afternoon market instead.',
+ speakers:[{name:'Amina',gender:'female',voice:'nova'},{name:'Hassan',gender:'male',voice:'onyx'}],
+ readingQuestions:[
+  q('A1L21_R01','When can both Amina and Hassan meet?',['Between 3:30 and 5:00 p.m.','At 2:00 p.m.','After 7:30 p.m.'],'Between 3:30 and 5:00 p.m.','reading:availability','Their free times overlap from 3:30 to 5:00.'),
+  q('A1L21_R02','Where is the community event?',['Town Hall','Airport','Hospital'],'Town Hall','reading:place','The plan says Town Hall.'),
+  q('A1L21_R03','What is the updated event time?',['7:00 p.m.','6:00 p.m.','5:00 p.m.'],'7:00 p.m.','reading:constraint','The update says 7:00 p.m.')
+ ],
+ listeningQuestions:[
+  q('A1L21_L01','What time do they first agree to meet?',['4:00 p.m.','2:00 p.m.','7:00 p.m.'],'4:00 p.m.','listening:arrangement','Amina suggests four.'),
+  q('A1L21_L02','What changed?',['The event start time','The town hall location','The ticket price'],'The event start time','listening:constraint','The message says the event now starts at seven.'),
+  q('A1L21_L03','Why do they change the plan?',['Amina cannot stay that late','Hassan lost his phone','The market is closed'],'Amina cannot stay that late','listening:reason','Amina says she cannot stay that late.'),
+  q('A1L21_L04','What do they choose instead?',['The afternoon market','The airport','A football game'],'The afternoon market','listening:adaptation','Hassan suggests the afternoon market.')
+ ],
+ writing:{task:'Write a short invitation or arrangement message. Include the event or activity, a day/time, a meeting place, and one question about availability.',minWords:35,maxWords:55,humanGraded:false,checkpoint:false,realWorldSurface:'invitation or arrangement message',copyPasteDisabled:true},
+ foundation:'Make plans by combining availability, proposal, place, and changed-condition language.',
+ performance:'Availability-calendar information gap: compare two calendars, propose a workable time and place, then adapt after the event time changes.',
+ pronunciation:'Practise: Are you free on Saturday? Let us meet at four. Can we meet later?',
+ mediation:'Read a calendar update and tell a partner what changed and what new plan is possible.',
+ reviewKeywords:'free · meet · event · weekend · early · late · together · invite',
+ reviewMission:'Arrange an event with a partner and adapt when the time changes.',
+ masteryGoal:'arrange_event_and_adapt_constraint',
+ minimumSpeakingEvidence:{personalDetails:4,relevantQuestions:2,maintainsExchange:true},
+ fixAndImprove:[{pattern:'Do you free Saturday?',model:'Are you free on Saturday?',focus:'availability question'},{pattern:'I cannot to meet at three.',model:'I cannot meet at three.',focus:'can + base verb'},{pattern:'Let us meeting at five.',model:'Let us meet at five.',focus:'let us + base verb'}]
+});
+
+const l22v=[];
+const L22=lesson({
+ id:'a1-gold-l22',number:22,title:'My English in the Real World',
+ outcome:'Use A1 English independently to manage a short real-world sequence involving people, place, time, service, and a changed condition.',
+ readingSkill:'Use mixed everyday documents to find only the information needed for a real task.',
+ communicationGoal:'Complete an unscripted A1 mission by understanding, responding, initiating, producing, and adapting.',
+ realWorldSituation:'You arrive for a community welcome event. You must introduce yourself, find the place, confirm the time, solve one service problem, and adapt when one detail changes.',
+ vocab:l22v,recycled:['name','live','work','study','ticket','price','bank','pharmacy','time','free','meet','event','help','available','because','there is','can'],
+ vocabItems:[
+  q('A1L22_V01','Which phrase asks for help politely?',['Can you help me, please?','Help me now you.','I helping?'],'Can you help me, please?','vocabulary:retrieval','Retrieve the familiar help phrase.'),
+  q('A1L22_V02','Which phrase asks about location?',['Where is the community centre?','How much is the centre?','When colour centre?'],'Where is the community centre?','vocabulary:retrieval','Retrieve the location question.'),
+  q('A1L22_V03','Which phrase checks availability?',['Are you free at five?','Do you five free?','How often five?'],'Are you free at five?','vocabulary:retrieval','Retrieve the availability question.'),
+  q('A1L22_V04','Which phrase reacts to an unavailable option?',['Do you have another one?','I unavailable because.','Where is another price?'],'Do you have another one?','vocabulary:retrieval','Retrieve an adaptation phrase.'),
+  q('A1L22_V05','Which phrase gives a simple reason?',['I want to go because my friend is there.','I because friend go.','Because want friend.'],'I want to go because my friend is there.','vocabulary:retrieval','Retrieve a simple because reason.')
+ ],
+ targetLanguage:['Hi. My name is…','I live in…','Where is the community centre?','What time does the event start?','Can you help me, please?','How much is this?','Do you have another one?','Are you free at…?','Let us meet at…','I want to… because…','Okay. The plan changed. What should we do now?'],
+ chunks:['Can you help me, please?','Where is…?','What time…?','Do you have another one?','Let us meet…'],
+ interactionExpressions:['Where is…?','What time…?','Can you help me?','Are you free…?','What should we do now?'],
+ functions:['introduce self','locate place','confirm time','complete service exchange','ask for help','arrange with another person','adapt to change'],
+ grammarFocus:'No new grammar. Integrated retrieval and independent A1 use.',
+ grammarRule:'Use the English you already know. Success is completing the real-world mission clearly, not producing perfect grammar.',
+ grammarItems:[
+  q('A1L22_G01','Choose the best self-introduction.',['Hi. My name is Ali. I live in Borama and I am a teacher.','Name Ali Borama teacher.','I is Ali and lives Borama.'],'Hi. My name is Ali. I live in Borama and I am a teacher.','grammar:integrated-retrieval','Use familiar complete A1 sentences.'),
+  q('A1L22_G02','Choose the location question.',['Where is the community centre?','Where the community centre is?','Does centre where?'],'Where is the community centre?','grammar:integrated-question','Retrieve the location form.'),
+  q('A1L22_G03','Choose the service response when your first option is unavailable.',['Do you have another one?','I no available.','What time is the colour?'],'Do you have another one?','grammar:adaptation','Ask for an alternative.'),
+  q('A1L22_G04','Choose the arrangement sentence.',['Let us meet at five near the market.','Let us meeting five market.','We meeted at five.'],'Let us meet at five near the market.','grammar:arrangement','Retrieve let us + time/place.'),
+  q('A1L22_G05','Choose the reason sentence.',['I want to attend because I want to meet new people.','I attend because meet people want.','Because attending people.'],'I want to attend because I want to meet new people.','grammar:reason','Retrieve want to + because.')
+ ],
+ readingText:'WELCOME EVENT PACK\nMessage: Welcome! Community English Event — Saturday, 5:00 p.m.\nMap note: Community Centre is next to the city market.\nService table: Name badge $1 — Blue badge unavailable — Black badge available.\nUPDATE: Event start changed to 6:00 p.m.',
+ audioScript:'Host: Welcome. Is this your first time here? Learner: Yes. My name is Ali. I live in Borama. Host: Great. The event now starts at six, not five. Learner: Okay. Where is the community centre? Host: Next to the city market. Learner: Thank you. I also need a name badge. Seller: Blue is unavailable, but black is available. Learner: Black is okay. How much is it? Seller: One dollar.',
+ speakers:[{name:'Host',gender:'female',voice:'nova'},{name:'Learner',gender:'male',voice:'onyx'},{name:'Seller',gender:'female',voice:'nova'}],
+ readingQuestions:[
+  q('A1L22_R01','Where is the Community Centre?',['Next to the city market','At the airport','Behind the hospital'],'Next to the city market','reading:mixed-doc','Use the map note.'),
+  q('A1L22_R02','What is the updated event time?',['6:00 p.m.','5:00 p.m.','4:00 p.m.'],'6:00 p.m.','reading:mixed-doc','Use the update.'),
+  q('A1L22_R03','Which badge is available?',['Black','Blue','Neither'],'Black','reading:mixed-doc','Use the service table.'),
+  q('A1L22_R04','How much is the badge?',['$1','$5','$10'],'$1','reading:mixed-doc','Use the service table.')
+ ],
+ listeningQuestions:[
+  q('A1L22_L01','What personal information does the learner give?',['Name and city','Only a price','Only the weather'],'Name and city','listening:integrated','The learner gives name and city.'),
+  q('A1L22_L02','What changed?',['The event start time','The market location','The learner’s name'],'The event start time','listening:constraint','The event now starts at six.'),
+  q('A1L22_L03','What service problem happens?',['Blue badge is unavailable','The centre is closed','The ticket is missing'],'Blue badge is unavailable','listening:service','Blue is unavailable.'),
+  q('A1L22_L04','How does the learner adapt?',['Chooses black and asks the price','Leaves without speaking','Buys a bus ticket'],'Chooses black and asks the price','listening:adaptation','The learner accepts black and asks how much it is.')
+ ],
+ writing:{task:'Write a real-world welcome message to a new classmate or visitor. Introduce yourself, give one useful place/time detail, offer or ask for help, and include one next action.',minWords:45,maxWords:70,humanGraded:false,checkpoint:true,realWorldSurface:'real-world welcome message',copyPasteDisabled:true},
+ foundation:'No new language. Retrieve and combine the most useful A1 functions independently.',
+ performance:'Unscripted final transfer: manage a welcome-event scenario. Introduce yourself, find the place, confirm the updated time, solve one unavailable-option problem, ask at least two useful questions, and make one next arrangement. The AI changes one detail during the exchange.',
+ pronunciation:'Use clear chunks and intelligible key words; perfect accent is not required.',
+ mediation:'Use mixed documents and spoken updates to relay the essential place, time, service, and change information to another person.',
+ reviewKeywords:'A1 integrated retrieval · people · place · time · service · help · plan · adapt',
+ reviewMission:'Complete the real-world mission without a script and recover when one detail changes.',
+ masteryGoal:'independent_a1_real_world_transfer',
+ minimumSpeakingEvidence:{personalDetails:5,relevantQuestions:2,maintainsExchange:true},
+ fixAndImprove:[{pattern:'Where the community centre is?',model:'Where is the community centre?',focus:'location question'},{pattern:'I can to get black.',model:'I can get the black one.',focus:'can + base verb'},{pattern:'Let us meeting at six.',model:'Let us meet at six.',focus:'arrangement'}],
+ stageCheckpoint:{
+  id:'a1-stage-4-independent-a1',title:'Independent A1 Use',
+  afterLesson:22,
+  missions:[
+   'Introduce yourself and exchange essential personal information.',
+   'Understand and relay a place, time, price, or schedule detail.',
+   'Ask for help or clarification when needed.',
+   'Complete a simple service or purchase exchange.',
+   'Arrange a time or place with another person.',
+   'Adapt when a place, time, or option changes.',
+   'Complete one unscripted integrated real-world mission.'
+  ],
+  domains:['UNDERSTAND','RESPOND','INITIATE','PRODUCE','ADAPT'],
+  passRule:'A1 completion requires successful real-world transfer across all five domains. Meaning can succeed with minor form errors, but communication breakdown, inability to initiate, or inability to adapt requires repair before level completion.'
+ }
+});
+const lessons=[L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22];
 const liveSpecs=[
  [L1,["Amina: Hi. I'm Amina. What's your name?","Hassan: I'm Hassan. Nice to meet you.","Amina: Nice to meet you too. Where do you live?","Hassan: I live in Hargeisa. What about you?","Amina: I live in Borama. What do you do?","Hassan: I'm a student. I like football."]],
  [L2,["Amina: Hi. What do you do?","Yusuf: I'm a driver.","Amina: Where do you work?","Yusuf: I work for a transport company.","Amina: What do you do there?","Yusuf: I drive a bus and help customers."]],
@@ -1182,9 +1507,14 @@ const liveSpecs=[
  [L14,["Ali: What is your goal?","Safia: I want to improve my English.","Ali: What are you going to do?","Safia: I am going to study every evening.","Ali: Why?","Safia: Because I need English for work."]],
  [L15,["Officer: Can I help you?","Visitor: Yes. I have a problem. I lost my phone.","Officer: What colour is it?","Visitor: Black.","Officer: Where did you last have it?","Visitor: It was at the bus station."]],
  [L16,["Muna: First, turn on the phone. Next, open the app. What comes next?","Adan: Then, choose your class.","Muna: And after that?","Adan: Press Join. Finally, wait for the class page."]],
- [L17,["Sahra: What do you want to watch?","Yusuf: I like Funny Family because it is funny.","Sahra: It is full.","Yusuf: Okay. What about Blue Road?","Sahra: I prefer the live music because it is free.","Yusuf: Good idea."]]
+ [L17,["Sahra: What do you want to watch?","Yusuf: I like Funny Family because it is funny.","Sahra: It is full.","Yusuf: Okay. What about Blue Road?","Sahra: I prefer the live music because it is free.","Yusuf: Good idea."]],
+ [L18,["David: Hi. I am David from Kenya. What country are you from?","Amina: I am from Somaliland. I live in Borama.","David: What languages do you speak?","Amina: Somali and some English.","David: Our meeting place changed to the community centre.","Amina: Okay. Where is the new place?"]],
+ [L19,["Assistant: How can I help?","Customer: How much is this shirt? Do you have it in blue, large?","Assistant: It is twelve dollars. Blue large is not available.","Customer: Do you have black, large?","Assistant: Yes.","Customer: I will take it. Can I pay by card?"]],
+ [L20,["Visitor: What time do you usually get home?","Host: At five, but today I am late. I will be home at six.","Visitor: Where is the bathroom?","Host: Next to Bedroom 1.","Visitor: And the kitchen?","Host: Next to the living room."]],
+ [L21,["Amina: Are you free on Saturday?","Hassan: I can meet after three-thirty.","Amina: Let us meet at four at the town hall.","Hassan: The event now starts at seven.","Amina: I cannot stay that late.","Hassan: Okay. Let us go to the afternoon market instead."]],
+ [L22,["Host: Welcome. Is this your first time here?","Learner: Yes. My name is Ali. I live in Borama.","Host: The event now starts at six, not five.","Learner: Okay. Where is the community centre?","Host: Next to the city market.","Seller: Blue badges are unavailable, but black is available.","Learner: Black is okay. How much is it?"]]
 ];
-const book={id:BOOK_ID,title:'A1 Beginner',level:'A1',moduleTitle:'A1 Beginner · Gold v1.3',moduleGoal:'Build functional basic communication through 22 real-life lessons.',totalLessons:22,lessons,stageCheckpoints:lessons.filter(x=>x.stageCheckpoint).map(x=>x.stageCheckpoint),standardVersion:VERSION,releaseStatus:'pilot',curriculumLocked:true};
+const book={id:BOOK_ID,title:'A1 Beginner',level:'A1',moduleTitle:'A1 Beginner · Gold v1.4',moduleGoal:'Build functional basic communication through 22 real-life lessons.',totalLessons:22,lessons,stageCheckpoints:lessons.filter(x=>x.stageCheckpoint).map(x=>x.stageCheckpoint),standardVersion:VERSION,releaseStatus:'pilot',curriculumLocked:true};
 
 if(typeof BOOK_PACKS!=='undefined')BOOK_PACKS[BOOK_ID]=book;
 window.A1_GOLD_V1_BOOK=book;
