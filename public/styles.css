@@ -6042,3 +6042,13 @@ img,video,canvas,svg{max-width:100%}
 .eg-reading-listening-page .eg-reading-connected>.eg-task-panel{width:100%!important;max-width:none!important;position:static!important}
 .eg-reading-listening-page .eg-reading-connected>.eg-reading-article{border-radius:16px 16px 0 0!important;border-bottom:0!important;margin:0!important}
 .eg-reading-listening-page .eg-reading-connected>.eg-task-panel{box-sizing:border-box;border:1px solid #dce4e7!important;border-top:1px solid #e8edef!important;border-radius:0 0 16px 16px!important;margin:0!important;padding:20px 24px 24px!important;background:#fbfcfd!important}
+
+.student-work-report .data-table td{vertical-align:top}
+.report-work-cell{display:grid;gap:5px;min-width:118px}
+.report-work-cell>div{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.report-work-cell small,.student-work-report td>small{display:block;margin-top:4px;color:#64748b;line-height:1.35}
+.report-work-state{font-size:.72rem;font-weight:750;color:#475569}
+.report-work-cell.is-not-started strong{font-size:.78rem;color:#94a3b8}
+.report-work-cell.is-not-started small{color:#94a3b8}
+.report-source-note{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+@media(max-width:760px){.student-work-report .performance-detail-table{overflow-x:auto}.report-work-cell{min-width:108px}}
