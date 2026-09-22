@@ -45,7 +45,7 @@ function stageShell(kicker,title,description,body,buttonLabel){
 }
 
 const L1={
- id:'su-a1-l1',
+ id:'a1g-v1-l1',
  number:1,
  title:'Getting Acquainted',
  level:'A1',
@@ -126,7 +126,7 @@ const L1={
 
 const placeholders=LESSON_TITLES.slice(1).map(function(title,index){
  return {
-  id:'su-a1-l'+(index+2),
+  id:'a1g-v1-l'+(index+2),
   number:index+2,
   title:title,
   level:'A1',
@@ -237,7 +237,7 @@ const LIVE_CONTENT=[
 window.LIVE_BOOKS=window.LIVE_BOOKS||{};
 window.LIVE_BOOKS['speakup-a1']={title:'A1 Beginner',lessons:[{number:1,title:'Getting Acquainted',content:LIVE_CONTENT}]};
 
-function isGoldLesson(l){return !!l&&l.standardVersion===A1_GOLD_VERSION&&l.id==='su-a1-l1'}
+function isGoldLesson(l){return !!l&&l.standardVersion===A1_GOLD_VERSION&&l.id==='a1g-v1-l1'}
 window.isA1GoldLesson=isGoldLesson;
 
 const baseWorkbookStepsForLesson=workbookStepsForLesson;
