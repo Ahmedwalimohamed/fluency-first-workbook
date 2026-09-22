@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 
-const VERSION='englishgate-a1-gold-v1.4-batch-d';
+const VERSION='englishgate-a1-gold-v1.0-frozen';
 const BOOK_ID='speakup-a1-gold';
 
 function q(id,text,options,answer,tag,feedback=''){
@@ -1521,7 +1521,7 @@ const liveSpecs=[
  [L21,["Amina: Are you free on Saturday?","Hassan: I can meet after three-thirty.","Amina: Let us meet at four at the town hall.","Hassan: The event now starts at seven.","Amina: I cannot stay that late.","Hassan: Okay. Let us go to the afternoon market instead."]],
  [L22,["Host: Welcome. Is this your first time here?","Learner: Yes. My name is Ali. I live in Borama.","Host: The event now starts at six, not five.","Learner: Okay. Where is the community centre?","Host: Next to the city market.","Seller: Blue badges are unavailable, but black is available.","Learner: Black is okay. How much is it?"]]
 ];
-const book={id:BOOK_ID,title:'A1 Beginner',level:'A1',moduleTitle:'A1 Beginner · Gold v1.4',moduleGoal:'Build functional basic communication through 22 real-life lessons.',totalLessons:22,lessons,stageCheckpoints:lessons.filter(x=>x.stageCheckpoint).map(x=>x.stageCheckpoint),standardVersion:VERSION,releaseStatus:'pilot',curriculumLocked:true};
+const book={id:BOOK_ID,title:'A1 Beginner',level:'A1',moduleTitle:'A1 Beginner · Gold v1.0 Frozen',moduleGoal:'Build functional basic communication through 22 real-life lessons.',totalLessons:22,lessons,stageCheckpoints:lessons.filter(x=>x.stageCheckpoint).map(x=>x.stageCheckpoint),standardVersion:VERSION,releaseStatus:'pilot',curriculumLocked:true,goldFreeze:{status:'frozen',scope:'lessons-1-22',productionActivation:false,requirements:['whole-level-regression','22-lesson-runtime','natural-dialogue-audio','jev-writing','jev-speaking','fix-and-improve','360-reporting']}};
 
 if(typeof BOOK_PACKS!=='undefined')BOOK_PACKS[BOOK_ID]=book;
 window.A1_GOLD_V1_BOOK=book;
