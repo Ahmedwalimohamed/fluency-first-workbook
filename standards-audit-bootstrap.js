@@ -5,6 +5,7 @@ const {installSemanticQaFirewall}=require('./semantic-qa-firewall.js');
 
 // A1 Gold pilot release gate: production starts through this bootstrap on Railway.
 execFileSync(process.execPath,['scripts/qa-a1-gold-l1.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/qa-a1-whole-level.mjs'],{stdio:'inherit'});
 
 const nativePost=express.application.post;
 const installed=new WeakSet();
