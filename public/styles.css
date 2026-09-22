@@ -6219,3 +6219,22 @@ img,video,canvas,svg{max-width:100%}
  .performance-intelligence-head{padding:17px}
  .performance-next-action{padding:15px 17px}
 }
+
+
+/* Teacher reports: narrative first, numbers as supporting evidence */
+.performance-written-report{background:#fff}
+.performance-written-heading{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:22px 24px 10px}
+.performance-written-heading h2{margin:5px 0 0;font-size:1.35rem;color:#0f172a}
+.performance-written-source{font-size:.72rem;font-weight:800;color:#64748b;background:#f1f5f9;border-radius:999px;padding:7px 10px;white-space:nowrap}
+.performance-written-body{padding:6px 24px 22px;max-width:880px}
+.performance-written-body>p{margin:0 0 12px;color:#334155;font-size:.97rem;line-height:1.65}
+.performance-written-body>p strong{color:#0f172a;font-weight:750}
+.performance-written-action{margin-top:16px;padding:14px 16px;border-left:4px solid #2563eb;background:#f8fafc;border-radius:0 12px 12px 0}
+.performance-written-action small{display:block;text-transform:uppercase;letter-spacing:.05em;color:#64748b;font-weight:800;font-size:.69rem;margin-bottom:4px}
+.performance-written-action p{margin:0;color:#0f172a;font-weight:650;line-height:1.5}
+.performance-evidence-details{border-top:1px solid #e2e8f0}
+.performance-evidence-details summary{cursor:pointer;padding:13px 20px;color:#475569;font-size:.82rem;font-weight:750;background:#f8fafc}
+.performance-evidence-details[open] summary{border-bottom:1px solid #e2e8f0}
+.lesson-written-summary{padding:18px 20px;border:1px solid #dbe4ef;border-radius:14px;background:#fff}
+.lesson-written-summary p{margin:6px 0 0;color:#334155;font-size:.94rem;line-height:1.6;max-width:920px}
+@media(max-width:720px){.performance-written-heading{padding:18px 18px 8px;display:grid}.performance-written-body{padding:6px 18px 18px}.performance-written-source{justify-self:start}.lesson-written-summary{padding:16px}}
