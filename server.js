@@ -721,6 +721,115 @@ app.post('/api/writing-grade',auth,studentOnly,async(req,res)=>{
   res.set('Cache-Control','no-store');res.json({ok:true,...grade});
  }catch(e){console.error('writing grade error',e.message);res.status(503).json({error:'Writing feedback is temporarily unavailable. Your response can still be saved.'})}
 });
+
+function a1SpeakingFallback(responses){
+ const text=responses.join(' ');
+ const questions=(responses[4].match(/\?/g)||[]).length;
+ const introduces=/\b(i['’]?m|i am|my name)\b/i.test(text);
+ const details=/\b(live|from|work|study|teacher|student|like)\b/i.test(text);
+ let score=45;
+ if(introduces)score+=12;
+ if(details)score+=12;
+ if(questions>=2)score+=16;
+ if(responses.filter(x=>x.split(/\s+/).filter(Boolean).length>=2).length>=4)score+=10;
+ score=Math.min(90,score);
+ const status=score>=80?'A1_SECURE':score>=60?'A1_FUNCTIONAL':'A1_DEVELOPING';
+ return {
+  score,status,fallback:true,provider:'deterministic-fallback',
+  feedback:{
+   strength:questions>=2?'You completed the exchange and asked questions back.':'You completed the main conversation turns.',
+   improve:questions>=2?'Keep your answers clear and use the target forms accurately.':'Ask at least two short, relevant questions to make the exchange reciprocal.'
+  }
+ };
+}
+async function evaluateA1SpeakingWithJev(responses){
+ const apiKey=String(process.env.TYPESAFE_API_KEY||'').trim();
+ if(!apiKey)return a1SpeakingFallback(responses);
+ const state={
+  purpose:'Evaluate an A1 English learner first-meeting conversation',
+  cefrLevel:'A1',
+  lesson:'Getting Acquainted',
+  learnerResponses:responses,
+  requiredEvidence:[
+   'greet or introduce self',
+   'give basic personal information',
+   'answer simple questions',
+   'ask at least two relevant questions',
+   'maintain a short understandable exchange'
+  ],
+  gradingRules:[
+   'Judge communication against A1 expectations only.',
+   'Minor article, preposition, or agreement errors must not erase successful meaning.',
+   'Do not require native-like pronunciation, sophistication, or B1-level elaboration.',
+   'Reciprocity matters: the learner must ask questions too.'
+  ]
+ };
+ const mk=instructions=>({
+  type:'choice',
+  instructions,
+  criteria:{
+   strong:'The learner demonstrates this A1 communication dimension independently and successfully.',
+   developing:'The learner communicates successfully overall but needs some support or correction in this dimension.',
+   needs_work:'The learner does not yet provide enough evidence of this A1 communication dimension.'
+  }
+ });
+ const questions={
+  task:mk('Judge whether the learner completes the first-meeting communication task and gives useful personal information.'),
+  comprehensibility:mk('Judge whether the learner responses are understandable at A1 even if minor form errors occur.'),
+  reciprocity:mk('Judge whether the learner responds to the partner and asks at least two relevant questions.'),
+  independence:mk('Judge whether the learner produces their own short responses rather than relying on a copied model.')
+ };
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),3500);
+ try{
+  const r=await fetch(WRITING_GRADE_URL,{
+   method:'POST',
+   headers:{Authorization:'Bearer '+apiKey,'Content-Type':'application/json'},
+   body:JSON.stringify({state,model:WRITING_GRADE_MODEL,questions}),
+   signal:controller.signal
+  });
+  if(!r.ok)throw new Error('Speaking decision service returned '+r.status);
+  const data=await r.json(),dimensions={};
+  for(const id of Object.keys(questions)){
+   const v=writingGradeChoice(data,id);
+   if(!v)throw new Error('Speaking decision response was incomplete.');
+   dimensions[id]=v;
+  }
+  const points={strong:100,developing:72,needs_work:45};
+  const score=Math.round(Object.values(dimensions).reduce((sum,x)=>sum+points[x.choice],0)/Object.keys(dimensions).length);
+  const status=score>=80&&dimensions.reciprocity.choice!=='needs_work'
+   ?'A1_SECURE'
+   :score>=60&&dimensions.task.choice!=='needs_work'
+    ?'A1_FUNCTIONAL'
+    :'A1_DEVELOPING';
+  const strong=Object.entries(dimensions).filter(([,v])=>v.choice==='strong').map(([k])=>k);
+  const weak=Object.entries(dimensions).filter(([,v])=>v.choice!=='strong').map(([k])=>k);
+  return {
+   score,status,fallback:false,provider:'jev',dimensions,
+   feedback:{
+    strength:strong.length?'Strong evidence: '+strong.join(', ')+'.':'The learner completed the speaking attempt.',
+    improve:weak.length?'Next focus: '+weak.slice(0,2).join(' and ')+'.':'Keep using short, clear, reciprocal questions and answers.'
+   }
+  };
+ }catch(e){
+  console.error('A1 speaking Jev evaluation error:',e.message);
+  return a1SpeakingFallback(responses);
+ }finally{
+  clearTimeout(timer);
+ }
+}
+app.post('/api/a1/speaking/evaluate',auth,studentOnly,async(req,res)=>{
+ const lessonId=String(req.body?.lessonId||'');
+ const raw=Array.isArray(req.body?.responses)?req.body.responses:[];
+ const responses=raw.slice(0,5).map(x=>String(x||'').trim().slice(0,700));
+ if(lessonId!=='su-a1-l1'||responses.length!==5||responses.some(x=>!x)){
+  return res.status(400).json({error:'Complete all five speaking turns first.'});
+ }
+ const result=await evaluateA1SpeakingWithJev(responses);
+ res.set('Cache-Control','no-store');
+ res.json({ok:true,...result});
+});
+
 app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||''),publishToCommunity=req.body.publishToCommunity===true;if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before saving.'});const previous=await pool.query('select content,published_to_community from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score,published_to_community) values($1,$2,$3,null,$4) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,published_to_community=excluded.published_to_community,updated_at=now()`,[req.user.id,lessonId,content,publishToCommunity]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,completed:Boolean(done.rowCount),publishedToCommunity:publishToCommunity,certificate:issued.certificate||null})});
 function authenticWritingText(raw){
  const text=String(raw||'').trim();if(!text)return'';
