@@ -580,6 +580,50 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
 
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{const {lessonId,skill,score,tags=[]}=req.body;if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});const safeTags=Array.isArray(tags)?tags.slice(0,9):[];if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags) values($1,$2,$3,$4,$5)',[req.user.id,lessonId,skill,score,safeTags]);await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);res.json({ok:true})});
 app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,certificate:issued.certificate||null})});
+
+const WRITING_GRADE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
+const WRITING_GRADE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
+const WRITING_GRADE_VERSION='englishgate-writing-grade-v1';
+function writingGradeChoice(data,id){
+ const a=data?.answers?.[id],choice=String(a?.choice||'').toLowerCase();
+ if(!['strong','developing','needs_work'].includes(choice))return null;
+ const confidence=Number(a?.probabilities?.[choice]??a?.confidence);
+ return {choice,confidence:Number.isFinite(confidence)&&confidence>=0&&confidence<=1?confidence:null};
+}
+function writingGradeScore(dimensions){
+ const points={strong:100,developing:72,needs_work:45},keys=['task','grammar','vocabulary','clarity'];
+ return Math.round(keys.reduce((sum,k)=>sum+(points[dimensions[k]?.choice]||0),0)/keys.length);
+}
+function writingGradeFeedback(dimensions){
+ const labels={task:'task completion',grammar:'grammar accuracy',vocabulary:'vocabulary',clarity:'clarity and organisation'};
+ const strong=[],improve=[];
+ for(const [k,v] of Object.entries(dimensions)){if(v.choice==='strong')strong.push(labels[k]);else improve.push(labels[k])}
+ return {strength:strong.length?'Strongest areas: '+strong.join(', ')+'.':'Your response addresses the writing task.',improve:improve.length?'Next, improve '+improve.slice(0,2).join(' and ')+'.':'Keep this level of accuracy and clarity in your next response.'};
+}
+async function gradeWritingWithJev({lessonId,task,text,level,minWords,maxWords}){
+ const apiKey=String(process.env.TYPESAFE_API_KEY||'').trim();if(!apiKey)throw new Error('Writing grading service is not configured.');
+ const state={purpose:'Grade an English learner writing response',lessonId:String(lessonId||''),cefrLevel:String(level||''),writingTask:String(task||'').slice(0,1200),learnerResponse:String(text||'').slice(0,5000),wordTarget:{min:Number(minWords||0),max:Number(maxWords||0)},gradingRules:['Judge only the supplied response against the supplied task.','Do not infer learner identity or background.','Use needs_work only when there is a meaningful weakness, not for a few harmless errors.','At B2, reward successful communication even when minor language errors remain.']};
+ const mk=instructions=>({type:'choice',instructions,criteria:{strong:'The response meets this dimension well for the stated CEFR level.',developing:'The response communicates successfully but has noticeable room to improve in this dimension.',needs_work:'The response has a substantial weakness in this dimension that interferes with the task or communication.'}});
+ const questions={task:mk('Judge task completion and relevance.'),grammar:mk('Judge grammar accuracy and control for the stated CEFR level.'),vocabulary:mk('Judge vocabulary range, appropriacy, and precision for the stated CEFR level.'),clarity:mk('Judge clarity, organisation, and ease of understanding for the stated CEFR level.')};
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),3500);
+ try{
+  const r=await fetch(WRITING_GRADE_URL,{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({state,model:WRITING_GRADE_MODEL,questions}),signal:controller.signal});
+  if(!r.ok)throw new Error('Writing grading service returned '+r.status);
+  const data=await r.json(),dimensions={};
+  for(const id of Object.keys(questions)){const v=writingGradeChoice(data,id);if(!v)throw new Error('Writing grading response was incomplete.');dimensions[id]=v}
+  const score=writingGradeScore(dimensions),feedback=writingGradeFeedback(dimensions);
+  return {score,dimensions,feedback,version:WRITING_GRADE_VERSION};
+ }finally{clearTimeout(timer)}
+}
+app.post('/api/writing-grade',auth,studentOnly,async(req,res)=>{
+ try{
+  const text=String(req.body?.text||'').trim(),task=String(req.body?.task||'').trim(),lessonId=String(req.body?.lessonId||'');
+  if(!isAuthenticWritingText(text))return res.status(400).json({error:'Write your real-life response before checking it.'});
+  if(!task)return res.status(400).json({error:'Writing task is missing.'});
+  const grade=await gradeWritingWithJev({lessonId,task,text,level:req.body?.level,minWords:req.body?.minWords,maxWords:req.body?.maxWords});
+  res.set('Cache-Control','no-store');res.json({ok:true,...grade});
+ }catch(e){console.error('writing grade error',e.message);res.status(503).json({error:'Writing feedback is temporarily unavailable. Your response can still be saved.'})}
+});
 app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||''),publishToCommunity=req.body.publishToCommunity===true;if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before saving.'});const previous=await pool.query('select content,published_to_community from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score,published_to_community) values($1,$2,$3,null,$4) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,published_to_community=excluded.published_to_community,updated_at=now()`,[req.user.id,lessonId,content,publishToCommunity]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,completed:Boolean(done.rowCount),publishedToCommunity:publishToCommunity,certificate:issued.certificate||null})});
 function authenticWritingText(raw){
  const text=String(raw||'').trim();if(!text)return'';
