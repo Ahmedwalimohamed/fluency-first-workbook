@@ -6119,3 +6119,9 @@ img,video,canvas,svg{max-width:100%}
 .student-lesson-open{justify-self:end;color:#2563eb;font-size:.82rem;font-weight:750}
 .student-lesson-report-row.is-empty .student-lesson-name,.student-lesson-report-row.is-empty .student-lesson-points{color:#64748b}
 @media(max-width:720px){.student-report-summary{grid-template-columns:1fr}.student-report-summary>div{border-right:0;border-bottom:1px solid #e2e8f0}.student-report-summary>div:last-child{border-bottom:0}.student-lesson-report-row{grid-template-columns:70px 1fr auto}.student-lesson-points{grid-column:2}.student-lesson-open{grid-column:3;grid-row:1 / span 2}.student-lesson-name{grid-column:2}}
+
+.student-performance-page{width:min(1180px,100%);margin:0 auto;padding:4px 0 48px;display:grid;gap:24px}
+.student-performance-page .student-performance-hero{padding:10px 0 2px;border-bottom:1px solid #e2e8f0}
+.student-performance-page .student-performance-hero h1{font-size:clamp(2rem,4vw,3rem);margin:4px 0 7px;color:#0f172a}
+.report-page-back{justify-self:start}
+@media(max-width:720px){.student-performance-page{gap:18px;padding-bottom:28px}}
