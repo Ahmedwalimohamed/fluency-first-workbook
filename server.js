@@ -523,6 +523,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   select u.id,u.name,(p.profile_photo is not null) as has_photo,p.job_title,
          coalesce(cls.name,'') as class_name,
          coalesce(cls.level,'') as level,
+         coalesce(cls.course_id,'') as course_id,
          coalesce(cls.book_title,'Workbook') as book_title,
          coalesce(cls.total_lessons,22)::int as total_lessons,
          coalesce(comp.completed,0)::int as completed,
@@ -532,7 +533,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   from users u
   left join profiles p on p.user_id=u.id
   left join lateral (
-    select c.name,c.level,b.title as book_title,coalesce(b.total_lessons,22) as total_lessons
+    select c.name,c.level,c.course_id,b.title as book_title,coalesce(b.total_lessons,22) as total_lessons
     from enrollments e
     join classes c on c.id=e.class_id
     left join books b on b.id=c.course_id
@@ -543,21 +544,21 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   left join lateral (
     select count(*)::int as completed
     from completion c
-    where c.student_id=u.id and c.step in ('vocabulary','listening','grammar','writing')
+    where c.student_id=u.id and ((cls.course_id='speakup-a1' and c.lesson_id like 'a1g-v1-l%' and c.step in ('vocabulary','grammar','reading','listening','writing','speaking','review')) or (coalesce(cls.course_id,'')<>'speakup-a1' and c.step in ('vocabulary','listening','grammar','writing')))
   ) comp on true
   left join lateral (
     select round(avg(latest.score)::numeric,0)::int as average,count(*)::int as scored,max(latest.at) as last_active
     from (
       select distinct on (a.lesson_id,a.skill) a.lesson_id,a.skill,a.score,a.at
       from attempts a
-      where a.student_id=u.id and a.skill in ('vocabulary','listening','grammar','writing')
+      where a.student_id=u.id and ((cls.course_id='speakup-a1' and a.lesson_id like 'a1g-v1-l%' and a.skill in ('vocabulary','grammar','reading','listening','writing','speaking','review')) or (coalesce(cls.course_id,'')<>'speakup-a1' and a.skill in ('vocabulary','listening','grammar','writing')))
       order by a.lesson_id,a.skill,a.at desc
     ) latest
   ) perf on true
   where u.role='student'
  `)).rows;
  const students=rows.map(r=>{
-  const completed=Number(r.completed||0),average=r.average===null||r.average===undefined?null:Number(r.average),scored=Number(r.scored||0),total=Math.max(1,Number(r.total_lessons||22)*4),completion=Math.min(100,Math.round(completed/total*100)),practice=Math.min(100,scored*8),score=Math.round((Number.isFinite(average)?average:0)*0.45+completion*0.35+practice*0.2);
+  const completed=Number(r.completed||0),average=r.average===null||r.average===undefined?null:Number(r.average),scored=Number(r.scored||0),stepsPerLesson=r.course_id==='speakup-a1'?7:4,total=Math.max(1,Number(r.total_lessons||22)*stepsPerLesson),completion=Math.min(100,Math.round(completed/total*100)),practice=Math.min(100,scored*8),score=Math.round((Number.isFinite(average)?average:0)*0.45+completion*0.35+practice*0.2);
   return {
   id:r.id,
   name:r.name,
