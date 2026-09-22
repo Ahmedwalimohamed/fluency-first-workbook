@@ -2916,11 +2916,15 @@ async function saveWriting(l){
  const correct=results.filter(x=>x.correct).length,score=Math.round(correct/Math.max(1,results.length)*100),ladder=writingLadderResult(results,checks.length);
  try{
   await api(`/api/writing/${l.id}`,{method:'PUT',body:JSON.stringify({content:response,publishToCommunity})});
-  if(!l.writing?.humanGraded)await recordAttempt(session.id,l.id,'writing',score,[`ladder:highest:${ladder.highest}`,'writing:sentence-building','writing:sentence-combining','writing:error-correction','writing:paragraph-ordering']);
+  if(l.writing?.humanGraded){await refreshState();clearActivityDraft();const done=$('doneActivity');if(done)done.disabled=false;if(f)f.innerHTML=`<div class="feedback good"><strong>Submitted for teacher grading.</strong> Your real-life writing is saved for your teacher. ${publishToCommunity?'It was also shared to My Writings.':'It was not published to My Writings.'}</div>${ladderResultHtml(ladder)}`;return}
+  let writingGrade=null;
+  try{writingGrade=await api('/api/writing-grade',{method:'POST',body:JSON.stringify({lessonId:l.id,task:spec.task,text:response,level:COURSE.level||'',minWords:spec.min,maxWords:spec.max})})}catch{}
+  const finalScore=writingGrade?.score??score;
+  await recordAttempt(session.id,l.id,'writing',finalScore,[`ladder:highest:${ladder.highest}`,'writing:task-completion','writing:grammar','writing:vocabulary','writing:clarity']);
   await refreshState();clearActivityDraft();const done=$('doneActivity');if(done)done.disabled=false;
-  if(l.writing?.humanGraded){if(f)f.innerHTML=`<div class="feedback good"><strong>Submitted for teacher grading.</strong> The 12 practice questions were auto-graded and your real-life writing is saved for your teacher. ${publishToCommunity?'It was also shared to My Writings.':'It was not published to My Writings.'}</div>${ladderResultHtml(ladder)}`;return}
-  const tone=score>=75?'good':'bad',label=score===100?'All 12 correct':score>=75?'Strong preparation':'Review the practice';
-  if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${score}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> practice questions correct</span><span><b>${12-correct}</b> to review</span><span><b>1</b> real-life response saved</span></div><p>Your final writing is saved. ${publishToCommunity?'It is now shared to <strong>My Writings</strong>.':'It remains private from <strong>My Writings</strong>.'} Review any practice item you missed, then press <strong>Done</strong>.</p></div>${ladderResultHtml(ladder)}`
+  const tone=finalScore>=70?'good':'bad',label=finalScore>=85?'Strong writing':finalScore>=65?'Developing writing':'Keep improving';
+  const feedbackText=writingGrade?`<p><strong>${escapeHtml(writingGrade.feedback.strength)}</strong> ${escapeHtml(writingGrade.feedback.improve)}</p>`:'<p>Your response is saved. Detailed writing feedback is temporarily unavailable, but you can continue.</p>';
+  if(f)f.innerHTML=`<div class="performance-result ${tone}"><div class="performance-score"><strong>${finalScore}%</strong><span>${label}</span></div><div class="performance-breakdown"><span><b>${correct}</b> practice questions correct</span><span><b>1</b> real-life response saved</span><span><b>4</b> writing areas checked</span></div>${feedbackText}<p>${publishToCommunity?'Your writing is shared to <strong>My Writings</strong>.':'Your writing remains private from <strong>My Writings</strong>.'} Press <strong>Done</strong> when you are ready to continue.</p></div>${ladderResultHtml(ladder)}`
  }catch(e){saveActivityDraft();if(f)f.innerHTML=`<div class="feedback bad">${navigator.onLine?escapeHtml(e.message):'<strong>You are offline.</strong> Your answers are saved on this device. Reconnect and press save again.'}</div>`}
 }
 async function checkCurrent(){
