@@ -166,14 +166,14 @@ const L2=lesson({
  speakers:[{name:'Hodan',gender:'female',voice:'nova'}],
  readingQuestions:[
   q('A1L2_R01','What is Ibrahim’s job?',['Driver','Nurse','Teacher'],'Driver','reading:detail','He says, “I am a driver.”'),
-  q('A1L2_R02','Where does Ibrahim work?',['For a transport company','At a school','At a hospital'],'For a transport company','reading:detail','He works for a transport company.'),
-  q('A1L2_R03','What does Ibrahim drive?',['A bus','A taxi','A truck'],'A bus','reading:detail','He says, “I drive a bus.”')
+  q('A1L2_R02','Ibrahim’s workplace is…',['A transport company','A school','A hospital'],'A transport company','reading:detail','The profile says, “I work for a transport company.”'),
+  q('A1L2_R03','Ibrahim’s work vehicle is…',['A bus','A taxi','A truck'],'A bus','reading:detail','The profile says, “I drive a bus.”')
  ],
  listeningQuestions:[
   q('A1L2_L01','What is Hodan’s job?',['Nurse','Driver','Student'],'Nurse','listening:detail','Listen for “I am a nurse.”'),
-  q('A1L2_L02','Where does Hodan work?',['At a hospital','In an office','At a school'],'At a hospital','listening:detail','Listen for “I work at a hospital.”'),
-  q('A1L2_L03','What does Hodan do there?',['She helps patients.','She drives a bus.','She teaches students.'],'She helps patients.','listening:detail','Listen for “I help patients.”'),
-  q('A1L2_L04','What time does she start work?',['8:00','9:00','10:00'],'8:00','listening:detail','Listen for “eight in the morning.”')
+  q('A1L2_L02','Hodan’s workplace is…',['A hospital','An office','A school'],'A hospital','listening:detail','Listen for “I work at a hospital.”'),
+  q('A1L2_L03','Hodan’s work action is…',['Help patients','Drive a bus','Teach students'],'Help patients','listening:detail','Listen for “I help patients.”'),
+  q('A1L2_L04','Hodan’s start time is…',['8:00','9:00','10:00'],'8:00','listening:detail','Listen for “eight in the morning.”')
  ],
  writing:{task:'Write a short introduction for a professional group. Say your name, your job or study, where you work or study, and one thing you do there.',minWords:20,maxWords:40,humanGraded:false,checkpoint:false,realWorldSurface:'professional group introduction',copyPasteDisabled:true},
  foundation:'Talk about your work or study with first-person English.',
