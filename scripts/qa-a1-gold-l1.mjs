@@ -8,7 +8,7 @@ const runtime=read('public/a1-gold-l1-runtime.js');
 const backend=read('a1-gold-bootstrap.js');
 const teacher=read('teacher-management-bootstrap.js');
 
-const syntaxFiles=['a1-gold-bootstrap.js','public/a1-gold-v1.js','public/a1-gold-l1-runtime.js'];
+const syntaxFiles=['server.js','standards-audit-bootstrap.js','reading-listening-separation-bootstrap.js','a1-gold-bootstrap.js','public/app.js','public/a1-gold-v1.js','public/a1-gold-l1-runtime.js'];
 for(const file of syntaxFiles){
   const run=spawnSync(process.execPath,['--check',new URL('../'+file,import.meta.url).pathname],{encoding:'utf8'});
   if(run.status!==0){
@@ -24,6 +24,8 @@ const checks=[
   ['legacy A1 retained but inactive',/"id":"speakup-a1"[^}]*"status":"inactive"[^}]*"total_lessons":44/.test(server)],
   ['B2 is the only active seed',(()=>{const m=server.match(/const BOOK_SEEDS=(\[[\s\S]*?\]);/);if(!m)return false;const books=JSON.parse(m[1]);return books.every(b=>b.id==='speakup-b2'?b.status==='ready':b.status==='inactive')})()],
   ['database startup enforces B2-only active state',server.includes("update books set status=case when id='speakup-b2' then 'ready' else 'inactive' end")],
+  ['B2-only standard activity guard',server.includes('requireB2LearningLesson')&&server.includes("Only B2 Upper Intermediate is currently active")],
+  ['B2-only separated activity guard',read('reading-listening-separation-bootstrap.js').includes('b2LessonOnly')],
   ['Gold curriculum loaded',index.includes('a1-gold-v1.js')&&index.includes('a1-gold-l1-runtime.js')],
   ['Gold bootstrap registered',teacher.includes("require('./a1-gold-bootstrap.js')")],
   ['inactive runtime guard present',runtime.includes('bookOperational')||read('public/app.js').includes('function bookOperational(id)')],
