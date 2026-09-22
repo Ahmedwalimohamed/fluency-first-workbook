@@ -6143,3 +6143,79 @@ img,video,canvas,svg{max-width:100%}
 .reports-fit-table .ghost-btn{padding:6px 8px;font-size:.68rem;white-space:nowrap}
 @media(max-width:1100px){.reports-fit-table{font-size:.7rem}.reports-fit-table th{font-size:.59rem}.reports-fit-table th,.reports-fit-table td{padding:7px 4px}.reports-fit-table .ghost-btn{padding:5px 6px;font-size:.63rem}}
 @media(max-width:760px){.reports-fit-table{font-size:.64rem}.reports-fit-table th{font-size:.54rem}.reports-fit-table th,.reports-fit-table td{padding:6px 3px}.reports-fit-table .management-row-meta{display:grid;gap:3px}.reports-fit-table .ghost-btn{width:100%;padding:4px 3px;font-size:.58rem}}
+
+
+/* Student performance intelligence — JEV decision layer */
+.performance-intelligence-card{border:1px solid #dbe4ef;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,.05)}
+.performance-intelligence-loading{padding:18px 20px;display:grid;gap:4px;color:#475569}
+.performance-intelligence-loading strong{color:#0f172a}
+.performance-intelligence-loading span{font-size:.84rem}
+.performance-intelligence-head{display:flex;justify-content:space-between;gap:22px;align-items:flex-start;padding:20px 22px 17px;border-bottom:1px solid #e2e8f0;background:#f8fafc}
+.performance-intelligence-status{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:5px}
+.performance-intelligence-status strong{font-size:1.22rem;color:#0f172a}
+.performance-intelligence-status span{font-size:.75rem;color:#64748b}
+.performance-intelligence-status .status-on_track{color:#166534}
+.performance-intelligence-status .status-watch{color:#92400e}
+.performance-intelligence-status .status-intervention{color:#991b1b}
+.performance-intelligence-status .status-insufficient_data{color:#475569}
+.performance-intelligence-score{display:grid;text-align:right;gap:2px}
+.performance-intelligence-score small,.performance-intelligence-grid small,.performance-next-action small{font-size:.7rem;text-transform:uppercase;letter-spacing:.055em;color:#64748b;font-weight:800}
+.performance-intelligence-score strong{font-size:1.55rem;color:#0f172a}
+.performance-intelligence-score span{font-size:.78rem;color:#64748b}
+.performance-intelligence-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid #e2e8f0}
+.performance-intelligence-grid>div{padding:15px 18px;display:grid;gap:3px;border-right:1px solid #e2e8f0;min-width:0}
+.performance-intelligence-grid>div:last-child{border-right:0}
+.performance-intelligence-grid strong{font-size:.94rem;color:#0f172a}
+.performance-intelligence-grid span{font-size:.74rem;color:#64748b;line-height:1.35}
+.performance-next-action{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.performance-next-action>div{display:grid;gap:3px}
+.performance-next-action strong{color:#0f172a}
+.performance-next-action p{margin:0;color:#475569;font-size:.84rem;line-height:1.45}
+.performance-persistence{white-space:nowrap;padding:7px 10px;border-radius:999px;background:#f1f5f9;color:#475569;font-size:.73rem;font-weight:800}
+
+/* Question-level evidence inside student activity review */
+.report-question-history{margin-top:20px}
+.report-attempt-evidence-list{display:grid;gap:10px}
+.report-attempt-evidence{border:1px solid #e2e8f0;border-radius:13px;background:#fff;overflow:hidden}
+.report-attempt-evidence>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 15px;background:#f8fafc}
+.report-attempt-evidence>summary::-webkit-details-marker{display:none}
+.report-attempt-evidence>summary>div{display:grid;gap:2px}
+.report-attempt-evidence>summary span{font-size:.74rem;color:#64748b}
+.report-attempt-evidence>summary>strong:last-child{font-size:1rem;color:#0f172a}
+.report-attempt-evidence-body{padding:14px 15px;display:grid;gap:13px;border-top:1px solid #e2e8f0}
+.report-question-evidence-list{display:grid;gap:10px}
+.report-question-evidence{border:1px solid #e2e8f0;border-radius:12px;padding:13px 14px;background:#fff}
+.report-question-evidence.correct{border-left:4px solid #16a34a}
+.report-question-evidence.incorrect{border-left:4px solid #dc2626}
+.report-question-evidence.open{border-left:4px solid #64748b}
+.report-question-evidence-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.report-question-evidence-head span{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#64748b;font-weight:800}
+.report-question-evidence-head strong{font-size:.74rem}
+.report-question-evidence.correct .report-question-evidence-head strong{color:#166534}
+.report-question-evidence.incorrect .report-question-evidence-head strong{color:#991b1b}
+.report-question-evidence.open .report-question-evidence-head strong{color:#475569}
+.report-question-evidence>p{margin:8px 0 10px;font-weight:700;color:#0f172a;line-height:1.4}
+.report-answer-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.report-answer-grid>div{background:#f8fafc;border-radius:9px;padding:10px;display:grid;gap:3px;min-width:0}
+.report-answer-grid small{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:#64748b;font-weight:800}
+.report-answer-grid b{font-size:.83rem;color:#0f172a;overflow-wrap:anywhere}
+.report-evidence-tag{display:inline-block;margin-top:9px;padding:4px 7px;border-radius:7px;background:#f1f5f9;color:#64748b;font-size:.68rem}
+.report-evidence-missing{padding:13px 14px;border:1px dashed #cbd5e1;border-radius:11px;background:#f8fafc;display:grid;gap:3px}
+.report-evidence-missing strong{color:#334155}
+.report-evidence-missing span{font-size:.78rem;color:#64748b;line-height:1.4}
+
+@media(max-width:800px){
+ .performance-intelligence-head,.performance-next-action{align-items:stretch;flex-direction:column}
+ .performance-intelligence-score{text-align:left}
+ .performance-intelligence-grid{grid-template-columns:1fr 1fr}
+ .performance-intelligence-grid>div:nth-child(2){border-right:0}
+ .performance-intelligence-grid>div:nth-child(-n+2){border-bottom:1px solid #e2e8f0}
+ .report-answer-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+ .performance-intelligence-grid{grid-template-columns:1fr}
+ .performance-intelligence-grid>div{border-right:0;border-bottom:1px solid #e2e8f0}
+ .performance-intelligence-grid>div:last-child{border-bottom:0}
+ .performance-intelligence-head{padding:17px}
+ .performance-next-action{padding:15px 17px}
+}
