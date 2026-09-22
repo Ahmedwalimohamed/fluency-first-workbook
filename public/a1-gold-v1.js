@@ -19,7 +19,7 @@ function lesson(spec){
     writing:spec.writing,foundation:spec.foundation,performance:spec.performance,pronunciation:spec.pronunciation,mediation:spec.mediation,
     review:{keywords:spec.reviewKeywords,mission:spec.reviewMission},
     mastery:{requiresTransfer:true,communicationGoal:spec.masteryGoal,minimumSpeakingEvidence:spec.minimumSpeakingEvidence},
-    fixAndImprove:spec.fixAndImprove||[]
+    fixAndImprove:spec.fixAndImprove||[],stageCheckpoint:spec.stageCheckpoint||null
   };
 }
 function live(spec,modelLines){
@@ -54,7 +54,15 @@ function live(spec,modelLines){
     '☐ ask or answer a useful question',
     '☐ fix one important language problem',
     'One sentence I used well: ____________________________',
-    'One thing I want to fix: ____________________________'
+    'One thing I want to fix: ____________________________',
+    ...(spec.stageCheckpoint?[
+      '',
+      'STAGE CHECKPOINT — '+spec.stageCheckpoint.title,
+      'Integrated communication missions:',
+      ...spec.stageCheckpoint.missions.map((x,i)=>(i+1)+'. '+x),
+      'Evidence domains: '+spec.stageCheckpoint.domains.join(' · '),
+      'Pass rule: '+spec.stageCheckpoint.passRule
+    ]:[])
   ].join('\n');
 }
 
@@ -1140,7 +1148,21 @@ const L17=lesson({
  reviewMission:'Make a shared entertainment choice, explain why, and adapt when the first choice is unavailable.',
  masteryGoal:'make_simple_shared_choice_with_reason',
  minimumSpeakingEvidence:{personalDetails:3,relevantQuestions:1,maintainsExchange:true},
- fixAndImprove:[{pattern:'I like film because funny.',model:'I like the film because it is funny.',focus:'because reason'},{pattern:'Why you like it?',model:'Why do you like it?',focus:'why question'},{pattern:'It full. Choose other.',model:'It is full. Let us choose another.',focus:'adaptation'}]
+ fixAndImprove:[{pattern:'I like film because funny.',model:'I like the film because it is funny.',focus:'because reason'},{pattern:'Why you like it?',model:'Why do you like it?',focus:'why question'},{pattern:'It full. Choose other.',model:'It is full. Let us choose another.',focus:'adaptation'}],
+ stageCheckpoint:{
+  id:'a1-stage-3-my-community',title:'My Community',
+  afterLesson:17,
+  missions:[
+   'Use two schedules to arrange a fitness meet-up.',
+   'Use a map to ask for and give directions to community places.',
+   'Explain one goal, next action, and simple reason.',
+   'Report a missing item and ask for help.',
+   'Reconstruct a short safe process from missing steps.',
+   'Choose an entertainment option, explain why, and adapt when the first choice changes.'
+  ],
+  domains:['UNDERSTAND','RESPOND','INITIATE','PRODUCE','ADAPT'],
+  passRule:'Complete the communication missions with understandable meaning, relevant questions, and enough independence; no large MCQ score can substitute for communication evidence.'
+ }
 });
 const lessons=[L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17];
 const liveSpecs=[
@@ -1162,7 +1184,7 @@ const liveSpecs=[
  [L16,["Muna: First, turn on the phone. Next, open the app. What comes next?","Adan: Then, choose your class.","Muna: And after that?","Adan: Press Join. Finally, wait for the class page."]],
  [L17,["Sahra: What do you want to watch?","Yusuf: I like Funny Family because it is funny.","Sahra: It is full.","Yusuf: Okay. What about Blue Road?","Sahra: I prefer the live music because it is free.","Yusuf: Good idea."]]
 ];
-const book={id:BOOK_ID,title:'A1 Beginner',level:'A1',moduleTitle:'A1 Beginner · Gold v1.3',moduleGoal:'Build functional basic communication through 22 real-life lessons.',totalLessons:22,lessons,standardVersion:VERSION,releaseStatus:'pilot',curriculumLocked:true};
+const book={id:BOOK_ID,title:'A1 Beginner',level:'A1',moduleTitle:'A1 Beginner · Gold v1.3',moduleGoal:'Build functional basic communication through 22 real-life lessons.',totalLessons:22,lessons,stageCheckpoints:lessons.filter(x=>x.stageCheckpoint).map(x=>x.stageCheckpoint),standardVersion:VERSION,releaseStatus:'pilot',curriculumLocked:true};
 
 if(typeof BOOK_PACKS!=='undefined')BOOK_PACKS[BOOK_ID]=book;
 window.A1_GOLD_V1_BOOK=book;
