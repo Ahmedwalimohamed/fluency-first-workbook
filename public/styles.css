@@ -6062,3 +6062,40 @@ img,video,canvas,svg{max-width:100%}
 .report-attempt-detail{align-items:flex-start}
 .report-attempt-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
 .report-attempt-tags:empty{display:none}
+
+/* Student performance report — Jev audit: progressive disclosure, evidence first */
+.student-performance-shell,.report-360-shell{display:grid;gap:24px;min-width:min(1040px,88vw)}
+.student-performance-hero,.report-360-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.student-performance-hero h2,.report-360-head h2{font-size:clamp(1.8rem,3vw,2.6rem);margin:4px 0 6px;color:#0f172a}
+.student-performance-hero p,.report-360-head p{margin:0;color:#64748b}
+.report-360-head>div:last-child{order:-1}
+.report-kpi-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;background:#fff}
+.report-kpi-strip>div{padding:18px 20px;display:grid;gap:4px;border-right:1px solid #e2e8f0}
+.report-kpi-strip>div:last-child{border-right:0}
+.report-kpi-strip small{color:#64748b;font-weight:650}
+.report-kpi-strip strong{font-size:1.55rem;color:#0f172a}
+.report-kpi-strip span{font-size:.78rem;color:#64748b}
+.report-360-section{display:grid;gap:14px}
+.report-skill-grid,.report-activity-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.report-skill-grid>div,.report-activity-card{padding:16px;border:1px solid #e2e8f0;border-radius:14px;background:#fff;display:grid;gap:6px;text-align:left}
+.report-skill-grid span,.report-activity-card span{font-size:.78rem;color:#64748b;font-weight:700}
+.report-skill-grid strong,.report-activity-card strong{font-size:1.3rem;color:#0f172a}
+.report-skill-grid small,.report-activity-card small{color:#64748b}
+.report-activity-card{font:inherit;cursor:pointer}
+.report-activity-card:hover,.report-activity-card:focus-visible,.report-lesson-card:hover,.report-lesson-card:focus-visible,.report-latest-card:hover,.report-latest-card:focus-visible{border-color:#93c5fd;box-shadow:0 0 0 3px #dbeafe;outline:0}
+.report-lesson-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-height:360px;overflow:auto;padding:2px}
+.report-lesson-card{font:inherit;text-align:left;border:1px solid #e2e8f0;border-radius:13px;background:#fff;padding:14px;display:grid;gap:4px;cursor:pointer}
+.report-lesson-card>span{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:#2563eb;font-weight:800}
+.report-lesson-card>strong{color:#0f172a}
+.report-lesson-card>small{color:#64748b}
+.report-lesson-card.is-empty{opacity:.72}
+.report-latest-card{width:100%;font:inherit;text-align:left;border:1px solid #dbeafe;background:#f8fbff;border-radius:14px;padding:16px;display:grid;grid-template-columns:1fr auto;gap:5px 18px;cursor:pointer}
+.report-latest-card strong{grid-row:1 / span 2;grid-column:2;font-size:1.45rem;color:#0f172a}
+.report-latest-card small{color:#64748b}
+.report-timeline{display:grid;gap:0;border-left:2px solid #e2e8f0;margin-left:8px}
+.report-timeline-item{display:grid;grid-template-columns:18px 1fr;gap:8px;padding:0 0 16px}
+.report-timeline-item>span{width:10px;height:10px;border-radius:50%;background:#2563eb;margin-left:-6px;margin-top:5px}
+.report-timeline-item div{display:grid;gap:2px}
+.report-timeline-item small{color:#64748b}
+@media(max-width:900px){.student-performance-shell,.report-360-shell{min-width:0}.report-kpi-strip,.report-skill-grid,.report-activity-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-kpi-strip>div:nth-child(2){border-right:0}.report-lesson-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.report-kpi-strip,.report-skill-grid,.report-activity-grid,.report-lesson-grid{grid-template-columns:1fr}.report-kpi-strip>div{border-right:0;border-bottom:1px solid #e2e8f0}.report-kpi-strip>div:last-child{border-bottom:0}.student-performance-hero,.report-360-head{gap:10px}.report-latest-card{grid-template-columns:1fr}.report-latest-card strong{grid-row:auto;grid-column:auto}}
