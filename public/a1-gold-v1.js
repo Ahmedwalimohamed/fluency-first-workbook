@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 
-const VERSION='englishgate-a1-gold-v1.2-batch-b';
+const VERSION='englishgate-a1-gold-v1.3-batch-c';
 const BOOK_ID='speakup-a1-gold';
 
 function q(id,text,options,answer,tag,feedback=''){return{id,q:text,options,answer,tag,feedback}}
@@ -764,7 +764,385 @@ const L11=lesson({
  fixAndImprove:[{pattern:'I listen radio.',model:'I listen to the radio.',focus:'listen to'},{pattern:'I watch videos in my phone.',model:'I watch videos on my phone.',focus:'on my phone'},{pattern:'I read news at morning.',model:'I read the news in the morning.',focus:'in the morning'}]
 });
 
-const lessons=[L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11];
+
+const l12v=[
+ entry('running','the activity of moving quickly on foot','I go running on Saturday.'),
+ entry('gym','a place where people exercise','I go to the gym twice a week.'),
+ entry('sport','a physical game or activity','My favourite sport is football.'),
+ entry('often','many times','I often walk after work.'),
+ entry('week','seven days','I exercise three times a week.'),
+ entry('once','one time','I swim once a week.'),
+ entry('twice','two times','I go to the gym twice a week.'),
+ entry('active','doing physical activity regularly','I try to stay active.')
+];
+const L12=lesson({
+ id:'a1-gold-l12',number:12,title:'Sports & Fitness',
+ outcome:'Talk about exercise frequency and use two simple schedules to find a time to be active together.',
+ readingSkill:'Use a weekly routine table to find activity days and frequency.',
+ communicationGoal:'Describe a fitness routine and coordinate one shared activity time.',
+ realWorldSituation:'You and a classmate want to exercise together this week, but your schedules are different.',
+ vocab:l12v,recycled:['exercise','walk','healthy','morning','evening','Monday','Saturday'],
+ vocabItems:[
+  vq('A1L12_V01',l12v[1],['a place to exercise','a kind of drink']),
+  vq('A1L12_V02',l12v[3],['one time only','many times']),
+  vq('A1L12_V03',l12v[5],['two times','one time']),
+  vq('A1L12_V04',l12v[6],['two times','many times']),
+  q('A1L12_V05','Complete: I exercise three times a ___.',['week','gym','sport'],'week','vocabulary:use','Use “a week” for weekly frequency.'),
+  q('A1L12_V06','Complete: I go to the gym ___ a week.',['twice','active','running'],'twice','vocabulary:use','Use “twice” for two times.')
+ ],
+ targetLanguage:['I often walk after work.','I exercise three times a week.','I go to the gym twice a week.','How often do you exercise?','Are you free on Wednesday?','I am free on Saturday morning.','Let us meet at nine.'],
+ chunks:['How often do you…?','times a week','Are you free on…?','I am free on…'],
+ interactionExpressions:['How often do you exercise?','Are you free on Saturday?','What time are you free?'],
+ functions:['describe frequency','ask about frequency','compare schedules','arrange a simple activity'],
+ grammarFocus:'Frequency with often, once/twice, and times a week.',
+ grammarRule:'Use “often” before the main verb: I often walk. Use “once/twice/three times a week” after the activity. Use simple availability questions to coordinate a time.',
+ grammarItems:[
+  q('A1L12_G01','Choose the natural sentence.',['I often walk after work.','I walk often after work always.','I often am walk after work.'],'I often walk after work.','grammar:frequency','Put “often” before the main verb.'),
+  q('A1L12_G02','Complete: I go running ___ a week.',['twice','two time','twices'],'twice','grammar:frequency','Use “twice a week”.'),
+  q('A1L12_G03','Complete: I exercise three ___ a week.',['times','time','often'],'times','grammar:frequency','Use “three times a week”.'),
+  q('A1L12_G04','Choose the frequency question.',['How often do you exercise?','How many often exercise?','When often you exercise?'],'How often do you exercise?','grammar:question','Use the complete “How often…?” question.'),
+  q('A1L12_G05','Choose the availability question.',['Are you free on Saturday?','Do you free Saturday?','Is you free on Saturday?'],'Are you free on Saturday?','grammar:availability','Use “Are you free on…?”')
+ ],
+ readingText:'WEEKLY ACTIVITY TABLE\nMonday — Walk — 7:00 p.m.\nWednesday — Gym — 6:00 p.m.\nFriday — Rest\nSaturday — Running — 9:00 a.m.',
+ audioScript:'Amina: How often do you exercise? Hassan: About three times a week. I go to the gym on Monday and Wednesday, and I walk on Saturday. Amina: Are you free Saturday morning? Hassan: Yes. Hassan: Are you free at nine? Amina: Yes. Let us walk together.',
+ speakers:[{name:'Amina',gender:'female',voice:'nova'},{name:'Hassan',gender:'male',voice:'onyx'}],
+ readingQuestions:[
+  q('A1L12_R01','What activity is on Wednesday?',['Gym','Running','Rest'],'Gym','reading:detail','The table shows Gym on Wednesday.'),
+  q('A1L12_R02','What day is the running activity?',['Saturday','Monday','Friday'],'Saturday','reading:detail','Running is on Saturday.'),
+  q('A1L12_R03','What time is the Saturday activity?',['9:00 a.m.','6:00 p.m.','7:00 p.m.'],'9:00 a.m.','reading:time','The table shows 9:00 a.m.')
+ ],
+ listeningQuestions:[
+  q('A1L12_L01','How often does Hassan exercise?',['About three times a week','Once a month','Every morning'],'About three times a week','listening:frequency','Listen for “three times a week”.'),
+  q('A1L12_L02','When is Hassan free?',['Saturday morning','Friday evening','Monday morning'],'Saturday morning','listening:detail','He says yes to Saturday morning.'),
+  q('A1L12_L03','What do they decide to do?',['Walk together','Buy a ticket','Watch TV'],'Walk together','listening:outcome','Amina says “Let us walk together.”')
+ ],
+ writing:{task:'Write a short fitness update. Say one activity you do, how often you do it, and one day or time you are usually free for exercise.',minWords:30,maxWords:50,humanGraded:false,checkpoint:false,realWorldSurface:'fitness update',copyPasteDisabled:true},
+ foundation:'Make frequency useful by connecting it to a real weekly schedule.',
+ performance:'Information gap: compare two different weekly activity schedules. Ask about frequency and availability, find one shared free time, and arrange one simple activity.',
+ pronunciation:'Practise: How often do you exercise? Twice a week. Are you free on Saturday?',
+ mediation:'Read your schedule and tell a partner only the information they need to find one shared activity time.',
+ reviewKeywords:'running · gym · sport · often · week · once · twice · active',
+ reviewMission:'Find one shared exercise time using two different schedules.',
+ masteryGoal:'coordinate_activity_using_frequency_and_schedule',
+ minimumSpeakingEvidence:{personalDetails:3,relevantQuestions:2,maintainsExchange:true},
+ fixAndImprove:[{pattern:'I exercise two time a week.',model:'I exercise twice a week.',focus:'frequency'},{pattern:'How many often do you exercise?',model:'How often do you exercise?',focus:'frequency question'},{pattern:'You free Saturday?',model:'Are you free on Saturday?',focus:'availability question'}]
+});
+
+const l13v=[
+ entry('village','a small community in the countryside','My family lives in a village.'),
+ entry('street','a road in a town or city','The bank is on Market Street.'),
+ entry('market','a place where people buy and sell things','The market is near the bank.'),
+ entry('bank','a place that keeps and manages money','There is a bank next to the market.'),
+ entry('centre','the middle area of a town or city','The pharmacy is in the town centre.'),
+ entry('quiet','with little noise','The village is quiet.'),
+ entry('busy','with many people or activities','The market is busy.'),
+ entry('pharmacy','a place where people get medicine','There is a pharmacy near the hospital.')
+];
+const L13=lesson({
+ id:'a1-gold-l13',number:13,title:'City & Countryside',
+ outcome:'Describe a simple place and ask for or give the location of basic services.',
+ readingSkill:'Use a simple map to locate community places.',
+ communicationGoal:'Use there is/there are and place language to complete a map information gap.',
+ realWorldSituation:'You need to find places in an unfamiliar town and your partner has some of the missing map information.',
+ vocab:l13v,recycled:['city','hospital','school','station','office','near','next to'],
+ vocabItems:[
+  vq('A1L13_V01',l13v[0],['a large city','a small community']),
+  vq('A1L13_V02',l13v[3],['a place for medicine','a place that manages money']),
+  vq('A1L13_V03',l13v[6],['with little noise','with many people']),
+  vq('A1L13_V04',l13v[7],['a place for medicine','a transport place']),
+  q('A1L13_V05','Complete: The ___ is near the hospital.',['pharmacy','quiet','street is'],'pharmacy','vocabulary:use','Use a place noun.'),
+  q('A1L13_V06','Complete: The market is very ___.',['busy','bank','centre'],'busy','vocabulary:use','Use “busy” for many people or activities.')
+ ],
+ targetLanguage:['There is a bank next to the market.','There are two cafés near the centre.','Is there a pharmacy near here?','Where is the bank?','It is next to the market.','The village is quiet.','The city centre is busy.'],
+ chunks:['There is…','There are…','Is there…?','next to','near'],
+ interactionExpressions:['Where is the bank?','Is there a pharmacy near here?','What is next to the market?'],
+ functions:['say what exists','ask if a place exists','ask location','give simple location','describe a place'],
+ grammarFocus:'There is / there are for places and basic map language.',
+ grammarRule:'Use “there is” for one place and “there are” for more than one. Use “Is there…?” to ask about one place. Use simple place phrases such as near and next to.',
+ grammarItems:[
+  q('A1L13_G01','Complete: There ___ a bank near the market.',['is','are','am'],'is','grammar:there-is','Use “there is” with one place.'),
+  q('A1L13_G02','Complete: There ___ two cafés near the centre.',['are','is','be'],'are','grammar:there-are','Use “there are” with more than one.'),
+  q('A1L13_G03','Choose the correct question.',['Is there a pharmacy near here?','Are there a pharmacy near here?','Does there pharmacy?'],'Is there a pharmacy near here?','grammar:there-question','Use “Is there + singular place…?”'),
+  q('A1L13_G04','Choose the location answer.',['It is next to the market.','It next market.','There next to market.'],'It is next to the market.','grammar:place','Use “It is + place phrase”.'),
+  q('A1L13_G05','Choose the place description.',['The village is quiet.','The village quiet is.','There quiet village.'],'The village is quiet.','grammar:be','Use be + adjective.')
+ ],
+ readingText:'TOWN MAP\n[School] — Market Street — [Market]\n[Bank] is next to the Market.\n[Pharmacy] is opposite the School.\n[Bus Station] is near the Town Centre.\n[Hospital] is behind the Pharmacy.',
+ audioScript:'Visitor: Excuse me. Is there a bank near here? Local: Yes. There is a bank next to the market. Visitor: Where is the pharmacy? Local: It is opposite the school, near the hospital. Visitor: Thank you. Local: You are welcome.',
+ speakers:[{name:'Visitor',gender:'female',voice:'nova'},{name:'Local',gender:'male',voice:'onyx'}],
+ readingQuestions:[
+  q('A1L13_R01','What is next to the market?',['The bank','The school','The hospital'],'The bank','reading:map','The map says the bank is next to the market.'),
+  q('A1L13_R02','What is opposite the school?',['The pharmacy','The bank','The station'],'The pharmacy','reading:map','The pharmacy is opposite the school.'),
+  q('A1L13_R03','What is near the town centre?',['The bus station','The hospital','The market only'],'The bus station','reading:map','The bus station is near the town centre.')
+ ],
+ listeningQuestions:[
+  q('A1L13_L01','What place does the visitor ask about first?',['The bank','The hospital','The station'],'The bank','listening:detail','The visitor asks about a bank.'),
+  q('A1L13_L02','Where is the bank?',['Next to the market','Behind the school','At the station'],'Next to the market','listening:place','The local says next to the market.'),
+  q('A1L13_L03','Where is the pharmacy?',['Opposite the school','Inside the bank','Next to the station'],'Opposite the school','listening:place','The pharmacy is opposite the school.')
+ ],
+ writing:{task:'Write a short directions message to a visitor. Name two places and explain where they are using near, next to, opposite, or behind.',minWords:30,maxWords:50,humanGraded:false,checkpoint:false,realWorldSurface:'directions message',copyPasteDisabled:true},
+ foundation:'Use existence and location language to solve a real navigation problem.',
+ performance:'Information gap: Student A and Student B have maps with different missing places. Ask location/existence questions until both maps are complete.',
+ pronunciation:'Practise: There is a bank. There are two cafés. Is there a pharmacy near here?',
+ mediation:'Use your map to give a partner the missing location without showing the map.',
+ reviewKeywords:'village · street · market · bank · centre · quiet · busy · pharmacy',
+ reviewMission:'Complete a partner’s map using there is/are and location questions.',
+ masteryGoal:'locate_community_places_using_map_language',
+ minimumSpeakingEvidence:{personalDetails:3,relevantQuestions:2,maintainsExchange:true},
+ fixAndImprove:[{pattern:'There are a bank near here.',model:'There is a bank near here.',focus:'there is/are'},{pattern:'Where the bank is?',model:'Where is the bank?',focus:'location question'},{pattern:'Bank next market.',model:'The bank is next to the market.',focus:'place phrase'}]
+});
+
+const l14v=[
+ entry('future','the time after now','I think about my future.'),
+ entry('plan','something you decide to do','My plan is to study English every day.'),
+ entry('start','begin','I am going to start a new course.'),
+ entry('improve','make something better','I want to improve my English.'),
+ entry('goal','something you want to achieve','My goal is to speak English well.'),
+ entry('hope','want something good to happen','I hope to travel next year.'),
+ entry('career','the work you do over many years','English can help my career.'),
+ entry('next year','the year after this year','I want to study next year.')
+];
+const L14=lesson({
+ id:'a1-gold-l14',number:14,title:'Dreams & Ambitions',
+ outcome:'State one concrete future goal, one planned action, and one simple reason.',
+ readingSkill:'Use a short goal card to identify goal, action, and reason.',
+ communicationGoal:'Explain a simple plan using want to, going to, and because.',
+ realWorldSituation:'You are discussing one realistic goal with a classmate and explaining what you will do next.',
+ vocab:l14v,recycled:['job','learn','travel','English','study','work'],
+ vocabItems:[
+  vq('A1L14_V01',l14v[1],['something you decide to do','a place in a city']),
+  vq('A1L14_V02',l14v[3],['make something better','finish something']),
+  vq('A1L14_V03',l14v[4],['something you want to achieve','a weekly routine']),
+  vq('A1L14_V04',l14v[6],['work over many years','a ticket']),
+  q('A1L14_V05','Complete: I want to ___ my English.',['improve','future','goal'],'improve','vocabulary:use','Use “improve” for making a skill better.'),
+  q('A1L14_V06','Complete: My ___ is to study every day.',['plan','career is','future to'],'plan','vocabulary:use','Use “plan” for what you decide to do.')
+ ],
+ targetLanguage:['I want to improve my English.','I am going to study every day.','I am going to start next month.','My goal is to speak English well.','I want to learn English because I need it for work.','What is your goal?','What are you going to do?','Why do you want to do that?'],
+ chunks:['I want to…','I am going to…','My goal is…','because I…'],
+ interactionExpressions:['What is your goal?','What are you going to do?','Why do you want to do that?'],
+ functions:['state a goal','state a future intention','give a simple reason','ask about another person’s plan'],
+ grammarFocus:'Want to, going to, and because for concrete A1 plans.',
+ grammarRule:'Use “want to + base verb” for a goal or desire. Use “am/is/are going to + base verb” for a planned action. Use “because + short reason” to explain why.',
+ grammarItems:[
+  q('A1L14_G01','Complete: I want ___ improve my English.',['to','for','at'],'to','grammar:want-to','Use “want to + base verb”.'),
+  q('A1L14_G02','Complete: I am going to ___ every day.',['study','studying','studies'],'study','grammar:going-to','Use the base verb after “going to”.'),
+  q('A1L14_G03','Choose the reason sentence.',['I want to learn English because I need it for work.','I want English because to work need.','I because learn English work.'],'I want to learn English because I need it for work.','grammar:because','Use “because + short reason”.'),
+  q('A1L14_G04','Choose the plan question.',['What are you going to do?','What you going do?','What do you going to?'],'What are you going to do?','grammar:future-question','Use “are you going to + base verb”.'),
+  q('A1L14_G05','Choose the goal sentence.',['My goal is to speak English well.','My goal speak English good.','I goal is English.'],'My goal is to speak English well.','grammar:goal-chunk','Use the complete goal chunk.')
+ ],
+ readingText:'GOAL CARD\nName: Mariam\nGoal: Improve my English for work\nAction 1: Study 30 minutes every evening\nAction 2: Speak English with a partner twice a week\nStart: Next Monday\nReason: I want a better job.',
+ audioScript:'Ali: What is your goal? Safia: I want to improve my English. Ali: What are you going to do? Safia: I am going to study every evening and speak with a partner twice a week. Ali: Why? Safia: Because I need English for my work.',
+ speakers:[{name:'Ali',gender:'male',voice:'onyx'},{name:'Safia',gender:'female',voice:'nova'}],
+ readingQuestions:[
+  q('A1L14_R01','What is Mariam’s goal?',['Improve English for work','Buy a phone','Travel this week'],'Improve English for work','reading:detail','The goal card says improve English for work.'),
+  q('A1L14_R02','When does Mariam study?',['Every evening','Only Saturday','Every morning at work'],'Every evening','reading:detail','Action 1 says every evening.'),
+  q('A1L14_R03','Why does Mariam want to improve?',['She wants a better job','She wants a ticket','She wants a new phone'],'She wants a better job','reading:reason','The reason says she wants a better job.')
+ ],
+ listeningQuestions:[
+  q('A1L14_L01','What does Safia want to improve?',['Her English','Her phone','Her driving'],'Her English','listening:detail','She says she wants to improve her English.'),
+  q('A1L14_L02','How often will she speak with a partner?',['Twice a week','Once a month','Every morning'],'Twice a week','listening:frequency','She says twice a week.'),
+  q('A1L14_L03','Why does she want English?',['For her work','For the weather','For a football game'],'For her work','listening:reason','She says she needs English for work.')
+ ],
+ writing:{task:'Write a short goal statement. Say what you want to improve or start, what you are going to do next, and one reason using because.',minWords:35,maxWords:55,humanGraded:false,checkpoint:false,realWorldSurface:'goal statement',copyPasteDisabled:true},
+ foundation:'Keep future language concrete: one goal, one next action, one reason.',
+ performance:'Tell a classmate one goal, one planned action, and one reason. Answer one follow-up question and ask about the classmate’s goal.',
+ pronunciation:'Practise: I want to improve my English. I am going to study every day. Because I need it for work.',
+ mediation:'Read a goal card and explain the person’s goal, next action, and reason in simple English.',
+ reviewKeywords:'future · plan · start · improve · goal · hope · career · next year',
+ reviewMission:'Explain one concrete goal with a next action and a reason.',
+ masteryGoal:'state_goal_plan_and_reason',
+ minimumSpeakingEvidence:{personalDetails:3,relevantQuestions:1,maintainsExchange:true},
+ fixAndImprove:[{pattern:'I want improve my English.',model:'I want to improve my English.',focus:'want to'},{pattern:'I am going to studying every day.',model:'I am going to study every day.',focus:'going to + base verb'},{pattern:'I learn English because for work.',model:'I want to learn English because I need it for work.',focus:'because reason'}]
+});
+
+const l15v=[
+ entry('police','people whose job is to protect the public and enforce laws','I need to speak to the police.'),
+ entry('safe','not in danger','I am safe now.'),
+ entry('careful','giving attention to avoid danger or mistakes','Be careful with your bag.'),
+ entry('lost','unable to find something you had','I lost my phone.'),
+ entry('missing','not where it should be','My bag is missing.'),
+ entry('problem','a difficult situation that needs help','I have a problem.'),
+ entry('officer','a police or security worker','I spoke to an officer.'),
+ entry('emergency','a serious situation needing quick help','Call for help in an emergency.')
+];
+const L15=lesson({
+ id:'a1-gold-l15',number:15,title:'Crime & Safety',
+ outcome:'Report a simple lost or missing-item problem and ask an appropriate person for help.',
+ readingSkill:'Use a short safety notice to identify safe actions and help points.',
+ communicationGoal:'Report a problem with essential details and respond to simple follow-up questions.',
+ realWorldSituation:'You cannot find an important personal item and need to report the problem safely.',
+ vocab:l15v,recycled:['help','phone','bag','station','name','number'],
+ vocabItems:[
+  vq('A1L15_V01',l15v[1],['not in danger','very busy']),
+  vq('A1L15_V02',l15v[3],['unable to find something','very expensive']),
+  vq('A1L15_V03',l15v[5],['a difficult situation','a job plan']),
+  vq('A1L15_V04',l15v[7],['a serious situation needing quick help','a weekly schedule']),
+  q('A1L15_V05','Complete: My phone is ___.',['missing','safe','officer'],'missing','vocabulary:use','Use “missing” when something is not where it should be.'),
+  q('A1L15_V06','Complete: I need to speak to an ___.',['officer','emergency','careful'],'officer','vocabulary:use','An officer is a person who can help with a report.')
+ ],
+ targetLanguage:['I have a problem.','I lost my phone.','My bag is missing.','Can you help me, please?','Where did you last have it?','It was at the station.','My phone is black.','My name is…','My number is…','Be careful with your bag.'],
+ chunks:['I have a problem.','I lost my…','My … is missing.','Can you help me, please?'],
+ interactionExpressions:['Can you help me, please?','Where did you last have it?','What colour is it?'],
+ functions:['report a problem','ask for help','give identifying details','respond to simple official questions'],
+ grammarFocus:'Functional problem-reporting chunks; limited past chunks without a past-tense lesson.',
+ grammarRule:'Treat “I lost my…” and “It was at…” as useful fixed chunks. Do not teach a full past-tense system here. Focus on communicating the problem clearly.',
+ grammarItems:[
+  q('A1L15_G01','Choose the problem report.',['I lost my phone.','I lose my phone yesterday every day.','My phone lose me.'],'I lost my phone.','grammar:functional-past-chunk','Learn “I lost my…” as a complete useful chunk.'),
+  q('A1L15_G02','Choose the missing-item sentence.',['My bag is missing.','My bag missing is.','I missing bag.'],'My bag is missing.','grammar:be','Use “is missing”.'),
+  q('A1L15_G03','Choose the help request.',['Can you help me, please?','You help me can?','Do help me can?'],'Can you help me, please?','grammar:repair','Use the familiar help question.'),
+  q('A1L15_G04','Choose the simple location chunk.',['It was at the station.','It were at station.','It did at station.'],'It was at the station.','grammar:functional-past-chunk','Treat “It was at…” as a useful fixed chunk.'),
+  q('A1L15_G05','Choose the safety instruction.',['Be careful with your bag.','You careful bag.','Careful is bag.'],'Be careful with your bag.','grammar:imperative','Use the imperative for a short safety instruction.')
+ ],
+ readingText:'SAFETY NOTICE\nKeep your phone and bag with you.\nIf an item is missing, go to the Help Desk near the main entrance.\nIn an emergency, speak to security or police.\nDo not give your password to another person.',
+ audioScript:'Officer: Hello. Can I help you? Visitor: Yes, please. I have a problem. I lost my phone. Officer: What colour is it? Visitor: Black. Officer: Where did you last have it? Visitor: It was at the bus station. Officer: What is your name? Visitor: My name is Ahmed.',
+ speakers:[{name:'Officer',gender:'female',voice:'nova'},{name:'Visitor',gender:'male',voice:'onyx'}],
+ readingQuestions:[
+  q('A1L15_R01','Where should a person go for a missing item?',['The Help Desk','The café','The gym'],'The Help Desk','reading:detail','The notice says go to the Help Desk.'),
+  q('A1L15_R02','Who can help in an emergency?',['Security or police','A singer','A customer'],'Security or police','reading:safety','The notice names security or police.'),
+  q('A1L15_R03','What should you not give another person?',['Your password','Your first name','The weather'],'Your password','reading:safety','The notice says do not give your password.')
+ ],
+ listeningQuestions:[
+  q('A1L15_L01','What is missing?',['A phone','A ticket','A card'],'A phone','listening:detail','The visitor says “I lost my phone.”'),
+  q('A1L15_L02','What colour is it?',['Black','Blue','White'],'Black','listening:detail','The visitor says black.'),
+  q('A1L15_L03','Where did the visitor last have it?',['At the bus station','At the hospital','At the gym'],'At the bus station','listening:place','The visitor says it was at the bus station.')
+ ],
+ writing:{task:'Write a short lost-item notice. Say what is missing, what it looks like, where you last had it, and one safe way to contact you without sharing a password.',minWords:30,maxWords:50,humanGraded:false,checkpoint:false,realWorldSurface:'lost-item notice',copyPasteDisabled:true},
+ foundation:'Use a few high-value chunks to solve a safety communication problem without teaching full past grammar.',
+ performance:'Role-play a report to an officer or help desk. State the problem, describe the item, give the last known place, answer a changed follow-up question, and ask for help.',
+ pronunciation:'Practise: I lost my phone. My bag is missing. Can you help me, please?',
+ mediation:'Listen to a simple lost-item report and relay the item, colour, and last known place.',
+ reviewKeywords:'police · safe · careful · lost · missing · problem · officer · emergency',
+ reviewMission:'Report a missing item clearly and answer follow-up questions safely.',
+ masteryGoal:'report_simple_problem_and_request_help',
+ minimumSpeakingEvidence:{personalDetails:4,relevantQuestions:1,maintainsExchange:true},
+ fixAndImprove:[{pattern:'I lose my phone yesterday.',model:'I lost my phone.',focus:'functional past chunk'},{pattern:'My bag missing.',model:'My bag is missing.',focus:'be + missing'},{pattern:'You can help me?',model:'Can you help me, please?',focus:'help request'}]
+});
+
+const l16v=[
+ entry('first','before all other steps','First, open the app.'),
+ entry('next','after the first step','Next, choose your name.'),
+ entry('then','after that','Then, press Start.'),
+ entry('finally','at the last step','Finally, close the app.'),
+ entry('add','put something with something else','Add water to the cup.'),
+ entry('open','make something ready to use by moving or starting it','Open the app.'),
+ entry('close','shut something','Close the window.'),
+ entry('turn on','start a device or machine','Turn on the phone.')
+];
+const L16=lesson({
+ id:'a1-gold-l16',number:16,title:'Science & Everyday Life',
+ outcome:'Give and follow a short sequence of safe everyday instructions.',
+ readingSkill:'Put simple process steps in the correct order.',
+ communicationGoal:'Use first, next, then, and finally to complete a missing-step information gap.',
+ realWorldSituation:'Your partner needs to complete a simple safe process but has different missing steps.',
+ vocab:l16v,recycled:['phone','app','water','use','computer'],
+ vocabItems:[
+  vq('A1L16_V01',l16v[0],['the last step','before all other steps']),
+  vq('A1L16_V02',l16v[3],['at the last step','at the first step']),
+  vq('A1L16_V03',l16v[5],['shut something','make something ready to use']),
+  vq('A1L16_V04',l16v[7],['start a device','remove water']),
+  q('A1L16_V05','Complete: ___, open the app.',['First','Finally after','Add'],'First','vocabulary:sequence','Use “First” for the beginning.'),
+  q('A1L16_V06','Complete: ___, close the app.',['Finally','First always','Turn on to'],'Finally','vocabulary:sequence','Use “Finally” for the last step.')
+ ],
+ targetLanguage:['First, turn on the phone.','Next, open the app.','Then, choose your class.','Finally, press Start.','Open the app.','Close the window.','Add water.','What comes next?','What is the missing step?'],
+ chunks:['First,…','Next,…','Then,…','Finally,…','What comes next?'],
+ interactionExpressions:['What comes next?','What is step three?','What is the missing step?'],
+ functions:['give an instruction','sequence steps','ask for a missing step','confirm process order'],
+ grammarFocus:'Imperatives plus basic sequence markers.',
+ grammarRule:'Use the base verb for instructions: Open, Add, Turn on. Use First, Next, Then, Finally to show order.',
+ grammarItems:[
+  q('A1L16_G01','Choose the instruction.',['Open the app.','You opening the app.','To open app you.'],'Open the app.','grammar:imperative','Use the base verb for an instruction.'),
+  q('A1L16_G02','Choose the first step marker.',['First','Finally','Because'],'First','grammar:sequence','Use “First” at the beginning.'),
+  q('A1L16_G03','Choose the last step marker.',['Finally','Next','Often'],'Finally','grammar:sequence','Use “Finally” for the last step.'),
+  q('A1L16_G04','Choose the natural sequence.',['First, turn on the phone. Then, open the app.','First, turning phone. Then opened app.','Finally first phone app.'],'First, turn on the phone. Then, open the app.','grammar:sequence','Combine sequence markers with imperatives.'),
+  q('A1L16_G05','Choose the missing-step question.',['What comes next?','What next comes is?','Does next what?'],'What comes next?','grammar:question','Use the complete question.')
+ ],
+ readingText:'HOW TO JOIN THE CLASS APP\n1. First, turn on your phone.\n2. Next, open the EnglishGate app.\n3. Then, choose your class.\n4. Next, press Join.\n5. Finally, wait for the class page.',
+ audioScript:'Muna: I have the first two steps. First, turn on the phone. Next, open the app. What comes next? Adan: Then, choose your class. Muna: And after that? Adan: Press Join. Finally, wait for the class page.',
+ speakers:[{name:'Muna',gender:'female',voice:'nova'},{name:'Adan',gender:'male',voice:'onyx'}],
+ readingQuestions:[
+  q('A1L16_R01','What is the first action?',['Turn on the phone','Press Join','Wait for the class page'],'Turn on the phone','reading:sequence','Step 1 says turn on the phone.'),
+  q('A1L16_R02','What happens after opening the app?',['Choose your class','Close the phone','Add water'],'Choose your class','reading:sequence','Step 3 is choose your class.'),
+  q('A1L16_R03','What is the final step?',['Wait for the class page','Turn on the phone','Choose your class'],'Wait for the class page','reading:sequence','Step 5 is the final step.')
+ ],
+ listeningQuestions:[
+  q('A1L16_L01','What are Muna’s first two steps?',['Turn on the phone and open the app','Choose class and press Join','Open a bank and pay'],'Turn on the phone and open the app','listening:sequence','She says turn on the phone, then open the app.'),
+  q('A1L16_L02','What step does Adan give next?',['Choose your class','Close the app','Call a friend'],'Choose your class','listening:sequence','Adan says choose your class.'),
+  q('A1L16_L03','What is the final action?',['Wait for the class page','Press the power button again','Write a message'],'Wait for the class page','listening:sequence','He says finally wait for the class page.')
+ ],
+ writing:{task:'Write short instructions for a safe everyday process such as joining an app, making tea, or preparing your study space. Use first, next or then, and finally.',minWords:35,maxWords:60,humanGraded:false,checkpoint:false,realWorldSurface:'process instructions',copyPasteDisabled:true},
+ foundation:'Turn sequence language into a practical procedure rather than a grammar exercise.',
+ performance:'Information gap: Student A and Student B each have different missing process steps. Ask for the missing steps and reconstruct the full safe process in order.',
+ pronunciation:'Practise: First, turn on the phone. Next, open the app. Finally, press Start.',
+ mediation:'Listen to a process step and tell a partner where it belongs in the sequence.',
+ reviewKeywords:'first · next · then · finally · add · open · close · turn on',
+ reviewMission:'Reconstruct a safe process by exchanging missing steps.',
+ masteryGoal:'sequence_and_exchange_process_instructions',
+ minimumSpeakingEvidence:{personalDetails:4,relevantQuestions:2,maintainsExchange:true},
+ fixAndImprove:[{pattern:'First, turning on the phone.',model:'First, turn on the phone.',focus:'imperative'},{pattern:'Finally after open app.',model:'Finally, open the class page.',focus:'sequence marker'},{pattern:'What next?',model:'What comes next?',focus:'sequence question'}]
+});
+
+const l17v=[
+ entry('film','a story shown as moving pictures','This film is funny.'),
+ entry('music','sounds made for people to enjoy','I like Somali music.'),
+ entry('song','a piece of music with words','This is my favourite song.'),
+ entry('singer','a person who sings','My favourite singer is from Hargeisa.'),
+ entry('funny','making you laugh','The film is funny.'),
+ entry('interesting','holding your attention','The story is interesting.'),
+ entry('boring','not interesting','The programme is boring.'),
+ entry('favourite','liked more than others','My favourite film is a comedy.')
+];
+const L17=lesson({
+ id:'a1-gold-l17',number:17,title:'Arts & Entertainment',
+ outcome:'Express a simple opinion, give a reason, and choose an entertainment option with another person.',
+ readingSkill:'Use an entertainment listing to compare time, type, and simple description.',
+ communicationGoal:'Make a simple shared choice using preference, because, and an alternative when the first choice changes.',
+ realWorldSituation:'You and a friend want to choose a film or music event, but one preferred option becomes unavailable.',
+ vocab:l17v,recycled:['watch','listen','video','like','online','time','ticket'],
+ vocabItems:[
+  vq('A1L17_V01',l17v[0],['a written article','a moving-picture story']),
+  vq('A1L17_V02',l17v[4],['making you laugh','not interesting']),
+  vq('A1L17_V03',l17v[5],['holding your attention','very expensive']),
+  vq('A1L17_V04',l17v[6],['not interesting','very funny']),
+  q('A1L17_V05','Complete: My ___ film is a comedy.',['favourite','boring to','singer'],'favourite','vocabulary:use','Use “favourite” for the one you like most.'),
+  q('A1L17_V06','Complete: The story is very ___.',['interesting','song','music'],'interesting','vocabulary:use','Use “interesting” for something that holds attention.')
+ ],
+ targetLanguage:['I like this film because it is funny.','I do not like that programme because it is boring.','My favourite music is…','I prefer the comedy.','What do you want to watch?','Why do you like it?','That one is full. Let us choose another.','Okay. The second film is interesting.'],
+ chunks:['I like it because…','I prefer…','Why do you like it?','Let us choose another.'],
+ interactionExpressions:['What do you want to watch?','Why do you like it?','What about the second option?'],
+ functions:['express opinion','give simple reason','ask preference','make a shared choice','adapt when first option is unavailable'],
+ grammarFocus:'Because for simple reasons, with but for contrast and choice.',
+ grammarRule:'Use “because + short reason” after an opinion. Recycle “but” for simple contrast. Keep the choice exchange short and concrete.',
+ grammarItems:[
+  q('A1L17_G01','Choose the reason sentence.',['I like the film because it is funny.','I like film because funny it.','Because film I like funny.'],'I like the film because it is funny.','grammar:because','Use “because + short reason”.'),
+  q('A1L17_G02','Choose the negative opinion.',['I do not like it because it is boring.','I not like because boring.','I does not like boring.'],'I do not like it because it is boring.','grammar:negative-reason','Use “do not like… because…”.'),
+  q('A1L17_G03','Choose the preference question.',['What do you want to watch?','What you want watching?','What does you watch want?'],'What do you want to watch?','grammar:question','Use “do you want to + base verb”.'),
+  q('A1L17_G04','Choose the reason question.',['Why do you like it?','Why you likes it?','Why does you like it?'],'Why do you like it?','grammar:why-question','Use “Why do you…?”'),
+  q('A1L17_G05','Choose the adaptation response.',['That one is full. Let us choose another.','That full because no.','We choosing another because fulling.'],'That one is full. Let us choose another.','grammar:adaptation','Use a short change-of-plan response.')
+ ],
+ readingText:'FRIDAY ENTERTAINMENT\nCity Cinema\n6:00 p.m. — “Funny Family” — Comedy — $3\n7:30 p.m. — “Blue Road” — Drama — $3\nCommunity Hall\n7:00 p.m. — Live music — Free\nNote: “Funny Family” is FULL.',
+ audioScript:'Sahra: What do you want to watch? Yusuf: I like Funny Family because it is funny. Sahra: It is full. Yusuf: Okay. What about Blue Road? Sahra: I prefer the live music because it is free. Yusuf: Good idea. Let us go to the music event.',
+ speakers:[{name:'Sahra',gender:'female',voice:'nova'},{name:'Yusuf',gender:'male',voice:'onyx'}],
+ readingQuestions:[
+  q('A1L17_R01','Which film is a comedy?',['Funny Family','Blue Road','Live music'],'Funny Family','reading:detail','The listing labels Funny Family as Comedy.'),
+  q('A1L17_R02','What time is the live music?',['7:00 p.m.','6:00 p.m.','7:30 p.m.'],'7:00 p.m.','reading:time','The listing shows 7:00 p.m.'),
+  q('A1L17_R03','Which option is unavailable?',['Funny Family','Blue Road','Live music'],'Funny Family','reading:constraint','The note says Funny Family is full.')
+ ],
+ listeningQuestions:[
+  q('A1L17_L01','Why does Yusuf like Funny Family?',['Because it is funny','Because it is free','Because it is short'],'Because it is funny','listening:reason','He says it is funny.'),
+  q('A1L17_L02','Why does Sahra prefer live music?',['Because it is free','Because it is at six','Because it is a film'],'Because it is free','listening:reason','She says the live music is free.'),
+  q('A1L17_L03','What do they choose?',['The live music event','Funny Family','A gym class'],'The live music event','listening:outcome','They decide to go to the music event.')
+ ],
+ writing:{task:'Write a short recommendation for a film, song, singer, or programme. Say what you like or do not like and give at least one simple reason using because.',minWords:35,maxWords:55,humanGraded:false,checkpoint:false,realWorldSurface:'entertainment recommendation',copyPasteDisabled:true},
+ foundation:'Move from stating a preference to supporting a simple choice and adapting when circumstances change.',
+ performance:'Role-play: choose one entertainment option together. Give a preference and reason. Then your first choice becomes unavailable, so choose a second option without complex negotiation.',
+ pronunciation:'Practise: I like it because it is funny. Why do you like it? Let us choose another.',
+ mediation:'Read an entertainment listing and tell a partner which option fits one simple preference, time, or price need.',
+ reviewKeywords:'film · music · song · singer · funny · interesting · boring · favourite',
+ reviewMission:'Make a shared entertainment choice, explain why, and adapt when the first choice is unavailable.',
+ masteryGoal:'make_simple_shared_choice_with_reason',
+ minimumSpeakingEvidence:{personalDetails:3,relevantQuestions:1,maintainsExchange:true},
+ fixAndImprove:[{pattern:'I like film because funny.',model:'I like the film because it is funny.',focus:'because reason'},{pattern:'Why you like it?',model:'Why do you like it?',focus:'why question'},{pattern:'It full. Choose other.',model:'It is full. Let us choose another.',focus:'adaptation'}]
+});
+const lessons=[L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17];
 const liveSpecs=[
  [L1,["Amina: Hi. I'm Amina. What's your name?","Hassan: I'm Hassan. Nice to meet you.","Amina: Nice to meet you too. Where do you live?","Hassan: I live in Hargeisa. What about you?","Amina: I live in Borama. What do you do?","Hassan: I'm a student. I like football."]],
  [L2,["Amina: Hi. What do you do?","Yusuf: I'm a driver.","Amina: Where do you work?","Yusuf: I work for a transport company.","Amina: What do you do there?","Yusuf: I drive a bus and help customers."]],
@@ -776,9 +1154,15 @@ const liveSpecs=[
  [L8,["Seller: This bag is ten dollars.","Customer: How much is this notebook?","Seller: Three dollars.","Customer: I will take it. Can I pay by card?","Seller: Yes, you can.","Customer: Thank you."]],
  [L9,["Asha: What's the weather like today?","Omar: It's sunny but windy.","Asha: Do you like this weather?","Omar: Yes. I like cool weather. What about you?","Asha: I don't like very hot weather."]],
  [L10,["Nimo: Do you have brothers or sisters?","Ali: Yes. This is my sister Sahra.","Nimo: Where does she live?","Ali: She lives in Hargeisa.","Nimo: What does she do?","Ali: She is a nurse and she likes reading."]],
- [L11,["Amina: What do you watch?","Hassan: I watch English videos on my phone in the evening.","Amina: Do you read news too?","Hassan: Yes, I read news online in the morning.","Amina: Listen to this announcement and tell me the time and ticket price."]]
+ [L11,["Amina: What do you watch?","Hassan: I watch English videos on my phone in the evening.","Amina: Do you read news too?","Hassan: Yes, I read news online in the morning.","Amina: Listen to this announcement and tell me the time and ticket price."]],
+ [L12,["Amina: How often do you exercise?","Hassan: About three times a week.","Amina: Are you free on Saturday morning?","Hassan: Yes. Are you free at nine?","Amina: Yes. Let us walk together."]],
+ [L13,["Visitor: Is there a bank near here?","Local: Yes. There is a bank next to the market.","Visitor: Where is the pharmacy?","Local: It is opposite the school, near the hospital.","Visitor: Thank you."]],
+ [L14,["Ali: What is your goal?","Safia: I want to improve my English.","Ali: What are you going to do?","Safia: I am going to study every evening.","Ali: Why?","Safia: Because I need English for work."]],
+ [L15,["Officer: Can I help you?","Visitor: Yes. I have a problem. I lost my phone.","Officer: What colour is it?","Visitor: Black.","Officer: Where did you last have it?","Visitor: It was at the bus station."]],
+ [L16,["Muna: First, turn on the phone. Next, open the app. What comes next?","Adan: Then, choose your class.","Muna: And after that?","Adan: Press Join. Finally, wait for the class page."]],
+ [L17,["Sahra: What do you want to watch?","Yusuf: I like Funny Family because it is funny.","Sahra: It is full.","Yusuf: Okay. What about Blue Road?","Sahra: I prefer the live music because it is free.","Yusuf: Good idea."]]
 ];
-const book={id:BOOK_ID,title:'A1 Beginner',level:'A1',moduleTitle:'A1 Beginner · Gold v1.2',moduleGoal:'Build functional basic communication through 22 real-life lessons.',totalLessons:22,lessons,standardVersion:VERSION,releaseStatus:'pilot',curriculumLocked:true};
+const book={id:BOOK_ID,title:'A1 Beginner',level:'A1',moduleTitle:'A1 Beginner · Gold v1.3',moduleGoal:'Build functional basic communication through 22 real-life lessons.',totalLessons:22,lessons,standardVersion:VERSION,releaseStatus:'pilot',curriculumLocked:true};
 
 if(typeof BOOK_PACKS!=='undefined')BOOK_PACKS[BOOK_ID]=book;
 window.A1_GOLD_V1_BOOK=book;
