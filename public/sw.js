@@ -2,7 +2,7 @@
    Resilient navigation policy: never turn a temporary upstream/network failure
    into Chrome's ERR_FAILED page when a previously installed EnglishGate PWA
    can still serve its application shell. */
-const CACHE_NAME = 'englishgate-pwa-v7';
+const CACHE_NAME = 'englishgate-pwa-v8';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -27,7 +27,8 @@ const APP_SHELL = [
   '/englishgate-blue-red-white-v1.css?v=2',
   '/englishgate-student-mode-v1.js?v=1',
   '/b2-lift-vocabulary-stage-v1.js?v=1',
-  '/lesson1-grammar-micro-v1.js'
+  '/lesson1-grammar-micro-v1.js',
+  '/a1-gold-lesson1-v1.js?v=1'
 ];
 
 self.addEventListener('install', event => {
