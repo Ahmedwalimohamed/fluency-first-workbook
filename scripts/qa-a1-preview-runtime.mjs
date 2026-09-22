@@ -4,41 +4,21 @@ const PORT=3999;
 const BASE=`http://127.0.0.1:${PORT}`;
 const USER=process.env.DEMO_STUDENT_USERNAME;
 const PASS=process.env.DEMO_STUDENT_PASSWORD;
-const allowAudioBlock=process.env.A1_QA_ALLOW_AUDIO_BLOCK==='1';
 if(process.env.A1_PREVIEW_MODE!=='1')throw new Error('A1_PREVIEW_MODE=1 is required for preview runtime QA.');
 if(!USER||!PASS)throw new Error('Preview demo student credentials are required.');
 
 const CASES=[
- {
-  id:'a1-gold-l1',title:'Getting Acquainted',
-  task:'Your new English class has a group page. Write a short introduction so your classmates can know you. Include your name, where you live, work or study, and one interest.',
-  writing:"Hi, my name is Ali. I live in Borama. I am a teacher and I work at a school. I like football and reading. Nice to meet you.",
-  turns:["Hi. I'm Ali. I live Borama. I am teacher. What your name?","I live in Borama. I am a teacher. I like football. Where do you live?"]
- },
- {
-  id:'a1-gold-l2',title:'Work & Careers',
-  task:'Write a short introduction for a professional group. Say your name, your job or study, where you work or study, and one thing you do there.',
-  writing:'My name is Ali. I am a teacher. I work at a school in Borama. I teach English and help students every day.',
-  turns:['I am nurse. I work hospital. I help patients. What you do?','I work at a hospital. I help patients. Where do you work?']
- },
- {
-  id:'a1-gold-l3',title:'Travel & Adventure',
-  task:'Write a short travel message. Say where you want to go, the travel time, and one other useful detail such as platform, price, or taxi.',
-  writing:'I want to go to Hargeisa tomorrow morning. The bus is at eight. My ticket is seven dollars, and I need platform two.',
-  turns:['I want ticket to Hargeisa. What time bus?','How much is the ticket? The afternoon bus is okay.']
- },
- {
-  id:'a1-gold-l4',title:'Technology & Social Media',
-  task:'Write a short post about your technology use. Say one device you use, where or how often you use it, and two things you do with it.',
-  writing:'I use my phone every day. I send messages and watch short videos. I also use the internet for work and study.',
-  turns:['I use phone every day. I use internet work. What you use phone for?','I use the internet for work. I send messages. What do you use your phone for?']
- },
- {
-  id:'a1-gold-l5',title:'Health & Wellbeing',
-  task:'Write a short message to your teacher. Say how you feel, one simple problem or need, and one healthy thing you do or plan to do today.',
-  writing:'I feel tired today and I have a headache. I need water. This evening I will rest and take a short walk.',
-  turns:['I feeling tired. I am headache. How you feel?','I feel tired. I have a headache. I walk every evening. How do you feel?']
- }
+ {id:'a1-gold-l1',title:'Getting Acquainted',task:'Write a short class introduction with name, place, work or study, and one interest.',min:20,max:40,writing:"Hi, my name is Ali. I live in Borama. I am a teacher and I work at a school. I like football and reading.",turns:["Hi. I'm Ali. I live Borama. I am teacher. What your name?","I live in Borama. I am a teacher. I like football. Where do you live?"]},
+ {id:'a1-gold-l2',title:'Work & Careers',task:'Write a professional group introduction with job or study, place, and one action.',min:20,max:40,writing:'My name is Ali. I am a teacher. I work at a school in Borama. I teach English and help students every day.',turns:['I am nurse. I work hospital. I help patients. What you do?','I work at a hospital. I help patients. Where do you work?']},
+ {id:'a1-gold-l3',title:'Travel & Adventure',task:'Write a travel message with destination, time, and one other detail.',min:20,max:40,writing:'I want to go to Hargeisa tomorrow morning. The bus is at eight. My ticket is seven dollars, and I need platform two.',turns:['I want ticket to Hargeisa. What time bus?','How much is the ticket? The afternoon bus is okay.']},
+ {id:'a1-gold-l4',title:'Technology & Social Media',task:'Write a technology-use post with device, frequency or place, and two uses.',min:25,max:45,writing:'I use my phone every day. I send messages and watch short videos. I also use the internet for work and study.',turns:['I use phone every day. I use internet work. What you use phone for?','I use the internet for work. I send messages. What do you use your phone for?']},
+ {id:'a1-gold-l5',title:'Health & Wellbeing',task:'Write a teacher message with feeling, problem or need, and one healthy action.',min:15,max:35,writing:'I feel tired today and I have a headache. I need water. This evening I will rest and take a short walk.',turns:['I feeling tired. I am headache. How you feel?','I feel tired. I have a headache. I walk every evening. How do you feel?']},
+ {id:'a1-gold-l6',title:'Food & Culture',task:'Reply to a friend about food preferences and one thing you would order.',min:20,max:40,writing:"I like rice and vegetables. I don't like coffee. At the café, I'd like rice and tea, please. Water is also okay.",turns:['I no like coffee. I like tea please. Can I water?','I don\'t like coffee. I\'d like rice, please. Can I have water, please?']},
+ {id:'a1-gold-l7',title:'Education & Learning',task:'Write a learner profile with two abilities, one difficulty, and one help phrase.',min:25,max:45,writing:"I can read English and I can write short messages. I can't understand every word. In class I can say, Can you repeat that, please?",turns:['I can to read. I no understand. You repeat?','I can read English. I can\'t understand this word. Can you repeat that?']},
+ {id:'a1-gold-l8',title:'Money & Business',task:'Write a short price enquiry with item, price question, and payment question.',min:15,max:35,writing:'Hello. I want to buy this notebook. How much is it? Can I pay by card, please? Thank you.',turns:['How much this? I take. I pay card.','How much is this? I\'ll take it. Can I pay by card?']},
+ {id:'a1-gold-l9',title:'Environment & Climate',task:'Write a short weather update and say whether you like the weather.',min:20,max:35,writing:"It is sunny but windy in Borama today. I like cool weather. I don't like very hot weather.",turns:['It hot today. I not like hot weather. What weather like?',"It is sunny but windy. I don't like hot weather. What's the weather like?"]},
+ {id:'a1-gold-l10',title:'Relationships & Family',task:'Introduce a real or fictional person with relationship, place, work or study, and interest.',min:30,max:50,writing:'This is my sister Amina. She lives in Borama. She is a teacher at a school. She likes reading and music. Her favourite music is Somali music.',turns:['This is my sister. She live Borama. He name is Ali. Where does she lives?','This is my sister. She lives in Borama. She is a nurse. She likes reading. What does your sister do?']},
+ {id:'a1-gold-l11',title:'Media & News',task:'Write a media-habit post with activity, source or device, and time.',min:30,max:50,writing:'I watch English videos on my phone in the evening. I read news online in the morning. I also listen to the radio at home after work.',turns:['I listen radio. I watch videos in my phone. I read news at morning. What do you watch?','I watch English videos on my phone in the evening. The football game is Saturday at four and tickets are two dollars. What do you watch?']}
 ];
 
 const results=[];
@@ -70,7 +50,6 @@ child.stderr.on('data',d=>{childLogs+=d.toString()});
 try{
  const health=await waitHealth();
  must(health.data?.books?.b2==='ready'&&health.data?.books?.a1Gold==='pilot','preview health',JSON.stringify(health.data));
-
  const login=await req('/api/auth/login',{method:'POST',body:{username:USER,password:PASS}});
  must(login.status===200&&login.data?.user?.role==='student','student login','HTTP '+login.status);
  const studentId=login.data.user.id;
@@ -82,7 +61,6 @@ try{
   const label=`L${idx+1} ${test.title}`;
   const core=await req('/api/attempts',{method:'POST',body:{lessonId:test.id,skill:'vocabulary',score:80,tags:['qa:a1-preview-runtime','qa:'+test.id],evidence:[{index:1,question:'Vocabulary QA',studentAnswer:'test',correctAnswer:'test',correct:true,tag:'qa'}]}});
   must(core.status===200&&core.data?.ok,label+' vocabulary persistence','HTTP '+core.status);
-
   const comp=await req('/api/completion',{method:'POST',body:{lessonId:test.id,step:'vocabulary'}});
   must(comp.status===200&&comp.data?.ok,label+' completion persistence','HTTP '+comp.status);
 
@@ -95,9 +73,8 @@ try{
    must(st.status===200&&at.status===200&&done.status===200&&saved,label+' '+type+' persistence',`state=${st.status} attempt=${at.status} complete=${done.status}`);
   }
 
-  const grade=await req('/api/writing-grade',{method:'POST',body:{lessonId:test.id,task:test.task,level:'A1',minWords:15,maxWords:45,text:test.writing}});
-  if(grade.status===200)record(label+' Jev writing grade','PASS',`score=${grade.data?.score??'returned'}`);
-  else record(label+' Jev writing grade','BLOCKED_EXTERNAL','HTTP '+grade.status);
+  const grade=await req('/api/writing-grade',{method:'POST',body:{lessonId:test.id,task:test.task,level:'A1',minWords:test.min,maxWords:test.max,text:test.writing}});
+  must(grade.status===200&&Number.isInteger(Number(grade.data?.score)),label+' Jev writing grade',`HTTP ${grade.status} score=${grade.data?.score??'—'}`);
   const save=await req('/api/writing/'+encodeURIComponent(test.id),{method:'PUT',body:{content:test.writing,publishToCommunity:false}});
   must(save.status===200&&save.data?.ok,label+' writing persistence','HTTP '+save.status);
 
@@ -109,8 +86,7 @@ try{
   must(lastTurn.data?.readyToComplete===true,label+' deterministic speaking gate',`details=${lastTurn.data?.evidence?.personalDetails||0} questions=${lastTurn.data?.evidence?.relevantQuestions||0}`);
   const finish=await req('/api/a1-gold/speaking/complete',{method:'POST',body:{sessionId:sid}});
   must(finish.status===200&&finish.data?.deterministicPass===true,label+' speaking completion','HTTP '+finish.status);
-  if(finish.data?.jevStatus==='pass')record(label+' Jev speaking decision','PASS',finish.data.masteryState||'MASTERED');
-  else record(label+' Jev speaking decision','BLOCKED_EXTERNAL',finish.data?.jevStatus||'pending');
+  must(finish.data?.jevStatus==='pass'&&finish.data?.masteryState==='MASTERED',label+' Jev speaking decision',finish.data?.masteryState||finish.data?.jevStatus||'missing');
 
   const repairs=finish.data?.repairs||[];
   must(repairs.length>=1,label+' Fix & Improve detection',`repairs=${repairs.length}`);
@@ -122,19 +98,16 @@ try{
   must(report.status===200&&(report.data?.speaking||[]).length>0&&(report.data?.fixes||[]).length>0&&(report.data?.attempts||[]).length>0&&report.data?.writing&&reportHasRL,label+' 360 report',`speaking=${report.data?.speaking?.length||0} RL=${reportHasRL}`);
  }
 
- const audio=await req('/api/audio',{method:'POST',body:{lessonId:'a1-gold-l3',text:"Agent: Hello. Traveler: I want a ticket to Hargeisa, please.",speakers:[{name:'Agent',gender:'female',voice:'nova'},{name:'Traveler',gender:'male',voice:'onyx'}]}});
- if(audio.status===200)record('Batch A natural listening audio','PASS','HTTP 200');
+ const audio=await req('/api/audio',{method:'POST',body:{lessonId:'a1-gold-l6',text:'Server: Hello. What would you like? Customer: I would like rice and vegetables, please. Server: And a drink? Customer: Can I have tea, please?',speakers:[{name:'Server',gender:'female',voice:'nova'},{name:'Customer',gender:'male',voice:'onyx'}]}});
+ if(audio.status===200)record('Lessons 1-11 natural dialogue audio','PASS','HTTP 200');
  else{
   const ttsLines=childLogs.split(/\n/).filter(line=>/TTS request error|OpenAI TTS|audio\/speech|billing_not_active|insufficient_quota|model|voice/i.test(line)).slice(-8).join(' | ').replace(/Bearer\s+[A-Za-z0-9._-]+/gi,'Bearer [redacted]').slice(0,1200);
-  if(audio.status===502&&/billing_not_active|account is not active|insufficient_quota|quota|billing/i.test(ttsLines))record('Batch A natural listening audio','BLOCKED_EXTERNAL',ttsLines||'OpenAI billing/quota blocked');
-  else record('Batch A natural listening audio','FAIL','HTTP '+audio.status+' '+(ttsLines||'no upstream detail captured'));
+  record('Lessons 1-11 natural dialogue audio','FAIL','HTTP '+audio.status+' '+(ttsLines||'no upstream detail captured'));
  }
 
  const logout=await req('/api/auth/logout',{method:'POST',body:{}});must(logout.status===200&&logout.data?.ok,'logout','HTTP '+logout.status);
- const failed=results.filter(x=>x.status==='FAIL'),blocked=results.filter(x=>x.status==='BLOCKED_EXTERNAL');
- console.log(`A1 BATCH A RUNTIME QA: ${results.filter(x=>x.status==='PASS').length} PASS, ${failed.length} FAIL, ${blocked.length} BLOCKED_EXTERNAL`);
- if(failed.length)process.exitCode=1;
- else if(blocked.some(x=>x.name==='Batch A natural listening audio')&&!allowAudioBlock)process.exitCode=2;
- else process.exitCode=0;
-}catch(e){console.error('A1 Batch A runtime QA error:',e.message);process.exitCode=1}
+ const failed=results.filter(x=>x.status==='FAIL');
+ console.log(`A1 LESSONS 1-11 RUNTIME QA: ${results.filter(x=>x.status==='PASS').length} PASS, ${failed.length} FAIL`);
+ process.exitCode=failed.length?1:0;
+}catch(e){console.error('A1 Lessons 1-11 runtime QA error:',e.message);process.exitCode=1}
 finally{cleanup(child)}
