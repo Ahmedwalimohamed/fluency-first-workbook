@@ -582,7 +582,9 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
  res.json({students,rankingMethod:'45% recorded activity average, 35% workbook completion, 20% practice consistency'});
 });
 
-function b2LearningLesson(lessonId){return /^su-b2-l\d+$/.test(String(lessonId||''))}\nfunction requireB2LearningLesson(lessonId,res){if(b2LearningLesson(lessonId))return true;res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is currently active.'});return false}\nfunction cleanAttemptEvidence(value){
+function b2LearningLesson(lessonId){return /^su-b2-l\d+$/.test(String(lessonId||''))}
+function requireB2LearningLesson(lessonId,res){if(b2LearningLesson(lessonId))return true;res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is currently active.'});return false}
+function cleanAttemptEvidence(value){
  if(!Array.isArray(value))return[];
  return value.slice(0,24).map((x,i)=>{
   const correct=x?.correct===true?true:x?.correct===false?false:null;
