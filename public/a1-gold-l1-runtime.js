@@ -13,7 +13,13 @@ const BATCH_A={
  'a1-gold-l8':{title:'Money & Business',mission:'Complete a simple purchase',instruction:'Ask the price, decide whether to buy, and handle payment with at least two useful questions.',minDetails:3,minQuestions:2},
  'a1-gold-l9':{title:'Environment & Climate',mission:'Talk about today’s weather',instruction:'Describe the weather, say a preference, and ask one relevant weather question.',minDetails:2,minQuestions:1},
  'a1-gold-l10':{title:'Relationships & Family',mission:'Introduce another person',instruction:'Describe a family member, friend, or fictional person with at least three details and ask one reciprocal question.',minDetails:3,minQuestions:1},
- 'a1-gold-l11':{title:'Media & News',mission:'Share a media habit and announcement',instruction:'Describe a media habit with source or time, then relay two key facts from a short announcement.',minDetails:3,minQuestions:1}
+ 'a1-gold-l11':{title:'Media & News',mission:'Share a media habit and announcement',instruction:'Describe a media habit with source or time, then relay two key facts from a short announcement.',minDetails:3,minQuestions:1},
+ 'a1-gold-l12':{title:'Sports & Fitness',mission:'Find one shared exercise time',instruction:'Describe your routine and frequency, compare schedules, ask at least two availability questions, and arrange one shared activity.',minDetails:4,minQuestions:2},
+ 'a1-gold-l13':{title:'City & Countryside',mission:'Complete the missing map',instruction:'Use there is/are, ask at least two location or existence questions, and exchange enough information to complete the map.',minDetails:4,minQuestions:2},
+ 'a1-gold-l14':{title:'Dreams & Ambitions',mission:'Explain one goal and next action',instruction:'State one concrete goal, one going-to plan, one reason with because, and ask one relevant question.',minDetails:3,minQuestions:1},
+ 'a1-gold-l15':{title:'Crime & Safety',mission:'Report a missing item safely',instruction:'Report the problem, describe the item, give the last known place, ask for help, and respond to a follow-up question.',minDetails:4,minQuestions:1},
+ 'a1-gold-l16':{title:'Science & Everyday Life',mission:'Reconstruct a missing-step process',instruction:'Give ordered instructions, ask at least two missing-step questions, and finish the safe process using finally.',minDetails:4,minQuestions:2},
+ 'a1-gold-l17':{title:'Arts & Entertainment',mission:'Choose, explain, and adapt',instruction:'Give a preference and reason, ask one useful question, then adapt when the first option is unavailable and agree on another.',minDetails:4,minQuestions:1}
 };
 function cfg(id){return BATCH_A[String(id||'')]||null}
 function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
