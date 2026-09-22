@@ -10,7 +10,7 @@ const nativeGet=express.application.get;
 const nativePost=express.application.post;
 const installed=new WeakSet();
 const BOOK_ID='speakup-a1-gold';
-const VERSION='englishgate-a1-gold-v1.3-batch-c';
+const VERSION='englishgate-a1-gold-v1.4-batch-d';
 const TYPE_SAFE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const TYPE_SAFE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
 
@@ -235,6 +235,71 @@ const LESSONS={
    {match:/\bi like film because funny\b/i,focus:'because_reason',original:'I like film because funny.',model:'I like the film because it is funny.'},
    {match:/\bwhy you like it\b/i,focus:'why_question',original:'Why you like it?',model:'Why do you like it?'},
    {match:/\bit full\. choose other\b/i,focus:'adaptation',original:'It full. Choose other.',model:'It is full. Let us choose another.'}
+  ]
+ },
+ 'a1-gold-l18':{
+  title:'Global Connections',
+  canDo:'Introduce yourself to an international visitor, talk about languages and places, and adapt when one detail changes.',
+  opening:'Hi. I am visiting your city. Please introduce yourself.',
+  keys:['identity','language','visit','questions','adaptation'],required:['identity','language','adaptation'],minimumKeys:5,minimumQuestions:2,
+  prompts:{identity:'Tell me where you are from or where you live.',language:'What languages do you speak?',visit:'Tell me one place you want to visit and why.',questions:'Ask me two useful questions about my country, language, or visit.',adaptation:'The meeting place changed from the library to the community centre. Ask for the new location.'},
+  detect:l=>({identity:/\b(i am from|i'm from|i live in|my name is)\b/.test(l),language:/\b(i speak|i can speak|some english|somali|arabic|swahili)\b/.test(l),visit:/\b(i want to visit|i hope to visit|because)\b/.test(l),questions:/\b(what country are you from|what languages do you speak|what place do you want to visit|where do you live)\b/.test(l),adaptation:/\b(where is the (?:new place|community centre)|where should we meet|meeting place changed)\b/.test(l)}),
+  repairs:[
+   {match:/\bi can speaking english\b/i,focus:'can_base',original:'I can speaking English.',model:'I can speak English.'},
+   {match:/\bwhat country you from\b/i,focus:'origin_question',original:'What country you from?',model:'What country are you from?'},
+   {match:/\bi want visit kenya\b/i,focus:'want_to',original:'I want visit Kenya.',model:'I want to visit Kenya.'}
+  ]
+ },
+ 'a1-gold-l19':{
+  title:'Shopping & Services',
+  canDo:'Ask about a product, choose size or colour, pay, and adapt when the preferred option is unavailable.',
+  opening:'Hello. I can help you in the shop. What do you need?',
+  keys:['product','option','adaptation','payment','receipt'],required:['product','adaptation','payment'],minimumKeys:5,minimumQuestions:3,
+  prompts:{product:'Ask about the item or price.',option:'Ask for a size or colour.',adaptation:'Your first colour or size is unavailable. Ask for another option.',payment:'Finish the purchase and ask how to pay.',receipt:'Ask for a receipt.'},
+  detect:l=>({product:/\b(how much|i want|shirt|bag|notebook|size|colour)\b/.test(l),option:/\b(do you have|what size|blue|black|small|medium|large|can i try)\b/.test(l),adaptation:/\b(do you have (?:black|blue|another)|another one|another size|another colour|not available|unavailable)\b/.test(l),payment:/\b(can i pay|pay by card|pay cash|i will take it|i'll take it)\b/.test(l),receipt:/\b(receipt|can i have a receipt)\b/.test(l)}),
+  repairs:[
+   {match:/\byou have blue this\b/i,focus:'service_question',original:'You have blue this?',model:'Do you have this in blue?'},
+   {match:/\bcan i trying this\b/i,focus:'can_base',original:'Can I trying this?',model:'Can I try this?'},
+   {match:/\bi pay card\b/i,focus:'payment_question',original:'I pay card.',model:'Can I pay by card?'}
+  ]
+ },
+ 'a1-gold-l20':{
+  title:'Home & Daily Life',
+  canDo:'Describe a home and daily routine, and give a visitor the practical information they need.',
+  opening:'I am visiting your home. Tell me one thing about your home and routine.',
+  keys:['home','routine','location','timeQuestion','adaptation'],required:['home','routine','adaptation'],minimumKeys:5,minimumQuestions:1,
+  prompts:{home:'Describe one or two rooms using there is or there are.',routine:'Tell me one routine and time.',location:'Tell me where one room is.',timeQuestion:'Ask me one useful routine or location question.',adaptation:'Today you will arrive one hour later than usual. Tell me the updated time.'},
+  detect:l=>({home:/\bthere (?:is|are)\b/.test(l),routine:/\b(i wake up|i cook|i clean|i get home|i sleep)\b/.test(l),location:/\b(next to|near|behind|opposite)\b/.test(l),timeQuestion:/\b(what time do you|where is|is there)\b/.test(l),adaptation:/\b(today|late|later|at six|at 6|changed)\b/.test(l)}),
+  repairs:[
+   {match:/\bthere is two bedrooms\b/i,focus:'there_are',original:'There is two bedrooms.',model:'There are two bedrooms.'},
+   {match:/\bi wake up in six\b/i,focus:'time_preposition',original:'I wake up in six.',model:'I wake up at six.'},
+   {match:/\bwhat time you get home\b/i,focus:'question_form',original:'What time you get home?',model:'What time do you get home?'}
+  ]
+ },
+ 'a1-gold-l21':{
+  title:'Plans & Events',
+  canDo:'Invite someone, compare availability, arrange a time and place, and adapt when the plan changes.',
+  opening:'Let us make a plan for Saturday. Ask when I am free.',
+  keys:['availability','proposal','place','adaptation','alternative'],required:['availability','proposal','adaptation'],minimumKeys:5,minimumQuestions:2,
+  prompts:{availability:'Ask when I am free and tell me when you are free.',proposal:'Suggest a meeting time.',place:'Choose a meeting place.',adaptation:'The event time changed and your first plan no longer works. Respond to the change.',alternative:'Make a new workable plan.'},
+  detect:l=>({availability:/\b(are you free|when are you free|what time can you meet|i can meet|i cannot meet|i can't meet)\b/.test(l),proposal:/\b(let(?:'s| us) meet|we can meet|meet at)\b/.test(l),place:/\b(town hall|market|cafe|café|community centre|where should we meet)\b/.test(l),adaptation:/\b(changed|starts at|cannot stay|can't stay|later|instead)\b/.test(l),alternative:/\b(let(?:'s| us) (?:go|meet)|afternoon market|another time|instead)\b/.test(l)}),
+  repairs:[
+   {match:/\bdo you free saturday\b/i,focus:'availability_question',original:'Do you free Saturday?',model:'Are you free on Saturday?'},
+   {match:/\bi cannot to meet at three\b/i,focus:'can_base',original:'I cannot to meet at three.',model:'I cannot meet at three.'},
+   {match:/\blet us meeting at five\b/i,focus:'lets_base',original:'Let us meeting at five.',model:'Let us meet at five.'}
+  ]
+ },
+ 'a1-gold-l22':{
+  title:'My English in the Real World',
+  canDo:'Use A1 English independently to manage a short real-world sequence involving people, place, time, service, and a changed condition.',
+  opening:'Welcome to the community event. Start the conversation and tell me who you are.',
+  keys:['identity','placeTime','service','helpOrQuestion','arrangement','adaptation'],required:['identity','placeTime','service','adaptation'],minimumKeys:6,minimumQuestions:2,
+  prompts:{identity:'Introduce yourself with at least two useful details.',placeTime:'Find the event place and confirm the updated time.',service:'Your preferred badge is unavailable. Solve the service problem.',helpOrQuestion:'Ask at least two useful questions during the mission.',arrangement:'Make one next arrangement with another person.',adaptation:'The event time or available option changes. Show that you can update your plan.'},
+  detect:l=>({identity:/\b(my name is|i['’]?m|i am|i live in|i work|i study)\b/.test(l),placeTime:/\b(where is|community centre|what time|starts at|at six|6:00|city market)\b/.test(l),service:/\b(how much|badge|black|blue|another one|available|i will take|i'll take)\b/.test(l),helpOrQuestion:/\b(can you help|where is|what time|how much|are you free|do you have|what should we do)\b/.test(l),arrangement:/\b(let(?:'s| us) meet|we can meet|meet at|see you at)\b/.test(l),adaptation:/\b(changed|not available|unavailable|another one|black is okay|new time|now starts)\b/.test(l)}),
+  repairs:[
+   {match:/\bwhere the community centre is\b/i,focus:'location_question',original:'Where the community centre is?',model:'Where is the community centre?'},
+   {match:/\bi can to get black\b/i,focus:'can_base',original:'I can to get black.',model:'I can get the black one.'},
+   {match:/\blet us meeting at six\b/i,focus:'arrangement',original:'Let us meeting at six.',model:'Let us meet at six.'}
   ]
  }
 };
