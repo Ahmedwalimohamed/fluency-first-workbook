@@ -1606,7 +1606,7 @@ function studentHome(){
  const sid=session.id,assignedBookId=bookIdForStudent(sid),assignedBook=bookMeta(assignedBookId);
  if(!bookOperational(assignedBookId)){
   title('EnglishGate','Home');
-  $('content').innerHTML=`<section class="course-shell"><div class="empty-state"><span class="pill">Course inactive</span><h2>${escapeHtml(assignedBook?.title||'Your current course')} is temporarily inactive.</h2><p>Your learning history and reports are محفوظ. EnglishGate currently has B2 Upper Intermediate active for teaching and study.</p><button class="ghost-btn" id="inactiveProgressBtn">View my saved progress</button></div></section>`;
+  $('content').innerHTML=`<section class="course-shell"><div class="empty-state"><span class="pill">Course inactive</span><h2>${escapeHtml(assignedBook?.title||'Your current course')} is temporarily inactive.</h2><p>Your learning history and reports are preserved. EnglishGate currently has B2 Upper Intermediate active for teaching and study.</p><button class="ghost-btn" id="inactiveProgressBtn">View my saved progress</button></div></section>`;
   if($('inactiveProgressBtn'))$('inactiveProgressBtn').onclick=()=>{currentPage='progress';renderNav();studentProgress()};
   return
  }
