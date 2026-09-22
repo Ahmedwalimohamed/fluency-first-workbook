@@ -158,7 +158,7 @@ const LESSONS={
    {match:/\bi watch videos in my phone\b/i,focus:'on_my_phone',original:'I watch videos in my phone.',model:'I watch videos on my phone.'},
    {match:/\bi read news at morning\b/i,focus:'time_preposition',original:'I read news at morning.',model:'I read the news in the morning.'}
   ]
-
+ }
 };
 
 function session(req){try{return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}}
