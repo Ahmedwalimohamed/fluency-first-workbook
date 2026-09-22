@@ -79,13 +79,21 @@ function speakerVoicePlan(turns,speakerProfiles=[]){
  return plan;
 }
 async function requestSpeechWav(input,voice,instructions){
- const apiKey=process.env.OPENAI_TTS_API_KEY||process.env.OPENAI_API_KEY;
- if(!apiKey){const e=new Error('OpenAI TTS key is not configured');e.status=503;throw e}
+ const keys=[process.env.OPENAI_TTS_API_KEY,process.env.OPENAI_API_KEY].map(x=>String(x||'').trim()).filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i);
+ if(!keys.length){const e=new Error('OpenAI TTS key is not configured');e.status=503;throw e}
  const body={model:OPENAI_TTS_MODEL,voice,input,response_format:'wav'};
  if(String(OPENAI_TTS_MODEL).startsWith('gpt-4o-mini-tts'))body.instructions=instructions;
- const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
- if(!r.ok){const detail=await r.text();const e=new Error('OpenAI TTS '+r.status+': '+detail.slice(0,500));e.status=r.status;throw e}
- return Buffer.from(await r.arrayBuffer());
+ let lastError=null;
+ for(let i=0;i<keys.length;i++){
+  const r=await fetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{'Authorization':`Bearer ${keys[i]}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(r.ok)return Buffer.from(await r.arrayBuffer());
+  const detail=await r.text();
+  const e=new Error('OpenAI TTS '+r.status+': '+detail.slice(0,500));e.status=r.status;lastError=e;
+  const mayTryNext=i<keys.length-1&&[401,403,429].includes(r.status);
+  if(!mayTryNext)throw e;
+  console.warn('Primary OpenAI TTS credential unavailable; trying secondary OpenAI credential. status='+r.status);
+ }
+ throw lastError||new Error('OpenAI TTS request failed');
 }
 function wavParts(buf){
  if(!Buffer.isBuffer(buf)||buf.length<44||buf.toString('ascii',0,4)!=='RIFF'||buf.toString('ascii',8,12)!=='WAVE')throw new Error('Invalid WAV response');
