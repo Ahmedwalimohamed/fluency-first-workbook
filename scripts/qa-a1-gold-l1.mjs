@@ -9,7 +9,7 @@ const runtime=read('public/a1-gold-l1-runtime.js');
 const backend=read('a1-gold-bootstrap.js');
 const teacher=read('teacher-management-bootstrap.js');
 
-const syntaxFiles=['server.js','standards-audit-bootstrap.js','reading-listening-separation-bootstrap.js','a1-gold-bootstrap.js','public/app.js','public/a1-gold-v1.js','public/a1-gold-l1-runtime.js'];
+const syntaxFiles=['server.js','standards-audit-bootstrap.js','school-platform-bootstrap.js','teacher-management-bootstrap.js','reading-listening-separation-bootstrap.js','a1-gold-bootstrap.js','public/app.js','public/a1-gold-v1.js','public/a1-gold-l1-runtime.js'];
 for(const file of syntaxFiles){
   const run=spawnSync(process.execPath,['--check',new URL('../'+file,import.meta.url).pathname],{encoding:'utf8'});
   if(run.status!==0){
