@@ -119,12 +119,12 @@ try{
 }catch(e){errors.push('A1 Foundation validation failed: '+e.message)}
 if(!server.includes('{"id":"speakup-a1","title":"A1 Beginner","level":"A1","audience":"Beginner","status":"pilot","total_lessons":22'))errors.push('A1 Gold: backend book seed must expose the 22-lesson pilot');
 if(!a1gold.includes("A1_CURRICULUM_VERSION='ENGLISHGATE_A1_GOLD_v1.0'"))errors.push('A1 Gold: frozen curriculum version is missing');
-if(!a1gold.includes('totalLessons:22')||!a1gold.includes("id:'su-a1-l1'")||!a1gold.includes('ready:true')||!a1gold.includes("status:'LOCKED_IMPLEMENTATION'"))errors.push('A1 Gold: 22-lesson runtime migration contract is incomplete');
+if(!a1gold.includes('totalLessons:22')||!a1gold.includes("id:'a1g-v1-l1'")||!a1gold.includes('ready:true')||!a1gold.includes("status:'LOCKED_IMPLEMENTATION'"))errors.push('A1 Gold: 22-lesson runtime migration contract is incomplete');
 if(!a1gold.includes("['vocabulary','grammar','reading','listening','writing','speaking','review']"))errors.push('A1 Gold: seven-stage workbook contract is missing');
 if(!server.includes("['vocabulary','grammar','reading','listening','writing','speaking','review'].includes(skill)"))errors.push('A1 Gold: backend attempt skills are incomplete');
 if(!server.includes("['vocabulary','grammar','reading','listening','writing','speaking','review'].includes(step)"))errors.push('A1 Gold: backend completion steps are incomplete');
 if(!server.includes("app.post('/api/a1/speaking/evaluate'"))errors.push('A1 Gold: Jev speaking evaluation endpoint is missing');
-if(!server.includes('LISTENING_SCRIPTS["su-a1-l1"]'))errors.push('A1 Gold: Lesson 1 listening source is missing');
+if(!server.includes('LISTENING_SCRIPTS["a1g-v1-l1"]'))errors.push('A1 Gold: Lesson 1 listening source is missing');
 if(!app.includes("slice(0,12).map(readingQuestionAsShort)"))errors.push('Reading workbook must preserve up to 12 comprehension checks while converting reading items to short answer');
 if(!app.includes('function shortAnswerEvidence')||!app.includes('function shortAnswerMatches')||!app.includes("tag.startsWith('reading:')||tag.startsWith('listening-reading:')"))errors.push('Reading workbook must render every reading comprehension question as a typed short answer');
 if(!app.includes('const A1_EARLY_WRITING_MODELS=')||!app.includes("early?'Sentence Order':'Paragraph Ordering'")||!app.includes("early?'Tap the two sentences in the natural order.'"))errors.push('A1 Foundation: Lessons 1–10 must use the simplified writing progression instead of paragraph ordering');
