@@ -606,7 +606,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
 });
 
 function b2LearningLesson(lessonId){return /^su-b2-l\d+$/.test(String(lessonId||''))}
-function a1PreviewLearningLesson(lessonId){return process.env.A1_PREVIEW_MODE==='1'&&String(lessonId||'')==='a1-gold-l1'}
+function a1PreviewLearningLesson(lessonId){return process.env.A1_PREVIEW_MODE==='1'&&/^a1-gold-l[1-5]$/.test(String(lessonId||''))}
 function operationalLearningLesson(lessonId){return b2LearningLesson(lessonId)||a1PreviewLearningLesson(lessonId)}
 function requireB2LearningLesson(lessonId,res){if(operationalLearningLesson(lessonId))return true;res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is active outside the isolated A1 preview.'});return false}
 function cleanAttemptEvidence(value){
