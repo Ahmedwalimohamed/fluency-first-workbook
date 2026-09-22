@@ -104,8 +104,11 @@ try{
 
   const audio=await req('/api/audio',{method:'POST',body:{lessonId:'a1-gold-l1',text:"Maryan: Hi. I'm Maryan. Nice to meet you.",speakers:[{name:'Maryan',gender:'female',voice:'nova'}]}});
   if(audio.status===200)record('natural listening audio','PASS','HTTP 200');
-  else if(audio.status===502&&/billing_not_active|account is not active/i.test(childLogs))record('natural listening audio','BLOCKED_EXTERNAL','OpenAI billing_not_active');
-  else record('natural listening audio','FAIL','HTTP '+audio.status);
+  else {
+    const ttsLines=childLogs.split(/\n/).filter(line=>/TTS request error|OpenAI TTS|audio\/speech|billing_not_active|insufficient_quota|model|voice/i.test(line)).slice(-8).join(' | ').replace(/Bearer\s+[A-Za-z0-9._-]+/gi,'Bearer [redacted]').slice(0,1200);
+    if(audio.status===502&&/billing_not_active|account is not active|insufficient_quota|quota|billing/i.test(ttsLines))record('natural listening audio','BLOCKED_EXTERNAL',ttsLines||'OpenAI billing/quota blocked');
+    else record('natural listening audio','FAIL','HTTP '+audio.status+' '+(ttsLines||'no upstream detail captured'));
+  }
 
   const logout=await req('/api/auth/logout',{method:'POST',body:{}});
   must(logout.status===200&&logout.data?.ok,'logout','HTTP '+logout.status);
