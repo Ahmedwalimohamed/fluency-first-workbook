@@ -649,18 +649,31 @@ function decisionAnswer(data,id,allowed){
  return {choice,confidence:Number.isFinite(confidence)&&confidence>=0&&confidence<=1?confidence:null}
 }
 async function performanceStateFor(studentId){
- const ctx=await currentCertificateContext(studentId),prefix=ctx?LEVEL_CERTIFICATE_PREFIXES[ctx.course_id]:null,params=[studentId],filter=prefix?' and lesson_id like $2':'';
+ const ctx=await currentCertificateContext(studentId),prefix=ctx?LEVEL_CERTIFICATE_PREFIXES[ctx.course_id]:null;
+ const evidenceSkills=ctx?.course_id==='speakup-a1'
+  ?['vocabulary','grammar','reading','listening','writing','speaking','review']
+  :['vocabulary','listening','grammar','writing'];
+ const proficiencySkills=ctx?.course_id==='speakup-a1'
+  ?['vocabulary','grammar','reading','listening','writing','speaking']
+  :evidenceSkills;
+ const params=[studentId,evidenceSkills],filter=prefix?' and lesson_id like $3':'';
  if(prefix)params.push(prefix+'%');
- const rows=(await pool.query(`select lesson_id,skill,score,tags,evidence,at from attempts where student_id=$1${filter} and skill in ('vocabulary','listening','grammar','writing') order by at`,params)).rows;
- const completionParams=[studentId],completionFilter=prefix?' and lesson_id like $2':'';
+ const rows=(await pool.query('select lesson_id,skill,score,tags,evidence,at from attempts where student_id=$1 and skill=any($2::text[])'+filter+' order by at',params)).rows;
+ const completionParams=[studentId,evidenceSkills],completionFilter=prefix?' and lesson_id like $3':'';
  if(prefix)completionParams.push(prefix+'%');
- const completionRows=(await pool.query(`select lesson_id,step from completion where student_id=$1${completionFilter} and step in ('vocabulary','listening','grammar','writing')`,completionParams)).rows;
+ const completionRows=(await pool.query('select lesson_id,step from completion where student_id=$1 and step=any($2::text[])'+completionFilter,completionParams)).rows;
  const latest=new Map();rows.forEach(r=>latest.set(r.lesson_id+'|'+r.skill,r));
  const latestRows=[...latest.values()].sort((a,b)=>new Date(a.at)-new Date(b.at));
- const skillAverages={};for(const skill of ['vocabulary','listening','grammar','writing'])skillAverages[skill]=averageNumbers(latestRows.filter(r=>r.skill===skill).map(r=>r.score));
- const totalActivities=Math.max(1,Number(ctx?.total_lessons||0)*4||latestRows.length||1),completion=Math.min(100,Math.round(completionRows.length/totalActivities*100)),overall=averageNumbers(Object.values(skillAverages));
- let trendDelta=null;if(latestRows.length>=4){const n=Math.min(4,Math.floor(latestRows.length/2)),recent=latestRows.slice(-n).map(r=>r.score),previous=latestRows.slice(-(n*2),-n).map(r=>r.score);if(previous.length===n)trendDelta=averageNumbers(recent)-averageNumbers(previous)}
- const wrongTags={};for(const r of rows){for(const e of Array.isArray(r.evidence)?r.evidence:[]){if(e?.correct===false&&e?.tag)wrongTags[e.tag]=(wrongTags[e.tag]||0)+1}}
+ const skillAverages={};for(const skill of proficiencySkills)skillAverages[skill]=averageNumbers(latestRows.filter(r=>r.skill===skill).map(r=>r.score));
+ const totalActivities=Math.max(1,Number(ctx?.total_lessons||0)*evidenceSkills.length||latestRows.length||1);
+ const completion=Math.min(100,Math.round(completionRows.length/totalActivities*100)),overall=averageNumbers(Object.values(skillAverages));
+ let trendDelta=null;
+ if(latestRows.length>=4){
+  const n=Math.min(4,Math.floor(latestRows.length/2)),recent=latestRows.slice(-n).map(r=>r.score),previous=latestRows.slice(-(n*2),-n).map(r=>r.score);
+  if(previous.length===n)trendDelta=averageNumbers(recent)-averageNumbers(previous)
+ }
+ const wrongTags={};
+ for(const r of rows){for(const e of Array.isArray(r.evidence)?r.evidence:[]){if(e?.correct===false&&e?.tag)wrongTags[e.tag]=(wrongTags[e.tag]||0)+1}}
  const recurrentErrors=Object.entries(wrongTags).filter(([,count])=>count>=2).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([tag,count])=>({tag,count}));
  const prioritySkill=Object.entries(skillAverages).filter(([,v])=>Number.isFinite(v)).sort((a,b)=>a[1]-b[1])[0]?.[0]||'none';
  return {studentId,bookId:ctx?.course_id||'',level:ctx?.level||'',completion,overall,activeLessons:new Set([...latestRows.map(r=>r.lesson_id),...completionRows.map(r=>r.lesson_id)]).size,totalAttempts:rows.length,scoredActivities:latestRows.length,skillAverages,trendDelta,retries:Math.max(0,rows.length-latestRows.length),recurrentErrors,prioritySkill}
@@ -682,7 +695,7 @@ async function performanceDecisionWithJev(state){
   status:mk('Classify the learner overall. Treat insufficient evidence as insufficient_data rather than guessing.',{on_track:'Evidence shows broadly successful progress with no urgent concern.',watch:'There is enough evidence to monitor a meaningful weakness or uneven progress.',intervention:'There is enough evidence of persistent low performance or decline needing direct teacher attention.',insufficient_data:'There is not enough evidence to make a reliable learner-status decision.'}),
   trend:mk('Classify the recent performance trend from the supplied numeric evidence only.',{improving:'Recent performance is meaningfully better than earlier comparable performance.',stable:'Recent performance is broadly similar to earlier performance.',declining:'Recent performance is meaningfully worse than earlier comparable performance.',insufficient_data:'There is not enough comparable evidence to judge a trend.'}),
   evidence:mk('Judge how strong the evidence base is for performance decisions.',{strong:'Many scored activities across multiple skills support a reliable judgement.',moderate:'There is useful evidence, but coverage or volume is still incomplete.',weak:'There is too little scored evidence for a confident judgement.'}),
-  priority:mk('Choose the skill that most needs attention, considering both low performance and persistence. Choose none when evidence is inadequate or no skill stands out.',{vocabulary:'Vocabulary is the clearest priority.',listening:'Listening and reading is the clearest priority.',grammar:'Grammar is the clearest priority.',writing:'Writing is the clearest priority.',none:'No reliable priority skill can be selected.'}),
+  priority:mk('Choose the skill that most needs attention, considering both low performance and persistence. Choose none when evidence is inadequate or no skill stands out.',{vocabulary:'Vocabulary is the clearest priority.',grammar:'Language control is the clearest priority.',reading:'Reading is the clearest priority.',listening:'Listening is the clearest priority.',writing:'Writing is the clearest priority.',speaking:'Speaking is the clearest priority.',none:'No reliable priority skill can be selected.'}),
   persistence:mk('Judge whether weaknesses look recurring rather than a single isolated result.',{recurring:'The evidence contains repeated weakness or repeated incorrect patterns.',one_off:'The concern appears isolated or has recovered on later evidence.',unclear:'There is not enough evidence to judge persistence.'}),
   urgency:mk('Choose the level of teacher attention warranted by the evidence.',{low:'Normal progress; routine monitoring is enough.',medium:'A real weakness should be reviewed soon, but immediate intervention is not required.',high:'Persistent low performance or decline warrants direct teacher review.'}),
   next_action:mk('Choose the single most useful next action supported by the evidence.',{continue:'Continue the planned workbook sequence.',review_activity:'Review the weakest recurring activity and its question evidence.',retry_lesson:'Retry the affected lesson after targeted review.',teacher_review:'A teacher should inspect the learner evidence and intervene directly.'})
@@ -692,7 +705,7 @@ async function performanceDecisionWithJev(state){
  try{
   const r=await fetch(WRITING_GRADE_URL,{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({state:safeState,model:WRITING_GRADE_MODEL,questions}),signal:controller.signal});
   if(!r.ok)return fallback;
-  const data=await r.json(),status=decisionAnswer(data,'status',['on_track','watch','intervention','insufficient_data']),trend=decisionAnswer(data,'trend',['improving','stable','declining','insufficient_data']),evidence=decisionAnswer(data,'evidence',['strong','moderate','weak']),priority=decisionAnswer(data,'priority',['vocabulary','listening','grammar','writing','none']),persistence=decisionAnswer(data,'persistence',['recurring','one_off','unclear']),urgency=decisionAnswer(data,'urgency',['low','medium','high']),nextAction=decisionAnswer(data,'next_action',['continue','review_activity','retry_lesson','teacher_review']);
+  const data=await r.json(),status=decisionAnswer(data,'status',['on_track','watch','intervention','insufficient_data']),trend=decisionAnswer(data,'trend',['improving','stable','declining','insufficient_data']),evidence=decisionAnswer(data,'evidence',['strong','moderate','weak']),priority=decisionAnswer(data,'priority',['vocabulary','grammar','reading','listening','writing','speaking','none']),persistence=decisionAnswer(data,'persistence',['recurring','one_off','unclear']),urgency=decisionAnswer(data,'urgency',['low','medium','high']),nextAction=decisionAnswer(data,'next_action',['continue','review_activity','retry_lesson','teacher_review']);
   if(!status||!trend||!evidence||!priority||!persistence||!urgency||!nextAction)return fallback;
   return {source:'jev',version:PERFORMANCE_DECISION_VERSION,status,trend,evidence,priority,persistence,urgency,nextAction}
  }catch{return fallback}finally{clearTimeout(timer)}
