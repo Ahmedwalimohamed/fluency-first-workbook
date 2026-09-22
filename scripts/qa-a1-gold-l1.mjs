@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from 'node:fs';\nimport {spawnSync} from 'node:child_process';
 
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const server=read('server.js');
@@ -7,6 +7,17 @@ const lesson=read('public/a1-gold-v1.js');
 const runtime=read('public/a1-gold-l1-runtime.js');
 const backend=read('a1-gold-bootstrap.js');
 const teacher=read('teacher-management-bootstrap.js');
+
+const syntaxFiles=['a1-gold-bootstrap.js','public/a1-gold-v1.js','public/a1-gold-l1-runtime.js'];
+for(const file of syntaxFiles){
+  const run=spawnSync(process.execPath,['--check',new URL('../'+file,import.meta.url).pathname],{encoding:'utf8'});
+  if(run.status!==0){
+    console.error('FAIL  syntax '+file);
+    console.error(run.stderr||run.stdout);
+    process.exit(1);
+  }
+  console.log('PASS  syntax '+file);
+}
 
 const checks=[
   ['isolated pilot book seed',server.includes('"id":"speakup-a1-gold"')&&server.includes('"total_lessons":22')&&server.includes('"status":"pilot"')],
