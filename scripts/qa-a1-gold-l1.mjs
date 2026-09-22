@@ -20,10 +20,14 @@ for(const file of syntaxFiles){
 }
 
 const checks=[
-  ['isolated pilot book seed',server.includes('"id":"speakup-a1-gold"')&&server.includes('"total_lessons":22')&&server.includes('"status":"pilot"')],
-  ['legacy A1 retained',server.includes('"id":"speakup-a1"')&&server.includes('"total_lessons":44')],
+  ['isolated Gold book retained but inactive',/"id":"speakup-a1-gold"[^}]*"status":"inactive"[^}]*"total_lessons":22/.test(server)],
+  ['legacy A1 retained but inactive',/"id":"speakup-a1"[^}]*"status":"inactive"[^}]*"total_lessons":44/.test(server)],
+  ['B2 is the only active seed',(()=>{const m=server.match(/const BOOK_SEEDS=(\[[\s\S]*?\]);/);if(!m)return false;const books=JSON.parse(m[1]);return books.every(b=>b.id==='speakup-b2'?b.status==='ready':b.status==='inactive')})()],
+  ['database startup enforces B2-only active state',server.includes("update books set status=case when id='speakup-b2' then 'ready' else 'inactive' end")],
   ['Gold curriculum loaded',index.includes('a1-gold-v1.js')&&index.includes('a1-gold-l1-runtime.js')],
   ['Gold bootstrap registered',teacher.includes("require('./a1-gold-bootstrap.js')")],
+  ['inactive runtime guard present',runtime.includes('bookOperational')||read('public/app.js').includes('function bookOperational(id)')],
+  ['Gold speaking APIs dormant while inactive',backend.includes('requireGoldActive')&&backend.includes('A1 Gold is currently inactive')],
   ['lesson identity',lesson.includes("id:LESSON_ID")&&lesson.includes("title:'Getting Acquainted'")],
   ['A1 can-do',lesson.includes('Introduce yourself and exchange basic personal information')],
   ['target vocabulary', ['name','live','work','study','teacher','student','city','like'].every(x=>lesson.includes(`word:'${x}'`))],
