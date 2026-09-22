@@ -19,6 +19,8 @@ function session(req){
   try{return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}
 }
 function clean(v,max=1200){return String(v||'').trim().replace(/\s+/g,' ').slice(0,max)}
+async function goldActive(){const q=await pool.query("select 1 from books where id=$1 and status in ('ready','pilot')",[BOOK_ID]);return Boolean(q.rowCount)}
+async function requireGoldActive(res){if(await goldActive())return true;res.status(423).json({error:'A1 Gold is currently inactive. Only B2 Upper Intermediate is active.'});return false}
 function bool(v){return v===true}
 async function ensureSchema(){
   await pool.query(`
@@ -123,6 +125,7 @@ function install(app){
     const user=session(req);
     if(!user||user.role!=='student')return res.status(403).json({error:'Student access required.'});
     await ensureSchema();
+    if(!(await requireGoldActive(res)))return;
     const lessonId=clean(req.body?.lessonId,80);
     if(lessonId!==LESSON_ID)return res.status(400).json({error:'This speaking pilot is available for A1 Lesson 1 only.'});
     const id='a1sp_'+crypto.randomUUID();
@@ -137,6 +140,7 @@ function install(app){
     const user=session(req);
     if(!user||user.role!=='student')return res.status(403).json({error:'Student access required.'});
     await ensureSchema();
+    if(!(await requireGoldActive(res)))return;
     const id=clean(req.body?.sessionId,100),text=clean(req.body?.text,800);
     if(!id||!text)return res.status(400).json({error:'Enter a response.'});
     const q=await pool.query('select * from a1_gold_speaking_sessions where id=$1 and student_id=$2 and lesson_id=$3',[id,user.id,LESSON_ID]);
@@ -160,6 +164,7 @@ function install(app){
     const user=session(req);
     if(!user||user.role!=='student')return res.status(403).json({error:'Student access required.'});
     await ensureSchema();
+    if(!(await requireGoldActive(res)))return;
     const id=clean(req.body?.sessionId,100);
     const q=await pool.query('select * from a1_gold_speaking_sessions where id=$1 and student_id=$2 and lesson_id=$3',[id,user.id,LESSON_ID]);
     if(!q.rowCount)return res.status(404).json({error:'Speaking session not found.'});
@@ -194,6 +199,7 @@ function install(app){
     const user=session(req);
     if(!user||user.role!=='student')return res.status(403).json({error:'Student access required.'});
     await ensureSchema();
+    if(!(await requireGoldActive(res)))return;
     const id=Number(req.body?.id),retry=clean(req.body?.retry,500);
     if(!Number.isInteger(id)||!retry)return res.status(400).json({error:'Enter your retry.'});
     const q=await pool.query('select * from a1_gold_fix_evidence where id=$1 and student_id=$2',[id,user.id]);
