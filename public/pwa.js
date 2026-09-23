@@ -104,6 +104,14 @@ async function registerServiceWorker(){
   }
 }
 
+function loadA1NorthstarParity(){
+  if(document.querySelector('script[data-a1-northstar-parity="v1"]')) return;
+  const script = document.createElement('script');
+  script.src = '/a1-northstar-parity-v1.js?v=1';
+  script.dataset.a1NorthstarParity = 'v1';
+  document.body.appendChild(script);
+}
+
 window.addEventListener('beforeinstallprompt', event => {
   event.preventDefault();
   deferredInstallPrompt = event;
@@ -123,6 +131,7 @@ function boot(){
   syncInstallButton();
   syncNetworkStatus();
   registerServiceWorker();
+  loadA1NorthstarParity();
   const observer = new MutationObserver(()=>syncInstallButton());
   const actions = document.querySelector('.top-actions');
   if(actions) observer.observe(actions,{childList:true});
