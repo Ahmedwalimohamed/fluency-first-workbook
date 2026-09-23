@@ -70,10 +70,6 @@
   color:#5d6e82;
   font-weight:700;
 }
-body.a1-northstar-workbook-mode .micro-title small::before{
-  content:"B2 NORTHSTAR · ";
-  color:#3157d5;
-}
 @media (max-width:700px){
   .a1-northstar-flow .a1-speaking-actions{display:grid;grid-template-columns:1fr}
   .a1-northstar-flow .a1-speaking-actions>*{width:100%}
