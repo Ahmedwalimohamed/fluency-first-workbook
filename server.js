@@ -15,8 +15,9 @@ const pool=new Pool({connectionString:process.env.DATABASE_URL});
 const JWT_SECRET=process.env.JWT_SECRET;
 if(!process.env.DATABASE_URL||!JWT_SECRET){console.error('DATABASE_URL and JWT_SECRET are required');process.exit(1)}
 const LISTENING_SCRIPTS={"w1l1":"I use English in several parts of my life. At work, I sometimes read messages and speak with colleagues. Online, I watch short videos and search for information in English. Reading is usually comfortable for me, and I can understand the main idea when people speak clearly. Speaking is different. When I need to answer quickly, I sometimes pause for too long because I am searching for the right word. In my experience, I communicate better when I have a few seconds to think. One goal I have for the next twelve weeks is to speak for two minutes without stopping after every sentence. I also want to ask for repetition confidently when I do not understand a question.","w1l2":"Hello, my name is Hassan. I currently work as a project assistant for a local construction company. My background is in construction planning, and I have worked with the team for almost two years. I’m responsible for checking schedules, collecting progress information, and preparing weekly updates for the project manager. I’m particularly interested in planning because I enjoy turning a complicated project into clear steps. I also work closely with engineers and site supervisors, so communication is an important part of my role. My current goal is to lead larger projects in the future. To do that well, I want to communicate more confidently with international colleagues and explain project information clearly in English.","w1l3":"English matters to me for two main reasons. The first point is communication at work. Sometimes I meet people from different countries, and I need to explain an idea or ask a clear question. For example, last month I spoke with a visitor about a project schedule. I understood the topic, but I paused too often while searching for words. Another thing is career growth. Better English can help me join training, attend interviews, and take on more responsibility. Let me say that another way: I do not need perfect English before I speak. I need enough useful language to keep my message moving. That is why I practise short answers, examples, and repair phrases instead of stopping completely.","w2l4":"I arrived early for a digital skills workshop and stood near the registration desk. A woman next to me smiled and said, “Hi, have we met before?” I said I did not think so, and she introduced herself. Then she asked, “What brings you here?” I explained that I wanted to learn more about using technology at work. She responded, “That sounds interesting,” and asked how I knew the organising team. Her questions felt natural because they were connected to the event, not too personal. After a few minutes, I asked about her work and we discovered that we both knew someone from the same community project. The conversation became easy because each question gave us a shared topic to continue.","w2l5":"A colleague told me that she had recently started learning mapping software. I wanted to keep the conversation going, so I did not immediately talk about myself. First I said, “Really?” and asked how she became interested in it. She explained that a colleague had shown her how mapping could help with community projects. I asked what the first few lessons were like. She said they were challenging because the software had many tools, but she enjoyed seeing her progress. I checked my understanding by asking if the difficult beginning had become easier with practice. She agreed. Then I said I could relate because I had felt the same way when learning a new reporting system. Each question connected directly to what she had just said.","w2l6":"Near the end of a workshop, I noticed that the person I was speaking with kept looking toward the next session. I said, “I should let you get back to the workshop.” He thanked me and said it had been great speaking with me. Before leaving, I suggested that we stay in touch. I promised to send him a project link that afternoon, and he said he would review it the next day. We confirmed one clear next step instead of ending with a vague promise. I finished by saying that I looked forward to speaking again. The ending felt warm but professional because it respected his time, confirmed what would happen next, and gave both of us a clear reason to continue the relationship later.","w3l7":"When people ask what I do, I try not to start with technical language. In simple terms, I help our projects stay organised and on schedule. My main responsibility is collecting progress information and turning it into clear updates. A typical task involves checking what has been completed, identifying anything that is late, and asking colleagues for missing information. I work closely with field staff, supervisors, and the finance team because each group has part of the information I need. The purpose of my role is to help managers understand what is happening and decide what to do next. The result is not just a report. A useful update helps the team notice problems early and keep the project moving.","w3l8":"Most weeks, my routine is predictable. I usually start the morning by checking messages and reviewing the plan for the day. After that, I coordinate with colleagues and update our task list. I normally spend part of the afternoon preparing notes or reports. This week is different because we have an important deadline on Thursday. At the moment, I’m checking final details for a client update and waiting for two pieces of information from other team members. My top priority today is finishing the update before 4 p.m. I still have my normal duties, but I am giving less time to them until this deadline is complete. Tomorrow, I expect my routine to become more normal again.","w3l9":"Here is a quick update on the client plan. So far, I’ve completed the first review and corrected the two sections we discussed yesterday. I’m currently checking the final details and confirming the latest numbers with the finance team. The main issue is one missing document from a supplier. I have already requested it, and I expect to receive it this afternoon. If it arrives on time, I expect to finish the full update by 3 p.m. My next step is to add the document, check the final version once more, and send the completed plan to the manager. At the moment, the missing document is the only blocker, so I do not expect the deadline to change."};
-const BOOK_SEEDS=[{"id":"career-fluency","title":"English Communication & Career Fluency","level":"A2+ → B1","audience":"Adult / professional","status":"ready","total_lessons":9,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-a2-b1","title":"SpeakUp English A2 → B1","level":"A2 → B1","audience":"False beginner / pre-intermediate","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-a1","title":"A1 Beginner","level":"A1","audience":"Beginner","status":"ready","total_lessons":44,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-a2","title":"A2 Elementary","level":"A2","audience":"Elementary / pre-intermediate","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-b1","title":"B1 Intermediate","level":"B1","audience":"Intermediate","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-b2","title":"B2 Upper Intermediate","level":"B2","audience":"Upper-intermediate","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-c1","title":"C1 Advanced","level":"C1","audience":"Advanced","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"career-fluency-muna","title":"Career Fluency — Muna Edition","level":"A1+/A2 → functional B1","audience":"Personal edition","status":"ready","total_lessons":36,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"career-fluency-abdisalan","title":"Career Fluency — Abdisalan Edition","level":"A2+ → functional B1","audience":"Personal edition","status":"ready","total_lessons":36,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"career-fluency-abdishakur","title":"Career Fluency — Abdishakur Edition","level":"A2+ → functional B1","audience":"Personal edition","status":"ready","total_lessons":36,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"}];
+const BOOK_SEEDS=[{"id":"career-fluency","title":"English Communication & Career Fluency","level":"A2+ → B1","audience":"Adult / professional","status":"ready","total_lessons":9,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-a2-b1","title":"SpeakUp English A2 → B1","level":"A2 → B1","audience":"False beginner / pre-intermediate","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-a1","title":"A1 Beginner","level":"A1","audience":"Beginner","status":"pilot","total_lessons":22,"activity_model":"Vocabulary · Language · Reading · Listening · Writing · Speaking · Fix & Improve"},{"id":"speakup-a2","title":"A2 Elementary","level":"A2","audience":"Elementary / pre-intermediate","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-b1","title":"B1 Intermediate","level":"B1","audience":"Intermediate","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-b2","title":"B2 Upper Intermediate","level":"B2","audience":"Upper-intermediate","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"speakup-c1","title":"C1 Advanced","level":"C1","audience":"Advanced","status":"ready","total_lessons":22,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"career-fluency-muna","title":"Career Fluency — Muna Edition","level":"A1+/A2 → functional B1","audience":"Personal edition","status":"ready","total_lessons":36,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"career-fluency-abdisalan","title":"Career Fluency — Abdisalan Edition","level":"A2+ → functional B1","audience":"Personal edition","status":"ready","total_lessons":36,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"},{"id":"career-fluency-abdishakur","title":"Career Fluency — Abdishakur Edition","level":"A2+ → functional B1","audience":"Personal edition","status":"ready","total_lessons":36,"activity_model":"Vocabulary · Listening & Reading · Grammar · Writing"}];
 LISTENING_SCRIPTS["su-a2b1-l1"]="On the first day of a new training course, Amina sits next to Yusuf. Amina lives in Borama and works in a small office. Her hometown is Hargeisa. She enjoys reading and walking in the evening. Yusuf is a university student. He likes football and photography. They ask each other simple questions about work, hometowns, and hobbies. Before the lesson starts, Amina introduces Yusuf to another student and says that he is friendly and outgoing.";
+LISTENING_SCRIPTS["a1g-v1-l1"]="Maryan: Hi. I'm Maryan. I'm from Somalia, and I live in Borama. I'm a teacher. I work at a school. I like reading and walking.";
 const OPENAI_TTS_MODEL=process.env.OPENAI_TTS_MODEL||'gpt-4o-mini-tts';
 const OPENAI_TTS_VOICE=process.env.OPENAI_TTS_VOICE||'coral';
 const EDGE_TTS_VOICE=process.env.EDGE_TTS_VOICE||'en-US-EmmaMultilingualNeural';
@@ -379,7 +380,7 @@ app.put('/api/student/b2-upgrade-notice',auth,studentOnly,async(req,res)=>{
 
 
 async function classIdsFor(user){if(user.role==='admin'){const q=await pool.query('select id from classes order by created_at,name');return q.rows.map(r=>r.id)}if(user.role==='teacher'){const q=await pool.query('select id from classes where teacher_id=$1 order by created_at,name',[user.id]);return q.rows.map(r=>r.id)}const q=await pool.query('select class_id from enrollments where user_id=$1',[user.id]);return q.rows.map(r=>r.class_id)}
-const LEVEL_CERTIFICATE_PREFIXES={'speakup-a1':'su-a1-l','speakup-a2':'su-a2-l','speakup-b1':'su-b1-l','speakup-b2':'su-b2-l','speakup-c1':'su-c1-l'};
+const LEVEL_CERTIFICATE_PREFIXES={'speakup-a1':'a1g-v1-l','speakup-a2':'su-a2-l','speakup-b1':'su-b1-l','speakup-b2':'su-b2-l','speakup-c1':'su-c1-l'};
 function certificateDto(r){return {id:r.id,certificateNumber:r.certificate_number,studentId:r.student_id,classId:r.class_id,bookId:r.book_id,level:r.level,studentName:r.student_name,bookTitle:r.book_title,teacherName:r.teacher_name||'',issuedAt:r.issued_at}}
 function certificateNumber(level){const safe=String(level||'LEVEL').toUpperCase().replace(/[^A-Z0-9]+/g,'');return 'EG-'+safe+'-'+new Date().getUTCFullYear()+'-'+crypto.randomBytes(4).toString('hex').toUpperCase()}
 async function currentCertificateContext(studentId,bookId=null){
@@ -392,10 +393,10 @@ async function certificateEligibility(studentId,bookId=null){
  if(!ctx)return {eligible:false,reason:'No class is assigned.',completed:0,required:0,context:null};
  const prefix=LEVEL_CERTIFICATE_PREFIXES[ctx.course_id];
  if(!prefix)return {eligible:false,reason:'Level completion certificates are available for standalone A1–C1 EnglishGate levels.',completed:0,required:0,context:ctx};
- const total=Math.max(1,Number(ctx.total_lessons||22)),lessonIds=Array.from({length:total},(_,i)=>prefix+(i+1)),steps=['vocabulary','listening','grammar','writing'];
+ const total=Math.max(1,Number(ctx.total_lessons||22)),lessonIds=Array.from({length:total},(_,i)=>prefix+(i+1)),steps=ctx.course_id==='speakup-a1'?['vocabulary','grammar','reading','listening','writing','speaking','review']:['vocabulary','listening','grammar','writing'];
  const q=await pool.query(`select count(*)::int as count from completion where student_id=$1 and lesson_id=any($2::text[]) and step=any($3::text[])`,[studentId,lessonIds,steps]);
  const completed=Number(q.rows[0]?.count||0),required=lessonIds.length*steps.length;
- return {eligible:completed>=required,completed,required,reason:completed>=required?'Complete':'Complete every Vocabulary, Listening & Reading, Grammar, and Writing activity in the level.',context:ctx};
+ return {eligible:completed>=required,completed,required,reason:completed>=required?'Complete':ctx.course_id==='speakup-a1'?'Complete every Vocabulary, Language, Reading, Listening, Writing, Speaking, and Fix & Improve activity in the level.':'Complete every Vocabulary, Listening & Reading, Grammar, and Writing activity in the level.',context:ctx};
 }
 async function maybeIssueLevelCertificate(studentId,bookId=null){
  const eligibility=await certificateEligibility(studentId,bookId),ctx=eligibility.context;if(!eligibility.eligible||!ctx)return {certificate:null,eligibility};
@@ -522,6 +523,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   select u.id,u.name,(p.profile_photo is not null) as has_photo,p.job_title,
          coalesce(cls.name,'') as class_name,
          coalesce(cls.level,'') as level,
+         coalesce(cls.course_id,'') as course_id,
          coalesce(cls.book_title,'Workbook') as book_title,
          coalesce(cls.total_lessons,22)::int as total_lessons,
          coalesce(comp.completed,0)::int as completed,
@@ -531,7 +533,7 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   from users u
   left join profiles p on p.user_id=u.id
   left join lateral (
-    select c.name,c.level,b.title as book_title,coalesce(b.total_lessons,22) as total_lessons
+    select c.name,c.level,c.course_id,b.title as book_title,coalesce(b.total_lessons,22) as total_lessons
     from enrollments e
     join classes c on c.id=e.class_id
     left join books b on b.id=c.course_id
@@ -542,21 +544,21 @@ app.get('/api/leaderboard',auth,async(req,res)=>{
   left join lateral (
     select count(*)::int as completed
     from completion c
-    where c.student_id=u.id and c.step in ('vocabulary','listening','grammar','writing')
+    where c.student_id=u.id and ((cls.course_id='speakup-a1' and c.lesson_id like 'a1g-v1-l%' and c.step in ('vocabulary','grammar','reading','listening','writing','speaking','review')) or (coalesce(cls.course_id,'')<>'speakup-a1' and c.step in ('vocabulary','listening','grammar','writing')))
   ) comp on true
   left join lateral (
     select round(avg(latest.score)::numeric,0)::int as average,count(*)::int as scored,max(latest.at) as last_active
     from (
       select distinct on (a.lesson_id,a.skill) a.lesson_id,a.skill,a.score,a.at
       from attempts a
-      where a.student_id=u.id and a.skill in ('vocabulary','listening','grammar','writing')
+      where a.student_id=u.id and ((cls.course_id='speakup-a1' and a.lesson_id like 'a1g-v1-l%' and a.skill in ('vocabulary','grammar','reading','listening','writing','speaking','review')) or (coalesce(cls.course_id,'')<>'speakup-a1' and a.skill in ('vocabulary','listening','grammar','writing')))
       order by a.lesson_id,a.skill,a.at desc
     ) latest
   ) perf on true
   where u.role='student'
  `)).rows;
  const students=rows.map(r=>{
-  const completed=Number(r.completed||0),average=r.average===null||r.average===undefined?null:Number(r.average),scored=Number(r.scored||0),total=Math.max(1,Number(r.total_lessons||22)*4),completion=Math.min(100,Math.round(completed/total*100)),practice=Math.min(100,scored*8),score=Math.round((Number.isFinite(average)?average:0)*0.45+completion*0.35+practice*0.2);
+  const completed=Number(r.completed||0),average=r.average===null||r.average===undefined?null:Number(r.average),scored=Number(r.scored||0),stepsPerLesson=r.course_id==='speakup-a1'?7:4,total=Math.max(1,Number(r.total_lessons||22)*stepsPerLesson),completion=Math.min(100,Math.round(completed/total*100)),practice=Math.min(100,scored*8),score=Math.round((Number.isFinite(average)?average:0)*0.45+completion*0.35+practice*0.2);
   return {
   id:r.id,
   name:r.name,
@@ -595,14 +597,14 @@ function cleanAttemptEvidence(value){
 }
 app.post('/api/attempts',auth,studentOnly,async(req,res)=>{
  const {lessonId,skill,score,tags=[],evidence=[]}=req.body;
- if(!lessonId||!['vocabulary','grammar','listening','writing'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});
+ if(!lessonId||!['vocabulary','grammar','reading','listening','writing','speaking','review'].includes(skill)||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid attempt.'});
  const safeTags=Array.isArray(tags)?tags.map(x=>String(x).slice(0,120)).slice(0,9):[],safeEvidence=cleanAttemptEvidence(evidence);
  if(/^su-b2-l\d+$/.test(String(lessonId))&&!safeTags.includes('curriculum:b2-living-standard-v1'))safeTags.push('curriculum:b2-living-standard-v1');
  await pool.query('insert into attempts(student_id,lesson_id,skill,score,tags,evidence) values($1,$2,$3,$4,$5,$6::jsonb)',[req.user.id,lessonId,skill,score,safeTags,JSON.stringify(safeEvidence)]);
  await pool.query('update profiles set points=points+$1 where user_id=$2',[score>=70?8:2,req.user.id]);
  res.json({ok:true,evidenceSaved:safeEvidence.length})
 });
-app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','listening','grammar','writing','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,certificate:issued.certificate||null})});
+app.post('/api/completion',auth,studentOnly,async(req,res)=>{const {lessonId,step}=req.body;if(!lessonId||!['vocabulary','grammar','reading','listening','writing','speaking','review'].includes(step))return res.status(400).json({error:'Invalid completion step.'});const r=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,step]);if(r.rowCount)await pool.query('update profiles set points=points+10 where user_id=$1',[req.user.id]);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,certificate:issued.certificate||null})});
 
 const WRITING_GRADE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const WRITING_GRADE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
@@ -625,7 +627,7 @@ function writingGradeFeedback(dimensions){
 }
 async function gradeWritingWithJev({lessonId,task,text,level,minWords,maxWords}){
  const apiKey=String(process.env.TYPESAFE_API_KEY||'').trim();if(!apiKey)throw new Error('Writing grading service is not configured.');
- const state={purpose:'Grade an English learner writing response',lessonId:String(lessonId||''),cefrLevel:String(level||''),writingTask:String(task||'').slice(0,1200),learnerResponse:String(text||'').slice(0,5000),wordTarget:{min:Number(minWords||0),max:Number(maxWords||0)},gradingRules:['Judge only the supplied response against the supplied task.','Do not infer learner identity or background.','Use needs_work only when there is a meaningful weakness, not for a few harmless errors.','At B2, reward successful communication even when minor language errors remain.']};
+ const state={purpose:'Grade an English learner writing response',lessonId:String(lessonId||''),cefrLevel:String(level||''),writingTask:String(task||'').slice(0,1200),learnerResponse:String(text||'').slice(0,5000),wordTarget:{min:Number(minWords||0),max:Number(maxWords||0)},gradingRules:['Judge only the supplied response against the supplied task.','Do not infer learner identity or background.','Use needs_work only when there is a meaningful weakness, not for a few harmless errors.','At the stated CEFR level, reward successful communication even when minor language errors remain.']};
  const mk=instructions=>({type:'choice',instructions,criteria:{strong:'The response meets this dimension well for the stated CEFR level.',developing:'The response communicates successfully but has noticeable room to improve in this dimension.',needs_work:'The response has a substantial weakness in this dimension that interferes with the task or communication.'}});
  const questions={task:mk('Judge task completion and relevance.'),grammar:mk('Judge grammar accuracy and control for the stated CEFR level.'),vocabulary:mk('Judge vocabulary range, appropriacy, and precision for the stated CEFR level.'),clarity:mk('Judge clarity, organisation, and ease of understanding for the stated CEFR level.')};
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),3500);
@@ -648,18 +650,31 @@ function decisionAnswer(data,id,allowed){
  return {choice,confidence:Number.isFinite(confidence)&&confidence>=0&&confidence<=1?confidence:null}
 }
 async function performanceStateFor(studentId){
- const ctx=await currentCertificateContext(studentId),prefix=ctx?LEVEL_CERTIFICATE_PREFIXES[ctx.course_id]:null,params=[studentId],filter=prefix?' and lesson_id like $2':'';
+ const ctx=await currentCertificateContext(studentId),prefix=ctx?LEVEL_CERTIFICATE_PREFIXES[ctx.course_id]:null;
+ const evidenceSkills=ctx?.course_id==='speakup-a1'
+  ?['vocabulary','grammar','reading','listening','writing','speaking','review']
+  :['vocabulary','listening','grammar','writing'];
+ const proficiencySkills=ctx?.course_id==='speakup-a1'
+  ?['vocabulary','grammar','reading','listening','writing','speaking']
+  :evidenceSkills;
+ const params=[studentId,evidenceSkills],filter=prefix?' and lesson_id like $3':'';
  if(prefix)params.push(prefix+'%');
- const rows=(await pool.query(`select lesson_id,skill,score,tags,evidence,at from attempts where student_id=$1${filter} and skill in ('vocabulary','listening','grammar','writing') order by at`,params)).rows;
- const completionParams=[studentId],completionFilter=prefix?' and lesson_id like $2':'';
+ const rows=(await pool.query('select lesson_id,skill,score,tags,evidence,at from attempts where student_id=$1 and skill=any($2::text[])'+filter+' order by at',params)).rows;
+ const completionParams=[studentId,evidenceSkills],completionFilter=prefix?' and lesson_id like $3':'';
  if(prefix)completionParams.push(prefix+'%');
- const completionRows=(await pool.query(`select lesson_id,step from completion where student_id=$1${completionFilter} and step in ('vocabulary','listening','grammar','writing')`,completionParams)).rows;
+ const completionRows=(await pool.query('select lesson_id,step from completion where student_id=$1 and step=any($2::text[])'+completionFilter,completionParams)).rows;
  const latest=new Map();rows.forEach(r=>latest.set(r.lesson_id+'|'+r.skill,r));
  const latestRows=[...latest.values()].sort((a,b)=>new Date(a.at)-new Date(b.at));
- const skillAverages={};for(const skill of ['vocabulary','listening','grammar','writing'])skillAverages[skill]=averageNumbers(latestRows.filter(r=>r.skill===skill).map(r=>r.score));
- const totalActivities=Math.max(1,Number(ctx?.total_lessons||0)*4||latestRows.length||1),completion=Math.min(100,Math.round(completionRows.length/totalActivities*100)),overall=averageNumbers(Object.values(skillAverages));
- let trendDelta=null;if(latestRows.length>=4){const n=Math.min(4,Math.floor(latestRows.length/2)),recent=latestRows.slice(-n).map(r=>r.score),previous=latestRows.slice(-(n*2),-n).map(r=>r.score);if(previous.length===n)trendDelta=averageNumbers(recent)-averageNumbers(previous)}
- const wrongTags={};for(const r of rows){for(const e of Array.isArray(r.evidence)?r.evidence:[]){if(e?.correct===false&&e?.tag)wrongTags[e.tag]=(wrongTags[e.tag]||0)+1}}
+ const skillAverages={};for(const skill of proficiencySkills)skillAverages[skill]=averageNumbers(latestRows.filter(r=>r.skill===skill).map(r=>r.score));
+ const totalActivities=Math.max(1,Number(ctx?.total_lessons||0)*evidenceSkills.length||latestRows.length||1);
+ const completion=Math.min(100,Math.round(completionRows.length/totalActivities*100)),overall=averageNumbers(Object.values(skillAverages));
+ let trendDelta=null;
+ if(latestRows.length>=4){
+  const n=Math.min(4,Math.floor(latestRows.length/2)),recent=latestRows.slice(-n).map(r=>r.score),previous=latestRows.slice(-(n*2),-n).map(r=>r.score);
+  if(previous.length===n)trendDelta=averageNumbers(recent)-averageNumbers(previous)
+ }
+ const wrongTags={};
+ for(const r of rows){for(const e of Array.isArray(r.evidence)?r.evidence:[]){if(e?.correct===false&&e?.tag)wrongTags[e.tag]=(wrongTags[e.tag]||0)+1}}
  const recurrentErrors=Object.entries(wrongTags).filter(([,count])=>count>=2).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([tag,count])=>({tag,count}));
  const prioritySkill=Object.entries(skillAverages).filter(([,v])=>Number.isFinite(v)).sort((a,b)=>a[1]-b[1])[0]?.[0]||'none';
  return {studentId,bookId:ctx?.course_id||'',level:ctx?.level||'',completion,overall,activeLessons:new Set([...latestRows.map(r=>r.lesson_id),...completionRows.map(r=>r.lesson_id)]).size,totalAttempts:rows.length,scoredActivities:latestRows.length,skillAverages,trendDelta,retries:Math.max(0,rows.length-latestRows.length),recurrentErrors,prioritySkill}
@@ -681,7 +696,7 @@ async function performanceDecisionWithJev(state){
   status:mk('Classify the learner overall. Treat insufficient evidence as insufficient_data rather than guessing.',{on_track:'Evidence shows broadly successful progress with no urgent concern.',watch:'There is enough evidence to monitor a meaningful weakness or uneven progress.',intervention:'There is enough evidence of persistent low performance or decline needing direct teacher attention.',insufficient_data:'There is not enough evidence to make a reliable learner-status decision.'}),
   trend:mk('Classify the recent performance trend from the supplied numeric evidence only.',{improving:'Recent performance is meaningfully better than earlier comparable performance.',stable:'Recent performance is broadly similar to earlier performance.',declining:'Recent performance is meaningfully worse than earlier comparable performance.',insufficient_data:'There is not enough comparable evidence to judge a trend.'}),
   evidence:mk('Judge how strong the evidence base is for performance decisions.',{strong:'Many scored activities across multiple skills support a reliable judgement.',moderate:'There is useful evidence, but coverage or volume is still incomplete.',weak:'There is too little scored evidence for a confident judgement.'}),
-  priority:mk('Choose the skill that most needs attention, considering both low performance and persistence. Choose none when evidence is inadequate or no skill stands out.',{vocabulary:'Vocabulary is the clearest priority.',listening:'Listening and reading is the clearest priority.',grammar:'Grammar is the clearest priority.',writing:'Writing is the clearest priority.',none:'No reliable priority skill can be selected.'}),
+  priority:mk('Choose the skill that most needs attention, considering both low performance and persistence. Choose none when evidence is inadequate or no skill stands out.',{vocabulary:'Vocabulary is the clearest priority.',grammar:'Language control is the clearest priority.',reading:'Reading is the clearest priority.',listening:'Listening is the clearest priority.',writing:'Writing is the clearest priority.',speaking:'Speaking is the clearest priority.',none:'No reliable priority skill can be selected.'}),
   persistence:mk('Judge whether weaknesses look recurring rather than a single isolated result.',{recurring:'The evidence contains repeated weakness or repeated incorrect patterns.',one_off:'The concern appears isolated or has recovered on later evidence.',unclear:'There is not enough evidence to judge persistence.'}),
   urgency:mk('Choose the level of teacher attention warranted by the evidence.',{low:'Normal progress; routine monitoring is enough.',medium:'A real weakness should be reviewed soon, but immediate intervention is not required.',high:'Persistent low performance or decline warrants direct teacher review.'}),
   next_action:mk('Choose the single most useful next action supported by the evidence.',{continue:'Continue the planned workbook sequence.',review_activity:'Review the weakest recurring activity and its question evidence.',retry_lesson:'Retry the affected lesson after targeted review.',teacher_review:'A teacher should inspect the learner evidence and intervene directly.'})
@@ -691,7 +706,7 @@ async function performanceDecisionWithJev(state){
  try{
   const r=await fetch(WRITING_GRADE_URL,{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({state:safeState,model:WRITING_GRADE_MODEL,questions}),signal:controller.signal});
   if(!r.ok)return fallback;
-  const data=await r.json(),status=decisionAnswer(data,'status',['on_track','watch','intervention','insufficient_data']),trend=decisionAnswer(data,'trend',['improving','stable','declining','insufficient_data']),evidence=decisionAnswer(data,'evidence',['strong','moderate','weak']),priority=decisionAnswer(data,'priority',['vocabulary','listening','grammar','writing','none']),persistence=decisionAnswer(data,'persistence',['recurring','one_off','unclear']),urgency=decisionAnswer(data,'urgency',['low','medium','high']),nextAction=decisionAnswer(data,'next_action',['continue','review_activity','retry_lesson','teacher_review']);
+  const data=await r.json(),status=decisionAnswer(data,'status',['on_track','watch','intervention','insufficient_data']),trend=decisionAnswer(data,'trend',['improving','stable','declining','insufficient_data']),evidence=decisionAnswer(data,'evidence',['strong','moderate','weak']),priority=decisionAnswer(data,'priority',['vocabulary','grammar','reading','listening','writing','speaking','none']),persistence=decisionAnswer(data,'persistence',['recurring','one_off','unclear']),urgency=decisionAnswer(data,'urgency',['low','medium','high']),nextAction=decisionAnswer(data,'next_action',['continue','review_activity','retry_lesson','teacher_review']);
   if(!status||!trend||!evidence||!priority||!persistence||!urgency||!nextAction)return fallback;
   return {source:'jev',version:PERFORMANCE_DECISION_VERSION,status,trend,evidence,priority,persistence,urgency,nextAction}
  }catch{return fallback}finally{clearTimeout(timer)}
@@ -720,7 +735,117 @@ app.post('/api/writing-grade',auth,studentOnly,async(req,res)=>{
   res.set('Cache-Control','no-store');res.json({ok:true,...grade});
  }catch(e){console.error('writing grade error',e.message);res.status(503).json({error:'Writing feedback is temporarily unavailable. Your response can still be saved.'})}
 });
-app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||''),publishToCommunity=req.body.publishToCommunity===true;if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before saving.'});const previous=await pool.query('select content,published_to_community from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score,published_to_community) values($1,$2,$3,null,$4) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,published_to_community=excluded.published_to_community,updated_at=now()`,[req.user.id,lessonId,content,publishToCommunity]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,completed:Boolean(done.rowCount),publishedToCommunity:publishToCommunity,certificate:issued.certificate||null})});
+
+function a1SpeakingFallback(responses){
+ const text=responses.join(' '),last=responses[4];
+ const punctuation=(last.match(/\?/g)||[]).length,forms=(last.match(/\b(?:what(?:'s| is)?|where|when|who|how|why|do you|are you|can you|is your)\b/gi)||[]).length;
+ const questions=Math.max(punctuation,forms);
+ const introduces=/\b(i['’]?m|i am|my name)\b/i.test(text);
+ const details=/\b(live|from|work|study|teacher|student|like)\b/i.test(text);
+ let score=45;
+ if(introduces)score+=12;
+ if(details)score+=12;
+ if(questions>=2)score+=16;
+ if(responses.filter(x=>x.split(/\s+/).filter(Boolean).length>=2).length>=4)score+=10;
+ score=Math.min(69,score);
+ const status=score>=60?'A1_FUNCTIONAL':'A1_DEVELOPING';
+ return {
+  score,status,fallback:true,provider:'deterministic-fallback',
+  feedback:{
+   strength:questions>=2?'You completed the exchange and asked questions back.':'You completed the main conversation turns.',
+   improve:questions>=2?'Keep your answers clear and use the target forms accurately.':'Ask at least two short, relevant questions to make the exchange reciprocal.'
+  }
+ };
+}
+async function evaluateA1SpeakingWithJev(responses){
+ const apiKey=String(process.env.TYPESAFE_API_KEY||'').trim();
+ if(!apiKey)return a1SpeakingFallback(responses);
+ const state={
+  purpose:'Evaluate an A1 English learner first-meeting conversation',
+  cefrLevel:'A1',
+  lesson:'Getting Acquainted',
+  learnerResponses:responses,
+  requiredEvidence:[
+   'greet or introduce self',
+   'give basic personal information',
+   'answer simple questions',
+   'ask at least two relevant questions',
+   'maintain a short understandable exchange'
+  ],
+  gradingRules:[
+   'Judge communication against A1 expectations only.',
+   'Minor article, preposition, or agreement errors must not erase successful meaning.',
+   'Do not require native-like pronunciation, sophistication, or B1-level elaboration.',
+   'Reciprocity matters: the learner must ask questions too.'
+  ]
+ };
+ const mk=instructions=>({
+  type:'choice',
+  instructions,
+  criteria:{
+   strong:'The learner demonstrates this A1 communication dimension independently and successfully.',
+   developing:'The learner communicates successfully overall but needs some support or correction in this dimension.',
+   needs_work:'The learner does not yet provide enough evidence of this A1 communication dimension.'
+  }
+ });
+ const questions={
+  task:mk('Judge whether the learner completes the first-meeting communication task and gives useful personal information.'),
+  comprehensibility:mk('Judge whether the learner responses are understandable at A1 even if minor form errors occur.'),
+  reciprocity:mk('Judge whether the learner responds to the partner and asks at least two relevant questions.'),
+  independence:mk('Judge whether the learner produces their own short responses rather than relying on a copied model.')
+ };
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),3500);
+ try{
+  const r=await fetch(WRITING_GRADE_URL,{
+   method:'POST',
+   headers:{Authorization:'Bearer '+apiKey,'Content-Type':'application/json'},
+   body:JSON.stringify({state,model:WRITING_GRADE_MODEL,questions}),
+   signal:controller.signal
+  });
+  if(!r.ok)throw new Error('Speaking decision service returned '+r.status);
+  const data=await r.json(),dimensions={};
+  for(const id of Object.keys(questions)){
+   const v=writingGradeChoice(data,id);
+   if(!v)throw new Error('Speaking decision response was incomplete.');
+   dimensions[id]=v;
+  }
+  const points={strong:100,developing:72,needs_work:45};
+  const score=Math.round(Object.values(dimensions).reduce((sum,x)=>sum+points[x.choice],0)/Object.keys(dimensions).length);
+  const status=score>=80&&dimensions.reciprocity.choice!=='needs_work'
+   ?'A1_SECURE'
+   :score>=60&&dimensions.task.choice!=='needs_work'
+    ?'A1_FUNCTIONAL'
+    :'A1_DEVELOPING';
+  const strong=Object.entries(dimensions).filter(([,v])=>v.choice==='strong').map(([k])=>k);
+  const weak=Object.entries(dimensions).filter(([,v])=>v.choice!=='strong').map(([k])=>k);
+  return {
+   score,status,fallback:false,provider:'jev',dimensions,
+   feedback:{
+    strength:strong.length?'Strong evidence: '+strong.join(', ')+'.':'The learner completed the speaking attempt.',
+    improve:weak.length?'Next focus: '+weak.slice(0,2).join(' and ')+'.':'Keep using short, clear, reciprocal questions and answers.'
+   }
+  };
+ }catch(e){
+  console.error('A1 speaking Jev evaluation error:',e.message);
+  return a1SpeakingFallback(responses);
+ }finally{
+  clearTimeout(timer);
+ }
+}
+app.post('/api/a1/speaking/evaluate',auth,studentOnly,async(req,res)=>{
+ const lessonId=String(req.body?.lessonId||'');
+ const raw=Array.isArray(req.body?.responses)?req.body.responses:[];
+ const responses=raw.slice(0,5).map(x=>String(x||'').trim().slice(0,700));
+ if(lessonId!=='a1g-v1-l1'||responses.length!==5||responses.some(x=>!x)){
+  return res.status(400).json({error:'Complete all five speaking turns first.'});
+ }
+ const result=await evaluateA1SpeakingWithJev(responses);
+ res.set('Cache-Control','no-store');
+ res.json({ok:true,...result});
+});
+
+app.put('/api/writing/:lessonId',auth,studentOnly,async(req,res)=>{const content=String(req.body.content||'').trim(),lessonId=String(req.params.lessonId||''),publishToCommunity=req.body.publishToCommunity===true;if(!isAuthenticWritingText(content))return res.status(400).json({error:'Write your real-life response before saving.'});const previous=await pool.query('select content,published_to_community from writing_samples where student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`insert into writing_samples(student_id,lesson_id,content,score,published_to_community) values($1,$2,$3,null,$4) on conflict(student_id,lesson_id) do update set content=excluded.content,score=null,published_to_community=excluded.published_to_community,updated_at=now()`,[req.user.id,lessonId,content,publishToCommunity]);if(previous.rowCount&&previous.rows[0].content!==content)await pool.query('delete from writing_likes where author_student_id=$1 and lesson_id=$2',[req.user.id,lessonId]);await pool.query(`delete from attempts where student_id=$1 and lesson_id=$2 and skill='writing' and tags @> array['teacher:graded']::text[]`,[req.user.id,lessonId]);const done=lessonId==='a1g-v1-l1'?{rowCount:0}:await pool.query('insert into completion(student_id,lesson_id,step) values($1,$2,$3) on conflict do nothing returning step',[req.user.id,lessonId,'writing']);const issued=await maybeIssueLevelCertificate(req.user.id);res.json({ok:true,completed:Boolean(done.rowCount),publishedToCommunity:publishToCommunity,certificate:issued.certificate||null})});
 function authenticWritingText(raw){
  const text=String(raw||'').trim();if(!text)return'';
  const looksJson=/^[\[{]/.test(text);
@@ -961,7 +1086,7 @@ app.put('/api/teacher/context',auth,teacherOnly,async(req,res)=>{
 });
 
 app.post('/api/teacher/assignments',auth,teacherOnly,async(req,res)=>{
- const classId=String(req.body.classId||'').trim(),bookId=String(req.body.bookId||'').trim(),lessonId=String(req.body.lessonId||'').trim(),lessonTitle=String(req.body.lessonTitle||'').trim(),lessonNumber=Number(req.body.lessonNumber),allowed=['vocabulary','listening','grammar','writing'],skills=Array.isArray(req.body.skills)?req.body.skills.filter(x=>allowed.includes(x)):[];
+ const classId=String(req.body.classId||'').trim(),bookId=String(req.body.bookId||'').trim(),lessonId=String(req.body.lessonId||'').trim(),lessonTitle=String(req.body.lessonTitle||'').trim(),lessonNumber=Number(req.body.lessonNumber),allowed=bookId==='speakup-a1'?['vocabulary','grammar','reading','listening','writing','speaking','review']:['vocabulary','listening','grammar','writing'],skills=Array.isArray(req.body.skills)?req.body.skills.filter(x=>allowed.includes(x)):[];
  if(!classId||!bookId||!lessonId||!lessonTitle||!Number.isInteger(lessonNumber)||lessonNumber<1||skills.length<1)return res.status(400).json({error:'Invalid workbook assignment.'});
  const owns=await pool.query('select id,course_id from classes where id=$1 and teacher_id=$2',[classId,req.user.id]);
  if(!owns.rowCount)return res.status(403).json({error:'You cannot assign work to this class.'});
@@ -991,6 +1116,7 @@ app.get('/a1-foundation-phase2.js',(req,res)=>sendFreshFile(res,'a1-foundation-p
 app.get('/a1-foundation-phase3.js',(req,res)=>sendFreshFile(res,'a1-foundation-phase3.js','application/javascript'));
 app.get('/a1-foundation-phase4.js',(req,res)=>sendFreshFile(res,'a1-foundation-phase4.js','application/javascript'));
 app.get('/a1-foundation-standard.js',(req,res)=>sendFreshFile(res,'a1-foundation-standard.js','application/javascript'));
+app.get('/a1-gold-lesson1-v1.js',(req,res)=>sendFreshFile(res,'a1-gold-lesson1-v1.js','application/javascript'));
 app.get('/a2-living-standard.js',(req,res)=>sendFreshFile(res,'a2-living-standard.js','application/javascript'));
 app.get('/cefr-live-books.js',(req,res)=>sendFreshFile(res,'cefr-live-books.js','application/javascript'));
 app.get('/live-books.js',(req,res)=>sendFreshFile(res,'live-books.js','application/javascript'));
