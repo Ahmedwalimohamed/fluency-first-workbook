@@ -94,9 +94,6 @@ async function registerServiceWorker(){
       sessionStorage.setItem(key,'reloaded');
       window.location.reload();
     });
-
-    // Version the worker URL so an existing installation cannot stay pinned
-    // to an older cache policy after a production release.
     const registration = await navigator.serviceWorker.register('/sw.js?v=7', { scope: '/' });
     registration.update().catch(()=>{});
   }catch(error){
@@ -106,10 +103,24 @@ async function registerServiceWorker(){
 
 function loadA1NorthstarParity(){
   if(document.querySelector('script[data-a1-northstar-parity="v1"]')) return;
-  const script = document.createElement('script');
-  script.src = '/a1-northstar-parity-v1.js?v=1';
-  script.dataset.a1NorthstarParity = 'v1';
-  document.body.appendChild(script);
+  const startParity = () => {
+    if(document.querySelector('script[data-a1-northstar-parity="v1"]')) return;
+    const parity = document.createElement('script');
+    parity.src = '/a1-northstar-parity-v1.js?v=1';
+    parity.dataset.a1NorthstarParity = 'v1';
+    document.body.appendChild(parity);
+  };
+  if(window.A1_GOLD_V1_BOOK?.northstarContent?.version === 'a1-northstar-content-v1'){
+    startParity();
+    return;
+  }
+  const existing = document.querySelector('script[data-a1-northstar-content="v1"]');
+  if(existing){ existing.addEventListener('load',startParity,{once:true}); return; }
+  const content = document.createElement('script');
+  content.src = '/a1-northstar-content-v1.js?v=1';
+  content.dataset.a1NorthstarContent = 'v1';
+  content.addEventListener('load',startParity,{once:true});
+  document.body.appendChild(content);
 }
 
 window.addEventListener('beforeinstallprompt', event => {
