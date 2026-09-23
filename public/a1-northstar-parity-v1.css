@@ -1,0 +1,80 @@
+/* EnglishGate A1 Gold — B2 Northstar parity additions.
+   Base layout intentionally reuses englishgate-b2-premium-v3.css through
+   .b2-microflow so A1 and B2 share the same product surface. */
+
+.a1-northstar-flow .a1-parity-mission,
+.a1-northstar-flow .a1-parity-bank,
+.a1-northstar-flow .a1-preview-transfer,
+.a1-northstar-flow .a1-mediation-note{
+  display:grid;
+  gap:8px;
+  padding:16px 18px;
+  border:1px solid var(--eg-line);
+  border-radius:12px;
+  background:var(--eg-soft);
+}
+.a1-northstar-flow .a1-parity-mission small,
+.a1-northstar-flow .a1-parity-bank>small,
+.a1-northstar-flow .a1-preview-transfer small,
+.a1-northstar-flow .a1-mediation-note small{
+  color:#405aa9;
+  font-size:.66rem;
+  font-weight:800;
+  letter-spacing:.09em;
+}
+.a1-northstar-flow .a1-parity-mission strong{
+  color:var(--eg-ink);
+  font-size:1rem;
+  line-height:1.45;
+}
+.a1-northstar-flow .a1-parity-mission p,
+.a1-northstar-flow .a1-preview-transfer p,
+.a1-northstar-flow .a1-mediation-note p{
+  margin:0;
+  color:#52647b;
+  line-height:1.6;
+}
+.a1-northstar-flow .a1-parity-bank{background:#fff}
+.a1-northstar-flow .a1-parity-bank>div{display:grid;gap:3px}
+.a1-northstar-flow .a1-parity-bank strong{color:#354963;font-size:.72rem}
+.a1-northstar-flow .a1-parity-bank span{color:#68788c;font-size:.88rem;line-height:1.55}
+.a1-northstar-flow .a1-retrieval-badge{
+  width:max-content;
+  max-width:100%;
+  padding:6px 9px;
+  border:1px solid #d5deeb;
+  border-radius:7px;
+  background:#f7f9fc;
+  color:#5a6c84;
+  font-size:.68rem;
+  font-weight:760;
+  letter-spacing:.04em;
+}
+.a1-northstar-flow .a1-northstar-speaking-transcript{
+  display:grid;
+  gap:10px;
+  max-height:310px;
+  overflow:auto;
+  padding:14px;
+  border:1px solid var(--eg-line);
+  border-radius:12px;
+  background:#f8fafc;
+}
+.a1-northstar-flow .a1-speaking-actions{display:flex;flex-wrap:wrap;gap:10px}
+.a1-northstar-flow .a1-speaking-actions>*{min-height:44px}
+.a1-northstar-flow .a1-jev-wait{
+  padding:18px;
+  border:1px solid var(--eg-line);
+  border-radius:12px;
+  background:#f8fafc;
+  color:#5d6e82;
+  font-weight:700;
+}
+body.a1-northstar-workbook-mode .micro-title small::before{
+  content:"B2 NORTHSTAR · ";
+  color:#3157d5;
+}
+@media (max-width:700px){
+  .a1-northstar-flow .a1-speaking-actions{display:grid;grid-template-columns:1fr}
+  .a1-northstar-flow .a1-speaking-actions>*{width:100%}
+}
