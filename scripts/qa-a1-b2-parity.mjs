@@ -1,18 +1,42 @@
 import fs from 'node:fs';
+import vm from 'node:vm';
 import {spawnSync} from 'node:child_process';
 
 const parity=fs.readFileSync(new URL('../public/a1-northstar-parity-v1.js',import.meta.url),'utf8');
+const content=fs.readFileSync(new URL('../public/a1-northstar-content-v1.js',import.meta.url),'utf8');
 const css=fs.readFileSync(new URL('../public/a1-northstar-parity-v1.css',import.meta.url),'utf8');
 const pwa=fs.readFileSync(new URL('../public/pwa.js',import.meta.url),'utf8');
 const gold=fs.readFileSync(new URL('../public/a1-gold-v1.js',import.meta.url),'utf8');
 const b2=fs.readFileSync(new URL('../public/b2-northstar-workbook-v1.js',import.meta.url),'utf8');
 
 function syntax(path){return spawnSync(process.execPath,['--check',new URL(path,import.meta.url).pathname],{encoding:'utf8'}).status===0}
+const mockLessons=Array.from({length:22},(_,i)=>({number:i+1,title:`L${i+1}`,listening:{},writing:{},realWorldSituation:'old',foundation:'old',performance:'old',mediation:'old'}));
+const sandbox={window:{A1_GOLD_V1_BOOK:{lessons:mockLessons}},setTimeout:()=>{}};
+vm.runInNewContext(content,sandbox,{filename:'a1-northstar-content-v1.js'});
+const overlay=sandbox.window.ENGLISHGATE_A1_NORTHSTAR_CONTENT||{};
+const allOverlayed=mockLessons.every(l=>l.northstarContentVersion==='a1-northstar-content-v1');
+const allSources=mockLessons.every(l=>String(l.listening?.readingText||'').length>=40&&String(l.listening?.audioScript||'').length>=40);
+const allQuestionDepth=mockLessons.every(l=>{
+ const qs=l.listening?.questions||[];
+ return qs.filter(q=>String(q.tag||'').startsWith('reading:')).length>=4&&qs.filter(q=>String(q.tag||'').startsWith('listening:')).length>=4;
+});
+const allTransfer=mockLessons.every(l=>String(l.performance||'').length>=35&&String(l.northstarChangedCondition||'').length>=25&&String(l.mediation||'').length>=25);
+const allEvidence=mockLessons.every(l=>l.northstarEvidence?.speaking?.length>=4&&l.northstarAdaptive?.strong?.length>=3&&l.northstarAdaptive?.struggling?.length>=3);
+
 const checks=[
  ['parity engine syntax',syntax('../public/a1-northstar-parity-v1.js')],
+ ['Northstar content overlay syntax',syntax('../public/a1-northstar-content-v1.js')],
  ['PWA loader syntax',syntax('../public/pwa.js')],
  ['all 22 frozen A1 lessons remain present',/const lessons=\[L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22\]/.test(gold)],
  ['A1 keeps Gold v1.0 frozen identity',gold.includes("englishgate-a1-gold-v1.0-frozen")&&gold.includes("curriculumLocked:true")],
+ ['content overlay contains exactly 22 lesson scenarios',Object.keys(overlay).length===22],
+ ['content overlay applies to all 22 lessons',allOverlayed],
+ ['every A1 lesson has substantial adult reading and listening sources',allSources],
+ ['every A1 lesson has >=4 reading and >=4 listening comprehension decisions',allQuestionDepth],
+ ['every A1 lesson has performance + mediation + changed-condition transfer',allTransfer],
+ ['every A1 lesson has B2-style evidence + adaptive metadata',allEvidence],
+ ['content overlay preserves frozen target grammar/vocabulary ledger',!content.includes('targetLanguage=')&&!content.includes('targetVocabulary=')&&!content.includes('grammar=')&&!content.includes('vocabularyEntries=')],
+ ['content overlay explicitly protects frozen progression',content.includes('This layer does not change the frozen vocabulary/grammar progression')&&content.includes('frozenProgressionPreserved:true')],
  ['A1 parity explicitly references B2 Northstar',parity.includes("reference:'B2 Northstar'")&&parity.includes("qualityParity:true")],
  ['A1 uses exact five-phase Northstar flow',parity.includes("const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX']")],
  ['A1 uses focused 10-step microflow',parity.includes("const TOTAL=10")&&parity.includes("{phase:'SEE',skill:'reading'}")&&parity.includes("{phase:'FIX',skill:'writing'}")],
@@ -32,7 +56,7 @@ const checks=[
  ['A1 saves Northstar evidence tags',parity.includes("'northstar:a1-parity-v1'")&&parity.includes("'b2-parity:true'")],
  ['A1 intercepts only Gold lesson IDs',parity.includes("startsWith('a1-gold-l')")],
  ['A1 exits premium mode cleanly',parity.includes("classList.remove('b2-premium-workbook-mode','a1-northstar-workbook-mode')")],
- ['A1 parity loader runs after parser stack via PWA boot',pwa.includes('loadA1NorthstarParity()')&&pwa.includes('/a1-northstar-parity-v1.js?v=1')],
+ ['A1 content loads before parity renderer',pwa.indexOf('/a1-northstar-content-v1.js?v=1')>=0&&pwa.indexOf("content.addEventListener('load',startParity")>=0&&pwa.includes('/a1-northstar-parity-v1.js?v=1')],
  ['A1 CSS intentionally inherits B2 premium surface',css.includes('Base layout intentionally reuses englishgate-b2-premium-v3.css')&&css.includes('.a1-northstar-flow')],
  ['A1 mobile speaking actions remain single-column and touch-safe',css.includes('@media (max-width:700px)')&&css.includes('min-height:44px')],
  ['B2 Northstar engine remains present',b2.includes("FLOW_VERSION='b2-northstar-v1.1'")&&b2.includes("const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX']")],
