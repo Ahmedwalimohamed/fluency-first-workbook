@@ -57,7 +57,7 @@ function validateReport(role,r){
 
 const child=spawn(process.execPath,['standards-audit-bootstrap.js'],{
  cwd:new URL('..',import.meta.url).pathname,
- env:{...process.env,PORT:String(PORT),AUDIO_STARTUP_SELF_TEST:'0'},
+ env:{...process.env,PORT:String(PORT),AUDIO_STARTUP_SELF_TEST:'0',A1_SKIP_RELEASE_UAT:'1'},
  stdio:['ignore','pipe','pipe']
 });
 child.stdout.on('data',d=>logs+=d.toString());child.stderr.on('data',d=>logs+=d.toString());
