@@ -1,6 +1,15 @@
 const express=require('express');
 const jwt=require('jsonwebtoken');
+const {execFileSync}=require('child_process');
 const {installSemanticQaFirewall}=require('./semantic-qa-firewall.js');
+
+// A1 Gold pilot release gates. These are preview-only and block startup on release-critical failures.
+execFileSync(process.execPath,['scripts/qa-a1-gold-l1.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/qa-a1-whole-level.mjs'],{stdio:'inherit'});
+if(process.env.A1_PREVIEW_MODE==='1'&&process.env.A1_SKIP_RELEASE_UAT!=='1'){
+  execFileSync(process.execPath,['scripts/qa-a1-uat.mjs'],{stdio:'inherit'});
+  execFileSync(process.execPath,['scripts/qa-a1-role-uat.mjs'],{stdio:'inherit',env:{...process.env,A1_SKIP_RELEASE_UAT:'1'}});
+}
 
 const nativePost=express.application.post;
 const installed=new WeakSet();

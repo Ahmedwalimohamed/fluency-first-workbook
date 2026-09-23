@@ -15,7 +15,7 @@
     "qa:final-ui": "node scripts/qa-final-ui.mjs",
     "qa:quality-gate": "node scripts/qa-quality-gate.mjs",
     "smoke:production": "node scripts/smoke-production.mjs",
-    "prestart": "npm run qa:quality-gate && npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2:ui:jev && npm run qa:b2 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
+    "prestart": "npm run qa:a1:gold:l1 && npm run qa:quality-gate && npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2:ui:jev && npm run qa:b2 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
     "start": "node teacher-management-bootstrap.js",
     "qa:community": "node scripts/qa-community.mjs",
     "qa:cefr": "node scripts/qa-cefr.mjs",
@@ -23,7 +23,8 @@
     "qa:b2:jev": "node scripts/jev-audit-b2-ui.js && node scripts/jev-audit-b2-northstar.js && node scripts/jev-audit-live-task-ui.js",
     "qa:b2:ui:jev": "node scripts/jev-audit-b2-ui.js",
     "qa:lesson-quality": "node scripts/qa-lesson-quality-firewall.js",
-    "qa:live-task:jev": "node scripts/jev-audit-live-task-ui.js"
+    "qa:live-task:jev": "node scripts/jev-audit-live-task-ui.js",
+    "qa:a1:gold:l1": "node --check a1-gold-bootstrap.js && node --check public/a1-gold-v1.js && node --check public/a1-gold-l1-runtime.js && node scripts/qa-a1-gold-l1.mjs"
   },
   "engines": {
     "node": ">=20"

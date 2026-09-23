@@ -33,6 +33,32 @@ function superAdminOnly(req,res,next){if(req.platformUser?.role!=='admin'||req.p
 function schoolAdminOnly(req,res,next){if(req.platformUser?.role!=='admin'||!req.platformUser?.school_id)return res.status(403).json({error:'School Admin access required.'});if(req.platformUser.school_status!=='active')return res.status(403).json({error:'This school workspace is not active.'});next()}
 async function blockTenantAdmin(req,res,next){try{if(req.user?.role!=='admin')return next();const q=await pool.query('select school_id from users where id=$1',[req.user.id]);if(q.rows[0]?.school_id)return res.status(403).json({error:'This action belongs to the school workspace.'});next()}catch(e){next(e)}}
 
+async function ensureCorePrerequisites(){
+ await pool.query(`
+  create table if not exists users(
+   id text primary key,
+   username text unique not null,
+   password_hash text not null,
+   role text not null check(role in ('teacher','student')),
+   name text not null,
+   created_at timestamptz default now()
+  );
+  create table if not exists classes(
+   id text primary key,
+   name text not null,
+   level text not null,
+   course_id text not null,
+   teacher_id text references users(id),
+   created_at timestamptz default now()
+  );
+  create table if not exists enrollments(
+   class_id text references classes(id) on delete cascade,
+   user_id text references users(id) on delete cascade,
+   primary key(class_id,user_id)
+  );
+ `);
+}
+
 async function ensureMultiSchoolSchema(){
  await pool.query(`
   create table if not exists schools(
@@ -178,4 +204,4 @@ express.application.patch=function schoolPatch(route,...handlers){installPlatfor
 express.application.delete=function schoolDelete(route,...handlers){installPlatformRoutes(this);if(typeof route==='string'&&route.startsWith('/api/admin/'))return withAdminIsolation.call(this,nativeDelete,route,handlers);if(typeof route==='string'&&route.startsWith('/api/writings/:studentId/'))return nativeDelete.call(this,route,handlers[0],sameSchoolResourceGuard,...handlers.slice(1));return nativeDelete.call(this,route,...handlers)};
 express.application.put=function schoolPut(route,...handlers){installPlatformRoutes(this);if(typeof route==='string'&&route.startsWith('/api/admin/'))return withAdminIsolation.call(this,nativePut,route,handlers);return nativePut.call(this,route,...handlers)};
 
-ensureMultiSchoolSchema().then(()=>require('./password-recovery-bootstrap.js')).catch(e=>{console.error('Multi-school bootstrap failed',e);process.exit(1)});
+ensureCorePrerequisites().then(ensureMultiSchoolSchema).then(()=>require('./password-recovery-bootstrap.js')).catch(e=>{console.error('Multi-school bootstrap failed',e);process.exit(1)});

@@ -74,6 +74,7 @@ const schemaReady=(async()=>{
     from completion where step='listening'
     on conflict(legacy_key) do nothing
   `);
+  await pool.query("create table if not exists books(id text primary key,title text not null,level text not null,audience text not null default '',status text not null default 'queued',total_lessons int not null default 0,activity_model text not null default '',created_at timestamptz default now())");
   await pool.query("update books set activity_model='Grammar · Reading · Listening · Vocabulary · Writing' where activity_model ilike '%Listening%Reading%' or activity_model ilike '%Reading%Listening%'");
 })().catch(e=>{console.error('Reading/Listening separation schema error:',e);throw e});
 
@@ -81,6 +82,7 @@ function userFrom(req){
   try{return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}
 }
 function activityId(lessonId,type){return `${String(lessonId).trim()}:${type}`}
+function b2LessonOnly(lessonId){return /^su-b2-l\d+$/.test(String(lessonId||''))||(process.env.A1_PREVIEW_MODE==='1'&&/^a1-gold-l(?:[1-9]|1\d|2[0-2])$/.test(String(lessonId||'')))}
 function cleanType(value){const type=String(value||'').trim().toLowerCase();return TYPES.has(type)?type:null}
 async function ensureActivity(lessonId,type,title='',instructions=''){
   const id=activityId(lessonId,type);
@@ -112,6 +114,7 @@ function install(app){
     await schemaReady;
     const lessonId=String(req.body?.lessonId||'').trim(),type=cleanType(req.body?.activityType);
     if(!lessonId||!type)return res.status(400).json({error:'Invalid Reading/Listening activity.'});
+    if(!b2LessonOnly(lessonId))return res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is currently active.'});
     const id=await ensureActivity(lessonId,type,req.body?.title,req.body?.instructions);
     const currentQuestion=Math.max(0,Math.min(500,Number(req.body?.currentQuestion)||0));
     const responses=req.body?.responses&&typeof req.body.responses==='object'?req.body.responses:{};
@@ -126,6 +129,7 @@ function install(app){
     await schemaReady;
     const lessonId=String(req.body?.lessonId||'').trim(),type=cleanType(req.body?.activityType),score=Number(req.body?.score),correct=Number(req.body?.correctCount||0),incorrect=Number(req.body?.incorrectCount||0);
     if(!lessonId||!type||!Number.isInteger(score)||score<0||score>100)return res.status(400).json({error:'Invalid activity attempt.'});
+    if(!b2LessonOnly(lessonId))return res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is currently active.'});
     const id=await ensureActivity(lessonId,type,req.body?.title,req.body?.instructions),responses=req.body?.responses&&typeof req.body.responses==='object'?req.body.responses:{};
     const client=await pool.connect();
     try{
@@ -143,6 +147,7 @@ function install(app){
     await schemaReady;
     const lessonId=String(req.body?.lessonId||'').trim(),type=cleanType(req.body?.activityType);
     if(!lessonId||!type)return res.status(400).json({error:'Invalid activity.'});
+    if(!b2LessonOnly(lessonId))return res.status(423).json({error:'This course is inactive. Only B2 Upper Intermediate is currently active.'});
     const id=await ensureActivity(lessonId,type,req.body?.title,req.body?.instructions);
     const r=await pool.query(`update workbook_activity_state set status='completed',completed_at=now(),last_activity_at=now() where student_id=$1 and activity_id=$2 and submitted_at is not null returning *`,[user.id,id]);
     if(!r.rowCount)return res.status(409).json({error:'Submit the activity before marking it complete.'});
