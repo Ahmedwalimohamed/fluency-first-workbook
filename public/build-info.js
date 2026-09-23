@@ -1,5 +1,7 @@
 (()=>{
   const ID='englishgateBuildInfo';
+  const PILOT_STYLE_ID='a1PilotHealthStyles';
+  const PILOT_SCRIPT_ID='a1PilotHealthScript';
   async function fetchBuild(){
     const r=await fetch('/api/build',{cache:'no-store',credentials:'same-origin'});
     if(!r.ok)throw new Error('Build info unavailable');
@@ -10,8 +12,22 @@
     const role=(document.getElementById('sidebarRole')?.textContent||'').toLowerCase();
     return Boolean(app?.classList.contains('admin-mode')||role.includes('admin'));
   }
+  function loadPilotHealth(){
+    if(!isAdmin())return;
+    if(!document.getElementById(PILOT_STYLE_ID)){
+      const link=document.createElement('link');
+      link.id=PILOT_STYLE_ID;link.rel='stylesheet';link.href='/a1-pilot-health-v1.css?v=1';
+      document.head.appendChild(link);
+    }
+    if(!document.getElementById(PILOT_SCRIPT_ID)){
+      const script=document.createElement('script');
+      script.id=PILOT_SCRIPT_ID;script.src='/a1-pilot-health-v1.js?v=1';script.defer=true;
+      document.body.appendChild(script);
+    }
+  }
   function mount(build){
     if(!isAdmin()||document.getElementById(ID))return;
+    loadPilotHealth();
     const footer=document.querySelector('.sidebar-footer');
     if(!footer)return;
     const badge=document.createElement('button');
