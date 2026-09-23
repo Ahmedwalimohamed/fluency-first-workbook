@@ -21,7 +21,7 @@ const checks=[
  ['A1 has progressive support reduction',parity.includes("if(n<=5)return'high'")&&parity.includes("if(n<=11)return'medium-high'")&&parity.includes("if(n<=17)return'medium'")&&parity.includes("return'low'")],
  ['A1 has spaced retrieval offsets 1/3/7',parity.includes("const REMEMBER_OFFSETS=[1,3,7]")],
  ['A1 contract carries B2-quality content fields',parity.includes('foundation:l.foundation')&&parity.includes('chunks:(l.chunks||[])')&&parity.includes('interaction:(l.interactionExpressions||[])')&&parity.includes('functions:(l.functions||[])')&&parity.includes('pronunciation:l.pronunciation')&&parity.includes('mediation:l.mediation')],
- ['A1 reading uses source-grounded multi-question flow',parity.includes("key:'reading',items:readingQuestions(l)")&&parity.includes('Question '+String.raw`${pos+1}`)],
+ ['A1 reading uses source-grounded multi-question flow',parity.includes("key:'reading',items:readingQuestions(l)")&&parity.includes("Question '+(pos+1)+' of '")],
  ['A1 listening uses natural audio player + multi-question flow',parity.includes('liveAudioPlayerHtml')&&parity.includes("key:'listening',items:qs")],
  ['A1 includes real speaking transfer in the Northstar flow',parity.includes('/api/a1-gold/speaking/start')&&parity.includes('/api/a1-gold/speaking/turn')&&parity.includes('/api/a1-gold/speaking/complete')],
  ['A1 speaking mastery remains Jev-gated',parity.includes("result.masteryState==='MASTERED'")&&parity.includes('result.jevStatus')],
