@@ -9,7 +9,6 @@ on:
       - 'scripts/simulate-learning-companion-1000.mjs'
       - 'reading-listening-separation-bootstrap.js'
       - 'package.json'
-      - 'package-lock.json'
       - '.github/workflows/learning-companion-ci.yml'
   push:
     branches:
@@ -20,7 +19,6 @@ on:
       - 'scripts/simulate-learning-companion-1000.mjs'
       - 'reading-listening-separation-bootstrap.js'
       - 'package.json'
-      - 'package-lock.json'
       - '.github/workflows/learning-companion-ci.yml'
   workflow_dispatch:
 
@@ -47,10 +45,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: npm
 
-      - name: Install locked dependencies
-        run: npm ci --ignore-scripts
+      - name: Install dependencies without lifecycle scripts
+        run: npm install --ignore-scripts --no-audit --no-fund
 
       - name: Verify Companion remains disabled
         shell: bash
