@@ -26,6 +26,14 @@ function enabled(env = process.env) {
   return String(env.LEARNING_COMPANION_V1 || 'false').toLowerCase() === 'true';
 }
 
+function shadowEnabled(env = process.env) {
+  return String(env.LEARNING_COMPANION_SHADOW_V1 || 'false').toLowerCase() === 'true';
+}
+
+function observationEnabled(env = process.env) {
+  return enabled(env) || shadowEnabled(env);
+}
+
 function validateEvent(e) {
   const required = ['event_id','learner_id','lesson_version','question_version','attempt_id','timestamp'];
   const missing = required.filter(k => e == null || e[k] === undefined || e[k] === null || e[k] === '');
@@ -106,9 +114,10 @@ function retrievalSchedule(mastery) {
 /**
  * Observer entry point. No mutation of EnglishGate core is permitted here.
  * persistCompanionEvent must write only to Companion-owned storage.
+ * Shadow mode may execute this observer while learner-facing activation stays off.
  */
 async function observe({ event, coreState, diagnose, decide, persistCompanionEvent }) {
-  if (!enabled()) return { status: 'DISABLED', core_unchanged: true };
+  if (!observationEnabled()) return { status: 'DISABLED', core_unchanged: true };
   const validation = validateEvent(event);
   if (!validation.valid) return { status: 'REJECTED_EVENT', missing: validation.missing, core_unchanged: true };
 
@@ -145,7 +154,7 @@ async function observe({ event, coreState, diagnose, decide, persistCompanionEve
 }
 
 module.exports = {
-  ACTIONS, MASTERY_STATES, LIMITS, enabled, validateEvent, buildSnapshot,
-  confidenceRoute, validateJevDecision, policyGate, deterministicFallback,
-  evidenceToMastery, retrievalSchedule, observe
+  ACTIONS, MASTERY_STATES, LIMITS, enabled, shadowEnabled, observationEnabled,
+  validateEvent, buildSnapshot, confidenceRoute, validateJevDecision, policyGate,
+  deterministicFallback, evidenceToMastery, retrievalSchedule, observe
 };
