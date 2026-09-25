@@ -27,11 +27,12 @@ assert.equal(e1.question_version,4);
 const snapshot=shadow.snapshotFromAcceptedAttempt(attempt,{});
 assert.equal(snapshot.correct,false);
 
-const workbook=capture.normalizeWorkbookAttempt({attempt_id:77,student_id:'s2',lesson_id:'su-b2-l5',activity_type:'reading',score:60,percentage:60,responses:{q1:'B'},submitted_at:'2026-09-25T01:00:00Z'});
-assert.equal(workbook.id,'workbook:77');
+const workbook=capture.safeResultFromWorkbook({attempt_id:77,student_id:'s2',lesson_id:'su-b2-l5',activity_type:'reading',score:60,percentage:60,responses:{q1:'B'},submitted_at:'2026-09-25T01:00:00Z'});
+assert.equal(workbook.attempt_id,'workbook:77');
 assert.equal(workbook.skill,'reading');
 assert.equal(workbook.correct,false);
-assert.deepEqual(workbook.response,{q1:'B'});
+assert.equal('response' in workbook,false);
+assert.equal('responses' in workbook,false);
 
 // Feature is OFF by default: no core behavior or DB access occurs.
 delete process.env.LEARNING_COMPANION_V1;
