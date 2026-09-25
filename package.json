@@ -14,6 +14,7 @@
     "qa:admin-ui": "node scripts/qa-admin-ui.mjs",
     "qa:final-ui": "node scripts/qa-final-ui.mjs",
     "qa:quality-gate": "node scripts/qa-quality-gate.mjs",
+    "qa:learning-companion": "node --check learning-companion-v1.js && node scripts/qa-learning-companion-v1.mjs",
     "smoke:production": "node scripts/smoke-production.mjs",
     "prestart": "node --check a1-pilot-bootstrap.js && npm run qa:a1:gold:l1 && npm run qa:quality-gate && npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2:ui:jev && npm run qa:b2 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
     "start": "node -r ./a1-pilot-bootstrap.js teacher-management-bootstrap.js",
@@ -26,9 +27,7 @@
     "qa:live-task:jev": "node scripts/jev-audit-live-task-ui.js",
     "qa:a1:gold:l1": "node --check a1-gold-bootstrap.js && node --check public/a1-gold-v1.js && node --check public/a1-gold-l1-runtime.js && node scripts/qa-a1-gold-l1.mjs"
   },
-  "engines": {
-    "node": ">=20"
-  },
+  "engines": {"node": ">=20"},
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
