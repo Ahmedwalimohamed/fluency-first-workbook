@@ -2,8 +2,8 @@ const express=require('express');
 const jwt=require('jsonwebtoken');
 const {Pool}=require('pg');
 const pilot=require('./learning-companion-pilot-scope');
-const learningCompanionEnabled=process.env.LEARNING_COMPANION_V1==='true';
-const learningCompanionShadow=learningCompanionEnabled?require('./learning-companion-shadow-capture'):null;
+const companion=require('./learning-companion-v1');
+const learningCompanionShadow=require('./learning-companion-shadow-capture');
 
 const nativePost=express.application.post;
 const nativeGet=express.application.get;
@@ -149,7 +149,9 @@ function install(app){
         on conflict(student_id,activity_id) do update set status='in_progress',responses=excluded.responses,last_activity_at=now(),submitted_at=now()`,[user.id,id,lessonId,type,responses]);
       await client.query('commit');
       res.json({ok:true,attempt:a.rows[0]});
-      if(learningCompanionEnabled)setImmediate(()=>learningCompanionShadow.observeWorkbookAttempt({pool,row:a.rows[0]}).catch(e=>console.error('[LearningCompanion shadow] post-commit observation failed:',e?.message||e)));
+      if(companion.observationEnabled())setImmediate(()=>learningCompanionShadow.observeWorkbookAttempt({pool,row:a.rows[0]}).then(result=>{
+        if(result?.shadow)console.log(`[LearningCompanion shadow] source=workbook lesson=${lessonId} skill=${type} status=${result.status} action=${result.action||'NONE'}`)
+      }).catch(e=>console.error('[LearningCompanion shadow] post-commit observation failed:',e?.message||e)));
     }catch(e){await client.query('rollback');throw e}finally{client.release()}
   });
   nativePost.call(app,'/api/workbook-activities/complete',async(req,res)=>{

@@ -64,7 +64,7 @@ function safeContext(result,source){
 }
 
 async function observeSafeResult({pool,result,source}){
-  if(!companion.enabled())return{status:'DISABLED',core_unchanged:true};
+  if(!companion.observationEnabled())return{status:'DISABLED',core_unchanged:true};
   if(!result||!result.learner_id||!result.lesson_id||!result.attempt_id)return{status:'INVALID_SHADOW_INPUT',core_unchanged:true};
   await shadow.ensureShadowSchema(pool);
   const context=safeContext(result,source);

@@ -12,6 +12,7 @@
 const express=require('express');
 const jwt=require('jsonwebtoken');
 const {Pool}=require('pg');
+const companion=require('./learning-companion-v1');
 const capture=require('./learning-companion-shadow-capture');
 const pilot=require('./learning-companion-pilot-scope');
 
@@ -19,7 +20,7 @@ const originalPost=express.application.post;
 const originalGet=express.application.get;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
-const companionEnabled=()=>String(process.env.LEARNING_COMPANION_V1||'false').toLowerCase()==='true';
+const observationEnabled=()=>companion.observationEnabled();
 
 function userFrom(req){
   try{return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}
@@ -38,8 +39,10 @@ function cleanEvidence(value){
 }
 
 function scheduleCoreObservation(row){
-  if(!companionEnabled()||!row)return;
-  setImmediate(()=>capture.observeCoreAttempt({pool,row}).catch(e=>console.error('[LearningCompanion shadow] core post-save observation failed:',e?.message||e)))
+  if(!observationEnabled()||!row)return;
+  setImmediate(()=>capture.observeCoreAttempt({pool,row}).then(result=>{
+    if(result?.shadow)console.log(`[LearningCompanion shadow] source=core lesson=${row.lesson_id} skill=${row.skill} status=${result.status} action=${result.action||'NONE'}`)
+  }).catch(e=>console.error('[LearningCompanion shadow] core post-save observation failed:',e?.message||e)))
 }
 
 async function latestCoreAttempt(user,body,startedAt){
@@ -55,7 +58,7 @@ async function latestCoreAttempt(user,body,startedAt){
 }
 
 function observeNormalAttemptAfterSuccess(req,res,next){
-  if(!companionEnabled())return next();
+  if(!observationEnabled())return next();
   const user=userFrom(req),startedAt=new Date(Date.now()-1000).toISOString(),nativeJson=res.json.bind(res);
   let scheduled=false;
   res.json=body=>{
@@ -125,7 +128,7 @@ function exposeB1AsPilotInState(req,res,next){
 function pilotConfig(req,res){
   const user=userFrom(req),allowed=Boolean(user?.role==='student'&&pilot.pilotStudentAllowed(user.id));
   res.set('Cache-Control','no-store');
-  res.json({enabled:allowed,courseId:allowed?'speakup-b1':null,lessonId:allowed?pilot.B1_PILOT_LESSON_ID:null,mode:allowed?'shadow':'off'})
+  res.json({enabled:allowed,courseId:allowed?'speakup-b1':null,lessonId:allowed?pilot.B1_PILOT_LESSON_ID:null,mode:allowed?'shadow':'off',learnerFacing:companion.enabled(),shadowObservation:companion.shadowEnabled()})
 }
 
 function install(app){

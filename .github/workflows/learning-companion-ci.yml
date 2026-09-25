@@ -6,6 +6,7 @@ on:
     paths:
       - 'learning-companion-*.js'
       - 'b1-learning-companion-e2e.js'
+      - 'b1-shadow-pilot-bootstrap.js'
       - 'scripts/qa-learning-companion-*.mjs'
       - 'scripts/qa-b1-learning-companion-pilot.mjs'
       - 'scripts/simulate-learning-companion-1000.mjs'
@@ -17,9 +18,11 @@ on:
     branches:
       - 'feature/learning-companion-v1-foundation'
       - 'feature/b1-learning-companion-e2e'
+      - 'feature/b1-real-shadow-pilot'
     paths:
       - 'learning-companion-*.js'
       - 'b1-learning-companion-e2e.js'
+      - 'b1-shadow-pilot-bootstrap.js'
       - 'scripts/qa-learning-companion-*.mjs'
       - 'scripts/qa-b1-learning-companion-pilot.mjs'
       - 'scripts/simulate-learning-companion-1000.mjs'
@@ -43,6 +46,7 @@ jobs:
     timeout-minutes: 10
     env:
       LEARNING_COMPANION_V1: 'false'
+      LEARNING_COMPANION_SHADOW_V1: 'false'
       NODE_ENV: test
     steps:
       - name: Checkout tested commit
@@ -56,7 +60,7 @@ jobs:
       - name: Install dependencies without lifecycle scripts
         run: npm install --ignore-scripts --no-audit --no-fund
 
-      - name: Verify Companion remains disabled
+      - name: Verify learner-facing Companion remains disabled
         shell: bash
         run: |
           test "$LEARNING_COMPANION_V1" = "false"
@@ -71,5 +75,5 @@ jobs:
       - name: Reliability gate result
         if: success()
         run: |
-          echo "PASS: universal adapter, safe B1 shadow pilot, isolated QA, 1200-case simulation, shadow gate, adversarial gate, and B1 Lesson 1 contract succeeded."
-          echo "This PASS is merge-readiness evidence only; it does not authorize learner-facing activation."
+          echo "PASS: shadow-only activation separation, controlled B1 learner bootstrap, universal adapter, safe shadow pilot, isolated QA, 1200-case simulation, adversarial gate, and B1 Lesson 1 contract succeeded."
+          echo "This PASS authorizes shadow evidence collection only; it does not authorize learner-facing activation."
