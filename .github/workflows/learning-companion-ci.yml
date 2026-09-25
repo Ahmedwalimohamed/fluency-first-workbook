@@ -1,0 +1,65 @@
+name: Learning Companion Reliability Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'learning-companion-*.js'
+      - 'scripts/qa-learning-companion-*.mjs'
+      - 'scripts/simulate-learning-companion-1000.mjs'
+      - 'reading-listening-separation-bootstrap.js'
+      - 'package.json'
+      - '.github/workflows/learning-companion-ci.yml'
+  push:
+    branches:
+      - 'feature/learning-companion-v1-foundation'
+    paths:
+      - 'learning-companion-*.js'
+      - 'scripts/qa-learning-companion-*.mjs'
+      - 'scripts/simulate-learning-companion-1000.mjs'
+      - 'reading-listening-separation-bootstrap.js'
+      - 'package.json'
+      - '.github/workflows/learning-companion-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: learning-companion-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reliability-gate:
+    name: Companion QA / PASS-HOLD
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LEARNING_COMPANION_V1: 'false'
+      NODE_ENV: test
+    steps:
+      - name: Checkout tested commit
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies without lifecycle scripts
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Verify Companion remains disabled
+        shell: bash
+        run: |
+          test "$LEARNING_COMPANION_V1" = "false"
+          echo "Learning Companion learner-facing activation: DISABLED"
+
+      - name: Run full Learning Companion reliability suite
+        run: npm run qa:learning-companion
+
+      - name: Reliability gate result
+        if: success()
+        run: |
+          echo "PASS: Learning Companion isolated QA, 1200-case simulation, shadow gate, and adversarial gate succeeded."
+          echo "This PASS is merge-readiness evidence only; it does not authorize learner-facing activation."
