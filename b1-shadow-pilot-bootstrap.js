@@ -18,6 +18,7 @@ const {Pool}=require('pg');
 const bcrypt=require('bcryptjs');
 const crypto=require('crypto');
 const companion=require('./learning-companion-v1');
+const smoke=require('./b1-shadow-pilot-smoke');
 
 const BOOK_ID='speakup-b1';
 const PILOT_CLASS_ID='b1_shadow_pilot_class';
@@ -55,7 +56,7 @@ async function verifyPilotState(studentId,password){
 }
 
 async function preparePilot(){
-  if(!enabled())return;
+  if(!enabled())return null;
   if(preparing)return preparing;
   preparing=(async()=>{
     assertSafeMode();
@@ -92,10 +93,10 @@ async function preparePilot(){
     await pool.query('delete from enrollments where user_id=$1 and class_id<>$2',[studentId,PILOT_CLASS_ID]);
     await pool.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',[PILOT_CLASS_ID,studentId]);
 
-    // Runtime-only allowlist. No real learner IDs are written to source or database config.
     process.env.B1_LEARNING_COMPANION_PILOT_STUDENT_IDS=studentId;
     await verifyPilotState(studentId,password);
     console.log(`B1 CONTROLLED SHADOW PILOT ACTIVE class=${PILOT_CLASS_ID} learner=${username} lesson=su-b1-l1`);
+    return{studentId,username,password}
   })();
   try{return await preparing}finally{preparing=null}
 }
@@ -104,7 +105,13 @@ const nativeListen=express.application.listen;
 express.application.listen=function b1ShadowPilotListen(...args){
   if(!enabled())return nativeListen.apply(this,args);
   const app=this;
-  preparePilot().then(()=>nativeListen.apply(app,args)).catch(error=>{
+  preparePilot().then(context=>{
+    nativeListen.apply(app,args);
+    if(context&&smoke.enabled()){
+      const port=Number(process.env.PORT)||(typeof args[0]==='number'?args[0]:3000);
+      setTimeout(()=>smoke.runAutosmoke({pool,port,...context}).catch(error=>console.error('B1 shadow autosmoke runner failed:',error?.message||error)),1500)
+    }
+  }).catch(error=>{
     console.error('B1 controlled shadow pilot activation failed:',error.message);
     process.exitCode=1;
     setTimeout(()=>process.exit(1),25);
