@@ -12,6 +12,7 @@ const pilot=require('../learning-companion-pilot-scope.js');
 const capture=require('../learning-companion-shadow-capture.js');
 const adapter=require('../learning-companion-adapter.js');
 const b1Bootstrap=require('../b1-shadow-pilot-bootstrap.js');
+const coreShadow=require('../learning-companion-core-attempt-shadow-bootstrap.js');
 
 const run=async(name,fn)=>{try{await fn();console.log('PASS',name)}catch(e){console.error('FAIL',name,e.message);process.exitCode=1}};
 
@@ -19,6 +20,22 @@ await run('shadow observation can run while learner-facing Companion remains off
  assert.equal(companion.enabled(),false);
  assert.equal(companion.shadowEnabled(),true);
  assert.equal(companion.observationEnabled(),true);
+});
+
+await run('shadow-only observation is restricted to allowlisted B1 Lesson 1 learner',async()=>{
+ const env={
+   LEARNING_COMPANION_V1:'false',
+   LEARNING_COMPANION_SHADOW_V1:'true',
+   B1_LEARNING_COMPANION_SHADOW_PILOT:'true',
+   B1_LEARNING_COMPANION_PILOT_STUDENT_IDS:'student-1'
+ };
+ assert.equal(coreShadow.observationAllowedForAttempt({student_id:'student-1',lesson_id:'su-b1-l1'},env),true);
+ assert.equal(coreShadow.observationAllowedForAttempt({student_id:'student-1',lesson_id:'su-b2-l1'},env),false);
+ assert.equal(coreShadow.observationAllowedForAttempt({student_id:'student-2',lesson_id:'su-b1-l1'},env),false);
+ assert.equal(coreShadow.observationAllowedForRequest({id:'student-1',role:'student'},'su-b1-l1',env),true);
+ assert.equal(coreShadow.observationAllowedForRequest({id:'student-1',role:'student'},'su-b2-l1',env),false);
+ const learnerFacing={...env,LEARNING_COMPANION_V1:'true'};
+ assert.equal(coreShadow.observationAllowedForAttempt({student_id:'student-2',lesson_id:'su-b2-l1'},learnerFacing),true);
 });
 
 await run('B1 controlled bootstrap rejects unsafe learner-facing activation',async()=>{
