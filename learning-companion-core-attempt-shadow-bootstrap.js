@@ -1,13 +1,11 @@
 'use strict';
 
 /**
- * Additive server bootstrap for Learning Companion shadow observation.
+ * Additive server bootstrap for Learning Companion observation.
  *
- * - Existing /api/attempts remains the source of truth for active courses.
- * - Successful core attempts are observed asynchronously after response.
- * - B1 Lesson 1 can be opened only when BOTH the pilot flag and an explicit
- *   student ID allowlist are configured. No database book-status mutation.
- * - Companion failures never block grading, completion, or navigation.
+ * Learner-facing mode may observe accepted core attempts broadly.
+ * Shadow-only mode is intentionally narrower: it may observe ONLY the
+ * explicitly allowlisted B1 Lesson 1 pilot learner.
  */
 const express=require('express');
 const jwt=require('jsonwebtoken');
@@ -20,10 +18,20 @@ const originalPost=express.application.post;
 const originalGet=express.application.get;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
-const observationEnabled=()=>companion.observationEnabled();
 
 function userFrom(req){
   try{return jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET)}catch{return null}
+}
+
+function observationAllowedForAttempt(row,env=process.env){
+  if(!row)return false;
+  if(companion.enabled(env))return true;
+  return Boolean(companion.shadowEnabled(env)&&pilot.isAllowedB1ShadowPilot(row.student_id,row.lesson_id,env))
+}
+
+function observationAllowedForRequest(user,lessonId,env=process.env){
+  if(companion.enabled(env))return true;
+  return Boolean(companion.shadowEnabled(env)&&user?.role==='student'&&pilot.isAllowedB1ShadowPilot(user.id,lessonId,env))
 }
 
 function cleanEvidence(value){
@@ -39,7 +47,7 @@ function cleanEvidence(value){
 }
 
 function scheduleCoreObservation(row){
-  if(!observationEnabled()||!row)return;
+  if(!observationAllowedForAttempt(row))return;
   setImmediate(()=>capture.observeCoreAttempt({pool,row}).then(result=>{
     if(result?.shadow)console.log(`[LearningCompanion shadow] source=core lesson=${row.lesson_id} skill=${row.skill} status=${result.status} action=${result.action||'NONE'}`)
   }).catch(e=>console.error('[LearningCompanion shadow] core post-save observation failed:',e?.message||e)))
@@ -58,8 +66,9 @@ async function latestCoreAttempt(user,body,startedAt){
 }
 
 function observeNormalAttemptAfterSuccess(req,res,next){
-  if(!observationEnabled())return next();
-  const user=userFrom(req),startedAt=new Date(Date.now()-1000).toISOString(),nativeJson=res.json.bind(res);
+  const user=userFrom(req),lessonId=String(req.body?.lessonId||'').trim();
+  if(!observationAllowedForRequest(user,lessonId))return next();
+  const startedAt=new Date(Date.now()-1000).toISOString(),nativeJson=res.json.bind(res);
   let scheduled=false;
   res.json=body=>{
     const successful=res.statusCode>=200&&res.statusCode<300&&body?.ok===true;
@@ -142,4 +151,4 @@ function install(app){
 express.application.post=function learningCompanionCoreShadowPost(route,...handlers){install(this);return originalPost.call(this,route,...handlers)};
 express.application.get=function learningCompanionCoreShadowGet(route,...handlers){install(this);return originalGet.call(this,route,...handlers)};
 
-module.exports={cleanEvidence,latestCoreAttempt,observeNormalAttemptAfterSuccess,saveB1PilotAttempt,saveB1PilotCompletion,exposeB1AsPilotInState,pilotConfig,install};
+module.exports={observationAllowedForAttempt,observationAllowedForRequest,cleanEvidence,latestCoreAttempt,observeNormalAttemptAfterSuccess,saveB1PilotAttempt,saveB1PilotCompletion,exposeB1AsPilotInState,pilotConfig,install};
