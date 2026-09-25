@@ -4,26 +4,36 @@ const require=createRequire(import.meta.url);
 const lc=require('../learning-companion-v1.js');
 
 // Deterministic offline shadow-evaluation harness.
-// It tests policy routing and promotion criteria without affecting learners.
+// It tests current policy routing and promotion criteria without affecting learners.
 const scenarios=[
- {name:'correct',snapshot:{correct:true,mastery_state:'UNKNOWN'},diagnosis:{misconception:null,confidence:1},expected:['NO_ACTION']},
- {name:'high-confidence-error',snapshot:{correct:false,mastery_state:'UNKNOWN'},diagnosis:{misconception:'target_form',confidence:.90},expected:['HINT_1','TARGETED_MICRO_EXPLANATION','GUIDED_RETRY','DIAGNOSTIC_PROBE']},
- {name:'medium-confidence-error',snapshot:{correct:false,mastery_state:'UNKNOWN'},diagnosis:{misconception:'target_form',confidence:.65},expected:['DIAGNOSTIC_PROBE','HINT_1']},
- {name:'low-confidence-error',snapshot:{correct:false,mastery_state:'UNKNOWN'},diagnosis:{misconception:null,confidence:.25},expected:['GENERIC_HINT','DIAGNOSTIC_PROBE','HINT_1']},
- {name:'assessment-safety',snapshot:{correct:false,assessment_item:true,intervention_counts:{}},diagnosis:{misconception:'target_form',confidence:.92},forbidden:['WORKED_EXAMPLE','ANSWER_REVEAL']},
- {name:'hint-budget',snapshot:{correct:false,intervention_counts:{hints:2}},diagnosis:{misconception:'target_form',confidence:.9},forbidden:['HINT_1']}
+ {name:'correct',snapshot:{correct:true,attempt_number:1,intervention_counts:{}},diagnosis:{misconception:null,confidence:1}},
+ {name:'high-confidence-error',snapshot:{correct:false,attempt_number:1,intervention_counts:{}},diagnosis:{misconception:'target_form',confidence:.90}},
+ {name:'medium-confidence-error',snapshot:{correct:false,attempt_number:2,intervention_counts:{}},diagnosis:{misconception:'target_form',confidence:.65}},
+ {name:'low-confidence-error',snapshot:{correct:false,attempt_number:3,intervention_counts:{}},diagnosis:{misconception:null,confidence:.25}},
+ {name:'assessment-safety',snapshot:{correct:false,attempt_number:3,assessment_item:true,intervention_counts:{}},diagnosis:{misconception:'target_form',confidence:.92}},
+ {name:'hint-budget',snapshot:{correct:false,attempt_number:2,intervention_counts:{hints:2}},diagnosis:{misconception:'target_form',confidence:.9}}
 ];
 
 let policyChecks=0;
 for(const s of scenarios){
  const route=lc.confidenceRoute(s.diagnosis.confidence);
+ assert(['TARGETED_REMEDIATION','DIAGNOSTIC_PROBE','GENERIC_HINT'].includes(route));
  const fallback=lc.deterministicFallback(s.snapshot);
- const decision={action:fallback.action,confidence:s.diagnosis.confidence,reason_code:`SHADOW_${route}`};
- const gate=lc.policyGate(decision,s.snapshot);
+ assert(lc.ACTIONS.includes(fallback.action),`${s.name}: fallback must use approved action`);
+ const gate=lc.policyGate(fallback,s.snapshot);
  assert.equal(typeof gate.allowed,'boolean',`${s.name}: policy gate must decide`);
- if(s.forbidden)assert(!s.forbidden.includes(gate.action||decision.action),`${s.name}: forbidden action escaped gate`);
+ assert(lc.ACTIONS.includes(gate.action),`${s.name}: policy output must use approved action`);
+ if(s.name==='hint-budget'){
+   assert.equal(gate.allowed,false);
+   assert.equal(gate.action,'CONTINUE');
+   assert.equal(gate.reason,'HINT_LIMIT');
+ }
  policyChecks++;
 }
+const protectedGate=lc.policyGate({action:'WORKED_EXAMPLE',confidence:.92,reason_code:'TEST'},scenarios.find(x=>x.name==='assessment-safety').snapshot);
+assert.equal(protectedGate.allowed,false);
+assert.equal(protectedGate.action,'PROMPT_NOTICE');
+assert.equal(protectedGate.reason,'ASSESSMENT_ANSWER_PROTECTION');
 
 // Promotion gates. Real shadow telemetry must satisfy these before student-facing activation.
 const PROMOTION={
