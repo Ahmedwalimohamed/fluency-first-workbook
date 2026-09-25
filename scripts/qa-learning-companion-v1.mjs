@@ -3,6 +3,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const lc = require('../learning-companion-v1.js');
 const shadow = require('../learning-companion-shadow-bootstrap.js');
+const capture = require('../learning-companion-shadow-capture.js');
 
 assert.equal(lc.validateEvent({}).valid, false);
 assert.equal(lc.validateEvent({event_id:'1',learner_id:'s',lesson_version:1,question_version:1,attempt_id:'a',timestamp:'now'}).valid, true);
@@ -26,6 +27,12 @@ assert.equal(e1.question_version,4);
 const snapshot=shadow.snapshotFromAcceptedAttempt(attempt,{});
 assert.equal(snapshot.correct,false);
 
+const workbook=capture.normalizeWorkbookAttempt({attempt_id:77,student_id:'s2',lesson_id:'su-b2-l5',activity_type:'reading',score:60,percentage:60,responses:{q1:'B'},submitted_at:'2026-09-25T01:00:00Z'});
+assert.equal(workbook.id,'workbook:77');
+assert.equal(workbook.skill,'reading');
+assert.equal(workbook.correct,false);
+assert.deepEqual(workbook.response,{q1:'B'});
+
 // Feature is OFF by default: no core behavior or DB access occurs.
 delete process.env.LEARNING_COMPANION_V1;
 const disabled = await lc.observe({event:{},coreState:{}});
@@ -34,5 +41,8 @@ assert.equal(disabled.core_unchanged, true);
 const shadowDisabled = await shadow.observeAcceptedAttempt({pool:null,attempt});
 assert.equal(shadowDisabled.status,'DISABLED');
 assert.equal(shadowDisabled.core_unchanged,true);
+const captureDisabled=await capture.observeWorkbookAttempt({pool:null,row:{attempt_id:1,student_id:'s',lesson_id:'su-b2-l1',activity_type:'reading',percentage:20}});
+assert.equal(captureDisabled.status,'DISABLED');
+assert.equal(captureDisabled.core_unchanged,true);
 
 console.log('Learning Companion v1 foundation + shadow QA: PASS');
