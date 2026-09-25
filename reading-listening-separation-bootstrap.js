@@ -1,6 +1,7 @@
 const express=require('express');
 const jwt=require('jsonwebtoken');
 const {Pool}=require('pg');
+const learningCompanionShadow=require('./learning-companion-shadow-capture');
 
 const nativePost=express.application.post;
 const nativeGet=express.application.get;
@@ -139,7 +140,9 @@ function install(app){
       await client.query(`insert into workbook_activity_state(student_id,activity_id,lesson_id,activity_type,status,current_question,responses,started_at,last_activity_at,submitted_at)
         values($1,$2,$3,$4,'in_progress',0,$5,now(),now(),now())
         on conflict(student_id,activity_id) do update set status='in_progress',responses=excluded.responses,last_activity_at=now(),submitted_at=now()`,[user.id,id,lessonId,type,responses]);
-      await client.query('commit');res.json({ok:true,attempt:a.rows[0]});
+      await client.query('commit');
+      res.json({ok:true,attempt:a.rows[0]});
+      setImmediate(()=>learningCompanionShadow.observeWorkbookAttempt({pool,row:a.rows[0]}).catch(e=>console.error('[LearningCompanion shadow] post-commit observation failed:',e?.message||e)));
     }catch(e){await client.query('rollback');throw e}finally{client.release()}
   });
   nativePost.call(app,'/api/workbook-activities/complete',async(req,res)=>{
