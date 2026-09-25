@@ -10,7 +10,7 @@ Core rule:
 
 > LLM generates. Jev decides. Deterministic code enforces. Evidence updates learning state.
 
-Learner-facing activation is disabled by default with `LEARNING_COMPANION_V1=false`.
+Learner-facing intervention activation is disabled by default with `LEARNING_COMPANION_V1=false`.
 
 ### B1 Lesson 1 shadow pilot
 
@@ -20,6 +20,8 @@ The B1 pilot is deliberately narrower than normal course activation. It is avail
 - `B1_LEARNING_COMPANION_SHADOW_PILOT=true`
 - the learner ID is explicitly listed in `B1_LEARNING_COMPANION_PILOT_STUDENT_IDS`
 - the lesson is exactly `su-b1-l1`
+
+This enables **shadow observation only**. It does not authorize learner-facing Companion interventions.
 
 The pilot does not change the B1 database book status. For an allowlisted pilot learner, the state API exposes B1 as `pilot` for that session only.
 
