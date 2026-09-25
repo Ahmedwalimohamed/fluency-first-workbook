@@ -51,6 +51,7 @@ express.application.post=function teacherManagementPost(route,...handlers){
 };
 
 require('./a1-gold-bootstrap.js');
+require('./b1-shadow-pilot-bootstrap.js');
 require('./reading-listening-separation-bootstrap.js');
 require('./learning-companion-core-attempt-shadow-bootstrap.js');
 require('./ai-content-editor-bootstrap.js');
