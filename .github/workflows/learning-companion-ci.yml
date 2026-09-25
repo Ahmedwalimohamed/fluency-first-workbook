@@ -5,7 +5,9 @@ on:
     branches: [main]
     paths:
       - 'learning-companion-*.js'
+      - 'b1-learning-companion-e2e.js'
       - 'scripts/qa-learning-companion-*.mjs'
+      - 'scripts/qa-b1-learning-companion-pilot.mjs'
       - 'scripts/simulate-learning-companion-1000.mjs'
       - 'reading-listening-separation-bootstrap.js'
       - 'package.json'
@@ -13,9 +15,12 @@ on:
   push:
     branches:
       - 'feature/learning-companion-v1-foundation'
+      - 'feature/b1-learning-companion-e2e'
     paths:
       - 'learning-companion-*.js'
+      - 'b1-learning-companion-e2e.js'
       - 'scripts/qa-learning-companion-*.mjs'
+      - 'scripts/qa-b1-learning-companion-pilot.mjs'
       - 'scripts/simulate-learning-companion-1000.mjs'
       - 'reading-listening-separation-bootstrap.js'
       - 'package.json'
@@ -58,8 +63,11 @@ jobs:
       - name: Run full Learning Companion reliability suite
         run: npm run qa:learning-companion
 
+      - name: Run B1 Lesson 1 pilot contract suite
+        run: npm run qa:learning-companion:b1-pilot
+
       - name: Reliability gate result
         if: success()
         run: |
-          echo "PASS: Learning Companion isolated QA, 1200-case simulation, shadow gate, and adversarial gate succeeded."
+          echo "PASS: Learning Companion isolated QA, 1200-case simulation, shadow gate, adversarial gate, and B1 Lesson 1 pilot contract succeeded."
           echo "This PASS is merge-readiness evidence only; it does not authorize learner-facing activation."
