@@ -10,6 +10,7 @@ on:
       - 'scripts/qa-b1-learning-companion-pilot.mjs'
       - 'scripts/simulate-learning-companion-1000.mjs'
       - 'reading-listening-separation-bootstrap.js'
+      - 'teacher-management-bootstrap.js'
       - 'package.json'
       - '.github/workflows/learning-companion-ci.yml'
   push:
@@ -23,6 +24,7 @@ on:
       - 'scripts/qa-b1-learning-companion-pilot.mjs'
       - 'scripts/simulate-learning-companion-1000.mjs'
       - 'reading-listening-separation-bootstrap.js'
+      - 'teacher-management-bootstrap.js'
       - 'package.json'
       - '.github/workflows/learning-companion-ci.yml'
   workflow_dispatch:
@@ -69,5 +71,5 @@ jobs:
       - name: Reliability gate result
         if: success()
         run: |
-          echo "PASS: Learning Companion isolated QA, 1200-case simulation, shadow gate, adversarial gate, and B1 Lesson 1 pilot contract succeeded."
+          echo "PASS: universal adapter, safe B1 shadow pilot, isolated QA, 1200-case simulation, shadow gate, adversarial gate, and B1 Lesson 1 contract succeeded."
           echo "This PASS is merge-readiness evidence only; it does not authorize learner-facing activation."
