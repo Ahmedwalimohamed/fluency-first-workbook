@@ -90,6 +90,10 @@ function learningLessonAllowed(user,lessonId){
     (process.env.A1_PREVIEW_MODE==='1'&&/^a1-gold-l(?:[1-9]|1\d|2[0-2])$/.test(String(lessonId||'')))||
     Boolean(user?.role==='student'&&pilot.isAllowedB1ShadowPilot(user.id,lessonId))
 }
+function observationAllowed(user,lessonId,env=process.env){
+  if(companion.enabled(env))return true;
+  return Boolean(companion.shadowEnabled(env)&&user?.role==='student'&&pilot.isAllowedB1ShadowPilot(user.id,lessonId,env))
+}
 function cleanType(value){const type=String(value||'').trim().toLowerCase();return TYPES.has(type)?type:null}
 async function ensureActivity(lessonId,type,title='',instructions=''){
   const id=activityId(lessonId,type);
@@ -149,7 +153,7 @@ function install(app){
         on conflict(student_id,activity_id) do update set status='in_progress',responses=excluded.responses,last_activity_at=now(),submitted_at=now()`,[user.id,id,lessonId,type,responses]);
       await client.query('commit');
       res.json({ok:true,attempt:a.rows[0]});
-      if(companion.observationEnabled())setImmediate(()=>learningCompanionShadow.observeWorkbookAttempt({pool,row:a.rows[0]}).then(result=>{
+      if(observationAllowed(user,lessonId))setImmediate(()=>learningCompanionShadow.observeWorkbookAttempt({pool,row:a.rows[0]}).then(result=>{
         if(result?.shadow)console.log(`[LearningCompanion shadow] source=workbook lesson=${lessonId} skill=${type} status=${result.status} action=${result.action||'NONE'}`)
       }).catch(e=>console.error('[LearningCompanion shadow] post-commit observation failed:',e?.message||e)));
     }catch(e){await client.query('rollback');throw e}finally{client.release()}
