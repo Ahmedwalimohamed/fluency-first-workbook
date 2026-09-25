@@ -2,14 +2,34 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const require=createRequire(import.meta.url);
 
-process.env.LEARNING_COMPANION_V1='true';
+process.env.LEARNING_COMPANION_V1='false';
+process.env.LEARNING_COMPANION_SHADOW_V1='true';
+process.env.B1_LEARNING_COMPANION_SHADOW_PILOT='true';
 delete process.env.TYPESAFE_API_KEY;
 
+const companion=require('../learning-companion-v1.js');
 const pilot=require('../learning-companion-pilot-scope.js');
 const capture=require('../learning-companion-shadow-capture.js');
 const adapter=require('../learning-companion-adapter.js');
+const b1Bootstrap=require('../b1-shadow-pilot-bootstrap.js');
 
 const run=async(name,fn)=>{try{await fn();console.log('PASS',name)}catch(e){console.error('FAIL',name,e.message);process.exitCode=1}};
+
+await run('shadow observation can run while learner-facing Companion remains off',async()=>{
+ assert.equal(companion.enabled(),false);
+ assert.equal(companion.shadowEnabled(),true);
+ assert.equal(companion.observationEnabled(),true);
+});
+
+await run('B1 controlled bootstrap rejects unsafe learner-facing activation',async()=>{
+ assert.doesNotThrow(()=>b1Bootstrap.assertSafeMode());
+ process.env.LEARNING_COMPANION_V1='true';
+ assert.throws(()=>b1Bootstrap.assertSafeMode(),/refuses to start/);
+ process.env.LEARNING_COMPANION_V1='false';
+ process.env.LEARNING_COMPANION_SHADOW_V1='false';
+ assert.throws(()=>b1Bootstrap.assertSafeMode(),/requires LEARNING_COMPANION_SHADOW_V1/);
+ process.env.LEARNING_COMPANION_SHADOW_V1='true';
+});
 
 await run('B1 pilot requires flag and explicit student allowlist',async()=>{
  const flagOnly={B1_LEARNING_COMPANION_SHADOW_PILOT:'true'};
@@ -43,7 +63,7 @@ await run('core capture strips detailed evidence before adapter',async()=>{
  assert.equal(JSON.stringify(safe).includes('ANSWER KEY'),false);
 });
 
-await run('safe shadow persistence contains metadata only',async()=>{
+await run('safe shadow persistence works with learner-facing mode disabled',async()=>{
  const calls=[];
  const pool={query:async(sql,params=[])=>{
    calls.push({sql:String(sql),params});
@@ -54,6 +74,7 @@ await run('safe shadow persistence contains metadata only',async()=>{
  const row={attempt_id:11,activity_id:'su-b1-l1:listening',lesson_id:'su-b1-l1',activity_type:'listening',student_id:'student-1',percentage:25,responses:{q1:'DO NOT STORE ME'},submitted_at:'2026-09-25T19:00:00Z'};
  const result=await capture.observeWorkbookAttempt({pool,row});
  assert.notEqual(result.status,'SHADOW_ERROR');
+ assert.equal(result.shadow,true);
  const serialized=JSON.stringify(calls);
  assert.equal(serialized.includes('DO NOT STORE ME'),false);
  assert.equal(serialized.includes('student-1'),true);
@@ -69,4 +90,4 @@ await run('safe core shadow event is deterministic and versioned',async()=>{
  assert.ok(a.event.question_version);
 });
 
-if(!process.exitCode)console.log('Learning Companion safe B1 shadow pilot gate: PASS');
+if(!process.exitCode)console.log('Learning Companion safe B1 real shadow pilot gate: PASS');
