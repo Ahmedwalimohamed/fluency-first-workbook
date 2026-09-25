@@ -6,6 +6,7 @@
  * Raw learner answers and answer keys are deliberately excluded from the
  * Learning Companion event contract and shadow persistence.
  */
+const companion=require('./learning-companion-v1');
 const adapter=require('./learning-companion-adapter');
 const shadow=require('./learning-companion-shadow-bootstrap');
 const jev=require('./learning-companion-jev');
@@ -63,6 +64,7 @@ function safeContext(result,source){
 }
 
 async function observeSafeResult({pool,result,source}){
+  if(!companion.enabled())return{status:'DISABLED',core_unchanged:true};
   if(!result||!result.learner_id||!result.lesson_id||!result.attempt_id)return{status:'INVALID_SHADOW_INPUT',core_unchanged:true};
   await shadow.ensureShadowSchema(pool);
   const context=safeContext(result,source);
