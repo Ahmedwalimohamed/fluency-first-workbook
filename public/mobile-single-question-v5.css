@@ -1,10 +1,12 @@
-/* EnglishGate mobile single-question experience v7
-   Mobile is the source of truth: one active question, fully visible, scrollable, and safe above navigation. */
+/* EnglishGate mobile single-question experience v8
+   Mobile is the source of truth: one active question, fully visible, scrollable, and safe above navigation.
+   v8 reserves measured space for the live mobile Back/Next bar so inputs can never sit underneath it. */
 @media (max-width:760px){
   body.student-question-focus-mode,
   body.student-question-focus-mode.student-question-nav-active{
     overflow:hidden!important;
     padding-bottom:0!important;
+    --eg-question-nav-clearance:var(--eg-mobile-question-nav-clearance,calc(116px + env(safe-area-inset-bottom)));
   }
 
   body.student-question-focus-mode .content,
@@ -15,9 +17,18 @@
     min-height:0!important;
     padding-top:12px!important;
     padding-right:12px!important;
-    padding-bottom:calc(86px + env(safe-area-inset-bottom))!important;
+    padding-bottom:var(--eg-question-nav-clearance,calc(116px + env(safe-area-inset-bottom)))!important;
     padding-left:12px!important;
     overflow:hidden!important;
+  }
+
+  /* Always reserve footer clearance while focus mode is active. The data marker is
+     still used for the stricter single-question scrolling rules below, but spacing
+     must not depend on that marker being present during a render transition. */
+  body.student-question-focus-mode #activityPanel{
+    box-sizing:border-box!important;
+    padding-bottom:var(--eg-question-nav-clearance,calc(116px + env(safe-area-inset-bottom)))!important;
+    scroll-padding-bottom:var(--eg-question-nav-clearance,calc(116px + env(safe-area-inset-bottom)))!important;
   }
 
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"]{
@@ -30,8 +41,8 @@
     -webkit-overflow-scrolling:touch!important;
     overscroll-behavior-y:contain!important;
     scroll-padding-top:12px!important;
-    scroll-padding-bottom:96px!important;
-    padding:0 0 calc(88px + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:var(--eg-question-nav-clearance,calc(116px + env(safe-area-inset-bottom)))!important;
+    padding:0 0 var(--eg-question-nav-clearance,calc(116px + env(safe-area-inset-bottom)))!important;
   }
 
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .activity-question-list[data-student-question-flow="1"],
@@ -148,11 +159,13 @@
   body.student-question-nav-active .content{
     padding-left:9px!important;
     padding-right:9px!important;
-    padding-bottom:calc(80px + env(safe-area-inset-bottom))!important;
+    padding-bottom:var(--eg-question-nav-clearance,calc(108px + env(safe-area-inset-bottom)))!important;
   }
 
+  body.student-question-focus-mode #activityPanel,
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"]{
-    padding-bottom:calc(82px + env(safe-area-inset-bottom))!important;
+    padding-bottom:var(--eg-question-nav-clearance,calc(108px + env(safe-area-inset-bottom)))!important;
+    scroll-padding-bottom:var(--eg-question-nav-clearance,calc(108px + env(safe-area-inset-bottom)))!important;
   }
 
   body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-current,
