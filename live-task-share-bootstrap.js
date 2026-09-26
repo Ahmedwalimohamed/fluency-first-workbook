@@ -75,13 +75,54 @@ function submissionDto(row){
     timedOut:Boolean(row.timed_out),submittedAt:row.submitted_at
   };
 }
+async function activeSharedTask(taskId,studentId){
+  return pool.query(`
+    select lt.*,c.name as class_name
+    from live_tasks lt
+    join classes c on c.id=lt.class_id and c.approval_status='approved'
+    join enrollments e on e.class_id=lt.class_id and e.user_id=$2
+    where lt.id=$1
+      and lt.status='live'
+      and lt.starts_at<=now()
+      and lt.ends_at>now()
+    limit 1
+  `,[taskId,studentId]);
+}
+async function recoverCurrentTaskForSameClass(taskId,studentId){
+  // An old WhatsApp link may still point at the previous task. Recover only inside
+  // the exact class encoded by that old task and only when this student is enrolled.
+  const classAccess=await pool.query(`
+    select lt.class_id
+    from live_tasks lt
+    join classes c on c.id=lt.class_id and c.approval_status='approved'
+    join enrollments e on e.class_id=lt.class_id and e.user_id=$2
+    where lt.id=$1
+    limit 1
+  `,[taskId,studentId]);
+  if(!classAccess.rowCount)return null;
+  const classId=classAccess.rows[0].class_id;
+  const current=await pool.query(`
+    select lt.*,c.name as class_name
+    from live_tasks lt
+    join classes c on c.id=lt.class_id and c.approval_status='approved'
+    join enrollments e on e.class_id=lt.class_id and e.user_id=$2
+    where lt.class_id=$1
+      and lt.status='live'
+      and lt.starts_at<=now()
+      and lt.ends_at>now()
+    order by lt.starts_at desc
+    limit 1
+  `,[classId,studentId]);
+  return current.rows[0]||null;
+}
 
 function install(app){
   if(installed.has(app))return;
   installed.add(app);
 
-  // The share URL is only a deep link. Authentication and exact class enrollment
-  // are still required, and answer keys are never returned to the student.
+  // A shared URL is only a deep link. Student authentication + exact class
+  // enrollment are always required. If the teacher has replaced an expired task
+  // in the same class, an old WhatsApp link resolves to that class's current task.
   nativeGet.call(app,'/api/student/live-task/shared',async(req,res)=>{
     res.set({
       'Cache-Control':'no-store',
@@ -90,23 +131,26 @@ function install(app){
     });
     const student=studentSession(req);
     if(!student)return res.status(403).json({error:'Student access required.'});
-    const taskId=String(req.query?.taskId||'').trim();
-    if(!validTaskId(taskId))return res.status(400).json({error:'Invalid live task link.'});
+    const requestedTaskId=String(req.query?.taskId||'').trim();
+    if(!validTaskId(requestedTaskId))return res.status(400).json({error:'Invalid live task link.'});
     try{
-      const q=await pool.query(`
-        select lt.*,c.name as class_name
-        from live_tasks lt
-        join classes c on c.id=lt.class_id and c.approval_status='approved'
-        join enrollments e on e.class_id=lt.class_id and e.user_id=$2
-        where lt.id=$1
-          and lt.status='live'
-          and lt.starts_at<=now()
-          and lt.ends_at>now()
-        limit 1
-      `,[taskId,student.id]);
-      if(!q.rowCount)return res.status(404).json({error:'This live task has ended or is not assigned to your class.',code:'LIVE_TASK_NOT_AVAILABLE'});
-      const sub=await pool.query('select answers,score,correct_count,total_count,timed_out,submitted_at from live_task_submissions where task_id=$1 and student_id=$2',[taskId,student.id]);
-      return res.json({task:studentTask(q.rows[0]),submission:submissionDto(sub.rows[0]),serverNow:new Date().toISOString()});
+      const exact=await activeSharedTask(requestedTaskId,student.id);
+      let row=exact.rows[0]||null;
+      let recovered=false;
+      if(!row){
+        row=await recoverCurrentTaskForSameClass(requestedTaskId,student.id);
+        recovered=Boolean(row);
+      }
+      if(!row)return res.status(404).json({error:'This live task has ended or is not assigned to your class.',code:'LIVE_TASK_NOT_AVAILABLE'});
+      if(recovered)console.log(`LIVE TASK SHARE RECOVERED stale=${requestedTaskId} current=${row.id} class=${row.class_id}`);
+      const sub=await pool.query('select answers,score,correct_count,total_count,timed_out,submitted_at from live_task_submissions where task_id=$1 and student_id=$2',[row.id,student.id]);
+      return res.json({
+        task:studentTask(row),
+        submission:submissionDto(sub.rows[0]),
+        serverNow:new Date().toISOString(),
+        resolvedTaskId:row.id,
+        staleLinkRecovered:recovered
+      });
     }catch(e){
       if(e?.code==='42P01')return res.status(404).json({error:'This live task is not available yet.',code:'LIVE_TASK_NOT_AVAILABLE'});
       console.error('Shared live task lookup error:',e);
