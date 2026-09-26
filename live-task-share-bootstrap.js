@@ -96,5 +96,3 @@ express.application.get=function englishGateLiveTaskShareGet(route,...handlers){
   install(this);
   return nativeGet.call(this,route,...handlers);
 };
-
-require('./school-platform-bootstrap.js');
