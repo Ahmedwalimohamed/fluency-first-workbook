@@ -13,6 +13,24 @@ function json(res, status, payload) {
   res.end(JSON.stringify(payload));
 }
 
+function databaseConfigProbe() {
+  const raw = process.env.DATABASE_URL;
+  if (!raw) return { configured: false, host: null, portConfigured: false, publicRailwayHost: false };
+  try {
+    const parsed = new URL(raw);
+    const host = parsed.hostname || null;
+    return {
+      configured: true,
+      host,
+      portConfigured: Boolean(parsed.port),
+      publicRailwayHost: Boolean(host && host.endsWith('.proxy.rlwy.net')),
+      internalRailwayHost: host === 'postgres.railway.internal'
+    };
+  } catch (_) {
+    return { configured: true, host: null, portConfigured: false, publicRailwayHost: false, parseable: false };
+  }
+}
+
 async function databaseProbe() {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not configured for this deployment');
   const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
@@ -66,6 +84,12 @@ module.exports = async function englishGateVercelHandler(req, res) {
     return json(res, 200, { ok: true, layer: 'runtime', runtime: 'vercel' });
   }
 
+  // Sanitized config probe: exposes host/port shape only, never credentials.
+  if (path === '/__migration/database-config') {
+    const config = databaseConfigProbe();
+    return json(res, config.configured ? 200 : 503, { ok: config.configured, layer: 'database-config', ...config });
+  }
+
   // Probe 2: read-only DB connectivity. Does not load EnglishGate.
   if (path === '/__migration/database') {
     try {
@@ -96,5 +120,3 @@ module.exports = async function englishGateVercelHandler(req, res) {
     return json(res, 503, { ok: false, layer: 'app', error: error?.code || error?.name || 'APP_BOOTSTRAP_FAILED' });
   }
 };
-
-// Migration redeploy marker: public Railway PostgreSQL endpoint enabled.
