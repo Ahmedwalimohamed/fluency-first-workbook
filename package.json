@@ -6,6 +6,7 @@
   "main": "server.js",
   "scripts": {
     "qa:b2": "node scripts/qa-lesson-quality-firewall.js && node scripts/qa-b2.mjs",
+    "qa:professional": "node scripts/qa-professional-curriculum.mjs && node --check professional-curriculum-runtime.js",
     "qa:multischool": "node --check school-platform-bootstrap.js && node --check public/assets/school-platform.js && node --check public/assets/academic-manager.js",
     "qa:deployment": "node scripts/qa-deployment.mjs",
     "qa:security": "node --check build-info-bootstrap.js && node --check ai-content-editor-bootstrap.js && node --check teacher-management-bootstrap.js && node --check scripts/smoke-production.mjs",
@@ -23,8 +24,8 @@
     "qa:learning-companion:simulate": "node scripts/simulate-learning-companion-1000.mjs",
     "qa:learning-companion:adversarial": "node scripts/qa-learning-companion-adversarial.mjs",
     "smoke:production": "node scripts/smoke-production.mjs",
-    "prestart": "node --check core-learning-access-bootstrap.js && node --check a1-pilot-bootstrap.js && node --check b1-shadow-pilot-bootstrap.js && node --check b1-shadow-pilot-smoke.js && node --check learning-companion-shadow-monitor-bootstrap.js && npm run qa:a1:gold:l1 && npm run qa:quality-gate && npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2:ui:jev && npm run qa:b2 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
-    "start": "node -r ./core-learning-access-bootstrap.js teacher-management-bootstrap.js",
+    "prestart": "node --check live-task-share-bootstrap.js && node --check core-learning-access-bootstrap.js && node --check a1-pilot-bootstrap.js && node --check b1-shadow-pilot-bootstrap.js && node --check b1-shadow-pilot-smoke.js && node --check learning-companion-shadow-monitor-bootstrap.js && npm run qa:a1:gold:l1 && npm run qa:professional && npm run qa:quality-gate && npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2:ui:jev && npm run qa:b2 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
+    "start": "node -r ./professional-curriculum-runtime.js -r ./live-task-share-bootstrap.js -r ./core-learning-access-bootstrap.js teacher-management-bootstrap.js",
     "qa:community": "node scripts/qa-community.mjs",
     "qa:cefr": "node scripts/qa-cefr.mjs",
     "qa:ladder": "node scripts/qa-learning-ladder.mjs",
