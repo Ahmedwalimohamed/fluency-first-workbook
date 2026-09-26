@@ -1,5 +1,6 @@
 'use strict';
 
+// Dedicated authenticated Jev relay for EnglishGate course-fit decisions.
 const http = require('http');
 
 const PORT = Number(process.env.PORT || 3000);
