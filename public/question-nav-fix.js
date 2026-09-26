@@ -1,7 +1,7 @@
 /* EnglishGate canonical student question navigation
    Single owner for Back/Next placement and response-based navigation state.
    Correctness affects feedback/score only; any genuine response may move forward.
-   Mobile nav clearance is measured from the live viewport-level proxy so content is never covered. */
+   Mobile footer and sticky-header clearances are measured live so content is never covered. */
 (function(){
 'use strict';
 
@@ -72,6 +72,30 @@ function syncMobileNavClearance(proxy){
  });
 }
 
+function clearMobileTopClearance(){
+ document.documentElement.style.removeProperty('--eg-mobile-question-top-clearance');
+}
+
+function syncMobileTopClearance(root){
+ if(!root||!isMobile()||!document.body.classList.contains('student-question-focus-mode')){
+  clearMobileTopClearance();
+  return;
+ }
+ requestAnimationFrame(()=>{
+  if(!document.body.classList.contains('student-question-focus-mode'))return;
+  const topbar=document.querySelector('.topbar');
+  if(!topbar){
+   document.documentElement.style.setProperty('--eg-mobile-question-top-clearance','12px');
+   return;
+  }
+  const panelRect=root.getBoundingClientRect();
+  const barRect=topbar.getBoundingClientRect();
+  const overlap=Math.max(0,Math.ceil(barRect.bottom-panelRect.top));
+  const clearance=Math.max(12,overlap+12);
+  document.documentElement.style.setProperty('--eg-mobile-question-top-clearance',`${clearance}px`);
+ });
+}
+
 function syncResponseState(q){
  if(!q)return;
  q.dataset.responseRecorded=hasResponse(q)?'1':'0';
@@ -100,6 +124,7 @@ function syncMobileProxy(root,back,next){
  proxy.hidden=!active;
  if(!active){
   clearMobileNavClearance();
+  clearMobileTopClearance();
   return;
  }
 
@@ -160,6 +185,7 @@ function enhance(){
 
  syncNavigationState(root);
  document.body.classList.add('student-question-nav-active');
+ syncMobileTopClearance(root);
  syncMobileProxy(root,back,next);
 }
 
@@ -167,6 +193,7 @@ function cleanup(){
  if(document.body.classList.contains('student-question-focus-mode'))return;
  document.body.classList.remove('student-question-nav-active','student-question-mobile-proxy-active');
  clearMobileNavClearance();
+ clearMobileTopClearance();
  const proxy=document.querySelector('.student-question-mobile-proxy');
  if(proxy)proxy.hidden=true;
 }
