@@ -3,9 +3,11 @@
 'use strict';
 
 const STYLE_ID='egLiveTaskShareStyles';
-const MIN_FETCH_MS=1800;
-let pending=false,lastKey='',lastFetchAt=0;
+const MIN_FETCH_MS=2200;
+const POLL_MS=3000;
+let pending=false,lastKey='',lastFetchAt=0,pollTimer=null;
 
+function currentRole(){try{return typeof session!=='undefined'?String(session?.role||''):''}catch{return''}}
 function addStyles(){
   if(document.getElementById(STYLE_ID))return;
   const style=document.createElement('style');
@@ -62,18 +64,22 @@ async function copyText(text){
 }
 function renderCard(side,url,taskId,classId){
   const old=side.querySelector('[data-live-share-card]');
-  if(old?.dataset.taskId===String(taskId)&&old?.dataset.classId===String(classId))return;
+  if(old?.dataset.taskId===String(taskId)&&old?.dataset.classId===String(classId)){
+    const input=old.querySelector('[data-live-share-input]');if(input&&input.value!==url)input.value=url;
+    const open=old.querySelector('[data-live-open]');if(open&&open.href!==url)open.href=url;
+    return;
+  }
   old?.remove();
   const card=document.createElement('section');
   card.className='eg-live-share-card';card.dataset.liveShareCard='1';card.dataset.taskId=String(taskId);card.dataset.classId=String(classId);
-  card.innerHTML=`<div class="eg-live-share-card-head"><strong>Student link</strong><span>Share live task</span></div>
+  card.innerHTML=`<div class="eg-live-share-card-head"><strong>Student link</strong><span>Current live task</span></div>
     <div class="eg-live-share-row"><input data-live-share-input readonly aria-label="Live task student link"><button type="button" data-live-copy>Copy link</button></div>
     <div class="eg-live-share-actions"><button type="button" data-live-share>Share</button><a data-live-open target="_blank" rel="noopener">Open link</a></div>
-    <small>Send this link to the class. Students must sign in and be enrolled in this class before the task opens.</small>`;
+    <small>This link automatically follows the current task for this class. Students must sign in and be enrolled in the class.</small>`;
   const input=card.querySelector('[data-live-share-input]');input.value=url;
   card.querySelector('[data-live-open]').href=url;
   const copy=card.querySelector('[data-live-copy]');
-  copy.onclick=async()=>{try{await copyText(url);const old=copy.textContent;copy.textContent='Copied';setTimeout(()=>{if(copy.isConnected)copy.textContent=old},1600)}catch{copy.textContent='Copy failed'}};
+  copy.onclick=async()=>{try{await copyText(url);const oldText=copy.textContent;copy.textContent='Copied';setTimeout(()=>{if(copy.isConnected)copy.textContent=oldText},1600)}catch{copy.textContent='Copy failed'}};
   const share=card.querySelector('[data-live-share]');
   share.onclick=async()=>{
     try{
@@ -84,33 +90,41 @@ function renderCard(side,url,taskId,classId){
   const students=side.querySelector('.eg-live-students-block');
   if(students)students.before(card);else side.prepend(card);
 }
+function removeCard(){document.querySelectorAll('[data-live-share-card]').forEach(el=>el.remove());lastKey=''}
 async function inject(){
-  pending=false;addStyles();
+  pending=false;
+  if(currentRole()!=='teacher'){removeCard();return}
+  addStyles();
   const side=liveSide();
   if(!side){lastKey='';return}
   const classId=resolveClassId();if(!classId)return;
-  const existing=side.querySelector('[data-live-share-card]');
-  if(existing?.dataset.classId===String(classId)&&existing?.dataset.taskId)return;
   try{
     lastFetchAt=Date.now();
-    const data=await getCurrentTask(classId),task=data?.task;
-    if(!task?.id||task.status!=='live')return;
-    const key=classId+':'+task.id,nowSide=liveSide();
+    const data=await getCurrentTask(classId),task=data?.task,nowSide=liveSide();
     if(!nowSide)return;
-    if(lastKey===key&&nowSide.querySelector(`[data-live-share-card][data-task-id="${CSS.escape(String(task.id))}"]`))return;
-    lastKey=key;renderCard(nowSide,taskUrl(task.id),task.id,classId);
+    if(!task?.id||task.status!=='live'){
+      nowSide.querySelector('[data-live-share-card]')?.remove();lastKey='';return;
+    }
+    const key=classId+':'+task.id;
+    if(lastKey!==key||!nowSide.querySelector(`[data-live-share-card][data-task-id="${CSS.escape(String(task.id))}"]`)){
+      lastKey=key;renderCard(nowSide,taskUrl(task.id),task.id,classId);
+    }
   }catch{}
 }
 function schedule(){
+  if(currentRole()!=='teacher'){removeCard();return}
   if(pending)return;
   pending=true;
   const wait=Math.max(80,MIN_FETCH_MS-(Date.now()-lastFetchAt));
   setTimeout(inject,wait);
 }
+function startPolling(){
+  if(pollTimer)return;
+  pollTimer=setInterval(()=>{if(currentRole()==='teacher')schedule();else removeCard()},POLL_MS);
+}
 
-addStyles();
-const observer=new MutationObserver(schedule);
+const observer=new MutationObserver(()=>{if(currentRole()==='teacher')schedule()});
 observer.observe(document.documentElement,{childList:true,subtree:true});
 window.addEventListener('englishgate:live-task-share-refresh',schedule);
-schedule();
+startPolling();schedule();
 })();
