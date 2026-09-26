@@ -1,6 +1,7 @@
 /* EnglishGate canonical student question navigation
    Single owner for Back/Next placement and response-based navigation state.
-   Correctness affects feedback/score only; any genuine response may move forward. */
+   Correctness affects feedback/score only; any genuine response may move forward.
+   Mobile nav clearance is measured from the live viewport-level proxy so content is never covered. */
 (function(){
 'use strict';
 
@@ -53,6 +54,24 @@ function makeMobileProxy(){
  return nav;
 }
 
+function clearMobileNavClearance(){
+ document.documentElement.style.removeProperty('--eg-mobile-question-nav-clearance');
+}
+
+function syncMobileNavClearance(proxy){
+ if(!proxy||proxy.hidden||!isMobile()){
+  clearMobileNavClearance();
+  return;
+ }
+ requestAnimationFrame(()=>{
+  if(proxy.hidden||!document.body.classList.contains('student-question-mobile-proxy-active'))return;
+  const height=Math.ceil(proxy.getBoundingClientRect().height||0);
+  if(height>0){
+   document.documentElement.style.setProperty('--eg-mobile-question-nav-clearance',`${height+20}px`);
+  }
+ });
+}
+
 function syncResponseState(q){
  if(!q)return;
  q.dataset.responseRecorded=hasResponse(q)?'1':'0';
@@ -79,7 +98,10 @@ function syncMobileProxy(root,back,next){
  const q=currentQuestion(root);
  const active=isMobile()&&document.body.classList.contains('student-question-focus-mode')&&isStudent();
  proxy.hidden=!active;
- if(!active)return;
+ if(!active){
+  clearMobileNavClearance();
+  return;
+ }
 
  proxyBack.hidden=Boolean(back.hidden);
  proxyBack.disabled=Boolean(back.disabled||back.hidden);
@@ -96,6 +118,7 @@ function syncMobileProxy(root,back,next){
   proxyNext.removeAttribute('aria-disabled');
  }
  document.body.classList.add('student-question-mobile-proxy-active');
+ syncMobileNavClearance(proxy);
 }
 
 function enhance(){
@@ -143,6 +166,7 @@ function enhance(){
 function cleanup(){
  if(document.body.classList.contains('student-question-focus-mode'))return;
  document.body.classList.remove('student-question-nav-active','student-question-mobile-proxy-active');
+ clearMobileNavClearance();
  const proxy=document.querySelector('.student-question-mobile-proxy');
  if(proxy)proxy.hidden=true;
 }
@@ -193,8 +217,6 @@ document.addEventListener('click',e=>{
   return;
  }
 
- // Typed grammar/transformation questions often use a plain "Check" button.
- // A genuine typed attempt must unlock navigation regardless of correctness.
  const genericCheck=e.target.closest?.('button');
  if(genericCheck&&/^check(?: answer| answers)?$/i.test(String(genericCheck.textContent||'').trim())){
   const q=genericCheck.closest('.guided-question');
@@ -232,8 +254,13 @@ function start(){
   attributeFilter:['class','hidden','disabled','data-core-complete','data-core-correct','data-response-recorded']
  });
  enhance();
- window.addEventListener('resize',()=>{enhance();cleanup()},{passive:true});
- window.addEventListener('orientationchange',()=>{enhance();cleanup()},{passive:true});
+ const resync=()=>{enhance();cleanup()};
+ window.addEventListener('resize',resync,{passive:true});
+ window.addEventListener('orientationchange',resync,{passive:true});
+ if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',resync,{passive:true});
+  window.visualViewport.addEventListener('scroll',resync,{passive:true});
+ }
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
