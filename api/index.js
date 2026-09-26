@@ -48,9 +48,9 @@ async function readSmokeProbe() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
   try {
     const [bookResult, classResult, enrollmentResult] = await Promise.all([
-      pool.query("select id,title,level,status,total_lessons from books where id='speakup-b1' limit 1"),
-      pool.query("select count(*)::int as count from classes where course_id='speakup-b1'"),
-      pool.query("select count(*)::int as count from enrollments e join classes c on c.id=e.class_id where c.course_id='speakup-b1'")
+      pool.query("select id,title,level,status,total_lessons from books where id='speakup-b2' limit 1"),
+      pool.query("select count(*)::int as count from classes where course_id='speakup-b2'"),
+      pool.query("select count(*)::int as count from enrollments e join classes c on c.id=e.class_id where c.course_id='speakup-b2'")
     ]);
     const book = bookResult.rows?.[0] || null;
     return {
@@ -62,8 +62,8 @@ async function readSmokeProbe() {
         status: book.status,
         totalLessons: Number(book.total_lessons || 0)
       } : null,
-      b1ClassCount: Number(classResult.rows?.[0]?.count || 0),
-      b1EnrollmentCount: Number(enrollmentResult.rows?.[0]?.count || 0)
+      b2ClassCount: Number(classResult.rows?.[0]?.count || 0),
+      b2EnrollmentCount: Number(enrollmentResult.rows?.[0]?.count || 0)
     };
   } finally {
     await pool.end();
