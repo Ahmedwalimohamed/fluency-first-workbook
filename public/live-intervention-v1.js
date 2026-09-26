@@ -9,6 +9,7 @@ const $id=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const role=()=>{try{return typeof session!=='undefined'?session?.role:null}catch{return null}};
 const fmt=sec=>{sec=Math.max(0,Math.ceil(sec));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')};
+const sharedTaskId=(()=>{try{return String(new URLSearchParams(window.location.search).get('liveTask')||'').trim()}catch{return''}})();
 
 function studentLiveHeaders(){return studentLiveToken?{'X-Live-Task-Token':studentLiveToken}:{}}
 function rememberStudentLiveToken(token){
@@ -21,6 +22,15 @@ function ensureRoot(){
   return root;
 }
 function clearTimer(){if(studentTimer){clearInterval(studentTimer);studentTimer=null}}
+function liveEndpoint(){return sharedTaskId?'/api/student/live-task/shared?taskId='+encodeURIComponent(sharedTaskId):'/api/student/live-task/current'}
+function showSharedUnavailable(){
+  if(!sharedTaskId||studentResultShowing)return;
+  clearTimer();
+  const root=ensureRoot();
+  if(root.querySelector('[data-shared-live-unavailable]'))return;
+  root.innerHTML=`<div class="student-live-overlay"><section class="student-live-panel student-live-result" data-shared-live-unavailable><span class="role-kicker">EnglishGate Live Task</span><h2>Live task unavailable</h2><div class="student-live-progress"><span>This task may have ended, or this account is not enrolled in the class. Sign in with the student account for this class and try the link again.</span></div><button class="primary-btn" id="closeSharedLiveUnavailable" type="button">Return to EnglishGate</button></section></div>`;
+  $id('closeSharedLiveUnavailable').onclick=()=>{root.innerHTML='';try{const u=new URL(location.href);u.searchParams.delete('liveTask');history.replaceState({},'',u.pathname+u.search+u.hash)}catch{}};
+}
 
 function renderQuestion(q,i){
   const type=q.type||'multiple_choice',legend=`<legend><span>${i+1}</span>${esc(q.prompt||'')}</legend>`;
@@ -153,10 +163,12 @@ function showExistingResult(task,sub){
 async function poll(){
   if(role()!=='student'){setTimeout(poll,4000);return}
   try{
-    const r=await api('/api/student/live-task/current',{headers:studentLiveHeaders()});
+    const r=await api(liveEndpoint(),{headers:studentLiveHeaders()});
     if(r?.studentLiveToken)rememberStudentLiveToken(r.studentLiveToken);
     if(!r.task){
-      studentTaskId=null;clearTimer();const root=$id('egLiveTaskRoot');if(root&&!studentResultShowing)root.innerHTML='';
+      studentTaskId=null;clearTimer();
+      const root=$id('egLiveTaskRoot');
+      if(sharedTaskId)showSharedUnavailable();else if(root&&!studentResultShowing)root.innerHTML='';
     }else if(!r.submission&&!dismissed.has(r.task.id)){
       if(studentTaskId!==r.task.id)renderTask(r.task,r.serverNow);
       else if(r.task?.endsAt){const offset=Date.now()-new Date(r.serverNow||Date.now()).getTime();studentEndLocal=new Date(r.task.endsAt).getTime()+offset}
@@ -164,10 +176,20 @@ async function poll(){
     }else if(r.submission&&studentTaskId!==r.task.id&&!dismissed.has(r.task.id)){
       showExistingResult(r.task,r.submission);studentTaskId=r.task.id;
     }
-  }catch{}
+  }catch{
+    if(sharedTaskId)showSharedUnavailable();
+  }
   setTimeout(poll,4000);
 }
 
-function boot(){setTimeout(poll,1200)}
+function loadShareUi(){
+  if(document.querySelector('script[data-englishgate-live-share]'))return;
+  const script=document.createElement('script');
+  script.src='/live-task-share-v1.js?v=1';
+  script.async=true;
+  script.dataset.englishgateLiveShare='1';
+  document.head.appendChild(script);
+}
+function boot(){loadShareUi();setTimeout(poll,1200)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
