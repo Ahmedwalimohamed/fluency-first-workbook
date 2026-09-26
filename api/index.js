@@ -96,3 +96,5 @@ module.exports = async function englishGateVercelHandler(req, res) {
     return json(res, 503, { ok: false, layer: 'app', error: error?.code || error?.name || 'APP_BOOTSTRAP_FAILED' });
   }
 };
+
+// Migration redeploy marker: public Railway PostgreSQL endpoint enabled.
