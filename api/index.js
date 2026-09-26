@@ -43,6 +43,33 @@ async function databaseProbe() {
   }
 }
 
+async function readSmokeProbe() {
+  if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not configured for this deployment');
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
+  try {
+    const [bookResult, classResult, enrollmentResult] = await Promise.all([
+      pool.query("select id,title,level,status,total_lessons from books where id='speakup-b1' limit 1"),
+      pool.query("select count(*)::int as count from classes where course_id='speakup-b1'"),
+      pool.query("select count(*)::int as count from enrollments e join classes c on c.id=e.class_id where c.course_id='speakup-b1'")
+    ]);
+    const book = bookResult.rows?.[0] || null;
+    return {
+      bookFound: Boolean(book),
+      book: book ? {
+        id: book.id,
+        title: book.title,
+        level: book.level,
+        status: book.status,
+        totalLessons: Number(book.total_lessons || 0)
+      } : null,
+      b1ClassCount: Number(classResult.rows?.[0]?.count || 0),
+      b1EnrollmentCount: Number(enrollmentResult.rows?.[0]?.count || 0)
+    };
+  } finally {
+    await pool.end();
+  }
+}
+
 function sanitizeBootstrapMessage(value) {
   return String(value || '')
     .replace(/postgres(?:ql)?:\/\/[^\s]+/gi, '[database-url-redacted]')
@@ -169,6 +196,16 @@ module.exports = async function englishGateVercelHandler(req, res) {
     } catch (error) {
       console.error('EnglishGate migration database probe failed:', error);
       return json(res, 503, { ok: false, layer: 'database', error: error?.code || error?.name || 'DATABASE_PROBE_FAILED' });
+    }
+  }
+
+  if (path === '/__migration/read-smoke') {
+    try {
+      const result = await readSmokeProbe();
+      return json(res, result.bookFound ? 200 : 503, { ok: result.bookFound, layer: 'read-smoke', ...result });
+    } catch (error) {
+      console.error('EnglishGate migration read smoke failed:', error);
+      return json(res, 503, { ok: false, layer: 'read-smoke', error: error?.code || error?.name || 'READ_SMOKE_FAILED' });
     }
   }
 
