@@ -1,0 +1,100 @@
+const express=require('express');
+const jwt=require('jsonwebtoken');
+const {Pool}=require('pg');
+
+const nativeGet=express.application.get;
+const installed=new WeakSet();
+const pool=new Pool({connectionString:process.env.DATABASE_URL});
+
+const CHOICE_TYPES=new Set(['multiple_choice','true_false']);
+const TEXT_TYPES=new Set(['short_answer','fill_blank','sentence_correction','sentence_construction']);
+const SPEAKING_TYPES=new Set(['teacher_speaking','individual_speaking','pair_discussion']);
+
+function studentSession(req){
+  try{
+    const user=jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET);
+    return user?.role==='student'?user:null;
+  }catch{return null}
+}
+function safeQuestion(q){
+  const type=String(q?.type||'multiple_choice');
+  const common={id:String(q?.id||''),type,prompt:String(q?.prompt||q?.q||''),explanation:''};
+  if(CHOICE_TYPES.has(type))return {...common,options:Array.isArray(q?.options)?q.options:[]};
+  if(TEXT_TYPES.has(type))return common;
+  if(type==='matching'){
+    const pairs=Array.isArray(q?.pairs)?q.pairs:[];
+    return {...common,leftItems:pairs.map(p=>p.left),rightOptions:pairs.map(p=>p.right).reverse()};
+  }
+  if(type==='ordering')return {...common,items:Array.isArray(q?.items)?q.items:[]};
+  if(SPEAKING_TYPES.has(type))return {...common,successCriteria:Array.isArray(q?.successCriteria)?q.successCriteria:[]};
+  return common;
+}
+function studentTask(row){
+  const content=row.content||{};
+  let safeContent;
+  if(row.task_type==='writing'){
+    safeContent={topic:content.topic||'',instructions:content.instructions||'',minWords:content.minWords||0};
+  }else{
+    const legacy=row.task_type==='mcq';
+    const questions=(Array.isArray(content.questions)?content.questions:[]).map((q,i)=>{
+      const normalized=legacy?{id:q.id||`q${i+1}`,type:'multiple_choice',prompt:q.prompt||q.q,options:q.options}:q;
+      return safeQuestion(normalized);
+    });
+    safeContent={topic:content.topic||'',tip:content.tip||'',questions};
+  }
+  return {
+    id:row.id,
+    classId:row.class_id,
+    className:row.class_name||'',
+    title:row.title,
+    taskType:row.task_type==='mcq'?'activity':row.task_type,
+    durationSeconds:row.duration_seconds,
+    status:row.status,
+    startsAt:row.starts_at,
+    endsAt:row.ends_at,
+    content:safeContent
+  };
+}
+function validTaskId(value){return /^lt_[0-9a-f-]{20,80}$/i.test(String(value||'').trim())}
+
+function install(app){
+  if(installed.has(app))return;
+  installed.add(app);
+
+  // A share URL is a deep link, not an authorization token. Students must still
+  // be signed in and enrolled in the exact class that owns the live task.
+  nativeGet.call(app,'/api/student/live-task/shared',async(req,res)=>{
+    const student=studentSession(req);
+    if(!student)return res.status(403).json({error:'Student access required.'});
+    const taskId=String(req.query?.taskId||'').trim();
+    res.set('Cache-Control','no-store');
+    if(!validTaskId(taskId))return res.json({task:null,serverNow:new Date().toISOString()});
+    try{
+      const q=await pool.query(`
+        select lt.*,c.name as class_name
+        from live_tasks lt
+        join classes c on c.id=lt.class_id and c.approval_status='approved'
+        join enrollments e on e.class_id=lt.class_id and e.user_id=$2
+        where lt.id=$1
+          and lt.status='live'
+          and lt.starts_at<=now()
+          and lt.ends_at>now()
+        limit 1
+      `,[taskId,student.id]);
+      if(!q.rowCount)return res.json({task:null,serverNow:new Date().toISOString()});
+      return res.json({task:studentTask(q.rows[0]),submission:null,serverNow:new Date().toISOString()});
+    }catch(e){
+      // Before the first live task the lazy live-task schema may not exist yet.
+      if(e?.code==='42P01')return res.json({task:null,serverNow:new Date().toISOString()});
+      console.error('Shared live task lookup error:',e);
+      return res.status(500).json({error:'The shared live task could not be opened.'});
+    }
+  });
+}
+
+express.application.get=function englishGateLiveTaskShareGet(route,...handlers){
+  install(this);
+  return nativeGet.call(this,route,...handlers);
+};
+
+require('./school-platform-bootstrap.js');
