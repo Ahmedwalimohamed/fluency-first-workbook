@@ -16,6 +16,7 @@ const pilot=require('./learning-companion-pilot-scope');
 
 const originalPost=express.application.post;
 const originalGet=express.application.get;
+const originalUse=express.application.use;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 
@@ -142,7 +143,10 @@ function pilotConfig(req,res){
 
 function install(app){
   if(installed.has(app))return;installed.add(app);
-  originalGet.call(app,'/api/state',exposeB1AsPilotInState);
+  // Use middleware for /api/state instead of registering another GET route.
+  // Registering a one-handler GET here collides with school-platform-bootstrap,
+  // which expects the real state route to have auth + handler and dereferences req.user.
+  originalUse.call(app,'/api/state',exposeB1AsPilotInState);
   originalGet.call(app,'/api/learning-companion/pilot-config',pilotConfig);
   originalPost.call(app,'/api/attempts',saveB1PilotAttempt);
   originalPost.call(app,'/api/completion',saveB1PilotCompletion)
