@@ -3,6 +3,7 @@ const jwt=require('jsonwebtoken');
 const {Pool}=require('pg');
 
 const nativeGet=express.application.get;
+const nativeListen=express.application.listen;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 
@@ -10,9 +11,19 @@ const CHOICE_TYPES=new Set(['multiple_choice','true_false']);
 const TEXT_TYPES=new Set(['short_answer','fill_blank','sentence_correction','sentence_construction']);
 const SPEAKING_TYPES=new Set(['teacher_speaking','individual_speaking','pair_discussion']);
 
+function cookieValue(req,name){
+  if(req.cookies&&Object.prototype.hasOwnProperty.call(req.cookies,name))return req.cookies[name];
+  const header=String(req.headers?.cookie||'');
+  for(const part of header.split(';')){
+    const i=part.indexOf('=');if(i<0)continue;
+    const key=part.slice(0,i).trim();if(key!==name)continue;
+    try{return decodeURIComponent(part.slice(i+1).trim())}catch{return part.slice(i+1).trim()}
+  }
+  return '';
+}
 function studentSession(req){
   try{
-    const user=jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET);
+    const user=jwt.verify(cookieValue(req,'ff_session')||'',process.env.JWT_SECRET);
     return user?.role==='student'?user:null;
   }catch{return null}
 }
@@ -68,14 +79,14 @@ function install(app){
   if(installed.has(app))return;
   installed.add(app);
 
-  // A share URL is a deep link, not an authorization token. Students must still
-  // be signed in and enrolled in the exact class that owns the live task.
+  // The share URL is only a deep link. Authentication and exact class enrollment
+  // are still required, and answer keys are never returned to the student.
   nativeGet.call(app,'/api/student/live-task/shared',async(req,res)=>{
     const student=studentSession(req);
+    res.set('Cache-Control','no-store');
     if(!student)return res.status(403).json({error:'Student access required.'});
     const taskId=String(req.query?.taskId||'').trim();
-    res.set('Cache-Control','no-store');
-    if(!validTaskId(taskId))return res.json({task:null,serverNow:new Date().toISOString()});
+    if(!validTaskId(taskId))return res.status(400).json({error:'Invalid live task link.'});
     try{
       const q=await pool.query(`
         select lt.*,c.name as class_name
@@ -88,19 +99,22 @@ function install(app){
           and lt.ends_at>now()
         limit 1
       `,[taskId,student.id]);
-      if(!q.rowCount)return res.json({task:null,serverNow:new Date().toISOString()});
+      if(!q.rowCount)return res.status(404).json({error:'This live task has ended or is not assigned to your class.',code:'LIVE_TASK_NOT_AVAILABLE'});
       const sub=await pool.query('select answers,score,correct_count,total_count,timed_out,submitted_at from live_task_submissions where task_id=$1 and student_id=$2',[taskId,student.id]);
       return res.json({task:studentTask(q.rows[0]),submission:submissionDto(sub.rows[0]),serverNow:new Date().toISOString()});
     }catch(e){
-      // Before the first live task the lazy live-task schema may not exist yet.
-      if(e?.code==='42P01')return res.json({task:null,serverNow:new Date().toISOString()});
+      if(e?.code==='42P01')return res.status(404).json({error:'This live task is not available yet.',code:'LIVE_TASK_NOT_AVAILABLE'});
       console.error('Shared live task lookup error:',e);
       return res.status(500).json({error:'The shared live task could not be opened.'});
     }
   });
+  console.log('LIVE TASK SHARE ROUTE ACTIVE /api/student/live-task/shared');
 }
 
-express.application.get=function englishGateLiveTaskShareGet(route,...handlers){
+// This module is preloaded with Node. Register the route immediately before the
+// Express server begins listening, after all middleware/bootstrap wrappers are set.
+// This avoids route loss when other bootstraps wrap express.application.get.
+express.application.listen=function englishGateLiveTaskShareListen(...args){
   install(this);
-  return nativeGet.call(this,route,...handlers);
+  return nativeListen.apply(this,args);
 };
