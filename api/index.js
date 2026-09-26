@@ -42,35 +42,52 @@ async function databaseProbe() {
   }
 }
 
+function sanitizeBootstrapMessage(value) {
+  return String(value || '')
+    .replace(/postgres(?:ql)?:\/\/[^\s]+/gi, '[database-url-redacted]')
+    .replace(/password\s*[=:]\s*[^\s,;]+/gi, 'password=[redacted]')
+    .replace(/Bearer\s+[A-Za-z0-9._-]+/gi, 'Bearer [redacted]')
+    .slice(0, 300);
+}
+
 function loadEnglishGateApp() {
   if (appPromise) return appPromise;
 
   appPromise = new Promise((resolve, reject) => {
     let settled = false;
+    let bootstrapExitCode = null;
+    let lastBootstrapError = '';
     const originalListen = express.application.listen;
     const originalExit = process.exit;
-    let bootstrapExitCode = null;
+    const originalConsoleError = console.error;
 
+    const restore = () => {
+      express.application.listen = originalListen;
+      process.exit = originalExit;
+      console.error = originalConsoleError;
+    };
     const finishResolve = app => {
       if (settled) return;
       settled = true;
       clearTimeout(timeout);
-      express.application.listen = originalListen;
-      process.exit = originalExit;
+      restore();
       resolve(app);
     };
     const finishReject = error => {
       if (settled) return;
       settled = true;
       clearTimeout(timeout);
-      express.application.listen = originalListen;
-      process.exit = originalExit;
+      restore();
+      if (lastBootstrapError && !error.bootstrapDetail) error.bootstrapDetail = lastBootstrapError;
       reject(error);
     };
 
-    // The legacy Railway bootstrap calls process.exit(1) if an async schema
-    // initialization step fails. In Vercel, capture that as diagnostic evidence
-    // instead of killing the serverless function before we can report the layer.
+    console.error = (...args) => {
+      const text = sanitizeBootstrapMessage(args.map(x => x instanceof Error ? (x.stack || x.message) : String(x)).join(' '));
+      if (text) lastBootstrapError = text;
+      originalConsoleError(...args);
+    };
+
     process.exit = function captureBootstrapExit(code) {
       bootstrapExitCode = Number(code ?? 0);
       const error = new Error(`Legacy bootstrap requested process.exit(${bootstrapExitCode})`);
@@ -78,8 +95,6 @@ function loadEnglishGateApp() {
       finishReject(error);
     };
 
-    // Vercel owns the HTTP listener. Capture the initialized Express app when
-    // the existing Railway startup reaches listen(), without opening a socket.
     express.application.listen = function captureListen() {
       finishResolve(this);
       return {
@@ -141,7 +156,8 @@ module.exports = async function englishGateVercelHandler(req, res) {
         ok: false,
         layer: 'app',
         error: error?.code || error?.name || 'APP_BOOTSTRAP_FAILED',
-        detail: String(error?.message || '').slice(0, 180)
+        detail: String(error?.message || '').slice(0, 180),
+        bootstrapDetail: sanitizeBootstrapMessage(error?.bootstrapDetail || '') || null
       });
     }
   }
