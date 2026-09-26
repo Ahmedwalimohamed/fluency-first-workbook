@@ -30,9 +30,33 @@ function installStyles(){
   .student-question-home svg{width:19px;height:19px;display:block;pointer-events:none}
   .student-question-home span{pointer-events:none}
   .student-question-home:focus-visible{outline:3px solid rgba(37,99,235,.22);outline-offset:2px}
+  @media(max-width:760px){
+    body.student-question-focus-mode #activityPanel[data-student-question-flow="1"]{
+      padding-top:var(--eg-question-context-clearance,112px)!important;
+      scroll-padding-top:var(--eg-question-context-clearance,112px)!important;
+    }
+    body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question.is-flow-current,
+    body.student-question-focus-mode #activityPanel[data-student-question-flow="1"] .guided-question:not([hidden]):not(.is-flow-previous){
+      scroll-margin-top:var(--eg-question-context-clearance,112px)!important;
+    }
+  }
   @media(max-width:480px){.student-question-home{width:44px;padding:0}.student-question-home span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}}
  `;
  document.head.appendChild(style);
+}
+
+function syncHeaderClearance(root){
+ if(!root||window.matchMedia('(min-width:761px)').matches)return;
+ requestAnimationFrame(()=>{
+  if(!document.body.classList.contains('student-question-focus-mode'))return;
+  const header=$('.student-question-flow-head',root);
+  if(!header)return;
+  const rootRect=root.getBoundingClientRect();
+  const headerRect=header.getBoundingClientRect();
+  const relativeBottom=Math.max(0,Math.ceil(headerRect.bottom-rootRect.top));
+  const clearance=Math.max(96,relativeBottom+12);
+  root.style.setProperty('--eg-question-context-clearance',clearance+'px');
+ });
 }
 
 function leaveQuestionFocus(root){
@@ -41,6 +65,7 @@ function leaveQuestionFocus(root){
 
  const proxy=document.querySelector('.student-question-mobile-proxy');
  if(proxy)proxy.hidden=true;
+ if(root)root.style.removeProperty('--eg-question-context-clearance');
  document.body.classList.remove('student-question-focus-mode','student-question-nav-active','student-question-mobile-proxy-active');
 
  // Re-render the same workbook lesson. This restores all workbook stages and normal
@@ -92,6 +117,13 @@ function enhance(){
   home.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();leaveQuestionFocus(root)});
   top.insertBefore(home,copy);
  }
+
+ // The fixed question header is outside normal document flow. Reserve its real
+ // measured height in the scroll surface so the first line of every task can never
+ // sit underneath the header on iPhone/Safari or other mobile browsers.
+ syncHeaderClearance(root);
+ setTimeout(()=>syncHeaderClearance(root),60);
+ setTimeout(()=>syncHeaderClearance(root),220);
 }
 
 let queued=false;
@@ -105,6 +137,12 @@ function start(){
  installStyles();
  observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
  enhance();
+ const resync=()=>enhance();
+ window.addEventListener('resize',resync,{passive:true});
+ window.addEventListener('orientationchange',resync,{passive:true});
+ if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',resync,{passive:true});
+ }
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
