@@ -56,6 +56,13 @@ function studentTask(row){
   };
 }
 function validTaskId(value){return /^lt_[0-9a-f-]{20,80}$/i.test(String(value||'').trim())}
+function submissionDto(row){
+  if(!row)return null;
+  return {
+    answers:row.answers||{},score:row.score,correctCount:row.correct_count,totalCount:row.total_count,
+    timedOut:Boolean(row.timed_out),submittedAt:row.submitted_at
+  };
+}
 
 function install(app){
   if(installed.has(app))return;
@@ -82,7 +89,8 @@ function install(app){
         limit 1
       `,[taskId,student.id]);
       if(!q.rowCount)return res.json({task:null,serverNow:new Date().toISOString()});
-      return res.json({task:studentTask(q.rows[0]),submission:null,serverNow:new Date().toISOString()});
+      const sub=await pool.query('select answers,score,correct_count,total_count,timed_out,submitted_at from live_task_submissions where task_id=$1 and student_id=$2',[taskId,student.id]);
+      return res.json({task:studentTask(q.rows[0]),submission:submissionDto(sub.rows[0]),serverNow:new Date().toISOString()});
     }catch(e){
       // Before the first live task the lazy live-task schema may not exist yet.
       if(e?.code==='42P01')return res.json({task:null,serverNow:new Date().toISOString()});
