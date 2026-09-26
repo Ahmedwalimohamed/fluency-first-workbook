@@ -2,7 +2,8 @@
 // Railway production remains unchanged. This adapter deliberately proves the
 // runtime and database independently before loading the legacy app bootstrap.
 const express = require('express');
-const { Pool } = require('pg');
+const pg = require('pg');
+const { Pool } = pg;
 
 let appPromise = null;
 
@@ -50,6 +51,10 @@ function sanitizeBootstrapMessage(value) {
     .slice(0, 300);
 }
 
+function compactSql(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim().slice(0, 140);
+}
+
 function loadEnglishGateApp() {
   if (appPromise) return appPromise;
 
@@ -57,14 +62,20 @@ function loadEnglishGateApp() {
     let settled = false;
     let bootstrapExitCode = null;
     let lastBootstrapError = '';
+    let bootstrapStage = 'module-load';
+    let queryCount = 0;
+    let lastQuery = '';
+    const startedAt = Date.now();
     const originalListen = express.application.listen;
     const originalExit = process.exit;
     const originalConsoleError = console.error;
+    const originalQuery = Pool.prototype.query;
 
     const restore = () => {
       express.application.listen = originalListen;
       process.exit = originalExit;
       console.error = originalConsoleError;
+      Pool.prototype.query = originalQuery;
     };
     const finishResolve = app => {
       if (settled) return;
@@ -79,7 +90,21 @@ function loadEnglishGateApp() {
       clearTimeout(timeout);
       restore();
       if (lastBootstrapError && !error.bootstrapDetail) error.bootstrapDetail = lastBootstrapError;
+      error.bootstrapStage = bootstrapStage;
+      error.queryCount = queryCount;
+      error.lastQuery = lastQuery;
+      error.elapsedMs = Date.now() - startedAt;
       reject(error);
+    };
+
+    Pool.prototype.query = function migrationStageQuery(...args) {
+      queryCount += 1;
+      lastQuery = compactSql(typeof args[0] === 'string' ? args[0] : args[0]?.text);
+      const stack = String(new Error().stack || '');
+      if (stack.includes('initDb')) bootstrapStage = 'initDb';
+      else if (stack.includes('authSelfCheck')) bootstrapStage = 'authSelfCheck';
+      else if (bootstrapStage === 'module-load') bootstrapStage = 'bootstrap-db';
+      return originalQuery.apply(this, args);
     };
 
     console.error = (...args) => {
@@ -96,6 +121,7 @@ function loadEnglishGateApp() {
     };
 
     express.application.listen = function captureListen() {
+      bootstrapStage = 'app.listen';
       finishResolve(this);
       return {
         close(callback) { if (typeof callback === 'function') callback(); },
@@ -107,11 +133,11 @@ function loadEnglishGateApp() {
 
     const timeout = setTimeout(() => {
       const error = new Error(bootstrapExitCode === null
-        ? 'EnglishGate bootstrap did not reach app.listen() within 8000ms'
+        ? 'EnglishGate bootstrap did not reach app.listen() within 12000ms'
         : `EnglishGate bootstrap exited with code ${bootstrapExitCode}`);
       error.code = bootstrapExitCode === null ? 'BOOTSTRAP_TIMEOUT' : 'BOOTSTRAP_EXIT';
       finishReject(error);
-    }, 8000);
+    }, 12000);
 
     try {
       require('../core-learning-access-bootstrap.js');
@@ -157,7 +183,11 @@ module.exports = async function englishGateVercelHandler(req, res) {
         layer: 'app',
         error: error?.code || error?.name || 'APP_BOOTSTRAP_FAILED',
         detail: String(error?.message || '').slice(0, 180),
-        bootstrapDetail: sanitizeBootstrapMessage(error?.bootstrapDetail || '') || null
+        bootstrapDetail: sanitizeBootstrapMessage(error?.bootstrapDetail || '') || null,
+        bootstrapStage: error?.bootstrapStage || null,
+        queryCount: Number(error?.queryCount || 0),
+        lastQuery: compactSql(error?.lastQuery || '') || null,
+        elapsedMs: Number(error?.elapsedMs || 0)
       });
     }
   }
@@ -170,5 +200,3 @@ module.exports = async function englishGateVercelHandler(req, res) {
     return json(res, 503, { ok: false, layer: 'app', error: error?.code || error?.name || 'APP_BOOTSTRAP_FAILED' });
   }
 };
-
-// Redeploy marker: TEACHER_PASSWORD explicitly enabled for Preview environment.
