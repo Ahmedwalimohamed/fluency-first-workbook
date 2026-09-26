@@ -1,11 +1,13 @@
 const express=require('express');
 const jwt=require('jsonwebtoken');
+const crypto=require('crypto');
 const {Pool}=require('pg');
 
 const originalPost=express.application.post;
 const originalPatch=express.application.patch;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
+const DEFAULT_SCHOOL_ID='school_iou_borama';
 
 function adminFrom(req){
   try{
@@ -21,6 +23,59 @@ function normalizeWhatsapp(value){
 function install(app){
   if(installed.has(app))return;
   installed.add(app);
+
+  // Compatibility bridge for the legacy admin class-creation screen.
+  // Multi-school DB guards require every teacher/class to have a school. Older
+  // /api/admin/teachers creation did not set school_id, so a newly created teacher
+  // could be selected successfully but the class INSERT then failed in
+  // englishgate_class_school_guard() with "Teacher must belong to a school".
+  // Repair a missing teacher scope atomically at class creation, then write the
+  // class with an explicit matching school_id. Never move an already-scoped
+  // teacher between schools.
+  originalPost.call(app,'/api/admin/classes',async(req,res,next)=>{
+    const admin=adminFrom(req);
+    if(!admin)return next();
+    const name=String(req.body?.name||'').trim();
+    const teacherId=String(req.body?.teacherId||'').trim();
+    const bookId=String(req.body?.bookId||'').trim();
+    if(name.length<2)return res.status(400).json({error:'Class name is required.'});
+    const client=await pool.connect();
+    try{
+      await client.query('begin');
+      const adminRow=(await client.query("select school_id from users where id=$1 and role='admin'",[admin.id])).rows[0];
+      const teacher=(await client.query("select id,school_id from users where id=$1 and role='teacher' for update",[teacherId])).rows[0];
+      if(!teacher){await client.query('rollback');return res.status(400).json({error:'Choose a valid teacher.'});}
+      const book=(await client.query("select id,title,level,status from books where id=$1",[bookId])).rows[0];
+      if(!book){await client.query('rollback');return res.status(400).json({error:'Choose a valid book.'});}
+      if(!['ready','pilot'].includes(book.status)){await client.query('rollback');return res.status(400).json({error:'That book is not ready for classes yet.'});}
+
+      // School admins are hard-scoped to their own school. A system admin keeps an
+      // already-scoped teacher in that school; only an unscoped legacy teacher is
+      // attached to the original EnglishGate/IOU-Borama school.
+      const adminSchool=adminRow?.school_id||null;
+      const schoolId=adminSchool||teacher.school_id||DEFAULT_SCHOOL_ID;
+      if(adminSchool&&teacher.school_id&&teacher.school_id!==adminSchool){
+        await client.query('rollback');
+        return res.status(400).json({error:'Choose a teacher from this school.'});
+      }
+      if(!teacher.school_id){
+        const schoolExists=await client.query("select 1 from schools where id=$1 and status='active'",[schoolId]);
+        if(!schoolExists.rowCount){await client.query('rollback');return res.status(409).json({error:'The teacher is not linked to an active school. Assign the teacher to a school first.'});}
+        await client.query("update users set school_id=$1 where id=$2 and role='teacher' and school_id is null",[schoolId,teacherId]);
+      }
+
+      const id='c_'+crypto.randomUUID();
+      await client.query('insert into classes(id,name,level,course_id,teacher_id,school_id) values($1,$2,$3,$4,$5,$6)',[id,name,book.level,bookId,teacherId,schoolId]);
+      await client.query('insert into enrollments(class_id,user_id) values($1,$2) on conflict do nothing',[id,teacherId]);
+      await client.query('commit');
+      return res.status(201).json({id,name,level:book.level,bookId,teacherId,schoolId});
+    }catch(e){
+      try{await client.query('rollback')}catch{}
+      console.error('Admin class creation compatibility error:',e);
+      return next(e);
+    }finally{client.release()}
+  });
+
   originalPatch.call(app,'/api/admin/teachers/:id/manage',async(req,res)=>{
     const admin=adminFrom(req);
     if(!admin)return res.status(403).json({error:'System Admin access required.'});
