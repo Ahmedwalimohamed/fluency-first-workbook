@@ -3,13 +3,14 @@ const jwt=require('jsonwebtoken');
 const {Pool}=require('pg');
 
 const nativeGet=express.application.get;
-const nativeUse=express.application.use;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 
 const CHOICE_TYPES=new Set(['multiple_choice','true_false']);
 const TEXT_TYPES=new Set(['short_answer','fill_blank','sentence_correction','sentence_construction']);
 const SPEAKING_TYPES=new Set(['teacher_speaking','individual_speaking','pair_discussion']);
+
+console.log('LIVE TASK SHARE PRELOAD ACTIVE');
 
 function cookieValue(req,name){
   if(req.cookies&&Object.prototype.hasOwnProperty.call(req.cookies,name))return req.cookies[name];
@@ -115,9 +116,9 @@ function install(app){
   console.log('LIVE TASK SHARE ROUTE ACTIVE /api/student/live-task/shared');
 }
 
-// This file is preloaded before server.js. Install the route on the first app.use()
-// so it is guaranteed to sit before server.js's final /api/* 404 fallback.
-express.application.use=function englishGateLiveTaskShareUse(...args){
+// Preloaded before server.js. The first GET route registration triggers the share
+// route installation, so it is guaranteed to be registered before the final API 404.
+express.application.get=function englishGateLiveTaskShareGet(route,...handlers){
   install(this);
-  return nativeUse.apply(this,args);
+  return nativeGet.call(this,route,...handlers);
 };
