@@ -3,7 +3,7 @@ const jwt=require('jsonwebtoken');
 const {Pool}=require('pg');
 
 const nativeGet=express.application.get;
-const nativeListen=express.application.listen;
+const nativeUse=express.application.use;
 const installed=new WeakSet();
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 
@@ -82,8 +82,12 @@ function install(app){
   // The share URL is only a deep link. Authentication and exact class enrollment
   // are still required, and answer keys are never returned to the student.
   nativeGet.call(app,'/api/student/live-task/shared',async(req,res)=>{
+    res.set({
+      'Cache-Control':'no-store',
+      'X-Content-Type-Options':'nosniff',
+      'Referrer-Policy':'strict-origin-when-cross-origin'
+    });
     const student=studentSession(req);
-    res.set('Cache-Control','no-store');
     if(!student)return res.status(403).json({error:'Student access required.'});
     const taskId=String(req.query?.taskId||'').trim();
     if(!validTaskId(taskId))return res.status(400).json({error:'Invalid live task link.'});
@@ -111,10 +115,9 @@ function install(app){
   console.log('LIVE TASK SHARE ROUTE ACTIVE /api/student/live-task/shared');
 }
 
-// This module is preloaded with Node. Register the route immediately before the
-// Express server begins listening, after all middleware/bootstrap wrappers are set.
-// This avoids route loss when other bootstraps wrap express.application.get.
-express.application.listen=function englishGateLiveTaskShareListen(...args){
+// This file is preloaded before server.js. Install the route on the first app.use()
+// so it is guaranteed to sit before server.js's final /api/* 404 fallback.
+express.application.use=function englishGateLiveTaskShareUse(...args){
   install(this);
-  return nativeListen.apply(this,args);
+  return nativeUse.apply(this,args);
 };
