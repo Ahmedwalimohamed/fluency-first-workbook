@@ -33,13 +33,12 @@ const checks=[
  ['production seed remains B2-only',(()=>{const m=server.match(/const BOOK_SEEDS=(\[[\s\S]*?\]);/);if(!m)return false;const books=JSON.parse(m[1]);return books.every(b=>b.id==='speakup-b2'?b.status==='ready':b.status==='inactive')})()],
  ['database production startup enforces B2-only',server.includes("update books set status=case when id='speakup-b2' then 'ready' else 'inactive' end")],
  ['preview standard activity guard covers A1 Lessons 1-22 only',server.includes("/^a1-gold-l(?:[1-9]|1\\d|2[0-2])$/")&&server.includes('function operationalLearningLesson')],
- ['preview separated activity guard covers A1 Lessons 1-22 only',separated.includes("/^a1-gold-l(?:[1-9]|1\\d|2[0-2])$/")&&separated.includes("A1_PREVIEW_MODE==='1'")],
+ ['preview separated activity guard uses unified learning access authority',separated.includes("require('./learning-access-runtime')")&&separated.includes('access.decideForStudent')&&separated.includes('learningLessonAllowed')],
  ['Gold curriculum and runtime loaded',index.includes('a1-gold-v1.js')&&index.includes('a1-gold-l1-runtime.js')],
  ['Gold bootstrap registered',teacher.includes("require('./a1-gold-bootstrap.js')")],
  ['all twenty-two lesson IDs present',ids.every(id=>lesson.includes("id:'"+id+"'"))],
  ['all twenty-two lesson titles present',titles.every(title=>lesson.includes("title:'"+title+"'"))],
  ['course exposes all 22 Gold lessons',lesson.includes('const lessons=[L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22]')],
-
  ['Lesson 2 remains first-person only',S[2].includes('Do not add third-person -s here.')&&!/\bShe works\b|\bHe works\b/.test(S[2])],
  ['Lesson 3 does remains a chunk blocker',S[3].includes('Do not analyse or test “does” yet.')&&!S[3].includes('What time does the bus leave?')],
  ['Lesson 5 remains first-person health',S[5].includes('Keep the lesson in first person.')&&!S[5].includes('She feels tired')],
@@ -54,7 +53,6 @@ const checks=[
  ['Lesson 15 limits past to functional chunks',S[15].includes('without a past-tense lesson')&&S[15].includes('I lost my phone.')],
  ['Lesson 16 requires missing-step process gap',S[16].includes('different missing process steps')&&S[16].includes('What comes next?')],
  ['Lesson 17 requires reason plus changed-condition adaptation',S[17].includes('first choice becomes unavailable')&&S[17].includes('Let us choose another')],
-
  ['Lesson 18 combines international profile exchange + changed location',S[18].includes('Profile information gap')&&S[18].includes('meeting place changes')&&S[18].includes('What languages do you speak?')],
  ['Lesson 19 completes service transaction with unavailable option',S[19].includes('preferred option is unavailable')&&S[19].includes('Can I have a receipt, please?')&&S[19].includes('Blue Large: NOT AVAILABLE')],
  ['Lesson 20 combines home + routine + changed time',S[20].includes('home and daily routine')&&S[20].includes('today I am late')&&S[20].includes('There are two bedrooms.')],
@@ -64,7 +62,6 @@ const checks=[
  ['Lesson 22 requires mixed documents and changed condition',S[22].includes('WELCOME EVENT PACK')&&S[22].includes('Blue badge unavailable')&&S[22].includes('Event start changed to 6:00 p.m.')],
  ['final Independent A1 checkpoint present',S[22].includes("id:'a1-stage-4-independent-a1'")&&S[22].includes("domains:['UNDERSTAND','RESPOND','INITIATE','PRODUCE','ADAPT']")],
  ['final checkpoint requires unscripted integrated mission',S[22].includes('Complete one unscripted integrated real-world mission.')&&S[22].includes('communication breakdown, inability to initiate, or inability to adapt requires repair')],
-
  ['reading and listening remain separately tagged',lesson.includes("'reading:detail'")&&lesson.includes("'listening:detail'")],
  ['all implemented lessons preserve copy/paste block',(lesson.match(/copyPasteDisabled:true/g)||[]).length>=22],
  ['dialogue audio speaker profiles present',lesson.includes("voice:'nova'")&&lesson.includes("voice:'onyx'")],
