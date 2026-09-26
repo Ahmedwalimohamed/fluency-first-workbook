@@ -5,25 +5,38 @@
   if(typeof originalLiveSections!=='function')return;
 
   const pageHeader=/^PAGE\s+\d+\s*[—–-]\s*(.+)$/i;
-  const languageFocusHeader=/^PAGE\s+\d+\s*[—–-]\s*LANGUAGE\s+FOCUS$/i;
   const b2LiftHeader=/^B2\s+LIFT(?:\s*[·—–-].*)?$/i;
+
+  function isLanguageFocusTitle(value){
+    return /\bLANGUAGE\s+FOCUS\b/i.test(String(value||'').trim());
+  }
 
   function extractLanguageFocus(text){
     const lines=String(text||'').split('\n');
-    const start=lines.findIndex(line=>languageFocusHeader.test(line.trim()));
+    let start=-1;
+    for(let i=0;i<lines.length;i++){
+      const line=String(lines[i]||'').trim();
+      const match=line.match(pageHeader);
+      if(match&&isLanguageFocusTitle(match[1])){start=i;break}
+    }
     if(start<0)return null;
     let end=lines.length;
     for(let i=start+1;i<lines.length;i++){
-      const line=lines[i].trim();
+      const line=String(lines[i]||'').trim();
       if(pageHeader.test(line)||b2LiftHeader.test(line)){end=i;break}
     }
-    return lines.slice(start+1,end).map(x=>x.trim()).filter(Boolean);
+    return lines.slice(start+1,end).map(x=>String(x||'').trim()).filter(Boolean);
   }
 
-  function stripEmbeddedLanguageFocus(section){
+  function stripHeaderDelimitedFocus(section){
     if(!section||!Array.isArray(section.lines))return section;
     const lines=section.lines.slice();
-    const start=lines.findIndex(line=>languageFocusHeader.test(String(line||'').trim()));
+    let start=-1;
+    for(let i=0;i<lines.length;i++){
+      const line=String(lines[i]||'').trim();
+      const match=line.match(pageHeader);
+      if(match&&isLanguageFocusTitle(match[1])){start=i;break}
+    }
     if(start<0)return section;
     let end=lines.length;
     for(let i=start+1;i<lines.length;i++){
@@ -33,9 +46,22 @@
     return {...section,lines:[...lines.slice(0,start),...lines.slice(end)]};
   }
 
+  function stripExactFocusPayload(section,focusLines){
+    if(!section||!Array.isArray(section.lines)||!focusLines?.length)return section;
+    const source=section.lines.map(x=>String(x||'').trim());
+    const needle=focusLines.map(x=>String(x||'').trim());
+    for(let i=0;i<=source.length-needle.length;i++){
+      let same=true;
+      for(let j=0;j<needle.length;j++){
+        if(source[i+j]!==needle[j]){same=false;break}
+      }
+      if(same)return {...section,lines:[...section.lines.slice(0,i),...section.lines.slice(i+needle.length)]};
+    }
+    return section;
+  }
+
   function isLanguageFocusSection(section){
-    const title=String(section?.title||'').trim();
-    return /LANGUAGE\s+FOCUS/i.test(title);
+    return isLanguageFocusTitle(section?.title);
   }
 
   function isReadingSection(section){
@@ -47,17 +73,18 @@
     return /\bREADING\b/i.test(`${title} ${label}`);
   }
 
-  window.liveSections=function(text){
+  window.liveSections=function languageFocusSeparated(text){
     const base=originalLiveSections(text)||[];
     const focusLines=extractLanguageFocus(text);
     if(!focusLines?.length)return base;
 
     const cleaned=base
       .filter(section=>!isLanguageFocusSection(section))
-      .map(stripEmbeddedLanguageFocus)
+      .map(stripHeaderDelimitedFocus)
+      .map(section=>stripExactFocusPayload(section,focusLines))
       .filter(section=>!Array.isArray(section.lines)||section.lines.length);
 
-    const focusSection={title:'Language Focus',lines:focusLines};
+    const focusSection={title:'Language Focus',lines:focusLines.slice()};
     const readingIndex=cleaned.findIndex(isReadingSection);
     const insertAt=readingIndex>=0?readingIndex+1:Math.min(3,cleaned.length);
     cleaned.splice(insertAt,0,focusSection);
