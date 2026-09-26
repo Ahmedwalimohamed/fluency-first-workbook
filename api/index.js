@@ -171,4 +171,4 @@ module.exports = async function englishGateVercelHandler(req, res) {
   }
 };
 
-// Redeploy marker: TEACHER_PASSWORD added to Preview.
+// Redeploy marker: TEACHER_PASSWORD explicitly enabled for Preview environment.
