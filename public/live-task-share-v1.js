@@ -3,7 +3,8 @@
 'use strict';
 
 const STYLE_ID='egLiveTaskShareStyles';
-let pending=false,lastKey='';
+const MIN_FETCH_MS=1800;
+let pending=false,lastKey='',lastFetchAt=0;
 
 function addStyles(){
   if(document.getElementById(STYLE_ID))return;
@@ -59,12 +60,12 @@ async function copyText(text){
   if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);return}
   const el=document.createElement('textarea');el.value=text;el.setAttribute('readonly','');el.style.position='fixed';el.style.opacity='0';document.body.appendChild(el);el.select();document.execCommand('copy');el.remove();
 }
-function renderCard(side,url,taskId){
+function renderCard(side,url,taskId,classId){
   const old=side.querySelector('[data-live-share-card]');
-  if(old?.dataset.taskId===String(taskId))return;
+  if(old?.dataset.taskId===String(taskId)&&old?.dataset.classId===String(classId))return;
   old?.remove();
   const card=document.createElement('section');
-  card.className='eg-live-share-card';card.dataset.liveShareCard='1';card.dataset.taskId=String(taskId);
+  card.className='eg-live-share-card';card.dataset.liveShareCard='1';card.dataset.taskId=String(taskId);card.dataset.classId=String(classId);
   card.innerHTML=`<div class="eg-live-share-card-head"><strong>Student link</strong><span>Share live task</span></div>
     <div class="eg-live-share-row"><input data-live-share-input readonly aria-label="Live task student link"><button type="button" data-live-copy>Copy link</button></div>
     <div class="eg-live-share-actions"><button type="button" data-live-share>Share</button><a data-live-open target="_blank" rel="noopener">Open link</a></div>
@@ -88,16 +89,24 @@ async function inject(){
   const side=liveSide();
   if(!side){lastKey='';return}
   const classId=resolveClassId();if(!classId)return;
+  const existing=side.querySelector('[data-live-share-card]');
+  if(existing?.dataset.classId===String(classId)&&existing?.dataset.taskId)return;
   try{
+    lastFetchAt=Date.now();
     const data=await getCurrentTask(classId),task=data?.task;
     if(!task?.id||task.status!=='live')return;
     const key=classId+':'+task.id,nowSide=liveSide();
     if(!nowSide)return;
     if(lastKey===key&&nowSide.querySelector(`[data-live-share-card][data-task-id="${CSS.escape(String(task.id))}"]`))return;
-    lastKey=key;renderCard(nowSide,taskUrl(task.id),task.id);
+    lastKey=key;renderCard(nowSide,taskUrl(task.id),task.id,classId);
   }catch{}
 }
-function schedule(){if(pending)return;pending=true;setTimeout(inject,80)}
+function schedule(){
+  if(pending)return;
+  pending=true;
+  const wait=Math.max(80,MIN_FETCH_MS-(Date.now()-lastFetchAt));
+  setTimeout(inject,wait);
+}
 
 addStyles();
 const observer=new MutationObserver(schedule);
