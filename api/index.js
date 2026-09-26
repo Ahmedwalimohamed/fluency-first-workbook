@@ -46,14 +46,42 @@ function loadEnglishGateApp() {
   if (appPromise) return appPromise;
 
   appPromise = new Promise((resolve, reject) => {
-    let capturedApp = null;
+    let settled = false;
     const originalListen = express.application.listen;
+    const originalExit = process.exit;
+    let bootstrapExitCode = null;
+
+    const finishResolve = app => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      express.application.listen = originalListen;
+      process.exit = originalExit;
+      resolve(app);
+    };
+    const finishReject = error => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      express.application.listen = originalListen;
+      process.exit = originalExit;
+      reject(error);
+    };
+
+    // The legacy Railway bootstrap calls process.exit(1) if an async schema
+    // initialization step fails. In Vercel, capture that as diagnostic evidence
+    // instead of killing the serverless function before we can report the layer.
+    process.exit = function captureBootstrapExit(code) {
+      bootstrapExitCode = Number(code ?? 0);
+      const error = new Error(`Legacy bootstrap requested process.exit(${bootstrapExitCode})`);
+      error.code = 'BOOTSTRAP_EXIT';
+      finishReject(error);
+    };
 
     // Vercel owns the HTTP listener. Capture the initialized Express app when
     // the existing Railway startup reaches listen(), without opening a socket.
     express.application.listen = function captureListen() {
-      capturedApp = this;
-      resolve(this);
+      finishResolve(this);
       return {
         close(callback) { if (typeof callback === 'function') callback(); },
         address() { return null; },
@@ -62,14 +90,19 @@ function loadEnglishGateApp() {
       };
     };
 
+    const timeout = setTimeout(() => {
+      const error = new Error(bootstrapExitCode === null
+        ? 'EnglishGate bootstrap did not reach app.listen() within 8000ms'
+        : `EnglishGate bootstrap exited with code ${bootstrapExitCode}`);
+      error.code = bootstrapExitCode === null ? 'BOOTSTRAP_TIMEOUT' : 'BOOTSTRAP_EXIT';
+      finishReject(error);
+    }, 8000);
+
     try {
       require('../core-learning-access-bootstrap.js');
       require('../teacher-management-bootstrap.js');
-      if (capturedApp) resolve(capturedApp);
     } catch (error) {
-      reject(error);
-    } finally {
-      express.application.listen = originalListen;
+      finishReject(error);
     }
   });
 
@@ -79,18 +112,15 @@ function loadEnglishGateApp() {
 module.exports = async function englishGateVercelHandler(req, res) {
   const path = String(req.url || '').split('?')[0];
 
-  // Probe 1: proves Vercel can invoke this function. No DB, no app bootstrap.
   if (path === '/__migration/runtime') {
     return json(res, 200, { ok: true, layer: 'runtime', runtime: 'vercel' });
   }
 
-  // Sanitized config probe: exposes host/port shape only, never credentials.
   if (path === '/__migration/database-config') {
     const config = databaseConfigProbe();
     return json(res, config.configured ? 200 : 503, { ok: config.configured, layer: 'database-config', ...config });
   }
 
-  // Probe 2: read-only DB connectivity. Does not load EnglishGate.
   if (path === '/__migration/database') {
     try {
       const ok = await databaseProbe();
@@ -101,14 +131,18 @@ module.exports = async function englishGateVercelHandler(req, res) {
     }
   }
 
-  // Probe 3: proves the EnglishGate bootstrap can load, without a learner write.
   if (path === '/__migration/app') {
     try {
       await loadEnglishGateApp();
       return json(res, 200, { ok: true, layer: 'app', loaded: true });
     } catch (error) {
       console.error('EnglishGate migration app probe failed:', error);
-      return json(res, 503, { ok: false, layer: 'app', error: error?.code || error?.name || 'APP_BOOTSTRAP_FAILED' });
+      return json(res, 503, {
+        ok: false,
+        layer: 'app',
+        error: error?.code || error?.name || 'APP_BOOTSTRAP_FAILED',
+        detail: String(error?.message || '').slice(0, 180)
+      });
     }
   }
 
@@ -120,5 +154,3 @@ module.exports = async function englishGateVercelHandler(req, res) {
     return json(res, 503, { ok: false, layer: 'app', error: error?.code || error?.name || 'APP_BOOTSTRAP_FAILED' });
   }
 };
-
-// Redeploy marker: corrected Railway public DATABASE_URL loaded into Preview.
