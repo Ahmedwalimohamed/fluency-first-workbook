@@ -152,6 +152,21 @@
 .eg-northstar-teaching-block.is-model{
   background:#fff;
 }
+.eg-northstar-teaching-block.is-dictionary{
+  border-color:#ddd6fe;
+  background:#faf5ff;
+}
+.eg-northstar-teaching-block.is-dictionary p{
+  color:#4c1d95;
+  font-weight:700;
+}
+.eg-northstar-teaching[data-correction-model="v3"] .eg-northstar-teaching-block.is-focus p{
+  font-weight:800;
+  color:#991b1b;
+}
+.eg-northstar-teaching[data-correction-model="v3"] .eg-northstar-teaching-block.is-model p{
+  font-family:Georgia,'Times New Roman',serif;
+}
 .eg-northstar-teaching-next{
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
