@@ -144,4 +144,4 @@ express.application.post=function readingSemanticPost(route,...handlers){
   return nativePost.call(this,route,...handlers);
 };
 
-require('./reading-listening-separation-bootstrap.js');
+require('./writing-rubric-bootstrap.js');
