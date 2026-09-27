@@ -1,6 +1,13 @@
 (()=>{
   'use strict';
 
+  if(!document.querySelector('script[data-northstar-semantic-grading]')){
+    const semantic=document.createElement('script');
+    semantic.src='northstar-semantic-grading-v1.js?v=1';
+    semantic.dataset.northstarSemanticGrading='1';
+    document.head.appendChild(semantic);
+  }
+
   let originalSaveWriting=null;
   try{originalSaveWriting=typeof saveWriting==='function'?saveWriting:window.saveWriting}catch(_){originalSaveWriting=window.saveWriting}
   if(typeof originalSaveWriting!=='function')return;
