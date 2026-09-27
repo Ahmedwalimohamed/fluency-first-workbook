@@ -1,2 +1,3 @@
 Redeploy marker for Preview environment refresh after TYPESAFE_API_KEY was added on 2026-09-27.
 Second verification redeploy after Preview scope was confirmed.
+Production verification redeploy after DATABASE_URL, JWT_SECRET, TEACHER_PASSWORD, and TYPESAFE_API_KEY were enabled for Production on 2026-09-27.
