@@ -4,10 +4,12 @@
   if(!document.querySelector('link[data-northstar-teaching-style]')){
     const link=document.createElement('link');
     link.rel='stylesheet';
-    link.href='northstar-teaching-v1.css?v=3';
+    link.href='northstar-teaching-v1.css?v=4';
     link.dataset.northstarTeachingStyle='1';
     document.head.appendChild(link);
   }
+
+  const repairState=new WeakMap();
 
   function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
   function currentLesson(){
@@ -25,6 +27,20 @@
     return raw.map(x=>typeof x==='string'?x:(x?.word||x?.term||'')).filter(Boolean).slice(0,24)
   }
   function targetLanguage(l){return String(l?.northstar?.fix?.target||l?.grammarFocus||l?.grammarRule||'').trim()}
+  function stateKey(flow,l,phase){return `${l?.id||''}|${phase||''}|${promptText(flow)}`}
+  function stateFor(flow,l,phase){
+    const key=stateKey(flow,l,phase);
+    let state=repairState.get(flow);
+    if(!state||state.key!==key){state={key,failures:0,answer:'',source:''};repairState.set(flow,state)}
+    return state
+  }
+  function resetState(flow){repairState.delete(flow)}
+  function replaceOnce(text,from,to){
+    const source=String(text||''),needle=String(from||'');
+    if(!needle)return String(to||source);
+    const i=source.indexOf(needle);
+    return i<0?String(to||source):source.slice(0,i)+String(to||'')+source.slice(i+needle.length)
+  }
 
   async function postJson(url,body){
     const r=await fetch(url,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -72,7 +88,7 @@
     }
   }
   function showCorrection(correction,response){
-    const f=feedbackBox();if(!f)return;
+    const f=feedbackBox();if(!f)return {answer:'',source:''};
     const c=correction||{},d=c.dictionary||{},contrast=c.contrast||{};
     const corrected=String(c.suggestedCorrection||'').trim();
     const focus=String(c.focusDifference||'').trim();
@@ -81,10 +97,11 @@
     const definition=String(d.definition||'').trim();
     const rule=String(c.rule||'').trim();
     const from=String(contrast.from||'').trim(),to=String(contrast.to||'').trim();
-    const answerLine=corrected||String(c.sourceSentence||response||'').trim();
+    const source=String(c.sourceSentence||response||'').trim();
+    const answerLine=corrected||source;
     const dictionaryLine=[label,definition].filter(Boolean).join(' — ');
     const contrastHtml=(from||to)?`<div class="eg-contrast">${from?`<div><span class="eg-mini-x">×</span><p>${esc(from)}</p></div>`:''}${to?`<div class="is-good"><span class="eg-mini-check">✓</span><p>${esc(to)}</p></div>`:''}</div>`:'';
-    f.innerHTML=`<section class="eg-simple-correction" data-correction-model="simple-v1" aria-live="polite">
+    f.innerHTML=`<section class="eg-simple-correction" data-correction-model="simple-v2" aria-live="polite">
       <div class="eg-wrong-card">
         <span class="eg-x">×</span>
         <div><strong>Not quite</strong><small>Correct answer:</small><p>${esc(answerLine)}</p></div>
@@ -99,43 +116,76 @@
       <button type="button" class="eg-try-btn" data-eg-repair>TRY AGAIN</button>
     </section>`;
     wireSimpleCard(f);
+    f.scrollIntoView({behavior:'smooth',block:'nearest'});
+    return {answer:corrected||to||'',source}
+  }
+  function showFinalAnswer(flow,button,box,state,fallbackAnswer=''){
+    const f=feedbackBox();if(!f)return;
+    const answer=String(state?.answer||fallbackAnswer||'').trim();
+    if(!answer){showUnavailable('The correct answer could not be determined safely.');return}
+    f.innerHTML=`<section class="eg-simple-correction eg-final-answer" aria-live="polite">
+      <div class="eg-answer-card">
+        <span class="eg-check">✓</span>
+        <div><strong>Correct answer</strong><p>${esc(answer)}</p></div>
+      </div>
+      <p class="eg-answer-note">You already had one correction and one retry. We will not add another correction for the same error.</p>
+      <button type="button" class="eg-try-btn" data-eg-use-answer>USE CORRECT ANSWER</button>
+    </section>`;
+    const use=f.querySelector('[data-eg-use-answer]');
+    if(use)use.onclick=()=>{
+      const current=String(box?.value||'');
+      const next=state?.source&&current.includes(state.source)?replaceOnce(current,state.source,answer):answer;
+      if(box){box.value=next;box.disabled=false;box.dispatchEvent(new Event('input',{bubbles:true}));box.dispatchEvent(new Event('change',{bubbles:true}))}
+      flow.dataset.egAnswerSupplied='1';
+      resetState(flow);
+      f.innerHTML='';
+      button.disabled=false;button.textContent='Checking…';
+      button.click()
+    };
     f.scrollIntoView({behavior:'smooth',block:'nearest'})
   }
 
-  function approveAndContinue(button){
+  function approveAndContinue(button,flow){
+    if(flow)resetState(flow);
     button.dataset.semanticApproved='1';button.disabled=false;button.click()
   }
-  async function gradeFinal(button,flow,l,response){
+  async function gradeFinal(button,flow,l,response,phase){
+    const state=stateFor(flow,l,phase);
     const final=l?.northstar?.final||l?.writing||{};
     const min=Number(final.minWords||l?.writing?.minWords||50),max=Number(final.maxWords||l?.writing?.maxWords||100);
     const task=String(final.task||l?.writing?.task||promptText(flow)||'Complete the final writing task.');
     const grade=await postJson('/api/writing-grade-v2',{lessonId:l.id,task,text:response,level:'B2',minWords:min,maxWords:max});
     if(grade?.pass!==true){
+      if(state.failures>=1){showFinalAnswer(flow,button,flow.querySelector('#northstarInput,textarea'),state,modelText(flow));return false}
       try{
         const correction=await correctionFor({mode:'paragraph',l,task,response,model:modelText(flow),target:targetLanguage(l),gradingContext:{dimensions:grade?.dimensions||{}}});
-        showCorrection(correction,response)
+        const shown=showCorrection(correction,response);
+        state.failures=1;state.answer=shown.answer||modelText(flow);state.source=shown.source||response
       }catch(_){
         const weak=Object.values(grade?.dimensions||{}).sort((a,b)=>(Number(a?.score)||0)-(Number(b?.score)||0))[0];
-        showFallback(grade?.feedback?.improve||weak?.descriptor||'Improve one part of your response, then check again.')
+        showFallback(grade?.feedback?.improve||weak?.descriptor||'Improve one part of your response, then check again.');state.failures=1
       }
       return false
     }
-    approveAndContinue(button);return true
+    approveAndContinue(button,flow);return true
   }
   async function gradeShort(button,flow,l,response,phase){
+    const state=stateFor(flow,l,phase);
     const task=promptText(flow),model=modelText(flow),target=targetLanguage(l);
     const result=await postJson('/api/northstar-response-grade',{
       lessonId:l.id,lessonTitle:l.title,phase:phase.toUpperCase(),prompt:task,model,
       targetLanguage:target,targetVocabulary:targetVocabulary(l),response
     });
     if(result?.pass!==true){
+      if(state.failures>=1){showFinalAnswer(flow,button,flow.querySelector('#northstarInput,textarea'),state,model);return false}
       try{
         const correction=await correctionFor({mode:'short',l,task,response,model,target,gradingContext:{decisions:result?.decisions||{}}});
-        showCorrection(correction,response)
-      }catch(_){showFallback(result?.feedback||'Check one part of your answer, then try again.')}
+        const shown=showCorrection(correction,response);
+        state.failures=1;state.answer=shown.answer||model;state.source=shown.source||response
+      }catch(_){showFallback(result?.feedback||'Check one part of your answer, then try again.');state.failures=1;state.answer=model;state.source=response}
       return false
     }
-    approveAndContinue(button);return true
+    approveAndContinue(button,flow);return true
   }
 
   document.addEventListener('click',async event=>{
@@ -158,7 +208,7 @@
 
     const previousLabel=button.textContent;let outcome=null;
     button.disabled=true;button.textContent='Checking…';showChecking();
-    try{outcome=finalMode?await gradeFinal(button,flow,l,response):await gradeShort(button,flow,l,response,phase)}
+    try{outcome=finalMode?await gradeFinal(button,flow,l,response,phase):await gradeShort(button,flow,l,response,phase)}
     catch(error){outcome=false;showUnavailable(error?.message)}
     finally{
       if(button.isConnected&&button.dataset.semanticApproved!=='1'){
@@ -167,5 +217,5 @@
     }
   },true);
 
-  window.ENGLISHGATE_NORTHSTAR_SEMANTIC_GRADING={version:'englishgate-simple-correction-v1'};
+  window.ENGLISHGATE_NORTHSTAR_SEMANTIC_GRADING={version:'englishgate-simple-correction-v2',retryPolicy:'one-correction-one-retry-then-answer'};
 })();
