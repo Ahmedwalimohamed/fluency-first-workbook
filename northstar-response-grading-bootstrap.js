@@ -5,8 +5,9 @@ const previousPost=express.application.post;
 const installed=new WeakSet();
 const TYPE_SAFE_URL=process.env.TYPESAFE_API_URL||'https://api.typesafe.ai/v1/systemone';
 const TYPE_SAFE_MODEL=process.env.TYPESAFE_MODEL||'jev-latest';
-const VERSION='englishgate-northstar-semantic-v1';
+const VERSION='englishgate-northstar-teaching-v2';
 const MIN_CONFIDENCE=0.55;
+const MIN_TEACH_CONFIDENCE=0.35;
 
 function studentSession(req){
   try{
@@ -69,6 +70,110 @@ function feedbackFor(decisions,phase){
   if(decisions.clarity?.choice==='revise')return 'Rewrite the sentence so the meaning is immediately clear.';
   return phase==='CHANGE'?'Your change fits the task and target language.':'Your response communicates the task successfully.';
 }
+function levenshtein(a,b){
+  const x=String(a||''),y=String(b||'');
+  const row=Array.from({length:y.length+1},(_,i)=>i);
+  for(let i=1;i<=x.length;i++){
+    let prev=row[0];row[0]=i;
+    for(let j=1;j<=y.length;j++){
+      const hold=row[j];
+      row[j]=Math.min(row[j]+1,row[j-1]+1,prev+(x[i-1]===y[j-1]?0:1));
+      prev=hold;
+    }
+  }
+  return row[y.length]
+}
+function comparativeBase(word){
+  const irregular={better:'good',worse:'bad'};
+  if(irregular[word])return irregular[word];
+  if(/ier$/.test(word))return word.slice(0,-3)+'y';
+  if(/er$/.test(word)){
+    let base=word.slice(0,-2);
+    if(base.length>2&&base.at(-1)===base.at(-2))base=base.slice(0,-1);
+    return base
+  }
+  return ''
+}
+function comparativeCorrection(state){
+  const context=[state.learnerTask,state.model,state.targetLanguage].join(' ').toLowerCase();
+  if(!(/\bthan\b|comparative|comparison/.test(context)))return null;
+  const match=state.learnerResponse.match(/\b([A-Za-z][A-Za-z'-]*)\s+than\b/i);
+  if(!match)return null;
+  const typed=match[1].toLowerCase();
+  const candidates=['sweeter','spicier','saltier','tastier','healthier','cheaper','fresher','hotter','colder','bigger','smaller','faster','slower','easier','harder','safer','cleaner','quieter','louder','warmer','cooler','stronger','weaker','older','younger','longer','shorter','higher','lower','better','worse'];
+  let best=null;
+  for(const candidate of candidates){
+    if(candidate===typed)continue;
+    const distance=levenshtein(typed,candidate);
+    if(!best||distance<best.distance)best={candidate,distance};
+  }
+  if(!best)return null;
+  const limit=typed.length>=6?2:1;
+  if(best.distance>limit)return null;
+  const corrected=state.learnerResponse.replace(match[1],best.candidate);
+  const base=comparativeBase(best.candidate);
+  const pattern=base?`${base} → ${best.candidate}`:`Use ${best.candidate} before “than”.`;
+  return {
+    corrected,
+    focusWord:match[1],
+    replacement:best.candidate,
+    rule:`In this comparison, the adjective needs the comparative form before “than”. ${pattern}.`
+  }
+}
+function primaryIssue(decisions,required){
+  const revised=required
+    .filter(id=>decisions[id]?.choice==='revise')
+    .map(id=>({id,confidence:Number(decisions[id]?.confidence)||0}))
+    .sort((a,b)=>b.confidence-a.confidence);
+  return revised[0]||null
+}
+function teachingFor(state,decisions,required,lowConfidence){
+  const issue=primaryIssue(decisions,required);
+  const canTeach=issue&&issue.confidence>=MIN_TEACH_CONFIDENCE;
+  if(!canTeach&&lowConfidence){
+    return {
+      mode:'diagnostic_probe',
+      focus:'uncertain',
+      title:'Let’s check the pattern together.',
+      learnerResponse:state.learnerResponse,
+      whatToFix:'I am not confident enough to call this answer right or wrong yet.',
+      remember:state.targetLanguage||'Use the lesson pattern and keep the meaning clear.',
+      example:state.model||'',
+      nextStep:'Compare your sentence with the pattern. Change only the part you are unsure about, then check again.'
+    }
+  }
+  const focus=issue?.id||'clarity';
+  const correction=(focus==='target_form'||focus==='word_choice')?comparativeCorrection(state):null;
+  const common={
+    mode:'teach_retry',focus,learnerResponse:state.learnerResponse,
+    suggestedCorrection:correction?.corrected||'',
+    example:state.model||''
+  };
+  if(focus==='task_fit')return {...common,
+    title:'Make the sentence do the task.',
+    whatToFix:'Your response does not fully match what the activity asks you to say.',
+    remember:`Task: ${state.learnerTask}`,
+    nextStep:'Keep your own meaning, but make the sentence answer this task directly. Then check again.'
+  };
+  if(focus==='target_form')return {...common,
+    title:'Fix the grammar pattern.',
+    whatToFix:correction?`The comparison form “${correction.focusWord}” needs to be “${correction.replacement}”.`:'The target grammar form is not correct yet.',
+    remember:correction?.rule||state.targetLanguage||'Use the lesson grammar pattern accurately.',
+    nextStep:'Keep your idea. Correct only the grammar form, then check the sentence again.'
+  };
+  if(focus==='word_choice')return {...common,
+    title:'Fix one word.',
+    whatToFix:correction?`“${correction.focusWord}” does not fit here. Use “${correction.replacement}”.`:'One key word does not fit the meaning or the form needed in this sentence.',
+    remember:correction?.rule||state.targetLanguage||'Check both the meaning of the word and the form the sentence needs.',
+    nextStep:'Change only the problem word, then check your sentence again.'
+  };
+  return {...common,
+    title:'Make the meaning clearer.',
+    whatToFix:'The sentence is not clear enough as written.',
+    remember:state.targetLanguage||'Keep the sentence simple, complete, and easy to understand.',
+    nextStep:'Rewrite only the unclear part, then check again.'
+  }
+}
 async function grade(body){
   const lessonId=clean(body?.lessonId,100),phase=clean(body?.phase,20).toUpperCase(),prompt=clean(body?.prompt,1200),response=clean(body?.response,2200);
   if(!/^su-b2-l\d+$/.test(lessonId))throw Object.assign(new Error('Northstar semantic grading is currently enabled for B2 Upper Intermediate.'),{status:423});
@@ -76,7 +181,7 @@ async function grade(body){
   if(!prompt||!response)throw Object.assign(new Error('Task and learner response are required.'),{status:400});
   if(response.split(/\s+/).filter(Boolean).length<3)throw Object.assign(new Error('Write a complete response before checking it.'),{status:400});
   const state={
-    purpose:'EnglishGate B2 Northstar short-response grading',
+    purpose:'EnglishGate B2 Northstar short-response grading and targeted teaching',
     version:VERSION,
     phase,
     lessonId,
@@ -91,7 +196,8 @@ async function grade(body){
       'CHANGE must accurately reuse or transform the target language; matching the model frame is not enough.',
       'Do not silently correct the learner response before judging it.',
       'Do not pass incorrect lexical substitutions simply because they resemble a valid word or grammar ending.',
-      'Minor errors may pass only when they do not break the task, target form, key word choice, or meaning.'
+      'Minor errors may pass only when they do not break the task, target form, key word choice, or meaning.',
+      'When confidence is insufficient, do not pretend certainty; route to a diagnostic teaching prompt instead.'
     ]
   };
   const data=await callJev(state,questionsFor(phase)),decisions={};
@@ -102,8 +208,10 @@ async function grade(body){
   const lowConfidence=required.some(id=>decisions[id].confidence==null||decisions[id].confidence<MIN_CONFIDENCE);
   const failed=required.some(id=>decisions[id].choice!=='meets');
   const pass=!lowConfidence&&!failed;
-  const feedback=lowConfidence?'Your answer could not be graded confidently. Revise it slightly and check again.':feedbackFor(decisions,phase);
-  return {pass,status:pass?'passed':lowConfidence?'review_required':'needs_revision',phase,feedback,decisions,threshold:{confidence:MIN_CONFIDENCE},model:String(data?.model||TYPE_SAFE_MODEL),version:VERSION};
+  const teaching=pass?null:teachingFor(state,decisions,required,lowConfidence);
+  const status=pass?'passed':teaching?.mode==='diagnostic_probe'?'diagnostic_probe':'needs_revision';
+  const feedback=pass?feedbackFor(decisions,phase):(teaching?.whatToFix||feedbackFor(decisions,phase));
+  return {pass,status,phase,feedback,teaching,decisions,threshold:{confidence:MIN_CONFIDENCE,teachingConfidence:MIN_TEACH_CONFIDENCE},model:String(data?.model||TYPE_SAFE_MODEL),version:VERSION};
 }
 function install(app){
   if(installed.has(app))return;
