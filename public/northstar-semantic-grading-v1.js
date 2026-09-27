@@ -66,7 +66,7 @@
     const flow=button.closest('.b2-northstar-flow');
     if(!flow)return;
     const phase=String(flow.dataset.phase||'').toLowerCase();
-    const finalMode=Boolean(document.getElementById('northstarCounter'));
+    const finalMode=phase==='use'&&Boolean(document.getElementById('northstarCounter'));
     if(!finalMode&&!['change','use'].includes(phase))return;
 
     event.preventDefault();
