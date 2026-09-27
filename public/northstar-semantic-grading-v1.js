@@ -4,7 +4,7 @@
   if(!document.querySelector('link[data-northstar-teaching-style]')){
     const link=document.createElement('link');
     link.rel='stylesheet';
-    link.href='northstar-teaching-v1.css?v=1';
+    link.href='northstar-teaching-v1.css?v=2';
     link.dataset.northstarTeachingStyle='1';
     document.head.appendChild(link);
   }
@@ -23,12 +23,12 @@
   function showChecking(){
     const f=feedbackBox();
     if(!f)return;
-    f.innerHTML='<section class="eg-northstar-status" aria-live="polite"><strong>Checking your English…</strong><p>I am checking the meaning and the lesson pattern, not only the number of words.</p></section>'
+    f.innerHTML='<section class="eg-northstar-status" aria-live="polite"><strong>Checking your English…</strong><p>I am checking the whole response, then choosing only the smallest useful thing to teach next.</p></section>'
   }
   function showSimpleRevision(message,title='Check this part again'){
     const f=feedbackBox();
     if(!f)return;
-    f.innerHTML='<section class="eg-northstar-teaching" data-mode="teach-retry"><header><span>Learning Companion</span><strong>'+esc(title)+'</strong></header><div class="eg-northstar-teaching-block"><small>What to fix</small><p>'+esc(message||'Check the task and try again.')+'</p></div><div class="eg-northstar-teaching-next"><strong>Now you try</strong><p>Edit your answer, then press <b>Check again</b>.</p></div></section>';
+    f.innerHTML='<section class="eg-northstar-teaching" data-mode="teach-retry"><header><span>Learning Companion</span><strong>'+esc(title)+'</strong></header><div class="eg-northstar-teaching-block"><small>What to fix</small><p>'+esc(message||'Check the task and try again.')+'</p></div><div class="eg-northstar-teaching-next"><strong>Now you repair it</strong><p>Edit your own answer, then press <b>Check again</b>.</p></div></section>';
     f.scrollIntoView({behavior:'smooth',block:'nearest'})
   }
   function showUnavailable(message){
@@ -56,8 +56,27 @@
     if(corrected)html+=block('Correction',corrected,'is-correction');
     html+=block(diagnostic?'What to check':'What to fix',t.whatToFix||result?.feedback,'is-focus');
     html+=block('Remember',t.remember,'is-rule');
-    if(example&&example!==corrected)html+=block('Lesson model',example,'is-model');
-    html+='<div class="eg-northstar-teaching-next"><strong>'+(diagnostic?'Check it yourself':'Now you try')+'</strong><p>'+esc(t.nextStep||'Edit only the problem part, then check your sentence again.')+'</p></div>';
+    if(example&&example!==corrected)html+=block('Compare',example,'is-model');
+    html+='<div class="eg-northstar-teaching-next"><strong>'+(diagnostic?'Check it yourself':'Now you repair it')+'</strong><p>'+esc(t.nextStep||'Edit only the problem part, then check your sentence again.')+'</p></div>';
+    html+='</section>';
+    f.innerHTML=html;
+    f.scrollIntoView({behavior:'smooth',block:'nearest'})
+  }
+  function showCorrection(correction,response){
+    const f=feedbackBox();
+    if(!f)return;
+    const c=correction||{},diagnostic=c.mode==='diagnostic_probe',dict=c.dictionary||{},contrast=c.contrast||{};
+    const source=String(c.sourceSentence||response||'').trim();
+    const dictionary=[dict.term,dict.label].filter(Boolean).join(' · ')+(dict.definition?(' — '+dict.definition):'');
+    const compare=(contrast.from&&contrast.to)?(`${contrast.from}  →  ${contrast.to}`):(contrast.from||contrast.to||'');
+    let html='<section class="eg-northstar-teaching" data-mode="'+(diagnostic?'diagnostic-probe':'teach-retry')+'" data-correction-model="v3" aria-live="polite">';
+    html+='<header><span>Learning Companion</span><strong>'+(diagnostic?'Check one thing':'Fix one thing')+'</strong></header>';
+    html+=block(source.length>220?'Focus':'Your sentence',source,'is-answer');
+    html+=block('Smallest difference',c.focusDifference,'is-focus');
+    html+=block('Dictionary note',dictionary,'is-dictionary');
+    html+=block('Why',c.rule,'is-rule');
+    html+=block('Compare',compare,'is-model');
+    html+='<div class="eg-northstar-teaching-next"><strong>Now you repair it</strong><p>'+esc(c.repairPrompt||'Change only this part in your own writing, then press Check again.')+'</p></div>';
     html+='</section>';
     f.innerHTML=html;
     f.scrollIntoView({behavior:'smooth',block:'nearest'})
@@ -73,6 +92,20 @@
     if(!r.ok)throw new Error(data?.error||('Grading request failed ('+r.status+').'));
     return data
   }
+  async function correctionFor({mode,l,task,response,model='',target='',gradingContext={}}){
+    const result=await postJson('/api/correction-model-v3',{
+      mode,
+      lessonId:l.id,
+      task,
+      response,
+      model,
+      targetLanguage:target,
+      targetVocabulary:targetVocabulary(l),
+      gradingContext
+    });
+    if(!result?.correction)throw new Error('No teachable correction was returned.');
+    return result.correction
+  }
   function approveAndContinue(button){
     button.dataset.semanticApproved='1';
     button.disabled=false;
@@ -84,25 +117,37 @@
     const task=String(final.task||l?.writing?.task||promptText(flow)||'Complete the final writing task.');
     const grade=await postJson('/api/writing-grade-v2',{lessonId:l.id,task,text:response,level:'B2',minWords:min,maxWords:max});
     if(grade?.pass!==true){
-      const weak=Object.values(grade?.dimensions||{}).sort((a,b)=>(Number(a?.score)||0)-(Number(b?.score)||0))[0];
-      const detail=grade?.feedback?.improve||weak?.descriptor||'Revise the response using the B2 writing rubric, then check it again.';
-      showSimpleRevision((grade?.score!=null?'Writing score: '+grade.score+'%. ':'')+detail,'Improve your final response');
+      try{
+        const correction=await correctionFor({mode:'paragraph',l,task,response,model:modelText(flow),target:targetLanguage(l),gradingContext:{dimensions:grade?.dimensions||{}}});
+        showCorrection(correction,response)
+      }catch(_){
+        const weak=Object.values(grade?.dimensions||{}).sort((a,b)=>(Number(a?.score)||0)-(Number(b?.score)||0))[0];
+        const detail=grade?.feedback?.improve||weak?.descriptor||'Revise the response using the B2 writing rubric, then check it again.';
+        showSimpleRevision((grade?.score!=null?'Writing score: '+grade.score+'%. ':'')+detail,'Improve one part of your response')
+      }
       return false
     }
     approveAndContinue(button);return true
   }
   async function gradeShort(button,flow,l,response,phase){
+    const task=promptText(flow),model=modelText(flow),target=targetLanguage(l);
     const result=await postJson('/api/northstar-response-grade',{
       lessonId:l.id,
       lessonTitle:l.title,
       phase:phase.toUpperCase(),
-      prompt:promptText(flow),
-      model:modelText(flow),
-      targetLanguage:targetLanguage(l),
+      prompt:task,
+      model,
+      targetLanguage:target,
       targetVocabulary:targetVocabulary(l),
       response
     });
-    if(result?.pass!==true){showTeaching(result,response);return false}
+    if(result?.pass!==true){
+      try{
+        const correction=await correctionFor({mode:'short',l,task,response,model,target,gradingContext:{decisions:result?.decisions||{}}});
+        showCorrection(correction,response)
+      }catch(_){showTeaching(result,response)}
+      return false
+    }
     approveAndContinue(button);return true
   }
 
@@ -138,5 +183,5 @@
     }
   },true);
 
-  window.ENGLISHGATE_NORTHSTAR_SEMANTIC_GRADING={version:'englishgate-northstar-teaching-v2'};
+  window.ENGLISHGATE_NORTHSTAR_SEMANTIC_GRADING={version:'englishgate-correction-model-v3'};
 })();
