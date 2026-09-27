@@ -45,8 +45,13 @@
   try{await api('/api/auth/verify-email',{method:'POST',body:JSON.stringify({token})});clearParam('emailVerify');result.innerHTML='<div class="feedback good"><strong>Email verified.</strong><br>This email can now be used for secure password recovery.</div>'}
   catch(err){result.innerHTML='<div class="feedback bad">'+escapeHtml(err.message||'This verification link is invalid or expired.')+'</div>'}
  }
+ function loadEmailSettings(){
+  if(document.querySelector('script[data-email-account-ui]'))return;
+  const s=document.createElement('script');s.src='email-account-ui-v1.js?v=1';s.dataset.emailAccountUi='1';document.head.appendChild(s);
+ }
  window.openForgotPassword=openRecovery;
  function wire(){
+  loadEmailSettings();
   const old=document.getElementById('forgotPasswordBtn');
   if(old){const button=old.cloneNode(true);old.replaceWith(button);button.addEventListener('click',openRecovery)}
   let params;try{params=new URLSearchParams(location.search)}catch{return}
