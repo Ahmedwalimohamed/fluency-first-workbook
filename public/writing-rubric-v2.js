@@ -3,7 +3,7 @@
 
   if(!document.querySelector('script[data-northstar-semantic-grading]')){
     const semantic=document.createElement('script');
-    semantic.src='northstar-semantic-grading-v1.js?v=1';
+    semantic.src='northstar-semantic-grading-v1.js?v=2';
     semantic.dataset.northstarSemanticGrading='1';
     document.head.appendChild(semantic);
   }
@@ -55,6 +55,28 @@
       <p class="eg-writing-grade-action">${safe(grade?.feedback?.action||'')}</p>
       <p><small>Rubric ${safe(grade?.version||'englishgate-writing-rubric-v2')} · pass threshold ${Number(grade?.threshold)||PASS_SCORE}%.</small></p>
     </div>`
+  }
+  function compactFailHtml(grade){
+    return `<div class="performance-result bad eg-writing-grade-result"><div class="performance-score"><strong>${Number(grade?.score)||0}%</strong><span>One repair at a time</span></div><p>Your whole response was graded. EnglishGate will teach only the highest-value repair now, then re-grade after you fix it.</p></div>`
+  }
+  function correctionHtml(c){
+    if(!c)return '';
+    const d=c.dictionary||{},contrast=c.contrast||{};
+    const dictionary=[d.term,d.label].filter(Boolean).join(' · ')+(d.definition?(' — '+d.definition):'');
+    const compare=(contrast.from&&contrast.to)?(`${contrast.from} → ${contrast.to}`):(contrast.from||contrast.to||'');
+    const block=(label,text,cls='')=>String(text||'').trim()?`<div class="eg-northstar-teaching-block ${cls}"><small>${safe(label)}</small><p>${safe(text)}</p></div>`:'';
+    return `<section class="eg-northstar-teaching" data-mode="${c.mode==='diagnostic_probe'?'diagnostic-probe':'teach-retry'}" data-correction-model="v3">
+      <header><span>Learning Companion</span><strong>${c.mode==='diagnostic_probe'?'Check one thing':'Fix one thing'}</strong></header>
+      ${block('Focus sentence',c.sourceSentence,'is-answer')}
+      ${block('Smallest difference',c.focusDifference,'is-focus')}
+      ${block('Dictionary note',dictionary,'is-dictionary')}
+      ${block('Why',c.rule,'is-rule')}
+      ${block('Compare',compare,'is-model')}
+      <div class="eg-northstar-teaching-next"><strong>Now you repair it</strong><p>${safe(c.repairPrompt||'Repair only this part in your own writing, then submit again.')}</p></div>
+    </section>`
+  }
+  async function getCorrection(l,spec,response,grade){
+    return await api('/api/correction-model-v3',{method:'POST',body:JSON.stringify({mode:'paragraph',lessonId:l.id,task:spec.task,response,targetLanguage:String(l?.grammar?.rule||l?.grammarFocus||''),gradingContext:{dimensions:grade?.dimensions||{}}})})
   }
   async function standardSaveWriting(l){
     if(!isB2Lesson(l)||l?.writing?.humanGraded)return originalSaveWriting(l);
@@ -110,7 +132,9 @@
     if(grade.pass!==true){
       if(typeof saveActivityDraft==='function')saveActivityDraft();
       const done=typeof $==='function'?$('doneActivity'):document.getElementById('doneActivity');if(done)done.disabled=true;
-      if(f)f.innerHTML=resultHtml(grade)+'<div class="feedback bad"><strong>Not complete yet.</strong> Revise your final response using the rubric feedback, then submit it again. Your current draft has not been marked correct.</div>';
+      let correction=null;
+      try{correction=(await getCorrection(l,spec,response,grade))?.correction||null}catch(_){correction=null}
+      if(f)f.innerHTML=compactFailHtml(grade)+correctionHtml(correction)+(correction?'':'<div class="feedback bad"><strong>Not complete yet.</strong> Revise the highest-priority rubric area, then submit again.</div>');
       if(button){button.disabled=false;button.textContent='Re-grade writing'}
       return;
     }
@@ -135,5 +159,5 @@
   const observer=new MutationObserver(()=>ensureRubricVisible());
   observer.observe(document.documentElement,{subtree:true,childList:true});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ensureRubricVisible,{once:true});else ensureRubricVisible();
-  window.ENGLISHGATE_WRITING_RUBRIC_V2={version:'englishgate-writing-rubric-v2',passScore:PASS_SCORE,rubric:RUBRIC};
+  window.ENGLISHGATE_WRITING_RUBRIC_V2={version:'englishgate-writing-rubric-v2+correction-v3',passScore:PASS_SCORE,rubric:RUBRIC};
 })();
