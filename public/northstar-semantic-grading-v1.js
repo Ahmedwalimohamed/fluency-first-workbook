@@ -161,11 +161,13 @@
     const finalMode=phase==='use'&&Boolean(document.getElementById('northstarCounter'));
     if(!finalMode&&!['change','use'].includes(phase))return;
 
+    const l=currentLesson();
+    if(finalMode&&(l?.writing?.humanGraded===true||l?.writing?.noAutomatedCorrection===true||l?.northstar?.final?.humanGraded===true||l?.northstar?.final?.noAutomatedCorrection===true))return;
+
     event.preventDefault();
     event.stopImmediatePropagation();
     const box=flow.querySelector('#northstarInput,textarea');
     const response=String(box?.value||'').trim();
-    const l=currentLesson();
     if(!l||!/^su-b2-l\d+$/.test(String(l.id||''))){showUnavailable('This B2 lesson could not be identified for checking.');return}
     if(!response){showSimpleRevision('Write your answer before checking it.','Write your answer first');return}
 
