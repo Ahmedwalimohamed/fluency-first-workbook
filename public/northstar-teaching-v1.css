@@ -1,0 +1,189 @@
+/* EnglishGate Northstar Learning Companion — correction + retry surface */
+.b2-northstar-flow #northstarFeedback{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+}
+.eg-northstar-status,
+.eg-northstar-teaching{
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  margin:2px 0 0;
+  color:#0f172a;
+  font-family:inherit;
+  writing-mode:horizontal-tb!important;
+}
+.eg-northstar-status *,
+.eg-northstar-teaching *{
+  box-sizing:border-box;
+  min-width:0;
+  writing-mode:horizontal-tb!important;
+  text-orientation:mixed!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word;
+}
+.eg-northstar-status{
+  display:grid;
+  gap:5px;
+  padding:14px 16px;
+  border:1px solid #bfdbfe;
+  border-left:4px solid #2563eb;
+  border-radius:13px;
+  background:#f8fbff;
+}
+.eg-northstar-status.is-error{
+  border-color:#fecaca;
+  border-left-color:#dc2626;
+  background:#fffafa;
+}
+.eg-northstar-status strong{
+  display:block;
+  width:auto!important;
+  font-size:1rem;
+  line-height:1.35;
+}
+.eg-northstar-status p{
+  display:block;
+  width:auto!important;
+  margin:0;
+  color:#475569;
+  font-size:.95rem;
+  line-height:1.55;
+}
+.eg-northstar-teaching{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:12px;
+  padding:18px;
+  border:1px solid #fecaca;
+  border-left:4px solid #dc2626;
+  border-radius:14px;
+  background:#fff;
+}
+.eg-northstar-teaching[data-mode="diagnostic-probe"]{
+  border-color:#fde3a7;
+  border-left-color:#d97706;
+  background:#fffdf8;
+}
+.eg-northstar-teaching>header{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:4px;
+  width:100%;
+  min-width:0;
+  padding:0 0 4px;
+}
+.eg-northstar-teaching>header span{
+  display:block!important;
+  width:auto!important;
+  color:#2563eb;
+  font-size:.72rem;
+  line-height:1.25;
+  font-weight:850;
+  letter-spacing:.075em;
+  text-transform:uppercase;
+}
+.eg-northstar-teaching>header strong{
+  display:block!important;
+  width:auto!important;
+  max-width:none!important;
+  color:#0f172a;
+  font-size:1.15rem;
+  line-height:1.35;
+  letter-spacing:-.01em;
+}
+.eg-northstar-teaching-block{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:5px;
+  width:100%;
+  min-width:0;
+  padding:12px 14px;
+  border:1px solid #e2e8f0;
+  border-radius:11px;
+  background:#f8fafc;
+}
+.eg-northstar-teaching-block small{
+  display:block!important;
+  width:auto!important;
+  color:#64748b;
+  font-size:.69rem;
+  line-height:1.25;
+  font-weight:850;
+  letter-spacing:.065em;
+  text-transform:uppercase;
+}
+.eg-northstar-teaching-block p{
+  display:block!important;
+  width:auto!important;
+  max-width:none!important;
+  margin:0!important;
+  color:#334155;
+  font-size:.98rem;
+  line-height:1.58;
+}
+.eg-northstar-teaching-block.is-answer{
+  background:#fff;
+}
+.eg-northstar-teaching-block.is-correction{
+  border-color:#bbf7d0;
+  background:#f0fdf4;
+}
+.eg-northstar-teaching-block.is-correction p{
+  color:#166534;
+  font-weight:800;
+}
+.eg-northstar-teaching-block.is-focus{
+  border-color:#fecaca;
+  background:#fef2f2;
+}
+.eg-northstar-teaching[data-mode="diagnostic-probe"] .eg-northstar-teaching-block.is-focus{
+  border-color:#fde3a7;
+  background:#fffbeb;
+}
+.eg-northstar-teaching-block.is-rule{
+  border-color:#bfdbfe;
+  background:#eff6ff;
+}
+.eg-northstar-teaching-block.is-model{
+  background:#fff;
+}
+.eg-northstar-teaching-next{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:4px;
+  width:100%;
+  min-width:0;
+  padding:13px 14px;
+  border-radius:11px;
+  background:#0f172a;
+}
+.eg-northstar-teaching-next strong,
+.eg-northstar-teaching-next p{
+  display:block!important;
+  width:auto!important;
+  max-width:none!important;
+}
+.eg-northstar-teaching-next strong{
+  color:#fff;
+  font-size:.92rem;
+  line-height:1.35;
+}
+.eg-northstar-teaching-next p{
+  margin:0!important;
+  color:#e2e8f0;
+  font-size:.92rem;
+  line-height:1.5;
+}
+.b2-northstar-flow:has(.eg-northstar-teaching) #northstarCheck{
+  min-width:148px;
+}
+@media(max-width:700px){
+  .eg-northstar-teaching{padding:14px;gap:10px}
+  .eg-northstar-teaching-block,.eg-northstar-teaching-next{padding:11px 12px}
+  .eg-northstar-teaching>header strong{font-size:1.06rem}
+}
