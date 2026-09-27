@@ -107,7 +107,7 @@ express.application.post=function teacherManagementPost(route,...handlers){
 
 require('./a1-gold-bootstrap.js');
 require('./b1-shadow-pilot-bootstrap.js');
-require('./reading-semantic-grading-bootstrap.js');
+require('./northstar-response-grading-bootstrap.js');
 require('./learning-companion-core-attempt-shadow-bootstrap.js');
 require('./learning-companion-shadow-monitor-bootstrap.js');
 require('./ai-content-editor-bootstrap.js');
