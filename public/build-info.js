@@ -2,6 +2,8 @@
   const ID='englishgateBuildInfo';
   const PILOT_STYLE_ID='a1PilotHealthStyles';
   const PILOT_SCRIPT_ID='a1PilotHealthScript';
+  const TEACH_TEXT_STYLE_ID='teachAddTextV2Styles';
+  const TEACH_TEXT_SCRIPT_ID='teachAddTextV2Script';
   async function fetchBuild(){
     const r=await fetch('/api/build',{cache:'no-store',credentials:'same-origin'});
     if(!r.ok)throw new Error('Build info unavailable');
@@ -11,6 +13,33 @@
     const app=document.getElementById('app');
     const role=(document.getElementById('sidebarRole')?.textContent||'').toLowerCase();
     return Boolean(app?.classList.contains('admin-mode')||role.includes('admin'));
+  }
+  function isTeacher(){
+    const role=(document.getElementById('sidebarRole')?.textContent||'').toLowerCase();
+    return Boolean(document.body?.classList.contains('role-teacher')||role.includes('teacher'));
+  }
+  function loadTeacherTeachText(){
+    if(!isTeacher())return false;
+    if(!document.getElementById(TEACH_TEXT_STYLE_ID)){
+      const link=document.createElement('link');
+      link.id=TEACH_TEXT_STYLE_ID;link.rel='stylesheet';link.href='/teach-add-text-v2.css?v=1';
+      document.head.appendChild(link);
+    }
+    if(!document.getElementById(TEACH_TEXT_SCRIPT_ID)){
+      const script=document.createElement('script');
+      script.id=TEACH_TEXT_SCRIPT_ID;script.src='/teach-add-text-v2.js?v=1';script.defer=true;
+      document.body.appendChild(script);
+    }
+    return true;
+  }
+  function watchTeacherFeatures(){
+    let attempts=0;
+    const check=()=>{
+      attempts+=1;
+      if(loadTeacherTeachText()||attempts>120){clearInterval(timer)}
+    };
+    const timer=setInterval(check,250);
+    check();
   }
   function loadPilotHealth(){
     if(!isAdmin())return;
@@ -39,6 +68,7 @@
     footer.appendChild(badge);
   }
   async function boot(){
+    watchTeacherFeatures();
     try{
       const build=await fetchBuild();
       let attempts=0;
