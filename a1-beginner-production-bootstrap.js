@@ -2,8 +2,9 @@
 
 const express=require('express');
 const {Pool}=require('pg');
+const {decideLearningAccess}=require('./learning-access-authority');
 
-// EnglishGate A1 Beginner production activation v1.0.
+// EnglishGate A1 Beginner production activation v1.1.
 const A1_BOOK_ID='speakup-a1-gold';
 const LEGACY_A1_BOOK_ID='speakup-a1';
 const B2_BOOK_ID='speakup-b2';
@@ -43,9 +44,21 @@ async function activateA1Beginner(){
 
     const verify=await pool.query('select id,status from books where id=any($1::text[])',[[B2_BOOK_ID,A1_BOOK_ID,LEGACY_A1_BOOK_ID]]);
     const state=Object.fromEntries(verify.rows.map(row=>[row.id,row.status]));
-    const ok=state[B2_BOOK_ID]==='ready'&&state[A1_BOOK_ID]==='ready'&&(!state[LEGACY_A1_BOOK_ID]||state[LEGACY_A1_BOOK_ID]==='inactive');
-    if(!ok)throw new Error(`A1 production self-check failed b2=${state[B2_BOOK_ID]||'missing'} a1=${state[A1_BOOK_ID]||'missing'} legacy=${state[LEGACY_A1_BOOK_ID]||'missing'}`);
-    console.log(`A1 BEGINNER PRODUCTION ACTIVE b2=${state[B2_BOOK_ID]} a1=${state[A1_BOOK_ID]} legacy=${state[LEGACY_A1_BOOK_ID]||'missing'} enrollments=preserved`);
+    const dbOk=state[B2_BOOK_ID]==='ready'&&state[A1_BOOK_ID]==='ready'&&(!state[LEGACY_A1_BOOK_ID]||state[LEGACY_A1_BOOK_ID]==='inactive');
+    if(!dbOk)throw new Error(`A1 production self-check failed b2=${state[B2_BOOK_ID]||'missing'} a1=${state[A1_BOOK_ID]||'missing'} legacy=${state[LEGACY_A1_BOOK_ID]||'missing'}`);
+
+    const access=decideLearningAccess({
+      userId:'a1-production-self-check',
+      courseId:A1_BOOK_ID,
+      lessonId:'a1-gold-l1',
+      env:process.env,
+      enrolledCourseIds:[A1_BOOK_ID]
+    });
+    if(!access.allowed||access.mode!=='production'){
+      throw new Error(`A1 production learning-access self-check failed allowed=${access.allowed} mode=${access.mode} reason=${access.reason}`);
+    }
+
+    console.log(`A1 BEGINNER PRODUCTION ACTIVE b2=${state[B2_BOOK_ID]} a1=${state[A1_BOOK_ID]} legacy=${state[LEGACY_A1_BOOK_ID]||'missing'} access=${access.mode} legacyGuards=bridged enrollments=preserved`);
   })();
   try{return await activating}finally{activating=null}
 }
@@ -54,6 +67,12 @@ const nativeListen=express.application.listen;
 express.application.listen=function a1BeginnerProductionListen(...args){
   if(!enabled())return nativeListen.apply(this,args);
   const app=this;
+
+  // server.js still contains older A1 route checks keyed to A1_PREVIEW_MODE.
+  // Set this only here, after initDb() has completed, so those route guards accept
+  // A1 lessons in production without running preview-mode database setup.
+  process.env.A1_PREVIEW_MODE='1';
+
   activateA1Beginner()
     .then(()=>nativeListen.apply(app,args))
     .catch(error=>{
