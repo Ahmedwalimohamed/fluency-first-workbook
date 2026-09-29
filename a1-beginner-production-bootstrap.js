@@ -3,6 +3,7 @@
 const express=require('express');
 const {Pool}=require('pg');
 
+// EnglishGate A1 Beginner production activation v1.0.
 const A1_BOOK_ID='speakup-a1-gold';
 const LEGACY_A1_BOOK_ID='speakup-a1';
 const B2_BOOK_ID='speakup-b2';
