@@ -21,6 +21,13 @@ function decideLearningAccess({userId,courseId,lessonId,env=process.env,enrolled
     return {allowed:true,mode:'production',reason:'b2_ready'};
   }
 
+  // A1 Beginner is a real production course when the production flag is enabled.
+  // Enrollment remains mandatory so students cannot open a course they were not assigned.
+  if(courseId==='speakup-a1-gold' && env.A1_BEGINNER_PRODUCTION_MODE==='1' && a1PreviewLesson(lessonId) && enrolled.has('speakup-a1-gold')){
+    return {allowed:true,mode:'production',reason:'a1_ready_enrollment'};
+  }
+
+  // Keep the isolated preview path for non-production QA environments only.
   if(courseId==='speakup-a1-gold' && env.A1_PREVIEW_MODE==='1' && a1PreviewLesson(lessonId) && enrolled.has('speakup-a1-gold')){
     return {allowed:true,mode:'preview',reason:'a1_preview_enrollment'};
   }
