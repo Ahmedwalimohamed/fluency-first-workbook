@@ -1,6 +1,6 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),express=require('express');
-const {register,chooseMove,contextFor,curriculum,offerSdp,checkConfiguration,providerFailure}=require('../lesson-practice-service');
+const {register,chooseMove,contextFor,curriculum,offerSdp,checkConfiguration,providerFailure,checkHandshake}=require('../lesson-practice-service');
 const env={OPENAI_API_KEY:'test-openai',TYPESAFE_API_KEY:'test-jev'};
 const answer=(move,confidence=0.95)=>async()=>new Response(JSON.stringify({answers:{move:{choice:move,confidence,probabilities:{[move]:confidence}}}}));
 test('preserves WebRTC offer bytes and final CRLF; rejects oversized offers instead of truncating',()=>{
@@ -17,6 +17,15 @@ test('configuration check reports rejection safely and never logs credentials or
  assert.equal(result.ok,false);assert.equal(result.param,'session.audio.input');assert.doesNotMatch(logs.join(' '),/sk-proj-secret|private message|test-openai/);
  const good=await checkConfiguration({env,log,fetchImpl:async()=>new Response(JSON.stringify({value:'ek-private-secret'}))});assert.equal(good.ok,true);assert.doesNotMatch(logs.join(' '),/ek-private-secret/);
  const error=await providerFailure(new Response(JSON.stringify({error:{code:'invalid_api_key',param:'sk-proj-secret private'}}),{status:401}));assert.equal(error.param,null);
+});
+test('synthetic handshake uses the same request as learners and always closes the call',async()=>{
+ const calls=[],logs=[];const result=await checkHandshake({env,log:x=>logs.push(x),fetchImpl:async(url,options)=>{
+  calls.push(url);if(url.endsWith('/hangup'))return new Response('{}');
+  const sdp=options.body.get('sdp');assert.match(sdp,/m=audio/);assert.match(sdp,/m=application/);assert.match(sdp,/OPUS\/48000\/2/i);assert.ok(sdp.endsWith('\r\n'));
+  assert.equal(JSON.parse(options.body.get('session')).audio.input.turn_detection.create_response,false);
+  return new Response('v=0\r\nanswer\r\n',{headers:{location:'/v1/realtime/calls/rtc_probe'}});
+ }});
+ assert.equal(result.ok,true);assert.equal(calls.length,2);assert.ok(calls[1].endsWith('/rtc_probe/hangup'));assert.doesNotMatch(logs.join(' '),/test-openai|ice-pwd/);
 });
 test('Jev bounds uncertain corrections and unexpected actions',async()=>{
  assert.equal((await chooseMove({learnerTurn:'I go yesterday'},{env,fetchImpl:answer('correct',0.6)})).move,'clarify');

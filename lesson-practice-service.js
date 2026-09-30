@@ -38,6 +38,24 @@ async function checkConfiguration({fetchImpl=fetch,env=process.env,log=console.i
   await r.arrayBuffer();log('LESSON PRACTICE CONFIGURATION ACCEPTED model='+sessionConfig(context,env).model);return {ok:true};
  }catch{log('LESSON PRACTICE CONFIGURATION CHECK UNAVAILABLE');return {ok:null};}
 }
+function createCall({sdp,context,env=process.env,fetchImpl=fetch,safetyId='englishgate-voice-self-check'}){
+ const fd=new FormData();fd.set('sdp',offerSdp(sdp));fd.set('session',JSON.stringify(sessionConfig(context,env)));
+ return fetchImpl('https://api.openai.com/v1/realtime/calls',{method:'POST',headers:{Authorization:'Bearer '+env.OPENAI_API_KEY,'OpenAI-Safety-Identifier':safetyId},body:fd,signal:AbortSignal.timeout(20000)});
+}
+async function checkHandshake({fetchImpl=fetch,env=process.env,log=console.info}={}){
+ // Synthetic offer generated offline; no microphone, learner text or student session.
+ const sdp=fs.readFileSync(path.join(__dirname,'tests/fixtures/voice-offer.sdp'),'utf8');
+ const context={level:'B2',title:'Voice connection check',stage:'Service check',pageText:'Connection check only; do not generate a response.'};
+ let callId;
+ try{
+  const r=await createCall({sdp,context,fetchImpl,env});
+  if(!r.ok){const diagnostic=await providerFailure(r);log('LESSON PRACTICE HANDSHAKE REJECTED '+JSON.stringify(diagnostic));return {ok:false,...diagnostic};}
+  callId=(r.headers.get('location')||'').split('/').pop();const answer=await r.text();
+  if(!answer.startsWith('v=0'))throw Error('invalid answer');
+  log('LESSON PRACTICE HANDSHAKE ACCEPTED');return {ok:true};
+ }catch{log('LESSON PRACTICE HANDSHAKE CHECK UNAVAILABLE');return {ok:null};}
+ finally{if(callId)try{await fetchImpl('https://api.openai.com/v1/realtime/calls/'+encodeURIComponent(callId)+'/hangup',{method:'POST',headers:{Authorization:'Bearer '+env.OPENAI_API_KEY},signal:AbortSignal.timeout(3000)})}catch{}}
+}
 
 // Trusted curriculum assets, evaluated in isolation without browser or Node APIs.
 function curriculum(){
@@ -79,7 +97,7 @@ async function chooseMove(state,{fetchImpl=fetch,env=process.env}={}){
 }
 function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,lessons=curriculum()}){
  const sessions=new Map();
- if(fetchImpl===fetch&&env.OPENAI_API_KEY)void checkConfiguration({fetchImpl,env});
+ if(fetchImpl===fetch&&env.OPENAI_API_KEY&&env.OPENAI_PRACTICE_SELF_TEST!=='0')void(async()=>{await checkConfiguration({fetchImpl,env});await checkHandshake({fetchImpl,env})})();
  const limit=rateLimit({windowMs:15*60*1000,max:8,keyGenerator:req=>req.user.id,message:{error:'Please wait before starting another voice session.'}});
  const turns=rateLimit({windowMs:15*60*1000,max:100,keyGenerator:req=>req.user.id,message:{error:'Please pause and try again shortly.'}});
  const sameOrigin=(req,res,next)=>{try{if(req.get('origin')&&new URL(req.get('origin')).host!==req.get('host'))return res.status(403).json({error:'Open practice inside EnglishGate.'});next()}catch{return res.status(403).json({error:'Invalid request origin.'})}};
@@ -94,8 +112,7 @@ function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,les
    if(!decision.allowed||!courses.includes(courseId))return res.status(423).json({error:'Speaking practice is available only for your active course.'});
    const sdp=offerSdp(req.body.sdp);
    for(const [id,s]of sessions)if(s.userId===req.user.id)await dispose(id);
-   const fd=new FormData();fd.set('sdp',sdp);fd.set('session',JSON.stringify(sessionConfig(context,env)));
-   const upstream=await fetchImpl('https://api.openai.com/v1/realtime/calls',{method:'POST',headers:{Authorization:'Bearer '+env.OPENAI_API_KEY,'OpenAI-Safety-Identifier':crypto.createHash('sha256').update(req.user.id).digest('hex')},body:fd,signal:AbortSignal.timeout(20000)});
+   const upstream=await createCall({sdp,context,fetchImpl,env,safetyId:crypto.createHash('sha256').update(req.user.id).digest('hex')});
    if(!upstream.ok){const diagnostic=await providerFailure(upstream);console.error('LESSON PRACTICE CONNECTION REJECTED '+JSON.stringify(diagnostic));return res.status(502).json({error:failureMessage(diagnostic)});}
    const answer=await upstream.text(),id=crypto.randomUUID(),location=upstream.headers.get('location')||'',callId=location.split('/').pop();
    sessions.set(id,{userId:req.user.id,context,expires:Date.now()+TTL,history:[],seen:new Map(),callId,turnCount:0});
@@ -123,4 +140,4 @@ function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,les
  app.post('/api/lesson-practice/end',auth,studentOnly,sameOrigin,async(req,res)=>{const id=clean(req.body?.sessionId,80),s=sessions.get(id);if(s?.userId===req.user.id)await dispose(id);res.json({ok:true})});
  return {sessions,dispose,close:()=>clearInterval(sweep)};
 }
-module.exports={register,contextFor,instructions,chooseMove,MOVES,curriculum,offerSdp,sessionConfig,providerFailure,checkConfiguration};
+module.exports={register,contextFor,instructions,chooseMove,MOVES,curriculum,offerSdp,sessionConfig,providerFailure,checkConfiguration,checkHandshake};
