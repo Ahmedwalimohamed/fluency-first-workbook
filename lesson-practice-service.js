@@ -10,7 +10,7 @@ const {evidence}=require('./learning-companion-jev');
 const MOVES=['clarify','follow_up','scaffold','correct','retry','finish'];
 const TTL=5*60*1000;
 const clean=(x,n=1200)=>String(x||'').replace(/\u0000/g,'').trim().slice(0,n);
-function sessionConfig(context,env=process.env){return {type:'realtime',model:env.OPENAI_PRACTICE_MODEL||'gpt-realtime-2.1-mini',instructions:instructions(context),output_modalities:['audio'],max_output_tokens:180,truncation:{type:'retention_ratio',retention_ratio:0.8,token_limits:{post_instructions:4000}},audio:{input:{noise_reduction:{type:'near_field'},transcription:{model:'gpt-4o-mini-transcribe',language:'en'},turn_detection:{type:'semantic_vad',eagerness:'low',create_response:false,interrupt_response:false}},output:{voice:env.OPENAI_PRACTICE_VOICE||'marin'}}};}
+function sessionConfig(context,env=process.env){return {type:'realtime',model:env.OPENAI_PRACTICE_MODEL||'gpt-realtime-2.1-mini',instructions:instructions(context),output_modalities:['audio'],max_output_tokens:512,truncation:{type:'retention_ratio',retention_ratio:0.8,token_limits:{post_instructions:4000}},audio:{input:{noise_reduction:{type:'near_field'},transcription:{model:'gpt-4o-mini-transcribe',language:'en'},turn_detection:{type:'semantic_vad',eagerness:'low',create_response:false,interrupt_response:false}},output:{voice:env.OPENAI_PRACTICE_VOICE||'marin'}}};}
 // SDP is a protocol document. Never trim, normalize, or silently truncate it.
 function offerSdp(value){
  if(typeof value!=='string'||value.length>64000||!value.startsWith('v=0')||value.includes('\u0000'))
