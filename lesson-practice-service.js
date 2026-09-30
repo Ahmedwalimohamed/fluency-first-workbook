@@ -8,9 +8,9 @@ const rateLimit=require('express-rate-limit');
 const access=require('./learning-access-runtime');
 const {evidence}=require('./learning-companion-jev');
 const MOVES=['clarify','follow_up','scaffold','correct','retry','finish'];
-const TTL=10*60*1000;
+const TTL=5*60*1000;
 const clean=(x,n=1200)=>String(x||'').replace(/\u0000/g,'').trim().slice(0,n);
-function sessionConfig(context,env=process.env){return {type:'realtime',model:env.OPENAI_PRACTICE_MODEL||'gpt-realtime',instructions:instructions(context),output_modalities:['audio'],max_output_tokens:300,audio:{input:{noise_reduction:{type:'near_field'},transcription:{model:'gpt-4o-mini-transcribe',language:'en'},turn_detection:{type:'semantic_vad',eagerness:'low',create_response:false,interrupt_response:true}},output:{voice:env.OPENAI_PRACTICE_VOICE||'marin'}}};}
+function sessionConfig(context,env=process.env){return {type:'realtime',model:env.OPENAI_PRACTICE_MODEL||'gpt-realtime-2.1-mini',instructions:instructions(context),output_modalities:['audio'],max_output_tokens:180,truncation:{type:'retention_ratio',retention_ratio:0.8,token_limits:{post_instructions:4000}},audio:{input:{noise_reduction:{type:'near_field'},transcription:{model:'gpt-4o-mini-transcribe',language:'en'},turn_detection:{type:'semantic_vad',eagerness:'low',create_response:false,interrupt_response:true}},output:{voice:env.OPENAI_PRACTICE_VOICE||'marin'}}};}
 // SDP is a protocol document. Never trim, normalize, or silently truncate it.
 function offerSdp(value){
  if(typeof value!=='string'||value.length>64000||!value.startsWith('v=0')||value.includes('\u0000'))
@@ -75,7 +75,7 @@ function contextFor(body,lessons){
   outcome:clean(l.outcome||l.canDo||l.goal,700),vocabulary:vocabulary.slice(0,12).map(x=>clean(typeof x==='string'?x:x.word||x.text,100)),grammar:clean(l.grammarFocus,180)};
 }
 function instructions(context){return `You are EnglishGate's warm, patient speaking partner. This is a live voice conversation for English practice.
-Speak English at the learner's ${context.level} level, naturally and clearly. Keep each turn to 1–3 short sentences and ONE question, then wait. Give the learner most of the speaking time.
+Speak English at the learner's ${context.level} level, naturally and clearly. Keep each turn under 35 words, normally 1–2 short sentences and ONE question, then wait. Give the learner most of the speaking time.
 Focus on the CURRENT ACTIVITY, using its topic, situation and language. Do not switch to unrelated generic small talk. For reading, discuss the ideas with an analogous question; for grammar, elicit the form in a meaningful conversation; for vocabulary, encourage natural use; for writing, rehearse ideas aloud. Never give answers to workbook assessment items or complete submitted work.
 Listen to meaning first. Use the teaching move supplied by the app. Scaffold with one useful word, a short sentence starter, or a small analogous example, then invite the learner to speak. Clarify unclear speech kindly; never pretend to have heard it. Do not judge pronunciation from transcription. Correct only one clearly heard, important language error, briefly model it, and invite a spoken retry. Do not correct every sentence. Follow up on what the learner actually said. Avoid repetitive praise and lectures.
 If asked to stop, end kindly without another question. Never give scores, grades, mastery claims or claim that a lesson is complete. Never ask for typing. Do not request personal accounts of crimes, victims, or traumatic experiences; use fictional everyday examples.
@@ -103,7 +103,7 @@ function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,les
  const sameOrigin=(req,res,next)=>{try{if(req.get('origin')&&new URL(req.get('origin')).host!==req.get('host'))return res.status(403).json({error:'Open practice inside EnglishGate.'});next()}catch{return res.status(403).json({error:'Invalid request origin.'})}};
  async function dispose(id){const s=sessions.get(id);if(!s)return;sessions.delete(id);if(s.callId)try{await fetchImpl('https://api.openai.com/v1/realtime/calls/'+encodeURIComponent(s.callId)+'/hangup',{method:'POST',headers:{Authorization:'Bearer '+env.OPENAI_API_KEY},signal:AbortSignal.timeout(3000)})}catch{}}
  const sweep=setInterval(()=>{for(const [id,s]of sessions)if(s.expires<=Date.now())void dispose(id)},30000);sweep.unref();
- app.get('/api/lesson-practice/status',auth,studentOnly,(req,res)=>res.set('Cache-Control','no-store').json({available:Boolean(env.OPENAI_API_KEY&&env.TYPESAFE_API_KEY),maxMinutes:10}));
+ app.get('/api/lesson-practice/status',auth,studentOnly,(req,res)=>res.set('Cache-Control','no-store').json({available:Boolean(env.OPENAI_API_KEY&&env.TYPESAFE_API_KEY),maxMinutes:5}));
  app.post('/api/lesson-practice/session',auth,studentOnly,sameOrigin,limit,async(req,res)=>{
   try{
    if(!env.OPENAI_API_KEY||!env.TYPESAFE_API_KEY)return res.status(503).json({error:'Voice practice is not configured yet. Please ask your teacher to check the voice service.'});
@@ -117,7 +117,7 @@ function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,les
    const answer=await upstream.text(),id=crypto.randomUUID(),location=upstream.headers.get('location')||'',callId=location.split('/').pop();
    sessions.set(id,{userId:req.user.id,context,expires:Date.now()+TTL,history:[],seen:new Map(),callId,turnCount:0});
    if(res.destroyed||req.aborted){await dispose(id);return;}
-   res.set('Cache-Control','no-store').json({sdp:answer,sessionId:id,maxMinutes:10,instructions:instructions(context)});
+   res.set('Cache-Control','no-store').json({sdp:answer,sessionId:id,maxMinutes:5,instructions:instructions(context)});
   }catch(e){res.status(e.status||503).json({error:e.status?e.message:'Speaking practice could not start. Please try again.'})}
  });
  app.post('/api/lesson-practice/decision',auth,studentOnly,sameOrigin,turns,async(req,res)=>{
@@ -133,7 +133,7 @@ function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,les
    const result=endRequested?{move:'finish',source:'limit'}:await chooseMove({context:s.context,history:s.history.slice(-8),learnerTurn,coachTurn,helpRequested,endRequested},{fetchImpl,env});
    const d=helpRequested&&!endRequested?{...result,move:'scaffold'}:result;
    if(coachTurn)s.history.push({role:'coach',text:coachTurn});if(learnerTurn)s.history.push({role:'learner',text:learnerTurn});s.history=s.history.slice(-12);s.turnCount++;
-   return {...d,instructions:instructions(s.context)+'\nNEXT TEACHING MOVE: '+GUIDANCE[d.move],finish:d.move==='finish'};
+   return {...d,instructions:'Stay with the CURRENT ACTIVITY already provided in this session. Under 35 words. NEXT TEACHING MOVE: '+GUIDANCE[d.move],finish:d.move==='finish'};
   })();s.seen.set(turnId,task);
   try{res.set('Cache-Control','no-store').json(await task)}catch{res.status(503).json({error:'Please try your speaking turn again.'})}finally{s.busy=false}
  });
