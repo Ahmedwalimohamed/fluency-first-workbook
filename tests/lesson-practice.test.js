@@ -63,7 +63,7 @@ test('voice routes enforce role, ownership, active enrollment, deduplication and
   assert.match(sessionConfig.instructions,/Crime & Justice/);assert.doesNotMatch(JSON.stringify(session),/test-openai/);
   assert.equal((await post('decision',{sessionId:session.sessionId,turnId:'x'},{'x-user':'other'})).status,410);
   const turn={sessionId:session.sessionId,turnId:'1',learnerTurn:'Evidence helps us understand an incident.',coachTurn:'Why is evidence useful?'};
-  const d=await (await post('decision',turn)).json();assert.equal(d.move,'follow_up');assert.match(d.instructions,/CURRENT ACTIVITY/);
+  const d=await (await post('decision',turn)).json();assert.equal(d.move,'follow_up');assert.match(d.instructions,/CURRENT ACTIVITY/);assert.doesNotMatch(d.instructions,/CURRENT ACTIVITY DATA/);assert.equal(session.maxMinutes,5);assert.equal(sessionConfig.model,'gpt-realtime-2.1-mini');assert.equal(sessionConfig.max_output_tokens,180);assert.equal(sessionConfig.truncation.token_limits.post_instructions,4000);
   await post('decision',turn);assert.equal(jevCalls,1);
   const help=await (await post('decision',{...turn,turnId:'2',helpRequested:true})).json();assert.equal(help.move,'scaffold');
   service.sessions.get(session.sessionId).expires=Date.now()-1;
