@@ -23,7 +23,7 @@ test('voice UI follows B2 activity and releases microphone, including late permi
   await page.getByRole('button',{name:'Help me practise',exact:true}).click();assert.equal(await page.locator('dialog textarea,dialog input').count(),0);
   await page.getByRole('button',{name:'Start speaking',exact:true}).click();await page.getByRole('button',{name:'End practice',exact:true}).waitFor();
   await page.waitForFunction(()=>window.sent.some(x=>x.type==='response.create'));
-  assert.match(await page.evaluate(()=>window.sent[0].response.instructions),/CURRENT ACTIVITY: Crime/);
+  assert.match(await page.evaluate(()=>window.sent[0].response.instructions),/this current activity/);
   const sessionRequest=requests.find(x=>x.url.endsWith('/session')).data;assert.equal(sessionRequest.lessonId,'su-b2-l15');assert.match(sessionRequest.stage,/choose.*Activity 2/);assert.match(sessionRequest.pageText,/evidence/);assert.doesNotMatch(sessionRequest.pageText,/Help me practise/);
   await page.evaluate(()=>{const emit=x=>channel.onmessage({data:JSON.stringify(x)});emit({type:'response.created'});emit({type:'response.output_audio_transcript.done',transcript:'Why is evidence useful?'});emit({type:'response.done',response:{status:'completed'}});emit({type:'output_audio_buffer.stopped'});emit({type:'input_audio_buffer.speech_started'});emit({type:'conversation.item.input_audio_transcription.completed',item_id:'turn1',transcript:'Evidence helps us find the facts.'});});
   await page.waitForFunction(()=>window.sent.filter(x=>x.type==='response.create').length===2);
