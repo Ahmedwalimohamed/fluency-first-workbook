@@ -10,6 +10,34 @@ const {evidence}=require('./learning-companion-jev');
 const MOVES=['clarify','follow_up','scaffold','correct','retry','finish'];
 const TTL=10*60*1000;
 const clean=(x,n=1200)=>String(x||'').replace(/\u0000/g,'').trim().slice(0,n);
+function sessionConfig(context,env=process.env){return {type:'realtime',model:env.OPENAI_PRACTICE_MODEL||'gpt-realtime',instructions:instructions(context),output_modalities:['audio'],max_output_tokens:300,audio:{input:{noise_reduction:{type:'near_field'},transcription:{model:'gpt-4o-mini-transcribe',language:'en'},turn_detection:{type:'semantic_vad',eagerness:'low',create_response:false,interrupt_response:true}},output:{voice:env.OPENAI_PRACTICE_VOICE||'marin'}}};}
+// SDP is a protocol document. Never trim, normalize, or silently truncate it.
+function offerSdp(value){
+ if(typeof value!=='string'||value.length>64000||!value.startsWith('v=0')||value.includes('\u0000'))
+  throw Object.assign(new Error('Could not prepare the audio connection. Please start again.'),{status:400});
+ return value;
+}
+async function providerFailure(response){
+ let body;try{body=await response.json()}catch{}
+ const identifier=x=>typeof x==='string'&&/^[a-zA-Z0-9_.\[\]-]{1,180}$/.test(x)?x:null;
+ return {status:response.status,type:identifier(body?.error?.type),code:identifier(body?.error?.code),param:identifier(body?.error?.param),requestId:identifier(response.headers?.get('x-request-id'))};
+}
+function failureMessage(error){
+ if(error.code==='insufficient_quota')return 'The voice service has reached its usage limit. Please ask your teacher to check the voice service.';
+ if([401,403].includes(error.status))return 'The voice service is not authorized to connect. Please ask your teacher to check the voice service.';
+ if(error.status===429)return 'The voice service is busy. Please wait a moment and try again.';
+ if(error.status===400)return 'The voice connection could not be prepared. Please reload this page and try again.';
+ return 'The voice service could not connect. Please try again shortly.';
+}
+async function checkConfiguration({fetchImpl=fetch,env=process.env,log=console.info}={}){
+ const context={level:'B2',title:'Voice configuration check',stage:'Service check',pageText:'Connection check only.'};
+ try{
+  const r=await fetchImpl('https://api.openai.com/v1/realtime/client_secrets',{method:'POST',headers:{Authorization:'Bearer '+env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({expires_after:{anchor:'created_at',seconds:60},session:sessionConfig(context,env)}),signal:AbortSignal.timeout(15000)});
+  if(!r.ok){const diagnostic=await providerFailure(r);log('LESSON PRACTICE CONFIGURATION REJECTED '+JSON.stringify(diagnostic));return {ok:false,...diagnostic};}
+  // Discard the short-lived secret. It is never sent to clients or logged.
+  await r.arrayBuffer();log('LESSON PRACTICE CONFIGURATION ACCEPTED model='+sessionConfig(context,env).model);return {ok:true};
+ }catch{log('LESSON PRACTICE CONFIGURATION CHECK UNAVAILABLE');return {ok:null};}
+}
 
 // Trusted curriculum assets, evaluated in isolation without browser or Node APIs.
 function curriculum(){
@@ -51,6 +79,7 @@ async function chooseMove(state,{fetchImpl=fetch,env=process.env}={}){
 }
 function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,lessons=curriculum()}){
  const sessions=new Map();
+ if(fetchImpl===fetch&&env.OPENAI_API_KEY)void checkConfiguration({fetchImpl,env});
  const limit=rateLimit({windowMs:15*60*1000,max:8,keyGenerator:req=>req.user.id,message:{error:'Please wait before starting another voice session.'}});
  const turns=rateLimit({windowMs:15*60*1000,max:100,keyGenerator:req=>req.user.id,message:{error:'Please pause and try again shortly.'}});
  const sameOrigin=(req,res,next)=>{try{if(req.get('origin')&&new URL(req.get('origin')).host!==req.get('host'))return res.status(403).json({error:'Open practice inside EnglishGate.'});next()}catch{return res.status(403).json({error:'Invalid request origin.'})}};
@@ -63,11 +92,11 @@ function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,les
    const context=contextFor(req.body||{},lessons),courses=await access.enrolledCourseIds(pool,req.user.id),courseId=access.courseIdFromLesson(context.lessonId);
    const decision=await access.decideStudentLessonAccess({pool,user:req.user,lessonId:context.lessonId,env});
    if(!decision.allowed||!courses.includes(courseId))return res.status(423).json({error:'Speaking practice is available only for your active course.'});
-   const sdp=clean(req.body.sdp,32000);if(!sdp.startsWith('v=0'))return res.status(400).json({error:'Could not prepare the audio connection.'});
+   const sdp=offerSdp(req.body.sdp);
    for(const [id,s]of sessions)if(s.userId===req.user.id)await dispose(id);
-   const fd=new FormData();fd.set('sdp',sdp);fd.set('session',JSON.stringify({type:'realtime',model:env.OPENAI_PRACTICE_MODEL||'gpt-realtime',instructions:instructions(context),output_modalities:['audio'],max_output_tokens:300,audio:{input:{noise_reduction:{type:'near_field'},transcription:{model:'gpt-4o-mini-transcribe',language:'en'},turn_detection:{type:'semantic_vad',eagerness:'low',create_response:false,interrupt_response:true}},output:{voice:env.OPENAI_PRACTICE_VOICE||'marin'}}}));
+   const fd=new FormData();fd.set('sdp',sdp);fd.set('session',JSON.stringify(sessionConfig(context,env)));
    const upstream=await fetchImpl('https://api.openai.com/v1/realtime/calls',{method:'POST',headers:{Authorization:'Bearer '+env.OPENAI_API_KEY,'OpenAI-Safety-Identifier':crypto.createHash('sha256').update(req.user.id).digest('hex')},body:fd,signal:AbortSignal.timeout(20000)});
-   if(!upstream.ok)return res.status(502).json({error:'The voice service could not connect. Please try again shortly.'});
+   if(!upstream.ok){const diagnostic=await providerFailure(upstream);console.error('LESSON PRACTICE CONNECTION REJECTED '+JSON.stringify(diagnostic));return res.status(502).json({error:failureMessage(diagnostic)});}
    const answer=await upstream.text(),id=crypto.randomUUID(),location=upstream.headers.get('location')||'',callId=location.split('/').pop();
    sessions.set(id,{userId:req.user.id,context,expires:Date.now()+TTL,history:[],seen:new Map(),callId,turnCount:0});
    if(res.destroyed||req.aborted){await dispose(id);return;}
@@ -94,4 +123,4 @@ function register({app,auth,studentOnly,pool,fetchImpl=fetch,env=process.env,les
  app.post('/api/lesson-practice/end',auth,studentOnly,sameOrigin,async(req,res)=>{const id=clean(req.body?.sessionId,80),s=sessions.get(id);if(s?.userId===req.user.id)await dispose(id);res.json({ok:true})});
  return {sessions,dispose,close:()=>clearInterval(sweep)};
 }
-module.exports={register,contextFor,instructions,chooseMove,MOVES,curriculum};
+module.exports={register,contextFor,instructions,chooseMove,MOVES,curriculum,offerSdp,sessionConfig,providerFailure,checkConfiguration};

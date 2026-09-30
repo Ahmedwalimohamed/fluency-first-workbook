@@ -1,8 +1,23 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),express=require('express');
-const {register,chooseMove,contextFor,curriculum}=require('../lesson-practice-service');
+const {register,chooseMove,contextFor,curriculum,offerSdp,checkConfiguration,providerFailure}=require('../lesson-practice-service');
 const env={OPENAI_API_KEY:'test-openai',TYPESAFE_API_KEY:'test-jev'};
 const answer=(move,confidence=0.95)=>async()=>new Response(JSON.stringify({answers:{move:{choice:move,confidence,probabilities:{[move]:confidence}}}}));
+test('preserves WebRTC offer bytes and final CRLF; rejects oversized offers instead of truncating',()=>{
+ const sdp='v=0\r\no=- 123 2 IN IP4 127.0.0.1\r\ns=-\r\na=ice-ufrag:abc\r\n';
+ assert.equal(offerSdp(sdp),sdp);assert.equal(offerSdp('v=0\r\n'+'x'.repeat(40000)+'\r\n').length,40007);
+ assert.throws(()=>offerSdp('v=0\r\n'+'x'.repeat(65000)));assert.throws(()=>offerSdp('bad offer'));
+});
+test('configuration check reports rejection safely and never logs credentials or ephemeral secrets',async()=>{
+ const logs=[],log=x=>logs.push(x);
+ const result=await checkConfiguration({env,log,fetchImpl:async(url,options)=>{
+  assert.match(url,/client_secrets$/);const body=JSON.parse(options.body);assert.equal(body.session.audio.input.turn_detection.eagerness,'low');
+  return new Response(JSON.stringify({error:{type:'invalid_request_error',code:'unknown_parameter',param:'session.audio.input',message:'private message sk-proj-secret'}}),{status:400});
+ }});
+ assert.equal(result.ok,false);assert.equal(result.param,'session.audio.input');assert.doesNotMatch(logs.join(' '),/sk-proj-secret|private message|test-openai/);
+ const good=await checkConfiguration({env,log,fetchImpl:async()=>new Response(JSON.stringify({value:'ek-private-secret'}))});assert.equal(good.ok,true);assert.doesNotMatch(logs.join(' '),/ek-private-secret/);
+ const error=await providerFailure(new Response(JSON.stringify({error:{code:'invalid_api_key',param:'sk-proj-secret private'}}),{status:401}));assert.equal(error.param,null);
+});
 test('Jev bounds uncertain corrections and unexpected actions',async()=>{
  assert.equal((await chooseMove({learnerTurn:'I go yesterday'},{env,fetchImpl:answer('correct',0.6)})).move,'clarify');
  assert.equal((await chooseMove({learnerTurn:'I went yesterday'},{env,fetchImpl:answer('follow_up')})).move,'follow_up');
@@ -22,7 +37,7 @@ test('voice routes enforce role, ownership, active enrollment, deduplication and
  const pool={query:async(sql)=>{assert.match(sql,/^select distinct c.course_id/);return {rows:[{course_id:'speakup-b2'}]}}};
  const fetchImpl=async(url,opts)=>{
   if(url.endsWith('/hangup')){hangups++;return new Response('{}')}
-  if(url.endsWith('/calls')){upstreamCalls++;sessionConfig=JSON.parse(opts.body.get('session'));return new Response('v=0\r\nanswer',{headers:{location:'/v1/realtime/calls/rtc_test'}})}
+  if(url.endsWith('/calls')){upstreamCalls++;assert.equal(opts.body.get('sdp'),'v=0\r\n');sessionConfig=JSON.parse(opts.body.get('session'));return new Response('v=0\r\nanswer',{headers:{location:'/v1/realtime/calls/rtc_test'}})}
   jevCalls++;return answer('follow_up')(url,opts);
  };
  const service=register({app,auth,studentOnly,pool,fetchImpl,env});const server=app.listen(0);await new Promise(r=>server.once('listening',r));
