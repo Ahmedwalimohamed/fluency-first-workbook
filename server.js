@@ -242,6 +242,7 @@ function adminOnly(req,res,next){if(req.user.role!=='admin')return res.status(40
 function teacherOnly(req,res,next){if(req.user.role!=='teacher')return res.status(403).json({error:'Teacher access required.'});next()}
 function teacherOrStudent(req,res,next){if(!['teacher','student'].includes(req.user.role))return res.status(403).json({error:'Teacher or student access required.'});next()}
 function studentOnly(req,res,next){if(req.user.role!=='student')return res.status(403).json({error:'Student access required.'});next()}
+require('./lesson-practice-service').register({app,auth,studentOnly,pool});
 function tempPassword(){return String(crypto.randomInt(0,100000000)).padStart(8,'0')}
 function newLoginToken(){return crypto.randomBytes(24).toString('base64url')}
 function chosenPassword(value){
