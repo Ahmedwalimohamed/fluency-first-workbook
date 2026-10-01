@@ -6,7 +6,7 @@
  if(typeof module!=='undefined'&&module.exports){module.exports={clean,pageKey};return;}
  const content=document.getElementById('content');if(!content)return;
  let dialog,launcher,key='',context,pc,dc,microphone,audio,sessionId='',request,generation=0,timer,idleTimer,connectTimer,transcriptTimer;
- let recorder,replayUrl='',replayAudio,replaying=false,recordingComplete=false;
+ let recorder,replayUrl='',replayAudio,replaying=false,recordingComplete=false,lastEvidenceSignal='',lastEvidenceAt=0;
  let status,start,mute,help,repeat,end,play,caption,orb,coachTurn='',baseInstructions='',connected=false,muted=false,responding=false,deciding=false,finished=false,speechActive=false,awaitingTranscript=0,pending=[],captionParts=new Map(),seenTurns=new Set();
  function current(){
   if(typeof session==='undefined'||session?.role!=='student'||typeof currentPage==='undefined')return null;
@@ -58,16 +58,20 @@
   if(!replayUrl||replaying)return;
   replaying=true;microphone?.getAudioTracks().forEach(t=>t.enabled=false);controls();
   const g=generation;replayAudio=el('audio');replayAudio.src=replayUrl;
-  const resume=()=>{if(g!==generation)return;replaying=false;microphone?.getAudioTracks().forEach(t=>t.enabled=!muted&&!replaying);state(muted?'Microphone paused. Resume when you’re ready.':'Your turn. Take your time.',muted?'ready':'listening');touch();};
+  const resume=()=>{if(g!==generation)return;replaying=false;microphone?.getAudioTracks().forEach(t=>t.enabled=!muted&&!replaying);state(muted?'Microphone paused. Resume when you’re ready.':'Your turn. Take your time.',muted?'ready':'listening');evidenceSignal('ready');touch();};
   replayAudio.onended=replayAudio.onerror=resume;
   state('Repeating the question…','speaking');try{await replayAudio.play();}catch{resume();}
  }
  function touch(){clearTimeout(idleTimer);if(connected)idleTimer=setTimeout(()=>stop('Practice paused after two quiet minutes. Start again when you’re ready.'),120000);}
  function send(event){if(dc?.readyState!=='open')return false;dc.send(JSON.stringify(event));return true;}
  async function post(route,body,signal){const r=await fetch('/api/lesson-practice/'+route,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal});const data=await r.json();if(!r.ok)throw new Error(data.error||'Voice practice could not connect.');return data;}
+ function evidenceSignal(type,detail=''){
+  if(!sessionId)return;const now=Date.now();if(type===lastEvidenceSignal&&now-lastEvidenceAt<2500)return;lastEvidenceSignal=type;lastEvidenceAt=now;
+  void fetch('/api/lesson-practice/event',{method:'POST',credentials:'same-origin',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId,type,detail})}).catch(()=>{});
+ }
  function stop(message='Practice ended. You can start again on this page.'){
   generation++;request?.abort();request=null;clearTimeout(timer);clearTimeout(idleTimer);clearTimeout(connectTimer);clearTimeout(transcriptTimer);clearReplay();
-  const old=sessionId;sessionId='';connected=false;responding=false;deciding=false;speechActive=false;awaitingTranscript=0;pending=[];muted=false;finished=false;captionParts.clear();seenTurns.clear();
+  const old=sessionId;sessionId='';connected=false;responding=false;deciding=false;speechActive=false;awaitingTranscript=0;pending=[];muted=false;finished=false;captionParts.clear();seenTurns.clear();lastEvidenceSignal='';lastEvidenceAt=0;
   if(dc){dc.onmessage=dc.onopen=null;dc.close();dc=null;}
   if(pc){pc.ontrack=pc.onconnectionstatechange=null;pc.close();pc=null;}
   microphone?.getTracks().forEach(t=>t.stop());microphone=null;
@@ -85,7 +89,7 @@
   orb=el('div','◌','eg-practise-orb');orb.setAttribute('aria-hidden','true');
   status=el('p','Start a voice conversation about this activity.','eg-practise-status');status.setAttribute('role','status');
   caption=el('div',null,'eg-practise-caption');caption.setAttribute('aria-label','Speaking partner captions');
-  start=button('Start speaking',begin,true);mute=button('Pause microphone',()=>{muted=!muted;microphone?.getAudioTracks().forEach(t=>t.enabled=!muted&&!replaying);state(muted?'Microphone paused. Resume when you’re ready.':'I’m listening. Take your time.',muted?'ready':'listening');touch();});
+  start=button('Start speaking',begin,true);mute=button('Pause microphone',()=>{muted=!muted;microphone?.getAudioTracks().forEach(t=>t.enabled=!muted&&!replaying);state(muted?'Microphone paused. Resume when you’re ready.':'I’m listening. Take your time.',muted?'ready':'listening');evidenceSignal('ready');touch();});
   help=button('Help me answer',()=>assist(false));repeat=button('Say it again',()=>assist(true));end=button('End practice',()=>stop());
   play=button('Tap to hear the coach',async()=>{try{await audio?.play();play.hidden=true}catch{state('Please allow audio playback, then tap to hear the coach.')}});play.hidden=true;
   const actions=el('div',null,'eg-practise-actions');actions.append(start,mute,help,repeat,end,play);
@@ -107,21 +111,21 @@
    pc=new RTCPeerConnection();audio=el('audio');audio.autoplay=true;audio.setAttribute('playsinline','');document.body.append(audio);
    pc.ontrack=e=>{if(g!==generation)return;audio.srcObject=e.streams[0];void audio.play().catch(()=>{if(g===generation)play.hidden=false})};
    microphone.getAudioTracks().forEach(t=>pc.addTrack(t,microphone));dc=pc.createDataChannel('oai-events');
-   dc.onmessage=e=>{if(g!==generation)return;try{handle(JSON.parse(e.data))}catch{stop('The audio connection was interrupted. Please start again.')}};
-   dc.onopen=()=>{if(g!==generation)return;request=null;clearTimeout(connectTimer);connected=true;state('Your speaking partner is getting ready…','thinking');touch();responding=true;send({type:'response.create',response:{instructions:'Briefly welcome the learner to this current activity. Ask ONE easy opening question about its situation or language, then wait. Do not read the lesson text aloud.'}});timer=setTimeout(()=>stop('Your five-minute practice is complete. Start again when you’re ready.'),300000);};
-   pc.onconnectionstatechange=()=>{if(g===generation&&['failed','disconnected','closed'].includes(pc?.connectionState))stop('The voice connection ended. Start again when you’re ready.');};
+   dc.onmessage=e=>{if(g!==generation)return;try{handle(JSON.parse(e.data))}catch{evidenceSignal('connection_problem','event_parse');stop('The audio connection was interrupted. Please start again.')}};
+   dc.onopen=()=>{if(g!==generation)return;request=null;clearTimeout(connectTimer);connected=true;state('Your speaking partner is getting ready…','thinking');evidenceSignal('listening');touch();responding=true;send({type:'response.create',response:{instructions:'Briefly welcome the learner to this current activity. Ask ONE easy opening question about its situation or language, then wait. Do not read the lesson text aloud.'}});timer=setTimeout(()=>stop('Your five-minute practice is complete. Start again when you’re ready.'),300000);};
+   pc.onconnectionstatechange=()=>{if(g===generation&&['failed','disconnected','closed'].includes(pc?.connectionState)){evidenceSignal('connection_problem',pc?.connectionState||'unknown');stop('The voice connection ended. Start again when you’re ready.');}};
    const offer=await pc.createOffer();if(g!==generation)return;await pc.setLocalDescription(offer);
    const answer=await post('session',{...context,sdp:offer.sdp},signal);
    if(g!==generation){void post('end',{sessionId:answer.sessionId}).catch(()=>{});return;}
    sessionId=answer.sessionId;baseInstructions=answer.instructions;await pc.setRemoteDescription({type:'answer',sdp:answer.sdp});if(g!==generation)return;
-   controls();connectTimer=setTimeout(()=>{if(!connected)stop('The audio connection took too long. Please try again.');},20000);
+   controls();connectTimer=setTimeout(()=>{if(!connected){evidenceSignal('connection_problem','connect_timeout');stop('The audio connection took too long. Please try again.');}},20000);
   }catch(e){if(g!==generation)return;stop(e.name==='NotAllowedError'?'Microphone permission was denied. Allow microphone access in your browser and start again.':e.name==='NotFoundError'?'No microphone was found. Connect one and start again.':e.message||'Voice practice could not start.');}
  }
  function handle(e){
   switch(e.type){
-   case 'input_audio_buffer.speech_started':if(replaying)break;speechActive=true;touch();state('I’m listening. Take your time.','listening');break;
+   case 'input_audio_buffer.speech_started':if(replaying)break;speechActive=true;touch();state('I’m listening. Take your time.','listening');evidenceSignal('speaking');break;
    case 'input_audio_buffer.speech_stopped':
-    speechActive=false;awaitingTranscript++;state('Thinking about your answer…','thinking');
+    speechActive=false;awaitingTranscript++;state('Thinking about your answer…','thinking');evidenceSignal('thinking');
     clearTimeout(transcriptTimer);transcriptTimer=setTimeout(()=>{
      if(!connected||!awaitingTranscript)return;
      awaitingTranscript=0;pending.push({text:'[Speech was unclear. Ask for repetition.]',id:crypto.randomUUID()});
@@ -138,36 +142,36 @@
     pending.push({text:'[Transcription failed. Ask for repetition; do not correct.]',id:e.item_id||crypto.randomUUID()});void nextTurn();break;
    case 'output_audio_buffer.started':recordCoach();break;
    case 'output_audio_buffer.cleared':clearReplay();break;
-   case 'response.created':responding=true;coachTurn='';caption.textContent='';state('Your speaking partner is responding…','speaking');break;
+   case 'response.created':responding=true;coachTurn='';caption.textContent='';state('Your speaking partner is responding…','speaking');evidenceSignal('listening');break;
    case 'response.output_audio_transcript.delta':{
     const id=e.item_id||e.response_id||'current';const text=(captionParts.get(id)||'')+(e.delta||'');captionParts.set(id,text);caption.textContent=text;break;}
    case 'response.output_audio_transcript.done':coachTurn=clean(e.transcript,1200);caption.textContent=e.transcript||caption.textContent;break;
-   case 'response.done':responding=false;if(e.response?.status==='failed'){stop('The voice service could not respond. Please try again.');return;}controls();void nextTurn();break;
+   case 'response.done':responding=false;if(e.response?.status==='failed'){evidenceSignal('connection_problem','response_failed');stop('The voice service could not respond. Please try again.');return;}controls();void nextTurn();break;
    case 'output_audio_buffer.stopped':
     recordingComplete=true;if(recorder?.state==='recording')recorder.stop();
     if(finished){stop('Practice ended. Well done for speaking today.');return;}
-    if(!deciding&&!responding&&!speechActive)state(muted?'Microphone paused. Resume when you’re ready.':'Your turn. Take your time.',muted?'ready':'listening');touch();break;
-   case 'error':stop('The voice service reported a connection problem. Please start again.');break;
+    if(!deciding&&!responding&&!speechActive)state(muted?'Microphone paused. Resume when you’re ready.':'Your turn. Take your time.',muted?'ready':'listening');evidenceSignal('ready');touch();break;
+   case 'error':evidenceSignal('connection_problem','provider_event');stop('The voice service reported a connection problem. Please start again.');break;
   }
  }
  async function nextTurn(){
   if(!connected||deciding||responding||speechActive||awaitingTranscript||!pending.length)return;
   const turns=pending.splice(0),turn={...turns[turns.length-1],text:turns.map(t=>t.text).join(' ').slice(0,2000)},g=generation;
-  deciding=true;state('Thinking about your answer…','thinking');
+  deciding=true;state('Thinking about your answer…','thinking');evidenceSignal('thinking');
   try{
    const d=await post('decision',{sessionId,turnId:turn.id,learnerTurn:turn.text,coachTurn});
    if(g!==generation)return;deciding=false;
    if(speechActive||awaitingTranscript||pending.length){pending.unshift(turn);controls();void nextTurn();return;}
    finished=d.finish;
-   if(!send({type:'response.create',response:{instructions:d.instructions}})){stop('The voice connection ended. Start again when you’re ready.');return;}
-   responding=true;state('Your speaking partner is responding…','speaking');
+   if(!send({type:'response.create',response:{instructions:d.instructions}})){evidenceSignal('connection_problem','data_channel_closed');stop('The voice connection ended. Start again when you’re ready.');return;}
+   responding=true;state('Your speaking partner is responding…','speaking');evidenceSignal('listening');
   }catch(e){if(g===generation)stop(e.message)}
  }
  async function assist(replay){
   if(!connected||responding||deciding||finished)return;touch();
   if(replay){await replayCoach();return;}
-  const g=generation;deciding=true;state('Finding a little help…','thinking');
-  try{const d=await post('decision',{sessionId,turnId:crypto.randomUUID(),helpRequested:true,coachTurn});if(g!==generation)return;deciding=false;send({type:'conversation.item.create',item:{type:'message',role:'user',content:[{type:'input_text',text:'Please help me answer your current question with one useful word or sentence starter.'}]}});send({type:'response.create',response:{instructions:d.instructions}});responding=true;state('Here’s a little help…','speaking');}catch(e){if(g===generation)stop(e.message)}
+  const g=generation;deciding=true;state('Finding a little help…','thinking');evidenceSignal('thinking');
+  try{const d=await post('decision',{sessionId,turnId:crypto.randomUUID(),helpRequested:true,coachTurn});if(g!==generation)return;deciding=false;send({type:'conversation.item.create',item:{type:'message',role:'user',content:[{type:'input_text',text:'Please help me answer your current question with one useful word or sentence starter.'}]}});send({type:'response.create',response:{instructions:d.instructions}});responding=true;state('Here’s a little help…','speaking');evidenceSignal('listening');}catch(e){if(g===generation)stop(e.message)}
  }
  function sync(){
   const now=current(),next=pageKey(now),header=content.querySelector('.eg-lesson-header,.micro-top');
