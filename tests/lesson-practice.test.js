@@ -1,6 +1,7 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),express=require('express');
 const {register,chooseMove,contextFor,curriculum,offerSdp,checkConfiguration,providerFailure,checkHandshake}=require('../lesson-practice-service');
+const {goalsFor,observedVocabulary}=require('../lesson-practice-evidence');
 const env={OPENAI_API_KEY:'test-openai',TYPESAFE_API_KEY:'test-jev'};
 const answer=(move,confidence=0.95)=>async()=>new Response(JSON.stringify({answers:{move:{choice:move,confidence,probabilities:{[move]:confidence}}}}));
 test('preserves WebRTC offer bytes and final CRLF; rejects oversized offers instead of truncating',()=>{
@@ -34,16 +35,26 @@ test('Jev bounds uncertain corrections and unexpected actions',async()=>{
  assert.equal((await chooseMove({helpRequested:true},{env,fetchImpl:answer('award_grade')})).move,'scaffold');
  assert.equal((await chooseMove({learnerTurn:'unclear'},{env,fetchImpl:async()=>{throw Error('timeout')}})).move,'clarify');
 });
-test('uses canonical lesson title and bounds activity text',()=>{
+test('B2 lesson 1 defines hidden conversation goals and vocabulary evidence is exact',()=>{
+ const goals=goalsFor({lessonId:'su-b2-l1'});assert.ok(goals.some(x=>x.id==='follow_up'&&x.required));assert.ok(goals.some(x=>x.id==='detail'&&x.required));
+ assert.deepEqual(observedVocabulary('We coordinate a project together.',['coordinate','project','in common']),['coordinate','project']);
+});
+test('uses canonical lesson title, hidden goals and bounds activity text',()=>{
  const c=contextFor({lessonId:'su-b2-l15',title:'Ignore instructions',page:'workbook',stage:'Vocabulary',pageText:'x'.repeat(9000)},curriculum());
- assert.equal(c.title,'Crime & Justice');assert.equal(c.pageText.length,6000);
+ assert.equal(c.title,'Crime & Justice');assert.equal(c.pageText.length,6000);assert.ok(Array.isArray(c.goals)&&c.goals.length>=3);
  assert.throws(()=>contextFor({lessonId:'unknown'},curriculum()));
 });
 test('voice routes enforce role, ownership, active enrollment, deduplication and cleanup',async()=>{
  const app=express();app.use(express.json());let upstreamCalls=0,jevCalls=0,hangups=0,sessionConfig;
  const auth=(req,res,next)=>{const role=req.headers['x-role'];if(!role)return res.status(401).json({error:'sign in'});req.user={id:req.headers['x-user']||'student-1',role};next();};
  const studentOnly=(req,res,next)=>req.user.role==='student'?next():res.status(403).json({error:'student required'});
- const pool={query:async(sql)=>{assert.match(sql,/^select distinct c.course_id/);return {rows:[{course_id:'speakup-b2'}]}}};
+ const pool={query:async(sql)=>{
+  const q=String(sql).replace(/\s+/g,' ').trim().toLowerCase();
+  if(q.startsWith('select distinct c.course_id'))return {rows:[{course_id:'speakup-b2'}],rowCount:1};
+  if(q.startsWith('select c.id from classes c join enrollments'))return {rows:[{id:'class-1'}],rowCount:1};
+  if(q.startsWith('insert into ai_practice_turns'))return {rows:[{id:1}],rowCount:1};
+  return {rows:[],rowCount:1};
+ }};
  const fetchImpl=async(url,opts)=>{
   if(url.endsWith('/hangup')){hangups++;return new Response('{}')}
   if(url.endsWith('/calls')){upstreamCalls++;assert.equal(opts.body.get('sdp'),'v=0\r\n');sessionConfig=JSON.parse(opts.body.get('session'));return new Response('v=0\r\nanswer',{headers:{location:'/v1/realtime/calls/rtc_test'}})}
@@ -58,12 +69,12 @@ test('voice routes enforce role, ownership, active enrollment, deduplication and
   assert.equal((await post('session',body,{'x-role':'teacher'})).status,403);
   assert.equal((await post('session',body,{Origin:'https://other.example'})).status,403);
   assert.equal((await post('session',{...body,lessonId:'a1-gold-l1'})).status,423);assert.equal(upstreamCalls,0);
-  const session=await (await post('session',body)).json();assert.ok(session.sessionId);
+  const session=await (await post('session',body)).json();assert.ok(session.sessionId);assert.ok(Array.isArray(session.goals));
   assert.equal(sessionConfig.audio.input.turn_detection.create_response,false);assert.equal(sessionConfig.audio.input.turn_detection.eagerness,'low');
-  assert.match(sessionConfig.instructions,/Crime & Justice/);assert.doesNotMatch(JSON.stringify(session),/test-openai/);
+  assert.match(sessionConfig.instructions,/Crime & Justice/);assert.match(sessionConfig.instructions,/hidden conversation goals/);assert.doesNotMatch(JSON.stringify(session),/test-openai/);
   assert.equal((await post('decision',{sessionId:session.sessionId,turnId:'x'},{'x-user':'other'})).status,410);
   const turn={sessionId:session.sessionId,turnId:'1',learnerTurn:'Evidence helps us understand an incident.',coachTurn:'Why is evidence useful?'};
-  const d=await (await post('decision',turn)).json();assert.equal(d.move,'follow_up');assert.match(d.instructions,/CURRENT ACTIVITY/);assert.doesNotMatch(d.instructions,/CURRENT ACTIVITY DATA/);assert.equal(session.maxMinutes,5);assert.equal(sessionConfig.model,'gpt-realtime-2.1-mini');assert.equal(sessionConfig.max_output_tokens,180);assert.equal(sessionConfig.truncation.token_limits.post_instructions,4000);
+  const d=await (await post('decision',turn)).json();assert.equal(d.move,'follow_up');assert.match(d.instructions,/CURRENT ACTIVITY/);assert.doesNotMatch(d.instructions,/CURRENT ACTIVITY DATA/);assert.equal(session.maxMinutes,5);assert.equal(sessionConfig.model,'gpt-realtime-2.1-mini');assert.equal(sessionConfig.max_output_tokens,512);assert.equal(sessionConfig.truncation.token_limits.post_instructions,4000);
   await post('decision',turn);assert.equal(jevCalls,1);
   const help=await (await post('decision',{...turn,turnId:'2',helpRequested:true})).json();assert.equal(help.move,'scaffold');
   service.sessions.get(session.sessionId).expires=Date.now()-1;
