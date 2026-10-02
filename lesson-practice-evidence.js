@@ -280,8 +280,8 @@ function createEvidenceStore({app,auth,pool,access,lessons}){
    const r=await pool.query(`select u.id student_id,u.name,count(s.id)::int sessions,coalesce(sum(s.turn_count),0)::int turns,coalesce(sum(s.word_count),0)::int words,max(s.started_at) last_practice_at,
     coalesce(sum(least(300,greatest(0,extract(epoch from (coalesce(s.ended_at,s.last_event_at)-s.started_at))))),0) seconds
     from enrollments e join users u on u.id=e.user_id
-    left join ai_practice_sessions s on s.student_id=u.id and s.class_id=e.class_id and s.started_at>=now()-($3::text||' days')::interval and ($4::text is null or s.lesson_id=$4)
-    where e.class_id=$1 and u.role='student' group by u.id,u.name order by u.name`,[classId,req.user.id,String(days),lessonId]);
+    left join ai_practice_sessions s on s.student_id=u.id and s.class_id=e.class_id and s.started_at>=now()-($2::text||' days')::interval and ($3::text is null or s.lesson_id=$3)
+    where e.class_id=$1 and u.role='student' group by u.id,u.name order by u.name`,[classId,String(days),lessonId]);
    const students=r.rows.map(x=>({studentId:x.student_id,name:x.name,used:Number(x.sessions)>0,sessions:Number(x.sessions||0),turns:Number(x.turns||0),words:Number(x.words||0),minutes:Math.round(Number(x.seconds||0)/60),lastPracticeAt:x.last_practice_at||null}));
    res.set('Cache-Control','no-store').json({days,class:own.rows[0],counts:{total:students.length,used:students.filter(x=>x.used).length,notUsed:students.filter(x=>!x.used).length},students});
   }catch(e){console.error('AI PRACTICE USAGE FAILED',e.message);res.status(503).json({error:'Practice usage report is temporarily unavailable.'})}
