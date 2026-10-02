@@ -46,6 +46,13 @@
     return String(text||'').replace(new RegExp(`\\b${escaped}\\b`,'i'),to)
   }
   function sentenceParts(text){return (String(text||'').match(/[^.!?]+[.!?]?/g)||[String(text||'')]).map(x=>x.trim()).filter(Boolean)}
+  function gradingNormalize(text){
+    return String(text||'').toLowerCase().replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/[^a-z0-9'&]+/g,' ').replace(/\s+/g,' ').trim()
+  }
+  function retryMatchesShownAnswer(response,state){
+    const answer=gradingNormalize(state?.answer),current=gradingNormalize(response);
+    return Boolean(answer&&current&&answer===current)
+  }
 
   const PRESENT_SIMPLE={
     speak:'speaks',work:'works',want:'wants',need:'needs',like:'likes',live:'lives',study:'studies',go:'goes',do:'does',have:'has',use:'uses',play:'plays',read:'reads',write:'writes',communicate:'communicates',require:'requires',prefer:'prefers',eat:'eats',drink:'drinks',learn:'learns',teach:'teaches',watch:'watches',finish:'finishes',try:'tries',start:'starts',help:'helps',make:'makes'
@@ -130,7 +137,7 @@
     const answer=String(state?.answer||fallbackAnswer||'').trim();if(!answer){showUnavailable('The correct answer could not be determined safely.');return}
     f.innerHTML=`<section class="eg-simple-correction eg-final-answer" aria-live="polite"><div class="eg-answer-card"><span class="eg-check">✓</span><div><strong>Correct answer</strong><p>${esc(answer)}</p></div></div><p class="eg-answer-note">You already had one correction and one retry. We will not add another correction for the same error.</p><button type="button" class="eg-try-btn" data-eg-use-answer>USE CORRECT ANSWER</button></section>`;
     const use=f.querySelector('[data-eg-use-answer]');
-    if(use)use.onclick=()=>{const current=String(box?.value||'');const next=state?.source&&current.includes(state.source)?replaceOnce(current,state.source,answer):answer;if(box){box.value=next;box.disabled=false;box.dispatchEvent(new Event('input',{bubbles:true}));box.dispatchEvent(new Event('change',{bubbles:true}))}flow.dataset.egAnswerSupplied='1';resetState(flow);f.innerHTML='';button.disabled=false;button.textContent='Checking…';button.click()};
+    if(use)use.onclick=()=>{const current=String(box?.value||'');const next=state?.source&&current.includes(state.source)?replaceOnce(current,state.source,answer):answer;if(box){box.value=next;box.disabled=false;box.dispatchEvent(new Event('input',{bubbles:true}));box.dispatchEvent(new Event('change',{bubbles:true}))}flow.dataset.egAnswerSupplied='1';f.innerHTML='';button.disabled=false;button.textContent='Checking…';button.click()};
     f.scrollIntoView({behavior:'smooth',block:'nearest'})
   }
 
@@ -173,9 +180,15 @@
     const box=flow.querySelector('#northstarInput,textarea'),response=String(box?.value||'').trim();
     if(!l||!/^su-b2-l\d+$/.test(String(l.id||''))){showUnavailable('This B2 lesson could not be identified for checking.');return}
     if(!response){showFallback('Write your answer first.');return}
+    const retryState=stateFor(flow,l,phase);
+    if(flow.dataset.egAnswerSupplied==='1'||(retryState.failures>=1&&retryMatchesShownAnswer(response,retryState))){
+      delete flow.dataset.egAnswerSupplied;
+      approveAndContinue(button,flow);
+      return
+    }
     const previousLabel=button.textContent;let outcome=null;button.disabled=true;button.textContent='Checking…';showChecking();
     try{outcome=finalMode?await gradeFinal(button,flow,l,response,phase):await gradeShort(button,flow,l,response,phase)}catch(error){outcome=false;showUnavailable(error?.message)}finally{if(button.isConnected&&button.dataset.semanticApproved!=='1'){button.disabled=false;button.textContent=outcome===false?'Check again':previousLabel}}
   },true);
 
-  window.ENGLISHGATE_NORTHSTAR_SEMANTIC_GRADING={version:'englishgate-context-exact-correction-v1',retryPolicy:'one-correction-one-retry-then-answer',correctionPolicy:'exact-student-sentence-first; close lesson model second'};
+  window.ENGLISHGATE_NORTHSTAR_SEMANTIC_GRADING={version:'englishgate-context-exact-correction-v2',retryPolicy:'displayed-correction-is-deterministic-pass; one-correction-one-retry-then-answer',correctionPolicy:'exact-student-sentence-first; close lesson model second'};
 })();
