@@ -1,6 +1,9 @@
 /* Student invitation for teacher-started EnglishGate AI Conversation rounds. */
 (function(){
  'use strict';
+ if(!document.querySelector('script[data-eg-practice-feedback]')){
+  const s=document.createElement('script');s.src='/assets/lesson-practice-feedback-v1.js?v=1';s.defer=true;s.dataset.egPracticeFeedback='1';document.head.appendChild(s);
+ }
  let banner=null,timer=null,lastRoundId='',lastActive=false;
  const clean=x=>String(x??'').trim();
  function role(){try{return typeof session!=='undefined'?session?.role:null}catch{return null}}
