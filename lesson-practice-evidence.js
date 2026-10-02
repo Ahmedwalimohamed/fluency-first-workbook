@@ -1,6 +1,7 @@
 'use strict';
 
 const crypto=require('crypto');
+const contracts=require('./lesson-practice-contracts');
 const ALLOWED_EVENTS=new Set(['starting','listening','speaking','thinking','ready','microphone_problem','connection_problem']);
 const TRANSFER_STATES=new Set(['observed','partial','struggling','not_observed']);
 const DECISION_ACTIONS=new Set(['use','edit','ignore']);
@@ -10,20 +11,7 @@ const escapeRegex=x=>String(x).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,Number(n)||0));
 
 function goalsFor(context={}){
- if(context.lessonId==='su-b2-l1')return [
-  {id:'introduce',label:'Introduce yourself and say what you do or study',required:true},
-  {id:'detail',label:'Add a useful detail instead of giving only a short answer',required:true},
-  {id:'react',label:'React to something the other speaker says',required:true},
-  {id:'follow_up',label:'Ask one relevant follow-up question',required:true},
-  {id:'duration',label:'Use accurate duration language such as for or since when relevant',required:false},
-  {id:'maintain',label:'Help maintain the interaction naturally',required:true}
- ];
- return [
-  {id:'answer',label:'Answer the current activity question clearly',required:true},
-  {id:'detail',label:'Add one useful detail, reason or example',required:true},
-  {id:'target_language',label:'Use relevant lesson language naturally',required:false},
-  {id:'maintain',label:'Help maintain the interaction',required:true}
- ];
+ return contracts.goalsForContext(context);
 }
 
 function observedVocabulary(text,vocabulary=[]){
@@ -166,7 +154,8 @@ function createEvidenceStore({app,auth,pool,access,lessons}){
   try{
    await ensureSchema();const placeholder=/^\[(speech|transcription)/i.test(clean(learnerTurn,200));
    const count=placeholder?0:words(learnerTurn).length,vocab=placeholder?[]:observedVocabulary(learnerTurn,context?.vocabulary||[]),status=placeholder?'uncertain':'observed';
-   const goal=decision?.goal&&Number(decision.goalConfidence)>=0.75?clean(decision.goal,60):null,goalConfidence=goal?Number(decision.goalConfidence):null;
+   const allowedGoals=new Set(goalsFor(context).map(g=>g.id));
+   const goal=decision?.goal&&allowedGoals.has(decision.goal)&&Number(decision.goalConfidence)>=0.75?clean(decision.goal,60):null,goalConfidence=goal?Number(decision.goalConfidence):null;
    const inserted=await pool.query(`insert into ai_practice_turns(session_id,turn_id,learner_text,coach_text,word_count,evidence_status,teaching_move,move_source,move_confidence,goal_id,goal_confidence,vocabulary_used,help_requested)
     select $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13 where exists(select 1 from ai_practice_sessions where id=$1 and student_id=$14)
     on conflict(session_id,turn_id) do nothing returning id`,[id,turnId,clean(learnerTurn,2000),clean(coachTurn,1200),count,status,clean(decision?.move,40),clean(decision?.source,40),Number.isFinite(Number(decision?.confidence))?Number(decision.confidence):null,goal,goalConfidence,vocab,Boolean(helpRequested),userId]);
@@ -179,21 +168,24 @@ function createEvidenceStore({app,auth,pool,access,lessons}){
   try{await ensureSchema();await pool.query(`update ai_practice_sessions set ended_at=coalesce(ended_at,now()),last_event_at=now(),status='finished' where id=$1 and student_id=$2`,[id,userId])}catch(e){console.error('AI PRACTICE EVIDENCE END FAILED',e.message)}
  }
 
- function lessonContext(lessonId){const l=lessons.get(lessonId);return {lessonId,title:l?.title||lessonId,goals:goalsFor({lessonId})}}
+ function lessonContract(lessonId){return contracts.contractFor(lessons.get(lessonId))||contracts.contractForId(lessonId)}
+ function lessonContext(lessonId){
+  const c=lessonContract(lessonId);return {lessonId,title:c?.title||lessonId,canDo:c?.canDo||'',goals:c?.goals||goalsFor({lessonId}),minMeaningfulTurns:c?.minMeaningfulTurns||2,requiredObserved:c?.requiredObserved||1,transferMission:c?.transferMission||''};
+ }
  function priorityFor(rows,lessonId){
   const participants=rows.filter(r=>Number(r.turn_count)>0);if(!participants.length)return null;const candidates=[];
+  const contract=lessonContract(lessonId),minTurns=Number(contract?.minMeaningfulTurns||2);
   const shortAffected=participants.filter(r=>Number(r.turn_count)>=2&&Number(r.short_answer_count)/Math.max(1,Number(r.turn_count))>=0.5).length;
-  if(shortAffected)candidates.push({key:'extend_answers',title:'Extend answers with one reason or useful detail',affectedCount:shortAffected,confidence:.96,relevance:.9,impact:.9,suggestedMinutes:4,why:`${shortAffected} learner${shortAffected===1?' has':'s have'} repeatedly given answers under five words.`,sequence:['Show one short answer from class evidence.','Model: answer + because/reason/example.','Ask learners to extend one answer orally.','Recheck during the Fluency Mission.']});
+  if(shortAffected)candidates.push({key:'extend_answers',title:'Extend answers with one reason or useful detail',affectedCount:shortAffected,confidence:.96,relevance:.9,impact:.9,suggestedMinutes:4,why:`${shortAffected} learner${shortAffected===1?' has':'s have'} repeatedly given answers under five words.`,sequence:['Show one short answer from class evidence.','Model: answer + reason, detail, or example.','Ask learners to extend one answer orally.','Recheck during the Fluency Mission.']});
   const helpAffected=participants.filter(r=>Number(r.help_count)>0).length;
-  if(helpAffected)candidates.push({key:'independent_response',title:'Build an answer before asking for help',affectedCount:helpAffected,confidence:.9,relevance:.78,impact:.72,suggestedMinutes:3,why:`${helpAffected} learner${helpAffected===1?' used':'s used'} scaffolding during practice.`,sequence:['Give one simple answer frame.','Model one example.','Remove the frame and ask for an independent retry.']});
-  if(lessonId==='su-b2-l1'){
-   const completed=participants.filter(r=>r.ended_at||Number(r.turn_count)>=3);
-   for(const spec of [{id:'follow_up',title:'Natural follow-up questions',impact:1,relevance:1,minutes:5,sequence:['Show a statement from the conversation.','Ask: What could you naturally ask next?','Model one relevant follow-up.','Students ask and answer in pairs.']},{id:'detail',title:'Add useful detail when introducing yourself',impact:.9,relevance:1,minutes:4,sequence:['Compare a one-line introduction with an extended one.','Elicit one extra detail.','Students retry their introductions.']}]){
-    const affected=completed.filter(r=>!r.goal_evidence?.[spec.id]).length;
-    if(affected)candidates.push({key:'goal_'+spec.id,title:spec.title,affectedCount:affected,confidence:.72,relevance:spec.relevance,impact:spec.impact,suggestedMinutes:spec.minutes,why:`Trusted evidence of this goal was not yet observed for ${affected} learner${affected===1?'':'s'}. Treat this as a teaching check, not proof of inability.`,sequence:spec.sequence});
-   }
+  if(helpAffected)candidates.push({key:'independent_response',title:'Build an answer before asking for help',affectedCount:helpAffected,confidence:.9,relevance:.78,impact:.72,suggestedMinutes:3,why:`${helpAffected} learner${helpAffected===1?' used':'s used'} scaffolding during practice.`,sequence:['Give one short answer frame.','Model one example.','Remove the frame and ask for an independent retry.']});
+  const completed=participants.filter(r=>r.ended_at||Number(r.turn_count)>=minTurns);
+  for(const goal of contract?.goals?.filter(g=>g.required)||[]){
+   const affected=completed.filter(r=>!r.goal_evidence?.[goal.id]).length;
+   if(!affected)continue;
+   candidates.push({key:'goal_'+goal.id,title:`Practise: ${goal.label}`,affectedCount:affected,confidence:.72,relevance:1,impact:.92,suggestedMinutes:4,why:`Trusted evidence of this lesson goal was not yet observed for ${affected} learner${affected===1?'':'s'}. Treat this as a teaching check, not proof of inability.`,sequence:['Show or model one clear example.','Elicit the target behaviour from learners.','Give a short paired retry.','Recheck it during the Fluency Mission.']});
   }
-  if(!candidates.length)return {key:'maintain_and_transfer',title:'Move to human performance',affectedCount:0,confidence:.9,relevance:1,impact:.8,suggestedMinutes:0,why:'No high-priority class-wide issue is supported by the current evidence.',sequence:['Start the Fluency Mission.','Observe whether learners transfer the practised language to human interaction.']};
+  if(!candidates.length)return {key:'maintain_and_transfer',title:'Move to human performance',affectedCount:0,confidence:.9,relevance:1,impact:.8,suggestedMinutes:0,why:'No high-priority class-wide issue is supported by the current trusted evidence.',sequence:['Start the Fluency Mission.','Observe whether learners transfer the practised language to human interaction.']};
   for(const c of candidates)c.score=Number((c.affectedCount*c.confidence*c.relevance*c.impact).toFixed(3));return candidates.sort((a,b)=>b.score-a.score)[0];
  }
  function signalFor(row){
@@ -206,6 +198,17 @@ function createEvidenceStore({app,auth,pool,access,lessons}){
 
  app.post('/api/lesson-practice/event',auth,studentOnly,sameOrigin,async(req,res)=>{
   const id=clean(req.body?.sessionId,80),type=clean(req.body?.type,40);if(!id||!ALLOWED_EVENTS.has(type))return res.status(400).json({error:'Invalid practice event.'});await event({id,userId:req.user.id,type,detail:req.body?.detail});res.json({ok:true});
+ });
+
+ app.get('/api/lesson-practice/student/feedback',auth,studentOnly,async(req,res)=>{
+  try{
+   await ensureSchema();const requested=clean(req.query.sessionId,80);
+   const params=[req.user.id];let filter='';if(requested){params.push(requested);filter=' and id=$2'}
+   const r=await pool.query(`select * from ai_practice_sessions where student_id=$1${filter} order by started_at desc limit 1`,params);
+   const row=r.rows[0];if(!row)return res.status(404).json({error:'No speaking practice evidence is available yet.'});
+   const contract=lessonContract(row.lesson_id);if(!contract)return res.status(404).json({error:'This lesson does not have a speaking feedback contract yet.'});
+   res.set('Cache-Control','no-store').json({feedback:contracts.feedbackForSession(contract,row)});
+  }catch(e){console.error('AI PRACTICE STUDENT FEEDBACK FAILED',e.message);res.status(503).json({error:'Your speaking feedback is temporarily unavailable.'})}
  });
 
  app.get('/api/lesson-practice/student/round',auth,studentOnly,async(req,res)=>{
