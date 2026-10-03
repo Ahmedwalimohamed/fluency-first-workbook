@@ -1,0 +1,33 @@
+name: Course Factory Gold QA
+
+on:
+  pull_request:
+    paths:
+      - 'course-factory/**'
+      - 'scripts/qa-course-factory-*.mjs'
+      - '.github/workflows/course-factory-gold.yml'
+  push:
+    branches:
+      - 'course-factory/**'
+    paths:
+      - 'course-factory/**'
+      - 'scripts/qa-course-factory-*.mjs'
+      - '.github/workflows/course-factory-gold.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  b1-gold-lesson-4:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run deterministic Course Factory QA
+        run: node scripts/qa-course-factory-b1-l4.mjs
