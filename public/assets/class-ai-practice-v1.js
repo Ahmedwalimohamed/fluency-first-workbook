@@ -1,15 +1,50 @@
 /* Student invitation for teacher-started EnglishGate AI Conversation rounds. */
 (function(){
  'use strict';
+ const clean=x=>String(x??'').trim();
+ function currentLessonSnapshot(){
+  try{if(typeof lesson==='function'){const l=lesson();if(l)return l}}catch{}
+  return {id:document.querySelector('[data-lesson-id]')?.dataset?.lessonId||'',title:document.querySelector('#pageTitle')?.textContent||''};
+ }
+ function canonicalLessonId(rawId,titleHint=''){
+  const id=clean(rawId);
+  if(/^su-b2-l\d+$/.test(id)||/^su-b1-l\d+$/.test(id)||/^a1-gold-l(?:[1-9]|1\d|2[0-2])$/.test(id))return id;
+  const title=clean(titleHint||currentLessonSnapshot()?.title).toLowerCase();
+  if(!title)return id;
+  const candidates=[...(Array.isArray(window.SPEAKUP_B2_BLUEPRINT)?window.SPEAKUP_B2_BLUEPRINT:[]),...((window.A1_GOLD_V1_BOOK?.lessons)||[])];
+  const match=candidates.find(x=>clean(x?.title).toLowerCase()===title&&x?.id);
+  return match?.id||id;
+ }
+ if(!window.__egPracticeLessonCompatV1){
+  window.__egPracticeLessonCompatV1=true;
+  const nativeFetch=window.fetch.bind(window);
+  window.fetch=function(input,init={}){
+   const rawUrl=typeof input==='string'?input:(input instanceof URL?input.toString():'');
+   if(!rawUrl)return nativeFetch(input,init);
+   try{
+    const url=new URL(rawUrl,window.location.href);
+    if(url.pathname.startsWith('/api/lesson-practice/teacher/')){
+     const snap=currentLessonSnapshot(),title=snap?.title||'';
+     if(url.searchParams.has('lessonId'))url.searchParams.set('lessonId',canonicalLessonId(url.searchParams.get('lessonId'),title));
+     let nextInit=init;
+     if(typeof init?.body==='string'&&init.body){
+      try{const body=JSON.parse(init.body);if(body&&body.lessonId){body.lessonId=canonicalLessonId(body.lessonId,title);nextInit={...init,body:JSON.stringify(body)}}}catch{}
+     }
+     const nextInput=typeof input==='string'?(url.origin===window.location.origin?url.pathname+url.search:url.toString()):url;
+     return nativeFetch(nextInput,nextInit);
+    }
+   }catch{}
+   return nativeFetch(input,init);
+  };
+ }
  if(!document.querySelector('script[data-eg-practice-feedback]')){
   const s=document.createElement('script');s.src='/assets/lesson-practice-feedback-v1.js?v=1';s.defer=true;s.dataset.egPracticeFeedback='1';document.head.appendChild(s);
  }
  let banner=null,timer=null,lastRoundId='',lastActive=false;
- const clean=x=>String(x??'').trim();
  function role(){try{return typeof session!=='undefined'?session?.role:null}catch{return null}}
  function currentLessonId(){
-  try{if(typeof lesson==='function')return lesson()?.id||''}catch{}
-  try{return document.querySelector('[data-lesson-id]')?.dataset?.lessonId||''}catch{return''}
+  const snap=currentLessonSnapshot();
+  return canonicalLessonId(snap?.id||'',snap?.title||'');
  }
  function remove(){banner?.remove();banner=null}
  function ensure(round){
