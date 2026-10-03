@@ -5,36 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow" />
   <title>EnglishGate · B1 Gold Lesson Book</title>
-  <link rel="stylesheet" href="/course-factory-preview.css?v=2" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/teacher-whiteboard-v1.css?v=1" />
+  <link rel="stylesheet" href="/teacher-timer-v1.css?v=1" />
+  <style>
+    body{background:#f4f7fb}
+    .course-factory-teacher-preview{max-width:1280px;margin:0 auto;padding:24px 24px 56px}
+    .course-factory-teacher-preview .eg-lesson{max-width:1180px;margin:0 auto}
+    .course-factory-teacher-preview .eg-lesson-header{background:#fff;border:1px solid #dbe4ee;border-radius:18px;padding:18px 20px;margin-bottom:14px;box-shadow:0 6px 20px rgba(15,23,42,.04)}
+    .course-factory-teacher-preview .eg-lesson-header-row{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+    .course-factory-teacher-preview .eg-lesson-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .course-factory-teacher-preview .eg-lesson-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px;align-items:start}
+    .course-factory-teacher-preview .eg-stage-list{position:sticky;top:18px;background:#fff;border:1px solid #dbe4ee;border-radius:16px;padding:10px;box-shadow:0 5px 16px rgba(15,23,42,.035)}
+    .course-factory-teacher-preview .eg-stage-list nav{display:grid;gap:7px}
+    .course-factory-teacher-preview .eg-stage{width:100%;min-height:46px;border:1px solid transparent;border-radius:10px;background:#fff;color:#475569;text-align:left;padding:10px 11px;font-weight:800;cursor:pointer}
+    .course-factory-teacher-preview .eg-stage:hover{background:#f8fafc}
+    .course-factory-teacher-preview .eg-stage.active{border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8}
+    .course-factory-teacher-preview .eg-goal{margin-top:10px;padding:11px 12px;border-left:3px solid #2563eb;border-radius:9px;background:#eff6ff;color:#1e3a8a;font-size:.88rem;line-height:1.5}
+    .course-factory-teacher-preview .eg-teaching-surface{min-width:0;background:#fff;border:1px solid #dbe4ee;border-radius:18px;padding:18px 20px 20px;box-shadow:0 7px 22px rgba(15,23,42,.04)}
+    .course-factory-teacher-preview .eg-stage-heading{display:flex;justify-content:space-between;gap:12px;align-items:end;border-bottom:1px solid #eef2f7;padding-bottom:12px;margin-bottom:10px}
+    .course-factory-teacher-preview .eg-stage-heading small{color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+    .course-factory-teacher-preview .eg-stage-heading h2{margin:3px 0 0;color:#0f172a}
+    .course-factory-teacher-preview .live-book-content{min-height:390px;padding:16px 2px 8px;color:#1e293b}
+    .course-factory-teacher-preview .live-book-content h1{font-size:clamp(1.7rem,3vw,2.45rem);line-height:1.18;color:#0f172a}
+    .course-factory-teacher-preview .live-book-content h2{margin-top:24px;color:#0f172a}
+    .course-factory-teacher-preview .live-book-content p,.course-factory-teacher-preview .live-book-content li{font-size:1rem;line-height:1.65}
+    .course-factory-teacher-preview .eg-live-card{padding:16px 17px;margin:12px 0;border:1px solid #e2e8f0;border-radius:14px;background:#fff}
+    .course-factory-teacher-preview .eg-live-card.soft{background:#f8fafc}
+    .course-factory-teacher-preview .eg-live-card.callout{border-left:4px solid #2563eb;background:#eff6ff}
+    .course-factory-teacher-preview .eg-language-chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+    .course-factory-teacher-preview .eg-language-chip{padding:7px 10px;border:1px solid #cbd5e1;border-radius:999px;background:#fff;font-weight:800;color:#334155}
+    .course-factory-teacher-preview .eg-lesson-footer{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;border-top:1px solid #eef2f7;padding-top:14px;margin-top:8px}
+    .course-factory-teacher-preview .eg-lesson-footer .next{justify-self:end}
+    .course-factory-teacher-preview .eg-stage-progress{color:#64748b;font-size:.82rem;font-weight:800}
+    .course-factory-teacher-preview .preview-pill{padding:6px 9px;border-radius:999px;background:#f1f5f9;color:#64748b;font-size:.72rem;font-weight:900}
+    .course-factory-teacher-preview .teacher-presentation-chrome{display:none}
+    body.teacher-presentation-mode .course-factory-teacher-preview{max-width:none;padding:10px;background:#fff}
+    body.teacher-presentation-mode .course-factory-teacher-preview .eg-stage-list{display:none}
+    body.teacher-presentation-mode .course-factory-teacher-preview .eg-lesson-layout{display:block}
+    body.teacher-presentation-mode .course-factory-teacher-preview .eg-lesson-header{display:none}
+    body.teacher-presentation-mode .course-factory-teacher-preview .eg-teaching-surface{border:0;box-shadow:none;max-width:1180px;margin:0 auto}
+    body.teacher-presentation-mode .course-factory-teacher-preview .teacher-presentation-chrome{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}
+    @media(max-width:820px){
+      .course-factory-teacher-preview{padding:12px 10px 36px}
+      .course-factory-teacher-preview .eg-lesson-layout{grid-template-columns:1fr}
+      .course-factory-teacher-preview .eg-stage-list{position:static;overflow:auto}
+      .course-factory-teacher-preview .eg-stage-list nav{display:flex;min-width:max-content}
+      .course-factory-teacher-preview .eg-stage{width:auto;white-space:nowrap}
+      .course-factory-teacher-preview .eg-teaching-surface{padding:14px}
+      .course-factory-teacher-preview .eg-lesson-footer{grid-template-columns:1fr 1fr}
+      .course-factory-teacher-preview .eg-stage-progress{display:none}
+    }
+  </style>
 </head>
-<body>
-  <div class="cf-shell">
-    <header class="cf-topbar">
-      <div class="cf-brand">
-        <div class="cf-mark">EG</div>
-        <div><strong>EnglishGate</strong><span>B1 Gold · Lesson Book</span></div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <a class="cf-btn secondary" href="/course-factory-b1-gold-l4-preview.html">Choose surface</a>
-        <a class="cf-btn" href="/course-factory-b1-gold-l4-workbook.html">Open Workbook</a>
-      </div>
-    </header>
-
-    <div class="cf-layout">
-      <nav class="cf-nav" id="lessonBookNav" aria-label="Lesson Book sections"></nav>
-      <main class="cf-main" id="lessonBookMain"><div class="cf-loading">Loading Lesson Book…</div></main>
-      <aside class="cf-side">
-        <section class="cf-side-card">
-          <span class="cf-kicker">Teacher-led purpose</span>
-          <p>Use this surface to teach, prompt, listen, correct selectively, and run the live Fluency Mission.</p>
-        </section>
-        <section class="cf-side-card">
-          <span class="cf-kicker">Do not do here</span>
-          <p style="margin-bottom:0">No mastery score, no reading/listening quiz, no writing unlock, and no Boost routing. Those belong to the Workbook.</p>
-        </section>
-      </aside>
-    </div>
+<body class="role-teacher teacher-live-active">
+  <div class="course-factory-teacher-preview">
+    <main id="content" aria-live="polite">
+      <div class="empty-note">Loading B1 Gold Lesson Book…</div>
+    </main>
   </div>
-  <script src="/course-factory-b1-gold-l4-lesson-book.js?v=1"></script>
+  <script>window.session={id:'course-factory-preview',name:'Preview Teacher',role:'teacher'};</script>
+  <script src="/course-factory-b1-gold-l4-lesson-book.js?v=2"></script>
+  <script src="/teacher-whiteboard-v1.js?v=1"></script>
+  <script src="/teacher-timer-v1.js?v=1"></script>
 </body>
 </html>
