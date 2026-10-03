@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'course-factory/**'
+      - 'public/course-factory-**'
       - 'scripts/qa-course-factory-*.mjs'
       - 'scripts/run-jev-course-factory-*.mjs'
       - 'api/vercel-parity-entry.js'
@@ -13,6 +14,7 @@ on:
       - 'course-factory/**'
     paths:
       - 'course-factory/**'
+      - 'public/course-factory-**'
       - 'scripts/qa-course-factory-*.mjs'
       - 'scripts/run-jev-course-factory-*.mjs'
       - 'api/vercel-parity-entry.js'
@@ -41,3 +43,5 @@ jobs:
         run: node scripts/qa-course-factory-b1-l4.mjs
       - name: Run teacher-reviewed Course Factory QA
         run: node scripts/qa-course-factory-b1-l4-reviewed.mjs
+      - name: Run student preview QA
+        run: node scripts/qa-course-factory-b1-l4-preview.mjs
