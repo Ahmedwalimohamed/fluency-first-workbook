@@ -10,7 +10,6 @@ function makeHarness(){
     post:(p,...h)=>routes.set('POST '+p,h),
     patch:(p,...h)=>routes.set('PATCH '+p,h),
   };
-  const now=Date.now();
   const state={
     classRow:{id:'class-1',name:'B2 Live',course_id:'speakup-b2',teacher_id:'teacher-1'},
     students:[{id:'student-1',name:'Amina'}],
@@ -102,7 +101,14 @@ function makeHarness(){
     const handlers=routes.get(method+' '+path);assert.ok(handlers,'route exists: '+method+' '+path);
     const out={statusCode:200,headers:{},body:null};
     const res={status(n){out.statusCode=n;return this},set(k,v){out.headers[k]=v;return this},json(v){out.body=v;return this}};
-    let i=0;const next=async()=>{const h=handlers[i++];if(h)await h(req,res,next)};await next();return out;
+    let i=0;
+    const run=async()=>{
+      const h=handlers[i++];if(!h)return;
+      let nested=null;const next=()=>{nested=run();return nested};
+      await Promise.resolve(h(req,res,next));
+      if(nested)await nested;
+    };
+    await run();return out;
   }
   const teacher=(extra={})=>({user:{id:'teacher-1',role:'teacher'},body:{},query:{},params:{},get:()=>'',...extra});
   const student=(extra={})=>({user:{id:'student-1',role:'student'},body:{},query:{},params:{},get:()=>'',...extra});
