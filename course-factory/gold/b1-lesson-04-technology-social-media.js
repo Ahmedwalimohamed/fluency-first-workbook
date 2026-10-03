@@ -103,7 +103,7 @@ const lesson = {
         { id: 'r1', type: 'short', question: 'Why does Amina still need her phone?', answer: 'For work messages, family groups and online learning.', skill: 'detail' },
         { id: 'r2', type: 'short', question: 'What often happened after Amina checked one notification?', answer: 'A short check often became about twenty minutes of scrolling.', skill: 'detail' },
         { id: 'r3', type: 'short', question: 'Name two changes Amina made to her phone or routine.', answer: 'Any two: turned off most notifications; moved entertainment apps; set a screen-time reminder; left the phone in another room during study.', skill: 'detail' },
-        { id: 'r4', type: 'mcq', question: 'What was Amina mainly worried about at first?', options: ['Missing something important', 'Breaking her phone', 'Paying for a new platform'], answer: 'Missing something important', skill: 'detail' },
+        { id: 'r4', type: 'mcq', question: 'What was Amina mainly worried about at first?', options: ['Breaking her phone', 'Missing something important', 'Paying for a new platform'], answer: 'Missing something important', skill: 'detail' },
         { id: 'r5', type: 'short', question: 'What two improvements does Amina report?', answer: 'She has been concentrating better and sleeping earlier.', skill: 'detail' },
         { id: 'r6', type: 'short', question: 'What is the main idea of the final paragraph?', answer: 'The goal is controlled, deliberate technology use rather than a perfect or phone-free routine.', skill: 'gist-inference' }
       ]
@@ -117,10 +117,10 @@ const lesson = {
       speedControl: true,
       audioScript: `Last month, three people in our office noticed that lunch had become very quiet because everyone was looking at a phone. We decided to try one small change: during lunch, phones stay in bags unless someone is expecting an urgent call. We have been testing the idea for three weeks. At first, a few people felt uncomfortable because they were used to checking messages immediately. Nobody wanted a strict rule, so we agreed that joining the experiment was optional. The interesting thing is that more people have been joining us each week. We have been talking more about our families, weekend plans and problems at work. I still check my phone before lunch and again when I finish. For me, that makes the rule realistic. It does not say that phones are bad. It simply creates a short time when we choose to pay attention to the people sitting with us.`,
       questions: [
-        { id: 'l1', type: 'mcq', question: 'Why did the group start the experiment?', options: ['Lunch had become quiet because people were using phones', 'The office internet stopped working', 'They wanted to buy new phones'], answer: 'Lunch had become quiet because people were using phones.', skill: 'gist' },
+        { id: 'l1', type: 'mcq', question: 'Why did the group start the experiment?', options: ['The office internet stopped working', 'Lunch had become quiet because people were using phones', 'They wanted to buy new phones'], answer: 'Lunch had become quiet because people were using phones', skill: 'gist' },
         { id: 'l2', type: 'short', question: 'How long have they been testing the idea?', answer: 'For three weeks.', skill: 'detail' },
         { id: 'l3', type: 'short', question: 'Why did some people feel uncomfortable at first?', answer: 'They were used to checking messages immediately.', skill: 'detail' },
-        { id: 'l4', type: 'mcq', question: 'Is the lunch rule compulsory?', options: ['Yes, for everyone', 'No, joining is optional', 'Only for managers'], answer: 'No, joining is optional', skill: 'detail' },
+        { id: 'l4', type: 'mcq', question: 'Is the lunch rule compulsory?', options: ['Yes, for everyone', 'Only for managers', 'No, joining is optional'], answer: 'No, joining is optional', skill: 'detail' },
         { id: 'l5', type: 'short', question: 'What has been changing during lunch?', answer: 'More people have been joining and they have been talking more.', skill: 'change-over-time' },
         { id: 'l6', type: 'short', question: 'Why does the speaker think the rule is realistic?', answer: 'Because people can still check phones before and after lunch; it only creates a short phone-free period.', skill: 'reason' }
       ]
@@ -134,12 +134,12 @@ const lesson = {
         'Common time phrases include for, since, recently, lately and all week.'
       ],
       items: [
-        { id: 'g1', prompt: 'I ___ my notifications less often this week.', options: ['have been checking', 'am check', 'checked since'], answer: 'have been checking' },
-        { id: 'g2', prompt: 'She ___ a screen-time limit since Monday.', options: ['has been trying', 'have been try', 'is tried'], answer: 'has been trying' },
+        { id: 'g1', prompt: 'I ___ my notifications less often this week.', options: ['am check', 'have been checking', 'checked since'], answer: 'have been checking' },
+        { id: 'g2', prompt: 'She ___ a screen-time limit since Monday.', options: ['is tried', 'have been try', 'has been trying'], answer: 'has been trying' },
         { id: 'g3', prompt: 'We ___ phones away during lunch for three weeks.', options: ['have been putting', 'has been putting', 'putting'], answer: 'have been putting' },
-        { id: 'g4', prompt: 'How long ___ you ___ that platform?', options: ['have / been using', 'are / use', 'did / been use'], answer: 'have / been using' },
-        { id: 'g5', prompt: 'My brother ___ late because he has been watching videos.', options: ['has been sleeping', 'have sleep', 'is been sleeping'], answer: 'has been sleeping' },
-        { id: 'g6', prompt: 'They ___ their privacy settings recently.', options: ['have been changing', 'has been change', 'were been changing'], answer: 'have been changing' },
+        { id: 'g4', prompt: 'How long ___ you ___ that platform?', options: ['are / use', 'have / been using', 'did / been use'], answer: 'have / been using' },
+        { id: 'g5', prompt: 'My brother ___ late because he has been watching videos.', options: ['have sleep', 'is been sleeping', 'has been sleeping'], answer: 'has been sleeping' },
+        { id: 'g6', prompt: 'They ___ their privacy settings recently.', options: ['has been change', 'have been changing', 'were been changing'], answer: 'have been changing' },
         { id: 'g7', prompt: 'Choose the sentence that focuses most clearly on the ongoing activity.', options: ['I have been reducing my screen time.', 'I reduced my screen time yesterday.', 'I reduce it every Friday.'], answer: 'I have been reducing my screen time.' },
         { id: 'g8', prompt: 'Complete naturally: “Since I turned off notifications, I ___.”', type: 'open', answerGuide: 'A meaningful Present Perfect Continuous clause, e.g. “have been concentrating better.”' }
       ],
