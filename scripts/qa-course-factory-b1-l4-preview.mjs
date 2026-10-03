@@ -11,6 +11,7 @@ const workbookHtml=read('public/course-factory-b1-gold-l4-workbook.html');
 const workbookJs=read('public/course-factory-b1-gold-l4-workbook.js');
 const northstarCss=read('public/b2-lesson1-microflow-v1.css');
 const appJs=read('public/app.js');
+const productionIndex=read('public/index.html');
 const api=read('api/vercel-parity-entry.js');
 
 for(const file of [
@@ -41,6 +42,15 @@ const lessonBookWorkbookForbidden=[
   /boostCard/
 ];
 
+const temporaryLessonUiForbidden=[
+  /course-factory-teacher-preview/,
+  /eg-live-card/,
+  /eg-language-chip/,
+  /preview-pill/,
+  /eg-lesson-header-row/,
+  /<style>/i
+];
+
 const workbookTeacherFlowForbidden=[
   /teacherMove/,
   /\['mission','Fluency Mission'\]/,
@@ -48,25 +58,38 @@ const workbookTeacherFlowForbidden=[
 ];
 
 const landingLower=landing.toLowerCase();
+const productionCssMarkers=[
+  'englishgate-unified-ui-v1.css',
+  'englishgate-blue-red-white-v1.css',
+  'englishgate-lesson-player-design-v2.css',
+  'englishgate-teacher-design-v1.css',
+  'teacher-whiteboard-v1.css',
+  'englishgate-b2-premium-v3.css',
+  'b2-learning-surface-v1.css'
+];
 const checks=[
   ['landing clearly separates Lesson Book and Workbook',landingLower.includes('lesson book')&&landingLower.includes('workbook')&&landingLower.includes('teacher-led')&&landingLower.includes('student practice')],
   ['landing links to Lesson Book',landing.includes('/course-factory-b1-gold-l4-lesson-book.html')],
   ['landing links to Workbook',landing.includes('/course-factory-b1-gold-l4-workbook.html')],
 
-  ['Lesson Book loads the shared EnglishGate styles',lessonBookHtml.includes('href="/styles.css"')],
-  ['Lesson Book loads current teacher Whiteboard and Timer tools',lessonBookHtml.includes('/teacher-whiteboard-v1.css?v=1')&&lessonBookHtml.includes('/teacher-whiteboard-v1.js?v=1')&&lessonBookHtml.includes('/teacher-timer-v1.css?v=1')&&lessonBookHtml.includes('/teacher-timer-v1.js?v=1')],
-  ['Lesson Book loads current teacher-player runtime',lessonBookHtml.includes('/course-factory-b1-gold-l4-lesson-book.js?v=2')],
+  ['Lesson Book uses production EnglishGate CSS stack',productionCssMarkers.every(marker=>lessonBookHtml.includes(marker)&&productionIndex.includes(marker))],
+  ['Lesson Book uses production app shell',lessonBookHtml.includes('id="app" class="app"')&&lessonBookHtml.includes('class="sidebar"')&&lessonBookHtml.includes('class="main"')&&lessonBookHtml.includes('class="topbar"')&&lessonBookHtml.includes('id="content" class="content"')],
+  ['Lesson Book uses real teacher navigation chrome',lessonBookHtml.includes('Overview')&&lessonBookHtml.includes('Teach')&&lessonBookHtml.includes('Workbooks')&&lessonBookHtml.includes('Students')&&lessonBookHtml.includes('Needs review')&&lessonBookHtml.includes('Reports')],
+  ['Lesson Book loads current teacher Whiteboard and Timer tools',lessonBookHtml.includes('/teacher-whiteboard-v1.css?v=8')&&lessonBookHtml.includes('/teacher-whiteboard-v1.js?v=7')&&lessonBookHtml.includes('/teacher-timer-v1.js?v=1')],
+  ['Lesson Book loads production-parity runtime',lessonBookHtml.includes('/course-factory-b1-gold-l4-lesson-book.js?v=3')],
+  ['Lesson Book removes temporary custom preview CSS and chrome',temporaryLessonUiForbidden.every(pattern=>!pattern.test(lessonBookHtml)&&!pattern.test(lessonBookJs))],
   ['Lesson Book enters teacher live mode',lessonBookHtml.includes('role-teacher teacher-live-active')&&lessonBookJs.includes("document.body.classList.add('role-teacher','teacher-live-active')")],
-  ['Lesson Book has exactly five teacher-led stages',lessonBookJs.includes("{key:'warmup',label:'Warm-up'}")&&lessonBookJs.includes("{key:'language',label:'Language briefing'}")&&lessonBookJs.includes("{key:'discussion',label:'Guided discussion'}")&&lessonBookJs.includes("{key:'mission',label:'Fluency Mission'}")&&lessonBookJs.includes("{key:'feedback',label:'Feedback & retry'}")],
-  ['Lesson Book reuses canonical teacher player shell',lessonBookJs.includes('class="eg-lesson"')&&lessonBookJs.includes('eg-lesson-header')&&lessonBookJs.includes('eg-stage-list')&&lessonBookJs.includes('class="eg-stage ')&&lessonBookJs.includes('eg-teaching-surface')&&lessonBookJs.includes('eg-stage-content')&&lessonBookJs.includes('eg-lesson-footer')],
+  ['Lesson Book has five teacher-led stages',lessonBookJs.includes("{key:'warmup',label:'Warm Up'}")&&lessonBookJs.includes("{key:'language',label:'Vocabulary & Language'}")&&lessonBookJs.includes("{key:'discussion',label:'Guided Discussion'}")&&lessonBookJs.includes("{key:'mission',label:'Fluency Mission'}")&&lessonBookJs.includes("{key:'feedback',label:'Feedback & Retry'}")],
+  ['Lesson Book mirrors canonical teacher lesson markup',lessonBookJs.includes('class="eg-lesson"')&&lessonBookJs.includes('eg-lesson-header-actions')&&lessonBookJs.includes('eg-lesson-layout')&&lessonBookJs.includes('eg-stage-list')&&lessonBookJs.includes("?'is-current':''")&&lessonBookJs.includes('eg-teaching-surface')&&lessonBookJs.includes('live-book-content eg-stage-content')&&lessonBookJs.includes('eg-lesson-footer')],
+  ['Lesson Book mirrors canonical B2 presentation chrome',lessonBookJs.includes('teacher-presentation-chrome')&&lessonBookJs.includes('teacher-presentation-title')&&lessonBookJs.includes('teacher-presentation-stages')&&lessonBookJs.includes('teacher-presentation-stage')&&lessonBookJs.includes('data-presentation-toggle')],
+  ['Lesson Book mirrors canonical teacher annotation surface',lessonBookJs.includes('teacher-annotation-stage')&&lessonBookJs.includes('teacher-annotation-text-layer')&&lessonBookJs.includes('teacher-annotation-canvas')&&lessonBookJs.includes('teacher-laser-pointer')],
   ['Lesson Book keeps canonical live teacher tools slot',lessonBookJs.includes('live-class-tools live-class-tools-whiteboard-only')&&lessonBookJs.includes('live-tool-actions')],
-  ['Lesson Book preserves presentation mode',lessonBookJs.includes('teacher-presentation-chrome')&&lessonBookJs.includes('data-presentation-toggle')&&lessonBookJs.includes("teacher-presentation-mode")],
-  ['Lesson Book preserves Previous and Next stage navigation',lessonBookJs.includes('data-prev-stage')&&lessonBookJs.includes('data-next-stage')&&lessonBookJs.includes('Stage ${index+1} of ${STAGES.length}')],
-  ['Lesson Book hands off to matching Workbook',lessonBookJs.includes('/course-factory-b1-gold-l4-workbook.html')&&lessonBookJs.includes('Open matching Workbook')],
-  ['Lesson Book no longer uses temporary custom Overview/sidebar engine',!lessonBookJs.includes("['overview','Overview']")&&!lessonBookJs.includes('lessonBookNav')&&!lessonBookJs.includes('lessonBookMain')&&!lessonBookHtml.includes('cf-layout')],
+  ['Lesson Book uses native B2 content renderer classes',lessonBookJs.includes('live-book-section')&&lessonBookJs.includes('live-book-subhead')&&lessonBookJs.includes('live-prompt-grid')&&lessonBookJs.includes('live-prompt-row')&&lessonBookJs.includes('live-vocab-table')&&lessonBookJs.includes('live-vocab-row')&&lessonBookJs.includes('live-check-row')],
+  ['Lesson Book preserves Previous and Next stage navigation',lessonBookJs.includes('id="prevLiveSection"')&&lessonBookJs.includes('id="nextLiveSection"')&&lessonBookJs.includes('Stage ${index+1} of ${total}')],
+  ['Lesson Book hands off to matching Workbook',lessonBookJs.includes('/course-factory-b1-gold-l4-workbook.html')&&lessonBookJs.includes('Open matching workbook')],
   ['Lesson Book stays teacher-led rather than Workbook-scored',lessonBookWorkbookForbidden.every(pattern=>!pattern.test(lessonBookJs))],
   ['Lesson Book keeps independent evidence out of live stages',!lessonBookJs.includes('renderReading(')&&!lessonBookJs.includes('renderListening(')&&!lessonBookJs.includes('renderWriting(')],
-  ['Lesson Book architecture matches canonical app player vocabulary',appJs.includes('eg-lesson-layout')&&appJs.includes('eg-stage-list')&&appJs.includes('eg-teaching-surface')&&appJs.includes('teacher-presentation-chrome')&&appJs.includes('live-class-tools')],
+  ['Lesson Book architecture vocabulary exists in canonical app player',appJs.includes('eg-lesson-header-actions')&&appJs.includes('eg-lesson-layout')&&appJs.includes('eg-stage-list')&&appJs.includes('eg-teaching-surface')&&appJs.includes('teacher-presentation-title')&&appJs.includes('teacher-annotation-canvas')&&appJs.includes('live-class-tools')],
 
   ['Workbook loads the shared current Northstar CSS',workbookHtml.includes('/b2-lesson1-microflow-v1.css?v=1')],
   ['Workbook loads its current-engine runtime',workbookHtml.includes('/course-factory-b1-gold-l4-workbook.js?v=2')],
@@ -93,5 +116,5 @@ const checks=[
 
 let failed=0;
 for(const [name,ok] of checks){console.log(`${ok?'PASS':'FAIL'}  ${name}`);if(!ok)failed++}
-if(failed){console.error(`B1 Gold current-engine preview QA failed: ${failed} check(s).`);process.exit(1)}
-console.log(`B1 Gold current-engine preview QA passed: ${checks.length}/${checks.length}.`);
+if(failed){console.error(`B1 Gold production-parity preview QA failed: ${failed} check(s).`);process.exit(1)}
+console.log(`B1 Gold production-parity preview QA passed: ${checks.length}/${checks.length}.`);
