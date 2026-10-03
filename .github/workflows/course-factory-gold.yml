@@ -6,6 +6,7 @@ on:
       - 'course-factory/**'
       - 'public/course-factory-**'
       - 'scripts/qa-course-factory-*.mjs'
+      - 'scripts/test-course-factory-*.mjs'
       - 'scripts/run-jev-course-factory-*.mjs'
       - 'api/vercel-parity-entry.js'
       - '.github/workflows/course-factory-gold.yml'
@@ -16,6 +17,7 @@ on:
       - 'course-factory/**'
       - 'public/course-factory-**'
       - 'scripts/qa-course-factory-*.mjs'
+      - 'scripts/test-course-factory-*.mjs'
       - 'scripts/run-jev-course-factory-*.mjs'
       - 'api/vercel-parity-entry.js'
       - '.github/workflows/course-factory-gold.yml'
@@ -45,3 +47,5 @@ jobs:
         run: node scripts/qa-course-factory-b1-l4-reviewed.mjs
       - name: Run student preview QA
         run: node scripts/qa-course-factory-b1-l4-preview.mjs
+      - name: Run student journey proof
+        run: node scripts/test-course-factory-b1-l4-student-flow.mjs
