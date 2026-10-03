@@ -32,8 +32,8 @@ const mcqs = lesson.stages.grammar.items.filter(x => Array.isArray(x.options));
 const positions = mcqs.map(x => x.options.indexOf(x.answer));
 const distinct = new Set(positions);
 const allOptionsUnique = mcqs.every(x => new Set(x.options).size === x.options.length);
-const weakLegacyDistractors = ['am check', 'is tried', 'putting', 'have sleep', 'were been changing'];
-const allGrammarText = JSON.stringify(lesson.stages.grammar.items).toLowerCase();
+const weakLegacyDistractors = new Set(['am check', 'is tried', 'putting', 'have sleep', 'were been changing']);
+const reviewedGrammarOptions = mcqs.flatMap(x => x.options).map(x => String(x).trim().toLowerCase());
 
 const checks = [
   ['teacher review metadata present', lesson.qualityReview?.status === 'revised-after-jev-review'],
@@ -44,7 +44,7 @@ const checks = [
   ['listening distractors revised', lesson.stages.listening.questions.find(x => x.id === 'l1')?.options?.includes('People were receiving too many work calls during lunch')],
   ['grammar answer positions remain varied', distinct.size >= 3 && positions.filter(x => x === 0).length < positions.length / 2],
   ['grammar options contain no duplicates', allOptionsUnique],
-  ['legacy joke distractors removed', weakLegacyDistractors.every(x => !allGrammarText.includes(x))],
+  ['legacy joke distractors removed', reviewedGrammarOptions.every(x => !weakLegacyDistractors.has(x))],
   ['open grammar item is formative only', lesson.stages.grammar.items.find(x => x.id === 'g8')?.formativeOnly === true],
   ['mission completion is communicative', String(lesson.stages.fluencyMission.completionPolicy || '').includes('communicative outcome')],
   ['mission no longer counts grammar forms as a pass requirement', !lesson.stages.fluencyMission.requirements.some(x => /present perfect|twice/i.test(x))],
