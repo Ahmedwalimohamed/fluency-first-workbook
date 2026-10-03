@@ -9,7 +9,7 @@ const lessonBookHtml=read('public/course-factory-b1-gold-l4-lesson-book.html');
 const lessonBookJs=read('public/course-factory-b1-gold-l4-lesson-book.js');
 const workbookHtml=read('public/course-factory-b1-gold-l4-workbook.html');
 const workbookJs=read('public/course-factory-b1-gold-l4-workbook.js');
-const css=read('public/course-factory-preview.css');
+const northstarCss=read('public/b2-lesson1-microflow-v1.css');
 const api=read('api/vercel-parity-entry.js');
 
 for(const file of [
@@ -30,19 +30,16 @@ const forbiddenRegistryWrites=[
 ];
 
 const lessonBookForbidden=[
-  /function\s+mastery\s*\(/,
-  /const\s+SCORED\s*=/,
-  /weakest-area Boost/i,
-  /renderReading\s*\(/,
-  /renderListening\s*\(/,
-  /renderWriting\s*\(/
+  /SEE_CHOOSE_CHANGE_USE_FIX/,
+  /const\s+PHASES\s*=/,
+  /function\s+renderQuestionSet\s*\(/,
+  /function\s+renderRepair\s*\(/
 ];
 
-const workbookForbidden=[
+const workbookTeacherFlowForbidden=[
   /teacherMove/,
-  /renderMission\s*\(/,
-  /Correction & debrief/i,
-  /Fluency Mission.*completion gate/i
+  /\['mission','Fluency Mission'\]/,
+  /\['debrief','Correction & debrief'\]/
 ];
 
 const landingLower=landing.toLowerCase();
@@ -51,24 +48,30 @@ const checks=[
   ['landing links to Lesson Book',landing.includes('/course-factory-b1-gold-l4-lesson-book.html')],
   ['landing links to Workbook',landing.includes('/course-factory-b1-gold-l4-workbook.html')],
   ['Lesson Book loads its own runtime',lessonBookHtml.includes('/course-factory-b1-gold-l4-lesson-book.js?v=1')],
-  ['Workbook loads its own runtime',workbookHtml.includes('/course-factory-b1-gold-l4-workbook.js?v=1')],
-  ['Lesson Book explicitly rejects workbook scoring',lessonBookHtml.includes('No mastery score')&&lessonBookHtml.includes('Those belong to the Workbook')],
-  ['Lesson Book contains live teaching flow',lessonBookJs.includes("['warmup','Warm-up']")&&lessonBookJs.includes("['mission','Fluency Mission']")&&lessonBookJs.includes("['debrief','Correction & debrief']")],
-  ['Lesson Book contains no workbook scoring engine',lessonBookForbidden.every(pattern=>!pattern.test(lessonBookJs))],
-  ['Workbook uses four scored evidence areas',workbookJs.includes("const SCORED=['vocabulary','reading','listening','grammar']")],
-  ['Workbook includes Help Me Practice evidence',workbookJs.includes("['practice','Help Me Practice']")&&workbookJs.includes('practiceSaved')],
-  ['Workbook writing remains mastery-gated',workbookJs.includes('mastery()>=Number(lesson?.mastery?.threshold||0.8)')],
-  ['Workbook opens only weakest-area Boost below mastery',workbookJs.includes('function weakest()')&&workbookJs.includes('Only the weakest-area Boost opens')],
-  ['Workbook keeps transcript-attempt rule',workbookJs.includes('state.listeningAttempts>=Number(s.transcriptUnlockAttempt||2)')&&workbookJs.includes('state.listeningAttempts++')],
-  ['Workbook does not contain teacher-led mission/debrief flow',workbookForbidden.every(pattern=>!pattern.test(workbookJs))],
-  ['preview data endpoint remains preview-gated',api.includes("/__course-factory/b1-gold-l4/preview-data")&&api.includes('if(!isPreview())return json(res,404')],
-  ['Jev endpoint remains preview-gated',api.includes("/__course-factory/b1-gold-l4/jev-review")],
-  ['preview reads reviewed lesson from server',api.includes('b1-lesson-04-quality-patch.js')],
-  ['mobile layout still exists',css.includes('@media(max-width:760px)')],
+  ['Lesson Book remains teacher-led rather than Northstar workbook',lessonBookForbidden.every(pattern=>!pattern.test(lessonBookJs))],
+  ['Workbook loads the shared current Northstar CSS',workbookHtml.includes('/b2-lesson1-microflow-v1.css?v=1')],
+  ['Workbook loads its current-engine runtime',workbookHtml.includes('/course-factory-b1-gold-l4-workbook.js?v=2')],
+  ['Workbook uses the exact five current phases',workbookJs.includes("const PHASES=['SEE','CHOOSE','CHANGE','USE','FIX']")],
+  ['Workbook has ten short actions',workbookJs.includes('const TOTAL=10;')&&workbookJs.includes("data-step=\"'+(Number(state.index)+1)+'\"")],
+  ['Workbook preserves current phase strip',workbookJs.includes('class="micro-framework"')&&workbookJs.includes('phaseStrip(state)')],
+  ['Workbook preserves current step counter and progress bar',workbookJs.includes("Step '+(Number(state.index)+1)+' of '+TOTAL")&&workbookJs.includes('class="micro-progress"')],
+  ['Workbook is one action at a time',workbookJs.includes('state.index')&&workbookJs.includes('function next(state)')&&workbookJs.includes('function previous(state)')],
+  ['Reading and listening use one-question-at-a-time subprogress',workbookJs.includes('function renderQuestionSet')&&workbookJs.includes('state.subprogress')&&workbookJs.includes("Question '+(pos+1)+' of '+items.length")],
+  ['Workbook gives immediate retry feedback',workbookJs.includes("ok?'Correct.':'Try again.'")&&workbookJs.includes('if(!ok)return renderQuestionSet(state,opts)')],
+  ['Workbook follows the same SEE→CHOOSE→CHANGE→USE→FIX step architecture',workbookJs.includes("{phase:'SEE',skill:'reading'}")&&workbookJs.includes("{phase:'CHANGE',skill:'grammar'}")&&workbookJs.includes("{phase:'USE',skill:'writing'}")&&workbookJs.includes("{phase:'FIX',skill:'grammar'}")],
+  ['B1 content remains original Technology & Social Media content',workbookJs.includes('Technology &amp; Social Media')&&workbookJs.includes('A quieter phone, not no phone')&&workbookJs.includes('screen time')],
+  ['Help Me Practice is embedded in USE rather than a separate navigation system',workbookJs.includes('same kind of short, personal response used in Help Me Practice')&&!workbookJs.includes("['practice','Help Me Practice']")],
+  ['Writing uses the B1 80–120 word social-post task',workbookJs.includes('80–120 words')&&workbookJs.includes('function renderPost')],
+  ['FIX repairs one important issue adaptively',workbookJs.includes('function repairMode')&&workbookJs.includes('function renderRepair')&&workbookJs.includes('one important part instead of correcting everything at once')],
+  ['Workbook no longer uses the temporary custom stage/sidebar engine',!workbookJs.includes('const STAGES=')&&!workbookJs.includes('workbookNav')&&!workbookHtml.includes('masteryTitle')&&!workbookHtml.includes('boostCard')],
+  ['Workbook does not contain teacher-led mission/debrief flow',workbookTeacherFlowForbidden.every(pattern=>!pattern.test(workbookJs))],
+  ['shared Northstar CSS includes mobile five-phase strip',northstarCss.includes('.micro-framework')&&northstarCss.includes('@media(max-width:700px)')],
+  ['preview data endpoint remains preview-gated',api.includes('/__course-factory/b1-gold-l4/preview-data')&&api.includes('if(!isPreview())return json(res,404')],
+  ['Jev endpoint remains preview-gated',api.includes('/__course-factory/b1-gold-l4/jev-review')],
   ['separated surfaces do not modify production book registries',forbiddenRegistryWrites.every(pattern=>!pattern.test(lessonBookJs)&&!pattern.test(workbookJs)&&!pattern.test(api))]
 ];
 
 let failed=0;
 for(const [name,ok] of checks){console.log(`${ok?'PASS':'FAIL'}  ${name}`);if(!ok)failed++}
-if(failed){console.error(`B1 Gold separated preview QA failed: ${failed} check(s).`);process.exit(1)}
-console.log(`B1 Gold separated preview QA passed: ${checks.length}/${checks.length}.`);
+if(failed){console.error(`B1 Gold current-engine preview QA failed: ${failed} check(s).`);process.exit(1)}
+console.log(`B1 Gold current-engine preview QA passed: ${checks.length}/${checks.length}.`);
