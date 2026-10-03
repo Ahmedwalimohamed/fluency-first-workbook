@@ -45,8 +45,9 @@ const workbookForbidden=[
   /Fluency Mission.*completion gate/i
 ];
 
+const landingLower=landing.toLowerCase();
 const checks=[
-  ['landing clearly separates Lesson Book and Workbook',landing.includes('Lesson Book')&&landing.includes('Workbook')&&landing.includes('teacher-led')&&landing.includes('student practice')],
+  ['landing clearly separates Lesson Book and Workbook',landingLower.includes('lesson book')&&landingLower.includes('workbook')&&landingLower.includes('teacher-led')&&landingLower.includes('student practice')],
   ['landing links to Lesson Book',landing.includes('/course-factory-b1-gold-l4-lesson-book.html')],
   ['landing links to Workbook',landing.includes('/course-factory-b1-gold-l4-workbook.html')],
   ['Lesson Book loads its own runtime',lessonBookHtml.includes('/course-factory-b1-gold-l4-lesson-book.js?v=1')],
