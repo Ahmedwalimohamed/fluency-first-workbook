@@ -9,7 +9,7 @@ require('../a1-pilot-observability-bootstrap.js');
 require('../email-identity-bootstrap.js');
 
 const baseHandler = require('./vercel-entry.js');
-const b1GoldLesson4 = require('../course-factory/gold/b1-lesson-04-technology-social-media.js');
+const b1GoldLesson4 = require('../course-factory/gold/b1-lesson-04-quality-patch.js');
 const { reviewGoldenLesson } = require('../course-factory/jev-semantic-review.js');
 
 function requestPath(req){
