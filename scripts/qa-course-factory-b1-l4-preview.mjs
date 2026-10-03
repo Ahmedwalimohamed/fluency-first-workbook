@@ -15,6 +15,13 @@ for(const file of ['public/course-factory-b1-gold-l4-preview.js','api/vercel-par
   console.log(`PASS  syntax ${file}`);
 }
 
+const forbiddenRegistryWrites=[
+ /BOOK_PACKS\s*\[/,
+ /LIVE_BOOKS\s*\[/,
+ /BOOK_SEEDS\s*=/,
+ /update\s+books\s+set\s+status/i
+];
+
 const checks=[
  ['preview HTML loads dedicated CSS',html.includes('/course-factory-preview.css?v=1')],
  ['preview HTML loads interactive runtime',html.includes('/course-factory-b1-gold-l4-preview.js?v=1')],
@@ -30,7 +37,7 @@ const checks=[
  ['open grammar response is formative',js.includes('Formative only — this open item does not reduce your mastery score')],
  ['Fluency Mission completion follows outcome',js.includes('The group decision—not a grammar count—is the completion gate')],
  ['mobile layout exists',css.includes('@media(max-width:760px)')],
- ['preview does not modify production book registry',!js.includes('BOOK_PACKS[')&&!js.includes('status=')]
+ ['preview does not modify production book registries',forbiddenRegistryWrites.every(pattern=>!pattern.test(js)&&!pattern.test(api))]
 ];
 let failed=0;for(const [name,ok] of checks){console.log(`${ok?'PASS':'FAIL'}  ${name}`);if(!ok)failed++}
 if(failed){console.error(`B1 Gold student preview QA failed: ${failed} check(s).`);process.exit(1)}
