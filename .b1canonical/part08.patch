@@ -1,0 +1,54 @@
++  {type:'exact',q:'Type the target word meaning “the place you are travelling to”.',answer:'destination',min:1,tag:'vocabulary:recall'},
++  {type:'choice',q:'Which word best completes the sentence: “Before every trip, I ___ extra water.”',options:['pack','delay','journey'],answer:'pack',tag:'vocabulary:application'}
++ ],
++ readingText:"Last summer, my cousin Ayaan and I travelled by bus from Hargeisa to Berbera. We wanted to spend two days by the sea. The journey usually takes about three hours, but that day was different. We were driving through the hills when the bus suddenly stopped. One of the tyres had a hole. While the driver was changing the tyre, the passengers waited by the road. It was very hot, and we didn't have much water. Then a local family invited us to sit under their tree. They gave us tea and bread. When we finally arrived in Berbera, it was dark, and our hotel had already closed its restaurant. We were tired and hungry, but we weren't angry. Now I pack extra water and some food before every trip. The delay taught me that a problem can also bring a kind surprise.",
++ audioScript:"Ayaan: Hi Mum, we're in Berbera now. Sorry I didn't call earlier.\nMum: I was worried! What happened?\nAyaan: The bus had a flat tyre. We were waiting by the road for nearly two hours.\nMum: Two hours? In that heat?\nAyaan: Yes, but a kind family helped us. They gave us tea while the driver was fixing the tyre.\nMum: That was lucky. Did you get dinner?\nAyaan: No. When we got to the hotel, the restaurant had already closed. We bought some bananas from a small shop.\nMum: Well, I'm happy you're safe. Call me tomorrow!",
++ questions:[
++  {q:'Why did the bus stop?',options:['One of the tyres had a hole','The driver was tired','The road was closed'],answer:'One of the tyres had a hole',tag:'reading:detail'},
++  {q:'What did the local family do?',options:['They gave the travellers tea and bread','They drove them to Berbera','They sold them water'],answer:'They gave the travellers tea and bread',tag:'reading:detail'},
++  {q:'How did the writer feel when they arrived in Berbera?',options:['Tired and hungry, but not angry','Angry with the driver','Excited and full of energy'],answer:'Tired and hungry, but not angry',tag:'reading:inference'},
++  {q:'What did the writer learn from the trip?',options:['A problem can also bring a kind surprise','Buses are never on time','It is better not to travel in summer'],answer:'A problem can also bring a kind surprise',tag:'reading:main-idea'},
++  {q:'How long did they wait by the road?',options:['Nearly two hours','About twenty minutes','All night'],answer:'Nearly two hours',tag:'listening:detail'},
++  {q:'What did they eat for dinner?',options:['Bananas from a small shop','Fish at the hotel','Bread from the family'],answer:'Bananas from a small shop',tag:'listening:detail'},
++  {q:'Why was Ayaan’s mum worried?',options:['Ayaan didn’t call her earlier','The hotel was expensive','Ayaan lost his phone'],answer:'Ayaan didn’t call her earlier',tag:'listening:inference'},
++  {q:'What does Mum ask Ayaan to do?',options:['Call her tomorrow','Come home immediately','Take a different bus'],answer:'Call her tomorrow',tag:'listening:response'}
++ ],
++ writing:{
++  builder:[
++   {q:'Which opening starts a natural WhatsApp travel story?',options:['Guess what happened on our trip yesterday!','Dear Sir, I hereby report my journey.','Travel.'],answer:'Guess what happened on our trip yesterday!',tag:'writing-builder:register'},
++   {q:'What should you tell the reader first?',options:['Where you were going and what went wrong','Every place you have ever visited','The price of your shoes'],answer:'Where you were going and what went wrong',tag:'writing-builder:task'},
++   {q:'Which phrase best introduces the problem?',options:['We were driving through the hills when…','In conclusion of the start,','Despite because the bus,'],answer:'We were driving through the hills when…',tag:'writing-builder:cohesion'},
++   {q:'Which word best fits: “There was a two-hour ___ because of the tyre.”',options:['delay','luggage','destination'],answer:'delay',tag:'writing-builder:vocabulary'},
++   {q:'Which closing adds a short reflection?',options:['It was a long day, but I learned to pack extra water.','Thanks, regards, management.','Finish.'],answer:'It was a long day, but I learned to pack extra water.',tag:'writing-builder:register'}
++  ],
++  task:'Write a 40–60 word WhatsApp message to a friend about a trip. Say what happened, what you did, and how the trip ended.',
++  minWords:40,maxWords:60,humanGraded:false,checkpoint:false
++ },
++ foundation:'Use past simple and past continuous to tell a short travel story in the right order.',
++ lift:'Make the story easy to follow: set the scene, show the moment things changed, and finish with how it ended and what you learned.',
++ performance:'Tell a short travel story about a problem, answer your listeners’ questions, and react to another person’s story.',
++ pronunciation:'Slow down and stress the words at the turning point (suddenly, when, then) so listeners notice the important moment.',
++ mediation:'Retell a partner’s travel story to another pair. Keep the events in the right order and give the ending.',
++ functions:['tell a short story about the past','describe a problem and a solution','react to someone else’s story'],
++ discourse:['setting the scene','showing a sudden change','finishing with what you learned'],
++ chunks:['travel by bus','suddenly stopped','in the end','a kind surprise','pack extra water'],
++ interactionExpressions:['What happened next?','Oh no! What did you do?','That was lucky!'],
++ grammarItems:[
++  {q:'Choose the best sentence for a background action and a sudden event.',options:['We were driving through the hills when the bus stopped.','We drove through the hills when the bus was stopping.','We were drive through the hills when the bus stopped.'],answer:'We were driving through the hills when the bus stopped.',tag:'grammar:background'},
++  {q:'Complete: “While the driver ___ the tyre, we waited by the road.”',options:['was changing','changed','has changed'],answer:'was changing',tag:'grammar:past-continuous'},
++  {q:'Complete: “When we arrived, the restaurant ___ already ___.”',options:['had / closed','has / closed','was / closing'],answer:'had / closed',tag:'grammar:prior-event'},
++  {q:'Which sentence tells the main events in order?',options:['We arrived at the station, bought tickets and got on the bus.','We were arriving at the station, were buying tickets and were getting on the bus.','We have arrived at the station and bought tickets yesterday.'],answer:'We arrived at the station, bought tickets and got on the bus.',tag:'grammar:sequence'},
++  {q:'Which question asks about an action in progress?',options:['What were you doing when the bus stopped?','What did you doing when the bus stopped?','What you were doing when the bus stopped?'],answer:'What were you doing when the bus stopped?',tag:'grammar:question-form'},
++  {q:'Choose the correct sentence.',options:['I was sleeping when my phone rang.','I was sleep when my phone rang.','I sleeping when my phone rang.'],answer:'I was sleeping when my phone rang.',tag:'grammar:form'}
++ ],
++ northstar:{
++  version:'b1-northstar-v1',framework:'SEE_CHOOSE_CHANGE_USE_FIX',support:'high',
++  mission:'Tell a short travel story when something goes wrong.',
++  see:{source:'reading',questionStrategy:'first-reading'},
++  choose:{includeGrammar:true,includeVocabulary:true,includeListening:true,includeRetrieval:true},
++  change:[
++   {model:'I was waiting for the bus when it started to rain.',prompt:'Change the model to a real or imagined travel problem.',starter:'I was ___ when ___.'},
++   {model:'When we got to the station, the train had already left.',prompt:'Change the model to show something that happened before another past event.',starter:'When we got to ___, ___ had already ___.'}
++  ],
++  use:{prompt:'A friend asks: “How was your trip?” Tell the main problem in 1–2 sentences.',help:'I was… when… · When we arrived, … had already…'},
++  final:{task:'Write a 40–60 word WhatsApp message to a friend about a trip. Say what happened, what you did, and how the trip ended.',minWords:40,maxWords:60,format:'WhatsApp travel story'},
