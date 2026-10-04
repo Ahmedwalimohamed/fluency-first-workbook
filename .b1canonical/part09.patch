@@ -1,0 +1,225 @@
++  fix:{target:'Use past continuous for the background and past simple for the main event. Use had + past participle for something that happened earlier.',model:'We were waiting at the bus station when we realised we had left our tickets at home.'},
++  retrieval:{prompt:'Which sentence talks about a finished time?',options:['I started my job last year.','I’ve started my job last year.','I start my job last year.'],answer:'I started my job last year.',from:2}
++ }
++}
++];
++
++/* Live lessons — same six-page, fluency-first format as the B2 Live book. */
++const live={
++ 1:`LESSON 1 Getting Acquainted
++CAN-DO GOAL: Meet someone new at a course, introduce yourself, ask a simple follow-up question, and send a short message to stay in touch.
++PAGE 1 — WARM UP
++FLUENCY START
++Choose one question first. Think for 20 seconds, then speak for 20–30 seconds. Your partner must ask one follow-up question before you switch.
++Think & Talk
++1. What's your name?
++2. Where is your hometown?
++3. Do you work or study?
++4. What are you interested in?
++5. Tell us one fun fact about yourself.
++SPEAKING CHALLENGE
++Find someone who...
++☐ has always lived in the same town
++☐ has a brother or sister at university
++☐ likes cooking
++☐ speaks three languages
++☐ has visited another country
++A name only counts after one follow-up question. Remember one interesting detail about the person. Do not write during the conversation.
++
++
++
++PAGE 2 — VOCABULARY
++Talking About Getting Acquainted
++WORD EXAMPLE
++introduce Let me introduce my friend, Omar.
++colleague My colleague helps me with the computer.
++hometown My hometown is Borama.
++interested in I'm interested in technology.
++in common We both like football, so we have a lot in common.
++stay in touch Let's stay in touch after the course.
++Useful Expressions
++• Nice to meet you.
++• Is this seat free?
++• What do you do?
++• How long have you lived here?
++• Oh, really? That's interesting.
++• How about you?
++Pronunciation — Repeat after your teacher
++introduce • colleague • interested • hometown • technology
++FLUENCY USE
++Choose two useful words or expressions from this page. Make each one true for you. Tell a partner, then answer one follow-up question: “Why?”, “How?”, or “Can you give me an example?”
++
++
++
++PAGE 3 — READING
++First Day at the Course
++READ
++${lessons[0].readingText.replace(/\n/g,' ')}
++Check Your Understanding
++1. Where does Omar work?
++2. How long has Omar worked there?
++3. What is Amina's job?
++4. Why is Amina at the course?
++TALK AFTER READING
++Choose one idea or detail from the text that you find important. Explain why for 20–30 seconds. Your partner must react, agree, disagree, or ask a question.
++
++
++
++PAGE 4 — LANGUAGE FOCUS
++Present Perfect with for and since
++Use have/has + past participle for something that started in the past and is still true now. Use for + a period of time. Use since + a starting point.
++Examples
++• I've worked at a bank for two years.
++• She's taught English since 2021.
++• We've lived in Borama for ten years.
++• How long have you studied English?
++Complete the Sentences
++1. I ______ (live) in my town ______ 2015.
++2. She ______ (work) at the school ______ three years.
++3. How long ______ you ______ (know) your best friend?
++4. They ______ (study) English ______ last September.
++MAKE IT PERSONAL — SPEAK FIRST
++Say four true sentences about yourself using this language. Do not write first. Your partner chooses one sentence and asks a follow-up question. Improve one sentence after speaking.
++
++
++
++PRONUNCIATION FOCUS
++${lessons[0].pronunciation}
++MEDIATION MOVE
++${lessons[0].mediation}
++
++
++
++PAGE 5 — FLUENCY MISSION
++THE WELCOME EVENT
++You are at the first day of a new course. Meet four classmates.
++Try to find out:
++• their name and hometown
++• their job or studies
++• how long they have done it
++• one thing they are interested in
++• one thing you have in common
++Do NOT write answers. Remember them.
++Challenge
++Introduce one classmate to the class with two correct details.
++FLUENCY RULE
++Do not read a prepared answer. Add one detail to each answer, react to other speakers, and ask at least one follow-up question.
++
++
++
++PAGE 6 — REFLECTION
++Today I learned...
++☐ words for meeting people
++☐ how long + present perfect with for and since
++☐ how to ask a follow-up question
++☐ how to stay in touch
++FLUENCY EXIT
++Tell a partner one thing you can now say more clearly or confidently. Speak for 20–30 seconds without notes. Your partner gives one short response or question.`,
++ 2:`LESSON 2 Work & Careers
++CAN-DO GOAL: Talk about your work or study experience at a Careers Day, give one clear example, and write a short polite message.
++PAGE 1 — WARM UP
++FLUENCY START
++Choose one question first. Think for 20 seconds, then speak for 20–30 seconds. Your partner must ask one follow-up question before you switch.
++Think & Talk
++1. What job did you want when you were a child?
++2. What do you do now — work or study?
++3. Have you ever had a part-time job?
++4. What skills are important for a good job?
++5. Do you prefer to work alone or in a team?
++SPEAKING CHALLENGE
++Find someone who...
++☐ has worked in a shop
++☐ wants to be a teacher or a doctor
++☐ has done a computer course
++☐ works or studies in the evening
++☐ has helped at a family business
++A name only counts after one follow-up question. Remember one interesting detail about the person. Do not write during the conversation.
++
++
++
++PAGE 2 — VOCABULARY
++Talking About Work & Careers
++WORD EXAMPLE
++experience I have two years of experience in sales.
++manager My manager checks our work every Friday.
++deadline The deadline for the report is Thursday.
++promotion She got a promotion and now leads a team.
++responsible for I'm responsible for the shop's money.
++team Our team has five people.
++Useful Expressions
++• What do you do?
++• I work as a…
++• I've worked there for…
++• I started in…
++• That sounds interesting.
++• What did you learn?
++Pronunciation — Repeat after your teacher
++experience • manager • responsible • promotion • receptionist
++FLUENCY USE
++Choose two useful words or expressions from this page. Make each one true for you. Tell a partner, then answer one follow-up question: “Why?”, “How?”, or “Can you give me an example?”
++
++
++
++PAGE 3 — READING
++From Receptionist to Team Leader
++READ
++${lessons[1].readingText}
++Check Your Understanding
++1. How long ago did Hodan start at the hospital?
++2. What did she do two years ago?
++3. What is she responsible for now?
++4. What has she learned about teamwork?
++TALK AFTER READING
++Choose one idea or detail from the text that you find important. Explain why for 20–30 seconds. Your partner must react, agree, disagree, or ask a question.
++
++
++
++PAGE 4 — LANGUAGE FOCUS
++Present Perfect vs Past Simple
++Use the present perfect for experience up to now and for things that are still true. Use the past simple for finished actions with a finished time (yesterday, last year, in 2023, two years ago).
++Examples
++• I've worked here for two years. (still true)
++• I started this job in 2023. (finished time)
++• She has never worked in a hospital.
++• He got a promotion last month.
++Complete the Sentences
++1. I ______ (study) English since 2022.
++2. She ______ (start) her new job last week.
++3. Have you ever ______ (work) in a team?
++4. We ______ (finish) the project yesterday.
++MAKE IT PERSONAL — SPEAK FIRST
++Say four true sentences about yourself using this language. Do not write first. Your partner chooses one sentence and asks a follow-up question. Improve one sentence after speaking.
++
++
++
++PRONUNCIATION FOCUS
++${lessons[1].pronunciation}
++MEDIATION MOVE
++${lessons[1].mediation}
++
++
++
++PAGE 5 — FLUENCY MISSION
++THE CAREERS DAY
++You are at a Careers Day. In small groups, talk about your work or study path.
++Try to cover:
++• what you do now
++• how long you have done it
++• one thing you did last year
++• one mistake you learned from
++• one job you would like in the future
++Speak for at least 45 seconds without stopping.
++Challenge
++Choose the most useful piece of advice in your group and share it with the class.
++FLUENCY RULE
++Do not read a prepared answer. Add one detail to each answer, react to other speakers, and ask at least one follow-up question.
++
++
++
++PAGE 6 — REFLECTION
++Today I learned...
++☐ work and career vocabulary
++☐ present perfect vs past simple
++☐ how to give an example of my experience
++☐ how to give simple career advice
++FLUENCY EXIT
