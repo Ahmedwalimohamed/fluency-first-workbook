@@ -1,0 +1,53 @@
++ discourse:['opening a conversation politely','adding one detail to an answer','connecting a question to what the other person said','closing a conversation in a friendly way'],
++ chunks:['Nice to meet you.','Is this seat free?','How long have you…?','What about you?','We have something in common.'],
++ interactionExpressions:['Oh, really?','That’s interesting.','Do you enjoy it?','How about you?','Would you like to stay in touch?'],
++ grammarItems:[
++  {q:'Omar started work at the bank two years ago. He still works there. Choose the best sentence.',options:['He has worked at the bank for two years.','He works at the bank since two years.','He worked at the bank for two years.'],answer:'He has worked at the bank for two years.',tag:'grammar:duration'},
++  {q:'Complete: “I’ve taught English ___ 2021.”',options:['since','for','from'],answer:'since',tag:'grammar:for-since'},
++  {q:'Complete: “We’ve lived in Borama ___ ten years.”',options:['for','since','ago'],answer:'for',tag:'grammar:for-since'},
++  {q:'Which question asks about a time from the past until now?',options:['How long have you worked there?','How long do you work there?','How long you have worked there?'],answer:'How long have you worked there?',tag:'grammar:question-form'},
++  {q:'Amina says, “I’m a teacher.” Which follow-up question is most natural?',options:['What do you teach?','Do you have a job?','What did you teach tomorrow?'],answer:'What do you teach?',tag:'grammar:interaction'},
++  {q:'Choose the correct sentence.',options:['She has known her best friend since primary school.','She knows her best friend since primary school.','She has know her best friend since primary school.'],answer:'She has known her best friend since primary school.',tag:'grammar:form'}
++ ],
++ northstar:{
++  version:'b1-northstar-v1',framework:'SEE_CHOOSE_CHANGE_USE_FIX',support:'high',
++  mission:'Meet someone new, ask a simple follow-up question, and stay in touch.',
++  see:{source:'reading',questionStrategy:'first-reading'},
++  choose:{includeGrammar:true,includeVocabulary:true,includeListening:true,includeRetrieval:false},
++  change:[
++   {model:"I've worked at a bank for two years.",prompt:'Change the model so it is true for you.',starter:"I've worked / studied at ___ for ___."},
++   {model:"I've lived in Hargeisa since 2019.",prompt:'Change the model. Use since with a real place and a real year.',starter:"I've lived in ___ since ___."}
++  ],
++  use:{prompt:'Omar says: “I work at a bank.” Ask him one natural follow-up question.',help:'How long have you…? · What do you…? · Do you enjoy…?'},
++  final:{task:'Write a 30–45 word WhatsApp message to Omar after the course. Say it was nice to meet him, mention one thing he told you, and suggest one way to stay in touch.',minWords:30,maxWords:45,format:'WhatsApp message'},
++  fix:{target:'Use present perfect with for or since for something that started in the past and is still true.',model:"I've studied English for three years."}
++ }
++},
++{
++ id:'su-b1-l2',number:2,title:'Work & Careers',
++ outcome:'Talk about your work or study experience at a Careers Day, give one clear example, and write a short polite message.',
++ grammarFocus:'Present Perfect vs Past Simple',
++ grammarRule:'Use present perfect for experience up to now and for things that are still true (I’ve worked here for two years). Use past simple for finished actions with a finished time (I started last year, in 2023, two years ago).',
++ finalWriting:'Polite message about your experience',
++ vocabulary:['experience','manager','deadline','promotion','responsible for','team'],
++ vocabularyItems:[
++  {type:'choice',q:'Match “experience” to its meaning.',options:['knowledge or skill you get from doing something','the latest time when work must be finished','having the job of looking after something or someone'],answer:'knowledge or skill you get from doing something',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “manager” to its meaning.',options:['a person who controls a team or a business','a move to a higher job in the same company','a group of people who work together'],answer:'a person who controls a team or a business',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “deadline” to its meaning.',options:['the latest time when work must be finished','having the job of looking after something or someone','knowledge or skill you get from doing something'],answer:'the latest time when work must be finished',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “promotion” to its meaning.',options:['a move to a higher job in the same company','a group of people who work together','a person who controls a team or a business'],answer:'a move to a higher job in the same company',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “responsible for” to its meaning.',options:['having the job of looking after something or someone','knowledge or skill you get from doing something','the latest time when work must be finished'],answer:'having the job of looking after something or someone',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “team” to its meaning.',options:['a group of people who work together','a person who controls a team or a business','a move to a higher job in the same company'],answer:'a group of people who work together',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Which word means “a group of people who work together”?',options:['team','deadline','experience'],answer:'team',tag:'vocabulary:context'},
++  {type:'choice',q:'Which target word best matches this idea: having the job of looking after something or someone?',options:['responsible for','manager','promotion'],answer:'responsible for',tag:'vocabulary:context'},
++  {type:'exact',q:'Type the target word meaning “the latest time when work must be finished”.',answer:'deadline',min:1,tag:'vocabulary:recall'},
++  {type:'choice',q:'Which word best completes the sentence: “Hodan’s ___ gave her a new job last month.”',options:['manager','team','deadline'],answer:'manager',tag:'vocabulary:application'}
++ ],
++ readingText:"Hodan works at a busy hospital in Borama. She started there as a receptionist four years ago. In her first year, she answered phones and helped patients find the right department. It was hard work, but she learned a lot. Two years ago, she took a computer course in the evenings. After that, she started to help with the hospital's patient records. Last month, her manager gave her a promotion. Now she is responsible for a small team of three people. Hodan has made some mistakes. Once, she missed a deadline because she tried to do everything alone. Now she asks her team for help earlier. She says, 'I have learned that good teamwork is more important than working fast.'",
++ audioScript:"Teacher: Thank you for coming to our Careers Day, Hodan. How long have you worked at the hospital?\nHodan: I've worked there for four years. I started as a receptionist.\nTeacher: And what do you do now?\nHodan: I'm a team leader. I got the job last month.\nTeacher: Congratulations! What helped you most?\nHodan: The evening computer course. I finished it two years ago, and it changed everything for me.\nTeacher: Do you have any advice for our students?\nHodan: Yes. Don't be afraid to ask questions. I didn't ask enough questions in my first year.",
++ questions:[
++  {q:'What was Hodan’s first job at the hospital?',options:['Receptionist','Doctor','Manager'],answer:'Receptionist',tag:'reading:detail'},
++  {q:'What happened last month?',options:['Her manager gave her a promotion','She started a computer course','She left the hospital'],answer:'Her manager gave her a promotion',tag:'reading:detail'},
++  {q:'Why did Hodan once miss a deadline?',options:['She tried to do everything alone','Her computer stopped working','Her manager forgot to tell her'],answer:'She tried to do everything alone',tag:'reading:inference'},
++  {q:'What is the main message of the text?',options:['Hodan has grown in her job by learning from experience','Hospitals are always busy places','Computer courses are very expensive'],answer:'Hodan has grown in her job by learning from experience',tag:'reading:main-idea'},
++  {q:'How long has Hodan worked at the hospital?',options:['For four years','For two years','Since last month'],answer:'For four years',tag:'listening:detail'},
++  {q:'When did she finish the computer course?',options:['Two years ago','Last month','In her first year'],answer:'Two years ago',tag:'listening:detail'},
