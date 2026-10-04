@@ -13,9 +13,9 @@
 + if(!text.startsWith(`LESSON ${n} ${l.title}\n`))fail(L+': Live lesson heading is wrong.');
 + if(!text.includes('CAN-DO GOAL: '+l.outcome))fail(L+': Live CAN-DO GOAL must match the workbook outcome.');
 + for(const page of ['PAGE 1 — WARM UP','PAGE 2 — VOCABULARY','PAGE 3 — READING','PAGE 4 — LANGUAGE FOCUS','PAGE 5 — FLUENCY MISSION','PAGE 6 — REFLECTION'])if(!text.includes(page))fail(`${L}: Live lesson missing "${page}".`);
-+ for(const marker of ['PRONUNCIATION FOCUS','MEDIATION MOVE','FLUENCY START','FLUENCY USE','TALK AFTER READING','FLUENCY RULE','FLUENCY EXIT','SPEAKING CHALLENGE','Useful Expressions','Check Your Understanding'])if(!text.includes(marker))fail(`${L}: Live lesson missing "${marker}".`);
++ for(const marker of ['PRONUNCIATION FOCUS','MEDIATION MOVE','FLUENCY START','FLUENCY USE','TALK AFTER READING','FLUEENCY RULE','FLUENCY EXIT','SPEAKING CHALLENGE','Useful Expressions','Check Your Understanding'])if(!text.includes(marker))fail(`${L}: Live lesson missing "${marker}".`);
 + if(n!==22&&!text.includes('MAKE IT PERSONAL — SPEAK FIRST'))fail(L+': language focus must personalise through speaking first.');
-+ if(text.includes('B2 LIFT')||/\bB2\b/.test(text))fail(L+': Live lesson must not mention B2.');
++ if(text.includes('B2 LIFT')||/\b2\b/.test(text))fail(L+': Live lesson must not mention B2.');
 + if(/\bHOMEWORK\b/i.test(text))fail(L+': Live lesson must not include homework.');
 + if(/Write their names below:|Make It Personal — write/i.test(text))fail(L+': Live lesson must stay speaking-first.');
 + if(!norm(text).includes(norm(l.readingText.replace(/\n/g,' '))))fail(L+': Live reading must match the workbook reading source.');
@@ -60,7 +60,7 @@
 +
 +for(const w of warnings)console.warn('WARN',w);
 +if(failures.length){
-+ console.error('B1 Northstar QA failed ('+failures.length+')');
++ console.error('B1 Northstar QA failed ('+failures.length+'):');
 + for(const f of failures)console.error(' - '+f);
 + process.exit(1);
 +}

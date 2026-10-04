@@ -90,45 +90,45 @@ index 0000000..84664aa
 +
 +## Change discipline
 +Future B1 changes must preserve stable IDs and topics, keep the grammar focus aligned with B2, pass `npm run qa:b1` and `npm run qa:b2`, and update this standard when the contract changes.
-+diff --git a/correction-model-v3-bootstrap.js b/correction-model-v3-bootstrap.js
-+index 64abd2f..2956df0 100644
-+--- a/correction-model-v3-bootstrap.js
-++++ b/correction-model-v3-bootstrap.js
-+@@ -192,7 +192,7 @@ function templateCorrection(target,priority){
-+ }
-+ async function buildCorrection(body){
-+   const mode=clean(body?.mode||'paragraph',20).toLowerCase(),lessonId=clean(body?.lessonId,100),task=clean(body?.task,1400),response=clean(body?.response,6000),targetLanguage=clean(body?.targetLanguage,1200),model=clean(body?.model,1200),grading=body?.gradingContext||{};
-+-  if(!/^su-b2-l\d+$/.test(lessonId))throw Object.assign(new Error('Correction Model v3 is currently enabled for B2 Upper Intermediate.'),{status:423});
-++  if(!/^su-b[12]-l\d+$/.test(lessonId))throw Object.assign(new Error('Correction Model v3 is currently enabled for B1 Intermediate and B2 Upper Intermediate.'),{status:423});
-+   if(!task||!response)throw Object.assign(new Error('Task and learner response are required.'),{status:400});
-+   const sentences=splitSentences(response),context=[task,targetLanguage,model].join(' ');
-+   const priority=mode==='short'?shortPriority(grading.decisions||{}):paragraphPriority(grading.dimensions||{});
-+diff --git a/northstar-response-grading-bootstrap.js b/northstar-response-grading-bootstrap.js
-+index 7de67bc..a8262ca 100644
-+--- a/northstar-response-grading-bootstrap.js
-++++ b/northstar-response-grading-bootstrap.js
-+@@ -176,12 +176,14 @@ function teachingFor(state,decisions,required,lowConfidence){
-+ }
-+ async function grade(body){
-+   const lessonId=clean(body?.lessonId,100),phase=clean(body?.phase,20).toUpperCase(),prompt=clean(body?.prompt,1200),response=clean(body?.response,2200);
-+-  if(!/^su-b2-l\d+$/.test(lessonId))throw Object.assign(new Error('Northstar semantic grading is currently enabled for B2 Upper Intermediate.'),{status:423});
-++  if(!/^su-b[12]-l\d+$/.test(lessonId))throw Object.assign(new Error('Northstar semantic grading is currently enabled for B1 Intermediate and B2 Upper Intermediate.'),{status:423});
-++  const level=/^su-b1-l\d+$/.test(lessonId)?'B1':'B2';
-+   if(!['CHANGE','USE'].includes(phase))throw Object.assign(new Error('Only CHANGE and USE responses use this grading gate.'),{status:400});
-+   if(!prompt||!response)throw Object.assign(new Error('Task and learner response are required.'),{status:400});
-+   if(response.split(/\s+/).filter(Boolean).length<3)throw Object.assign(new Error('Write a complete response before checking it.'),{status:400});
-+   const state={
-+-    purpose:'EnglishGate B2 Northstar short-response grading and targeted teaching',
-++    purpose:`EnglishGate ${level} Northstar short-response grading and targeted teaching`,
-++    targetLevel:level,
-+     version:VERSION,
-+     phase,
-+     lessonId,
-+diff --git a/package.json b/package.json
-+index 70be27a..9df6871 100644
-+--- a/package.json
-++++ b/package.json
-+@@ -6,6 +6,7 @@
-+   "main": "server.js",
-+   "scripts": {
-+     "qa:b2": "node scripts/qa-lesson-quality-firewall.js && node scripts/qa-b2.mjs",
+diff --git a/correction-model-v3-bootstrap.js b/correction-model-v3-bootstrap.js
+index 64abd2f..2956df0 100644
+--- a/correction-model-v3-bootstrap.js
++++ b/correction-model-v3-bootstrap.js
+@@ -192,7 +192,7 @@ function templateCorrection(target,priority){
+ }
+ async function buildCorrection(body){
+   const mode=clean(body?.mode||'paragraph',20).toLowerCase(),lessonId=clean(body?.lessonId,100),task=clean(body?.task,1400),response=clean(body?.response,6000),targetLanguage=clean(body?.targetLanguage,1200),model=clean(body?.model,1200),grading=body?.gradingContext||{};
+-  if(!/^su-b2-l\d+$/.test(lessonId))throw Object.assign(new Error('Correction Model v3 is currently enabled for B2 Upper Intermediate.'),{status:423});
++  if(!/^su-b[12]-l\d+$/.test(lessonId))throw Object.assign(new Error('Correction Model v3 is currently enabled for B1 Intermediate and B2 Upper Intermediate.'),{status:423});
+   if(!task||!response)throw Object.assign(new Error('Task and learner response are required.'),{status:400});
+   const sentences=splitSentences(response),context=[task,targetLanguage,model].join(' ');
+   const priority=mode==='short'?shortPriority(grading.decisions||{}):paragraphPriority(grading.dimensions||{});
+diff --git a/northstar-response-grading-bootstrap.js b/northstar-response-grading-bootstrap.js
+index 7de67bc..a8262ca 100644
+--- a/northstar-response-grading-bootstrap.js
++++ b/northstar-response-grading-bootstrap.js
+@@ -176,12 +176,14 @@ function teachingFor(state,decisions,required,lowConfidence){
+ }
+ async function grade(body){
+   const lessonId=clean(body?.lessonId,100),phase=clean(body?.phase,20).toUpperCase(),prompt=clean(body?.prompt,1200),response=clean(body?.response,2200);
+-  if(!/^su-b2-l\d+$/.test(lessonId))throw Object.assign(new Error('Northstar semantic grading is currently enabled for B2 Upper Intermediate.'),{status:423});
++  if(!/^su-b[12]-l\d+$/.test(lessonId))throw Object.assign(new Error('Northstar semantic grading is currently enabled for B1 Intermediate and B2 Upper Intermediate.'),{status:423});
++  const level=/^su-b1-l\d+$/.test(lessonId)?'B1':'B2';
+   if(!['CHANGE','USE'].includes(phase))throw Object.assign(new Error('Only CHANGE and USE responses use this grading gate.'),{status:400});
+   if(!prompt||!response)throw Object.assign(new Error('Task and learner response are required.'),{status:400});
+   if(response.split(/\s+/).filter(Boolean).length<3)throw Object.assign(new Error('Write a complete response before checking it.'),{status:400});
+   const state={
+-    purpose:'EnglishGate B2 Northstar short-response grading and targeted teaching',
++    purpose:`EnglishGate ${level} Northstar short-response grading and targeted teaching`,
++    targetLevel:level,
+     version:VERSION,
+     phase,
+     lessonId,
+diff --git a/package.json b/package.json
+index 70be27a..9df6871 100644
+--- a/package.json
++++ b/package.json
+@@ -6,6 +6,7 @@
+   "main": "server.js",
+   "scripts": {
+     "qa:b2": "node scripts/qa-lesson-quality-firewall.js && node scripts/qa-b2.mjs",

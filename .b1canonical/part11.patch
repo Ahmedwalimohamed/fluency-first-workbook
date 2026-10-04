@@ -7,7 +7,7 @@
 +const words=s=>String(s||'').trim().split(/\s+/).filter(Boolean).length;
 +/* Average words per sentence, counting dialogue lines as sentences. */
 +function avgSentence(text){
-+ const parts=String(text||'').split(/\n+/).map(x=>x.replace(/^[A-Z][A-Za-z ]{0,20}:\s*/, '')).join(' ').split(/(?<=[.!?])\s+/).filter(x=>words(x)>0);
++ const parts=String(text||'').split(/\n+/).map(x=>x.replace(/^[A-Z][A-Za-z ]{0,20}:\s*/,'')).join(' ').split(/(?<=[.!?])\s+/).filter(x=>words(x)>0);
 + return parts.length?words(parts.join(' '))/parts.length:0;
 +}
 +function loadWindowScript(rel,ctxExtra={}){
