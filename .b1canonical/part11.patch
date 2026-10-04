@@ -1,0 +1,119 @@
++];
++const HUMAN=new Set([5,10,15,18,22]);
++const REQUIRED_KEYS=['id','number','title','outcome','grammarFocus','grammarRule','finalWriting','vocabulary','vocabularyItems','readingText','audioScript','questions','writing','foundation','lift','performance','pronunciation','mediation','functions','discourse','chunks','interactionExpressions','grammarItems','northstar'];
++const failures=[],warnings=[];
++const fail=x=>failures.push(x),warn=x=>warnings.push(x);
++const norm=s=>String(s||'').toLowerCase().replace(/[’']/g,"'").replace(/\s+/g,' ').trim();
++const words=s=>String(s||'').trim().split(/\s+/).filter(Boolean).length;
++/* Average words per sentence, counting dialogue lines as sentences. */
++function avgSentence(text){
++ const parts=String(text||'').split(/\n+/).map(x=>x.replace(/^[A-Z][A-Za-z ]{0,20}:\s*/, '')).join(' ').split(/(?<=[.!?])\s+/).filter(x=>words(x)>0);
++ return parts.length?words(parts.join(' '))/parts.length:0;
++}
++function loadWindowScript(rel,ctxExtra={}){
++ const code=fs.readFileSync(new URL(rel,ROOT),'utf8'),ctx={window:{},console,...ctxExtra};
++ vm.createContext(ctx);vm.runInContext(code,ctx,{filename:rel});return ctx
++}
++function validChoice(q,label){
++ if(!q?.q||!Array.isArray(q.options)||q.options.length<3||q.answer===undefined){fail(label+': incomplete selected-response item.');return}
++ if(!q.options.includes(q.answer))fail(label+': accepted answer is not one of the options.');
++ if(new Set(q.options.map(norm)).size!==q.options.length)fail(label+': duplicate options.');
++}
++/* Same support fade as B2. */
++function expectedSupport(n){return n<=5?'high':n<=11?'medium-high':n<=17?'medium':'low'}
++/* B1 writing ranges: same progression shape as B2, lower word targets. */
++function expectedRange(n){
++ if(n===1)return[30,45];
++ if(n===2)return[35,50];
++ if(n<=5)return[40,60];
++ if(n===6)return[45,65];
++ if(n<=11)return[50,70];
++ if(n<=13)return[55,75];
++ if(n<=17)return[60,80];
++ if(n===18)return[70,90];
++ if(n===19)return[50,70];
++ if(n<=21)return[70,90];
++ return[140,180]
++}
++/* B1 receptive bands. B2 floors are 100/140/180 reading and 70/90/110 listening. */
++function readingBand(n){return n<=7?[70,160]:n<=14?[100,180]:[120,200]}
++function listeningBand(n){return n<=7?[60,120]:n<=14?[70,130]:[80,140]}
++const MAX_AVG_SENTENCE=14;
++
++const b1=loadWindowScript('public/speakup-b1-blueprint.js').window;
++const blueprint=b1.SPEAKUP_B1_BLUEPRINT,liveRows=b1.SPEAKUP_B1_LIVE_LESSONS,standard=b1.SPEAKUP_B1_STANDARD;
++const b2=loadWindowScript('public/speakup-b2-blueprint.js').window.SPEAKUP_B2_BLUEPRINT;
++
++if(!Array.isArray(blueprint)||!blueprint.length)fail('B1 blueprint must contain at least one authored lesson.');
++if((blueprint||[]).length>22)fail('B1 blueprint cannot contain more than 22 lessons.');
++if(standard?.bookId!=='speakup-b1'||standard?.level!=='B1'||standard?.totalLessons!==22)fail('B1 standard metadata is missing or wrong.');
++if(!Array.isArray(liveRows)||liveRows.length!==(blueprint||[]).length)fail('Every authored B1 lesson needs a matching Live lesson.');
++if(new Set((blueprint||[]).map(x=>x.id)).size!==(blueprint||[]).length)fail('B1 lesson IDs must be unique.');
++
++for(const [i,l] of (blueprint||[]).entries()){
++ const n=i+1,ref=b2?.[i],L='Lesson '+n;
++ if(Number(l.number)!==n)fail(L+': lessons must be authored in order without gaps.');
++ if(l.id!==`su-b1-l${n}`)fail(L+': stable ID must be su-b1-l'+n+'.');
++ if(l.title!==TOPICS[i])fail(L+': topic must match the shared 22-topic curriculum.');
++ for(const k of REQUIRED_KEYS)if(l[k]===undefined||l[k]===null||l[k]==='')fail(`${L}: missing required field "${k}".`);
++ if(ref&&norm(l.grammarFocus)!==norm(ref.grammarFocus))fail(`${L}: grammar focus must match B2 ("${ref.grammarFocus}").`);
++ if((l.vocabulary||[]).length<6)fail(L+': needs at least 6 core vocabulary items.');
++ if((l.chunks||[]).length<4)fail(L+': needs at least 4 chunks.');
++ if((l.interactionExpressions||[]).length<3)fail(L+': needs at least 3 interaction expressions.');
++ if((l.functions||[]).length<3)fail(L+': needs at least 3 communicative functions.');
++ if((l.discourse||[]).length<3)fail(L+': needs at least 3 discourse targets.');
++
++ const qs=Array.isArray(l.questions)?l.questions:[];
++ qs.forEach((q,j)=>validChoice(q,`${L}, question ${j+1}`));
++ const reading=qs.filter(q=>String(q.tag||'').startsWith('reading:')),listening=qs.filter(q=>String(q.tag||'').startsWith('listening:'));
++ if(reading.length<4)fail(L+': needs 4 reading questions.');
++ if(listening.length<4)fail(L+': needs 4 listening questions.');
++ const higher=/inference|purpose|stance|main-idea|response|evaluation|synthesis/;
++ if(!reading.some(q=>higher.test(q.tag)))fail(L+': reading needs at least one higher-order question.');
++ if(!listening.some(q=>higher.test(q.tag)))fail(L+': listening needs at least one higher-order question.');
++
++ const grammar=l.grammarItems||[];
++ if(grammar.length<6)fail(L+': needs at least 6 contextual grammar items.');
++ grammar.forEach((q,j)=>validChoice(q,`${L}, grammar ${j+1}`));
++ const vocab=l.vocabularyItems||[];
++ if(vocab.length<10)fail(L+': needs 10 vocabulary activities.');
++ vocab.filter(q=>Array.isArray(q.options)).forEach((q,j)=>validChoice(q,`${L}, vocabulary choice ${j+1}`));
++ vocab.filter(q=>q.type==='exact').forEach(q=>{if(!(l.vocabulary||[]).includes(q.answer))fail(L+': recall answer must be a target word.')});
++
++ const wr=l.writing||{},[emin,emax]=expectedRange(n);
++ if(Number(wr.minWords)!==emin||Number(wr.maxWords)!==emax)fail(`${L}: writing range must be ${emin}–${emax} words.`);
++ if(Boolean(wr.humanGraded)!==HUMAN.has(n))fail(`${L}: humanGraded must be ${HUMAN.has(n)}.`);
++ if((wr.builder||[]).length<5)fail(L+': needs 5 writing-builder items.');
++ (wr.builder||[]).forEach((q,j)=>validChoice(q,`${L}, writing builder ${j+1}`));
++ if(!String(wr.task||'').includes(`${emin}–${emax}`))fail(L+': writing task must state the word range.');
++
++ const x=l.northstar;
++ if(!x||x.framework!=='SEE_CHOOSE_CHANGE_USE_FIX'||x.version!=='b1-northstar-v1')fail(L+': Northstar metadata is missing or has the wrong version.');
++ else{
++  if(x.support!==expectedSupport(n))fail(`${L}: support must be "${expectedSupport(n)}".`);
++  if(!String(x.mission||'').trim())fail(L+': missing real-world mission.');
++  if(!Array.isArray(x.change)||x.change.length!==2)fail(L+': CHANGE must contain exactly two guided transformations.');
++  (x.change||[]).forEach((ch,ci)=>{if(!String(ch.model||'').trim()||!String(ch.prompt||'').trim()||!String(ch.starter||'').trim())fail(`${L}: CHANGE ${ci+1} needs a model, prompt and starter.`)});
++  if(!String(x.use?.prompt||'').trim()||!String(x.use?.help||'').trim())fail(L+': USE needs a prompt and help.');
++  if(norm(x.final?.task)!==norm(wr.task))fail(L+': Northstar final task must match the writing task.');
++  if(Number(x.final?.minWords)!==emin||Number(x.final?.maxWords)!==emax)fail(L+': Northstar final range does not match the writing range.');
++  if(!String(x.fix?.target||'').trim()||!String(x.fix?.model||'').trim())fail(L+': FIX needs one target and one model.');
++  const r=x.retrieval;
++  if(n===1){if(r)fail('Lesson 1: there is no earlier lesson to retrieve from.')}
++  else{
++   if(!r||Number(r.from)!==n-1)fail(L+': hidden REMEMBER must retrieve from the previous lesson.');
++   if(!String(r?.prompt||'').trim()||!Array.isArray(r?.options)||r.options.length!==3||!r.options.includes(r.answer))fail(L+': retrieval question is incomplete.');
++  }
++  if(n===22&&!x.final?.noAutomatedCorrection)fail('Lesson 22: final human-graded task must disable automated correction.');
++  if(n!==22&&x.final?.noAutomatedCorrection)fail(L+': noAutomatedCorrection is reserved for Lesson 22.');
++ }
++
++ /* Difficulty: B1 must be easier than B2, not a copy of it. */
++ const rw=words(l.readingText),aw=words(l.audioScript),[rmin,rmax]=readingBand(n),[amin,amax]=listeningBand(n);
++ if(rw<rmin||rw>rmax)fail(`${L}: reading is ${rw} words; B1 band is ${rmin}–${rmax}.`);
++ if(aw<amin||aw>amax)fail(`${L}: listening is ${aw} words; B1 band is ${amin}–${amax}.`);
++ if(norm(l.readingText)===norm(l.audioScript))fail(L+': listening must add new information, not repeat the reading.');
++ const avg=avgSentence(l.readingText);
++ if(avg>MAX_AVG_SENTENCE)fail(`${L}: reading averages ${avg.toFixed(1)} words per sentence; B1 maximum is ${MAX_AVG_SENTENCE}.`);
++ if(ref){
++  if(n>=2&&rw>=words(ref.readingText))fail(`${L}: B1 reading (${rw}) must be shorter than B2 (${words(ref.readingText)}).`);
