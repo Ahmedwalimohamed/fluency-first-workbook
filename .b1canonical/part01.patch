@@ -1,0 +1,134 @@
+From c355e129dc7f98596a2ee654ee378f6ee2074e90 Mon Sep 17 00:00:00 2001
+From: Ahmed Mohamed Hamud <ahmedmohamedhseed@gmail.com>
+Date: Sun, 4 Oct 2026 06:18:49 +0300
+Subject: [PATCH] =?UTF-8?q?Add=20B1=20Intermediate=20on=20the=20B2=20north?=
+ =?UTF-8?q?=20star=20(Lessons=201=E2=80=933)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+B1 reuses the B2 architecture end to end: same 22 topics, lesson schema,
+Northstar workbook (SEE → CHOOSE → CHANGE → USE → FIX), six-page
+fluency-first Live lesson, graders and UI. Only content difficulty changes.
+
+- speakup-b1-blueprint.js: B1 Lessons 1–3 (workbook + Live lessons),
+  same grammar focus as B2, shorter texts/sentences, simpler vocabulary,
+  lower writing targets
+- speakup-b1-northstar-v1.js: installs authored lessons into speakup-b1
+  via the shared B2 lesson mapper; unauthored lessons keep current content
+- Northstar engine, semantic grading, writing rubric, short-response and
+  correction graders now read the level from the lesson ID (B2 unchanged)
+- qa:b1 blocking gate for B2 parity and B1 difficulty limits, added to prestart
+- B1_LIVING_STANDARD.md
+
+speakup-b1 stays inactive for learners until all 22 lessons are approved.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01S1NZitNmGhjaoJLqYBmEU3
+---
+ B1_LIVING_STANDARD.md                   |  39 ++
+ correction-model-v3-bootstrap.js        |   2 +-
+ northstar-response-grading-bootstrap.js |   6 +-
+ package.json                            |   3 +-
+ public/assets/class-ai-practice-v1.js   |   4 +-
+ public/b2-northstar-workbook-v1.js      |  24 +-
+ public/index.html                       |   2 +-
+ public/northstar-semantic-grading-v1.js |  11 +-
+ public/speakup-b1-blueprint.js          | 571 ++++++++++++++++++++++++
+ public/speakup-b1-northstar-v1.js       |  57 +++
+ scripts/qa-b1.mjs                       | 200 +++++++++
+ server.js                               |   2 +
+ writing-rubric-bootstrap.js             |  30 +-
+ 13 files changed, 922 insertions(+), 29 deletions(-)
+ create mode 100644 B1_LIVING_STANDARD.md
+ create mode 100644 public/speakup-b1-blueprint.js
+ create mode 100644 public/speakup-b1-northstar-v1.js
+ create mode 100644 scripts/qa-b1.mjs
+
+diff --git a/B1_LIVING_STANDARD.md b/B1_LIVING_STANDARD.md
+new file mode 100644
+index 0000000..84664aa
+--- /dev/null
++++ b/B1_LIVING_STANDARD.md
+@@ -0,0 +1,39 @@
++# EnglishGate B1 Intermediate — Living Standard v1
++
++## Purpose
++B1 Intermediate is built from the B2 Upper Intermediate north star (`B2_LIVING_STANDARD.md`). Everything is the same — topics, lesson schema, Live lesson format, Northstar workbook (SEE → CHOOSE → CHANGE → USE → FIX), graders, UI and design — **except content difficulty**.
++
++## What stays identical to B2
++- 22 topics in the same order, stable IDs `su-b1-l1` … `su-b1-l22`, course ID `speakup-b1`
++- The grammar focus of each lesson (simplified, not replaced)
++- Lesson fields: outcome, foundation, lift, performance, pronunciation, mediation, functions, discourse, chunks, interaction expressions
++- 4 reading + 4 listening questions (with higher-order items), 6 grammar items, 10 vocabulary activities, 5 writing-builder items, 1 real-life writing task
++- Northstar support fade: high (1–5), medium-high (6–11), medium (12–17), low (18–22)
++- Hidden REMEMBER retrieval from the previous lesson (from Lesson 2)
++- Teacher-graded checkpoints: Lessons 5, 10, 15, 18, 22
++- Six-page fluency-first Live lesson with FLUENCY START, FLUENCY USE, TALK AFTER READING, MAKE IT PERSONAL — SPEAK FIRST, PRONUNCIATION FOCUS, MEDIATION MOVE, FLUENCY RULE, FLUENCY EXIT; no homework
++
++## What changes for B1 (difficulty only)
++| | B2 | B1 |
++|---|---|---|
++| Reading (L1–7 / 8–14 / 15–22) | 100+ / 140+ / 180+ words | 70–160 / 100–180 / 120–200, always shorter than B2 |
++| Listening | 70+ / 90+ / 110+ words | 60–120 / 70–130 / 80–140 |
++| Average sentence length (reading) | ~15–21 words | ≤ 14 words, always shorter than B2 |
++| Writing range | 40–60 → 180–220 | 30–45 → 140–180, always shorter than B2 |
++| Vocabulary | upper-intermediate, collocations | high-frequency words with plain definitions |
++| Live speaking turns | think 15s, speak 30–45s | think 20s, speak 20–30s |
++
++## Files
++- `public/speakup-b1-blueprint.js` — workbook lessons (`SPEAKUP_B1_BLUEPRINT`) and Live lessons (`SPEAKUP_B1_LIVE_LESSONS`)
++- `public/speakup-b1-northstar-v1.js` — installs authored lessons into `BOOK_PACKS['speakup-b1']` and `LIVE_BOOKS['speakup-b1']` using the shared B2 lesson mapper; lessons not yet authored keep their existing content
++- `scripts/qa-b1.mjs` — blocking gate (`npm run qa:b1`, runs in `prestart`)
++
++The Northstar engine and the AI graders read the level from the lesson ID, so B1 lessons are graded as B1 and B2 behaviour is unchanged.
++
++## Rollout
++- Lessons are authored in phases. Phase 1: Lessons 1–3.
++- `speakup-b1` stays **inactive** for learners until all 22 lessons pass `qa:b1` and are approved. Admins and teachers can preview it from Books.
++- Activation step (separate task): set the book to `ready`, allow `su-b1-l*` in the server learning-lesson gate, and add the B1 curriculum tag to attempts.
++
++## Change discipline
++Future B1 changes must preserve stable IDs and topics, keep the grammar focus aligned with B2, pass `npm run qa:b1` and `npm run qa:b2`, and update this standard when the contract changes.
++diff --git a/correction-model-v3-bootstrap.js b/correction-model-v3-bootstrap.js
++index 64abd2f..2956df0 100644
++--- a/correction-model-v3-bootstrap.js
+++++ b/correction-model-v3-bootstrap.js
++@@ -192,7 +192,7 @@ function templateCorrection(target,priority){
++ }
++ async function buildCorrection(body){
++   const mode=clean(body?.mode||'paragraph',20).toLowerCase(),lessonId=clean(body?.lessonId,100),task=clean(body?.task,1400),response=clean(body?.response,6000),targetLanguage=clean(body?.targetLanguage,1200),model=clean(body?.model,1200),grading=body?.gradingContext||{};
++-  if(!/^su-b2-l\d+$/.test(lessonId))throw Object.assign(new Error('Correction Model v3 is currently enabled for B2 Upper Intermediate.'),{status:423});
+++  if(!/^su-b[12]-l\d+$/.test(lessonId))throw Object.assign(new Error('Correction Model v3 is currently enabled for B1 Intermediate and B2 Upper Intermediate.'),{status:423});
++   if(!task||!response)throw Object.assign(new Error('Task and learner response are required.'),{status:400});
++   const sentences=splitSentences(response),context=[task,targetLanguage,model].join(' ');
++   const priority=mode==='short'?shortPriority(grading.decisions||{}):paragraphPriority(grading.dimensions||{});
++diff --git a/northstar-response-grading-bootstrap.js b/northstar-response-grading-bootstrap.js
++index 7de67bc..a8262ca 100644
++--- a/northstar-response-grading-bootstrap.js
+++++ b/northstar-response-grading-bootstrap.js
++@@ -176,12 +176,14 @@ function teachingFor(state,decisions,required,lowConfidence){
++ }
++ async function grade(body){
++   const lessonId=clean(body?.lessonId,100),phase=clean(body?.phase,20).toUpperCase(),prompt=clean(body?.prompt,1200),response=clean(body?.response,2200);
++-  if(!/^su-b2-l\d+$/.test(lessonId))throw Object.assign(new Error('Northstar semantic grading is currently enabled for B2 Upper Intermediate.'),{status:423});
+++  if(!/^su-b[12]-l\d+$/.test(lessonId))throw Object.assign(new Error('Northstar semantic grading is currently enabled for B1 Intermediate and B2 Upper Intermediate.'),{status:423});
+++  const level=/^su-b1-l\d+$/.test(lessonId)?'B1':'B2';
++   if(!['CHANGE','USE'].includes(phase))throw Object.assign(new Error('Only CHANGE and USE responses use this grading gate.'),{status:400});
++   if(!prompt||!response)throw Object.assign(new Error('Task and learner response are required.'),{status:400});
++   if(response.split(/\s+/).filter(Boolean).length<3)throw Object.assign(new Error('Write a complete response before checking it.'),{status:400});
++   const state={
++-    purpose:'EnglishGate B2 Northstar short-response grading and targeted teaching',
+++    purpose:`EnglishGate ${level} Northstar short-response grading and targeted teaching`,
+++    targetLevel:level,
++     version:VERSION,
++     phase,
++     lessonId,
++diff --git a/package.json b/package.json
++index 70be27a..9df6871 100644
++--- a/package.json
+++++ b/package.json
++@@ -6,6 +6,7 @@
++   "main": "server.js",
++   "scripts": {
++     "qa:b2": "node scripts/qa-lesson-quality-firewall.js && node scripts/qa-b2.mjs",
