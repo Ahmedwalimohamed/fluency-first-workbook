@@ -1,0 +1,57 @@
++   format and same grammar point per lesson. Only the difficulty changes:
++   shorter texts and sentences, high-frequency vocabulary, more support and
++   shorter writing tasks.
++   Lessons are authored in phases; speakup-b1-northstar-v1.js installs every
++   authored lesson and leaves the remaining lessons on their existing content. */
++(function(){
++'use strict';
++
++const lessons=[
++{
++ id:'su-b1-l1',number:1,title:'Getting Acquainted',
++ outcome:'Meet someone new at a course, introduce yourself, ask a simple follow-up question, and send a short message to stay in touch.',
++ grammarFocus:'Present perfect with for/since + natural follow-up questions',
++ grammarRule:'Use present perfect (have/has + past participle) with for or since for something that started in the past and is still true now. Use for + a period of time and since + a starting point. Then ask one simple follow-up question.',
++ finalWriting:'WhatsApp message after meeting someone new',
++ vocabulary:['introduce','colleague','hometown','interested in','in common','stay in touch'],
++ vocabularyItems:[
++  {type:'choice',q:'Match “introduce” to its meaning.',options:['to tell someone your name, or another person’s name, for the first time','the town or city where you grew up','shared by two or more people'],answer:'to tell someone your name, or another person’s name, for the first time',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “colleague” to its meaning.',options:['a person you work with','wanting to know or learn more about something','to keep talking or sending messages to someone'],answer:'a person you work with',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “hometown” to its meaning.',options:['the town or city where you grew up','shared by two or more people','to tell someone your name, or another person’s name, for the first time'],answer:'the town or city where you grew up',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “interested in” to its meaning.',options:['wanting to know or learn more about something','to keep talking or sending messages to someone','a person you work with'],answer:'wanting to know or learn more about something',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “in common” to its meaning.',options:['shared by two or more people','to tell someone your name, or another person’s name, for the first time','the town or city where you grew up'],answer:'shared by two or more people',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “stay in touch” to its meaning.',options:['to keep talking or sending messages to someone','a person you work with','wanting to know or learn more about something'],answer:'to keep talking or sending messages to someone',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Which word means “a person you work with”?',options:['colleague','interested in','stay in touch'],answer:'colleague',tag:'vocabulary:context'},
++  {type:'choice',q:'Which target word best matches this idea: to keep talking or sending messages to someone?',options:['stay in touch','hometown','introduce'],answer:'stay in touch',tag:'vocabulary:context'},
++  {type:'exact',q:'Type the target word meaning “the town or city where you grew up”.',answer:'hometown',min:1,tag:'vocabulary:recall'},
++  {type:'choice',q:'Which words best complete the sentence: “We both love football, so we have a lot ___.”',options:['in common','stay in touch','hometown'],answer:'in common',tag:'vocabulary:application'}
++ ],
++ readingText:"Amina: Hi, I'm Amina. Is this seat free?\nOmar: Yes, please sit down. I'm Omar. Nice to meet you.\nAmina: Nice to meet you too. Are you here for the computer course?\nOmar: Yes. My manager told me about it. I work at a bank in Hargeisa.\nAmina: Oh, really? How long have you worked there?\nOmar: I've worked there for two years. What about you?\nAmina: I'm a teacher. I've taught English since 2021.\nOmar: That's interesting. Do you enjoy it?\nAmina: Yes, very much. I want to use more technology in my classes.",
++ audioScript:"Omar: Today was really useful. I learned a lot about spreadsheets.\nAmina: Me too. I want to try some new ideas with my students next week.\nOmar: How many students do you have?\nAmina: About thirty in each class. They're teenagers, so they love phones and computers.\nOmar: I have a younger brother at secondary school. He's the same!\nAmina: Ha! We have something in common, then. Would you like to stay in touch?\nOmar: Yes, of course. Let's share numbers. Maybe we can practise English together.",
++ questions:[
++  {q:'What are Amina and Omar mainly doing?',options:['Meeting for the first time at a course','Planning a lesson together','Talking about a problem at the bank'],answer:'Meeting for the first time at a course',tag:'reading:main-idea'},
++  {q:'How long has Omar worked at the bank?',options:['For two years','Since 2021','For five years'],answer:'For two years',tag:'reading:detail'},
++  {q:'Why is Amina at the computer course?',options:['She wants to use more technology in her classes','Her manager told her to come','She wants to work at a bank'],answer:'She wants to use more technology in her classes',tag:'reading:inference'},
++  {q:'Which question could Omar ask next to keep the conversation going?',options:['What do you teach, and who are your students?','Is this seat free?','Do you have a job?'],answer:'What do you teach, and who are your students?',tag:'reading:response'},
++  {q:'What did Omar learn about at the course?',options:['Spreadsheets','Teaching teenagers','Mobile phones'],answer:'Spreadsheets',tag:'listening:detail'},
++  {q:'How many students does Amina have in each class?',options:['About thirty','About thirteen','About three hundred'],answer:'About thirty',tag:'listening:detail'},
++  {q:'What do Amina and Omar have in common?',options:['They both know young people who love technology','They both work at a bank','They both teach English'],answer:'They both know young people who love technology',tag:'listening:inference'},
++  {q:'What do they decide to do at the end?',options:['Share numbers and stay in touch','Take another course tomorrow','Visit Amina’s school together'],answer:'Share numbers and stay in touch',tag:'listening:response'}
++ ],
++ writing:{
++  builder:[
++   {q:'Which opening is best for a WhatsApp message to Omar after the course?',options:['Hi Omar, it was nice to meet you today.','Dear Sir, I am writing to inform you.','Omar. Answer me.'],answer:'Hi Omar, it was nice to meet you today.',tag:'writing-builder:register'},
++   {q:'Which sentence shows you remember your conversation?',options:['I hope your work at the bank is going well.','I have a phone.','Today is Tuesday.'],answer:'I hope your work at the bank is going well.',tag:'writing-builder:detail'},
++   {q:'Which sentence gives a good reason to stay in touch?',options:['Maybe we can practise English together on Saturdays.','Please never message me.','I am always very busy.'],answer:'Maybe we can practise English together on Saturdays.',tag:'writing-builder:purpose'},
++   {q:'Which word best completes the sentence: “It would be great to stay in ___.”',options:['touch','common','hometown'],answer:'touch',tag:'writing-builder:vocabulary'},
++   {q:'Which closing is friendly and natural?',options:['See you soon!','Regards, from the management.','End of message.'],answer:'See you soon!',tag:'writing-builder:register'}
++  ],
++  task:'Write a 30–45 word WhatsApp message to Omar after the course. Say it was nice to meet him, mention one thing he told you, and suggest one way to stay in touch.',
++  minWords:30,maxWords:45,humanGraded:false,checkpoint:false
++ },
++ foundation:'Use familiar introduction language (name, job, hometown, interests) so the learner can start a first-meeting conversation with confidence.',
++ lift:'Go beyond one-word answers: add one detail, react to what the other person says, and ask one simple follow-up question.',
++ performance:'Meet someone new at a course, share basic information about yourself, ask at least one follow-up question, and send a short message to stay in touch.',
++ pronunciation:'Stress the important words (names, jobs, places) and pause between short ideas so your introduction is easy to follow.',
++ mediation:'Listen to a partner’s introduction, then introduce your partner to another person with two correct details.',
++ functions:['introduce yourself','ask and answer simple personal questions','react to new information','ask a follow-up question','suggest staying in touch'],
