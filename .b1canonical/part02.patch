@@ -1,0 +1,98 @@
++    "qa:b1": "node scripts/qa-b1.mjs",
+     "qa:professional": "node scripts/qa-professional-curriculum.mjs && node --check professional-curriculum-runtime.js",
+     "qa:multischool": "node --check school-platform-bootstrap.js && node --check public/assets/school-platform.js && node --check public/assets/academic-manager.js",
+     "qa:deployment": "node scripts/qa-deployment.mjs",
+@@ -25,7 +26,7 @@
+     "qa:learning-companion:adversarial": "node scripts/qa-learning-companion-adversarial.mjs",
+     "qa:ai-practice": "node --check lesson-practice-contracts.js && node --check lesson-practice-evidence.js && node --check lesson-practice-service.js && node --check public/assets/lesson-practice.js && node --check public/assets/lesson-practice-feedback-v1.js && node --check public/assets/class-ai-practice-v1.js && node --check public/assets/englishgate-evidence-v1.js && node --check public/northstar-semantic-grading-v1.js && node scripts/qa-lesson-practice-contracts.mjs && node --test tests/lesson-practice.test.js tests/live-ai-conversation-proof.test.js",
+     "smoke:production": "node scripts/smoke-production.mjs",
+-    "prestart": "node --check live-task-share-bootstrap.js && node --check core-learning-access-bootstrap.js && node --check a1-pilot-bootstrap.js && node --check b1-shadow-pilot-bootstrap.js && node --check b1-shadow-pilot-smoke.js && node --check learning-companion-shadow-monitor-bootstrap.js && npm run qa:ai-practice && npm run qa:a1:gold:l1 && npm run qa:professional && npm run qa:quality-gate && npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2:ui:jev && npm run qa:b2 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
++    "prestart": "node --check live-task-share-bootstrap.js && node --check core-learning-access-bootstrap.js && node --check a1-pilot-bootstrap.js && node --check b1-shadow-pilot-bootstrap.js && node --check b1-shadow-pilot-smoke.js && node --check learning-companion-shadow-monitor-bootstrap.js && npm run qa:ai-practice && npm run qa:a1:gold:l1 && npm run qa:professional && npm run qa:quality-gate && npm run qa:deployment && npm run qa:security && npm run qa:multischool && npm run qa:b2:ui:jev && npm run qa:b2 && npm run qa:b1 && npm run qa:cefr && npm run qa:community && npm run qa:ladder",
+     "start": "node -r ./professional-curriculum-runtime.js -r ./live-task-share-bootstrap.js -r ./core-learning-access-bootstrap.js teacher-management-bootstrap.js",
+     "qa:community": "node scripts/qa-community.mjs",
+     "qa:cefr": "node scripts/qa-cefr.mjs",
+diff --git a/public/assets/class-ai-practice-v1.js b/public/assets/class-ai-practice-v1.js
+index 6e895fe..52b06ab 100644
+--- a/public/assets/class-ai-practice-v1.js
++++ b/public/assets/class-ai-practice-v1.js
+@@ -20,7 +20,7 @@
+   return 0;
+  }
+  function candidatePool(){
+-  return [...(Array.isArray(window.SPEAKUP_B2_BLUEPRINT)?window.SPEAKUP_B2_BLUEPRINT:[]),...((window.A1_GOLD_V1_BOOK?.lessons)||[])].filter(x=>x?.id);
++  return [...(Array.isArray(window.SPEAKUP_B2_BLUEPRINT)?window.SPEAKUP_B2_BLUEPRINT:[]),...((window.A1_GOLD_V1_BOOK?.lessons)||[]),...(Array.isArray(window.SPEAKUP_B1_BLUEPRINT)?window.SPEAKUP_B1_BLUEPRINT:[])].filter(x=>x?.id);
+  }
+  function courseMatches(id,hint){
+   const h=clean(hint).toLowerCase();if(!h)return true;
+@@ -32,7 +32,7 @@
+  function canonicalLessonId(rawId,titleHint=''){
+   const id=clean(rawId);
+   if(/^su-b2-l\d+$/.test(id)||/^su-b1-l\d+$/.test(id)||/^a1-gold-l(?:[1-9]|1\d|2[0-2])$/.test(id))return id;
+-  const snap=currentLessonSnapshot()||{},title=clean(titleHint||snap.title||document.querySelector('#pageTitle')?.textContent||''),titleNorm=norm(title),candidates=candidatePool(),courseHint=currentCourseHint();
++  const snap=currentLessonSnapshot()||{},title=clean(titleHint||snap.title||document.querySelector('#pageTitle')?.textContent||''),titleNorm=norm(title),courseHint=currentCourseHint(),pool=candidatePool(),scoped=pool.filter(x=>courseMatches(x.id,courseHint)),candidates=scoped.length?scoped:pool;
+   if(titleNorm){
+    let match=candidates.find(x=>norm(x.title)===titleNorm);
+    if(!match)match=candidates.find(x=>{const t=norm(x.title);return t.length>=4&&(titleNorm.includes(t)||t.includes(titleNorm))});
+diff --git a/public/b2-northstar-workbook-v1.js b/public/b2-northstar-workbook-v1.js
+index dc27b1c..512479f 100644
+--- a/public/b2-northstar-workbook-v1.js
++++ b/public/b2-northstar-workbook-v1.js
+@@ -1,4 +1,4 @@
+-/* EnglishGate B2 Lessons 2–22 — Northstar workbook engine
++/* EnglishGate Northstar workbook engine — B2 Lessons 2–22 and B1 Lessons 1–22
+    SEE → CHOOSE → CHANGE → USE → FIX
+    Keeps the learner experience simple while Jev handles the repair decision. */
+ (function(){
+@@ -30,6 +30,11 @@ function esc(v){
+ }
+ function words(v){const s=String(v||'').trim();return s?s.split(/\s+/).filter(Boolean).length:0}
+ function preview(){return typeof isWorkbookPreview==='function'&&isWorkbookPreview()}
++/* Level comes from the stable lesson ID: su-b2-l* → B2, su-b1-l* → B1. */
++function levelCode(l){const m=String(l&&l.id||'').match(/^su-(b1|b2)-l\d+$/i);return m?m[1].toLowerCase():'b2'}
++function levelLabel(l){return levelCode(l).toUpperCase()}
++function siblingId(l,n){return 'su-'+levelCode(l)+'-l'+n}
++function usesNorthstar(l){return Boolean(l&&l.northstar?.framework==='SEE_CHOOSE_CHANGE_USE_FIX'&&(Number(l.number)>=2||levelCode(l)!=='b2'))}
+ function sid(){return typeof session!=='undefined'&&session&&session.id?session.id:'preview'}
+ function key(l){return 'englishgate:'+FLOW_VERSION+':'+sid()+':'+l.id}
+ function fresh(l){return{version:FLOW_VERSION,lessonId:l.id,index:0,responses:{},results:{},attempts:{},subprogress:{},subresponses:{},repair:null,complete:false,saved:false,share:false,updatedAt:new Date().toISOString()}}
+@@ -58,7 +63,7 @@ function shell(l,s,body){
+  const pct=s.complete?100:Math.round(s.index/TOTAL*100),phase=phaseAt(s.index),step=STEPS[Math.max(0,Math.min(TOTAL-1,s.index))]||{},mode=uiModeAt(s.index);
+  return '<div class="b2-microflow b2-northstar-flow" data-ui-mode="'+mode+'" data-phase="'+String(phase).toLowerCase()+'" data-skill="'+String(step.skill||'').toLowerCase()+'" data-step="'+(Number(s.index)+1)+'">'+
+   '<div class="micro-top"><button class="ghost-btn" id="northstarBack" type="button">← Lessons</button>'+
+-  '<div class="micro-title"><small>B2 · Lesson '+Number(l.number)+'</small><strong>'+esc(l.title)+'</strong></div>'+
++  '<div class="micro-title"><small>'+levelLabel(l)+' · Lesson '+Number(l.number)+'</small><strong>'+esc(l.title)+'</strong></div>'+
+   '<span class="micro-preview">'+(preview()?'Preview':'Workbook')+'</span></div>'+
+   phaseStrip(s)+
+   '<div class="micro-history-nav"><button class="ghost-btn" id="northstarPrevious" type="button"'+((s.index<=0||(s.complete&&!reviewingComplete))?' hidden':'')+'>← Previous activity</button></div>'+
+@@ -125,7 +130,7 @@ function rememberCandidate(l){
+  const n=Number(l.number)||0;
+  const candidates=REMEMBER_OFFSETS.filter(offset=>n-offset>=1).map(offset=>{
+   const from=n-offset;
+-  const prior=typeof lessonById==='function'?lessonById('su-b2-l'+from):null;
++  const prior=typeof lessonById==='function'?lessonById(siblingId(l,from)):null;
+   const q=prior?grammarItem(prior):null;
+   return q?{offset,from,q,weak:(()=>{try{return Boolean(localStorage.getItem(weakKey(prior.id)))}catch{return false}})()}:null
+  }).filter(Boolean);
+@@ -220,7 +225,12 @@ function renderSee(l,s){
+ }
+ function renderRetrieval(l,s){
+  const item=rememberCandidate(l);
+- if(!item)return renderGrammar(l,s);
++ if(!item){
++  /* No earlier lesson to remember (B1 Lesson 1): practise a second grammar item instead of repeating the first. */
++  const second=(l.grammar?.items||[]).filter(x=>Array.isArray(x.options)&&x.options.length>=3&&x.answer!==undefined)[1];
++  if(second)return renderChoice(l,s,{q:second.q,sub:l.grammar?.rule||'',options:second.options,answer:choiceIndex(second),good:'This form matches the meaning.',bad:'Use the short rule above, then try again.',memoryId:l.id});
++  return renderGrammar(l,s)
++ }
+  const q=item.q;
+  return renderChoice(l,s,{
+   q:q.q,
+@@ -229,7 +239,7 @@ function renderRetrieval(l,s){
+   answer:choiceIndex(q),
+   good:'That earlier language is still useful here.',
+   bad:'Choose the form that sounds natural and communicates the meaning clearly.',
+-  memoryId:'su-b2-l'+item.from
++  memoryId:siblingId(l,item.from)
+  })
+ }
+ function renderGrammar(l,s){
