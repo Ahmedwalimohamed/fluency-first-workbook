@@ -1,0 +1,63 @@
++  {q:'What does Hodan think was a mistake in her first year?',options:['She didn’t ask enough questions','She studied too much','She changed jobs too quickly'],answer:'She didn’t ask enough questions',tag:'listening:inference'},
++  {q:'What is Hodan’s advice for the students?',options:['Don’t be afraid to ask questions','Always work alone','Start as a team leader'],answer:'Don’t be afraid to ask questions',tag:'listening:response'}
++ ],
++ writing:{
++  builder:[
++   {q:'Which opening fits a polite message to Hodan after Careers Day?',options:['Dear Hodan, thank you for your talk at Careers Day.','Hey!!! Give me a job.','To everybody about everything.'],answer:'Dear Hodan, thank you for your talk at Careers Day.',tag:'writing-builder:register'},
++   {q:'Which sentence gives a clear example of your experience?',options:['Last year, I helped organise a school event for 100 people.','I am very good at everything.','I have done things.'],answer:'Last year, I helped organise a school event for 100 people.',tag:'writing-builder:evidence'},
++   {q:'Which words best join these ideas: “I’ve worked in a shop for two years. ___, I’ve learned to talk to customers.”',options:['Because of this','Although','Unless'],answer:'Because of this',tag:'writing-builder:cohesion'},
++   {q:'Which word best fits: “I want to get more ___ in a hospital.”',options:['experience','deadline','promotion'],answer:'experience',tag:'writing-builder:vocabulary'},
++   {q:'Which closing asks politely for a chance?',options:['Could you tell me if there are any volunteer jobs at the hospital?','Give me a job now.','Bye.'],answer:'Could you tell me if there are any volunteer jobs at the hospital?',tag:'writing-builder:purpose'}
++  ],
++  task:'Write a 35–50 word message to Hodan after Careers Day. Thank her, say what experience you have, and give one clear example.',
++  minWords:35,maxWords:50,humanGraded:false,checkpoint:false
++ },
++ foundation:'Use present perfect and past simple to talk about simple work or study history.',
++ lift:'Move from general claims (“I am hardworking”) to one clear example with a time and a result.',
++ performance:'Talk about your work or study experience at a Careers Day, give one clear example, and answer a simple follow-up question.',
++ pronunciation:'Stress the time words and the result (two years, last month, a promotion) so the listener hears the key facts.',
++ mediation:'Listen to a partner’s work or study story and tell the group one thing they did and one thing they learned.',
++ functions:['describe work or study experience','give an example to support a claim','talk about something you learned'],
++ discourse:['telling events in order','moving from a claim to an example','ending with what you learned'],
++ chunks:['work as a…','be responsible for','meet a deadline','get a promotion','learn a lot'],
++ interactionExpressions:['What do you do now?','What helped you most?','What did you learn from that?']
++ ,
++ grammarItems:[
++  {q:'Hodan still works at the hospital. Choose the best sentence.',options:['She has worked there for four years.','She worked there for four years.','She is working there for four years.'],answer:'She has worked there for four years.',tag:'grammar:unfinished-time'},
++  {q:'Which sentence is correct?',options:['She got a promotion last month.','She has got a promotion last month.','She gets a promotion last month.'],answer:'She got a promotion last month.',tag:'grammar:finished-time'},
++  {q:'Choose the best sentence about life experience (no time is given).',options:['I’ve worked in a shop before.','I worked in a shop before tomorrow.','I have work in a shop before.'],answer:'I’ve worked in a shop before.',tag:'grammar:experience'},
++  {q:'Which question asks about a finished time?',options:['When did you start your job?','When have you started your job?','When you started your job?'],answer:'When did you start your job?',tag:'grammar:function'},
++  {q:'Complete: “I ___ here since 2022, and I ___ my current job last year.”',options:['have worked / started','worked / have started','work / have started'],answer:'have worked / started',tag:'grammar:contrast'},
++  {q:'Which sentence shows a result now?',options:['I’ve finished the report, so I can help you now.','I finished the report tomorrow.','I have finish the report.'],answer:'I’ve finished the report, so I can help you now.',tag:'grammar:present-result'}
++ ],
++ northstar:{
++  version:'b1-northstar-v1',framework:'SEE_CHOOSE_CHANGE_USE_FIX',support:'high',
++  mission:'Talk about your experience and give one clear example.',
++  see:{source:'reading',questionStrategy:'first-reading'},
++  choose:{includeGrammar:true,includeVocabulary:true,includeListening:true,includeRetrieval:true},
++  change:[
++   {model:"I've worked in a shop for two years.",prompt:'Change the model so it is true for you.',starter:"I've worked / studied in ___ for ___."},
++   {model:'Last year, I helped organise a school event.',prompt:'Change the model to one real thing you did. Use a finished time.',starter:'Last year / In 2024, I ___.'}
++  ],
++  use:{prompt:'Hodan asks: “Tell me about your experience.” Answer in 1–2 sentences.',help:"I've worked / studied… · Last year, I…"},
++  final:{task:'Write a 35–50 word message to Hodan after Careers Day. Thank her, say what experience you have, and give one clear example.',minWords:35,maxWords:50,format:'polite message'},
++  fix:{target:'Use present perfect for experience up to now, and past simple with a finished time (last year, in 2024).',model:"I've studied computers for two years. Last year, I finished a short course."},
++  retrieval:{prompt:'Someone says, “I’ve worked at a bank for two years.” Which follow-up question is natural?',options:['Do you enjoy working there?','Is a bank?','Where you work?'],answer:'Do you enjoy working there?',from:1}
++ }
++},
++{
++ id:'su-b1-l3',number:3,title:'Travel & Adventure',
++ outcome:'Tell a short travel story in the right order, say what went wrong and how it ended, and react to a friend’s story.',
++ grammarFocus:'Narrative Tenses',
++ grammarRule:'Use past simple for the main events, past continuous (was/were + -ing) for the background action, and past perfect (had + past participle) for something that happened before another past event.',
++ finalWriting:'WhatsApp travel story',
++ vocabulary:['journey','delay','luggage','local','destination','pack'],
++ vocabularyItems:[
++  {type:'choice',q:'Match “journey” to its meaning.',options:['travelling from one place to another, often a long way','the bags you carry when you travel','the place you are travelling to'],answer:'travelling from one place to another, often a long way',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “delay” to its meaning.',options:['a time when something happens later than planned','from or connected with the place near you','to put your things into a bag before a trip'],answer:'a time when something happens later than planned',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “luggage” to its meaning.',options:['the bags you carry when you travel','the place you are travelling to','travelling from one place to another, often a long way'],answer:'the bags you carry when you travel',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “local” to its meaning.',options:['from or connected with the place near you','to put your things into a bag before a trip','a time when something happens later than planned'],answer:'from or connected with the place near you',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “destination” to its meaning.',options:['the place you are travelling to','travelling from one place to another, often a long way','the bags you carry when you travel'],answer:'the place you are travelling to',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Match “pack” to its meaning.',options:['to put your things into a bag before a trip','a time when something happens later than planned','from or connected with the place near you'],answer:'to put your things into a bag before a trip',tag:'vocabulary:meaning'},
++  {type:'choice',q:'Which word means “the bags you carry when you travel”?',options:['luggage','local','pack'],answer:'luggage',tag:'vocabulary:context'},
++  {type:'choice',q:'Which target word best matches this idea: a time when something happens later than planned?',options:['delay','journey','destination'],answer:'delay',tag:'vocabulary:context'},
