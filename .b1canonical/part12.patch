@@ -1,0 +1,109 @@
++  if(n>=2&&avg>=avgSentence(ref.readingText))fail(`${L}: B1 sentences must be shorter on average than B2.`);
++  if(emax>=Number(ref.writing?.maxWords))fail(`${L}: B1 writing target must be shorter than B2.`);
++  if(norm(l.readingText)===norm(ref.readingText))fail(L+': B1 reading is copied from B2.');
++ }
++
++ const allText=JSON.stringify(l);
++ if(/lorem ipsum|\btodo\b|\btbd\b|placeholder text/i.test(allText))fail(L+': placeholder residue detected.');
++ if(/\bB2\b/.test(allText))fail(L+': B1 learner content must not mention B2.');
++
++ const live=liveRows?.[i],text=String(live?.content||'');
++ if(!live){fail(L+': Live lesson missing.');continue}
++ if(live.number!==n||live.title!==l.title)fail(L+': Live lesson number/title mismatch.');
++ if(!text.startsWith(`LESSON ${n} ${l.title}\n`))fail(L+': Live lesson heading is wrong.');
++ if(!text.includes('CAN-DO GOAL: '+l.outcome))fail(L+': Live CAN-DO GOAL must match the workbook outcome.');
++ for(const page of ['PAGE 1 — WARM UP','PAGE 2 — VOCABULARY','PAGE 3 — READING','PAGE 4 — LANGUAGE FOCUS','PAGE 5 — FLUENCY MISSION','PAGE 6 — REFLECTION'])if(!text.includes(page))fail(`${L}: Live lesson missing "${page}".`);
++ for(const marker of ['PRONUNCIATION FOCUS','MEDIATION MOVE','FLUENCY START','FLUENCY USE','TALK AFTER READING','FLUENCY RULE','FLUENCY EXIT','SPEAKING CHALLENGE','Useful Expressions','Check Your Understanding'])if(!text.includes(marker))fail(`${L}: Live lesson missing "${marker}".`);
++ if(n!==22&&!text.includes('MAKE IT PERSONAL — SPEAK FIRST'))fail(L+': language focus must personalise through speaking first.');
++ if(text.includes('B2 LIFT')||/\bB2\b/.test(text))fail(L+': Live lesson must not mention B2.');
++ if(/\bHOMEWORK\b/i.test(text))fail(L+': Live lesson must not include homework.');
++ if(/Write their names below:|Make It Personal — write/i.test(text))fail(L+': Live lesson must stay speaking-first.');
++ if(!norm(text).includes(norm(l.readingText.replace(/\n/g,' '))))fail(L+': Live reading must match the workbook reading source.');
++ for(const w of l.vocabulary||[])if(!text.includes('\n'+w+' '))fail(`${L}: Live vocabulary page must teach "${w}".`);
++}
++
++/* Runtime wiring: the installer must map B1 lessons through the shared B2 lesson mapper. */
++const app=fs.readFileSync(new URL('public/app.js',ROOT),'utf8');
++const mapper=app.split('\n').find(line=>line.startsWith('function makeBlueprintB2Lesson('));
++if(!mapper)fail('Shared lesson mapper makeBlueprintB2Lesson was not found in app.js.');
++else{
++ const pack={id:'speakup-b1',lessons:TOPICS.map((title,i)=>({id:`su-b1-l${i+1}`,number:i+1,title,legacy:true}))};
++ const liveBook={title:'B1 Intermediate',lessons:TOPICS.map((title,i)=>({number:i+1,title,content:'legacy'}))};
++ const ctx={window:{SPEAKUP_B1_BLUEPRINT:blueprint,SPEAKUP_B1_LIVE_LESSONS:liveRows,LIVE_BOOKS:{'speakup-b1':liveBook}},console,BOOK_PACKS:{'speakup-b1':pack},grammarQuestions:()=>[]};
++ vm.createContext(ctx);
++ vm.runInContext(mapper,ctx);
++ vm.runInContext(fs.readFileSync(new URL('public/speakup-b1-northstar-v1.js',ROOT),'utf8'),ctx,{filename:'speakup-b1-northstar-v1.js'});
++ for(const l of blueprint||[]){
++  const got=pack.lessons[l.number-1],liveGot=liveBook.lessons[l.number-1];
++  if(got.legacy||got.id!==l.id)fail(`Runtime: ${l.id} was not installed into the speakup-b1 workbook.`);
++  if(got.northstar?.framework!=='SEE_CHOOSE_CHANGE_USE_FIX')fail(`Runtime: ${l.id} lost its Northstar metadata.`);
++  if(got.b2Lift!==l.lift)fail(`Runtime: ${l.id} Lift stage was not mapped.`);
++  if((got.listening?.questions||[]).length!==(l.questions||[]).length)fail(`Runtime: ${l.id} questions were not mapped.`);
++  if(liveGot.content==='legacy')fail(`Runtime: ${l.id} Live lesson was not installed.`);
++ }
++ const untouched=pack.lessons.slice((blueprint||[]).length).every(x=>x.legacy);
++ if(!untouched)fail('Runtime: lessons that are not authored yet must keep their existing content.');
++ if(typeof ctx.window.ENGLISHGATE_BLUEPRINTS?.blueprintForLessonId!=='function')fail('Runtime: blueprint resolver is not exposed.');
++ else if(ctx.window.ENGLISHGATE_BLUEPRINTS.blueprintForLessonId('su-b1-l1')!==blueprint)fail('Runtime: su-b1 lessons must resolve to the B1 blueprint.');
++}
++const index=fs.readFileSync(new URL('public/index.html',ROOT),'utf8');
++const cefrAt=index.indexOf('cefr-live-books.js'),bpAt=index.indexOf('speakup-b1-blueprint.js'),instAt=index.indexOf('speakup-b1-northstar-v1.js'),engineAt=index.indexOf('b2-northstar-workbook-v1.js');
++if(bpAt<0||instAt<0)fail('index.html must load the B1 blueprint and installer.');
++else if(!(cefrAt<bpAt&&bpAt<instAt&&instAt<engineAt))fail('B1 scripts must load after cefr-live-books.js and before the Northstar engine.');
++const engine=fs.readFileSync(new URL('public/b2-northstar-workbook-v1.js',ROOT),'utf8');
++for(const token of ['function usesNorthstar(l)','function levelLabel(l)','siblingId(l,from)','level:levelLabel(l)'])if(!engine.includes(token))fail('Northstar engine is not level-aware: missing '+token+'.');
++const semantic=fs.readFileSync(new URL('public/northstar-semantic-grading-v1.js',ROOT),'utf8');
++if(!semantic.includes('SPEAKUP_B1_BLUEPRINT')||!semantic.includes('su-b[12]-l'))fail('Northstar semantic grading must accept B1 lessons.');
++for(const file of ['writing-rubric-bootstrap.js','northstar-response-grading-bootstrap.js','correction-model-v3-bootstrap.js']){
++ if(!fs.readFileSync(new URL(file,ROOT),'utf8').includes('su-b[12]-l'))fail(file+' must accept B1 lessons.');
++}
++
++for(const w of warnings)console.warn('WARN',w);
++if(failures.length){
++ console.error('B1 Northstar QA failed ('+failures.length+')');
++ for(const f of failures)console.error(' - '+f);
++ process.exit(1);
++}
++console.log(`B1 Northstar QA passed: ${blueprint.length}/22 lessons authored on the B2 north star, all within B1 difficulty limits.`);
+diff --git a/server.js b/server.js
+index 8ef0809..81f7851 100644
+--- a/server.js
++++ b/server.js
+@@ -1029,6 +1029,8 @@ app.get('/a2-living-standard.js',(req,res)=>sendFreshFile(res,'a2-living-standar
+ app.get('/cefr-live-books.js',(req,res)=>sendFreshFile(res,'cefr-live-books.js','application/javascript'));
+ app.get('/live-books.js',(req,res)=>sendFreshFile(res,'live-books.js','application/javascript'));
+ app.get('/speakup-b2-blueprint.js',(req,res)=>sendFreshFile(res,'speakup-b2-blueprint.js','application/javascript'));
++app.get('/speakup-b1-blueprint.js',(req,res)=>sendFreshFile(res,'speakup-b1-blueprint.js','application/javascript'));
++app.get('/speakup-b1-northstar-v1.js',(req,res)=>sendFreshFile(res,'speakup-b1-northstar-v1.js','application/javascript'));
+ app.get('/live-books.json',(req,res)=>sendFreshFile(res,'live-books.json','application/json'));
+ app.get('/',(req,res)=>sendFreshFile(res,'index.html'));
+ app.use((req,res)=>{if(req.path.startsWith('/api/'))return res.status(404).json({error:'Not found'});res.sendFile(path.join(__dirname,'public','index.html'))});
+diff --git a/writing-rubric-bootstrap.js b/writing-rubric-bootstrap.js
+index 6189275..bf1afb9 100644
+--- a/writing-rubric-bootstrap.js
++++ b/writing-rubric-bootstrap.js
+@@ -42,6 +42,13 @@ const RUBRIC={
+   }}
+ };
+ 
++/* The rubric wording is written for B2. B1 uses the same rubric with the level name swapped,
++   so B2 grading is unchanged and B1 is judged against its own target level. */
++function levelForLesson(lessonId){return /^su-b1-l\d+$/.test(String(lessonId||''))?'B1':'B2'}
++function rubricFor(level){
++  if(level==='B2')return RUBRIC;
++  return Object.fromEntries(Object.entries(RUBRIC).map(([id,r])=>[id,{...r,criteria:Object.fromEntries(Object.entries(r.criteria).map(([band,text])=>[band,text.replace(/B2/g,level)]))}]));
++}
+ function studentSession(req){
+   try{
+     const user=jwt.verify(req.cookies?.ff_session||'',process.env.JWT_SECRET);
+@@ -63,7 +70,7 @@ function basicIntegrity(text,minWords,maxWords){
+ }
+ function jevQuestions(level){
+   const questions={};
+-  for(const [id,r] of Object.entries(RUBRIC)){
++  for(const [id,r] of Object.entries(rubricFor(level||'B2'))){
+     questions[id]={
+       type:'choice',
+       instructions:`Judge ONLY ${r.label.toLowerCase()} for this ${level||'B2'} English learner writing response. Do not reward the learner merely for writing enough words. Use the task and learner response supplied in state. Select the single descriptor that best matches the evidence.`,
+@@ -106,34 +113,35 @@ async function callJev(state,questions){
+     throw last||new Error('Jev writing grader failed.');
