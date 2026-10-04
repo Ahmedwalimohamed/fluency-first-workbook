@@ -1,0 +1,67 @@
+   }finally{clearTimeout(timeout)}
+ }
+-function scoreDimensions(decisions){
++function scoreDimensions(decisions,level='B2'){
+   let total=0;
+   const dimensions={};
+-  for(const [id,r] of Object.entries(RUBRIC)){
++  for(const [id,r] of Object.entries(rubricFor(level))){
+     const d=decisions[id],raw=BAND_POINTS[d.band];
+     total+=raw*(r.weight/100);
+     dimensions[id]={label:r.label,weight:r.weight,band:d.band,score:raw,confidence:d.confidence,descriptor:r.criteria[d.band]};
+   }
+   return {score:Math.round(total),dimensions};
+ }
+-function feedbackFor(dimensions,pass){
++function feedbackFor(dimensions,pass,level='B2'){
+   const rows=Object.entries(dimensions).sort((a,b)=>b[1].score-a[1].score);
+   const strongest=rows[0]?.[1],weakest=rows[rows.length-1]?.[1];
+   return {
+     strength:strongest?`Strongest area: ${strongest.label}.`:'',
+     improve:weakest?`Priority for revision: ${weakest.label}.`:'',
+-    action:pass?'This response meets the EnglishGate B2 writing standard.':'Revise the weakest rubric area, then submit again for a new grade.'
++    action:pass?`This response meets the EnglishGate ${level} writing standard.`:'Revise the weakest rubric area, then submit again for a new grade.'
+   };
+ }
+ async function gradeWriting(body){
+-  const lessonId=clean(body?.lessonId,100),task=clean(body?.task,1400),text=clean(body?.text,6000),level=clean(body?.level||'B2',30);
+-  if(!/^su-b2-l\d+$/.test(lessonId))throw Object.assign(new Error('The standard writing grader is currently enabled for B2 Upper Intermediate.'),{status:423});
++  const lessonId=clean(body?.lessonId,100),task=clean(body?.task,1400),text=clean(body?.text,6000);
++  if(!/^su-b[12]-l\d+$/.test(lessonId))throw Object.assign(new Error('The standard writing grader is currently enabled for B1 Intermediate and B2 Upper Intermediate.'),{status:423});
++  const level=levelForLesson(lessonId);
+   if(!task||!text)throw Object.assign(new Error('Writing task and learner response are required.'),{status:400});
+   const integrity=basicIntegrity(text,body?.minWords,body?.maxWords);
+   if(!integrity.meaningful)throw Object.assign(new Error('The response does not yet contain enough meaningful English for reliable grading.'),{status:400,integrity});
+   if(!integrity.withinHardLimit)throw Object.assign(new Error(`Write within ${integrity.minWords}–${integrity.maxWords} words before grading.`),{status:400,integrity});
+   const state={
+-    purpose:'EnglishGate B2 writing assessment',
++    purpose:`EnglishGate ${level} writing assessment`,
+     rubricVersion:RUBRIC_VERSION,
+     targetLevel:level||'B2',
+     lessonId,
+@@ -143,7 +151,7 @@ async function gradeWriting(body){
+     rules:[
+       'Judge the learner response, not effort or length alone.',
+       'Task relevance is mandatory: unrelated fluent writing must not receive a passing task-achievement decision.',
+-      'At B2, minor errors are acceptable when communication remains clear.',
++      `At ${level}, minor errors are acceptable when communication remains clear.`,
+       'Do not infer learner identity, background, intelligence, motivation, or intent.',
+       'Do not silently correct the learner text before judging it.',
+       'Use the rubric descriptors consistently across learners.'
+@@ -156,12 +164,12 @@ async function gradeWriting(body){
+     if(!d)throw new Error(`Jev returned an incomplete ${id} decision.`);
+     decisions[id]=d;
+   }
+-  const {score,dimensions}=scoreDimensions(decisions);
++  const {score,dimensions}=scoreDimensions(decisions,level);
+   const taskScore=dimensions.task.score;
+   const lowConfidence=Object.values(dimensions).some(d=>d.confidence!=null&&d.confidence<0.55);
+   const pass=score>=PASS_SCORE&&taskScore>=65&&integrity.withinTarget&&!lowConfidence;
+   const status=lowConfidence?'review_required':pass?'passed':'needs_revision';
+-  return {score,pass,status,threshold:PASS_SCORE,dimensions,integrity,feedback:feedbackFor(dimensions,pass),model:String(data?.model||TYPE_SAFE_MODEL),version:RUBRIC_VERSION};
++  return {score,pass,status,threshold:PASS_SCORE,dimensions,integrity,feedback:feedbackFor(dimensions,pass,level),level,model:String(data?.model||TYPE_SAFE_MODEL),version:RUBRIC_VERSION};
+ }
+ function rubricSummary(){
+   return {version:RUBRIC_VERSION,level:'B2',passScore:PASS_SCORE,dimensions:Object.fromEntries(Object.entries(RUBRIC).map(([id,r])=>[id,{label:r.label,weight:r.weight,bands:r.criteria}]))};
+-- 
+2.43.0
