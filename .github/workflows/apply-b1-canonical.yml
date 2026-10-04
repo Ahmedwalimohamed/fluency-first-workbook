@@ -1,0 +1,63 @@
+name: Apply canonical B1 patch
+
+on:
+  push:
+    branches:
+      - b1-canonical-patch-20261004
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[b1-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b1-canonical-patch-20261004
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Reconstruct and verify canonical source patch
+        shell: bash
+        run: |
+          cat .b1canonical/part*.patch > /tmp/b1.patch
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/b1.patch')
+          b=p.read_bytes()
+          b=b.replace(b'FLUEENCY RULE',b'FLUENCY RULE')
+          b=b.replace(b'/\\b2\\b/.test(text)',b'/\\bB2\\b/.test(text)')
+          p.write_bytes(b)
+          PY
+          test "$(wc -c < /tmp/b1.patch)" -eq 107202
+          echo "fac5c4a6691f67ad6f2b391c654af572ccb8163178f5dc729d3e5cdb25fb205b  /tmp/b1.patch" | sha256sum -c -
+          git apply --check /tmp/b1.patch
+
+      - name: Apply canonical B1 patch
+        run: git apply --whitespace=nowarn /tmp/b1.patch
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run canonical B1 QA
+        run: npm run qa:b1
+
+      - name: Run B2 regression QA
+        run: npm run qa:b2
+
+      - name: Run AI practice regression QA
+        run: npm run qa:ai-practice
+
+      - name: Commit canonical B1 upgrade
+        shell: bash
+        run: |
+          git config user.name "EnglishGate B1 Upgrade"
+          git config user.email "actions@users.noreply.github.com"
+          git add B1_LIVING_STANDARD.md correction-model-v3-bootstrap.js northstar-response-grading-bootstrap.js package.json public/assets/class-ai-practice-v1.js public/b2-northstar-workbook-v1.js public/index.html public/northstar-semantic-grading-v1.js public/speakup-b1-blueprint.js public/speakup-b1-northstar-v1.js scripts/qa-b1.mjs server.js writing-rubric-bootstrap.js
+          git commit -m "Apply canonical B1 Northstar Phase 1 [b1-applied]"
+          git push origin HEAD:b1-canonical-patch-20261004
