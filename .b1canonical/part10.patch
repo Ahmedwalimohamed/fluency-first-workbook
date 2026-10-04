@@ -1,0 +1,199 @@
++Tell a partner one thing you can now say more clearly or confidently. Speak for 20–30 seconds without notes. Your partner gives one short response or question.`,
++ 3:`LESSON 3 Travel & Adventure
++CAN-DO GOAL: Tell a short travel story in the right order, say what went wrong and how it ended, and react to a friend’s story.
++PAGE 1 — WARM UP
++FLUENCY START
++Choose one question first. Think for 20 seconds, then speak for 20–30 seconds. Your partner must ask one follow-up question before you switch.
++Think & Talk
++1. What is the best trip you have ever taken?
++2. Do you prefer travelling by bus, car or plane?
++3. Where would you like to go next?
++4. Have you ever been late for a bus or a flight?
++5. What do you always pack for a trip?
++SPEAKING CHALLENGE
++Find someone who...
++☐ has travelled to another city this year
++☐ has been on a plane
++☐ prefers the mountains to the sea
++☐ has lost a bag while travelling
++☐ likes long journeys
++A name only counts after one follow-up question. Remember one interesting detail about the person. Do not write during the conversation.
++
++
++
++PAGE 2 — VOCABULARY
++Talking About Travel & Adventure
++WORD EXAMPLE
++journey The journey to Berbera takes about three hours.
++delay There was a short delay because of the rain.
++luggage My luggage was very heavy.
++local We ate at a small local restaurant.
++destination Our final destination was the coast.
++pack I always pack my phone charger first.
++Useful Expressions
++• Guess what happened!
++• We were… when…
++• Suddenly,…
++• In the end,…
++• Oh no! What did you do?
++• That was lucky!
++Pronunciation — Repeat after your teacher
++journey • luggage • destination • suddenly • adventure
++FLUENCY USE
++Choose two useful words or expressions from this page. Make each one true for you. Tell a partner, then answer one follow-up question: “Why?”, “How?”, or “Can you give me an example?”
++
++
++
++PAGE 3 — READING
++A Long Day on the Road
++READ
++${lessons[2].readingText}
++Check Your Understanding
++1. Where were they travelling to?
++2. What happened in the hills?
++3. Who helped them?
++4. What does the writer do now before every trip?
++TALK AFTER READING
++Choose one idea or detail from the text that you find important. Explain why for 20–30 seconds. Your partner must react, agree, disagree, or ask a question.
++
++
++
++PAGE 4 — LANGUAGE FOCUS
++Narrative Tenses — Past Simple, Past Continuous, Past Perfect
++Use the past continuous for the background, the past simple for the main events, and the past perfect for something that happened before another past event.
++Examples
++• We were driving through the hills when the bus stopped.
++• While the driver was changing the tyre, we waited.
++• When we arrived, the restaurant had already closed.
++• A local family gave us tea and bread.
++Complete the Sentences
++1. I ______ (walk) to the station when it ______ (start) to rain.
++2. While we ______ (wait), my brother ______ (buy) some water.
++3. When we got to the airport, the plane ______ already ______ (leave).
++4. We ______ (arrive) late, but we ______ (be) safe.
++MAKE IT PERSONAL — SPEAK FIRST
++Say four true sentences about yourself using this language. Do not write first. Your partner chooses one sentence and asks a follow-up question. Improve one sentence after speaking.
++
++
++
++PRONUNCIATION FOCUS
++${lessons[2].pronunciation}
++MEDIATION MOVE
++${lessons[2].mediation}
++
++
++
++PAGE 5 — FLUENCY MISSION
++THE TRAVEL STORY
++Tell your group about a real or imaginary trip when something went wrong.
++Try to cover:
++• where you were going
++• what you were doing when the problem started
++• what happened
++• how you solved the problem
++• how the trip ended
++Use the past simple and the past continuous in your story.
++Challenge
++Your group chooses the most surprising story.
++FLUENCY RULE
++Do not read a prepared answer. Add one detail to each answer, react to other speakers, and ask at least one follow-up question.
++
++
++
++PAGE 6 — REFLECTION
++Today I learned...
++☐ travel vocabulary
++☐ past simple, past continuous and past perfect
++☐ how to tell a story in order
++☐ how to react to someone's story
++FLUENCY EXIT
++Tell a partner one thing you can now say more clearly or confidently. Speak for 20–30 seconds without notes. Your partner gives one short response or question.`
++};
++
++window.SPEAKUP_B1_BLUEPRINT=lessons;
++window.SPEAKUP_B1_LIVE_LESSONS=lessons.map(l=>({number:l.number,title:l.title,content:live[l.number]}));
++window.SPEAKUP_B1_STANDARD={version:'b1-northstar-v1',bookId:'speakup-b1',level:'B1',totalLessons:22,authored:lessons.length};
++})();
+diff --git a/public/speakup-b1-northstar-v1.js b/public/speakup-b1-northstar-v1.js
+new file mode 100644
+index 0000000..466ab18
+--- /dev/null
++++ b/public/speakup-b1-northstar-v1.js
+@@ -0,0 +1,57 @@
++/* EnglishGate B1 Intermediate — Northstar installer
++   Installs every authored B1 Northstar lesson into the existing speakup-b1
++   workbook pack and Live book, using the same lesson mapper as B2.
++   Lessons that are not yet authored keep their current content.
++   Course ID speakup-b1 and lesson IDs su-b1-l1 … su-b1-l22 stay stable. */
++(function(){
++'use strict';
++const BOOK_ID='speakup-b1';
++const rows=Array.isArray(window.SPEAKUP_B1_BLUEPRINT)?window.SPEAKUP_B1_BLUEPRINT:[];
++const liveRows=Array.isArray(window.SPEAKUP_B1_LIVE_LESSONS)?window.SPEAKUP_B1_LIVE_LESSONS:[];
++
++/* One place for "which blueprint belongs to this book / lesson". */
++function blueprintForBook(bookId){
++ if(bookId===BOOK_ID)return rows;
++ if(bookId==='speakup-b2')return Array.isArray(window.SPEAKUP_B2_BLUEPRINT)?window.SPEAKUP_B2_BLUEPRINT:[];
++ return [];
++}
++function blueprintForLessonId(lessonId){
++ const id=String(lessonId||'');
++ if(/^su-b1-l\d+$/.test(id))return rows;
++ if(/^su-b2-l\d+$/.test(id))return Array.isArray(window.SPEAKUP_B2_BLUEPRINT)?window.SPEAKUP_B2_BLUEPRINT:[];
++ return [];
++}
++window.ENGLISHGATE_BLUEPRINTS={blueprintForBook,blueprintForLessonId};
++
++function toRuntimeLesson(x){
++ /* B1 stores the Lift stage as `lift`; the shared runtime field is b2Lift. */
++ const source={...x,b2Lift:x.lift||x.b2Lift||''};
++ if(typeof makeBlueprintB2Lesson==='function')return makeBlueprintB2Lesson(source);
++ return null;
++}
++
++try{
++ const pack=typeof BOOK_PACKS!=='undefined'?BOOK_PACKS[BOOK_ID]:null;
++ if(pack&&Array.isArray(pack.lessons)){
++  rows.forEach(x=>{
++   const i=Number(x.number)-1,lesson=toRuntimeLesson(x);
++   if(lesson&&i>=0&&i<pack.lessons.length&&pack.lessons[i]?.id===x.id)pack.lessons[i]={...lesson,level:'B1',curriculum:'b1-northstar-v1'};
++  });
++  pack.title='B1 Intermediate';pack.moduleTitle='B1 Intermediate';
++  pack.moduleGoal='Independent workbook practice for vocabulary, listening & reading, grammar and writing that supports the live B1 fluency course.';
++ }
++}catch(err){console.warn('B1 Northstar workbook install skipped',err)}
++
++try{
++ const books=window.LIVE_BOOKS||{},liveBook=books[BOOK_ID];
++ if(liveBook&&Array.isArray(liveBook.lessons)){
++  liveRows.forEach(x=>{
++   const i=Number(x.number)-1;
++   if(i>=0&&i<liveBook.lessons.length&&liveBook.lessons[i]?.title===x.title)liveBook.lessons[i]={number:x.number,title:x.title,content:x.content};
++  });
++  liveBook.title='B1 Intermediate';
++ }
++}catch(err){console.warn('B1 Northstar live book install skipped',err)}
++
++window.ENGLISHGATE_B1_NORTHSTAR={version:'b1-northstar-v1',bookId:BOOK_ID,installed:rows.map(x=>x.id)};
++})();
+diff --git a/scripts/qa-b1.mjs b/scripts/qa-b1.mjs
+new file mode 100644
+index 0000000..c88d8a4
+--- /dev/null
++++ b/scripts/qa-b1.mjs
+@@ -0,0 +1,200 @@
++/* EnglishGate B1 Intermediate — blocking QA gate.
++   B1 is built from the B2 north star: same topics, same lesson schema, same
++   Northstar workbook, same Live lesson format and same grammar point per lesson.
++   This gate checks that parity AND that the content is actually easier than B2.
++   Lessons are authored in phases; every authored lesson must pass in full. */
++import fs from 'node:fs';
++import vm from 'node:vm';
++
++const ROOT=new URL('../',import.meta.url);
++const TOPICS=[
++ 'Getting Acquainted','Work & Careers','Travel & Adventure','Technology & Social Media','Health & Wellbeing',
++ 'Food & Culture','Education & Learning','Money & Business','Environment & Climate','Relationships & Family',
++ 'Media & News','Sports & Fitness','City vs Countryside','Dreams & Ambitions','Crime & Justice','Science & Innovation',
++ 'Arts & Entertainment','Global Issues','Free Time & Hobbies','Cultural Identity','Making Decisions','Looking Back, Looking Forward'
